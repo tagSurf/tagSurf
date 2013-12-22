@@ -1,6 +1,6 @@
 Tagsurf::Application.routes.draw do
 
   devise_for :users
-  root 'status#index' 
+  root 'static#index' 
 
 end
