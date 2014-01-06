@@ -1,0 +1,31 @@
+<form class="form-signin" role="form">
+  <h2 class="form-signin-heading">The new way to surf the web!</h2>
+  <input type="text" class="form-control" placeholder="Email address" required autofocus>
+  <input type="password" class="form-control" placeholder="Password" required>
+  <label class="checkbox">
+    <input type="checkbox" value="remember-me"> Remember me
+  </label>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+</form>
+
+<hr>
+
+<div class="row">
+  <ul>
+    <% @hot_list.each do |img| %>
+      <% unless img["is_album"] == true %>
+        <li>
+          <div>
+            <% if img["animated"] == true %>
+              <%= image_tag img['link'], class: 'img-thumb', width: 160, height: 160 %>
+            <% else %>
+              <%= image_tag "http://i.imgur.com/#{img['id']}b.#{RemoteResource.content_type(img['type'])}", class: 'img-thumb' %>
+            <% end %>
+            <p><%= img["title"] %></p>
+          </div>
+        </li>
+      <% end %>
+    <% end %>
+  </ul>
+</div>
+

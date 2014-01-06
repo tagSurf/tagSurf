@@ -7,6 +7,7 @@ gem 'pg'
 gem 'unicorn'
 gem 'turbolinks'
 gem 'rails_12factor', group: :production
+gem 'httparty'
 # gem 'bcrypt-ruby', '~> 3.1.2'
 
 gem 'sass-rails', '~> 4.0.0'

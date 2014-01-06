@@ -3,3 +3,10 @@ $light-orange: #ff8c00;
 $navbar-default-color: $light-orange;
 
 @import "bootstrap";
+
+.img-thumb {
+  width: 160px;
+  height: 160px;
+  overflow: hidden;
+  display: block;
+}
