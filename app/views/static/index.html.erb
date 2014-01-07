@@ -1,4 +1,4 @@
-<form class="form-signin" role="form">
+<!--<form class="form-signin" role="form">
   <h2 class="form-signin-heading">The new way to surf the web!</h2>
   <input type="text" class="form-control" placeholder="Email address" required autofocus>
   <input type="password" class="form-control" placeholder="Password" required>
@@ -7,6 +7,9 @@
   </label>
   <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
 </form>
+-->
+
+<h3><%= link_to "Sign in with Imgur", user_omniauth_authorize_path(:imgur) %></h3>
 
 <hr>
 

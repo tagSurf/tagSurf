@@ -17,5 +17,7 @@ gem 'bootstrap-sass', '~> 3.0.3.0'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 1.2'
 gem 'devise'
+gem 'omniauth'
+gem 'omniauth-oauth2'
 
 gem 'debugger', group: [:development, :test]
