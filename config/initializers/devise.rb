@@ -1,6 +1,5 @@
 require 'imgur'
 
-
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -10,16 +9,18 @@ Devise.setup do |config|
   config.secret_key = '417d9af63b2f181be0d5952475a96c5d3546757ad25006818736f5ddc7764081dbf4906a20f1d02f8ea1be6cb4a4c80ebaa12a452f876f99bfc9ed8e349771b9'
 
   if Rails.env.development?
+    OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
     config.omniauth :imgur, "63c3978f06dac10", "4eea9bc017f984049cfcd748fb3d8de17ae1cb8e", :strategy_class => OmniAuth::Strategies::Imgur
   else
-    config.omniauth :imgur, "e0d1a9753eaf289", "804e630c072f527b68bdfcc6a08ccbfe2492ab99", :strategy_class => OmniAuth::Strategies::Imgur
+    config.omniauth :imgur, "e0d1a9753eaf289", "804e630c072f527b68bdfcc6a08ccbfe2492ab99", :strategy_class => OmniAuth::Strategies::Imgur, 
+      {:scope => 'email, offline_access', :client_options => {:ssl => {:ca_file => '/usr/lib/ssl/certs/ca-certificates.crt'}}}
   end
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = 'please-change-me-at-config-initializers-devise@example.com'
+  config.mailer_sender = 'info@tagsurf.co' 
 
   # Configure the class responsible to send e-mails.
   # config.mailer = 'Devise::Mailer'
