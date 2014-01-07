@@ -12,8 +12,7 @@ Devise.setup do |config|
     OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
     config.omniauth :imgur, "63c3978f06dac10", "4eea9bc017f984049cfcd748fb3d8de17ae1cb8e", :strategy_class => OmniAuth::Strategies::Imgur
   else
-    config.omniauth :imgur, "e0d1a9753eaf289", "804e630c072f527b68bdfcc6a08ccbfe2492ab99", :strategy_class => OmniAuth::Strategies::Imgur, 
-      {:scope => 'email, offline_access', :client_options => {:ssl => {:ca_file => '/usr/lib/ssl/certs/ca-certificates.crt'}}}
+    config.omniauth :imgur, "e0d1a9753eaf289", "804e630c072f527b68bdfcc6a08ccbfe2492ab99", :strategy_class => OmniAuth::Strategies::Imgur
   end
 
   # ==> Mailer Configuration
