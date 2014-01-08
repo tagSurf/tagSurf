@@ -3,7 +3,7 @@ require 'omniauth-oauth2'
 module OmniAuth
   module Strategies
     class Imgur < OmniAuth::Strategies::OAuth2
-      
+
       option :client_options, {
         site:           "https://api.imgur.com",
         authorize_url:  "/oauth2/authorize",
@@ -11,17 +11,19 @@ module OmniAuth
         add_client:     "/oauth2/addclient"
       }
 
-      uid { 8571776 }
+      uid do
+        
+      end 
   
       info do
         {
-          username: 'brettu' 
+          code: request.params[:code]
         }
       end
 
       extra do 
         {
-          raw_info: raw_info
+          raw_info: "raw_info"
         }
       end
 
