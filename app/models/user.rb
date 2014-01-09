@@ -5,6 +5,29 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable, 
          :omniauthable, :omniauth_providers => [:imgur]
 
+  def expired_imgur_token?
+    Time.now > imgur_token_expires_at
+  end 
+
+  def refresh_imgur_token
+    params = {
+      client_id: '63c3978f06dac10',
+      client_secret: '4eea9bc017f984049cfcd748fb3d8de17ae1cb8e',
+      grant_type: 'refresh_token',
+      refresh_token: imgur_refresh_token
+    }
+
+    response = HTTParty.post(
+      "https://api.imgur.com/3/oauth2/token", 
+      :body => params  
+    )
+
+    # if response success
+    self.imgur_auth_token = response["token"]
+    self.imgur_token_expires_at = Time.now + 3600
+    self.save
+  end
+
   def self.create_imgur_user(auth, code)
 
     params = {
@@ -14,15 +37,31 @@ class User < ActiveRecord::Base
       code: code
     }
 
-    response = HTTParty.post("https://api.imgur.com/oauth2/token", :body => params) 
-    
-    raise response.inspect
+    @auth = auth.credentials
+    auth_value = "Bearer " + @auth.token 
 
-    user = User.create!(
-      email: auth.username,
-      password: Devise.friendly_token[0,20]
-    )
+    response = HTTParty.get(
+      "https://api.imgur.com/3/account/me", 
+      :headers => { "Authorization" => auth_value }
+    ) 
 
+    @user = response.parsed_response["data"]
+
+    user = User.new({
+      uid: @user["id"],
+      username: @user["url"],
+      email: "#{@user["url"]}-#{@user["id"]}@imgur.com",
+      provider: 'imgur',
+      password: Devise.friendly_token[0,20], 
+      imgur_refresh_token: @auth.refresh_token,
+      imgur_auth_token: @auth.token,
+      imgur_pro_expiration: @user["pro_expiration"],
+      imgur_token_expires_at: Time.now + 3600,
+      imgur_token_created_at: Time.now,
+      active: true
+    })
+
+    user
   end
 
   def self.from_oauth(auth, code, signed_in_resource=nil)
@@ -31,12 +70,10 @@ class User < ActiveRecord::Base
       if auth.provider == 'imgur'
         user = create_imgur_user(auth, code)
       else
-        raise "Only Imgur account allowed at this time"
+        raise "Only Imgur accounts allowed at this time"
       end
     end
     user
   end
-
-
   
 end
