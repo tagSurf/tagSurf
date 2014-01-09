@@ -11,9 +11,6 @@
   <div class="container">
     <p class="notice"><%= notice %></p>
     <p class="alert"><%= alert %></p>
-    <% if current_user %>
-      <%= current_user.to_json %>
-    <% end %>
     <%= yield %>
   </div>
 </body>

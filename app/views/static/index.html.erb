@@ -9,7 +9,13 @@
 </form>
 -->
 
-<h3><%= link_to "Sign in with Imgur", user_omniauth_authorize_path(:imgur) %></h3>
+<div class="row">
+  <% if current_user %>
+    <p>Using tagsurf as: <%= current_user.username %></p>
+  <% else %>
+    <h3><%= link_to "Sign in with Imgur", user_omniauth_authorize_path(:imgur) %></h3>
+  <% end %>
+</div>
 
 <hr>
 

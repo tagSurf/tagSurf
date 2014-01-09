@@ -61,6 +61,7 @@ class User < ActiveRecord::Base
       active: true
     })
 
+    user.save
     user
   end
 
