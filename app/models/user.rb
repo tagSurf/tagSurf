@@ -5,14 +5,17 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable, 
          :omniauthable, :omniauth_providers => [:imgur]
 
+  CLIENT_ID = Rails.env.production? ? 'e0d1a9753eaf289' : '63c3978f06dac10'
+  CLIENT_SECRET = Rails.env.production? ? '804e630c072f527b68bdfcc6a08ccbfe2492ab99' : '4eea9bc017f984049cfcd748fb3d8de17ae1cb8e'
+
   def expired_imgur_token?
     Time.now > imgur_token_expires_at
   end 
 
   def refresh_imgur_token
     params = {
-      client_id: '63c3978f06dac10',
-      client_secret: '4eea9bc017f984049cfcd748fb3d8de17ae1cb8e',
+      client_id: CLIENT_ID,
+      client_secret: CLIENT_SECRET,
       grant_type: 'refresh_token',
       refresh_token: imgur_refresh_token
     }
@@ -29,14 +32,6 @@ class User < ActiveRecord::Base
   end
 
   def self.create_imgur_user(auth, code)
-
-    params = {
-      client_id: '63c3978f06dac10',
-      client_secret: '4eea9bc017f984049cfcd748fb3d8de17ae1cb8e',
-      grant_type: 'authorization_code',
-      code: code
-    }
-
     @auth = auth.credentials
     auth_value = "Bearer " + @auth.token 
 
