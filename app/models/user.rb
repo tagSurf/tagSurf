@@ -47,32 +47,30 @@ class User < ActiveRecord::Base
 
     @user = response.parsed_response["data"]
 
-    user = User.new({
-      uid: @user["id"],
-      username: @user["url"],
-      email: "#{@user["url"]}-#{@user["id"]}@imgur.com",
-      provider: 'imgur',
-      password: Devise.friendly_token[0,20], 
-      imgur_refresh_token: @auth.refresh_token,
-      imgur_auth_token: @auth.token,
-      imgur_pro_expiration: @user["pro_expiration"],
-      imgur_token_expires_at: Time.now + 3600,
-      imgur_token_created_at: Time.now,
-      active: true
-    })
-
-    user.save
+    user = User.where(:provider => 'imgur', :uid => "#{@user['id']}").first
+    unless user
+      user = User.create!({
+        uid: @user["id"],
+        username: @user["url"],
+        email: "#{@user["url"]}-#{@user["id"]}@imgur.com",
+        provider: 'imgur',
+        password: Devise.friendly_token[0,20], 
+        imgur_refresh_token: @auth.refresh_token,
+        imgur_auth_token: @auth.token,
+        imgur_pro_expiration: @user["pro_expiration"],
+        imgur_token_expires_at: Time.now + 3600,
+        imgur_token_created_at: Time.now,
+        active: true
+      })
+    end
     user
   end
 
   def self.from_oauth(auth, code, signed_in_resource=nil)
-    user = User.where(:provider => auth.provider, :uid => auth.uid).first
-    unless user
-      if auth.provider == 'imgur'
-        user = create_imgur_user(auth, code)
-      else
-        raise "Only Imgur accounts allowed at this time"
-      end
+    if auth.provider == 'imgur'
+      user = create_imgur_user(auth, code)
+    else
+      raise "Only Imgur accounts allowed at this time"
     end
     user
   end
