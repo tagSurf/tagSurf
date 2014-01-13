@@ -8,7 +8,8 @@ gem 'unicorn'
 gem 'turbolinks'
 gem 'rails_12factor', group: :production
 gem 'httparty'
-gem 'rest-client'
+gem 'acts_as_votable', '~> 0.8.0'
+
 # gem 'bcrypt-ruby', '~> 3.1.2'
 
 gem 'sass-rails', '~> 4.0.0'
