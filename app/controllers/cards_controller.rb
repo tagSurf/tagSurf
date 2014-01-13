@@ -14,7 +14,7 @@ class CardsController < ApplicationController
 
   def vote
     @card = Card.next(@user)
-    if @card.cache_update_available?
+    if @card && @card.cache_update_available?
       @card.refresh!
     end
   end
