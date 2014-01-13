@@ -26,7 +26,7 @@ class Card < ActiveRecord::Base
   # Excludes albums, TODO requery to populate albums
   def refresh!
     existing = Card.pluck(:remote_id, :created_at)
-    if Rails.env.development? || existing.last.try(:created_at) < 20.minutes.ago 
+    if Rails.env.development? || existing.last[1] < 20.minutes.ago 
       response = RemoteResource.get
       fresh_list = response.parsed_response["data"] 
       fresh_list.each do |obj|
