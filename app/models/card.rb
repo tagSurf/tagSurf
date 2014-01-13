@@ -4,6 +4,16 @@ class Card < ActiveRecord::Base
 
   validates_uniqueness_of :remote_id, :link
 
+  # Display the next card to the user for voting
+  def self.next(user)
+    return unless user
+    if user.votes.size < 1
+      Card.last
+    else
+      Card.where('id not in (?)', user.get_voted(Card).map(&:id)).first
+    end
+  end
+
   def cache_update_available?
     c = Card.last
     c.try(:created_at) < 20.minutes.ago ? true : false
@@ -42,33 +52,31 @@ class Card < ActiveRecord::Base
     end
   end
 
-
-# IMGUR example of image model
-
-#  {
-#  "data": {
-  #  "id":"vW5QZE1",
-  #  "title":"I want to do good.",
-  #  "description":null,
-  #  "datetime":1389559678,
-  #  "type":"image/png",
-  #  "animated":false,
-  #  "width":800,
-  #  "height":600,
-  #  "size":41511,
-  #  "views":32947,
-  #  "bandwidth":1367662917,
-  #  "vote":null,
-  #  "favorite":false,
-  #  "nsfw":false,
-  #  "section":null,
-  #  "account_url":"ColorfulSpectrum",
-  #  "link":"http://i.imgur.com/vW5QZE1.png",
-  #  "ups":3663,
-  #  "downs":241,
-  #  "score":3438,
-  #  "is_album":false
+  # Mock IMGUR image model
+  #  {
+  #  "data": {
+    #  "id":"vW5QZE1",
+    #  "title":"I want to do good.",
+    #  "description":null,
+    #  "datetime":1389559678,
+    #  "type":"image/png",
+    #  "animated":false,
+    #  "width":800,
+    #  "height":600,
+    #  "size":41511,
+    #  "views":32947,
+    #  "bandwidth":1367662917,
+    #  "vote":null,
+    #  "favorite":false,
+    #  "nsfw":false,
+    #  "section":null,
+    #  "account_url":"ColorfulSpectrum",
+    #  "link":"http://i.imgur.com/vW5QZE1.png",
+    #  "ups":3663,
+    #  "downs":241,
+    #  "score":3438,
+    #  "is_album":false
+    #}
   #}
-#}
 
 end
