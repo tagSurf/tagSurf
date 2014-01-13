@@ -1,0 +1,35 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  uid: 1
+  provider: MyString
+  title: MyString
+  description: MyText
+  remote_created_at: 2014-01-12 19:12:56
+  content_type: MyString
+  animated: false
+  width: 1
+  height: 1
+  size: 1
+  imgur_views: 1
+  bandwidth: 1
+  delete_hash: MyString
+  section: MyString
+  link: MyString
+
+two:
+  uid: 1
+  provider: MyString
+  title: MyString
+  description: MyText
+  remote_created_at: 2014-01-12 19:12:56
+  content_type: MyString
+  animated: false
+  width: 1
+  height: 1
+  size: 1
+  imgur_views: 1
+  bandwidth: 1
+  delete_hash: MyString
+  section: MyString
+  link: MyString

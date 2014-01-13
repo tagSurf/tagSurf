@@ -1,0 +1,33 @@
+class Cards < ActiveRecord::Base
+  
+ 
+  def refresh!
+
+  
+  end
+
+
+
+# IMGUR example of image model
+#{
+#    "data": {
+#        "id": "SbBGk",
+#        "title": null,
+#        "description": null,
+#        "datetime": 1341533193,
+#        "type": "image/jpeg",
+#        "animated": false,
+#        "width": 2559,
+#        "height": 1439,
+#        "size": 521916,
+#        "views": 1,
+#        "bandwidth": 521916,
+#        "deletehash": "eYZd3NNJHsbreD1"
+#        "section": null,
+#        "link": "http://i.imgur.com/SbBGk.jpg",
+#    },
+#    "success": true,
+#    "status": 200
+#}
+
+end

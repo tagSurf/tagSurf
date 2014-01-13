@@ -11,10 +11,30 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140109043410) do
+ActiveRecord::Schema.define(version: 20140113031256) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "cards", force: true do |t|
+    t.string   "remote_id"
+    t.string   "remote_provider"
+    t.datetime "remote_created_at"
+    t.string   "link"
+    t.string   "title"
+    t.text     "description"
+    t.string   "content_type"
+    t.boolean  "animated"
+    t.integer  "width"
+    t.integer  "height"
+    t.integer  "size"
+    t.integer  "imgur_views"
+    t.integer  "bandwidth"
+    t.string   "delete_hash"
+    t.string   "section"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
