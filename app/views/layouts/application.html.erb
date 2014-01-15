@@ -9,9 +9,21 @@
 </head>
 <body>
   <div class="container">
-    <p class="notice"><%= notice %></p>
-    <p class="alert"><%= alert %></p>
+
+    <% if notice %>
+      <div class="col-sm-4">
+        <p class="alert alert-success"><%= notice %></p>
+      </div>
+    <% end %>
+
+    <% if alert %>
+      <div class="col-sm-4">
+        <p class="alert alert-danger"><%= alert %></p>
+      </div>
+    <% end %>
+
     <%= yield %>
+
   </div>
 </body>
 </html>

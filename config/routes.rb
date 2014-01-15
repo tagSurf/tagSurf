@@ -4,7 +4,8 @@ Tagsurf::Application.routes.draw do
 
   # Voting
   get    'votes/:id/:vote'  => 'cards#add_vote'
-  get    'cards/:id'        => 'cards#show'
+
+  resources :cards
 
   root   'cards#vote' 
 
