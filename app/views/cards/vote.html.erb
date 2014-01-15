@@ -20,27 +20,30 @@
 
   <hr>
 
-  <div class="row">
-
-    <div class="col-md-1">
-      <%= link_to "dislike", controller: "cards", action: "add_vote", id: @card, vote: 'dislike' %>
-    </div>
-
-    <div class="col-md-3">
+  <div class="row spaced">
+    <div class="col-md-6">
       <% if @card.animated == true %>
-
         <%= link_to(@card) do %>
-          <%=  image_tag(@card.link, class: 'img-thumb', width: 160, height: 160) %>
+          <%=  image_tag(@card.link, class: 'img-thumbnail', width: 290, height: 290) %>
         <% end %>
-
       <% else %>
-        <%= link_to(image_tag("http://i.imgur.com/#{@card.remote_id}b.#{RemoteResource.content_type(@card.content_type)}", class: 'img-thumb'), @card) %>
+        <%= link_to(@card) do %>
+          <%= image_tag(
+                "http://i.imgur.com/#{@card.remote_id}b.#{RemoteResource.content_type(@card.content_type)}", 
+                class: 'img-thumbnail',
+                width: 290,
+                height: 290
+              ) 
+          %>
+        <% end %>
       <% end %>
     </div>
-
-    <div class="col-md-1">
-      <%= link_to "like", controller: "cards", action: "add_vote", id: @card, vote: 'like' %>
-    </div>
-
   </div>
+
+  <div class="row spaced">
+    <div class="col-md-6">
+      <p><%= @card.title %></p>
+    </div>
+  </div>
+
 <% end %>

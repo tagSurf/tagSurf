@@ -19,13 +19,19 @@
 
   <hr>
 
-  <div class="row">
+  <div class="row spaced">
     <div class="col-md-10">
       <% if @card.animated == true %>
         <%= image_tag @card.link, class: 'img-responsive' %>
       <% else %>
         <%= image_tag "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}", class: 'img-responsive' %>
       <% end %>
+    </div>
+  </div>
+
+  <div class="row spaced">
+    <div class="col-md-6">
+      <p><%= @card.title %></p>
     </div>
   </div>
 
