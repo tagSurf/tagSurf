@@ -19,6 +19,15 @@ class CardsController < ApplicationController
     end
   end
 
+  def show
+    @card = Card.find card_params[:id]
+    if @card
+      @card
+    else
+      render 404
+    end
+  end
+
   private
 
     def card_params
