@@ -14,7 +14,8 @@ $navbar-default-color: $light-orange;
 
 .img-thumbnail {
   width:270px;
-  height:270px;
+  height:auto;
+  overflow:hidden;
 }
 
 .container {
