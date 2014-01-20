@@ -14,11 +14,36 @@ class Card < ActiveRecord::Base
     end
   end
 
+  def self.populate!
+    response = RemoteResource.get
+    fresh_list = response.parsed_response["data"]
+    fresh_list.each do |obj|
+      if obj['is_album'].to_s == 'false' and obj['nsfw'].to_s == 'false'
+        Card.create({
+          remote_id: obj['id'],
+          remote_provider: 'imgur',
+          remote_created_at: Time.at(obj['datatime'].to_i) || Time.now,
+          link: obj['link'],
+          title: obj['title'],
+          description: obj['description'],
+          content_type: obj['type'],
+          animated: obj['animated'],
+          width: obj['width'],
+          height: obj['height'],
+          size: obj['size'],
+          imgur_views: obj['views'],
+          section: obj['section'],
+          delete_hash: obj['deletehash']
+        })
+      end
+    end
+  end
+
   def cache_update_available?
     c = Card.last
     c.try(:created_at) < 20.minutes.ago ? true : false
   end
-  
+
   # Move to redis sidekiq
   # Expensive !!!
   #
@@ -26,29 +51,8 @@ class Card < ActiveRecord::Base
   # Excludes albums, TODO requery to populate albums
   def refresh!
     existing = Card.pluck(:remote_id, :created_at)
-    if Rails.env.development? || existing.last[1] < 20.minutes.ago 
-      response = RemoteResource.get
-      fresh_list = response.parsed_response["data"] 
-      fresh_list.each do |obj|
-        if obj['is_album'].to_s == 'false' and obj['nsfw'].to_s == 'false'
-          Card.create({
-            remote_id: obj['id'],
-            remote_provider: 'imgur', 
-            remote_created_at: Time.at(obj['datatime'].to_i) || Time.now,
-            link: obj['link'],
-            title: obj['title'],
-            description: obj['description'],
-            content_type: obj['type'],
-            animated: obj['animated'],
-            width: obj['width'],
-            height: obj['height'],
-            size: obj['size'],
-            imgur_views: obj['views'],
-            section: obj['section'],
-            delete_hash: obj['deletehash']
-          })
-        end
-      end
+    if Rails.env.development? || existing.last[1] < 20.minutes.ago
+      self.class.populate!
     end
   end
 
