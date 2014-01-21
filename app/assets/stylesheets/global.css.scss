@@ -1,0 +1,79 @@
+$navbar-default-bg: #1d7189;
+$navbar-default-color: #ffffff;
+$light-orange: #ff8c00;
+$navbar-default-color: $light-orange;
+
+@import "bootstrap";
+
+html, body{
+  background:#e0e0e0;
+}
+
+.navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a{
+  color:#f7f4da;
+  &:hover{
+    color: #ffffff;
+  }
+}
+
+// TODO Move to cards.css.scss
+.card-container{
+  width:280px;
+  height: auto;
+  background:#f4f3f4;
+  border:#d8d8d8 thin solid;
+  border-bottom-width: 2px;
+
+  .img-container {
+    margin: 4px auto;
+    width: 260px;
+    overflow:hidden;
+
+    // Examples
+    // Very tall image http://i.imgur.com/JAN3GYF.jpg
+    // ... more to come 
+    img {
+      width: 260px;
+      height: auto;
+      position: relative;
+      margin: 8px auto;
+    }
+  }
+
+  .partial { max-height: 260px; }
+
+  .full { height: auto; }
+
+  .txt-container{
+    margin: 12px auto; 
+    width: 260px;
+    font-weight:400;
+    font-size:11px;
+  }
+}
+
+.container {
+  padding:0 0 0 0;
+}
+
+.row{
+  padding: 0 15px;
+}
+
+.spaced{
+  margin-bottom: 15px;
+}
+
+ul { list-style-type: none; }
+
+
+// TODO Move to buttons.css.scss
+.left-btn {
+  width: 80px;
+  float:left;
+}
+
+.right-btn {
+  width: 80px;
+  float:right;
+}

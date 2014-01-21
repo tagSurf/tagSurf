@@ -1,0 +1,16 @@
+<div class="row">
+  <div class="col-sm-1">
+    
+    <%= 
+       link_to "dislike",  
+       {controller: "cards", action: "add_vote", id: @card, vote: 'dislike'},
+       class: 'btn btn-danger left-btn'
+    %>
+    
+    <%= 
+       link_to "like",
+       {controller: "cards", action: "add_vote", id: @card, vote: 'like'},
+       class: 'btn btn-success right-btn'
+    %>
+  </div>
+</div>

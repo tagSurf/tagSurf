@@ -2,48 +2,34 @@
 
 <% if current_user %>
 
-  <div class="row">
-    <div class="col-sm-1">
-      <%= 
-          link_to "dislike", 
-          {controller: "cards", action: "add_vote", id: @card, vote: 'dislike'},
-          class: 'btn btn-danger left-btn'
-      %>
-
-      <%= 
-          link_to "like",
-          {controller: "cards", action: "add_vote", id: @card, vote: 'like'},
-          class: 'btn btn-success right-btn'
-      %>
-    </div>
-  </div>
-
-  <hr>
-
   <div class="row spaced">
     <div class="col-md-6">
-      <% if @card.animated == true %>
-        <%= link_to(@card) do %>
-          <%=  image_tag(@card.link, class: 'img-thumbnail', width: 290, height: 290) %>
-        <% end %>
-      <% else %>
-        <%= link_to(@card) do %>
-          <%= image_tag(
-                "http://i.imgur.com/#{@card.remote_id}m.#{RemoteResource.content_type(@card.content_type)}", 
-                class: 'img-thumbnail',
-                width: 290,
-                height: 290
-              ) 
-          %>
-        <% end %>
-      <% end %>
+
+       <div class="card-container clearfix">
+
+          <div class="img-container partial">
+            <% if @card.animated == true %>
+              <%= link_to(@card) do %>
+                <%= image_tag(@card.link) %>
+              <% end %>
+            <% else %>
+              <%= link_to(@card) do %>
+                <%= 
+                  image_tag( "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}") 
+                %>
+              <% end %>
+            <% end %>
+          </div>
+
+          <div class="txt-container">
+            <%= @card.title %>
+          </div>
+
+       </div>
+
     </div>
   </div>
 
-  <div class="row spaced">
-    <div class="col-md-6">
-      <p><%= @card.title %></p>
-    </div>
-  </div>
+  <%= render 'shared/voting', object: @card %>
 
 <% end %>

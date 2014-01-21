@@ -1,38 +1,32 @@
 <%= render 'shared/authentication' %>
 
 <% if current_user %>
-  <div class="row">
-    <div class="col-sm-1">
-      <%= 
-          link_to "dislike", 
-          {controller: "cards", action: "add_vote", id: @card, vote: 'dislike'},
-          class: 'btn btn-danger left-btn'
-      %>
-
-      <%= 
-          link_to "like",
-          {controller: "cards", action: "add_vote", id: @card, vote: 'like'},
-          class: 'btn btn-success right-btn'
-      %>
-    </div>
-  </div>
-
-  <hr>
 
   <div class="row spaced">
     <div class="col-md-10">
-      <% if @card.animated == true %>
-        <%= image_tag @card.link, class: 'img-responsive' %>
-      <% else %>
-        <%= image_tag "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}", class: 'img-responsive' %>
-      <% end %>
+
+      <div class="card-container clearfix">
+
+        <div class="img-container full">
+          <% if @card.animated == true %>
+              <%= image_tag(@card.link) %>
+          <% else %>
+              <%= 
+                image_tag( "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}")
+              %>
+          <% end %>
+        </div>
+            
+        <div class="txt-container"> 
+          <%= @card.title %>
+        </div> 
+
+      </div> 
+
+
     </div>
   </div>
 
-  <div class="row spaced">
-    <div class="col-md-6">
-      <p><%= @card.title %></p>
-    </div>
-  </div>
+  <%= render 'shared/voting', object: @card %>
 
 <% end %>
