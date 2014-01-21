@@ -16,8 +16,6 @@ html, body{
   }
 }
 
-
-
 // TODO Move to cards.css.scss
 .card-container{
   width:280px;
@@ -29,7 +27,6 @@ html, body{
   .img-container {
     margin: 4px auto;
     width: 260px;
-    max-height: 260px;
     overflow:hidden;
 
     // Examples
@@ -42,6 +39,8 @@ html, body{
       margin: 8px auto;
     }
   }
+
+  .partial { max-height: 260px; }
 
   .full { height: auto; }
 
