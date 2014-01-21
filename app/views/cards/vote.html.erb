@@ -4,13 +4,13 @@
 
   <div class="row">
     <div class="col-sm-1">
-      <%= 
-          link_to "dislike", 
+      <%=
+          link_to "dislike",
           {controller: "cards", action: "add_vote", id: @card, vote: 'dislike'},
           class: 'btn btn-danger left-btn'
       %>
 
-      <%= 
+      <%=
           link_to "like",
           {controller: "cards", action: "add_vote", id: @card, vote: 'like'},
           class: 'btn btn-success right-btn'
@@ -19,6 +19,16 @@
   </div>
 
   <hr>
+  <div id="swiper">
+    <div id="current" class="current">
+      <img class="picture" />
+      <div class="text">hej hej hej</div>
+    </div>
+    <div id="next" class="next">
+      <img class="picture" />
+      <div class="text">next next next</div>
+    </div>
+  </div>
 
   <div class="row spaced">
     <div class="col-md-6">
@@ -29,11 +39,11 @@
       <% else %>
         <%= link_to(@card) do %>
           <%= image_tag(
-                "http://i.imgur.com/#{@card.remote_id}m.#{RemoteResource.content_type(@card.content_type)}", 
+                "http://i.imgur.com/#{@card.remote_id}m.#{RemoteResource.content_type(@card.content_type)}",
                 class: 'img-thumbnail',
                 width: 290,
                 height: 290
-              ) 
+              )
           %>
         <% end %>
       <% end %>

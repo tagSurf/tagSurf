@@ -1,3 +1,5 @@
+@import "compass/css3/transition";
+
 $navbar-default-bg: #1d7189;
 $navbar-default-color: #ffffff;
 $light-orange: #ff8c00;
@@ -41,7 +43,12 @@ ul { list-style-type: none; }
   float:right;
 }
 
+#swiper img {
+  pointer-events: none;
+}
+
 #swiper {
+  position: relative;
   width: 500px;
   height: 500px;
 }
@@ -49,5 +56,24 @@ ul { list-style-type: none; }
 #swiper img {
   width: 200px;
   height: 200px;
-  pointer-events: none;
+}
+
+#swiper > div {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  @include transition-timing-function(ease-out);
+  @include transition-duration(0.2s);
+}
+.current {
+  z-index: 20;
+}
+.next {
+  z-index: 10;
+}
+
+#swiper > div.moving {
+  @include transition-duration(0s);
 }
