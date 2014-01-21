@@ -47,7 +47,15 @@ $(document).ready ->
     state.deltaX = point.pageX-state.startX
     console.log('deltaX: '+state.deltaX)
 
-    state.current.css('transform', 'translate('+state.deltaX+'px,0)')
+    # state.current.css('transform', '')
+    translate = 'translate('+state.deltaX+'px,0)'
+    
+    # if Math.abs(state.deltaX) > 100
+    #   direction = if state.deltaX < 0 then -1 else 1
+    #   rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/20.0, 0), 90)
+    #   translate += ' rotate('+(direction*rotate)+'deg)'
+    
+    state.current.css('transform', translate)
 
 
   state.swipeEnd = (e) ->
