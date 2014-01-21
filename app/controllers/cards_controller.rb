@@ -8,12 +8,12 @@ class CardsController < ApplicationController
     if result
       redirect_to :root, notice: "Vote recorded"
     else
-      redirect_to :root, flash: "Something went wrong, please vote again" 
+      redirect_to :root, flash: "Something went wrong, please vote again"
     end
   end
 
   def vote
-    @card = Card.next(@user)
+    @card = Card.next(@user).first
     if @card && @card.cache_update_available?
       @card.refresh!
     end
@@ -28,12 +28,17 @@ class CardsController < ApplicationController
     end
   end
 
+  def next
+    @cards = Card.next(@user)
+    render json: @cards
+  end
+
   private
 
     def card_params
       params.permit(:id, :vote)
     end
-  
+
     def find_authenticated_user
       @user = current_user
     end

@@ -5,8 +5,9 @@ Tagsurf::Application.routes.draw do
   # Voting
   get    'votes/:id/:vote'  => 'cards#add_vote'
 
+  get 'cards/next' => 'cards#next'
   resources :cards
 
-  root   'cards#vote' 
+  root   'cards#vote'
 
 end

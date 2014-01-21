@@ -40,3 +40,14 @@ ul { list-style-type: none; }
   width: 80px;
   float:right;
 }
+
+#swiper {
+  width: 500px;
+  height: 500px;
+}
+
+#swiper img {
+  width: 200px;
+  height: 200px;
+  pointer-events: none;
+}
