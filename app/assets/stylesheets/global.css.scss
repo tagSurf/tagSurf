@@ -5,6 +5,10 @@ $navbar-default-color: $light-orange;
 
 @import "bootstrap";
 
+html, body{
+  background:#e0e0e0;
+}
+
 .navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a{
   color:#f7f4da;
   &:hover{
@@ -12,10 +16,38 @@ $navbar-default-color: $light-orange;
   }
 }
 
-.img-thumbnail {
-  width:270px;
-  height:auto;
-  overflow:hidden;
+
+
+.card-container{
+  width:280px;
+  height: auto;
+  background:#f4f3f4;
+  border:#d8d8d8 thin solid;
+  border-bottom-width: 2px;
+
+  .img-container {
+    margin: 4px auto;
+    width: 260px;
+    height: 260px;
+    overflow:hidden;
+
+    // Examples
+    // Very tall image http://i.imgur.com/JAN3GYF.jpg
+    // ... more to come 
+    img {
+      width: 260px;
+      height: auto;
+      position: relative;
+      margin: 8px auto;
+    }
+  }
+
+  .txt-container{
+    margin: 12px auto; 
+    width: 260px;
+    font-weight:400;
+    font-size:11px;
+  }
 }
 
 .container {
