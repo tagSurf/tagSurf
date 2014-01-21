@@ -18,6 +18,7 @@ html, body{
 
 
 
+// TODO Move to cards.css.scss
 .card-container{
   width:280px;
   height: auto;
@@ -28,7 +29,7 @@ html, body{
   .img-container {
     margin: 4px auto;
     width: 260px;
-    height: 260px;
+    max-height: 260px;
     overflow:hidden;
 
     // Examples
@@ -41,6 +42,8 @@ html, body{
       margin: 8px auto;
     }
   }
+
+  .full { height: auto; }
 
   .txt-container{
     margin: 12px auto; 
@@ -64,6 +67,8 @@ html, body{
 
 ul { list-style-type: none; }
 
+
+// TODO Move to buttons.css.scss
 .left-btn {
   width: 80px;
   float:left;
