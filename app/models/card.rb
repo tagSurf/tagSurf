@@ -5,12 +5,12 @@ class Card < ActiveRecord::Base
   validates_uniqueness_of :remote_id, :link
 
   # Display the next card to the user for voting
-  def self.next(user)
+  def self.next(user, n=10)
     return unless user
     if user.votes.size < 1
-      Card.last
+      Card.first(n)
     else
-      Card.where('id not in (?)', user.get_voted(Card).map(&:id)).first
+      Card.where('id not in (?)', user.get_voted(Card).map(&:id)).limit(n)
     end
   end
 
