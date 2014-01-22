@@ -2,7 +2,7 @@
 
 <% if current_user %>
 
-  <div id="swiper">
+  <!--<div id="swiper">
     <div id="current" class="current">
       <img class="picture" />
       <div class="text">hej hej hej</div>
@@ -11,12 +11,12 @@
       <img class="picture" />
       <div class="text">next next next</div>
     </div>
-  </div>
+  </div>-->
 
   <div class="row spaced">
-    <div class="col-md-6">
+    <div class="col-md-6" id="swiper">
 
-       <div class="card-container clearfix">
+       <div class="card-container" id="current">
 
           <div class="img-container partial">
             <% if @card.animated == true %>
@@ -38,8 +38,30 @@
 
        </div>
 
+       <div class="card-container" id="next">
+
+          <div class="img-container partial">
+            <% if @card.animated == true %>
+              <%= link_to(@card) do %>
+                <%= image_tag(@card.link) %>
+              <% end %>
+            <% else %>
+              <%= link_to(@card) do %>
+                <%= 
+                  image_tag( "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}") 
+                %>
+              <% end %>
+            <% end %>
+          </div>
+
+          <div class="txt-container">
+            <%= @card.title %>
+          </div>
+
+       </div>
     </div>
   </div>
+  <div class="clearfix"></div>
 
   <%= render 'shared/voting', object: @card %>
 

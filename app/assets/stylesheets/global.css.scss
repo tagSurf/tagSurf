@@ -6,6 +6,7 @@ $navbar-default-color: $light-orange;
 @import "bootstrap";
 
 html, body{
+  max-width:320px;
   background:#e0e0e0;
 }
 
@@ -52,6 +53,16 @@ html, body{
   }
 }
 
+.current{
+  z-index:10;
+}
+
+.next{
+  z-index:9;
+}
+
+
+/* Global configuration */
 .container {
   padding:0 0 0 0;
 }
