@@ -3,9 +3,9 @@
 <% if current_user %>
 
   <div class="row spaced">
-    <div class="col-md-10">
+    <div class="col-md-10" id="swiper">
 
-      <div class="card-container clearfix">
+      <div class="card-container clearfix" id="current">
 
         <div class="img-container full">
           <% if @card.animated == true %>
@@ -23,6 +23,24 @@
 
       </div> 
 
+
+      <div class="card-container clearfix" id="next">
+
+        <div class="img-container full">
+          <% if @card.animated == true %>
+              <%= image_tag(@card.link) %>
+          <% else %>
+              <%= 
+                image_tag( "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}")
+              %>
+          <% end %>
+        </div>
+            
+        <div class="txt-container"> 
+          <%= @card.title %>
+        </div> 
+
+      </div> 
 
     </div>
   </div>

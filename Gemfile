@@ -23,3 +23,5 @@ gem 'omniauth'
 gem 'omniauth-oauth2'
 
 gem 'debugger', group: [:development, :test]
+
+gem 'compass-rails'

@@ -11,9 +11,9 @@ class RemoteResource
     app = 'https://api.imgur.com/3/'
     service = 'gallery/hot/viral/0.json'
     if Rails.env.development?
-      HTTParty.get(app + service, :headers => {"Authorization" => "Client-ID 63c3978f06dac10"}) 
+      HTTParty.get(app + service, :headers => {"Authorization" => "Client-ID 63c3978f06dac10"})
     else
-      HTTParty.get(app + service, :headers => {"Authorization" => "Client-ID e0d1a9753eaf289"}) 
+      HTTParty.get(app + service, :headers => {"Authorization" => "Client-ID e0d1a9753eaf289"})
     end
   end
 
