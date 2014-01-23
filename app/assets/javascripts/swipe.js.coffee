@@ -45,11 +45,11 @@ $(document).ready ->
 
     e = e.originalEvent
     touchObject = e.changedTouches[0]
-    alert touchObject.pageX
+    #alert touchObject.pageX
 
     point = if e.touches then e.touches[0] else e
 
-    state.deltaX = point.pageX-state.startX
+    state.deltaX = touchObject.pageX - state.startX
     console.log('deltaX: '+state.deltaX)
 
     # state.current.css('transform', '')
