@@ -44,8 +44,7 @@ $(document).ready ->
     e.preventDefault()
     console.log "event:"
 
-    for key of e
-      alert "key: " + key + "\n" + "value: " + e[key]
+    alert e.changedTouches[0]
 
     alert Object.prototype.toString.apply(e)
     console.log "state:"
