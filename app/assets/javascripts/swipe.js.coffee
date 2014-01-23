@@ -29,7 +29,6 @@ $(document).ready ->
       state.updateCards()
 
 
-  # First event called on swipe
   state.swipeStart = (e) ->
     state.current.css('opacity', 0.6)
     return if state.initiated or state.waiting
@@ -41,7 +40,6 @@ $(document).ready ->
     state.startX = point.pageX
     state.current.addClass 'moving'
 
-  # Called when finger moves
   state.swipeMove = (e) ->
     return if !state.initiated or state.waiting
     e.preventDefault()
@@ -51,11 +49,11 @@ $(document).ready ->
 
     point = if e.touches then e.touches[0] else e
 
-    state.deltaX = point.pageX - state.startX
+    state.deltaX = touchObject.pageX - state.startX
     console.log('deltaX: '+state.deltaX)
 
     # state.current.css('transform', '')
-    translate = 'translate('+state.deltaX+'px,0)'
+    translate = 'translate('+state.deltaX+'px,0) rotate(50deg)'
     
     # if Math.abs(state.deltaX) > 100
     #   direction = if state.deltaX < 0 then -1 else 1
