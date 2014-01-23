@@ -35,7 +35,7 @@ html, body{
   .img-container {
     margin: 4px auto;
     width: 260px;
-    height:260px;
+    height:240px;
     overflow:hidden;
 
     // Examples
@@ -49,14 +49,16 @@ html, body{
     }
   }
 
-  .partial { max-height: 300px; }
+  .partial { max-height: 280px; }
 
   .full { height: auto; }
 
   .txt-container{
-    margin: 12px auto; 
+    margin: 2px auto; 
     width: 260px;
     font-weight:400;
+    min-height: 22px;
+    overflow:hidden;
     font-size:11px;
   }
 }

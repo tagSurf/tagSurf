@@ -32,6 +32,7 @@ $(document).ready ->
 
 
   state.swipeStart = (e) ->
+    console.log "here"
     state.current.css('opacity', 0.8)
     return if state.initiated or state.waiting
 

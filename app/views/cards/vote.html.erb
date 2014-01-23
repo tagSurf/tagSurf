@@ -14,7 +14,6 @@
                 <%= image_tag( "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}") %>
             <% end %>
           </div>
-
           <div class="txt-container">
             <%= @card.title %>
           </div>
@@ -30,9 +29,7 @@
                 %>
             <% end %>
           </div>
-
           <div class="txt-container">
-            <%#= link_to 'enlarge', card_path(@card) %>
             <%= @card.title %>
           </div>
        </div>
@@ -42,16 +39,3 @@
   <div class="clearfix"></div>
 
 <% end %>
-
-  <!--<div id="swiper">
-    <div id="current" class="current">
-      <img class="picture" />
-      <div class="text">hej hej hej</div>
-    </div>
-    <div id="next" class="next">
-      <img class="picture" />
-      <div class="text">next next next</div>
-    </div>
-  </div>-->
-
-
