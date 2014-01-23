@@ -32,7 +32,6 @@ $(document).ready ->
 
 
   state.swipeStart = (e) ->
-    console.log "here"
     state.current.css('opacity', 0.8)
     return if state.initiated or state.waiting
 
@@ -47,14 +46,13 @@ $(document).ready ->
   state.swipeMove = (e) ->
     return if !state.initiated or state.waiting
     e.preventDefault()
-
+    
     e = e.originalEvent
     touchObject = e.changedTouches[0]
 
     point = if e.touches then e.touches[0] else e
 
     state.deltaX = touchObject.pageX - state.startX
-    #console.log('deltaX: '+state.deltaX)
 
     translate = 'translate('+state.deltaX+'px,0)'
     
