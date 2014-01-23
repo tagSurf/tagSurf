@@ -6,7 +6,6 @@
     <div class="col-md-10" id="swiper">
 
       <div class="card-container clearfix" id="current">
-
         <div class="img-container full">
           <% if @card.animated == true %>
               <%= image_tag(@card.link) %>
@@ -20,12 +19,9 @@
         <div class="txt-container"> 
           <%= @card.title %>
         </div> 
-
       </div> 
 
-
-      <!-- <div class="card-container clearfix" id="next">
-
+      <div class="card-container clearfix" id="next">
         <div class="img-container full">
           <% if @card.animated == true %>
               <%= image_tag(@card.link) %>
@@ -39,8 +35,7 @@
         <div class="txt-container"> 
           <%= @card.title %>
         </div> 
-
-      </div> --> 
+      </div>
 
     </div>
   </div>

@@ -1,42 +1,10 @@
 <%= render 'shared/authentication' %>
 
 <% if current_user %>
-
-  <!--<div id="swiper">
-    <div id="current" class="current">
-      <img class="picture" />
-      <div class="text">hej hej hej</div>
-    </div>
-    <div id="next" class="next">
-      <img class="picture" />
-      <div class="text">next next next</div>
-    </div>
-  </div>-->
-
   <div class="row spaced">
-    <div class="col-md-6" id="swiper">
+    <div class="col-md-6 clearfix" id="swiper">
 
-       <div class="card-container" id="current">
-
-          <div class="img-container partial">
-            <% if @card.animated == true %>
-                <%= image_tag(@card.link) %>
-            <% else %>
-                <%= 
-                  image_tag( "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}") 
-                %>
-            <% end %>
-          </div>
-
-          <div class="txt-container">
-            <%= link_to 'enlarge', card_path(@card) %>
-            <%= @card.title %>
-          </div>
-
-       </div>
-
-       <!-- <div class="card-container" id="next">
-
+       <div class="card-container" id="next" data-id="<%= @card.id %>">
           <div class="img-container partial">
             <% if @card.animated == true %>
               <%= link_to(@card) do %>
@@ -50,14 +18,40 @@
           <div class="txt-container">
             <%= @card.title %>
           </div>
+       </div>
 
-       </div> -->
+       <div class="card-container" id="current" data-id="<%=@card.id %>">
+          <div class="img-container partial">
+            <% if @card.animated == true %>
+                <%= image_tag(@card.link) %>
+            <% else %>
+                <%= 
+                  image_tag( "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}") 
+                %>
+            <% end %>
+          </div>
+
+          <div class="txt-container">
+            <%#= link_to 'enlarge', card_path(@card) %>
+            <%= @card.title %>
+          </div>
+       </div>
 
     </div>
   </div>
   <div class="clearfix"></div>
 
-            <div class="info"></div>
-  <%= render 'shared/voting', object: @card %>
-
 <% end %>
+
+  <!--<div id="swiper">
+    <div id="current" class="current">
+      <img class="picture" />
+      <div class="text">hej hej hej</div>
+    </div>
+    <div id="next" class="next">
+      <img class="picture" />
+      <div class="text">next next next</div>
+    </div>
+  </div>-->
+
+

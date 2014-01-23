@@ -4,12 +4,8 @@ class CardsController < ApplicationController
 
   def add_vote
     @card = Card.find card_params[:id]
-    result = @card.vote :voter => @user, :vote => card_params[:vote]
-    if result
-      redirect_to :root, notice: "Vote recorded"
-    else
-      redirect_to :root, flash: "Something went wrong, please vote again"
-    end
+    @result = @card.vote :voter => @user, :vote => card_params[:vote]
+    render json: @result 
   end
 
   def vote

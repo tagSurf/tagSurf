@@ -32,7 +32,7 @@ $(document).ready ->
 
 
   state.swipeStart = (e) ->
-    state.current.css('opacity', 0.6)
+    state.current.css('opacity', 0.8)
     return if state.initiated or state.waiting
 
     e = e.originalEvent
@@ -41,7 +41,6 @@ $(document).ready ->
     state.initiated = true
     state.startX = point.pageX
     state.current.addClass 'moving'
-
 
 
   state.swipeMove = (e) ->
@@ -54,7 +53,7 @@ $(document).ready ->
     point = if e.touches then e.touches[0] else e
 
     state.deltaX = touchObject.pageX - state.startX
-    console.log('deltaX: '+state.deltaX)
+    #console.log('deltaX: '+state.deltaX)
 
     translate = 'translate('+state.deltaX+'px,0)'
     
@@ -70,9 +69,9 @@ $(document).ready ->
     
     state.current.css('transform', translate)
     state.current.css('-webkit-transform', translate)
+    state.current.css('-webkit-transform', translate)
 
   state.swipeEnd = (e) ->
-
     state.current.css('opacity', 1.0)
     state.current.css('background-color', '#f4f3f4')
     return unless state.initiated
@@ -86,7 +85,7 @@ $(document).ready ->
     if Math.abs(state.deltaX) <= 50
       # did not swipe far enough, return
       state.current.css('transform', 'translate(0)')
-      console.log('swipe return')
+      #console.log('swipe return')
       return
 
     state.waiting = true
@@ -95,12 +94,12 @@ $(document).ready ->
       # swipe right
       state.current.css('transform', 'translate(250px)')
       state.current.css('-webkit-transform', 'translate(250px)')
-      state.swipeRight()
+      state.swipeRight(state.current)
     else
       # swipe left
       state.current.css('transform', 'translate(-250px)')
       state.current.css('-webkit-transform', 'translate(-250px)')
-      state.swipeLeft()
+      state.swipeLeft(state.current)
 
     #swap current and next
     state.current.removeClass('current')
@@ -110,11 +109,19 @@ $(document).ready ->
 
     setTimeout state.nextPicture, 250-Math.abs(state.deltaX)
 
-  state.swipeRight = ->
-    console.log('swiped right')
+  state.swipeRight = (obj) ->
+    $.ajax
+      url: "/votes/#{obj.attr('data-id')}/like",
+    .success (data) ->
+      console.log data
+      state.updateCards()
 
-  state.swipeLeft = ->
-    console.log('swipe left')
+  state.swipeLeft = (obj) ->
+    $.ajax
+      url: "/votes/#{obj.attr('data-id')}/dislike",
+    .success (data) ->
+      console.log data
+      state.updateCards()
 
   state.nextPicture = ->
     state.queue.shift()
@@ -139,16 +146,16 @@ $(document).ready ->
     $('.text', state.next).text(state.queue[1].title)
 
 
-  state.wrapper.bind 'touchstart', state.swipeStart
-  state.wrapper.bind 'mousedown', state.swipeStart
-  #state.wrapper.bind 'touchmove', state.swipeStart
+  #state.wrapper.bind 'touchstart', state.swipeStart
+  #state.wrapper.bind 'mousedown', state.swipeStart
+  state.wrapper.bind 'touchmove', state.swipeStart
 
   state.wrapper.bind 'touchmove', state.swipeMove
-  state.wrapper.bind 'mousemove', state.swipeMove
+  #state.wrapper.bind 'mousemove', state.swipeMove
 
   state.wrapper.bind 'touchend', state.swipeEnd
   state.wrapper.bind 'touchcancel', state.swipeEnd
-  state.wrapper.bind 'mouseup', state.swipeEnd
+  #state.wrapper.bind 'mouseup', state.swipeEnd
 
   state.fetchData()
 
