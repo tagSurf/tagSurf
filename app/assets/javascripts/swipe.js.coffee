@@ -59,6 +59,10 @@ $(document).ready ->
     state.current.css('transform', translate)
     state.current.css('-webkit-transform', translate)
 
+    $( ".info" ).append( "<h3>Point:"+  point  +"</h3>" )
+    $( ".info" ).append( "<h3>e.touches: "+  e.touches  +"</h3>" )
+    $( ".info" ).append( "<h3>e.touches[0]: "+  e.touches[0]  +"</h3>" )
+
 
   state.swipeEnd = (e) ->
 
