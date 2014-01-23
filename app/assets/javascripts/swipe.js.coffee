@@ -28,29 +28,30 @@ $(document).ready ->
       state.queue = $.merge state.queue, data
       state.updateCards()
 
+
+  # First event called on swipe
   state.swipeStart = (e) ->
     state.current.css('opacity', 0.6)
     return if state.initiated or state.waiting
 
+    e = e.originalEvent
     point = if e.touches then e.touches[0] else e
 
     state.initiated = true
     state.startX = point.pageX
     state.current.addClass 'moving'
 
-
+  # Called when finger moves
   state.swipeMove = (e) ->
     return if !state.initiated or state.waiting
     e.preventDefault()
 
     e = e.originalEvent
     touchObject = e.changedTouches[0]
-    console.log touchObject.pageX
-    console.log state.startX
 
     point = if e.touches then e.touches[0] else e
 
-    state.deltaX = touchObject.pageX - state.startX
+    state.deltaX = point.pageX - state.startX
     console.log('deltaX: '+state.deltaX)
 
     # state.current.css('transform', '')
