@@ -29,7 +29,7 @@ $(document).ready ->
       state.updateCards()
 
   state.swipeStart = (e) ->
-    state.current.css('opacity', 0.8)
+    state.current.css('opacity', 0.4)
     return if state.initiated or state.waiting
 
     point = if e.touches then e.touches[0] else e
@@ -57,6 +57,7 @@ $(document).ready ->
     #   translate += ' rotate('+(direction*rotate)+'deg)'
     
     state.current.css('transform', translate)
+    state.current.css('-webkit-transform', translate)
 
 
   state.swipeEnd = (e) ->
@@ -78,10 +79,12 @@ $(document).ready ->
     if state.deltaX > 50
       # swipe right
       state.current.css('transform', 'translate(250px)')
+      state.current.css('-webkit-transform', 'translate(250px)')
       state.swipeRight()
     else
       # swipe left
       state.current.css('transform', 'translate(-250px)')
+      state.current.css('-webkit-transform', 'translate(-250px)')
       state.swipeLeft()
 
     #swap current and next
@@ -107,6 +110,7 @@ $(document).ready ->
 
     state.waiting = false
     state.next.css('transform', 'translate(0)')
+    state.next.css('-webkit-transform', 'translate(0)')
     $('img', state.next).attr("src", state.queue[1].link)
     state.updateCards()
 
