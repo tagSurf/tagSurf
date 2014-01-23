@@ -44,7 +44,8 @@ $(document).ready ->
     e.preventDefault()
 
     e = e.originalEvent
-    alert e.changedTouches[0] 
+    touchObject = e.changedTouches[0]
+    alert touchObject.pageX
 
     point = if e.touches then e.touches[0] else e
 
