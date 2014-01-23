@@ -42,13 +42,8 @@ $(document).ready ->
   state.swipeMove = (e) ->
     return if !state.initiated or state.waiting
     e.preventDefault()
-    console.log "event:"
 
-    alert e.changedTouches[0]
-
-    alert Object.prototype.toString.apply(e)
-    console.log "state:"
-    console.log state.startX
+    alert(e.changedTouches[0])
 
     point = if e.touches then e.touches[0] else e
 
