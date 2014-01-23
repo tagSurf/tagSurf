@@ -45,7 +45,8 @@ $(document).ready ->
 
     e = e.originalEvent
     touchObject = e.changedTouches[0]
-    #alert touchObject.pageX
+    console.log touchObject.pageX
+    console.log state.startX
 
     point = if e.touches then e.touches[0] else e
 
