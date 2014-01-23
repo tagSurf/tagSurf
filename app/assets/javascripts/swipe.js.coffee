@@ -43,7 +43,7 @@ $(document).ready ->
     return if !state.initiated or state.waiting
     e.preventDefault()
     console.log "event:"
-    alert e.type
+    alert e.pageX
     console.log "state:"
     console.log state.startX
 
