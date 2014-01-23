@@ -120,15 +120,15 @@ $(document).ready ->
 
 
   state.wrapper.bind 'touchstart', state.swipeStart
-  state.wrapper.bind 'mousedown', state.swipeStart
-  state.wrapper.bind 'touchmove', state.swipeStart
+  #state.wrapper.bind 'mousedown', state.swipeStart
+  #state.wrapper.bind 'touchmove', state.swipeStart
 
   state.wrapper.bind 'touchmove', state.swipeMove
-  state.wrapper.bind 'mousemove', state.swipeMove
+  #state.wrapper.bind 'mousemove', state.swipeMove
 
   state.wrapper.bind 'touchend', state.swipeEnd
   state.wrapper.bind 'touchcancel', state.swipeEnd
-  state.wrapper.bind 'mouseup', state.swipeEnd
+  #state.wrapper.bind 'mouseup', state.swipeEnd
 
   state.fetchData()
 
