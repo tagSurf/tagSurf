@@ -42,7 +42,7 @@ $(document).ready ->
   state.swipeMove = (e) ->
     return if !state.initiated or state.waiting
     e.preventDefault()
-    alert(e.changedTouches[0].pageX)
+    alert e.touches
 
     point = if e.touches then e.touches[0] else e
 
