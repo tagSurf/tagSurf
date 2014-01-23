@@ -43,7 +43,7 @@ $(document).ready ->
     return if !state.initiated or state.waiting
     e.preventDefault()
 
-    alert(e.changedTouches[0])
+    alert e 
 
     point = if e.touches then e.touches[0] else e
 
