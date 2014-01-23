@@ -46,11 +46,7 @@
                 <%= image_tag(@card.link) %>
               <% end %>
             <% else %>
-              <%= link_to(@card) do %>
-                <%= 
-                  image_tag( "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}") 
-                %>
-              <% end %>
+                <%= image_tag( "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}") %>
             <% end %>
           </div>
 

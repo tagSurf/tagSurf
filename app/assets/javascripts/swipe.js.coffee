@@ -29,6 +29,7 @@ $(document).ready ->
       state.updateCards()
 
   state.swipeStart = (e) ->
+    state.current.css('opacity', 0.8)
     return if state.initiated or state.waiting
 
     point = if e.touches then e.touches[0] else e
