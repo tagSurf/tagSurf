@@ -1,4 +1,6 @@
 $(document).ready ->
+  FastClick.attach(document.body)
+
   state =
     initiated: false
     waiting: false
@@ -40,6 +42,8 @@ $(document).ready ->
     state.startX = point.pageX
     state.current.addClass 'moving'
 
+
+
   state.swipeMove = (e) ->
     return if !state.initiated or state.waiting
     e.preventDefault()
@@ -52,13 +56,17 @@ $(document).ready ->
     state.deltaX = touchObject.pageX - state.startX
     console.log('deltaX: '+state.deltaX)
 
-    # state.current.css('transform', '')
-    translate = 'translate('+state.deltaX+'px,0) rotate(50deg)'
+    translate = 'translate('+state.deltaX+'px,0)'
     
-    # if Math.abs(state.deltaX) > 100
-    #   direction = if state.deltaX < 0 then -1 else 1
-    #   rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/20.0, 0), 90)
-    #   translate += ' rotate('+(direction*rotate)+'deg)'
+    if Math.abs(state.deltaX) > 100
+      direction = if state.deltaX < 0 then -1 else 1
+      rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/20.0, 0), 90)
+      translate += ' rotate('+(direction*rotate)+'deg)'
+      if direction == -1
+        state.current.css('background-color', '#E56E6E')
+      else
+        state.current.css('background-color', '#8EE5B0')
+      
     
     state.current.css('transform', translate)
     state.current.css('-webkit-transform', translate)
@@ -66,8 +74,10 @@ $(document).ready ->
   state.swipeEnd = (e) ->
 
     state.current.css('opacity', 1.0)
+    state.current.css('background-color', '#f4f3f4')
     return unless state.initiated
 
+    e = e.originalEvent
     point = if e.touches then e.touches[0] else e
 
     state.initiated = false
