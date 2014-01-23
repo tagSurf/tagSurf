@@ -20,19 +20,16 @@
 
           <div class="img-container partial">
             <% if @card.animated == true %>
-              <%= link_to(@card) do %>
                 <%= image_tag(@card.link) %>
-              <% end %>
             <% else %>
-              <%= link_to(@card) do %>
                 <%= 
                   image_tag( "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}") 
                 %>
-              <% end %>
             <% end %>
           </div>
 
           <div class="txt-container">
+            <%= link_to 'enlarge', card_path(@card) %>
             <%= @card.title %>
           </div>
 
