@@ -31,7 +31,6 @@
           <div class="txt-container">
             <%= link_to 'enlarge', card_path(@card) %>
             <%= @card.title %>
-            <div class="info"></div>
           </div>
 
        </div>
@@ -58,6 +57,7 @@
   </div>
   <div class="clearfix"></div>
 
+            <div class="info"></div>
   <%= render 'shared/voting', object: @card %>
 
 <% end %>

@@ -42,6 +42,7 @@ $(document).ready ->
   state.swipeMove = (e) ->
     return if !state.initiated or state.waiting
     e.preventDefault()
+    alert(e.changedTouches[0].pageX)
 
     point = if e.touches then e.touches[0] else e
 
@@ -59,9 +60,8 @@ $(document).ready ->
     state.current.css('transform', translate)
     state.current.css('-webkit-transform', translate)
 
-    $( ".info" ).append( "<h3>Point:"+  point  +"</h3>" )
-    $( ".info" ).append( "<h3>e.touches: "+  e.touches  +"</h3>" )
-    $( ".info" ).append( "<h3>e.touches[0]: "+  e.touches[0]  +"</h3>" )
+    $(".info").append( "<h3>e.touches: "+  e.touches  +"</h3>" )
+    $(".info").append( "<h3>e.touches[0]: "+  e.touches[0]  +"</h3>" )
 
 
   state.swipeEnd = (e) ->
@@ -131,15 +131,15 @@ $(document).ready ->
 
 
   state.wrapper.bind 'touchstart', state.swipeStart
-  #state.wrapper.bind 'mousedown', state.swipeStart
+  state.wrapper.bind 'mousedown', state.swipeStart
   #state.wrapper.bind 'touchmove', state.swipeStart
 
   state.wrapper.bind 'touchmove', state.swipeMove
-  #state.wrapper.bind 'mousemove', state.swipeMove
+  state.wrapper.bind 'mousemove', state.swipeMove
 
   state.wrapper.bind 'touchend', state.swipeEnd
   state.wrapper.bind 'touchcancel', state.swipeEnd
-  #state.wrapper.bind 'mouseup', state.swipeEnd
+  state.wrapper.bind 'mouseup', state.swipeEnd
 
   state.fetchData()
 
