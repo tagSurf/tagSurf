@@ -2,7 +2,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   
   def all
     @user = User.from_oauth(request.env["omniauth.auth"], params[:code])
-    if @user.persisted?
+    if @user.persisted? && @user.beta_user == true
       sign_in_and_redirect @user, :event => :authentication 
       set_flash_message(:notice, :success, :kind => "Imgur") if is_navigational_format?
     else
