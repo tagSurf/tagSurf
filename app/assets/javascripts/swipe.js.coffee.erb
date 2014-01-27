@@ -110,14 +110,14 @@ $(document).ready ->
 
   state.swipeRight = (obj) ->
     $.ajax
-      url: "/votes/#{obj.attr('data-id')}/like",
+      url: "/votes/#{ state.queue[0].id }/like",
     .success (data) ->
       console.log data
       state.updateCards()
 
   state.swipeLeft = (obj) ->
     $.ajax
-      url: "/votes/#{obj.attr('data-id')}/dislike",
+      url: "/votes/#{ state.queue[0].id }/dislike",
     .success (data) ->
       console.log data
       state.updateCards()
@@ -180,9 +180,6 @@ $(document).ready ->
   #state.wrapper.bind 'mouseup', state.swipeEnd
 
   state.fetchData()
-  @cards = state.queue
-  window.CARDS = @cards["1"]
-
 
   
 
