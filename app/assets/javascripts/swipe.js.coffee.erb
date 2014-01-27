@@ -27,7 +27,7 @@ $(document).ready ->
     $.ajax
       url: "/cards/next",
     .success (data) ->
-      console.log data
+      #console.log data
       state.queue = $.merge state.queue, data
       state.updateCards()
 
@@ -44,6 +44,7 @@ $(document).ready ->
 
 
   state.swipeMove = (e) ->
+    console.log "moving"
     return if !state.initiated or state.waiting
     e.preventDefault()
     
@@ -168,7 +169,7 @@ $(document).ready ->
 
 
 
-  state.wrapper.bind 'touchstart', state.swipeStart
+  #state.wrapper.bind 'touchstart', state.swipeStart
   #state.wrapper.bind 'mousedown', state.swipeStart
   state.wrapper.bind 'touchmove', state.swipeStart
 
