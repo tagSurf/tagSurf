@@ -1,10 +1,18 @@
 <%= render 'shared/authentication' %>
 
 <% if current_user %>
-  <div class="row spaced">
-    <div class="col-md-6 clearfix" id="swiper">
+
+  <div class="row spaced clearfix">
+    <div class="clearfix" id="swiper">
     </div>
   </div>
-  <div class="clearfix"></div>
+
+  <br />
+
+  <div class="row">
+    <div class="col-sm-4 center">
+      <span class="expand-btn glyphicon glyphicon-chevron-down"></span>
+    </div>
+  </div>
 
 <% end %>

@@ -15,4 +15,5 @@
 //= require turbolinks
 //= require bootstrap
 //= require fastclick
+//= require underscore
 //= require_tree .
