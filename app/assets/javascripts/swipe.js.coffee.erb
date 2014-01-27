@@ -81,7 +81,7 @@ $(document).ready ->
     state.initiated = false
     state.current.removeClass 'moving'
 
-    if Math.abs(state.deltaX) <= 100
+    if Math.abs(state.deltaX) <= 50
       # did not swipe far enough, return
       state.current.css('transform', 'translate(0)')
       #console.log('swipe return')
@@ -145,7 +145,7 @@ $(document).ready ->
     $('.text', state.next).text(state.queue[1].title)
 
     template = """
-        <div class="card-container" id="next" data-id="#{ state.queue[1].id }">
+        <div class="card-container" id="next">
            <div class="img-container partial">
               <img src="#{state.queue[1].link} />
            </div>
@@ -154,7 +154,7 @@ $(document).ready ->
            </div>
         </div>
 
-        <div class="card-container" id="current" data-id="#{ state.queue[0].id }">
+        <div class="card-container" id="current">
            <div class="img-container partial">
               <img src="#{state.queue[0].link} />
            </div>
@@ -169,15 +169,15 @@ $(document).ready ->
 
 
   state.wrapper.bind 'touchstart', state.swipeStart
-  state.wrapper.bind 'mousedown', state.swipeStart
+  #state.wrapper.bind 'mousedown', state.swipeStart
   state.wrapper.bind 'touchmove', state.swipeStart
 
   state.wrapper.bind 'touchmove', state.swipeMove
-  state.wrapper.bind 'mousemove', state.swipeMove
+  #state.wrapper.bind 'mousemove', state.swipeMove
 
   state.wrapper.bind 'touchend', state.swipeEnd
   state.wrapper.bind 'touchcancel', state.swipeEnd
-  state.wrapper.bind 'mouseup', state.swipeEnd
+  #state.wrapper.bind 'mouseup', state.swipeEnd
 
   state.fetchData()
 
