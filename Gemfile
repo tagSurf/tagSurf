@@ -9,7 +9,6 @@ gem 'turbolinks'
 gem 'rails_12factor', group: :production
 gem 'httparty'
 gem 'acts_as_votable', '~> 0.8.0'
-gem 'handlebars_assets'
 
 # gem 'bcrypt-ruby', '~> 3.1.2'
 

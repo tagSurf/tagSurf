@@ -15,6 +15,4 @@
 //= require turbolinks
 //= require bootstrap
 //= require fastclick
-//= require handlebars.runtime
-//= require_tree ./templates
 //= require_tree .
