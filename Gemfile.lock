@@ -64,6 +64,11 @@ GEM
     faraday (0.8.8)
       multipart-post (~> 1.2.0)
     fssm (0.2.10)
+    handlebars_assets (0.15)
+      execjs (>= 1.2.9)
+      multi_json
+      sprockets (>= 2.0.3)
+      tilt
     hashie (1.2.0)
     hike (1.2.3)
     httparty (0.11.0)
@@ -171,6 +176,7 @@ DEPENDENCIES
   compass-rails
   debugger
   devise
+  handlebars_assets
   httparty
   jbuilder (~> 1.2)
   jquery-rails

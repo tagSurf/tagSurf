@@ -1,0 +1,31 @@
+<div class="card-container" id="next" data-id="{{ card.id }}"> 
+
+  <div class="img-container partial"> 
+    <% if @card.animated == true %> 
+        <%= image_tag(@card.link) %> 
+    <% else %> 
+        <%= image_tag( "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}") %> 
+    <% end %> 
+  </div> 
+
+  <div class="txt-container"> 
+    <%= @card.title %> 
+  </div> 
+</div> 
+
+<div class="card-container" id="current" data-id="{{ @card.id }}"> 
+
+  <div class="img-container partial"> 
+    <% if @card.animated == true %> 
+        <%= image_tag(@card.link) %> 
+    <% else %> 
+        <%=  
+          image_tag( "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}")  
+        %> 
+    <% end %> 
+  </div> 
+
+  <div class="txt-container"> 
+    <%= @card.title %> 
+  </div> 
+</div> 
