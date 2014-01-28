@@ -9,6 +9,9 @@ class User < ActiveRecord::Base
   CLIENT_ID = Rails.env.production? ? 'e0d1a9753eaf289' : '63c3978f06dac10'
   CLIENT_SECRET = Rails.env.production? ? '804e630c072f527b68bdfcc6a08ccbfe2492ab99' : '4eea9bc017f984049cfcd748fb3d8de17ae1cb8e'
 
+
+  validates :beta_user, inclusion: [true]
+
   def expired_imgur_token?
     Time.now > imgur_token_expires_at
   end 
