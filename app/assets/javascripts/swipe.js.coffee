@@ -80,7 +80,7 @@ $(document).ready ->
     state.initiated = false
     state.current.removeClass 'moving'
 
-    if Math.abs(state.deltaX) <= 180
+    if Math.abs(state.deltaX) <= 150
       # did not swipe far enough, return
       state.current.css('transform', 'translate(0)')
       #console.log('swipe return')
@@ -88,7 +88,7 @@ $(document).ready ->
 
     state.waiting = true
 
-    if state.deltaX > 180
+    if state.deltaX > 150
       # swipe right
       state.current.css('transform', 'translate(250px)')
       state.current.css('-webkit-transform', 'translate(250px)')
