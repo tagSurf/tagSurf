@@ -88,7 +88,7 @@ $(document).ready ->
 
     state.waiting = true
 
-    if state.deltaX > 150
+    if state.deltaX > 120
       # swipe right
       state.current.css('transform', 'translate(250px)')
       state.current.css('-webkit-transform', 'translate(250px)')
