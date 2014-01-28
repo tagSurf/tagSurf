@@ -62,7 +62,7 @@ $(document).ready ->
         rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/35.0, 0), 90)
       else
         state.current.css('background-color', '#8EE5B0')
-        rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/15.0, 0), 90)
+        rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/20.0, 0), 90)
     
       translate += ' rotate('+(direction*rotate)+'deg)'
 
