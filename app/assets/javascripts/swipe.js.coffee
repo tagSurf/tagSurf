@@ -55,7 +55,7 @@ $(document).ready ->
 
     translate = 'translate('+state.deltaX+'px,0)'
     
-    if Math.abs(state.deltaX) > 100
+    if Math.abs(state.deltaX) > 70
       direction = if state.deltaX < 0 then -1 else 1
       if direction == -1
         state.current.css('background-color', '#E56E6E')
@@ -88,7 +88,7 @@ $(document).ready ->
 
     state.waiting = true
 
-    if state.deltaX > 100
+    if state.deltaX > 90
       # swipe right
       state.current.css('transform', 'translate(250px)')
       state.current.css('-webkit-transform', 'translate(250px)')
