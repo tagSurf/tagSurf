@@ -80,7 +80,7 @@ $(document).ready ->
     state.initiated = false
     state.current.removeClass 'moving'
 
-    if Math.abs(state.deltaX) <= 150
+    if Math.abs(state.deltaX) <= 100
       # did not swipe far enough, return
       state.current.css('transform', 'translate(0)')
       #console.log('swipe return')
