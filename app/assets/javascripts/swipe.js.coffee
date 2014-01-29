@@ -9,7 +9,9 @@ $(document).ready ->
     current: $('#current')
     next: $('#next')
     startX: 0
+    startY: 0
     deltaX: 0
+    deltaY: 0
     snapThreshold: 50
     swipeStart: null
     swipeMove: null
@@ -25,7 +27,10 @@ $(document).ready ->
     $.ajax
       url: "/cards/next",
     .success (data) ->
-      console.log "fetched"
+      if state.queue.length
+        data = data.filter((val) ->
+          state.queue.indexOf(val) is -1
+        )
       state.queue = _.union(state.queue, data)
       console.log state.queue
       state.updateCards()
@@ -41,7 +46,6 @@ $(document).ready ->
     state.startX = point.pageX
     state.current.addClass 'moving'
 
-
   state.swipeMove = (e) ->
     return if !state.initiated or state.waiting
     e.preventDefault()
@@ -52,6 +56,12 @@ $(document).ready ->
     point = if e.touches then e.touches[0] else e
 
     state.deltaX = touchObject.pageX - state.startX
+    state.deltaY = touchObject.pageY - state.startY
+
+    #console.log "Delta X"
+    #console.log state.deltaX
+    #console.log "Delta Y"
+    #console.log state.deltaY
 
     translate = 'translate('+state.deltaX+'px,0)'
     

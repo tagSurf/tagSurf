@@ -28,7 +28,7 @@ class CardsController < ApplicationController
 
   def next
     @cards = Card.next(@user)
-    render json: @cards
+    render json: @cards.to_a[2..9]
   end
 
   private
