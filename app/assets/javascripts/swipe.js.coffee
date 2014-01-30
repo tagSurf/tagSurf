@@ -27,12 +27,9 @@ $(document).ready ->
     $.ajax
       url: "/cards/next",
     .success (data) ->
-      if state.queue.length
-        data = data.filter((val) ->
-          state.queue.indexOf(val) is -1
-        )
       state.queue = _.union(state.queue, data)
-      console.log state.queue
+      if state.queue.length > 9
+        state.queue.splice(0,2)
       state.updateCards()
 
   state.swipeStart = (e) ->
