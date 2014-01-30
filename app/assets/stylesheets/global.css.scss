@@ -69,7 +69,9 @@ html, body{
     font-weight:400;
     min-height: 22px;
     overflow:hidden;
-    font-size:12px;
+    font-size:14px;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-weight:300;
     text-align:center;
    }
 }
@@ -88,12 +90,14 @@ html, body{
 }
 
 
-.current{
+#current{
   z-index:100;
 }
 
-.next{
+#next{
   z-index:10;
+  max-height:320px;
+  overflow:hidden;
 }
 
 

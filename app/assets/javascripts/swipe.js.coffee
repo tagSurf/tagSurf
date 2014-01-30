@@ -12,6 +12,7 @@ $(document).ready ->
     startY: 0
     deltaX: 0
     deltaY: 0
+    fullscreen: false
     snapThreshold: 50
     swipeStart: null
     swipeMove: null
@@ -33,7 +34,6 @@ $(document).ready ->
       state.updateCards()
 
   state.swipeStart = (e) ->
-    state.current.css('opacity', 0.8)
     return if state.initiated or state.waiting
 
     e = e.originalEvent
@@ -41,6 +41,7 @@ $(document).ready ->
 
     state.initiated = true
     state.startX = point.pageX
+    state.startY = point.pageY
     state.current.addClass 'moving'
 
   state.swipeMove = (e) ->
@@ -55,26 +56,28 @@ $(document).ready ->
     state.deltaX = touchObject.pageX - state.startX
     state.deltaY = touchObject.pageY - state.startY
 
-    #console.log "Delta X"
-    #console.log state.deltaX
-    #console.log "Delta Y"
-    #console.log state.deltaY
+    if Math.abs(state.deltaY) < Math.abs(state.deltaX)
+      state.current.css('opacity', 0.8)
+      translate = 'translate('+state.deltaX+'px,0)'
+      
+      if Math.abs(state.deltaX) > 70
+        direction = if state.deltaX < 0 then -1 else 1
+        if direction == -1
+          state.current.css('background-color', '#E56E6E')
+          rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/35.0, 0), 90)
+        else
+          state.current.css('background-color', '#8EE5B0')
+          rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/20.0, 5), 90)
+      
+        translate += ' rotate('+(direction*rotate)+'deg)'
 
-    translate = 'translate('+state.deltaX+'px,0)'
-    
-    if Math.abs(state.deltaX) > 70
-      direction = if state.deltaX < 0 then -1 else 1
-      if direction == -1
-        state.current.css('background-color', '#E56E6E')
-        rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/35.0, 0), 90)
-      else
-        state.current.css('background-color', '#8EE5B0')
-        rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/20.0, 5), 90)
-    
-      translate += ' rotate('+(direction*rotate)+'deg)'
-
-    state.current.css('transform', translate)
-    state.current.css('-webkit-transform', translate)
+      state.current.css('transform', translate)
+      state.current.css('-webkit-transform', translate)
+      state.current.css('-moz-transform', translate)
+    else
+      #return if state.fullscreen == false
+      $('body').scrollTop(state.startY)
+      #console.log "swiping vertical"
 
   state.swipeEnd = (e) ->
     state.current.css('opacity', 1.0)
@@ -99,11 +102,13 @@ $(document).ready ->
       # swipe right
       state.current.css('transform', 'translate(250px)')
       state.current.css('-webkit-transform', 'translate(250px)')
+      state.current.css('-moz-transform', 'translate(250px)')
       state.swipeRight(state.current)
     else
       # swipe left
       state.current.css('transform', 'translate(-250px)')
       state.current.css('-webkit-transform', 'translate(-250px)')
+      state.current.css('-moz-transform', 'translate(-250px)')
       state.swipeLeft(state.current)
 
     #swap current and next
