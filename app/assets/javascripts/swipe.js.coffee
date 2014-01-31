@@ -8,6 +8,7 @@ $(document).ready ->
     wrapper: $('#swiper')
     current: $('#current')
     next: $('#next')
+    fullscreenButton: $('.fullscreen')
     startX: 0
     startY: 0
     deltaX: 0
@@ -37,6 +38,7 @@ $(document).ready ->
     return if state.initiated or state.waiting
 
     e = e.originalEvent
+    return if e.touches.length > 1
     point = if e.touches then e.touches[0] else e
 
     state.initiated = true
@@ -48,6 +50,7 @@ $(document).ready ->
     return if !state.initiated or state.waiting
     
     e = e.originalEvent
+    return if e.touches.length > 1
     touchObject = e.changedTouches[0]
 
     point = if e.touches then e.touches[0] else e
@@ -56,7 +59,6 @@ $(document).ready ->
     state.deltaY = touchObject.pageY - state.startY
 
     if Math.abs(state.deltaY) < Math.abs(state.deltaX)
-      e.preventDefault()
       translate = 'translate('+state.deltaX+'px,0)'
       
       if Math.abs(state.deltaX) > 70
@@ -121,18 +123,15 @@ $(document).ready ->
     $.ajax
       url: "/votes/#{ state.queue[0].id }/like",
     .success (data) ->
-      console.log data
       state.updateCards()
 
   state.swipeLeft = (obj) ->
     $.ajax
       url: "/votes/#{ state.queue[0].id }/dislike",
     .success (data) ->
-      console.log data
       state.updateCards()
 
   state.nextPicture = ->
-    $('.expand-btn').show()
     state.queue.shift()
     current = state.current
     next = state.next
@@ -150,14 +149,14 @@ $(document).ready ->
 
   state.expand = ->
     state.fullscreen = true
-    $('.expand-btn').hide()
+    state.fullscreenButton.hide()
     el = state.current
     el.addClass('full')
 
   state.updateCards = ->
     template = """
         <div class="card-container clearfix" id="next">
-           <div class="img-container">
+           <div class="img-container clearfix">
               <img src="#{state.queue[1].link}" />
            </div>
            <div class="txt-container clearfix">
@@ -165,8 +164,8 @@ $(document).ready ->
            </div>
         </div>
 
-        <div class="card-container" id="current">
-           <div class="img-container">
+        <div class="card-container clearfix" id="current">
+           <div class="img-container clearfix">
               <img src="#{state.queue[0].link}" />
            </div>
            <div class="txt-container clearfix">
@@ -179,7 +178,14 @@ $(document).ready ->
     state.current = $('#current')
     state.next = $('#next')
     state.fullscreen = false
-   
+ 
+    element = state.current[0]
+
+    if (element.offsetHeight < element.scrollHeight) || (element.offsetWidth < element.scrollWidth)
+      state.fullscreenButton.show()
+    else
+      state.fullscreenButton.hide()
+  
     $('img', state.current).attr("src", state.queue[0].link)
     $('.text', state.current).text(state.queue[0].title)
     $('img', state.next).attr("src", state.queue[1].link)
@@ -196,6 +202,6 @@ $(document).ready ->
   state.wrapper.bind 'touchcancel', state.swipeEnd
   #state.wrapper.bind 'mouseup', state.swipeEnd
 
-  $('.expand-btn').bind 'touchstart', state.expand
+  state.fullscreenButton.bind 'touchstart', state.expand
 
   state.fetchData()

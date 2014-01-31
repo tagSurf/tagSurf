@@ -24,30 +24,28 @@ html, body{
 
 // TODO Move to cards.css.scss
 #swiper{
-  min-height:310px;
-  padding:0 10px;
+  min-height:300px;
+  padding: 40px 10px;
   width:300px;
-  margin: 0 auto;
-  position:relative;
-  margin-left:15px;
-  margin-right:0px;
+  margin: 0 0 0 15px;
 }
 
 .card-container{
   width:300px;
   margin:0 auto;
-  height: 300px;
+  height: 290px;
   background:#f4f3f4;
   border:#d8d8d8 thin solid;
   border-bottom-width: 1px;
   position:absolute;
-  top:0;
+  top:65px;
+  float:none;
   min-height:340px;
-  z-index:2;
+  z-index:20;
   overflow-y:hidden;
 
   .img-container {
-    margin: 4px auto;
+    margin: 4px auto 0;
     width: 280px;
 
     // Examples
@@ -77,18 +75,16 @@ html, body{
 .partial { max-height: 280px; }
 
 .full { 
-  height: auto; 
+  height:auto; 
   overflow:visible; 
-  content: " ";
 }
 
-
-.center{
-  z-index:1;
+.fullscreen{
   width:300px;
   margin: 0 auto !important;
   float: none !important;
   padding:15px 0;
+
   span.expand-btn{
     width:300px;
     background:#f4f3f4;
@@ -96,7 +92,7 @@ html, body{
     border-bottom-width: 2px;
     font-size:20px;
     text-align:center;
-    padding:10px 0 10px 5px;
+    padding:20px 0 10px 5px;
   }
 }
 
@@ -113,6 +109,7 @@ html, body{
 /* Global configuration */
 .container {
   padding:0 0 0 0;
+  height:100%;
 }
 
 .row{
