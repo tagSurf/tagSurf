@@ -156,8 +156,8 @@ $(document).ready ->
 
   state.updateCards = ->
     template = """
-        <div class="card-container" id="next">
-           <div class="img-container partial">
+        <div class="card-container clearfix" id="next">
+           <div class="img-container">
               <img src="#{state.queue[1].link}" />
            </div>
            <div class="txt-container clearfix">
@@ -166,7 +166,7 @@ $(document).ready ->
         </div>
 
         <div class="card-container" id="current">
-           <div class="img-container partial">
+           <div class="img-container">
               <img src="#{state.queue[0].link}" />
            </div>
            <div class="txt-container clearfix">

@@ -49,7 +49,6 @@ html, body{
   .img-container {
     margin: 4px auto;
     width: 280px;
-    overflow:hidden;
 
     // Examples
     // Very tall image http://i.imgur.com/JAN3GYF.jpg
@@ -77,7 +76,11 @@ html, body{
 
 .partial { max-height: 280px; }
 
-.full { height: auto; }
+.full { 
+  height: auto; 
+  overflow:visible; 
+  content: " ";
+}
 
 
 .center{
