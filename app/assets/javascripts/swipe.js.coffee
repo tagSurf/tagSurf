@@ -46,7 +46,6 @@ $(document).ready ->
 
   state.swipeMove = (e) ->
     return if !state.initiated or state.waiting
-    e.preventDefault()
     
     e = e.originalEvent
     touchObject = e.changedTouches[0]
@@ -57,7 +56,7 @@ $(document).ready ->
     state.deltaY = touchObject.pageY - state.startY
 
     if Math.abs(state.deltaY) < Math.abs(state.deltaX)
-      state.current.css('opacity', 0.8)
+      e.preventDefault()
       translate = 'translate('+state.deltaX+'px,0)'
       
       if Math.abs(state.deltaX) > 70
@@ -74,13 +73,12 @@ $(document).ready ->
       state.current.css('transform', translate)
       state.current.css('-webkit-transform', translate)
       state.current.css('-moz-transform', translate)
+    else if state.fullscreen == false
+      e.preventDefault()
     else
-      #return if state.fullscreen == false
-      $('body').scrollTop(state.startY)
-      #console.log "swiping vertical"
+      return
 
   state.swipeEnd = (e) ->
-    state.current.css('opacity', 1.0)
     state.current.css('background-color', '#f4f3f4')
     return unless state.initiated
 
@@ -151,6 +149,7 @@ $(document).ready ->
       state.fetchData()
 
   state.expand = ->
+    state.fullscreen = true
     $('.expand-btn').hide()
     el = state.current.children("div")
     el.addClass('full').removeClass('partial')
@@ -179,6 +178,7 @@ $(document).ready ->
     $('#swiper').html(template)
     state.current = $('#current')
     state.next = $('#next')
+    state.fullscreen = false
    
     $('img', state.current).attr("src", state.queue[0].link)
     $('.text', state.current).text(state.queue[0].title)
