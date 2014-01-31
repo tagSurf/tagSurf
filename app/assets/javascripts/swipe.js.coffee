@@ -151,8 +151,8 @@ $(document).ready ->
   state.expand = ->
     state.fullscreen = true
     $('.expand-btn').hide()
-    el = state.current.children("div")
-    el.addClass('full').removeClass('partial')
+    el = state.current
+    el.addClass('full')
 
   state.updateCards = ->
     template = """

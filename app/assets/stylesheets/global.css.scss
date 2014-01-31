@@ -36,14 +36,15 @@ html, body{
 .card-container{
   width:300px;
   margin:0 auto;
-  height: auto;
+  height: 300px;
   background:#f4f3f4;
   border:#d8d8d8 thin solid;
-  border-bottom-width: 2px;
+  border-bottom-width: 1px;
   position:absolute;
   top:0;
   min-height:340px;
   z-index:2;
+  overflow-y:hidden;
 
   .img-container {
     margin: 4px auto;
@@ -61,10 +62,6 @@ html, body{
     }
   }
 
-  .partial { max-height: 280px; }
-
-  .full { height: auto; }
-
   .txt-container{
     margin: 10px auto; 
     width: 280px;
@@ -78,19 +75,27 @@ html, body{
    }
 }
 
+.partial { max-height: 280px; }
+
+.full { height: auto; }
+
+
 .center{
   z-index:1;
-  width:30px;
+  width:300px;
   margin: 0 auto !important;
   float: none !important;
   padding:15px 0;
   span.expand-btn{
-    font-size:32px;
+    width:300px;
+    background:#f4f3f4;
+    border:#d8d8d8 thin solid;
+    border-bottom-width: 2px;
+    font-size:20px;
     text-align:center;
-    padding:0 0 0 5px;
+    padding:10px 0 10px 5px;
   }
 }
-
 
 #current{
   z-index:100;
@@ -101,7 +106,6 @@ html, body{
   max-height:320px;
   overflow:hidden;
 }
-
 
 /* Global configuration */
 .container {
