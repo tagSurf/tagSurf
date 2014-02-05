@@ -68,8 +68,7 @@ $(document).ready ->
     state.deltaX = touchObject.pageX - state.startX
     state.deltaY = touchObject.pageY - state.startY
 
-    if Math.abs(state.deltaY) < Math.abs(state.deltaX)
-      e.preventDefault()
+    if (Math.abs(state.deltaY) - 1) < Math.abs(state.deltaX)
       translate = 'translate('+state.deltaX+'px,0)'
       
       if Math.abs(state.deltaX) > 70
@@ -86,6 +85,7 @@ $(document).ready ->
       state.current.css('transform', translate)
       state.current.css('-webkit-transform', translate)
       state.current.css('-moz-transform', translate)
+      e.preventDefault()
     else if state.fullscreen == false
       e.preventDefault()
     else
@@ -95,6 +95,7 @@ $(document).ready ->
       
 
   state.swipeEnd = (e) ->
+    e.preventDefault()
     state.current.css('background-color', '#f4f3f4')
     return unless state.initiated
 
