@@ -89,6 +89,7 @@ $(document).ready ->
     else if state.fullscreen == false
       e.preventDefault()
     else
+      e.preventDefault()
       return
      
 
