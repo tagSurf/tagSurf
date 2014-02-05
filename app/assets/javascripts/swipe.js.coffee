@@ -68,7 +68,7 @@ $(document).ready ->
     state.deltaX = touchObject.pageX - state.startX
     state.deltaY = touchObject.pageY - state.startY
 
-    if (Math.abs(state.deltaY) - 1) < Math.abs(state.deltaX)
+    if Math.abs(state.deltaY) < Math.abs(state.deltaX)
       translate = 'translate('+state.deltaX+'px,0)'
       
       if Math.abs(state.deltaX) > 70
