@@ -78,6 +78,7 @@ $(document).ready ->
           rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/35.0, 0), 90)
         else
           state.current.css('background-color', '#8EE5B0')
+          state.current.css('margin', '0 0 0 0')
           rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/20.0, 5), 90)
       
         translate += ' rotate('+(direction*rotate)+'deg)'
@@ -89,7 +90,7 @@ $(document).ready ->
     else if state.fullscreen == false
       e.preventDefault()
     else
-      e.preventDefault()
+      #e.preventDefault()
       return
      
 
