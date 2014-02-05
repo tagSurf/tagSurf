@@ -69,6 +69,7 @@ $(document).ready ->
     state.deltaY = touchObject.pageY - state.startY
 
     if Math.abs(state.deltaY) < Math.abs(state.deltaX)
+      e.preventDefault()
       translate = 'translate('+state.deltaX+'px,0)'
       
       if Math.abs(state.deltaX) > 70
@@ -78,7 +79,6 @@ $(document).ready ->
           rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/35.0, 0), 90)
         else
           state.current.css('background-color', '#8EE5B0')
-          state.current.css('margin', '0 0 0 0')
           rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/20.0, 5), 90)
       
         translate += ' rotate('+(direction*rotate)+'deg)'
@@ -86,7 +86,6 @@ $(document).ready ->
       state.current.css('transform', translate)
       state.current.css('-webkit-transform', translate)
       state.current.css('-moz-transform', translate)
-      e.preventDefault()
     else if state.fullscreen == false
       e.preventDefault()
     else
