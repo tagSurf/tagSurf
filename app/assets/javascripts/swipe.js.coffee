@@ -1,6 +1,16 @@
 $(document).ready ->
   FastClick.attach(document.body)
 
+  # FTScroller implementation
+  # https://github.com/ftlabs/ftscroller
+  #scroller = new FTScroller(document.getElementById("mwa"),
+     #  scrollingX: false,
+     #  scrollingY: true,
+     #  alwaysScroll: true,
+     #  flinging: false,
+     #  updateOnWindowResize: true
+     #)
+    
   state =
     initiated: false
     waiting: false
@@ -59,6 +69,7 @@ $(document).ready ->
     state.deltaY = touchObject.pageY - state.startY
 
     if Math.abs(state.deltaY) < Math.abs(state.deltaX)
+      e.preventDefault()
       translate = 'translate('+state.deltaX+'px,0)'
       
       if Math.abs(state.deltaX) > 70
@@ -79,6 +90,9 @@ $(document).ready ->
       e.preventDefault()
     else
       return
+     
+
+      
 
   state.swipeEnd = (e) ->
     state.current.css('background-color', '#f4f3f4')
@@ -152,6 +166,7 @@ $(document).ready ->
     state.fullscreenButton.hide()
     el = state.current
     el.addClass('full')
+    $('.ftscroller_y').addClass('full')
 
   state.updateCards = ->
     template = """

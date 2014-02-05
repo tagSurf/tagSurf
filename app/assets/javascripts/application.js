@@ -16,4 +16,5 @@
 //= require bootstrap
 //= require fastclick
 //= require underscore
+//= require ftscroll
 //= require_tree .

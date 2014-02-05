@@ -8,18 +8,18 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-  <div class="container">
+  <div class="container" id="mwa">
     <%= yield %>
 
     <% if notice %>
       <div class="col-sm-4">
-        <p class="alert alert-success"><%= notice %></p>
+        <p class="alert alert-success"><%#= notice %></p>
       </div>
     <% end %>
 
     <% if alert %>
       <div class="col-sm-4">
-        <p class="alert alert-danger"><%= alert %></p>
+        <p class="alert alert-danger"><%#= alert %></p>
       </div>
     <% end %>
 
