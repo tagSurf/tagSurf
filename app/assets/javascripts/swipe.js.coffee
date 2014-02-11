@@ -40,8 +40,9 @@ $(document).ready ->
       url: "/cards/next",
     .success (data) ->
       state.queue = _.union(state.queue, data)
-      if state.queue.length > 9
-        state.queue.splice(0,2)
+      state.queue = _.uniq state.queue, (item) ->
+        JSON.stringify item
+      console.log state.queue
       state.updateCards()
 
   state.swipeStart = (e) ->
