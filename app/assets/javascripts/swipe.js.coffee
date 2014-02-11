@@ -42,7 +42,6 @@ $(document).ready ->
       state.queue = _.union(state.queue, data)
       state.queue = _.uniq state.queue, (item) ->
         JSON.stringify item
-      console.log state.queue
       state.updateCards()
 
   state.swipeStart = (e) ->
