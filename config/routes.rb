@@ -9,6 +9,12 @@ Tagsurf::Application.routes.draw do
   get 'votes/:id/:vote'  => 'cards#add_vote'
   get 'cards/next' => 'cards#next'
 
+  namespace :api do
+    get  'tags'       => 'tags#index'
+    get  'tags/:name' => 'tags#show'
+    post 'tags'       => 'tags#create'
+  end
+
   resources :cards
   root   'cards#vote'
 
