@@ -15,24 +15,9 @@ class ActiveRecord::Base
     ActiveRecord::Base.send(:sanitize_sql_array, sql_array)
   end
 
-  # exists fine in rails4
-  unless rails4?
-    # note: update_attributes still spins up a transaction this can cause contention
-    # this method performs the raw update sidestepping the locking
-    # exists in rails 4
-    def update_columns(hash)
-      self.class.where(self.class.primary_key => self.id).update_all(hash)
-
-      hash.each do |k,v|
-        raw_write_attribute k, v
-      end
-    end
-  end
-
   def exec_sql(*args)
     ActiveRecord::Base.exec_sql(*args)
   end
-
 
   # Executes the given block +retries+ times (or forever, if explicitly given nil),
   # catching and retrying SQL Deadlock errors.

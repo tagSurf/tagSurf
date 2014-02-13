@@ -1,8 +1,14 @@
 class Card < ActiveRecord::Base
 
   acts_as_votable
+  acts_as_taggable
 
   validates_uniqueness_of :remote_id, :link
+
+  def create_tagging
+    return if section.nil?
+    tag_list.add(section)
+  end
 
   # Display the next card to the user for voting
   def self.next(user, n=10)
