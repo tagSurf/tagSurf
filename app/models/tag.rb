@@ -8,6 +8,17 @@ class Tag < ActiveRecord::Base
     end
   end
 
+  def self.populate!
+    Card.pluck(:section).uniq.each do |name|
+      begin
+        Tag.create(name: name)
+      rescue ActiveRecord::RecordNotUnique => e
+        next if(e.message =~ /unique.*constraint.*name/)
+        raise "Something else happened #{e}"
+      end
+    end
+  end
+
   def self.mega_tag!
     # create tagging associations for all cards with sections
   end
