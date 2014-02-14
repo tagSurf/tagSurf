@@ -11,6 +11,24 @@ class Api::VotesController < Api::BaseController
     end
   end
 
+  def up
+    @voted = @user.find_up_voted_items
+    if @voted
+      render json: @voted
+    else
+      render json: "no up voted items"
+    end
+  end
+
+  def down
+    @voted = @user.find_down_voted_items
+    if @voted
+      render json: @voted
+    else
+      render json: "no down voted items"
+    end
+  end
+
   private
 
     def vote_params
