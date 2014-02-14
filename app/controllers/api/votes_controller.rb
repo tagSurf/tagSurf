@@ -1,20 +1,14 @@
 class Api::VotesController < Api::BaseController
 
-  def index
-    render json: Votes.all
-  end
+  before_filter :find_authenticated_user 
 
   def show
-    @cards = Card.tagged_with(tag_params['name'])
-    if @cards
-      render json: @cards 
+    @voted = @user.find_voted_items
+    if @votes
+      render json: @votes
     else
-      render json: "no cards with that tag"
+      render json: "no voted items"
     end
-  end
-
-  def create
-    render json: "you didn't create a tag yet"
   end
 
   private
