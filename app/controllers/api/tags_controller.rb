@@ -5,7 +5,11 @@ class Api::TagsController < Api::BaseController
   end
 
   def show
-    render json: Tag.where(name: tag_params["name"]).first 
+    @cards = Card.tagged_with(tag_params['name'])
+    if @cards
+      render json: @cards 
+    else
+      render json: "no cards with that tag"
   end
 
   def create
