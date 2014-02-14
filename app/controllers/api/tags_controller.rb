@@ -10,6 +10,7 @@ class Api::TagsController < Api::BaseController
       render json: @cards 
     else
       render json: "no cards with that tag"
+    end
   end
 
   def create
