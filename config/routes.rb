@@ -16,6 +16,7 @@ Tagsurf::Application.routes.draw do
     get  'votes'      => 'votes#show'
     get  'votes/up'   => 'votes#up'
     get  'votes/down' => 'votes#down'
+    get  'stats'      => 'votes#stats'
   end
 
   resources :cards
