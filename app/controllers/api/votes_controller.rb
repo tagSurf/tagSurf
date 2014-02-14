@@ -4,8 +4,8 @@ class Api::VotesController < Api::BaseController
 
   def show
     @voted = @user.find_voted_items
-    if @votes
-      render json: @votes
+    if @voted
+      render json: @voted
     else
       render json: "no voted items"
     end
