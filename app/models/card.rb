@@ -7,7 +7,8 @@ class Card < ActiveRecord::Base
 
   def create_tagging
     return if section.nil?
-    tag_list.add(section)
+    self.tag_list = self.section
+    self.save
   end
 
   # Display the next card to the user for voting
