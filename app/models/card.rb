@@ -17,7 +17,16 @@ class Card < ActiveRecord::Base
     if user.votes.size < 1
       Card.first(n)
     else
-      Card.where('id not in (?)', user.get_voted(Card).map(&:id)).limit(n)
+      Card.where('id not in (?)', user.get_voted(Card).map(&:id)).limit(n).order('created_at DESC')
+    end
+  end
+
+  def Card.next_tagged(user, tag, n=10)
+    return unless user
+    if user.votes.size < 1
+      Card.first(n)
+    else
+      Card.where('id not in (?)', user.get_voted(Card).map(&:id)).limit(n).order('created_at DESC')
     end
   end
 

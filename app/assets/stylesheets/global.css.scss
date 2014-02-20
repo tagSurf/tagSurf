@@ -28,6 +28,8 @@ html, body{
   border-right:0px;
   border-bottom: thin $ts-gray solid;
   border-radius:0px;
+  z-index:300;
+  position:relative;
 }
 
 .navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a{
@@ -35,6 +37,11 @@ html, body{
   &:hover{
     color: #ffffff;
   }
+}
+
+.navbar-collapse{
+  z-index:300;
+  position:relative;
 }
 
 // TODO Move to cards.css.scss

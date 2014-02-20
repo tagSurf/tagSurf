@@ -5,7 +5,7 @@ class Api::TagsController < Api::BaseController
   end
 
   def show
-    @cards = Card.tagged_with(tag_params['name'])
+    @cards = Card.tagged_with(tag_params['name']).order('created_at DESC')
     if @cards
       render json: @cards 
     else

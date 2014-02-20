@@ -6,8 +6,9 @@ Tagsurf::Application.routes.draw do
   devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks", :sessions => 'sessions' }
  
   # Voting
-  get 'votes/:id/:vote'  => 'cards#add_vote'
-  get 'cards/next' => 'cards#next'
+  get 'votes/:id/:vote' => 'cards#add_vote'
+  get 'cards/next'      => 'cards#next'
+  get 'cards/next/:tag' => 'cards#show'
 
   namespace :api do
     get  'tags'       => 'tags#index'

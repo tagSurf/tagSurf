@@ -1,46 +1,15 @@
 <%= render 'shared/authentication' %>
+<br />
 
 <% if current_user %>
 
-  <div class="row spaced">
-    <div class="col-md-10" id="swiper">
+  <div class="row clearfix">
+    <div class="clearfix" id="swiper">
+    </div>
 
-      <div class="card-container clearfix" id="current">
-        <div class="img-container full">
-          <% if @card.animated == true %>
-              <%= image_tag(@card.link) %>
-          <% else %>
-              <%= 
-                image_tag( "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}")
-              %>
-          <% end %>
-        </div>
-            
-        <div class="txt-container"> 
-          <%= @card.title %>
-        </div> 
-      </div> 
-
-      <div class="card-container clearfix" id="next">
-        <div class="img-container full">
-          <% if @card.animated == true %>
-              <%= image_tag(@card.link) %>
-          <% else %>
-              <%= 
-                image_tag( "http://i.imgur.com/#{@card.remote_id}.#{RemoteResource.content_type(@card.content_type)}")
-              %>
-          <% end %>
-        </div>
-            
-        <div class="txt-container"> 
-          <%= @card.title %>
-        </div> 
-      </div>
-
+    <div class="col-sm-4 fullscreen">
+      <span class="expand-btn glyphicon glyphicon-chevron-down"></span>
     </div>
   </div>
-
-          <div class="info"></div> 
-  <%= render 'shared/voting', object: @card %>
 
 <% end %>

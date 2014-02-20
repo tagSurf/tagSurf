@@ -12,6 +12,7 @@ $(document).ready ->
      #)
     
   state =
+    tagSurfing: false
     initiated: false
     waiting: false
     queue: []
@@ -36,13 +37,22 @@ $(document).ready ->
   return unless state.wrapper
 
   state.fetchData = ->
-    $.ajax
-      url: "/cards/next",
-    .success (data) ->
-      state.queue = _.union(state.queue, data)
-      state.queue = _.uniq state.queue, (item) ->
-        JSON.stringify item
-      state.updateCards()
+    if state.tagSurfing
+      $.ajax
+        url: "/cards/next",
+      .success (data) ->
+        state.queue = _.union(state.queue, data)
+        state.queue = _.uniq state.queue, (item) ->
+          JSON.stringify item
+        state.updateCards()
+    else
+      $.ajax
+        url: "/cards/next",
+      .success (data) ->
+        state.queue = _.union(state.queue, data)
+        state.queue = _.uniq state.queue, (item) ->
+          JSON.stringify item
+        state.updateCards()
 
   state.swipeStart = (e) ->
     return if state.initiated or state.waiting
@@ -89,11 +99,7 @@ $(document).ready ->
     else if state.fullscreen == false
       e.preventDefault()
     else
-      #e.preventDefault()
       return
-     
-
-      
 
   state.swipeEnd = (e) ->
     e.preventDefault()

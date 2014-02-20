@@ -18,7 +18,7 @@ class CardsController < ApplicationController
   end
 
   def show
-    @card = Card.find card_params[:id]
+    @card = Card.next_tagged(@user, card_params[:tag])
     if @card
       @card
     else
@@ -34,7 +34,7 @@ class CardsController < ApplicationController
   private
 
     def card_params
-      params.permit(:id, :vote)
+      params.permit(:id, :vote, :tag)
     end
 
     def find_authenticated_user
