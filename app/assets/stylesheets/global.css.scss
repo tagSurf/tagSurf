@@ -20,6 +20,12 @@ html, body{
 
 #mwa { height:100%; overflow:hidden; }
 
+#history-btn{ 
+  background: image-url('history.png');
+  width:44px;
+  height:44px;
+}
+
 .navbar{
   margin-bottom:10px;
   background:$ts-blue;
