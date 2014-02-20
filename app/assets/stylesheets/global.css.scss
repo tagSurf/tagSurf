@@ -5,8 +5,14 @@ $navbar-default-color: $light-orange;
 
 @import "bootstrap";
 
+$ts-blue: #1dafec;
+$ts-orange: #ed7d31;
+$ts-dark-orange: #Ef7c00;
+$ts-gray: #404041;
+$ts-dark-gray: #2f2f2f;
+
 html, body{
-  background:#e0e0e0;
+  background:$ts-dark-gray;
   width:100%;  
   height: 100%;
   overflow:hidden; 
@@ -16,10 +22,16 @@ html, body{
 
 .navbar{
   margin-bottom:10px;
+  background:$ts-blue;
+  border-top:0px;
+  border-left:0px;
+  border-right:0px;
+  border-bottom: thin $ts-gray solid;
+  border-radius:0px;
 }
 
 .navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a{
-  color:#f7f4da;
+  color:$ts-gray;
   &:hover{
     color: #ffffff;
   }
