@@ -1,10 +1,5 @@
-$navbar-default-bg: #1d7189;
-$navbar-default-color: #ffffff;
-$light-orange: #ff8c00;
-$navbar-default-color: $light-orange;
-
 @import "bootstrap";
-
+@import "constants";
 $ts-blue: #1dafec;
 $ts-orange: #ed7d31;
 $ts-dark-orange: #Ef7c00;
@@ -12,7 +7,7 @@ $ts-gray: #404041;
 $ts-dark-gray: #2f2f2f;
 
 html, body{
-  background-color:$ts-dark-gray;
+  background-color:#ffffff;
   width:100%;  
   height: 100%;
   overflow:hidden; 
@@ -24,13 +19,10 @@ html, body{
 }
 
 .background-image{
-  background-image: image-url('ts_logo_stacked_white.png');
-  width:200px;
-  height:228px;
-  position:absolute; 
-  z-index:0;
-  top:85px;
-  left:60px;
+  background-image: image-url('ts_logo_stacked_white.jpg');
+  width:220px;
+  height:241px;
+  margin:20px auto; 
 }
 
 #history-btn{ 

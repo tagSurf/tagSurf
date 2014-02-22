@@ -15,6 +15,8 @@ Devise.setup do |config|
     config.omniauth :imgur, "e0d1a9753eaf289", "804e630c072f527b68bdfcc6a08ccbfe2492ab99", :strategy_class => OmniAuth::Strategies::Imgur
   end
 
+  config.scoped_views = true
+
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
