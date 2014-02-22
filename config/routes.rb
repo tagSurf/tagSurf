@@ -3,8 +3,6 @@ Tagsurf::Application.routes.draw do
   get '/users/sign_up', to: redirect('/')
 
   devise_for :users, :controllers => { :sessions => 'sessions' }
-
-  get "sign_up" => "users#new", :as => "sign_up"
  
   # Voting
   get 'votes/:id/:vote' => 'cards#add_vote'
