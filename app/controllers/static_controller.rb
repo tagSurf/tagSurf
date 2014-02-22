@@ -1,8 +1,10 @@
 class StaticController < ApplicationController
 
   def index
-    response = RemoteResource.get
-    @hot_list = response.parsed_response["data"]
+    if current_user
+      redirect_to voting_path
+    else
+    end
   end
 
 end

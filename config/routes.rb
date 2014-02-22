@@ -1,14 +1,16 @@
 Tagsurf::Application.routes.draw do
 
-  get '/users/sign_in', to: redirect('/')
   get '/users/sign_up', to: redirect('/')
 
-  devise_for :users, :controllers => { :omniauth_callbacks => "omniauth_callbacks", :sessions => 'sessions' }
+  devise_for :users#, :controllers => { :omniauth_callbacks => "omniauth_callbacks", :sessions => 'sessions' }
+
+  get "sign_up" => "users#new", :as => "sign_up"
  
   # Voting
   get 'votes/:id/:vote' => 'cards#add_vote'
   get 'cards/next'      => 'cards#next'
   get 'cards/next/:tag' => 'cards#show'
+  get 'voting'          => 'cards#vote'
 
   namespace :api do
     get  'tags'       => 'tags#index'
@@ -21,6 +23,7 @@ Tagsurf::Application.routes.draw do
   end
 
   resources :cards
-  root   'cards#vote'
+  resources :users
+  root to: "static#index"
 
 end
