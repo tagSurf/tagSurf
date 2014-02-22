@@ -14,7 +14,7 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require bootstrap
-//= require fastclick
 //= require underscore
+//= require jquery.hammer-full
 //= require ftscroll
 //= require_tree .
