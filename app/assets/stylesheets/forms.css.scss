@@ -1,0 +1,37 @@
+/* Forms */
+
+@import "constants";
+
+/* Authentication Overrides */
+.ts-form-group{
+  margin-bottom: 10px;
+}
+
+.ts-input {
+  width: 215px;
+  color: #000;
+  margin: 0 auto;
+  border: #000 solid thin;
+  border-radius: 2px;
+  padding: 20px 10px;
+  font-size: 16px;
+  font-family:'Raleway', sans-serif;
+}
+
+.ts-submit-bar{
+  width:100%;
+  height: 44px;
+  background: $ts-blue;
+  margin-top:24px;
+  padding:4px 25%;
+}
+
+.ts-submit-btn{
+  font-family:'Raleway', sans-serif;
+  width: 90px;
+  float: left;
+  
+}
+
+
+

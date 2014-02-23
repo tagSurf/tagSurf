@@ -1,22 +1,6 @@
 @import "bootstrap";
 @import "constants";
-$ts-blue: #1dafec;
-$ts-orange: #ed7d31;
-$ts-dark-orange: #Ef7c00;
-$ts-gray: #404041;
-$ts-dark-gray: #2f2f2f;
-
-html, body{
-  background-color:#ffffff;
-  width:100%;  
-  height: 100%;
-  overflow:hidden; 
-}
-
-#mwa { 
-  height:100%; 
-  overflow:hidden;
-}
+@import "forms";
 
 .background-image{
   background-image: image-url('ts_logo_stacked_white.jpg');
@@ -75,8 +59,6 @@ li.border-top{
   margin:4px auto 10px;
   border-radius:2px; 
 }
-
-
 
 // TODO Move to cards.css.scss
 #swiper{
