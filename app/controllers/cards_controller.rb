@@ -3,6 +3,8 @@ class CardsController < ApplicationController
   before_action :authenticate_user!
   before_action :find_authenticated_user
 
+  layout 'internal'
+
   def add_vote
     @card = Card.find card_params[:id]
     @result = @card.vote :voter => @user, :vote => card_params[:vote]
@@ -10,11 +12,10 @@ class CardsController < ApplicationController
   end
 
   def vote
-    if @user
-      @card = Card.next(@user).first
-      if @card && @card.cache_update_available?
-        @card.refresh!
-      end
+    @card = Card.new
+    @tags = Tag.all
+    if @card.cache_update_available?
+      @card.refresh!
     end
   end
 

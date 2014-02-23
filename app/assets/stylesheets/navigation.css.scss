@@ -1,0 +1,57 @@
+/* Navigation styles */
+@import 'constants';
+
+#history-btn{ 
+  background: image-url('history.png') no-repeat;
+  width:33px;
+  height:29px;
+  margin-top:10px;
+  margin-left:13px;
+}
+
+.navbar{
+  margin-bottom:10px;
+  background: #fff;
+  border-top: 0px;
+  border-left: 0px;
+  border-right: 0px;
+  border-bottom: thin $ts-gray solid;
+  border-radius: 0px;
+  z-index: 300;
+  position: relative;
+}
+
+.navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a{
+  color: $ts-gray;
+  &:hover{
+    color: #ffffff;
+  }
+}
+
+.navbar-default .navbar-toggle {
+  border-color: $ts-dark-gray;
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+  background-color: $ts-dark-gray;
+}
+
+.navbar-collapse{
+  z-index:300;
+  position:relative;
+}
+
+/* Tag list in navigation */
+// Might need to be moved to sections
+.tag-list{
+  background: #f8f8f8;
+  padding:20px;
+  margin-top:12px;
+  border-top: #f0f0f0 solid thin;
+  
+  .tag-item{
+    font-size: 18px;
+    font-family: $ts-raven;
+  }
+}
+

@@ -16,6 +16,7 @@
   padding: 20px 10px;
   font-size: 16px;
   font-family:'Raleway', sans-serif;
+  background: #fff;
 }
 
 .ts-submit-bar{
@@ -33,5 +34,18 @@
   
 }
 
+.background-image{
+  background-image: image-url('ts_logo_stacked_white.jpg');
+  width:220px;
+  height:241px;
+  margin:20px auto; 
+}
+
+/* Tag Form */
+.tag-input{
+  width:80%;
+  margin:4px auto 10px;
+  border-radius:2px; 
+}
 
 

@@ -1,64 +1,7 @@
 @import "bootstrap";
 @import "constants";
 @import "forms";
-
-.background-image{
-  background-image: image-url('ts_logo_stacked_white.jpg');
-  width:220px;
-  height:241px;
-  margin:20px auto; 
-}
-
-#history-btn{ 
-  background: image-url('history.png') no-repeat;
-  width:33px;
-  height:29px;
-  margin-top:10px;
-  margin-left:13px;
-}
-
-.navbar{
-  margin-bottom:10px;
-  background:$ts-blue;
-  border-top:0px;
-  border-left:0px;
-  border-right:0px;
-  border-bottom: thin $ts-gray solid;
-  border-radius:0px;
-  z-index:300;
-  position:relative;
-}
-
-.navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a{
-  color:$ts-gray;
-  &:hover{
-    color: #ffffff;
-  }
-}
-
-.navbar-default .navbar-toggle {
-  border-color:$ts-dark-gray;
-}
-
-.navbar-default .navbar-toggle .icon-bar {
-  background-color:$ts-dark-gray;
-}
-
-.navbar-collapse{
-  z-index:300;
-  position:relative;
-}
-
-li.border-top{
-  border-top:solid $ts-gray thin;
-}
-
-/* Tag Form */
-.tag-input{
-  width:80%;
-  margin:4px auto 10px;
-  border-radius:2px; 
-}
+@import "navigation";
 
 // TODO Move to cards.css.scss
 #swiper{

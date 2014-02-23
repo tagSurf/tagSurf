@@ -1,0 +1,8 @@
+/* Sections Styles */
+@import 'constants';
+
+// Internal layout
+// Dumb hack because I don't to style based on routing atm
+.internal{
+  background:$ts-dark-gray;
+}
