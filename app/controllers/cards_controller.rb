@@ -1,5 +1,6 @@
 class CardsController < ApplicationController
 
+  before_action :authenticate_user!
   before_action :find_authenticated_user
 
   def add_vote

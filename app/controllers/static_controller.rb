@@ -5,7 +5,7 @@ class StaticController < ApplicationController
   # for desktop and tablets
   def index
     if current_user
-      redirect_to voting_path
+      redirect_to t_hot_path
     else
       redirect_to user_session_path
     end
