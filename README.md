@@ -52,37 +52,34 @@ Navigate to localhost:3000, authenitcate with imgur.com, and vote away.
 Documents the API for the application.
 
 # Users history (Authenticated)
-```
-# /api/users/history
-
 ## GET
+### /api/users/history
 + Response 200 (text/plain)
 
-        [
-          {
-            id: 2,
-            remote_id: "vW5QZE1",
-            remote_provider: "imgur",
-            remote_created_at: "1970-01-01T00:00:00.000Z",
-            link: "http://i.imgur.com/vW5QZE1.png",
-            title: "I want to do good.",
-            description: null,
-            content_type: "image/png",
-            animated: false,
-            width: 800,
-            height: 600,
-            size: 41511,
-            imgur_views: 71262,
-            bandwidth: null,
-            delete_hash: null,
-            section: null,
-            created_at: "2014-01-13T05:21:02.576Z",
-            updated_at: "2014-01-13T05:21:02.576Z"
-          }
-        ]
-
-```
-
-
-
+{
+  data: [
+    {
+      id: 2,
+      link: "http://i.imgur.com/vW5QZE1.png",
+      title: "I want to do good.",
+      description: null,
+      tagged_as: null,
+      user_vote: "up",
+      total_votes: 3,
+      down_votes: 3,
+      up_votes: 0
+    },
+    {
+      id: 3,
+      link: "http://i.imgur.com/vW5QZE1.png",
+      title: "I want to do good.",
+      description: null,
+      tagged_as: null,
+      user_vote: "up",
+      total_votes: 3,
+      down_votes: 3,
+      up_votes: 0
+    }
+  ]
+}
 

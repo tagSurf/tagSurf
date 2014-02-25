@@ -11,6 +11,7 @@ gem 'httparty'
 gem 'acts_as_votable', '~> 0.8.0'
 gem 'underscore-rails'
 gem 'acts-as-taggable-on'
+gem "active_model_serializers"
 
 # gem 'bcrypt-ruby', '~> 3.1.2'
 
