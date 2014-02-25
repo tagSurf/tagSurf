@@ -12,12 +12,17 @@ class Card < ActiveRecord::Base
   end
 
   # Display the next card to the user for voting
-  def self.next(user, n=10)
+  def self.next(user, tag=nil, n=10)
     return unless user
     if user.votes.size < 1
       Card.first(n)
-    else
+    elsif tag == nil
       Card.where('id not in (?)', user.get_voted(Card).map(&:id)).limit(n).order('created_at DESC')
+    else
+      query = Card.where('id not in (?)', user.get_voted(Card).map(&:id))
+      query = query.tagged_with([tag], :any => true)
+      query = query.limit(n).order('created_at DESC')
+      query
     end
   end
 

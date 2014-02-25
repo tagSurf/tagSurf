@@ -16,6 +16,7 @@ Tagsurf::Application.routes.draw do
     get  'tags/:name' => 'tags#show'
     post 'tags'       => 'tags#create'
     get  'votes'      => 'votes#show'
+    get  'users/history' => 'users#history'
     get  'votes/up'   => 'votes#up'
     get  'votes/down' => 'votes#down'
     get  'stats'      => 'votes#stats'
