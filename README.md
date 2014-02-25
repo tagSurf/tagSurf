@@ -56,6 +56,7 @@ Documents the API for the application.
 ### /api/users/history
 + Response 200 (text/plain)
 
+```
 {
   data: [
     {
@@ -82,4 +83,5 @@ Documents the API for the application.
     }
   ]
 }
+```
 

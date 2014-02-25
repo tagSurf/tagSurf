@@ -1,11 +1,12 @@
 class Api::UsersController < Api::BaseController
 
   def history
-    @voted = @user.find_voted_items
+    # Cheating pagination
+    @voted = @user.find_voted_items[(user_params["offset"]).to_i .. (user_params["offset"].to_i + user_params["limit"].to_i)] 
     if @voted
       render json: @voted, root: 'data'
     else
-      render json: "No history yet"
+      render json: "Nothing here"
     end
   end
 
@@ -41,8 +42,8 @@ class Api::UsersController < Api::BaseController
 
   private
 
-    def vote_params
-      params.permit(:user) 
+    def user_params
+      params.permit(:user, :limit, :offset) 
     end
 
 end
