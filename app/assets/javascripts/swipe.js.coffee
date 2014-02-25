@@ -33,8 +33,17 @@ $(document).ready ->
     swipeRight: null
     nextPicture: null
     updateCards: null
+    limit: 10
+    offset: 0
 
   return unless state.wrapper
+
+  # TODO abstract into own constructor
+  state.fetchHistory = (state.limit, state.offset) ->
+    $.ajax
+      url: "/api/users/history?limit=#{state.limit}&#{state.offset}",
+    .success (data) ->
+      console.log data
 
   state.fetchData = ->
     if state.tagSurfing

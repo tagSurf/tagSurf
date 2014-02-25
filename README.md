@@ -52,10 +52,17 @@ Navigate to localhost:3000, authenitcate with imgur.com, and vote away.
 Documents the API for the application.
 
 # Users history (Authenticated)
-## GET
-### /api/users/history
-+ Response 200 (text/plain)
 
+## GET
+#### /api/users/history
+
+### Optional params
+#### /api/users/history?limit=1&offset=0
+
+- limit
+- offset
+
++ Response 200 (text/plain)
 ```
 {
   data: [
