@@ -3,6 +3,10 @@ class Card < ActiveRecord::Base
   acts_as_votable
   acts_as_taggable
 
+  def active_model_serializer
+    CardSerializer
+  end
+
   validates_uniqueness_of :remote_id, :link
 
   def create_tagging

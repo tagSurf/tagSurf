@@ -3,7 +3,7 @@ class Api::UsersController < Api::BaseController
   def history
     @voted = @user.find_voted_items
     if @voted
-      render json: @voted, each_serializer: CardSerializer, root: 'data'
+      render json: @voted, root: 'data'
     else
       render json: "No history yet"
     end
