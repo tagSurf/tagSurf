@@ -39,29 +39,20 @@ $(document).ready ->
   return unless state.wrapper
 
   # TODO abstract into own constructor
-  state.fetchHistory = (state.limit, state.offset) ->
+  state.fetchHistory = ->
     $.ajax
       url: "/api/users/history?limit=#{state.limit}&#{state.offset}",
     .success (data) ->
       console.log data
 
   state.fetchData = ->
-    if state.tagSurfing
-      $.ajax
-        url: "/cards/next",
-      .success (data) ->
-        state.queue = _.union(state.queue, data)
-        state.queue = _.uniq state.queue, (item) ->
-          JSON.stringify item
-        state.updateCards()
-    else
-      $.ajax
-        url: "/cards/next",
-      .success (data) ->
-        state.queue = _.union(state.queue, data)
-        state.queue = _.uniq state.queue, (item) ->
-          JSON.stringify item
-        state.updateCards()
+    $.ajax
+      url: "/cards/next",
+    .success (data) ->
+      state.queue = _.union(state.queue, data)
+      state.queue = _.uniq state.queue, (item) ->
+        JSON.stringify item
+      state.updateCards()
 
   state.swipeStart = (e) ->
     return if state.initiated or state.waiting
