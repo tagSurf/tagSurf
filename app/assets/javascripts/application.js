@@ -17,4 +17,5 @@
 //= require underscore
 //= require jquery.hammer-full
 //= require ftscroll
+//= require toolbar
 //= require_tree .

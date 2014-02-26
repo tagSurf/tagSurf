@@ -38,12 +38,6 @@ $(document).ready ->
 
   return unless state.wrapper
 
-  element = document.getElementById("history-btn")
-  hammertime = Hammer(element).on("tap", (event) ->
-    alert "history"
-    return
-  )
-
   # TODO abstract into own constructor
   #state.fetchHistory = ->
   #  $.ajax
