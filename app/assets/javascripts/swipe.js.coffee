@@ -38,17 +38,25 @@ $(document).ready ->
 
   return unless state.wrapper
 
+  element = document.getElementById("history-btn")
+  hammertime = Hammer(element).on("tap", (event) ->
+    alert "history"
+    return
+  )
+
   # TODO abstract into own constructor
-  state.fetchHistory = ->
-    $.ajax
-      url: "/api/users/history?limit=#{state.limit}&#{state.offset}",
-    .success (data) ->
-      console.log data
+  #state.fetchHistory = ->
+  #  $.ajax
+  #    url: "/api/users/history?limit=#{state.limit}&#{state.offset}",
+  #  .success (data) ->
+  #    console.log data
 
   state.fetchData = ->
     $.ajax
       url: "/cards/next",
     .success (data) ->
+      # Now serializing data
+      data = data.cards
       state.queue = _.union(state.queue, data)
       state.queue = _.uniq state.queue, (item) ->
         JSON.stringify item

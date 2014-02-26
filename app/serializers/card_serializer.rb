@@ -1,4 +1,6 @@
 class CardSerializer < ActiveModel::Serializer
+  self.root = false
+
   attributes( 
     :id,
     :link,
