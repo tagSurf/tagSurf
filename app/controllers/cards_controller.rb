@@ -2,7 +2,7 @@ class CardsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :find_authenticated_user
-  before_action :update_cache
+  #before_action :update_cache
 
   layout 'internal'
 
@@ -28,7 +28,7 @@ class CardsController < ApplicationController
 
   def next
     @cards = Card.next(@user)
-    render json: @cards.to_a[2..9]
+    render json: @cards
   end
 
   private

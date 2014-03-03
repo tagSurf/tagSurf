@@ -1,10 +1,9 @@
-lass Api::UsersController < Api::BaseController
+class Api::UsersController < Api::BaseController
 
   def history
     @offset = user_params["offset"].to_i
     @limit = user_params["limit"].to_i
-    # Cheating pagination
-    @voted = @user.find_voted_items[@offset .. @limit]
+    @voted = Vote.paginated_history(current_user.id, @limit, @offset) 
     if @voted
       render json: @voted, root: 'data'
     else

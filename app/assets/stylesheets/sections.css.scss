@@ -19,11 +19,14 @@
 
 .thumbnails{
   .row{
-    width: 90%;
+    width: 95%;
     margin: 10px auto;
 
     .col-xs-1{
-      width: 100px;
+      width: 90px;
+      h6{
+        width:90px;
+      }
     }
   }
 

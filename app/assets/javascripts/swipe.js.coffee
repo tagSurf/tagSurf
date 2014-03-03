@@ -33,23 +33,13 @@ $(document).ready ->
     swipeRight: null
     nextPicture: null
     updateCards: null
-    limit: 10
-    offset: 0
 
   return unless state.wrapper
-
-  # TODO abstract into own constructor
-  #state.fetchHistory = ->
-  #  $.ajax
-  #    url: "/api/users/history?limit=#{state.limit}&#{state.offset}",
-  #  .success (data) ->
-  #    console.log data
 
   state.fetchData = ->
     $.ajax
       url: "/cards/next",
     .success (data) ->
-      # Now serializing data
       data = data.cards
       state.queue = _.union(state.queue, data)
       state.queue = _.uniq state.queue, (item) ->

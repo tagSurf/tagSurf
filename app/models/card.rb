@@ -19,7 +19,7 @@ class Card < ActiveRecord::Base
   def self.next(user, tag=nil, n=10)
     return unless user
     if user.votes.size < 1
-      Card.first(n)
+      Card.last(n)
     elsif tag == nil
       Card.where('id not in (?)', user.get_voted(Card).map(&:id)).limit(n).order('created_at DESC')
     else
