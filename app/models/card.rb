@@ -45,7 +45,7 @@ class Card < ActiveRecord::Base
     tagged.each do |obj|
       next if obj["nsfw"].to_s == 'false'
       next if obj['is_album'].to_s == 'false'
-      Card.create({
+      card = Card.create({
         remote_id: obj['id'],
         remote_provider: 'imgur',
         remote_created_at: Time.at(obj['datatime'].to_i) || Time.now,
@@ -61,6 +61,7 @@ class Card < ActiveRecord::Base
         section: tag,
         delete_hash: obj['deletehash']
       })
+      Rails.logger.info "Created #{card.inspect}"
     end
 
   end
