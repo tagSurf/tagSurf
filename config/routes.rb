@@ -6,8 +6,7 @@ Tagsurf::Application.routes.draw do
  
   # Voting
   get 'votes/:id/:vote' => 'cards#add_vote'
-  get 'cards/next'      => 'cards#next'
-  get 'cards/next/:tag' => 'cards#show'
+  get 'cards/next/:tag' => 'cards#next'
   get 't/:tag'          => 'cards#vote'
   get 't/hot'           => 'cards#vote'
 

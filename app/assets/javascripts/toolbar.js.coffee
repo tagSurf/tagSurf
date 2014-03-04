@@ -50,7 +50,8 @@ $(document).ready ->
     containerElement = document.getElementById('history-page')
 
     scroller = new FTScroller(containerElement,
-      scrollingX: false
+      scrollingX: false,
+      flinging: false
     )
 
     # Function to add event listener to table

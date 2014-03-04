@@ -20,7 +20,7 @@ class RemoteResource
 
   def self.get_tag(tag)
     app = 'https://api.imgur.com/3/'
-    service = "gallery/#{tag}/viral/0.json"
+    service = "gallery/r/#{tag}/" 
     if Rails.env.development?
       HTTParty.get(app + service, :headers => {"Authorization" => "Client-ID 63c3978f06dac10"})
     else

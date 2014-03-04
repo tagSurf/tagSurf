@@ -3,14 +3,7 @@ $(document).ready ->
 
   # FTScroller implementation
   # https://github.com/ftlabs/ftscroller
-  #scroller = new FTScroller(document.getElementById("mwa"),
-     #  scrollingX: false,
-     #  scrollingY: true,
-     #  alwaysScroll: true,
-     #  flinging: false,
-     #  updateOnWindowResize: true
-     #)
-    
+   
   state =
     tagSurfing: false
     initiated: false
@@ -37,15 +30,16 @@ $(document).ready ->
   return unless state.wrapper
 
   state.fetchData = ->
+    tag = location.pathname.match(/\/t\/(.*)/)[1]
     $.ajax
-      url: "/cards/next",
+      url: "/cards/next/#{tag}",
     .success (data) ->
       data = data.cards
       state.queue = _.union(state.queue, data)
       state.queue = _.uniq state.queue, (item) ->
         JSON.stringify item
       state.updateCards()
-
+    
   state.swipeStart = (e) ->
     return if state.initiated or state.waiting
 
