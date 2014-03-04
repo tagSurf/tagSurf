@@ -13,6 +13,7 @@ class CardsController < ApplicationController
   end
 
   def vote
+    @tag = Tag.all
   end
 
   def show
