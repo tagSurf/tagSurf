@@ -27,7 +27,6 @@ class CardsController < ApplicationController
   end
 
   def next
-    @tags = Tag.all
     @cards = Card.next(@user, card_params[:tag])
     render json: @cards
   end
