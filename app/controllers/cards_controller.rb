@@ -13,8 +13,6 @@ class CardsController < ApplicationController
   end
 
   def vote
-    # will need to cache this after a few thousand tags it will be terribly slow.
-    @tags = Tag.all
   end
 
   def show
