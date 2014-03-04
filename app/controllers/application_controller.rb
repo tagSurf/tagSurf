@@ -6,6 +6,6 @@ class ApplicationController < ActionController::Base
   before_filter :get_tags
 
   def get_tags
-    @tag = Tag.all
+    @tags = Tag.all
   end
 end
