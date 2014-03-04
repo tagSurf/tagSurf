@@ -31,14 +31,24 @@ $(document).ready ->
 
   state.fetchData = ->
     tag = location.pathname.match(/\/t\/(.*)/)[1]
-    $.ajax
-      url: "/cards/next/#{tag}",
-    .success (data) ->
-      data = data.cards
-      state.queue = _.union(state.queue, data)
-      state.queue = _.uniq state.queue, (item) ->
-        JSON.stringify item
-      state.updateCards()
+    if tag
+      $.ajax
+        url: "/cards/next/#{tag}",
+      .success (data) ->
+        data = data.cards
+        state.queue = _.union(state.queue, data)
+        state.queue = _.uniq state.queue, (item) ->
+          JSON.stringify item
+        state.updateCards()
+    else
+      $.ajax
+        url: "/cards/next/hot",
+      .success (data) ->
+        data = data.cards
+        state.queue = _.union(state.queue, data)
+        state.queue = _.uniq state.queue, (item) ->
+          JSON.stringify item
+        state.updateCards()
     
   state.swipeStart = (e) ->
     return if state.initiated or state.waiting
