@@ -24,7 +24,7 @@
       -->
       <li>  
         <ul class="tag-list">
-          <li class="tag-item"><%= 'Hot', "/t/hot" %></li>
+          <li class="tag-item"><%= link_to 'Hot', "/t/hot" %></li>
           <% @tags.each do |tag| %>
             <li class="tag-item"><%= link_to tag.name, "/t/#{tag.name}" %></li>
           <% end %>
