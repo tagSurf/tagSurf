@@ -2,6 +2,7 @@ class CardsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :find_authenticated_user
+  before_action :update_cache
 
   layout 'internal'
 
@@ -12,15 +13,11 @@ class CardsController < ApplicationController
   end
 
   def vote
-    @card = Card.new
-    @tags = Tag.all
-    if @card.cache_update_available?
-      @card.refresh!
-    end
+    @tag = Tag.all
   end
 
   def show
-    @card = Card.next_tagged(@user, card_params[:tag])
+    @cards = Card.next(@user, card_params[:tag])
     if @card
       @card
     else
@@ -29,8 +26,8 @@ class CardsController < ApplicationController
   end
 
   def next
-    @cards = Card.next(@user)
-    render json: @cards.to_a[2..9]
+    @cards = Card.next(@user, card_params[:tag])
+    render json: @cards
   end
 
   private
@@ -41,6 +38,13 @@ class CardsController < ApplicationController
 
     def find_authenticated_user
       @user = current_user
+    end
+
+    def update_cache
+      @card = Card.new
+      if @card.cache_update_available?
+        @card.refresh!
+      end
     end
 
 end

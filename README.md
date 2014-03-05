@@ -45,3 +45,50 @@ $ rails server
 ```
 
 Navigate to localhost:3000, authenitcate with imgur.com, and vote away.
+
+
+### API Routes
+
+Documents the API for the application.
+
+# Users history (Authenticated)
+
+## GET
+#### /api/users/history
+
+### Optional params
+#### /api/users/history?limit=1&offset=0
+
+- limit
+- offset
+
++ Response 200 (text/plain)
+```
+{
+  data: [
+    {
+      id: 2,
+      link: "http://i.imgur.com/vW5QZE1.png",
+      title: "I want to do good.",
+      description: null,
+      tagged_as: null,
+      user_vote: "up",
+      total_votes: 3,
+      down_votes: 3,
+      up_votes: 0
+    },
+    {
+      id: 3,
+      link: "http://i.imgur.com/vW5QZE1.png",
+      title: "I want to do good.",
+      description: null,
+      tagged_as: null,
+      user_vote: "up",
+      total_votes: 3,
+      down_votes: 3,
+      up_votes: 0
+    }
+  ]
+}
+```
+

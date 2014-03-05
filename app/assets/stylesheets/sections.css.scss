@@ -6,3 +6,30 @@
 .internal{
   background:$ts-dark-gray;
 }
+
+/* History Container */
+.overlay-container{
+  position:absolute; 
+  width: 100%;
+  height: 100%;
+  background: white;
+  z-index:500;
+  top:10;
+}
+
+.thumbnails{
+  .row{
+    width: 95%;
+    margin: 10px auto;
+
+    .col-xs-1{
+      width: 90px;
+      h6{
+        width:90px;
+      }
+    }
+  }
+
+
+}
+

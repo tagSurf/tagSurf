@@ -5,7 +5,16 @@ development:
   username:
   password:
   host: localhost
-  port: 5432
+  port: 15432
+
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: tagsurf_development
+  username:
+  password:
+  host: localhost
+  port: 15432
 
 test:
   adapter: postgresql

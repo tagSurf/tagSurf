@@ -3,6 +3,10 @@ class Card < ActiveRecord::Base
   acts_as_votable
   acts_as_taggable
 
+  def active_model_serializer
+    CardSerializer
+  end
+
   validates_uniqueness_of :remote_id, :link
 
   def create_tagging
@@ -12,12 +16,17 @@ class Card < ActiveRecord::Base
   end
 
   # Display the next card to the user for voting
-  def self.next(user, n=10)
+  def self.next(user, tag, n=10)
     return unless user
     if user.votes.size < 1
-      Card.first(n)
-    else
+      Card.last(n)
+    elsif tag == 'hot'
       Card.where('id not in (?)', user.get_voted(Card).map(&:id)).limit(n).order('created_at DESC')
+    else
+      cards = Card.where('cards.id not in (?)', user.get_voted(Card).map(&:id)).tagged_with([tag], :any => true).limit(n).order('created_at DESC')
+      if cards.length < 10
+        self.populate_tag(tag) 
+      end
     end
   end
 
@@ -28,6 +37,33 @@ class Card < ActiveRecord::Base
     else
       Card.where('id not in (?)', user.get_voted(Card).map(&:id)).limit(n).order('created_at DESC')
     end
+  end
+
+  def self.populate_tag(tag) 
+    response = RemoteResource.get_tag(tag)
+    tagged = response.parsed_response["data"]
+    tagged.each do |obj|
+      next if obj["nsfw"].to_s == 'false'
+      next if obj['is_album'].to_s == 'false'
+      card = Card.create({
+        remote_id: obj['id'],
+        remote_provider: 'imgur',
+        remote_created_at: Time.at(obj['datatime'].to_i) || Time.now,
+        link: obj['link'],
+        title: obj['title'],
+        description: obj['description'],
+        content_type: obj['type'],
+        animated: obj['animated'],
+        width: obj['width'],
+        height: obj['height'],
+        size: obj['size'],
+        imgur_views: obj['views'],
+        section: tag,
+        delete_hash: obj['deletehash']
+      })
+      Rails.logger.info "Created #{card.inspect}"
+    end
+
   end
 
   def self.populate!

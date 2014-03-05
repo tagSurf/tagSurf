@@ -12,9 +12,12 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require global-functions
 //= require turbolinks
 //= require bootstrap
 //= require underscore
 //= require jquery.hammer-full
+//= require jquery.turbolinks
 //= require ftscroll
+//= require toolbar
 //= require_tree .
