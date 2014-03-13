@@ -1,42 +1,19 @@
 <nav class="navbar navbar-default" role="navigation">
+
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
-    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-      <span class="icon-bar"></span>
-    </button>
-    <button type="button" class="navbar-toggle borderless center" data-toggle="collapse" data-target="#select-tag-feed-form">
-      <span class="navbar-tag" id="tag">Tags</span>
-    </button>
-    <a class="navbar-brand" id="history-btn"></a>
+    <div class="navbar-brand favorites-btn">
+      <span class="glyphicon glyphicon-star-empty"></span>
+    </div>
+    <a class="navbar-brand history-btn"></a>
   </div>
-
 
   <!-- Matches middle button on nav --> 
   <div class="collapse navbar-collapse" id="select-tag-feed-form">
-
-    <ul class="nav navbar-nav">
-      <li>
-        <form role="form" id="tag-search" action="">
-          <input type="text" class="form-control ts-input" placeholder="#funny">
-        </form>
-      </li>
-      <!--<li>  
-        <ul class="tag-list">
-          <li class="tag-item"><%= link_to 'Hot', "/t/hot" %></li>
-          <% @tags.each do |tag| %>
-            <li class="tag-item"><%= link_to tag.name, "/t/#{tag.name}" %></li>
-          <% end %>
-        </ul>
-      </li>
-      -->
-    </ul>
-
   </div><!-- /.navbar-collapse -->
 
   <!-- User setting navbar --> 
-  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+  <div class="collapse navbar-collapse" id="ts-nav-collapse">
 
     <ul class="nav navbar-nav">
       <li class="border-top"></li>
@@ -45,26 +22,5 @@
 
   </div><!-- /.navbar-collapse -->
 </nav>
-
-  <!-- Matches middle button on nav --> 
-  <div class="collapse navbar-collapse" id="select-tag-feed-form">
-
-    <ul class="nav navbar-nav">
-      <li>
-        <form role="form" id="tag-search" action="">
-          <input type="text" class="form-control ts-input" placeholder="#funny">
-        </form>
-      </li>
-      <!--<li>  
-        <ul class="tag-list">
-          <li class="tag-item"><%= link_to 'Hot', "/t/hot" %></li>
-          <% @tags.each do |tag| %>
-            <li class="tag-item"><%= link_to tag.name, "/t/#{tag.name}" %></li>
-          <% end %>
-        </ul>
-      </li>
-      -->
-    </ul>
-
 <div id="overlay"></div>
 
