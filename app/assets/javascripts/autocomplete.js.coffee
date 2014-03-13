@@ -23,8 +23,8 @@ $ ->
     "Scala"
     "Scheme"
   ]
-  $("#tags").autocomplete source: availableTags
-  return
+
+  $("#ts-tags").autocomplete source: availableTags
 
   
 

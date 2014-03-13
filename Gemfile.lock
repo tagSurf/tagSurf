@@ -84,8 +84,12 @@ GEM
     jquery-turbolinks (2.0.2)
       railties (>= 3.1.0)
       turbolinks
-    jquery-ui-rails (4.0.4)
+    jquery-ui-rails (4.0.3)
       jquery-rails
+      railties (>= 3.1.0)
+    jquery-ui-sass-rails (4.0.3.0)
+      jquery-rails
+      jquery-ui-rails (= 4.0.3)
       railties (>= 3.1.0)
     json (1.8.1)
     jwt (0.1.8)
@@ -188,7 +192,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   jquery-turbolinks
-  jquery-ui-rails
+  jquery-ui-sass-rails
   omniauth
   omniauth-oauth2
   pg
