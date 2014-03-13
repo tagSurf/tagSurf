@@ -20,5 +20,6 @@
 //= require jquery.turbolinks
 //= require ftscroll
 //= require jquery.ui.autocomplete
+//= require autocomplete
 //= require toolbar
 //= require_tree .
