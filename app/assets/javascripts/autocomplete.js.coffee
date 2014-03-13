@@ -11,10 +11,13 @@ $(document).ready ->
         url: "/api/tags",
       .success (data) ->
         this.tags = data['tags']
-        autoComplete.input.autocomplete
+        autoComplete.input.autocomplete(
           source: this.tags
+          minLength : 0
           select: (event, ui) ->
             window.location = "/t/#{ui.item.value}"
+        ).on "focus", (event) ->
+          $(this).autocomplete "search", ""
 
   autoComplete.currentTag = ->
     urlRouteArray = window.location.href.split('/')
