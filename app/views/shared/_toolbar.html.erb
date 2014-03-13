@@ -12,17 +12,17 @@
     <a class="navbar-brand" id="history-btn"></a>
   </div>
 
+
   <!-- Matches middle button on nav --> 
   <div class="collapse navbar-collapse" id="select-tag-feed-form">
 
     <ul class="nav navbar-nav">
-      <!--<li>
+      <li>
         <form role="form" id="tag-search" action="">
           <input type="text" class="form-control ts-input" placeholder="#funny">
         </form>
       </li>
-      -->
-      <li>  
+      <!--<li>  
         <ul class="tag-list">
           <li class="tag-item"><%= link_to 'Hot', "/t/hot" %></li>
           <% @tags.each do |tag| %>
@@ -30,6 +30,7 @@
           <% end %>
         </ul>
       </li>
+      -->
     </ul>
 
   </div><!-- /.navbar-collapse -->
@@ -44,5 +45,26 @@
 
   </div><!-- /.navbar-collapse -->
 </nav>
+
+  <!-- Matches middle button on nav --> 
+  <div class="collapse navbar-collapse" id="select-tag-feed-form">
+
+    <ul class="nav navbar-nav">
+      <li>
+        <form role="form" id="tag-search" action="">
+          <input type="text" class="form-control ts-input" placeholder="#funny">
+        </form>
+      </li>
+      <!--<li>  
+        <ul class="tag-list">
+          <li class="tag-item"><%= link_to 'Hot', "/t/hot" %></li>
+          <% @tags.each do |tag| %>
+            <li class="tag-item"><%= link_to tag.name, "/t/#{tag.name}" %></li>
+          <% end %>
+        </ul>
+      </li>
+      -->
+    </ul>
+
 <div id="overlay"></div>
 

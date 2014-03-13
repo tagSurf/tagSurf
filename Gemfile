@@ -8,6 +8,7 @@ gem 'unicorn'
 gem 'turbolinks'
 gem 'rails_12factor', group: :production
 gem 'jquery-turbolinks'
+gem 'jquery-ui-rails'
 gem 'httparty'
 gem 'acts_as_votable', '~> 0.8.0'
 gem 'underscore-rails'
