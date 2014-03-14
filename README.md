@@ -44,7 +44,22 @@ $ rake db:seed
 $ rails server
 ```
 
-Navigate to localhost:3000, authenitcate with imgur.com, and vote away.
+Navigate to localhost:3000, authenitcate with the test account and vote away.
+
+The default user info is:
+
+email: admin@example.com
+password: 12345678
+
+This user is created when you $ rake db:seed. You can update or create a new user in a Rails console session.
+
+For example
+```
+$ rails console
+>> u = User.create(email: 'myemail@gmail.com', password: 'foobarbaz', password_confirmation: 'foobarbaz', beta_user: true)
+#=> <# User... >
+```
+
 
 
 ### API Routes
