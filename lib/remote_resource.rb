@@ -28,6 +28,16 @@ class RemoteResource
     end
   end
 
+  def self.get_image(remote_id)
+    app = 'https://api.imgur.com/3/'
+    service = "image/#{remote_id}/" 
+    if Rails.env.development?
+      HTTParty.get(app + service, :headers => {"Authorization" => "Client-ID 63c3978f06dac10"})
+    else
+      HTTParty.get(app + service, :headers => {"Authorization" => "Client-ID e0d1a9753eaf289"})
+    end
+  end
+
   def self.content_type(type)
     if type == "image/jpeg"
       "jpg"
