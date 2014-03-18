@@ -114,3 +114,8 @@ ul { list-style-type: none; }
   width: 80px;
   float:right;
 }
+
+.ui-autocomplete {
+  max-height: 250px;
+  overflow-y: auto;
+}
