@@ -173,6 +173,7 @@ $(document).ready ->
     $('.ftscroller_y').addClass('full')
 
   state.updateCards = ->
+    state.fullscreenButton.show()
     template = """
         <div class="card-container clearfix" id="next">
            <div class="img-container clearfix">
