@@ -12,7 +12,7 @@
   color: #000;
   margin: 3px auto;
   border: #000 solid thin;
-  padding: 13px 13px 13px 26px;
+  padding: 13px;
   font-size: 16px;
   font-family:'Raleway', sans-serif;
   background: #fff;
@@ -21,10 +21,14 @@
   border-radius: 50px / 50px;
 }
 
+.tag-input-field{
+  padding: 13px 13px 13px 26px;
+}
+
 #static-tag {
   position: absolute;
   top: 6px;
-  left: 121px;
+  left: 40px;
   font-size: 16px;
   font-family: Raleway, sans-serif;
 }
