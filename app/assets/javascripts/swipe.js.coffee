@@ -173,7 +173,6 @@ $(document).ready ->
     $('.ftscroller_y').addClass('full')
 
   state.updateCards = ->
-    state.fullscreenButton.show()
     template = """
         <div class="card-container clearfix" id="next">
            <div class="img-container clearfix">
@@ -199,12 +198,12 @@ $(document).ready ->
     state.next = $('#next')
     state.fullscreen = false
  
-    element = state.current[0]
-
-    if (element.offsetHeight < element.scrollHeight) || (element.offsetWidth < element.scrollWidth)
-      state.fullscreenButton.show()
-    else
-      state.fullscreenButton.hide()
+    state.current.promise().done (element) ->
+      return unless state.current == element
+      if (element.offsetHeight < element.scrollHeight) || (element.offsetWidth < element.scrollWidth)
+        state.fullscreenButton.show()
+      else
+        state.fullscreenButton.hide()
   
     $('img', state.current).attr("src", state.queue[0].link)
     $('.text', state.current).text(state.queue[0].title)

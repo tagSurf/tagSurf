@@ -67,7 +67,7 @@ Percompile assets locally before pushing to server
 $ RAILS_ENV=production bundle exec rake assets:precompile
 ```
 
-Make the above easy and add this alias to your ~/.zshrc or ~/.bashrc
+Add this alias to your ~/.zshrc or ~/.bashrc and forgot the rest.
 ```
 alias precompile="RAILS_ENV=production bundle exec rake assets:precompile"
 
