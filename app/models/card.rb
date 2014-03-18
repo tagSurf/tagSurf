@@ -43,8 +43,8 @@ class Card < ActiveRecord::Base
     response = RemoteResource.get_tag(tag)
     tagged = response.parsed_response["data"]
     tagged.each do |obj|
-      next if obj["nsfw"].to_s == 'false'
-      next if obj['is_album'].to_s == 'false'
+      next if obj["nsfw"].to_s == 'true'
+      next if obj['is_album'].to_s == 'true'
       card = Card.create({
         remote_id: obj['id'],
         remote_provider: 'imgur',

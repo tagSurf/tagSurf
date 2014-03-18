@@ -1,7 +1,12 @@
 class Api::TagsController < Api::BaseController
 
   def index
-    render json: Tag.all
+    tags = []
+    Tag.all.each do |tag|
+      tags << tag.name
+    end
+    tags << "hot"
+    render json: tags
   end
 
   def show
