@@ -62,6 +62,17 @@ $ rails console
 
 ### Deploying
 
+Push master branch to the server
+```
+$ git push heroku master
+```
+
+Push non-master branch to server
+```
+$ git push heroku <non-master-branch-name>:master
+```
+
+
 
 ### API Routes
 
