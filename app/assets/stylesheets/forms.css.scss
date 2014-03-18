@@ -12,14 +12,23 @@
   color: #000;
   margin: 3px auto;
   border: #000 solid thin;
-  padding: 13px;
+  padding: 13px 13px 13px 26px;
   font-size: 16px;
   font-family:'Raleway', sans-serif;
   background: #fff;
-   -moz-border-radius: 100px / 75px;
-    -webkit-border-radius: 100px / 75px;
-    border-radius: 100px / 75px;
+  -moz-border-radius: 50px / 50px;
+  -webkit-border-radius: 50px / 50px;
+  border-radius: 50px / 50px;
 }
+
+#static-tag {
+  position: absolute;
+  top: 6px;
+  left: 121px;
+  font-size: 16px;
+  font-family: Raleway, sans-serif;
+}
+
 
 .ts-submit-bar{
   width:100%;
