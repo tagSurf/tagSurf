@@ -21,16 +21,41 @@
   border-radius: 50px / 50px;
 }
 
-.tag-input-field{
-  padding: 13px 13px 13px 26px;
-}
+.ts-form-control{
+  width: 230px;
+  margin: 3px auto;
 
-#static-tag {
-  position: absolute;
-  top: 6px;
-  left: 40px;
-  font-size: 16px;
-  font-family: Raleway, sans-serif;
+  .tag-surf-input {
+    width: 203px;
+    color: #000;
+    border:0px;
+    padding: 3px; 
+    font-size: 16px;
+    font-family:'Raleway', sans-serif;
+    background: #fff;
+    -moz-border-bottom-right-radius: 50px;
+    -moz-border-bottom-top-radius: 50px;
+    -webkit-border-bottom-right-radius: 50px;
+    -webkit-border-top-right-radius: 50px;
+    border-bottom-right-radius: 50px;
+    border-top-right-radius: 50px;
+  }
+
+  .static-tag {
+    background: #fff;
+    padding: 7px 5px 5px 17px;
+    border:0px;
+    font-size: 16px;
+    width:27px;
+    float:left;
+    font-family: Raleway, sans-serif;
+    -moz-border-bottom-left-radius: 50px;
+    -moz-border-bottom-top-radius: 50px;
+    -webkit-border-bottom-left-radius: 50px;
+    -webkit-border-top-left-radius: 50px;
+    border-bottom-left-radius: 50px;
+    border-top-left-radius: 50px;
+  }
 }
 
 
