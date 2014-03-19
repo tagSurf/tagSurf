@@ -62,6 +62,29 @@ $ rails console
 
 ### Deploying
 
+Percompile assets locally before pushing to server
+```
+$ RAILS_ENV=production bundle exec rake assets:precompile
+```
+
+Add this alias to your ~/.zshrc or ~/.bashrc and forgot the rest.
+```
+alias precompile="RAILS_ENV=production bundle exec rake assets:precompile"
+
+$ precompile
+```
+
+
+Push master branch to the server
+```
+$ git push heroku master
+```
+
+Push non-master branch to server
+```
+$ git push heroku <non-master-branch-name>:master
+```
+
 
 ### API Routes
 
