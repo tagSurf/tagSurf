@@ -6,7 +6,7 @@
 
 // TODO Move to cards.css.scss
 #swiper{
-  min-height:300px;
+  min-height:297px;
   padding: 40px 10px;
   width:300px;
   margin: 0 0 0 15px;
@@ -67,7 +67,7 @@
   width:300px;
   margin: 0 auto !important;
   float: none !important;
-  padding:15px 0;
+  padding:0;
 
   span.expand-btn{
     width:300px;
@@ -76,7 +76,7 @@
     border-bottom-width: 2px;
     font-size:20px;
     text-align:center;
-    padding:20px 0 10px 5px;
+    padding:10px 0 10px 5px;
   }
 }
 

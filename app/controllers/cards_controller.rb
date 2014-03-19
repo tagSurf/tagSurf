@@ -27,7 +27,11 @@ class CardsController < ApplicationController
 
   def next
     @cards = Card.next(@user, card_params[:tag])
-    render json: @cards
+    if @cards.present?
+      render json: @cards
+    else
+      render json: {errors: 'no cards found'}, status: :not_found
+    end
   end
 
   private
