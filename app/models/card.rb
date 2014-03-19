@@ -26,7 +26,7 @@ class Card < ActiveRecord::Base
       cards
     else
       has_voted = user.find_voted_items.map(&:id)
-      cards = Card.where('cards.id not in (?)', has_voted)).tagged_with([tag], :any => true).limit(n).order('created_at DESC')
+      cards = Card.where('cards.id not in (?)', has_voted).tagged_with([tag], :any => true).limit(n).order('created_at DESC')
       if cards.length < 10
         self.populate_tag(tag)
       end
@@ -40,7 +40,7 @@ class Card < ActiveRecord::Base
       Card.first(n)
     else
       has_voted = user.find_voted_items.map(&:id)
-      Card.where('id not in (?)', has_voted)).limit(n).order('created_at DESC')
+      Card.where('id not in (?)', has_voted).limit(n).order('created_at DESC')
     end
   end
 
