@@ -27,6 +27,7 @@ class Card < ActiveRecord::Base
       if cards.length < 10
         self.populate_tag(tag) 
       end
+      cards
     end
   end
 

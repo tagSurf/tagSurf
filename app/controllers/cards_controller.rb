@@ -1,4 +1,4 @@
-class CardsController < ApplicationController
+jlass CardsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :find_authenticated_user
@@ -27,7 +27,7 @@ class CardsController < ApplicationController
 
   def next
     @cards = Card.next(@user, card_params[:tag])
-    if @cards
+    if @cards.present?
       render json: @cards
     else
       render json: {error: 'no cards found'}, status: :not_found
