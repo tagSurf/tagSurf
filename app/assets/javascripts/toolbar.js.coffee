@@ -23,7 +23,6 @@ $(document).ready ->
   # Toggle history view
   element = document.getElementById("history-btn")
   hammer = Hammer(element).on("tap", (event) ->
-    console.log "here"
     if toolbar.historyTabOpen == false
       toolbar.historyTabOpen = true
       toolbar.fetchHistory(true)
@@ -57,6 +56,7 @@ $(document).ready ->
 
     # Function to add event listener to table
     scroller.addEventListener "reachedend", ->
+      console.log "reached end"
       toolbar.offset = toolbar.offset + toolbar.limit
       toolbar.fetchHistory(false)
       return
