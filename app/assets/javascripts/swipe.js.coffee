@@ -207,7 +207,10 @@ $(document).ready ->
     state.next = $('#next')
     state.fullscreen = false
  
-    state.displayFullscreenButton(state.current[0])
+    setTimeout (->
+      state.displayFullscreenButton(state.current[0])
+      return
+    ), 1000
      
     $('img', state.current).attr("src", state.queue[0].link)
     $('.text', state.current).text(state.queue[0].title)
