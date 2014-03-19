@@ -27,7 +27,7 @@ jlass CardsController < ApplicationController
 
   def next
     @cards = Card.next(@user, card_params[:tag])
-    if @cards.present?
+    if @cards
       render json: @cards
     else
       render json: {error: 'no cards found'}, status: :not_found
