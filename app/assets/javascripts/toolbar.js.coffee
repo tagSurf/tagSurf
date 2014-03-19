@@ -23,6 +23,7 @@ $(document).ready ->
   # Toggle history view
   element = document.getElementById("history-btn")
   hammer = Hammer(element).on("tap", (event) ->
+    console.log "here"
     if toolbar.historyTabOpen == false
       toolbar.historyTabOpen = true
       toolbar.fetchHistory(true)
