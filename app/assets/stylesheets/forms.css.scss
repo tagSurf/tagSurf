@@ -27,12 +27,12 @@
 
   .tag-surf-input {
     width: 203px;
-    color: #000;
+    color: white;
     border:0px;
     padding: 3px; 
     font-size: 16px;
     font-family:'Raleway', sans-serif;
-    background: #fff;
+    background: $ts-light-gray;
     // Todo move these into mixin
     -moz-border-bottom-top-radius: 50px;
     -moz-border-bottom-left-radius: 0px;
@@ -49,7 +49,8 @@
   }
 
   .static-tag {
-    background: #fff;
+    background: $ts-light-gray;
+    color: white;
     padding: 7px 5px 5px 17px;
     border:0px;
     font-size: 16px;
@@ -145,3 +146,18 @@
   box-shadow: none !important;
 }
 
+::-webkit-input-placeholder {
+  color: white;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+  color: white;  
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+  color: white;  
+}
+
+:-ms-input-placeholder {  
+  color: white;  
+}
