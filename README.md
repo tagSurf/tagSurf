@@ -70,13 +70,13 @@ $ RAILS_ENV=production bundle exec rake assets:precompile
 Add this alias to your ~/.zshrc or ~/.bashrc and forgot the rest.
 ```
 alias precompile="RAILS_ENV=production bundle exec rake assets:precompile"
+```
 
+After compiling push master branch to the server
+```
 $ precompile
-```
-
-
-Push master branch to the server
-```
+$ git add .
+$ git commit -am 'precompiled #foobaz'
 $ git push heroku master
 ```
 
