@@ -21,11 +21,14 @@ class Card < ActiveRecord::Base
     if user.votes.size < 1
       Card.last(n)
     elsif tag == 'hot'
-      Card.where('id not in (?)', user.get_voted(Card).map(&:id)).limit(n).order('created_at DESC')
+      has_voted = user.find_voted_items.map(&:id)
+      cards = Card.where('id not in (?)', has_voted).limit(n).order('created_at DESC')
+      cards
     else
-      cards = Card.where('cards.id not in (?)', user.get_voted(Card).map(&:id)).tagged_with([tag], :any => true).limit(n).order('created_at DESC')
+      has_voted = user.find_voted_items.map(&:id)
+      cards = Card.where('cards.id not in (?)', has_voted)).tagged_with([tag], :any => true).limit(n).order('created_at DESC')
       if cards.length < 10
-        self.populate_tag(tag) 
+        self.populate_tag(tag)
       end
       cards
     end
@@ -36,7 +39,8 @@ class Card < ActiveRecord::Base
     if user.votes.size < 1
       Card.first(n)
     else
-      Card.where('id not in (?)', user.get_voted(Card).map(&:id)).limit(n).order('created_at DESC')
+      has_voted = user.find_voted_items.map(&:id)
+      Card.where('id not in (?)', has_voted)).limit(n).order('created_at DESC')
     end
   end
 
