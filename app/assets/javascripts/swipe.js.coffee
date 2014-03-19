@@ -210,7 +210,7 @@ $(document).ready ->
     setTimeout (->
       state.displayFullscreenButton(state.current[0])
       return
-    ), 300
+    ), 500
      
     $('img', state.current).attr("src", state.queue[0].link)
     $('.text', state.current).text(state.queue[0].title)
