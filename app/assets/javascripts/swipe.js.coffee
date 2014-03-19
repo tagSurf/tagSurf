@@ -172,6 +172,15 @@ $(document).ready ->
     el.addClass('full')
     $('.ftscroller_y').addClass('full')
 
+  state.displayFullscreenButton = (element) ->
+    # Todo, need to defer scrollHeight somehow on first request
+    if element.offsetHeight > element.scrollHeight
+      state.fullscreenButton.hide()
+      console.log "hide button"
+    else
+      state.fullscreenButton.show()
+      console.log "show button"
+
   state.updateCards = ->
     template = """
         <div class="card-container clearfix" id="next">
@@ -198,13 +207,11 @@ $(document).ready ->
     state.next = $('#next')
     state.fullscreen = false
  
-    element = state.current[0]
-
-    if (element.offsetHeight < element.scrollHeight) || (element.offsetWidth < element.scrollWidth)
-      state.fullscreenButton.show()
-    else
-      state.fullscreenButton.hide()
-  
+    setTimeout (->
+      state.displayFullscreenButton(state.current[0])
+      return
+    ), 300
+     
     $('img', state.current).attr("src", state.queue[0].link)
     $('.text', state.current).text(state.queue[0].title)
     $('img', state.next).attr("src", state.queue[1].link)

@@ -2,6 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
+# DEPRECATED MODEL FROM PREVIOUS APPLICATION
 CardUI =
   centerCard: ->
     width = CardUI.$element.outerWidth()
