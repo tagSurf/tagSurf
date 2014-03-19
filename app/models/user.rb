@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
 
-  acts_as_voter
+  #acts_as_voter
+  has_many :votes, :foreign_key => :voter_id
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, 
@@ -19,7 +20,7 @@ class User < ActiveRecord::Base
   end 
 
   def vote_history
-    find_voted_items
+    #find_voted_items
   end
 
   def refresh_imgur_token

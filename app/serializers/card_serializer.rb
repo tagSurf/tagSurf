@@ -18,19 +18,19 @@ class CardSerializer < ActiveModel::Serializer
   end
 
   def user_vote
-    current_user.likes(object) == true ? 'up' : 'down'
+    #current_user.likes(object) == true ? 'up' : 'down'
   end
 
   def total_votes
-    object.votes.size
+    #object.votes.size
   end
 
   def down_votes
-    object.upvotes.size
+    #object.upvotes.size
   end
 
   def up_votes
-    object.downvotes.size
+    #object.downvotes.size
   end
 
 end
