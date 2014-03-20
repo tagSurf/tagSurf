@@ -22,4 +22,5 @@
 //= require jquery.ui.autocomplete
 //= require autocomplete
 //= require toolbar
+//= require history
 //= require_tree .

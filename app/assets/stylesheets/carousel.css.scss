@@ -1,6 +1,14 @@
 /* Sections Styles */
 @import 'constants';
 
+html, body, #carousel, #carousel ul, #carousel li {
+  min-height: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+
 #carousel {
   background: silver;
   overflow: hidden;
