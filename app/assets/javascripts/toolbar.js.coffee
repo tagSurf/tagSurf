@@ -40,9 +40,9 @@ $(document).ready ->
     template = "<div class='overlay-container clearfix thumbnails' id='history-page'><div class='row'>"
     for card, idx in toolbar.history
       if ((idx + 1) % 3 == 0)
-        template = template.concat("<div class='col-xs-1'><a href=''><img src='#{card.link}' width='80' height='80' /></a></div></div><div class='row'>")
+        template = template.concat("<div class='col-xs-1'><a href='/u/history'><img src='#{card.link}' width='80' height='80' /></a></div></div><div class='row'>")
       else
-        template = template.concat("<div class='col-xs-1'><a href=''><img src='#{card.link}' width='80' height='80' /></a></div>")
+        template = template.concat("<div class='col-xs-1'><a href='/u/history'><img src='#{card.link}' width='80' height='80' /></a></div>")
 
     tempate = template.concat("</div>")
 
