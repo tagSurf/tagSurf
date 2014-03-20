@@ -1,6 +1,6 @@
 class Api::UsersController < Api::BaseController
 
-  def history
+  def paginated_history
     @offset = user_params["offset"].to_i
     @limit = user_params["limit"].to_i
     @voted = Vote.paginated_history(current_user.id, @limit, @offset) 
