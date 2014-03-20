@@ -19,6 +19,7 @@
 //= require jquery.hammer-full
 //= require jquery.turbolinks
 //= require ftscroll
+//= require carousel
 //= require jquery.ui.autocomplete
 //= require autocomplete
 //= require toolbar
