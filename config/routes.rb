@@ -15,6 +15,7 @@ Tagsurf::Application.routes.draw do
     post 'tags'                          => 'tags#create'
     get  'votes'                         => 'votes#show'
     get  'users/history/:limit/:offset'  => 'users#history'
+    get  'history/:id'                   => 'users#bracketed_history'
     get  'votes/up'                      => 'votes#up'
     get  'votes/down'                    => 'votes#down'
     get  'stats'                         => 'votes#stats'

@@ -11,6 +11,16 @@ class Api::UsersController < Api::BaseController
     end
   end
 
+  def bracketed_history
+    vote = Vote.where(votable_id: params[:id], voter_id: @user.id).first
+    @cards = Vote.bracketed_collection(vote)
+    if @cards.present?
+      render json: @cards, each_serializer: CardSerializer
+    else
+      render json: {error: 'no cards found'}, status: :not_found
+    end
+  end
+
   def up
     @voted = @user.find_up_voted_items
     if @voted
