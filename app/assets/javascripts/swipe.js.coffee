@@ -99,7 +99,8 @@ $(document).ready ->
 
   state.swipeEnd = (e) ->
     e.preventDefault()
-    state.current.css('background-color', '#f4f3f4')
+    #state.current.css('background-color', '#f4f3f4')
+    state.current.css('background-color', '#353535')
     return unless state.initiated
 
     e = e.originalEvent
@@ -183,7 +184,7 @@ $(document).ready ->
 
   state.updateCards = ->
     template = """
-        <div class="card-container clearfix" id="next">
+        <div class="card-container card-style clearfix" id="next">
            <div class="img-container clearfix">
               <img src="#{state.queue[1].link}" />
            </div>
@@ -192,7 +193,7 @@ $(document).ready ->
            </div>
         </div>
 
-        <div class="card-container clearfix" id="current">
+        <div class="card-container card-style clearfix" id="current">
            <div class="img-container clearfix">
               <img src="#{state.queue[0].link}" />
            </div>
@@ -210,7 +211,7 @@ $(document).ready ->
     setTimeout (->
       state.displayFullscreenButton(state.current[0])
       return
-    ), 300
+    ), 500
      
     $('img', state.current).attr("src", state.queue[0].link)
     $('.text', state.current).text(state.queue[0].title)

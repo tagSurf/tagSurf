@@ -8,7 +8,8 @@ class CardsController < ApplicationController
 
   def add_vote
     @card = Card.find card_params[:id]
-    @result = @card.vote :voter => @user, :vote => card_params[:vote]
+    @vote = card_params[:vote] == 'like' ? true : false
+    @result = Vote.create(:voter_id => @user.id, :votable_id => @card.id, :vote_flag => @vote)
     render json: @result 
   end
 

@@ -27,12 +27,12 @@
 
   .tag-surf-input {
     width: 203px;
-    color: #000;
+    color: white;
     border:0px;
     padding: 3px; 
     font-size: 16px;
     font-family:'Raleway', sans-serif;
-    background: #fff;
+    background: $ts-light-gray;
     // Todo move these into mixin
     -moz-border-bottom-top-radius: 50px;
     -moz-border-bottom-left-radius: 0px;
@@ -49,7 +49,8 @@
   }
 
   .static-tag {
-    background: #fff;
+    background: $ts-light-gray;
+    color: white;
     padding: 7px 5px 5px 17px;
     border:0px;
     font-size: 16px;
@@ -71,12 +72,12 @@
   height: 44px;
   background: $ts-blue;
   margin-top:24px;
-  padding:4px 25%;
+  padding:4px 2%;
 }
 
 .ts-submit-btn{
   font-family:'Raleway', sans-serif;
-  width: 90px;
+  width: 110px;
   float: left;
   
 }
@@ -95,4 +96,68 @@
   border-radius:2px; 
 }
 
+.ts-login-btn{
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 22px;
+  border-right: 0.4em solid white;
+  border-top-right-radius: 40px;
+  border-bottom-right-radius: 40px;
+  border-top: 0.3em solid white;
+  border-bottom: 0.3em solid white;
+  height: 63px;
+  top: -10px;
+  width: 165px;
+  position: relative;
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+.border-trim
+{
+  overflow: hidden;
+  width: 170px;
+  height: 44px;
+  position: relative;
+  top: -4px;
+}
 
+.ts-signup-btn{
+  color: inherit;
+  font-size: 22px;
+  position: relative;
+  margin-right: 35px;
+  color: white;
+  top: 2px;
+  left: 75px;
+  text-decoration: none !important;
+}
+.ts-signup-btn:hover{
+  color:white;
+}
+
+/*
+ * Webkit blue box-shadow on focus not sure yet how we will fix
+ */
+.ts-login-btn:focus, .ts-signup-btn:focus{
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+
+::-webkit-input-placeholder {
+  color: white;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+  color: white;  
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+  color: white;  
+}
+
+:-ms-input-placeholder {  
+  color: white;  
+}
