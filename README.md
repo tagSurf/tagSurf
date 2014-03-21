@@ -62,7 +62,14 @@ $ rails console
 
 ### Deploying
 
-Percompile assets locally before pushing to server
+Once changes are merged into master, push to heroku branch
+```
+$ git checkout heroku
+$ git merge master
+$ git push
+```
+
+Precompile assets locally before pushing to server
 ```
 $ RAILS_ENV=production bundle exec rake assets:precompile
 ```
