@@ -11,8 +11,15 @@
 
   <div class="ts-submit-bar">
     <!--<div class="ts-submit-btn"><%= f.submit "Login", class: 'btn btn-default' %></div>-->
-    <div class="ts-submit-btn"><div class="border-trim"><%= f.submit "log in", class: 'ts-login-btn' %></div></div>
-    <div class="ts-submit-btn"><%= link_to "sign up", new_registration_path(resource_name), class: 'ts-signup-btn' %></div>
+    <div class="ts-submit-btn"><div class="border-trim"><%= f.submit "log in", class: 'ts-login-btn ts-front-btn'%></div></div>
+    <div class="ts-submit-btn"><%= link_to "sign up", new_registration_path(resource_name), class: 'ts-signup-btn ts-front-btn' %></div>
   </div>
+  <script>
+	$('.ts-login-btn').click(function(){$(this).addClass('ts-front-btn-active')});
+	$('.ts-signup-btn').click(function(){
+		$(this).css('color','#404041');
+		$('.ts-submit-bar').css('background-color','#48a4df');
+	});
+  </script>
 <% end %>
 
