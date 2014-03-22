@@ -84,7 +84,7 @@ After compiling push master branch to the server
 $ precompile
 $ git add .
 $ git commit -am 'precompiled #foobaz'
-$ git push heroku master
+$ git push heroku heroku:master
 ```
 
 Push non-master branch to server
