@@ -81,7 +81,7 @@ $(document).ready ->
       if Math.abs(state.deltaX) > 70
         direction = if state.deltaX < 0 then -1 else 1
         if direction == -1
-          state.current.css('border-color', '#E56E6E')
+          state.current.css('border-color', '#C90016')
           rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/35.0, 0), 90)
         else
           state.current.css('border-color', '#8EE5B0')
