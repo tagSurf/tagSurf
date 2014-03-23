@@ -62,36 +62,11 @@ $ rails console
 
 ### Deploying
 
-Once changes are merged into master, push to heroku branch
-```
-$ git checkout heroku
-$ git merge master
-$ git push
-```
+Deploying is a cinch with the rake task. The following will rm any existing assets & precompile new assets. Whatever branch you are on when you run the rake task will be deployed. If you on master branch it will be deployed to production. If you are on feature/my-feature that branch will be deployed. Once we add staging envs a simple which out of :production to :staging will deploy to a our staging server.
 
-Precompile assets locally before pushing to server
 ```
-$ RAILS_ENV=production bundle exec rake assets:precompile
+$ rake deploy:production
 ```
-
-Add this alias to your ~/.zshrc or ~/.bashrc and forgot the rest.
-```
-alias precompile="RAILS_ENV=production bundle exec rake assets:precompile"
-```
-
-After compiling push master branch to the server
-```
-$ precompile
-$ git add .
-$ git commit -am 'precompiled #foobaz'
-$ git push heroku heroku:master
-```
-
-Push non-master branch to server
-```
-$ git push heroku <non-master-branch-name>:master
-```
-
 
 ### API Routes
 
