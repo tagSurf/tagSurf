@@ -80,10 +80,10 @@ $(document).ready ->
       if Math.abs(state.deltaX) > 70
         direction = if state.deltaX < 0 then -1 else 1
         if direction == -1
-          state.current.css('background-color', '#E56E6E')
+          state.current.css('border-color', '#C90016')
           rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/35.0, 0), 90)
         else
-          state.current.css('background-color', '#8EE5B0')
+          state.current.css('border-color', '#8EE5B0')
           rotate = Math.min(Math.max(Math.abs(100-state.deltaX)/20.0, 5), 90)
       
         translate += ' rotate('+(direction*rotate)+'deg)'
@@ -98,8 +98,7 @@ $(document).ready ->
 
   state.swipeEnd = (e) ->
     e.preventDefault()
-    #state.current.css('background-color', '#f4f3f4')
-    state.current.css('background-color', '#353535')
+    state.current.css('border-color', '#353535')
     return unless state.initiated
 
     e = e.originalEvent

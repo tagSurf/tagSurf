@@ -5,6 +5,7 @@ $ts-blue: #1dafec;
 $ts-orange: #ed7d31; 
 $ts-dark-orange: #Ef7c00; 
 $ts-gray: #404041; 
+$ts-red: #C90016;
 $ts-dark-gray: #494949; 
 $ts-light-gray: #6a6a6a; 
 //$ts-dark-gray: #2f2f2f; 
@@ -25,4 +26,8 @@ html, body{
 #mwa { 
   height:100%; 
   overflow:hidden;
+}
+
+.internal {
+	background-color:$ts-dark-gray;
 }
