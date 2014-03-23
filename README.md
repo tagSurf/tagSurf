@@ -62,7 +62,7 @@ $ rails console
 
 ### Deploying
 
-Deploying is a cinch with the rake task. The following will rm any existing assets & precompile new assets. Whatever branch you are on when you run the rake task will be deployed. If you on master branch it will be deployed to production. If you are on feature/my-feature that branch will be deployed. Once we add staging envs a simple which out of :production to :staging will deploy to a our staging server.
+Deploying is a cinch with the rake task. The following will rm any existing assets & precompile new assets. Whatever branch you are on when you run the rake task will be deployed. If you are on master branch it will be deployed to production. If you are on feature/my-feature that branch will be deployed. Once we add staging envs a simple which out of :production to :staging will deploy to our staging server.
 
 ```
 $ rake deploy:production
