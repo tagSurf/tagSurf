@@ -34,6 +34,7 @@ $(document).ready ->
     return if toolbar.historyTabOpen == false
     toolbar.historyTabOpen = false
     toolbar.history = []
+    toolbar.offset = 0
     document.getElementById("history-page").remove()
     
   toolbar.render = (initial) ->
@@ -52,14 +53,13 @@ $(document).ready ->
 
     scroller = new FTScroller(historyPage,
       scrollingX: false,
-      flinging: false,
+      flinging: true,
       alwaysScroll: true,
-      updateOnChanges: true,
-      updateOnWindowResize: true
+      paginatedSnap: true
     )
 
     unless initial == true
-      scroller.scrollTo(0, scroller.scrollHeight - 100)
+      scroller.scrollTo(0, (scroller.scrollHeight - 200))
 
     # Function to add event listener to table
     scroller.addEventListener "reachedend", ->
