@@ -3,11 +3,15 @@ $(document).ready ->
   # Basic button actions
   toolbar =
     container: $('#overlay')
+    historyPage: null
+    counter: null
+    gridEnd: null
     buttons: ["history", "tagSearch", "settings"]
     historyTabOpen: false
     limit: 18
     offset: 0
     history: []
+    nextPage: []
 
   toolbar.fetchHistory = (initial, scroller) ->
     $.ajax
@@ -17,7 +21,7 @@ $(document).ready ->
         toolbar.history = results.data
         toolbar.render(true)
       else
-        toolbar.history = _.union(toolbar.history, results.data)
+        toolbar.nextPage = results.data
         toolbar.render(false)
 
   # Toggle history view
@@ -38,22 +42,40 @@ $(document).ready ->
     document.getElementById("history-page").remove()
     
   toolbar.render = (initial) ->
-    template = "<div class='overlay-container clearfix thumbnails' id='history-page'><div class='row'>"
-    for card, idx in toolbar.history
-      if ((idx + 1) % 3 == 0)
-        template = template.concat("<div class='col-xs-1'><a href='/u/history'><img src='#{card.link}' width='80' height='80' /></a></div></div><div class='row'>")
-      else
-        template = template.concat("<div class='col-xs-1'><a href='/u/history'><img src='#{card.link}' width='80' height='80' /></a></div>")
+    if initial
+      template = "<div class='overlay-container clearfix thumbnails' id='history-page'><div class='row'>"
+      for card, idx in toolbar.history
+        if ((idx + 1) % 3 == 0)
+          template = template.concat("<div class='col-xs-1'><a href='/u/history'><img src='#{card.link}' width='80' height='80' /></a></div></div><div class='row'>")
+        else
+          template = template.concat("<div class='col-xs-1'><a href='/u/history'><img src='#{card.link}' width='80' height='80' /></a></div>")
 
-    tempate = template.concat("</div>")
+      template = template.concat("</div><div id='end-of-history-1'></div>")
+      toolbar.container.html(template)
+      toolbar.historyEl = $('#history-page')
+      historyPage = toolbar.historyEl[0]
+    else
+      unless toolbar.gridEnd
+        toolbar.counter = 1
 
-    toolbar.container.html(template)
+      toolbar.gridEnd = $("#end-of-history-#{toolbar.counter}")
 
-    historyPage = document.getElementById('history-page')
+      nextCards = "<div class='row'>"
+      for card, idx in toolbar.nextPage
+        if ((idx + 1) % 3 == 0)
+          nextCards = nextCards.concat("<div class='col-xs-1'><a href='/u/history'><img src='#{card.link}' width='80' height='80' /></a></div></div><div class='row'>")
+        else
+          nextCards = nextCards.concat("<div class='col-xs-1'><a href='/u/history'><img src='#{card.link}' width='80' height='80' /></a></div>")
+
+      toolbar.counter = toolbar.counter + 1
+      nextCards = nextCards.concat("</div><div id='end-of-history-#{toolbar.counter}'></div>")
+      toolbar.gridEnd.after(nextCards)
+      
 
     scroller = new FTScroller(historyPage,
       scrollingX: false,
       flinging: true,
+      maxFlingDuration: 100,
       alwaysScroll: true,
       paginatedSnap: true
     )
