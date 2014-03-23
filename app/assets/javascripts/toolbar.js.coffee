@@ -74,8 +74,7 @@ $(document).ready ->
 
     scroller = new FTScroller(historyPage,
       scrollingX: false,
-      flinging: true,
-      maxFlingDuration: 100,
+      flinging: false,
       alwaysScroll: true,
       paginatedSnap: true
     )
