@@ -9,16 +9,16 @@ $(document).ready ->
     offset: 0
     history: []
 
-  toolbar.fetchHistory = (initial) ->
+  toolbar.fetchHistory = (initial, scroller) ->
     $.ajax
       url: "/api/users/history/#{toolbar.limit}/#{toolbar.offset}",
     .success (results) ->
       if initial == true
         toolbar.history = results.data
-        toolbar.render()
+        toolbar.render(true)
       else
         toolbar.history = _.union(toolbar.history, results.data)
-        toolbar.render()
+        toolbar.render(false)
 
   # Toggle history view
   element = document.getElementById("history-btn")
@@ -36,7 +36,7 @@ $(document).ready ->
     toolbar.history = []
     document.getElementById("history-page").remove()
     
-  toolbar.render = ->
+  toolbar.render = (initial) ->
     template = "<div class='overlay-container clearfix thumbnails' id='history-page'><div class='row'>"
     for card, idx in toolbar.history
       if ((idx + 1) % 3 == 0)
@@ -47,18 +47,24 @@ $(document).ready ->
     tempate = template.concat("</div>")
 
     toolbar.container.html(template)
-    containerElement = document.getElementById('history-page')
 
-    scroller = new FTScroller(containerElement,
+    historyPage = document.getElementById('history-page')
+
+    scroller = new FTScroller(historyPage,
       scrollingX: false,
-      flinging: false
+      flinging: false,
+      alwaysScroll: true,
+      updateOnChanges: true,
+      updateOnWindowResize: true
     )
+
+    unless initial == true
+      scroller.scrollTo(0, scroller.scrollHeight - 100)
 
     # Function to add event listener to table
     scroller.addEventListener "reachedend", ->
-      console.log "reached end"
       toolbar.offset = toolbar.offset + toolbar.limit
-      toolbar.fetchHistory(false)
+      toolbar.fetchHistory(false, historyPage)
       return
     , false
       
