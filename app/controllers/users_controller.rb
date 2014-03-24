@@ -13,4 +13,7 @@ class UsersController < ApplicationController
     end
   end
 
+  def history
+  end
+
 end

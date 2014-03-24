@@ -1,8 +1,5 @@
 $(document).ready ->
   FastClick.attach(document.body)
-
-  # FTScroller implementation
-  # https://github.com/ftlabs/ftscroller
    
   state =
     tagSurfing: false
@@ -12,6 +9,7 @@ $(document).ready ->
     wrapper: $('#swiper')
     current: $('#current')
     next: $('#next')
+    path: location.pathname.match(/\/t\/(.*)/)
     fullscreenButton: $('.fullscreen')
     startX: 0
     startY: 0
@@ -28,9 +26,10 @@ $(document).ready ->
     updateCards: null
 
   return unless state.wrapper
+  return unless state.path
 
   state.fetchData = ->
-    tag = location.pathname.match(/\/t\/(.*)/)[1]
+    tag = state.path[1]
     if tag
       $.ajax
         url: "/cards/next/#{tag}",

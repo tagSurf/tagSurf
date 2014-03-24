@@ -1,6 +1,5 @@
 class Card < ActiveRecord::Base
 
-  #acts_as_votable
   acts_as_taggable
 
   has_many :votes, :foreign_key => :votable_id
