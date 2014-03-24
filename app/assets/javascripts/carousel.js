@@ -94,7 +94,7 @@ function Carousel(element)
 
                 // slow down at the first and last pane 
                 if (current_pane == pane_count-1 && ev.gesture.direction == "left") {
-                    var el = $('.pane' + (current_pane + 1))
+                    var el = $('li').last()
                     var id = el.data("id")
                     var doc_width = $(document).width();
                     var collection = []
@@ -111,8 +111,7 @@ function Carousel(element)
                         };
                       });
                       setContainerOffset(drag_offset + pane_offset);
-                      var new_current_pane = current_pane + 1
-                      self.init(new_current_pane)
+                      self.init(current_pane + 1)
                     });
                 }
 
@@ -130,12 +129,11 @@ function Carousel(element)
                           //console.log("already added");
                         }else{
                           pane_count = pane_count + 1
-                          el.before( "<li class='pane" + (current_pane + index + 2) + " carousel-card' data-id=" + value.id + " style='width:"+ doc_width +"px'> <div class='carousel-img-container'> <img src='" + value.link + "' class='carousel-img' /> </div> <div class='carousel-txt-container'> <p>" + value.title + "</p> </div> </li>");
+                          el.before( "<li class='pane-" + (current_pane + index) + " carousel-card' data-id=" + value.id + " style='width:"+ doc_width +"px'> <div class='carousel-img-container'> <img src='" + value.link + "' class='carousel-img' /> </div> <div class='carousel-txt-container'> <p>" + value.title + "</p> </div> </li>");
                         };
                       });
                       setContainerOffset(drag_offset + pane_offset);
-                      var new_current_pane = current_pane + 1
-                      self.init(new_current_pane)
+                      self.init(10)
                     });
 
 
