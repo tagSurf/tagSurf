@@ -10,24 +10,36 @@ function Carousel(element)
     element = $(element);
 
     var container = $(">ul", element);
-    var panes = $(">ul>li", element);
+    var panes = $.unique($(">ul>li", element));
 
     var pane_width = 0;
     var pane_count = panes.length;
-
     var current_pane = 2;
 
 
     /**
      * initial
      */
-    this.init = function() {
+    this.init = function(starting_pane) {
         setPaneDimensions();
+        //clearDuplicates();
 
         $(window).on("load resize orientationchange", function() {
             setPaneDimensions();
         })
-        this.showPane(current_pane, false);
+        this.showPane(starting_pane, false);
+    };
+
+    function clearDuplicates() {
+      dup = {}
+      $('.carousel-card').each(function() {
+        var data = $(this).data();
+        if (dup[data] == null){
+          dup[data] = true;
+        } else {
+          $(this).remove();
+        };
+      });
     };
 
 
@@ -35,9 +47,9 @@ function Carousel(element)
      * set the pane dimensions and scale the container
      */
     function setPaneDimensions() {
-        pane_width = element.width();
+        pane_width = $(document).width();
         panes.each(function() {
-            $(this).width(pane_width);
+          $(this).width(pane_width);
         });
         container.width(pane_width*pane_count);
     };
@@ -49,7 +61,6 @@ function Carousel(element)
     this.showPane = function(index, animate) {
         // between the bounds
         index = Math.max(0, Math.min(index, pane_count-1));
-        console.log(index);
         current_pane = index;
 
         var offset = -((100/pane_count)*current_pane);
@@ -70,7 +81,6 @@ function Carousel(element)
     this.next = function() { return this.showPane(current_pane+1, true); };
     this.prev = function() { return this.showPane(current_pane-1, true); };
 
-
     function handleHammer(ev) {
         // disable browser scrolling
         ev.gesture.preventDefault();
@@ -82,9 +92,54 @@ function Carousel(element)
                 var pane_offset = -(100/pane_count)*current_pane;
                 var drag_offset = ((100/pane_width)*ev.gesture.deltaX) / pane_count;
 
-                // slow down at the first and last pane
-                if((current_pane == 0 && ev.gesture.direction == "right") ||
-                    (current_pane == pane_count-1 && ev.gesture.direction == "left")) {
+                // slow down at the first and last pane 
+                if (current_pane == pane_count-1 && ev.gesture.direction == "left") {
+                    var el = $('.pane' + (current_pane + 1))
+                    var id = el.data("id")
+                    var doc_width = $(document).width();
+                    var collection = []
+                    $.ajax({
+                      url: "/api/history/next/" + id
+                    }).success(function(data) {
+                      collection = data.data;
+                      $.each(collection, function(index, value) {
+                        if ($('.carousel-card[data-id='+ value.id + ']')[0]) {
+                          //console.log("already added");
+                        }else{
+                          pane_count = pane_count + 1
+                          container.append( "<li class='pane" + (current_pane + index + 2) + " carousel-card' data-id=" + value.id + " style='width:"+ doc_width +"px'> <div class='carousel-img-container'> <img src='" + value.link + "' class='carousel-img' /> </div> <div class='carousel-txt-container'> <p>" + value.title + "</p> </div> </li>");
+                        };
+                      });
+                      setContainerOffset(drag_offset + pane_offset);
+                      var new_current_pane = current_pane + 1
+                      self.init(new_current_pane)
+                    });
+                }
+
+                if (current_pane == 0 && ev.gesture.direction == "right") {
+                    var el = $($('.carousel-card')[0]);
+                    var id = el.data("id");
+                    var doc_width = $(document).width();
+                    var collection = [];
+                    $.ajax({
+                      url: "/api/history/previous/" + id
+                    }).success(function(data) {
+                      collection = data.data;
+                      $.each(collection, function(index, value) {
+                        if ($('.carousel-card[data-id='+ value.id + ']')[0]) {
+                          //console.log("already added");
+                        }else{
+                          pane_count = pane_count + 1
+                          el.before( "<li class='pane" + (current_pane + index + 2) + " carousel-card' data-id=" + value.id + " style='width:"+ doc_width +"px'> <div class='carousel-img-container'> <img src='" + value.link + "' class='carousel-img' /> </div> <div class='carousel-txt-container'> <p>" + value.title + "</p> </div> </li>");
+                        };
+                      });
+                      setContainerOffset(drag_offset + pane_offset);
+                      var new_current_pane = current_pane + 1
+                      self.init(new_current_pane)
+                    });
+
+
+
                     drag_offset *= .4;
                 }
 
@@ -117,6 +172,6 @@ function Carousel(element)
         }
     }
 
-    new Hammer(element[0], { drag_block_vertical: true, drag_lock_to_axis: true }).on("release dragleft dragright swipeleft swiperight", handleHammer);
+    new Hammer(element[0], { drag_lock_to_axis: true }).on("release dragleft dragright swipeleft swiperight", handleHammer);
 }
 

@@ -13,32 +13,36 @@ $(document).ready ->
 
   state.fetchRevolvingHistory = (id) ->
     $.ajax
-      url: "/api/history/#{id}",
+      url: "/api/history/bracketed/#{id}",
     .success (data) ->
-      state.collection = data.cards
+      state.collection = data.data
       $.each state.collection, (index, value) ->
-        console.log value
         state.carouselInner.append("
-          <li class='pane#{index + 1}'>
+          <li class='pane#{index + 1} carousel-card' data-id='#{value.id}'>
             <div class='carousel-img-container'>
               <img src='#{value.link}' class='carousel-img' />
             </div>
-            <small>#{value.title}</small>
+            
+            <div class='carousel-txt-container'>
+              <p>#{value.title}</p>
+            </div>
           </li>
         ")
-    
+
       state.renderCarousel()
       state.initScrolling()
+    
   
   state.renderCarousel = ->
     carousel = new Carousel(state.wrapper[0])
-    carousel.init()
+    carousel.init(2)
 
   state.initScrolling = ->
-    historyScroller = new FTScroller($('.carousel-card'),
-      scrollingX: false,
-      flinging: true,
-      maxFlingDuration: 100,
-    )
+    # wait for styling requirements 
+    # historyScroller = new FTScroller($('.carousel-img-container'),
+    #  scrollingX: false,
+    #  flinging: true,
+    #  maxFlingDuration: 100,
+    #)
 
   state.fetchRevolvingHistory(state.startingId)

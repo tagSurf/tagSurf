@@ -8,15 +8,15 @@ class Vote < ActiveRecord::Base
     Card.joins(:votes).where("votes.voter_id = #{user_id}").order('votes.id desc').limit(limit).offset(offset)
   end
 
-  def next_ten_cards
+  def prev_cards(n=2)
     cards = []
-    user.votes.includes(:card).where("votes.id > ?", id).order("id ASC").limit(2).each {|v| cards << v.card }
+    user.votes.includes(:card).where("votes.id > ?", id).order("id ASC").limit(n).each {|v| cards << v.card }
     cards
   end
 
-  def prev_ten_cards
+  def next_cards(n=2)
     cards = []
-    user.votes.includes(:card).where("votes.id < ?", id).order("id DESC").limit(2).each {|v| cards << v.card }
+    user.votes.includes(:card).where("votes.id < ?", id).order("id DESC").limit(n).each {|v| cards << v.card }
     cards
   end
 
@@ -24,10 +24,17 @@ class Vote < ActiveRecord::Base
   # [previous 10 cards voted] + [requested card] + [next 10 votes]
   def self.bracketed_collection(vote)
     collection = []
-    collection << vote.next_ten_cards.reverse!
+    collection << vote.prev_cards.reverse!
     collection << vote.card
-    collection << vote.prev_ten_cards
+    collection << vote.next_cards
     collection.flatten
   end
 
+  def self.next_collection(vote)
+    vote.next_cards(10) - [vote.card]
+  end
+
+  def self.previous_collection(vote)
+    vote.prev_cards(10).reverse! - [vote.card]
+  end
 end

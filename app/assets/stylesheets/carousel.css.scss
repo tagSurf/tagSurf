@@ -11,10 +11,20 @@
 
 .carousel-img-container{
   height:240px;
-  overflow-y:scroll;
+  overflow:hidden;
   width:100%;
+  border-bottom:white thin solid;
+  background-color:$card-background;
   .carousel-img{
     width:100%;
+  }
+}
+
+.carousel-txt-container{
+  margin:20px;
+  p{
+    font-size:16px;
+    color: white;
   }
 }
 
@@ -69,8 +79,4 @@
   text-shadow: -1px -1px 0 rgba(0,0,0,.2);
 }
 
-#carousel li.pane1 { background: #42d692; }
-#carousel li.pane2 { background: #4986e7; }
-#carousel li.pane3 { background: #d06b64; }
-#carousel li.pane4 { background: #cd74e6; }
-#carousel li.pane5 { background: #9fe1e7; }
+#carousel li { background: $ts-dark-gray; }

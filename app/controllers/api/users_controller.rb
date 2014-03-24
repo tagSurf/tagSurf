@@ -21,7 +21,40 @@ class Api::UsersController < Api::BaseController
 
     @cards = Vote.bracketed_collection(vote)
     if @cards.present?
-      render json: @cards, each_serializer: CardSerializer, root: 'cards'
+      render json: @cards, each_serializer: CardSerializer, root: 'data'
+    else
+      render json: {error: 'no cards found'}, status: :not_found
+    end
+  end
+
+  def next_history
+    vote = Vote.where(votable_id: params[:id], voter_id: @user.id).first
+
+    unless vote
+      render json: {error: "no votes for card: #{params[:id]} and user" }, status: :not_found
+      return
+    end
+
+    @cards = Vote.next_collection(vote)
+    if @cards.present?
+      render json: @cards, each_serializer: CardSerializer, root: 'data'
+    else
+      render json: {error: 'no cards found'}, status: :not_found
+    end
+
+  end
+
+  def previous_history
+    vote = Vote.where(votable_id: params[:id], voter_id: @user.id).first
+
+    unless vote
+      render json: {error: "no votes for card: #{params[:id]} and user" }, status: :not_found
+      return
+    end
+
+    @cards = Vote.previous_collection(vote)
+    if @cards.present?
+      render json: @cards, each_serializer: CardSerializer, root: 'data'
     else
       render json: {error: 'no cards found'}, status: :not_found
     end
