@@ -21,7 +21,7 @@ class Api::UsersController < Api::BaseController
 
     @cards = Vote.bracketed_collection(vote)
     if @cards.present?
-      render json: @cards, each_serializer: CardSerializer
+      render json: @cards, each_serializer: CardSerializer, root: 'cards'
     else
       render json: {error: 'no cards found'}, status: :not_found
     end

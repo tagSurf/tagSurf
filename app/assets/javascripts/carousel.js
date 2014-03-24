@@ -1,6 +1,8 @@
 /*
 * super simple carousel
 * animation between panes happens with css transitions
+* Specific to tagSurf
+* TODO translate to Coffeescript
 */
 function Carousel(element)
 {
@@ -13,7 +15,7 @@ function Carousel(element)
     var pane_width = 0;
     var pane_count = panes.length;
 
-    var current_pane = 0;
+    var current_pane = 2;
 
 
     /**
@@ -25,6 +27,7 @@ function Carousel(element)
         $(window).on("load resize orientationchange", function() {
             setPaneDimensions();
         })
+        this.showPane(current_pane, false);
     };
 
 
@@ -46,6 +49,7 @@ function Carousel(element)
     this.showPane = function(index, animate) {
         // between the bounds
         index = Math.max(0, Math.min(index, pane_count-1));
+        console.log(index);
         current_pane = index;
 
         var offset = -((100/pane_count)*current_pane);
@@ -113,6 +117,6 @@ function Carousel(element)
         }
     }
 
-    new Hammer(element[0], { drag_lock_to_axis: true }).on("release dragleft dragright swipeleft swiperight", handleHammer);
+    new Hammer(element[0], { drag_block_vertical: true, drag_lock_to_axis: true }).on("release dragleft dragright swipeleft swiperight", handleHammer);
 }
 

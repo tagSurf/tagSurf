@@ -10,13 +10,13 @@ class Vote < ActiveRecord::Base
 
   def next_ten_cards
     cards = []
-    user.votes.includes(:card).where("votes.id > ?", id).order("id ASC").limit(10).each {|v| cards << v.card }
+    user.votes.includes(:card).where("votes.id > ?", id).order("id ASC").limit(2).each {|v| cards << v.card }
     cards
   end
 
   def prev_ten_cards
     cards = []
-    user.votes.includes(:card).where("votes.id < ?", id).order("id DESC").limit(10).each {|v| cards << v.card }
+    user.votes.includes(:card).where("votes.id < ?", id).order("id DESC").limit(2).each {|v| cards << v.card }
     cards
   end
 

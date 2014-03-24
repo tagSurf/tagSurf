@@ -9,6 +9,15 @@
   position: relative;
 }
 
+.carousel-img-container{
+  height:240px;
+  overflow-y:scroll;
+  width:100%;
+  .carousel-img{
+    width:100%;
+  }
+}
+
 #carousel {
   background: silver;
   overflow: hidden;
