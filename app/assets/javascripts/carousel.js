@@ -84,6 +84,7 @@ function Carousel(element)
     function handleHammer(ev) {
         // disable browser scrolling
         ev.gesture.preventDefault();
+        var doc_width = $(document).width()
 
         switch(ev.type) {
             case 'dragright':
@@ -94,31 +95,30 @@ function Carousel(element)
 
                 // slow down at the first and last pane 
                 if (current_pane == pane_count-1 && ev.gesture.direction == "left") {
-                    var el = $('li').last()
-                    var id = el.data("id")
-                    var doc_width = $(document).width();
-                    var collection = []
-                    $.ajax({
-                      url: "/api/history/next/" + id
-                    }).success(function(data) {
-                      collection = data.data;
-                      $.each(collection, function(index, value) {
-                        if ($('.carousel-card[data-id='+ value.id + ']')[0]) {
-                          //console.log("already added");
-                        }else{
-                          pane_count = pane_count + 1
-                          container.append( "<li class='pane" + (current_pane + index + 2) + " carousel-card' data-id=" + value.id + " style='width:"+ doc_width +"px'> <div class='carousel-img-container'> <img src='" + value.link + "' class='carousel-img' /> </div> <div class='carousel-txt-container'> <p>" + value.title + "</p> </div> </li>");
-                        };
-                      });
-                      setContainerOffset(drag_offset + pane_offset);
-                      self.init(current_pane + 1)
+                  var el = $('li').last()
+                  var id = el.data("id")
+                  var collection = []
+                  $.ajax({
+                    url: "/api/history/next/" + id
+                  }).success(function(data) {
+                    collection = data.data;
+                    $.each(collection, function(index, value) {
+                      if ($('.carousel-card[data-id='+ value.id + ']')[0]) {
+                        //console.log("already added");
+                      }else{
+                        pane_count = pane_count + 1
+                        container.append( "<li class='pane" + (current_pane + index + 2) + " carousel-card' data-id=" + value.id + " style='width:"+ doc_width +"px'> <div class='carousel-img-container'> <img src='" + value.link + "' class='carousel-img' /> </div> <div class='carousel-txt-container'> <p>" + value.title + "</p> </div> </li>");
+                      };
                     });
+                    setContainerOffset(drag_offset + pane_offset);
+                    console.log(pane_count);
+                    self.init(pane_count - 11)
+                  });
                 }
 
                 if (current_pane == 0 && ev.gesture.direction == "right") {
                     var el = $($('.carousel-card')[0]);
                     var id = el.data("id");
-                    var doc_width = $(document).width();
                     var collection = [];
                     $.ajax({
                       url: "/api/history/previous/" + id
