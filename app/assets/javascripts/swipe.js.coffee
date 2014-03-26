@@ -189,7 +189,6 @@ $(document).ready ->
       console.log "show button"
 
   state.formatCards = ->
-    state.formatter.html("")
     template_next =  """
         <div class="card-container card-style clearfix" id="next">
            <div class="img-container clearfix">
@@ -243,14 +242,11 @@ $(document).ready ->
     else
       current_fullscreen.addClass('hider')
       state.fullscreen = true
-    state.fullscreenButton = current_fullscreen
 
     $('#swiper').html(state.formatter.html())
     state.formatter.html("")
-    return
 
   state.updateCards = ->
-
     state.formatCards()
     state.current = $('#current')
     state.next = $('#next')
