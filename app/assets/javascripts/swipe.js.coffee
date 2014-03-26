@@ -235,7 +235,7 @@ $(document).ready ->
     current_fullscreen = state.formatter.find('#current .fullscreen')
     if $('img',current_image).height() + current_title.height() > state.maxCardHeight
       current_image.css 'max-height', '300px' 
-      truncated_title = "#{state.queue[0].title}".trunc(20)
+      truncated_title = "#{state.queue[0].title}".trunc(30)
       truncated_title = "<p>" + truncated_title + "</p>"
       $(current_title).html(truncated_title) 
       state.fullscreen = false
