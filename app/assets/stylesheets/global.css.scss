@@ -74,7 +74,7 @@
 }
 
 .fullscreen{
-  width:300px;
+  width:100%;
   margin: 0 auto !important;
   float: none !important;
   padding:0;
@@ -82,7 +82,7 @@
   bottom: 0;
 
   span.expand-btn{
-    width:300px;
+    width:100%;
     border: none;
     background: transparent;
     color: $ts-blue;
