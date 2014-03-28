@@ -8,4 +8,5 @@ class ApplicationController < ActionController::Base
   def get_tags
     @tags = Tag.all
   end
+
 end
