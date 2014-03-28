@@ -11,4 +11,7 @@ class StaticController < ApplicationController
     end
   end
 
+  def device
+  end
+
 end
