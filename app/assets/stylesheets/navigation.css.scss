@@ -30,9 +30,9 @@
 .navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a{
   color: $ts-gray;
   font-size:22px;
-  &:hover{
-    color: #ffffff;
-  }
+  //&:hover{
+  //  color: #ffffff;
+  //}
 }
 
 .navbar-center {
@@ -69,5 +69,57 @@
     font-size: 18px;
     font-family: $ts-raven;
   }
+}
+
+#slider-icon,
+#slide_down_menu,
+.slider-button-text
+{
+  transition: all 250ms ease-in-out;
+  -webkit-transition: all 250ms ease-in-out;
+}
+
+#slide_down_menu
+{
+  width: 100%;
+  position: fixed;
+  height: 45%;
+  bottom: 95%;
+  z-index: 101;
+}
+
+#slider-icon{
+  font-size: 10px;
+  top:-1px;
+  margin-left: 5px;
+}
+.slid #slider-icon{
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+}
+
+#slider_box:checked + #slide_down_menu
+{
+  bottom: 48%;
+}
+
+#slide_down_menu ul
+{
+  padding: 0;
+}
+#slide_down_menu li
+{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 21%;
+  background-color: white;
+  border-bottom: 1px solid black;
+  font-family: Raleway;
+  font-size: 22px;
+}
+#slide_down_menu li.slide_active
+{
+  color: white;
+  background-color: $ts-blue;
 }
 

@@ -9,7 +9,13 @@
     <a class="navbar-brand history-btn" id="history-btn"></a>
 
     <!-- TODO route location and different headers --> 
-    <div class="navbar-center logo"><%= link_to "tagSurf", '/t/hot' %></div>
+    <div class="navbar-center logo">
+      <label for="slider_box" id="navbar_label" onclick="$(this).toggleClass('slid');">
+	<div>
+	  <span class="slider-button-text">tagSurf</span><span id="slider-icon" class="glyphicon glyphicon-chevron-down"></span>
+	</div>
+      </label>
+    </div>
   </div>
 
   <!-- Matches middle button on nav --> 
@@ -27,4 +33,24 @@
   </div><!-- /.navbar-collapse -->
 </nav>
 <div id="overlay"></div>
+<div>
+  <input type="checkbox" name="slider_box" id="slider_box" style="display:none">
+  <div id="slide_down_menu">
+    <ul>
+      <li>
+	<span><span class="glyphicon glyphicon-trending-up"></span>&nbsp;&nbsp;&nbsp;TRENDING</span>
+      </li>
+      <li>
+	<span><span class="glyphicon glyphicon-star-empty"></span>&nbsp;&nbsp;&nbsp;FAVORITES</span>
+      </li>
+      <li>
+	<span><span class="glyphicon glyphicon-plus"></span>&nbsp;&nbsp;&nbsp;SUBMISSIONS</span>
+      </li>
+      <li>
+	<span><span class="glyphicon glyphicon-cog"></span>&nbsp;&nbsp;&nbsp;OPTIONS</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
 
