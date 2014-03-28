@@ -1,3 +1,5 @@
 Rails.configuration.middleware.use Browser::Middleware do
-  redirect_to '/device' unless browser.mobile?
+  if Rails.env.production? && !browser.mobile?
+    redirect_to '/device'
+  end
 end
