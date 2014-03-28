@@ -53,18 +53,18 @@ namespace :deploy do
     end
 
     if env == 'production'
-      safety_string = 'Yes'
-      puts "=== Production push"
-      puts
-      puts "  'I don't always test my code. But when I do, I do it in production.'"
-      puts "    - Ancient proverb"
-      puts
-      puts "You are deploying against production. Are you sure you want to do this?"
-      begin
-        print "Please type: '#{safety_string}': "
-      end while STDIN.gets.chomp != safety_string
-      puts "Okay, here we go!"
-      puts
+      #safety_string = 'Yes'
+      #puts "=== Production push"
+      #puts
+      #puts "  'I don't always test my code. But when I do, I do it in production.'"
+      #puts "    - Ancient proverb"
+      #puts
+      #puts "You are deploying against production. Are you sure you want to do this?"
+      #begin
+      #  print "Please type: '#{safety_string}': "
+      #end while STDIN.gets.chomp != safety_string
+      #puts "Okay, here we go!"
+      #puts
     end
 
     hash = commit_hash
