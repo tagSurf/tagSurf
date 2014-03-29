@@ -105,9 +105,13 @@
   -webkit-transform: rotate(180deg);
 }
 
-#slider_box:checked + #slide_down_menu
+/*#slider_box:checked + #slide_down_menu
 {
   bottom: 48%;
+}*/
+.opened_menu
+{
+  bottom: 48% !important;
 }
 
 #slide_down_menu ul
