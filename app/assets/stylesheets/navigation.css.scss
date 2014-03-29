@@ -2,7 +2,8 @@
 @import 'constants';
 
 .history-btn{ 
-  background: image-url('history.png') no-repeat;
+  background: image-url('history_icon_blue.png') no-repeat;
+  background-size: contain;
   width:26px;
   height:26px;
   margin-top:7px;
@@ -11,6 +12,11 @@
 
 .favorites-btn{
   float:right;
+}
+
+.slider-button-text img, .favorites-btn img {
+  width: auto;
+  height: 26px;
 }
 
 .navbar{
@@ -89,6 +95,7 @@
 }
 
 #slider-icon{
+  color: #01aef0;
   font-size: 10px;
   top:-1px;
   margin-left: 5px;
