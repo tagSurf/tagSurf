@@ -83,8 +83,9 @@
 }
 
 .background-image{
-  background-image: image-url('ts_logo_stacked_white.jpg');
-  width:220px;
+  background-image: image-url('ts_logo_stacked_gray.jpg');
+  background-image: -webkit-image-set( image-url('ts_logo_stacked_gray.jpg') 1x, image-url('ts_logo_stacked_gray2x.jpg') 2x); 
+  width:210px;
   height:241px;
   margin:20px auto; 
 }

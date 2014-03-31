@@ -26,6 +26,9 @@ Tagsurf::Application.routes.draw do
 
   resources :cards
   resources :users
+
+  get '/device' => 'static#device'
+
   root to: "static#index"
 
 end

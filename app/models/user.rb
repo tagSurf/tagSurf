@@ -1,6 +1,5 @@
 class User < ActiveRecord::Base
 
-  #acts_as_voter
   has_many :votes, :foreign_key => :voter_id
 
   devise :database_authenticatable, :registerable,

@@ -23,7 +23,6 @@
   margin:85px auto 0 0;
   height: 385px;
   background: $card-background;
-  //background:#f4f3f4;
   border: $card-background thin solid;
   padding-bottom:3px;
   border-bottom-width: 1px;
@@ -153,4 +152,11 @@ ul { list-style-type: none; }
     border-radius: 4px;
     background-color: rgba(0,0,0,.5);
     -webkit-box-shadow: 0 0 1px rgba(255,255,255,.5);
+}
+
+// Global tools
+.center-text{
+  width: 180px;
+  margin:0 auto;
+  text-align:center;
 }
