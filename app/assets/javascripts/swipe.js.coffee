@@ -26,7 +26,7 @@ $(document).ready ->
     nextPicture: null
     formatCards: null
     updateCards: null
-    maxCardHeight: 365 #subject to change based on device height
+    maxCardHeight: 330 #subject to change based on device height
 
   return unless state.wrapper
   return unless state.path
@@ -208,8 +208,8 @@ $(document).ready ->
     next_title = state.formatter.find('#next .txt-container')
     next_fullscreen = state.formatter.find('#next .fullscreen')
     if next_image.height() + next_title.height() > state.maxCardHeight
-      next_image.css "max-height", "300px"
-      truncated_title = "#{state.queue[1].title}".trunc(20)
+      next_image.css "max-height", "280px"
+      truncated_title = "#{state.queue[1].title}".trunc(30)
       truncated_title = "<p>" + truncated_title + "</p>"
       $(next_title).html(truncated_title)
     else
@@ -234,7 +234,7 @@ $(document).ready ->
     current_title = state.formatter.find('#current .txt-container')
     current_fullscreen = state.formatter.find('#current .fullscreen')
     if $('img',current_image).height() + current_title.height() > state.maxCardHeight
-      current_image.css 'max-height', '300px' 
+      current_image.css 'max-height', '280px' 
       truncated_title = "#{state.queue[0].title}".trunc(30)
       truncated_title = "<p>" + truncated_title + "</p>"
       $(current_title).html(truncated_title) 
