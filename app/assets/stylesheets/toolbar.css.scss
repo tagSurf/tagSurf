@@ -1,0 +1,38 @@
+@import "constants";
+
+.ftscroller_container
+{
+  background-color: $ts-dark-gray;
+}
+
+.col-xs-1 img
+{
+  border-radius: 5px;
+  box-shadow: 2px 3px 5px -1px rgba(0,0,0,0.7);
+}
+
+.col-xs-1
+{
+}
+.thumb-top-tag
+{
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  width: 89%;
+  position: absolute;
+  height: 15px;
+  background: rgba(0,0,0,0.5);;
+  content: '';
+  color: white;
+  margin: 0 auto;
+}
+.thumb-top-tag div
+{
+  position: absolute;
+  top: -3px;
+  text-align: center;
+  width: 100%;
+}
+.vote-split-container
+{
+}

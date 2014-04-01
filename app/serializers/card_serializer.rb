@@ -10,7 +10,8 @@ class CardSerializer < ActiveModel::Serializer
     :user_vote,
     :total_votes,
     :down_votes,
-    :up_votes
+    :up_votes,
+    :updated_at
   )
 
   def tagged_as
