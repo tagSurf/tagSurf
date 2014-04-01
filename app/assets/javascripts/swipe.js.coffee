@@ -172,10 +172,10 @@ $(document).ready ->
       state.fullscreen = true
       state.fullscreenButton.hide()
       el = state.current
-      el.addClass('full')
+      #el.addClass('full')
       full_title = "<p>#{state.queue[0].title}</p>"
       $($('.txt-container', el)[0]).html(full_title)
-      $($('.img-container', el)[0]).css("max-height", "none")
+      $($('.img-container', el)[0]).toggleClass('expanded')
       $(state.fullscreenButton).addClass('hider')
       $('.ftscroller_y').addClass('full')
 
@@ -189,32 +189,6 @@ $(document).ready ->
       console.log "show button"
 
   state.formatCards = ->
-    template_next =  """
-        <div class="card-container card-style clearfix" id="next">
-           <div class="img-container clearfix">
-              <img src="#{state.queue[1].link}" />
-           </div>
-           <div class="txt-container clearfix">
-             <p>#{state.queue[1].title}</p>
-           </div>
-	   <div class="fullscreen">
-	     <span class="expand-btn glyphicon glyphicon-chevron-down"></span>
-	   </div>
-
-        </div>
-    """
-    state.formatter.html(template_next)
-    next_image = state.formatter.find('#next .img-container')
-    next_title = state.formatter.find('#next .txt-container')
-    next_fullscreen = state.formatter.find('#next .fullscreen')
-    if next_image.height() + next_title.height() > state.maxCardHeight
-      next_image.css "max-height", "280px"
-      truncated_title = "#{state.queue[1].title}".trunc(30)
-      truncated_title = "<p>" + truncated_title + "</p>"
-      $(next_title).html(truncated_title)
-    else
-      next_fullscreen.addClass('hider')
-
     template_current = """
         <div class="card-container card-style clearfix" id="current">
            <div class="img-container clearfix">
@@ -229,12 +203,12 @@ $(document).ready ->
 
         </div>
     """
-    state.formatter[0].innerHTML += template_current
+    state.formatter.html template_current
     current_image = state.formatter.find('#current .img-container')
     current_title = state.formatter.find('#current .txt-container')
     current_fullscreen = state.formatter.find('#current .fullscreen')
     if $('img',current_image).height() + current_title.height() > state.maxCardHeight
-      current_image.css 'max-height', '280px' 
+      current_image.addClass "expand-animation"
       truncated_title = "#{state.queue[0].title}".trunc(30)
       truncated_title = "<p>" + truncated_title + "</p>"
       $(current_title).html(truncated_title) 
@@ -242,6 +216,32 @@ $(document).ready ->
     else
       current_fullscreen.addClass('hider')
       state.fullscreen = true
+
+    template_next =  """
+        <div class="card-container card-style clearfix" id="next">
+           <div class="img-container clearfix">
+              <img src="#{state.queue[1].link}" />
+           </div>
+           <div class="txt-container clearfix">
+             <p>#{state.queue[1].title}</p>
+           </div>
+	   <div class="fullscreen">
+	     <span class="expand-btn glyphicon glyphicon-chevron-down"></span>
+	   </div>
+
+        </div>
+    """
+    state.formatter[0].innerHTML = template_next + state.formatter.html()
+    next_image = state.formatter.find('#next .img-container')
+    next_title = state.formatter.find('#next .txt-container')
+    next_fullscreen = state.formatter.find('#next .fullscreen')
+    if next_image.height() + next_title.height() > state.maxCardHeight
+      next_image.addClass "expand-animation"
+      truncated_title = "#{state.queue[1].title}".trunc(30)
+      truncated_title = "<p>" + truncated_title + "</p>"
+      $(next_title).html(truncated_title)
+    else
+      next_fullscreen.addClass('hider')
 
     $('#swiper').html(state.formatter.html())
     state.formatter.html("")

@@ -21,7 +21,8 @@
 .card-container{
   width: auto;
   margin:85px auto 0 0;
-  height: 350px;
+  min-height: 350px;
+  height: auto;
   background: $card-background;
   border: $card-background thin solid;
   padding-bottom:3px;
@@ -37,7 +38,6 @@
   .img-container {
     margin: 4px auto;
     width: 280px;
-    //max-height: 300px;
     overflow-y: hidden;
 
     // Examples
@@ -56,20 +56,44 @@
     margin: 10px auto; 
     width: 280px;
     font-weight:400;
-    min-height: 22px;
+    min-height: 40px;
     overflow:hidden;
     font-size:14px;
+    height: auto;
     font-family: Tahoma, Geneva, sans-serif;
     font-weight:300;
     text-align:center;
    }
 }
 
+.expand-animation
+{
+	max-height: 280px;
+}
+
+.expand-animation
+{
+  transition: all 1s ease-in-out;
+  -webkit-transtion: all 1s ease-in-out;
+}
+
 .partial { max-height: 260px; }
+
+.margin
+{
+	width: 320px;
+	height: 100px;
+	position: absolute;
+	bottom: 0;
+}
 
 .full { 
   height:auto; 
   overflow:hidden;
+}
+.expanded
+{
+  max-height: 9999px;
 }
 
 .fullscreen{
@@ -79,14 +103,13 @@
   padding:0;
   position: absolute;
   bottom: 0;
+  height: 40px;
 
   span.expand-btn{
     width:100%;
     border: none;
     background: transparent;
     color: $ts-blue;
-    //border:#d8d8d8 thin solid;
-    //border-bottom-width: 2px;
     font-size:20px;
     text-align:center;
     padding:10px 0 10px 5px;
@@ -99,7 +122,6 @@
 
 #next{
   z-index:10;
-  //max-height:320px;
   overflow:hidden;
 }
 
