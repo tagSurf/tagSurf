@@ -3,13 +3,22 @@
   <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
     <div class="navbar-brand favorites-btn">
-      <span class="glyphicon glyphicon-star-empty"></span>
+      <img src="/assets/star_icon.png"></img>
     </div>
 
     <a class="navbar-brand history-btn" id="history-btn"></a>
 
     <!-- TODO route location and different headers --> 
-    <div class="navbar-brand logo"><%= link_to "tagSurf", '/t/hot' %></div>
+    <div class="navbar-center logo">
+      <label for="slider_box" id="navbar_label" onclick="$(this).toggleClass('slid'); $('#slide_down_menu').toggleClass('opened_menu');">
+      	<div>
+      	  <span class="slider-button-text">
+            <img src="/assets/logo.png"></img>
+          </span>
+          <img id="slider-icon" src="/assets/down_arrow.png"></img>
+      	</div>
+      </label>
+    </div>
   </div>
 
   <!-- Matches middle button on nav --> 
@@ -27,4 +36,24 @@
   </div><!-- /.navbar-collapse -->
 </nav>
 <div id="overlay"></div>
+<div>
+  <input type="checkbox" name="slider_box" id="slider_box" style="display:none">
+  <div id="slide_down_menu">
+    <ul>
+      <li>
+	<span><img class="menu_icon" src="/assets/trending_icon_gray.png"></img>&nbsp;&nbsp;&nbsp;TRENDING</span>
+      </li>
+      <li>
+	<span><img class="menu_icon" src="/assets/star_icon_gray.png"></img>&nbsp;&nbsp;&nbsp;FAVORITES</span>
+      </li>
+      <li>
+	<span><img class="menu_icon" src="/assets/add_icon_gray.png"></img>&nbsp;&nbsp;&nbsp;SUBMISSIONS</span>
+      </li>
+      <li>
+	<span><img class="menu_icon" src="/assets/options_icon.png"></img>&nbsp;&nbsp;&nbsp;OPTIONS</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
 

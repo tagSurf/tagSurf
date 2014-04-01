@@ -2,7 +2,8 @@
 @import 'constants';
 
 .history-btn{ 
-  background: image-url('history.png') no-repeat;
+  background: image-url('history_icon_blue.png') no-repeat;
+  background-size: contain;
   width:26px;
   height:26px;
   margin-top:7px;
@@ -11,6 +12,21 @@
 
 .favorites-btn{
   float:right;
+}
+
+.slider-button-text img {
+  width: auto;
+  height: 36px;
+}
+
+.favorites-btn img {
+  width: auto;
+  height: 26px;
+}
+
+.menu_icon {
+  width: 22px;
+  height: 22px;
 }
 
 .navbar{
@@ -24,15 +40,20 @@
   z-index: 300;
   position: relative;
   min-height:38px;
-  height:38px;
+  height:50px;
 }
 
 .navbar-default .navbar-brand, .navbar-default .navbar-nav > li > a{
   color: $ts-gray;
   font-size:22px;
-  &:hover{
-    color: #ffffff;
-  }
+  //&:hover{
+  //  color: #ffffff;
+  //}
+}
+
+.navbar-center {
+  text-align: center;
+  font-size: 22px;
 }
 
 .navbar-brand{
@@ -64,5 +85,56 @@
     font-size: 18px;
     font-family: $ts-raven;
   }
+}
+
+#slider-icon,
+#slide_down_menu,
+.slider-button-text
+{
+  transition: all 250ms ease-in-out;
+  -webkit-transition: all 250ms ease-in-out;
+}
+
+#slide_down_menu
+{
+  width: 100%;
+  position: fixed;
+  height: 45%;
+  bottom: 95%;
+  z-index: 101;
+}
+
+.slid #slider-icon{
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+}
+
+/*#slider_box:checked + #slide_down_menu
+{
+  bottom: 48%;
+}*/
+.opened_menu
+{
+  bottom: 48% !important;
+}
+
+#slide_down_menu ul
+{
+  padding: 0;
+}
+#slide_down_menu li
+{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 21%;
+  background-color: white;
+  border-bottom: 1px solid black;
+  font-family: Raleway;
+  font-size: 22px;
+}
+#slide_down_menu li.slide_active
+{
+  color: white;
+  background-color: $ts-blue;
 }
 
