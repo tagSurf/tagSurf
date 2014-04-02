@@ -1,0 +1,24 @@
+#tslogo {
+	display: block;
+	margin: 20px;
+}
+
+.ts-input {
+	width: 215px;
+	height: 34px;
+	color: #000;
+	margin: 3px auto;
+	padding-left: 13px;
+	border: #000 solid thin;
+	font-size: 16px;
+	font-family: 'Raleway', sans-serif;
+	background: #fff;
+	-moz-border-radius: 50px / 50px;
+	-webkit-border-radius: 50px / 50px;
+	border-radius: 50px / 50px;
+}
+
+.ts-input:focus {
+	border-color: #48a4df;
+	outline-width: 0;
+}
