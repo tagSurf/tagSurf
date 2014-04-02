@@ -1,0 +1,76 @@
+#tslogo {
+	display: block;
+	margin: 20px;
+}
+
+.ts-input {
+	width: 215px;
+	height: 34px;
+	color: #000;
+	margin: 3px auto;
+	padding-left: 13px;
+	border: #000 solid thin;
+	font-size: 16px;
+	background: #fff;
+	-moz-border-radius: 50px / 50px;
+	-webkit-border-radius: 50px / 50px;
+	border-radius: 50px / 50px;
+}
+
+.ts-input:focus {
+	border-color: #48a4df;
+	outline-width: 0;
+}
+
+.ts-submit-bar {
+	width: 100%;
+	height: 44px;
+	background: #1dafec;
+	margin-top: 24px;
+	padding: 4px 2%;
+}
+
+.ts-submit-btn {
+	width: 120px;
+	float: left;
+}
+
+.border-trim {
+	overflow: hidden;
+	width: 165px;
+	height: 44px;
+	position: relative;
+	top: -4px;
+	left: -6px;
+}
+
+#ts-login-btn {
+	background-color: #1dafec;
+	border: none;
+	color: white;
+	font-size: 24px;
+	border-right: 0.3em solid white;
+	border-top-right-radius: 40px;
+	border-bottom-right-radius: 40px;
+	border-top: 0.3em solid white;
+	border-bottom: 0.3em solid white;
+	height: 63px;
+	top: -10px;
+	width: 175px;
+	left: -12px;
+	position: relative;
+	-moz-box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+}
+
+.ts-signup-btn {
+	color: inherit;
+	font-size: 24px;
+	position: relative;
+	margin-right: 35px;
+	color: white;
+	top: 2px;
+	left: 75px;
+	text-decoration: none !important;
+}
