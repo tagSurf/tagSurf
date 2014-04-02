@@ -5,3 +5,7 @@
 html {
 	font-family: 'Raleway', sans-serif;
 }
+
+a, input[type="submit"] {
+	cursor: pointer;
+}
