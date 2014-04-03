@@ -1,5 +1,6 @@
 Tagsurf::Application.routes.draw do
 
+  apipie
   get '/users/sign_up', to: redirect('/t/tag')
 
   devise_for :users, :controllers => { :sessions => 'sessions' }

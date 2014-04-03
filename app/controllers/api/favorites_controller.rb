@@ -3,29 +3,35 @@ class Api::FavoritesController < Api::BaseController
   before_filter :find_authenticated_user 
 
   def create
-    @fav = Favorite.new(user_id: @user.id, resource_id: fav_params[:resource_id], fav_params[:resouce_type])
-    if @fav.save 
-      render json: true, status: 200
+    @fav = Favorite.new(user_id: @user.id, resource_id: fav_params[:resource_id], resource_type: fav_params[:resouce_type])
+    if @fav.save
+      render json: {created: true}, status: :ok
     else
-      render json: false, status: 500 
+      render json: {created: false}, status: :not_implemented 
     end
   end
 
   def delete
-    @fav = Favorite.where(user_id: @user.id, resource_id: fav_params[:resource_id], fav_params[:resouce_type]).first
+    @fav = Favorite.where(user_id: @user.id, resource_id: fav_params[:resource_id], resource_type: fav_params[:resouce_type]).first
     if @fav.destroy
-      render json: true, status: 200
+      render json: {created: true}, status: :ok
     else
-      render json: false, status: 500 
+      render json: {created: false}, status: :not_implemented 
     end
   end
 
   def paginated_history
-    @offset = user_params["offset"].to_i
-    @limit = user_params["limit"].to_i
+    @offset = fav_params["offset"].to_i
+    @limit = fav_params["limit"].to_i
+
+    # limit responses to 50 cards
+    if @limit > 50
+      @limit = 50
+    end
+
     @cards = Favorite.paginated_history(current_user.id, @limit, @offset)
     if @cards
-      render json: @favorited, root: 'data'
+      render json: @cards, root: 'data'
     else
       render json: "Nothing here"
     end
@@ -85,7 +91,7 @@ class Api::FavoritesController < Api::BaseController
   private
 
     def fav_params
-      params.permit(:resource_type, :resource_id)
+      params.permit(:resource_type, :resource_id, :limit, :offset)
     end
 
 end

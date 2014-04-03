@@ -28,3 +28,4 @@ gem 'omniauth-oauth2', '1.0.3'
 gem 'debugger', group: [:development, :test]
 
 gem 'compass-rails', '1.1.3'
+gem 'apipie-rails'
