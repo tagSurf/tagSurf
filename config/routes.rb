@@ -11,9 +11,13 @@ Tagsurf::Application.routes.draw do
   get 'u/history/:id'   => 'users#history'
 
   namespace :api do
+
+    # Tags API
     get  'tags'                          => 'tags#index'
     get  'tags/:name'                    => 'tags#show'
     post 'tags'                          => 'tags#create'
+
+    # Vote API
     get  'votes'                         => 'votes#show'
     get  'users/history/:limit/:offset'  => 'users#paginated_history'
     get  'history/bracketed/:id'         => 'users#bracketed_history'
@@ -22,6 +26,14 @@ Tagsurf::Application.routes.draw do
     get  'votes/up'                      => 'votes#up'
     get  'votes/down'                    => 'votes#down'
     get  'stats'                         => 'votes#stats'
+
+    # Favorites API
+    get  'favorites/bracketed/:id'       => 'favorites#bracketed_history'
+    get  'favorites/next/:id'            => 'favorites#next_history'
+    get  'favorites/previous/:id'        => 'favorites#previous_history'
+    get  'favorites/:limit/:offset'      => 'favorites#paginated_history'
+    post 'favorites/:card_id'            => 'favorites#create'
+    delete 'favorites/:card_id'          => 'favorites#delete'
   end
 
   resources :cards

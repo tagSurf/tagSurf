@@ -10,7 +10,7 @@ class CardSerializer < ActiveModel::Serializer
     :user_vote,
     :total_votes,
     :down_votes,
-    :up_votes
+    :up_votes,
   )
 
   def tagged_as
@@ -18,7 +18,6 @@ class CardSerializer < ActiveModel::Serializer
   end
 
   def user_vote
-    #current_user.likes(object) == true ? 'up' : 'down'
   end
 
   def total_votes
