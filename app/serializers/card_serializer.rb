@@ -11,7 +11,6 @@ class CardSerializer < ActiveModel::Serializer
     :total_votes,
     :down_votes,
     :up_votes,
-    :favorite_id
   )
 
   def tagged_as
@@ -19,10 +18,6 @@ class CardSerializer < ActiveModel::Serializer
   end
 
   def user_vote
-  end
-
-  def favorite_id
-    object.favorites.first.id
   end
 
   def total_votes
