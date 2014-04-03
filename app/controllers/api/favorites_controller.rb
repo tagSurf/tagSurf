@@ -3,7 +3,7 @@ class Api::FavoritesController < Api::BaseController
   before_filter :find_authenticated_user 
 
   def create
-    @fav = Favorite.new(user_id: @user.id, resource_id: fav_params[:resource_id], resource_type: fav_params[:resouce_type])
+    @fav = Favorite.new(user_id: @user.id, card_id: fav_params[:card_id]) 
     if @fav.save
       render json: {created: true}, status: :ok
     else
@@ -12,7 +12,7 @@ class Api::FavoritesController < Api::BaseController
   end
 
   def delete
-    @fav = Favorite.where(user_id: @user.id, resource_id: fav_params[:resource_id], resource_type: fav_params[:resouce_type]).first
+    @fav = Favorite.where(user_id: @user.id, card_id: fav_params[:card_id])
     if @fav.destroy
       render json: {created: true}, status: :ok
     else
@@ -38,7 +38,7 @@ class Api::FavoritesController < Api::BaseController
   end
 
   def bracketed_history
-    favorite = Favorite.where(resource_id: params[:id], user_id: @user.id).first
+    favorite = Favorite.where(card_id: params[:id], user_id: @user.id).first
 
     unless favorite
       render json: {error: "no favorites for card: #{params[:id]} and user" }, status: :not_found
@@ -54,7 +54,7 @@ class Api::FavoritesController < Api::BaseController
   end
 
   def next_history
-    favorite = Favorite.where(resource_id: params[:id], user_id: @user.id).first
+    favorite = Favorite.where(card_id: params[:id], user_id: @user.id).first
 
     unless favorite
       render json: {error: "no favorites for card: #{params[:id]} and user" }, status: :not_found
@@ -71,7 +71,7 @@ class Api::FavoritesController < Api::BaseController
   end
 
   def previous_history
-    favorite = Favorite.where(resource_id: params[:id], user_id: @user.id).first
+    favorite = Favorite.where(card_id: params[:id], user_id: @user.id).first
 
     unless favorite
       render json: {error: "no favorites for card: #{params[:id]} and user" }, status: :not_found
@@ -91,7 +91,7 @@ class Api::FavoritesController < Api::BaseController
   private
 
     def fav_params
-      params.permit(:resource_type, :resource_id, :limit, :offset)
+      params.permit(:card_id, :limit, :offset)
     end
 
 end

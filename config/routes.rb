@@ -1,6 +1,5 @@
 Tagsurf::Application.routes.draw do
 
-  apipie
   get '/users/sign_up', to: redirect('/t/tag')
 
   devise_for :users, :controllers => { :sessions => 'sessions' }
@@ -29,10 +28,10 @@ Tagsurf::Application.routes.draw do
     get  'stats'                         => 'votes#stats'
 
     # Favorites API
-    get  'users/favorites/:limit/:offset'=> 'favorites#paginated_history'
     get  'favorites/bracketed/:id'       => 'favorites#bracketed_history'
     get  'favorites/next/:id'            => 'favorites#next_history'
     get  'favorites/previous/:id'        => 'favorites#previous_history'
+    get  'favorites/:limit/:offset'      => 'favorites#paginated_history'
     post 'favorites/:type/:id'           => 'favorites#create'
     delete 'favorites/:type/:id'         => 'favorites#delete'
   end

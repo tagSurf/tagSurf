@@ -1,9 +1,10 @@
 class Favorite < ActiveRecord::Base
 
   validates_presence_of :user_id
-  validates_presence_of :resource_id
+  validates_presence_of :card_id
 
   belongs_to :user
+  belongs_to :card
 
 
   def self.paginated_history(user_id, limit, offset)
@@ -12,32 +13,32 @@ class Favorite < ActiveRecord::Base
 
   def prev_cards(n=2)
     cards = []
-    user.votes.includes(:card).where("votes.id > ?", id).order("id ASC").limit(n).each {|v| cards << v.card }
+    user.favorites.includes(:card).where("favorites.id < ?", id).order("id DESC").limit(n).each {|v| cards << v.card }
     cards
   end
 
   def next_cards(n=2)
     cards = []
-    user.votes.includes(:card).where("votes.id < ?", id).order("id DESC").limit(n).each {|v| cards << v.card }
+    user.favorites.includes(:card).where("favorites.id > ?", id).order("id ASC").limit(n).each {|v| cards << v.card }
     cards
   end
 
   # Places the requested card in the center of a collection of 21 cards
   # [previous 10 cards voted] + [requested card] + [next 10 votes]
-  def self.bracketed_collection(vote)
+  def self.bracketed_collection(favorite)
     collection = []
-    collection << vote.prev_cards.reverse!
-    collection << vote.card
-    collection << vote.next_cards
+    collection << favorite.next_cards.reverse!
+    collection << favorite.card
+    collection << favorite.prev_cards
     collection.flatten
   end
 
-  def self.next_collection(vote)
-    vote.next_cards(10) - [vote.card]
+  def self.next_collection(favorite)
+    favorite.next_cards(10).reverse!- [favorite.card]
   end
 
-  def self.previous_collection(vote)
-    vote.prev_cards(10).reverse! - [vote.card]
+  def self.previous_collection(favorite)
+    favorite.prev_cards(10) - [favorite.card]
   end
 
 end
