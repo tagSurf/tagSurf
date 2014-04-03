@@ -22,6 +22,8 @@ Tagsurf::Application.routes.draw do
     get  'votes/up'                      => 'votes#up'
     get  'votes/down'                    => 'votes#down'
     get  'stats'                         => 'votes#stats'
+    post 'favorites/:type/:id'           => 'favorites#create'
+    delete 'favorites/:type/:id'         => 'favorites#delete'
   end
 
   resources :cards
