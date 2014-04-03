@@ -32,8 +32,8 @@ Tagsurf::Application.routes.draw do
     get  'favorites/next/:id'            => 'favorites#next_history'
     get  'favorites/previous/:id'        => 'favorites#previous_history'
     get  'favorites/:limit/:offset'      => 'favorites#paginated_history'
-    post 'favorites/:type/:id'           => 'favorites#create'
-    delete 'favorites/:type/:id'         => 'favorites#delete'
+    post 'favorites/:card_id'            => 'favorites#create'
+    delete 'favorites/:card_id'          => 'favorites#delete'
   end
 
   resources :cards

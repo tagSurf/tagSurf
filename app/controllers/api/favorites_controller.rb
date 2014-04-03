@@ -7,16 +7,16 @@ class Api::FavoritesController < Api::BaseController
     if @fav.save
       render json: {created: true}, status: :ok
     else
-      render json: {created: false}, status: :not_implemented 
+      render json: {created: false, reason: @fav.errors.full_messages.first }, status: :not_implemented 
     end
   end
 
   def delete
-    @fav = Favorite.where(user_id: @user.id, card_id: fav_params[:card_id])
-    if @fav.destroy
-      render json: {created: true}, status: :ok
+    @fav = Favorite.where(user_id: @user.id, card_id: fav_params[:card_id]).first
+    if @fav && @fav.destroy
+      render json: {removed: true}, status: :ok
     else
-      render json: {created: false}, status: :not_implemented 
+      render json: {removed: false, reason: "Missing resource"}, status: :not_implemented 
     end
   end
 

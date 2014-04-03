@@ -2,6 +2,7 @@ class Favorite < ActiveRecord::Base
 
   validates_presence_of :user_id
   validates_presence_of :card_id
+  validates_uniqueness_of :card_id, :scope => :user_id, :message => "already favorited by user."
 
   belongs_to :user
   belongs_to :card
