@@ -3,6 +3,7 @@ class Card < ActiveRecord::Base
   acts_as_taggable
 
   has_many :votes, :foreign_key => :votable_id
+  has_many :favorites
 
   def active_model_serializer
     CardSerializer
