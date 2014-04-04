@@ -11,6 +11,10 @@ class Card < ActiveRecord::Base
 
   validates_uniqueness_of :remote_id, :link
 
+  def self.worker
+    TestWorker.perform_async('Me', 5)
+  end
+
   def create_tagging
     return if section.nil?
     self.tag_list = self.section
