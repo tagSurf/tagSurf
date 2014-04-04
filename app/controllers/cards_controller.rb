@@ -2,7 +2,6 @@ class CardsController < ApplicationController
 
   before_action :authenticate_user!
   before_action :find_authenticated_user
-  before_action :update_cache
 
   layout 'internal'
 
@@ -43,13 +42,6 @@ class CardsController < ApplicationController
 
     def find_authenticated_user
       @user = current_user
-    end
-
-    def update_cache
-      @card = Card.new
-      if @card.cache_update_available?
-        @card.refresh!
-      end
     end
 
 end
