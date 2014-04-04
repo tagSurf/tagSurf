@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140403193117) do
+ActiveRecord::Schema.define(version: 20140404215233) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20140403193117) do
     t.string   "remote_id"
     t.string   "remote_provider"
     t.datetime "remote_created_at"
-    t.string   "link"
+    t.string   "image_link_original"
     t.string   "title"
     t.text     "description"
     t.string   "content_type"
@@ -28,12 +28,20 @@ ActiveRecord::Schema.define(version: 20140403193117) do
     t.integer  "width"
     t.integer  "height"
     t.integer  "size"
-    t.integer  "imgur_views"
+    t.integer  "remote_views"
     t.integer  "bandwidth"
     t.string   "delete_hash"
     t.string   "section"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "viral",                default: false
+    t.string   "image_link_tiny"
+    t.string   "image_link_thumbnail"
+    t.string   "image_link_medium"
+    t.string   "image_link_large"
+    t.integer  "remote_up_votes"
+    t.integer  "remote_down_votes"
+    t.integer  "remote_score"
   end
 
   create_table "favorites", force: true do |t|

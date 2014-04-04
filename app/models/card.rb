@@ -9,7 +9,7 @@ class Card < ActiveRecord::Base
     CardSerializer
   end
 
-  validates_uniqueness_of :remote_id, :link
+  validates_uniqueness_of :remote_id, :image_link_original
 
   def self.worker
     TestWorker.perform_async('Me', 5)
@@ -77,7 +77,7 @@ class Card < ActiveRecord::Base
 
   end
 
-  def self.populate!
+  def self.populate_trending!
     response = RemoteResource.get
     fresh_list = response.parsed_response["data"]
     fresh_list.each do |obj|
@@ -86,7 +86,12 @@ class Card < ActiveRecord::Base
           remote_id: obj['id'],
           remote_provider: 'imgur',
           remote_created_at: Time.at(obj['datatime'].to_i) || Time.now,
-          link: obj['link'],
+          image_link_tiny: obj['link'],
+          image_link_thumbnail: obj['link'],
+          image_link_original: obj['link'],
+          image_link_medium: obj['link'],
+          image_link_large: obj['link'],
+          viral: true,
           title: obj['title'],
           description: obj['description'],
           content_type: obj['type'],
@@ -94,7 +99,10 @@ class Card < ActiveRecord::Base
           width: obj['width'],
           height: obj['height'],
           size: obj['size'],
-          imgur_views: obj['views'],
+          remote_views: obj['views'],
+          remote_score: obj['score'],
+          remote_up_votes: obj['up'],
+          remote_down_votes: obj['up'],
           section: obj['section'],
           delete_hash: obj['deletehash']
         })
@@ -105,18 +113,6 @@ class Card < ActiveRecord::Base
   def cache_update_available?
     c = Card.last
     c.try(:created_at) < 20.minutes.ago ? true : false
-  end
-
-  # Move to redis sidekiq
-  # Expensive !!!
-  #
-  # The main method to update the imgur cards in the db
-  # Excludes albums, TODO requery to populate albums
-  def refresh!
-    existing = Card.pluck(:remote_id, :created_at)
-    if Rails.env.development? || existing.last[1] < 20.minutes.ago
-      self.class.populate!
-    end
   end
 
   # Mock IMGUR image model
