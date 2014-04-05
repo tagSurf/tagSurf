@@ -5,11 +5,26 @@ class Card < ActiveRecord::Base
   has_many :votes, :foreign_key => :votable_id
   has_many :favorites
 
+  validates_uniqueness_of :remote_id, :image_link_original
+
+  # Imgur specific
+  before_create :resize_image_links
+  def resize_image_links
+    return unless remote_provider == 'imgur'
+    type = RemoteResource.content_type(content_type)
+    # tiny 90x90
+    self.image_link_tiny = "http://i.imgur.com/#{remote_id}s.#{type}"
+    # thumnail 160x160 
+    self.image_link_thumbnail = "http://i.imgur.com/#{remote_id}t.#{type}"
+    # medium 320x320 
+    self.image_link_medium = "http://i.imgur.com/#{remote_id}m.#{type}"
+    # large 640x640
+    self.image_link_large = "http://i.imgur.com/#{remote_id}l.#{type}"
+  end
+
   def active_model_serializer
     CardSerializer
   end
-
-  validates_uniqueness_of :remote_id, :image_link_original
 
   def self.worker
     TestWorker.perform_async('Me', 5)
