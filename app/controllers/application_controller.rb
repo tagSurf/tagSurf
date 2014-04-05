@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
 
   def redirect_desktops
     return unless Rails.env.production? && !browser.mobile? 
-    if browser.current_user && current_user.admin? 
+    if current_user && current_user.admin? 
       redirect_to sidekiq_web_path
     else
       redirect_to device_path
