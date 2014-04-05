@@ -43,6 +43,7 @@ Tagsurf::Application.routes.draw do
   resources :users
 
   get '/device' => 'static#device'
+  get '/render_sidekiq' => 'static#render_sidekiq'
 
   root to: "static#index"
 

@@ -11,10 +11,15 @@ class StaticController < ApplicationController
     end
   end
 
-  def device
+  def render_sidekiq
     if current_user && current_user.admin? 
       redirect_to sidekiq_web_path
+    else
+      redirect_to device_path
     end
+  end
+
+  def device
   end
 
 end
