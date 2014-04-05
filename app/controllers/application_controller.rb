@@ -14,7 +14,8 @@ class ApplicationController < ActionController::Base
     if current_user && current_user.admin? 
       redirect_to sidekiq_web_path
     else
-      redirect_to device_path
+      return if request.path == '/device'
+      redirect_to '/device'
     end
   end 
 
