@@ -12,6 +12,9 @@ class StaticController < ApplicationController
   end
 
   def device
+    if current_user && current_user.admin? 
+      redirect_to sidekiq_web_path
+    end
   end
 
 end
