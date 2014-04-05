@@ -26,10 +26,6 @@ class Card < ActiveRecord::Base
     CardSerializer
   end
 
-  def self.worker
-    TestWorker.perform_async('Me', 5)
-  end
-
   def create_tagging
     return if section.nil?
     self.tag_list = self.section
@@ -63,6 +59,11 @@ class Card < ActiveRecord::Base
       has_voted = user.votes.pluck(:votable_id) 
       Card.where('id not in (?)', has_voted).limit(n).order('created_at DESC')
     end
+  end
+
+  def cache_update_available?
+    c = Card.last
+    c.try(:created_at) < 20.minutes.ago ? true : false
   end
 
   def self.populate_tag(tag) 
@@ -119,11 +120,6 @@ class Card < ActiveRecord::Base
         })
       end
     end
-  end
-
-  def cache_update_available?
-    c = Card.last
-    c.try(:created_at) < 20.minutes.ago ? true : false
   end
 
   # Mock IMGUR image model
