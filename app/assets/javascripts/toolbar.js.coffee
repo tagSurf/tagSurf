@@ -46,9 +46,9 @@ $(document).ready ->
       template = "<div class='overlay-container clearfix thumbnails' id='history-page'><div class='row'>"
       for card, idx in toolbar.history
         if ((idx + 1) % 3 == 0)
-          template = template.concat("<div class='col-xs-1'><a href='/u/history/#{card.id}'><img src='#{card.link}' width='80' height='80' /></a></div></div><div class='row'>")
+          template = template.concat("<div class='col-xs-1'><a href='/u/history/#{card.id}'><img src='#{card.image_link_tiny}' width='80' height='80' /></a></div></div><div class='row'>")
         else
-          template = template.concat("<div class='col-xs-1'><a href='/u/history/#{card.id}'><img src='#{card.link}' width='80' height='80' /></a></div>")
+          template = template.concat("<div class='col-xs-1'><a href='/u/history/#{card.id}'><img src='#{card.image_link_tiny}' width='80' height='80' /></a></div>")
 
       template = template.concat("</div><div id='end-of-history-1'></div>")
       toolbar.container.html(template)
@@ -63,9 +63,9 @@ $(document).ready ->
       nextCards = "<div class='row'>"
       for card, idx in toolbar.nextPage
         if ((idx + 1) % 3 == 0)
-          nextCards = nextCards.concat("<div class='col-xs-1'><a href='/u/history/#{card.id}'><img src='#{card.link}' width='80' height='80' /></a></div></div><div class='row'>")
+          nextCards = nextCards.concat("<div class='col-xs-1'><a href='/u/history/#{card.id}'><img src='#{card.image_link_tiny}' width='80' height='80' /></a></div></div><div class='row'>")
         else
-          nextCards = nextCards.concat("<div class='col-xs-1'><a href='/u/history/#{card.id}'><img src='#{card.link}' width='80' height='80' /></a></div>")
+          nextCards = nextCards.concat("<div class='col-xs-1'><a href='/u/history/#{card.id}'><img src='#{card.image_link_medium}' width='80' height='80' /></a></div>")
 
       toolbar.counter = toolbar.counter + 1
       nextCards = nextCards.concat("</div><div id='end-of-history-#{toolbar.counter}'></div>")
