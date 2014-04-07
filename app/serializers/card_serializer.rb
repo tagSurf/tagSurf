@@ -20,6 +20,14 @@ class CardSerializer < ActiveModel::Serializer
     object.section
   end
 
+  def image_link_medium
+    if object.animated?
+      object.image_link_original
+    else 
+      object.image_link_medium
+    end
+  end
+
   def user_vote
   end
 
