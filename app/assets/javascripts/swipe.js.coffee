@@ -192,7 +192,7 @@ $(document).ready ->
     template_current = """
         <div class="card-container card-style clearfix" id="current">
            <div class="img-container expand-animation clearfix">
-              <img src="#{state.queue[0].link}" />
+              <img src="#{state.queue[0].image_link_medium}" />
            </div>
            <div class="txt-container clearfix">
              <p>#{state.queue[0].title}</p>
@@ -220,7 +220,7 @@ $(document).ready ->
     template_next =  """
         <div class="card-container card-style clearfix" id="next">
            <div class="img-container expand-animation clearfix">
-              <img src="#{state.queue[1].link}" />
+              <img src="#{state.queue[1].image_link_medium}" />
            </div>
            <div class="txt-container clearfix">
              <p>#{state.queue[1].title}</p>
