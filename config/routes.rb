@@ -11,13 +11,21 @@ Tagsurf::Application.routes.draw do
   devise_for :users, :controllers => { :sessions => 'sessions' }
  
   # Voting
-  get 'votes/:id/:vote' => 'cards#add_vote'
-  get 'cards/next/:tag' => 'cards#next'
-  get 't/:tag'          => 'cards#vote'
-  get 'u/history/:id'   => 'users#history'
+  #get 'votes/:id/:vote' => 'cards#add_vote'
+  #get 'cards/next/:tag' => 'cards#next'
+  #get 't/:tag'          => 'cards#vote'
+  #get 'u/history/:id'   => 'users#history'
+
+  get 't/:tag'      => 'clients#index'
+
+  get 'index'       => 'clients#index'
+  get 'feed'        => 'clients#feed'
+  get 'favorites'   => 'clients#favorites'
+  get 'submissions' => 'clients#submissions'
+  get 'tag'         => 'clients#tag'
+  get 'history'     => 'clients#tag'
 
   namespace :api do
-
     # Tags API
     get  'tags'                          => 'tags#index'
     get  'tags/:name'                    => 'tags#show'
