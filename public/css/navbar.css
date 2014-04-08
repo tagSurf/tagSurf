@@ -1,0 +1,126 @@
+#nav
+{
+  height: 50px;
+}
+#navbar
+{
+  position: fixed;
+  width: 100%;
+  height: 50px;
+  background-color: white;
+  border-bottom: 1px solid lightgray;
+  box-shadow: 0 0 5px 2px rgba(0,0,0,0.5);
+  z-index: 100;
+}
+#menu_slider
+{
+  position: absolute;
+  z-index: 90;
+}
+
+.history-btn
+{
+  position: relative;
+  float:left;
+  top: 12px;
+  left: 10px;
+}
+
+.history-btn img
+{ 
+  width: auto;
+  height: 26px;
+}
+
+.favorites-btn
+{
+  float:right;
+  padding: 10px;
+}
+
+.gallery_icon {
+  width: auto;
+  height: 20px;
+  padding-right: 10px;
+}
+
+#navbar_label div
+{
+  padding-top: 8px;
+}
+
+#tagsurf-logo
+{
+  width: auto;
+  height: 36px;
+}
+
+.favorites-btn img
+{
+  width: auto;
+  height: 26px;
+}
+
+.menu_icon
+{
+  width: 22px;
+  height: 22px;
+}
+
+.navbar-center
+{
+  text-align: center;
+  font-size: 22px;
+  padding-top: 10px;
+}
+
+#slider-icon,
+#slide_down_menu
+{
+  transition: all 250ms ease-in-out;
+  -webkit-transition: all 250ms ease-in-out;
+}
+
+#slide_down_menu
+{
+  width: 100%;
+  height: 45%;
+  position: fixed;
+  bottom: 95%;
+}
+
+.vtop
+{
+  vertical-align: text-top;
+}
+
+.slid #slider-icon
+{
+  transform: rotate(180deg);
+  -webkit-transform: rotate(180deg);
+}
+
+.opened_menu
+{
+  bottom: 48% !important;
+}
+
+#slide_down_menu ul
+{
+  padding: 0;
+}
+#slide_down_menu li
+{
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-left: 21%;
+  background-color: white;
+  border-bottom: 1px solid lightgray;
+  //font-family: Raleway;
+  font-size: 20px;
+}
+#slide_down_menu li.slide_active
+{
+  color: white;
+  background-color: #1dafec;
+}
