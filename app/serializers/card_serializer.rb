@@ -31,10 +31,6 @@ class CardSerializer < ActiveModel::Serializer
   def user_vote
   end
 
-  def favorite_id
-    object.favorites.first.id
-  end
-
   def total_votes
     #object.votes.size
   end
