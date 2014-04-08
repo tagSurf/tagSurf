@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>tagSurf</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%= stylesheet_link_tag    "application", media: "all" %>
+  <link href='http://fonts.googleapis.com/css?family=Raleway:200' rel='stylesheet' type='text/css'>
+  <link rel="apple-touch-icon" href="icon.png"/> 
+  <%= favicon_link_tag 'ts_icon_grey_50.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '50x50' %>
+  <%= favicon_link_tag 'ts_icon_grey_120.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '120x120' %>
+  <%= favicon_link_tag 'ts_icon_grey_152.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '152x152' %>
+  <%= favicon_link_tag 'favicon.ico', :rel => 'shortcut icon' %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+  <div class="container login" id="mwa">
+
+    <%= yield %>
+
+    <% if Rails.env.development? %>
+      <% flash.each do |name, msg| %>
+        <% if msg.is_a?(String) %>
+          <div class="alert alert-<%= name == :notice ? "success" : "danger" %>">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <%= content_tag :div, msg, :id => "flash_#{name}" %>
+          </div>
+        <% end %>
+      <% end %>
+    <% end %>
+
+  </div>
+</body>
+</html>

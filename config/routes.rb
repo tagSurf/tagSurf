@@ -13,11 +13,12 @@ Tagsurf::Application.routes.draw do
   # Voting
   get 'votes/:id/:vote' => 'cards#add_vote'
   get 'cards/next/:tag' => 'cards#next'
-  get 't/:tag'          => 'cards#vote'
+  #get 't/:tag'          => 'cards#vote'
+  get 't/:tag'          => 'clients#index'
+
   get 'u/history/:id'   => 'users#history'
 
   namespace :api do
-
     # Tags API
     get  'tags'                          => 'tags#index'
     get  'tags/:name'                    => 'tags#show'

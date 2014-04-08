@@ -1,6 +1,8 @@
 class ClientsController < ApplicationController
 
-  def home
+  layout 'client'
+
+  def index
   end
 
   def feed

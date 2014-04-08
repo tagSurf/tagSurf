@@ -77,6 +77,7 @@ class Card < ActiveRecord::Base
         remote_provider: 'imgur',
         remote_created_at: Time.at(obj['datatime'].to_i) || Time.now,
         image_link_original: obj['link'],
+        viral: true,
         title: obj['title'],
         description: obj['description'],
         content_type: obj['type'],
@@ -84,8 +85,11 @@ class Card < ActiveRecord::Base
         width: obj['width'],
         height: obj['height'],
         size: obj['size'],
-        imgur_views: obj['views'],
-        section: tag,
+        remote_views: obj['views'],
+        remote_score: obj['score'],
+        remote_up_votes: obj['up'],
+        remote_down_votes: obj['up'],
+        section: obj['section'],
         delete_hash: obj['deletehash']
       })
       Rails.logger.info "Created #{card.inspect}"
