@@ -39,7 +39,7 @@ class Card < ActiveRecord::Base
       Card.last(n)
     elsif tag == 'hot'
       has_voted = user.votes.pluck(:votable_id) 
-      cards = Card.where('id not in (?)', has_voted).limit(n).order('created_at DESC')
+      cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('created_at DESC')
       cards
     else
       has_voted = user.votes.pluck(:votable_id) 
