@@ -20,7 +20,7 @@ $(document).ready ->
         state.carouselInner.append("
           <li class='pane#{index + 1} carousel-card' data-id='#{value.id}'>
             <div class='carousel-img-container'>
-              <img src='#{value.link}' class='carousel-img' />
+              <img src='#{value.image_link_medium}' class='carousel-img' />
             </div>
             
             <div class='carousel-txt-container'>
