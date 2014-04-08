@@ -2,7 +2,10 @@ require 'sidekiq/web'
 
 Tagsurf::Application.routes.draw do
 
-  mount Sidekiq::Web => '/sidekiq'
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
+
   get '/users/sign_up', to: redirect('/t/tag')
 
   devise_for :users, :controllers => { :sessions => 'sessions' }
