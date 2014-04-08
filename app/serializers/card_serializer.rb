@@ -3,7 +3,9 @@ class CardSerializer < ActiveModel::Serializer
 
   attributes( 
     :id,
-    :link,
+    :image_link_medium,
+    :image_link_tiny,
+    :image_link_original,
     :title, 
     :description,
     :tagged_as,
@@ -11,10 +13,19 @@ class CardSerializer < ActiveModel::Serializer
     :total_votes,
     :down_votes,
     :up_votes,
+    :remote_score
   )
 
   def tagged_as
     object.section
+  end
+
+  def image_link_medium
+    if object.animated?
+      object.image_link_original
+    else 
+      object.image_link_medium
+    end
   end
 
   def user_vote

@@ -5,11 +5,26 @@ class Card < ActiveRecord::Base
   has_many :votes, :foreign_key => :votable_id
   has_many :favorites
 
+  validates_uniqueness_of :remote_id, :image_link_original
+
+  # Imgur specific
+  before_create :resize_image_links
+  def resize_image_links
+    return unless remote_provider == 'imgur'
+    type = RemoteResource.content_type(content_type)
+    # tiny 90x90
+    self.image_link_tiny = "http://i.imgur.com/#{remote_id}s.#{type}"
+    # thumnail 160x160 
+    self.image_link_thumbnail = "http://i.imgur.com/#{remote_id}t.#{type}"
+    # medium 320x320 
+    self.image_link_medium = "http://i.imgur.com/#{remote_id}m.#{type}"
+    # large 640x640
+    self.image_link_large = "http://i.imgur.com/#{remote_id}l.#{type}"
+  end
+
   def active_model_serializer
     CardSerializer
   end
-
-  validates_uniqueness_of :remote_id, :link
 
   def create_tagging
     return if section.nil?
@@ -24,7 +39,7 @@ class Card < ActiveRecord::Base
       Card.last(n)
     elsif tag == 'hot'
       has_voted = user.votes.pluck(:votable_id) 
-      cards = Card.where('id not in (?)', has_voted).limit(n).order('created_at DESC')
+      cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('created_at DESC')
       cards
     else
       has_voted = user.votes.pluck(:votable_id) 
@@ -46,6 +61,11 @@ class Card < ActiveRecord::Base
     end
   end
 
+  def cache_update_available?
+    c = Card.last
+    c.try(:created_at) < 20.minutes.ago ? true : false
+  end
+
   def self.populate_tag(tag) 
     response = RemoteResource.get_tag(tag)
     tagged = response.parsed_response["data"]
@@ -56,7 +76,7 @@ class Card < ActiveRecord::Base
         remote_id: obj['id'],
         remote_provider: 'imgur',
         remote_created_at: Time.at(obj['datatime'].to_i) || Time.now,
-        link: obj['link'],
+        image_link_original: obj['link'],
         title: obj['title'],
         description: obj['description'],
         content_type: obj['type'],
@@ -73,7 +93,7 @@ class Card < ActiveRecord::Base
 
   end
 
-  def self.populate!
+  def self.populate_trending!
     response = RemoteResource.get
     fresh_list = response.parsed_response["data"]
     fresh_list.each do |obj|
@@ -82,7 +102,8 @@ class Card < ActiveRecord::Base
           remote_id: obj['id'],
           remote_provider: 'imgur',
           remote_created_at: Time.at(obj['datatime'].to_i) || Time.now,
-          link: obj['link'],
+          image_link_original: obj['link'],
+          viral: true,
           title: obj['title'],
           description: obj['description'],
           content_type: obj['type'],
@@ -90,28 +111,14 @@ class Card < ActiveRecord::Base
           width: obj['width'],
           height: obj['height'],
           size: obj['size'],
-          imgur_views: obj['views'],
+          remote_views: obj['views'],
+          remote_score: obj['score'],
+          remote_up_votes: obj['up'],
+          remote_down_votes: obj['up'],
           section: obj['section'],
           delete_hash: obj['deletehash']
         })
       end
-    end
-  end
-
-  def cache_update_available?
-    c = Card.last
-    c.try(:created_at) < 20.minutes.ago ? true : false
-  end
-
-  # Move to redis sidekiq
-  # Expensive !!!
-  #
-  # The main method to update the imgur cards in the db
-  # Excludes albums, TODO requery to populate albums
-  def refresh!
-    existing = Card.pluck(:remote_id, :created_at)
-    if Rails.env.development? || existing.last[1] < 20.minutes.ago
-      self.class.populate!
     end
   end
 

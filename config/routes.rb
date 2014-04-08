@@ -1,4 +1,10 @@
+require 'sidekiq/web'
+
 Tagsurf::Application.routes.draw do
+
+  authenticate :user, lambda { |u| u.admin? } do
+    mount Sidekiq::Web => '/sidekiq'
+  end
 
   get '/users/sign_up', to: redirect('/t/tag')
 
