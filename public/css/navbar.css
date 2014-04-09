@@ -84,9 +84,8 @@
 #slide_down_menu
 {
   width: 100%;
-  height: 45%;
   position: fixed;
-  bottom: 95%;
+  top: -330px;
 }
 
 .vtop
@@ -102,7 +101,7 @@
 
 .opened_menu
 {
-  bottom: 48% !important;
+  top: 30px !important;
 }
 
 #slide_down_menu ul
