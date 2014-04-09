@@ -25,17 +25,19 @@ onload = function ()
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
 	var maxCardHeight = window.innerHeight - 170;
-	var setMaxHeight = function() {
-		var maxHeightCss = ".expand-animation { max-height: " + maxCardHeight + "px; }";
-		var maxHeightCssNode = document.createElement("style");
-		maxHeightCssNode.type = "text/css";
-		if (maxHeightCssNode.styleSheet)
-		    maxHeightCssNode.styleSheet.cssText = maxHeightCss;
+	var setHeightCss = function() {
+		var heightCss = ".expand-animation { max-height: "
+			+ maxCardHeight + "px; } .card-container { min-height: "
+			+ (maxCardHeight + 65) + "px; }";
+		var heightCssNode = document.createElement("style");
+		heightCssNode.type = "text/css";
+		if (heightCssNode.styleSheet)
+		    heightCssNode.styleSheet.cssText = heightCss;
 		else
-		    maxHeightCssNode.appendChild(document.createTextNode(maxHeightCss));
-		document.getElementsByTagName("head")[0].appendChild(maxHeightCssNode);
+		    heightCssNode.appendChild(document.createTextNode(heightCss));
+		document.getElementsByTagName("head")[0].appendChild(heightCssNode);
 	};
-	setMaxHeight();
+	setHeightCss();
 	var slideContainer = document.getElementById('slider');
 	var formatter = document.getElementById('formatter');
 	var slider = slideContainer.children[0];

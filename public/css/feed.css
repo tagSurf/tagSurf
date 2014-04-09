@@ -86,7 +86,6 @@ html, body
 .card-container
 {
   position: relative;
-  min-height: 365px;
   height: auto;
   width: 95%;
   margin: 2.5%;
