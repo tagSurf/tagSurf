@@ -24,7 +24,18 @@ onload = function ()
 	var tapThreshold = 20;
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
-	var maxCardHeight = 300;
+	var maxCardHeight = window.innerHeight - 170;
+	var setMaxHeight = function() {
+		var maxHeightCss = ".expand-animation { max-height: " + maxCardHeight + "px; }";
+		var maxHeightCssNode = document.createElement("style");
+		maxHeightCssNode.type = "text/css";
+		if (maxHeightCssNode.styleSheet)
+		    maxHeightCssNode.styleSheet.cssText = maxHeightCss;
+		else
+		    maxHeightCssNode.appendChild(document.createTextNode(maxHeightCss));
+		document.getElementsByTagName("head")[0].appendChild(maxHeightCssNode);
+	};
+	setMaxHeight();
 	var slideContainer = document.getElementById('slider');
 	var formatter = document.getElementById('formatter');
 	var slider = slideContainer.children[0];

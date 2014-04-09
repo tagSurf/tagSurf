@@ -124,11 +124,6 @@ html, body
 
 .expand-animation
 {
-  max-height: 280px;
-}
-
-.expand-animation
-{
   transition: all 1s ease-in-out;
   -webkit-transition: all 1s ease-in-out;
 }
@@ -145,5 +140,5 @@ html, body
 }
 .expanded
 {
-  max-height: 9999px;
+  max-height: 9999px !important;
 }
