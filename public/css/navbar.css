@@ -112,11 +112,14 @@
 {
   padding-top: 10px;
   padding-bottom: 10px;
-  padding-left: 21%;
   background-color: white;
   border-bottom: 1px solid lightgray;
-  //font-family: Raleway;
   font-size: 20px;
+}
+#slide_down_menu li div
+{
+  width: 200px;
+  margin: auto;
 }
 #slide_down_menu li.slide_active
 {
