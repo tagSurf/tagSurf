@@ -25,7 +25,7 @@ onload = function ()
 	var tapThreshold = 5;
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
-	var maxCardHeight = window.innerHeight - 180;
+	var maxCardHeight = window.innerHeight - 170;
 	var setHeightCss = function() {
 		var heightCss = ".expand-animation { max-height: "
 			+ maxCardHeight + "px; } .card-container { min-height: "
