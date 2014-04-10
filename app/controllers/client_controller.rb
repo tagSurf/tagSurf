@@ -1,5 +1,7 @@
 class ClientController < ApplicationController
 
+  before_action :authenticate_user!, except: :index
+
   layout 'client'
 
   def index
