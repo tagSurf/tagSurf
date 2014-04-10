@@ -241,7 +241,7 @@ onload = function ()
 	{
 		var xDifference, _xTotal, _yLast, _yDiff;
 		
-		if (event.type == 'touchend')
+		if (event.type == 'touchmove')
 		{
 			_yLast = event.changedTouches[0].pageY;
 		}
