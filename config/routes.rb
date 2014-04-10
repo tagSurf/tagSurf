@@ -16,9 +16,6 @@ Tagsurf::Application.routes.draw do
   #get 't/:tag'          => 'cards#vote'
   #get 'u/history/:id'   => 'users#history'
 
-  get 't/:tag'      => 'clients#index'
-
-  get 'index'       => 'clients#index'
   get 'feed'        => 'clients#feed'
   get 'favorites'   => 'clients#favorites'
   get 'submissions' => 'clients#submissions'
@@ -55,6 +52,6 @@ Tagsurf::Application.routes.draw do
 
   get '/device' => 'static#device'
 
-  root to: "static#index"
+  root to: "clients#index"
 
 end

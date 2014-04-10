@@ -1,9 +1,26 @@
+<% content_for :title do %>
+  <title>tagSurf - Feed</title>
+<% end %>
+
+<% content_for :stylesheets do %>
+  <link rel="icon" type="image/png" href="//img/ts_icon_white_16.png"/>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/navbar.css">
+  <link rel="stylesheet" href="/css/feed.css">
+<% end %>
+
+<% content_for :javascripts do %>
+  <script src="js/test_data.js"></script>
+  <script src="js/util.js"></script>
+  <script src="js/feed.js"></script>
+<% end %>
+
+<!-- Place body html below -->
 <div id="nav"></div>
-  <div id="formatter" class="hider"></div>
-  <div id="input-container">
-   <div id="static-hash">#</div>
-   <input id="tag-input" type="text" placeholder="hot">
-   <div id="autocomplete"></div>
-  </div>
-  <div id="slider">
-  </div>
+<div id="formatter" class="hider"></div>
+<div id="input-container">
+  <div id="static-hash">#</div>
+  <input id="tag-input" type="text" placeholder="hot">
+  <div id="autocomplete"></div>
+</div>
+<div id="slider"></div>

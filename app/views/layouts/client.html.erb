@@ -2,20 +2,12 @@
 <html>
 <head>
   <title>tagSurf</title>
+  <% content_for :title %>
 
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-  <link rel="icon" type="image/x-icon" href="img/favicon.ico"/>
   <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Raleway:200">
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/navbar.css">
-  <link rel="stylesheet" href="/css/gallery.css">
-  <link rel="stylesheet" href="/css/feed.css">
-  <link rel="stylesheet" href="/css/login.css">
-  <script src="/js/test_data.js"></script>
-  <script src="/js/util.js"></script>
-  <script src="/js/gallery.js"></script>
-  <script src="/js/feed.js"></script>
-  <script src="/js/login.js"></script>
+
+  <% content_for :stylesheets %>
 
 </head>
 <body>
@@ -32,6 +24,8 @@
       <% end %>
     <% end %>
   <% end %>
+
+  <% content_for :javascripts %>
 
 </body>
 </html>
