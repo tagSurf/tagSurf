@@ -292,9 +292,9 @@ onload = function ()
 			}
 			if (isExpanded && slideState.verticaling && _yDiff)
 				window.scrollBy(0, _yDiff);
-			event.preventDefault();
-			return false;
 		}
+		event.preventDefault();
+		return false;
 	};
 	populateSlider();
 };
