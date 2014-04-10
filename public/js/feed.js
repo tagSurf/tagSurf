@@ -45,6 +45,7 @@ onload = function ()
 	var cardCompression = true;
 	var animationInProgress = false;
 	var nextCardCompression = true;
+	var isExpanded = false;
 	var slideState =
 	{
 		active: false,
@@ -54,7 +55,8 @@ onload = function ()
 		yStart: 0,
 		xTotal: 0,
 		yTotal: 0,
-		xLast: null
+		xLast: null,
+		yLast: null
 	};
 	var resetSlideState = function ()
 	{
@@ -67,12 +69,14 @@ onload = function ()
 			yStart: 0,
 			xTotal: 0,
 			yTotal: 0,
-			xLast: null
+			xLast: null,
+			yLast: null
 		};
 	};
 	var updateCompressionStatus = function ()
 	{
 		cardCompression = nextCardCompression;
+		isExpanded = false;
 	}
 	var buildCard = function (stackIndex)
 	{
@@ -142,6 +146,7 @@ onload = function ()
 		if (cardCompression)
 		{
 			cardCompression = false;
+			isExpanded = true;
 			slider.children[0].className += " expanded";
 			slider.children[1].innerHTML = "<p>" + test_data[cardIndex-2].title + "</p>";
 			slider.children[2].style.visibility = "hidden";
@@ -234,17 +239,22 @@ onload = function ()
 	}
 	var swipeMove = function (event)
 	{
-		var xDifference, _xTotal;
+		var xDifference, _xTotal, _yLast, _yDiff;
+		
 		if (event.type == 'touchend')
 		{
-			slideState.yTotal = slideState.yStart - event.changedTouches[0].pageY;
+			_yLast = event.changedTouches[0].pageY;
 		}
 		else
 		{
-			slideState.yTotal = slideState.yStart - event.y;
+			_yLast = event.y;
 		}
+		if (slideState.yLast)
+			_yDiff = slideState.yLast - _yLast;
+		slideState.yLast = _yLast;
+		slideState.yTotal = slideState.yStart - slideState.yLast;
 
-		if ((slideState.yTotal > verticalingThreshold) && (slideState.sliding == false))
+		if ((Math.abs(slideState.yTotal) > verticalingThreshold) && (slideState.sliding == false))
 		{
 			slideState.verticaling = true;
 		}
@@ -280,11 +290,10 @@ onload = function ()
 				slider.style['-webkit-transform'] = 
 					"translate3d(" + ((slideState.xTotal - tapThreshold) * translationScale) + "px,0,0) rotate(" + ((slideState.xTotal - tapThreshold) * rotationScale) + "deg)";
 			}
-			if (cardCompression == false)
-			{
-				event.preventDefault();
-				return false;
-			}
+			if (isExpanded && slideState.verticaling && _yDiff)
+				window.scrollBy(0, _yDiff);
+			event.preventDefault();
+			return false;
 		}
 	};
 	populateSlider();
