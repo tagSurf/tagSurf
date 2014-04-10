@@ -51,6 +51,6 @@ Tagsurf::Application.routes.draw do
 
   get '/desktop' => 'client#desktop'
 
-  root to: "clients#index"
+  root to: "client#index"
 
 end
