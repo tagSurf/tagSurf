@@ -25,4 +25,7 @@ class ClientController < ApplicationController
   def tag
   end
 
+  def desktop
+  end
+
 end
