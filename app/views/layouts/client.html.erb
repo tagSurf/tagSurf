@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <% content_for :title %>
+  <%= content_for :title %>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
   <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Raleway:200">
-  <% content_for :stylesheets %>
+  <%= content_for :stylesheets %>
   <%= csrf_meta_tags %>
 </head>
 <body>
@@ -22,7 +22,7 @@
     <% end %>
   <% end %>
 
-  <% content_for :javascripts %>
+  <%= content_for :javascripts %>
 
 </body>
 </html>

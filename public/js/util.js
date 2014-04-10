@@ -75,6 +75,6 @@ var populateNavbar = function () {
   nav.appendChild(menu_slider);
   document.getElementById("logout").onclick = function() {
     document.cookie = "ts=";
-    window.location = "index.html";
+    window.location = "/users/sign_out";
   };
 };

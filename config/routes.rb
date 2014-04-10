@@ -47,8 +47,6 @@ Tagsurf::Application.routes.draw do
     delete 'favorites/:card_id'          => 'favorites#delete'
   end
 
-  resources :users
-
   get '/desktop' => 'client#desktop'
 
   root to: "client#index"
