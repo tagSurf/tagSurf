@@ -12,6 +12,9 @@ class ClientController < ApplicationController
     end
   end
 
+  def trending
+  end
+
   def feed
   end
 

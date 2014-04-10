@@ -20,8 +20,8 @@ onload = function ()
 
 	// slider stuff
 	var cardIndex = 0;
-	var slideThreshold = 50;
-	var tapThreshold = 10;
+	var slideThreshold = 60;
+	var tapThreshold = 20;
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
 	var maxCardHeight = 300;
@@ -31,6 +31,7 @@ onload = function ()
 	var slideState =
 	{
 		active: false,
+		sliding: false,
 		xStart: 0,
 		yStart: 0,
 		xTotal: 0,
@@ -42,6 +43,7 @@ onload = function ()
 		slideState =
 		{
 			active: false,
+			sliding: false,
 			xStart: 0,
 			yStart: 0,
 			xTotal: 0,
@@ -52,11 +54,11 @@ onload = function ()
 	var buildCard = function (stackIndex)
 	{
 		var imageContainer, textContainer, fullscreenButton, truncatedTitle;
-		var cardTemplate = "<div class='card-container' style='z-index:" + stackIndex + ";'><div class='image-container expand-animation'><img src='http://" + test_data[cardIndex].src + "'></div><div class='text-container'><p>" + test_data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + stackIndex + ";'><div class='image-container expand-animation'><img src='http://" + test_data[cardIndex].src + "'></div><div class='text-container'><p>" + test_data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div></div></div>";
 		formatter.innerHTML = cardTemplate;
-		imageContainer = formatter.children[0].children[0];
-		textContainer = formatter.children[0].children[1];
-		fullscreenButton = formatter.children[0].children[2];
+		imageContainer = formatter.children[0].children[0].children[0];
+		textContainer = formatter.children[0].children[0].children[1];
+		fullscreenButton = formatter.children[0].children[0].children[2];
 		imageContainer.children[0].onload = function () {
 			if (imageContainer.children[0].clientHeight + textContainer.clientHeight < maxCardHeight)
 			{
@@ -96,7 +98,7 @@ onload = function ()
 	};
 	var initSliding = function () 
 	{
-		slider = document.getElementById('slider').children[0];
+		slider = document.getElementById('slider').children[0].children[0];
 		slider.addEventListener('mousedown', moveStart, false);
 		slider.addEventListener('mouseup', moveEnd, false);
 		slider.addEventListener('mousemove', swipeMove, false);
@@ -129,7 +131,7 @@ onload = function ()
 			slideState.yStart = event.y;
 			slideState.xLast = event.x;
 		}
-		event.preventDefault();
+		//event.preventDefault();
 	};
 	var moveEnd = function (event)
 	{
@@ -159,7 +161,7 @@ onload = function ()
 				slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
 				slider.style['-webkit-transform'] = "translate3d(600px,0,0) rotate(60deg)";
 				slider.addEventListener( 'webkitTransitionEnd', function (event) {
-					slideContainer.removeChild(slider);
+					slideContainer.removeChild(slider.parentNode);
 					slideContainer.children[0].style.zIndex = 2;
 					buildCard(1); resetSlideState();
 				},false);
@@ -174,12 +176,12 @@ onload = function ()
 					resetSlideState();
 				}, false);
 			}
-			else if (slideState.xTotal < slideThreshold)
+			else if (slideState.xTotal < -slideThreshold)
 			{
 				slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
 				slider.style['-webkit-transform'] = "translate3d(-600px,0,0) rotate(-60deg)";
 				slider.addEventListener( 'webkitTransitionEnd', function (event) {
-					slideContainer.removeChild(slider);
+					slideContainer.removeChild(slider.parentNode);
 					slideContainer.children[0].style.zIndex = 2;
 					buildCard(1); resetSlideState();
 				},false);
@@ -203,18 +205,25 @@ onload = function ()
 				slideState.xLast = event.x;
 			}
 			slideState.xTotal += xDifference;
-			if (slideState.xTotal < 0)
+			if (Math.abs(slideState.xTotal) > tapThreshold)
 			{
-				slider.style['border-color'] = '#C90016';
+				slideState.sliding = true;
 			}
-			else if (slideState.xTotal > 0)
+			if (slideState.sliding == true)
 			{
-				slider.style['border-color'] = '#8EE5B0';
+				if (slideState.xTotal < 0)
+				{
+					slider.style['border-color'] = '#C90016';
+				}
+				else if (slideState.xTotal > 0)
+				{
+					slider.style['border-color'] = '#8EE5B0';
+				}
+				slider.style['-webkit-transform'] = 
+					"translate3d(" + (slideState.xTotal * translationScale) + "px,0,0) rotate(" + (slideState.xTotal * rotationScale) + "deg)";
+				event.preventDefault();
 			}
-			slider.style['-webkit-transform'] = 
-				"translate3d(" + (slideState.xTotal * translationScale) + "px,0,0) rotate(" + (slideState.xTotal * rotationScale) + "deg)";
 		}
-		event.preventDefault();
 	};
 	populateSlider();
 };

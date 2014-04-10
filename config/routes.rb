@@ -12,6 +12,7 @@ Tagsurf::Application.routes.draw do
  
   # Static Routes
   get 'feed'        => 'client#feed'
+  get 'trending'    => 'client#trending'
   get 'favorites'   => 'client#favorites'
   get 'submissions' => 'client#submissions'
   get 'tag'         => 'client#tag'
