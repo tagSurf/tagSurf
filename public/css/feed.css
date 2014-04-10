@@ -135,7 +135,7 @@ html, body
 .expand-button
 {
   position: relative;
-  bottom: 0;
+  bottom: 10px;
   text-align: center;
 }
 .expanded
