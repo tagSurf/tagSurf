@@ -1,5 +1,7 @@
 class StaticController < ApplicationController
 
+  layout 'client'
+
   # Keep the default controller action
   # This will make it easy to have a beta page
   # for desktop and tablets
