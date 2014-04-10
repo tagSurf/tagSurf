@@ -49,7 +49,7 @@ Tagsurf::Application.routes.draw do
 
   resources :users
 
-  get '/device' => 'static#device'
+  get '/desktop' => 'client#desktop'
 
   root to: "clients#index"
 
