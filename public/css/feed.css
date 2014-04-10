@@ -66,8 +66,9 @@ html, body
   height: 160px;
   border-radius: 8px;
   background: white;
-  overflow-y: scroll;
   text-align: left;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 #autocomplete div {
