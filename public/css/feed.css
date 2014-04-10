@@ -61,7 +61,9 @@ html, body
   z-index: 3;
   position: absolute;
   top: 90px;
-  left: 60px;
+  left: 0px;
+  right: 0px;
+  margin: auto;
   width: 200px;
   height: 160px;
   border-radius: 8px;
