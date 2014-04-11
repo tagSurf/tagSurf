@@ -43,9 +43,9 @@ class Card < ActiveRecord::Base
       cards
     else
       has_voted = user.votes.pluck(:votable_id) 
-      cards = Card.where('cards.id not in (?)', has_voted).tagged_with([tag], :any => true).limit(n).order('created_at DESC')
+      cards = Card.where('cards.id not in (?) and cards.section ilike ?', has_voted, tag).limit(n).order('created_at DESC')
       if cards.length < 10
-        self.populate_tag(tag)
+        TaggedMediaPopulation.perform_async(tag)
       end
       cards
     end
