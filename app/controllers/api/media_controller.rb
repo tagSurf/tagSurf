@@ -1,30 +1,34 @@
-class Api::MediaController < ApplicationController
+class Api::MediaController < Api::BaseController
 
   before_action :authenticate_user!
   before_action :find_authenticated_user
 
-  def add_vote
-    @card = Card.find card_params[:id]
-    @vote = card_params[:vote] == 'like' ? true : false
-    @result = Vote.create(:voter_id => @user.id, :votable_id => @card.id, :vote_flag => @vote)
-    render json: @result 
+  def create_vote
+    @media = Card.find media_params[:id]
+    @vote = media_params[:vote] == 'up' ? true : false
+    begin
+      result = Vote.create(voter_type: 'User', voter_id: @user.id, votable_id: @media.id, vote_flag: @vote, votable_type: 'Card')
+      render json: {success: "true"}
+    rescue => e
+      render json: {error: "something went wrong"}, status: :unprocessible_entity
+    end
   end
 
-  def vote
+  def votes
     @tag = Tag.all
   end
 
   def show
-    @cards = Card.next(@user, card_params[:tag])
+    @cards = Card.find media_params[:media_id]
     if @card
       @card
     else
-      render 404
+      render json: {errors: "no card found"}, status: :not_found
     end
   end
 
   def next
-    @cards = Card.next(@user, card_params[:tag])
+    @cards = Card.next(@user, media_params[:tag])
     if @cards.present?
       render json: @cards, root: "data"
     else
@@ -34,7 +38,7 @@ class Api::MediaController < ApplicationController
 
   private
 
-    def card_params
+    def media_params
       params.permit(:id, :vote, :tag)
     end
 

@@ -69,6 +69,12 @@ class Card < ActiveRecord::Base
   def self.populate_tag(tag) 
     response = RemoteResource.get_tag(tag)
     tagged = response.parsed_response["data"]
+
+    # Create tag if not already in the system
+    unless tag = Tag.where('name ilike ?', tag).first
+      Tag.create(name: tag)
+    end
+
     tagged.each do |obj|
       next if obj["nsfw"].to_s == 'true'
       next if obj['is_album'].to_s == 'true'
