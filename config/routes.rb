@@ -6,17 +6,21 @@ Tagsurf::Application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  get '/users/sign_up', to: redirect('/t/tag')
+  #get '/users/sign_up', to: redirect('/feed')
 
   devise_for :users, :controllers => { :sessions => 'sessions' }
  
-  # Voting
-  get 'votes/:id/:vote' => 'cards#add_vote'
-  get 'cards/next/:tag' => 'cards#next'
-  get 't/:tag'          => 'cards#vote'
-  get 'u/history/:id'   => 'users#history'
+  # Static Routes
+  get 'feed'        => 'client#feed'
+  get 'trending'    => 'client#trending'
+  get 'favorites'   => 'client#favorites'
+  get 'submissions' => 'client#submissions'
+  get 'tag'         => 'client#tag'
+  get 'history'     => 'client#tag'
 
   namespace :api do
+    # Feed API
+    get 'feed/:tag'   => 'cards#next'
 
     # Tags API
     get  'tags'                          => 'tags#index'
@@ -25,13 +29,15 @@ Tagsurf::Application.routes.draw do
 
     # Vote API
     get  'votes'                         => 'votes#show'
-    get  'users/history/:limit/:offset'  => 'users#paginated_history'
-    get  'history/bracketed/:id'         => 'users#bracketed_history'
-    get  'history/next/:id'              => 'users#next_history'
-    get  'history/previous/:id'          => 'users#previous_history'
     get  'votes/up'                      => 'votes#up'
     get  'votes/down'                    => 'votes#down'
     get  'stats'                         => 'votes#stats'
+
+    # History API
+    get  'history/paginated/:limit/:offset'  => 'users#paginated_history'
+    get  'history/bracketed/:id'             => 'users#bracketed_history'
+    get  'history/next/:id'                  => 'users#next_history'
+    get  'history/previous/:id'              => 'users#previous_history'
 
     # Favorites API
     get  'favorites/bracketed/:id'       => 'favorites#bracketed_history'
@@ -42,11 +48,8 @@ Tagsurf::Application.routes.draw do
     delete 'favorites/:card_id'          => 'favorites#delete'
   end
 
-  resources :cards
-  resources :users
+  get '/desktop' => 'client#desktop'
 
-  get '/device' => 'static#device'
-
-  root to: "static#index"
+  root to: "client#index"
 
 end
