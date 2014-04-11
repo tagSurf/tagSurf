@@ -6,7 +6,7 @@ Tagsurf::Application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  get '/users/sign_up', to: redirect('/feed')
+  #get '/users/sign_up', to: redirect('/feed')
 
   devise_for :users, :controllers => { :sessions => 'sessions' }
  

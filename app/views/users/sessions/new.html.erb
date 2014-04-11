@@ -1,25 +1,31 @@
-<div class="background-image"></div>
-
-<%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:role => 'form'} ) do |f| %>
-  <div class="ts-form-group form-group">
-    <%= f.email_field :email, :placeholder => 'email', :class => 'form-control ts-input' %>
-  </div>
-
-  <div class="ts-form-group form-group">
-    <%= f.password_field :password, :placeholder => 'password', :class => 'form-control ts-input' %>
-  </div>
-
-  <div class="ts-submit-bar">
-    <!--<div class="ts-submit-btn"><%= f.submit "Login", class: 'btn btn-default' %></div>-->
-    <div class="ts-submit-btn"><div class="border-trim"><%= f.submit "log in", class: 'ts-login-btn ts-front-btn'%></div></div>
-    <div class="ts-submit-btn"><%= link_to "sign up", new_registration_path(resource_name), class: 'ts-signup-btn ts-front-btn' %></div>
-  </div>
-  <script>
-	$('.ts-login-btn').click(function(){$(this).addClass('ts-front-btn-active')});
-	$('.ts-signup-btn').click(function(){
-		$(this).css('color','#404041');
-		$('.ts-submit-bar').css('background-color','#48a4df');
-	});
-  </script>
+<% content_for :title do %>
+  <title>tagSurf</title>
 <% end %>
 
+<% content_for :stylesheets do %>
+  <link rel="icon" type="image/x-icon" href="img/favicon.ico"/>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/login.css">
+<% end %>
+
+<% content_for :javascripts do %>
+  <script src="/js/login.js"></script>
+<% end %>
+
+<%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:role => 'form'} ) do |f| %>
+  <center>
+   <img id="tslogo" src="/img/ts_logo_stacked_gray.jpg"></img>
+   <%= f.email_field :email, :placeholder => 'email', :class => 'ts-input' %>
+   <%= f.password_field :password, :placeholder => 'password', :class => 'ts-input' %>
+  </center>
+  <div class="ts-submit-bar">
+   <div class="ts-submit-btn">
+    <div class="border-trim">
+     <%= f.submit "Log in", id: "ts-login-btn" %> 
+    </div>
+   </div>
+   <div class="ts-submit-btn">
+    <a class="ts-signup-btn" href="/users/sign_up">sign up</a>
+   </div>
+  </div>
+<% end %>

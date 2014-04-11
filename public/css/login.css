@@ -69,7 +69,7 @@ html, body {
 	-webkit-appearance: none;
 }
 
-.ts-signup-btn {
+.ts-signup-btn{
 	color: inherit;
 	font-size: 24px;
 	position: relative;
@@ -77,4 +77,8 @@ html, body {
 	color: white;
 	top: 2px;
 	text-decoration: none !important;
+}
+
+.ts-blue{
+  color: #1dafec;
 }

@@ -6,7 +6,7 @@ class ClientController < ApplicationController
 
   def index
     if current_user
-      redirect_to '/feed'
+      redirect_to '/trending'
     else
       redirect_to user_session_path
     end
