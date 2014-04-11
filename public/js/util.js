@@ -77,3 +77,12 @@ var populateNavbar = function () {
     window.location = "/users/sign_out";
   };
 };
+var addCss = function(css) {
+    var n = document.createElement("style");
+    n.type = "text/css";
+    if (n.styleSheet)
+        n.styleSheet.cssText = css;
+    else
+        n.appendChild(document.createTextNode(css));
+    document.getElementsByTagName("head")[0].appendChild(n);
+};

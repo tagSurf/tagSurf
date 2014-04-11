@@ -1,6 +1,9 @@
 onload = function() {
 	populateNavbar();
 
+	addCss(".modal { -webkit-transform: translate3d("
+		+ window.innerWidth + "px, 0, 0); }");
+
 	var grid = document.getElementById("grid");
 	var now = new Date();
 	var day = 1000 * 60 * 60 * 24;

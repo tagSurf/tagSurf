@@ -91,12 +91,11 @@
 	background: #2f2f2f;
 	border-radius: 5px;
 	box-shadow: 3px 3px 5px 2px #161617;
-	-webkit-transform: translate3d(350px, 0, 0);
 	-webkit-transition: -webkit-transform .25s ease-in-out;
 }
 
 .modalslide {
-	-webkit-transform: translate3d(0, 0, 0);
+	-webkit-transform: translate3d(0, 0, 0) !important;
 }
 
 .bigpic {
