@@ -2,6 +2,11 @@ require "spec_helper"
 
 describe Card do
 
+  context :next do
+    it "should render tagged content" do
+    end
+  end
+
   context :resize_image_links do 
     it "creates a thumbnail image link" do
       card = Card.create!(

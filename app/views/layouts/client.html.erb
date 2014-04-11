@@ -4,6 +4,9 @@
   <%= content_for :title %>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
   <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Raleway:200">
+  <%= favicon_link_tag '/img/ts_icon_grey_50.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '50x50' %>
+  <%= favicon_link_tag '/img/ts_icon_grey_120.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '120x120' %>
+  <%= favicon_link_tag '/img/ts_icon_grey_152.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '152x152' %>
   <%= content_for :stylesheets %>
   <%= csrf_meta_tags %>
 </head>
