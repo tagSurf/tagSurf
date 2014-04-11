@@ -20,7 +20,8 @@ Tagsurf::Application.routes.draw do
 
   namespace :api do
     # Feed API
-    get 'feed/:tag'   => 'cards#next'
+    get 'feed/:tag'    => 'media#next'
+    get 'media/:tag'   => 'media#next'
 
     # Tags API
     get  'tags'                          => 'tags#index'
