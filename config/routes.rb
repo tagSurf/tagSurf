@@ -20,17 +20,16 @@ Tagsurf::Application.routes.draw do
 
   namespace :api do
     # Media API
-    get 'media/:tag'   => 'media#next'
+    get 'media/:tag'                     => 'media#next'
 
     # Tags API
-    get  'tags'                          => 'tags#index'
+    get  'tags'                          => 'media#tags'
     get  'tags/:name'                    => 'tags#show'
     post 'tags'                          => 'tags#create'
 
     # Vote API
     get  'votes'                         => 'votes#show'
-    get  'votes/up/:media_id'            => 'votes#up'
-    get  'votes/down/:media_id'          => 'votes#down'
+    post 'votes/:vote/:id'               => 'media#create_vote'
 
     # Users API
     get  'users/:id/stats'               => 'votes#stats'
