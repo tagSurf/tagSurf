@@ -29,6 +29,7 @@ onload = function ()
 	addCss(".expand-animation { max-height: "
 		+ maxCardHeight + "px; } .card-container { min-height: "
 		+ (maxCardHeight + 65) + "px; }");
+	var scrollContainer = document.getElementById('scroll-container');
 	var slideContainer = document.getElementById('slider');
 	var formatter = document.getElementById('formatter');
 	var slider = slideContainer.children[0];
@@ -36,30 +37,39 @@ onload = function ()
 	var animationInProgress = false;
 	var nextCardCompression = true;
 	var isExpanded = false;
+	var activeState = false;
+	var scrollState = 
+	{
+		verticaling: false,
+		yCurrent: 0,
+		yStart: 0,
+		yTotal: 0,
+		yLast: null
+	};
 	var slideState =
 	{
-		active: false,
 		sliding: false,
-		verticaling: false,
 		xStart: 0,
-		yStart: 0,
 		xTotal: 0,
-		yTotal: 0,
-		xLast: null,
-		yLast: null
+		xLast: null
 	};
 	var resetSlideState = function ()
 	{
 		slideState =
 		{
-			active: false,
 			sliding: false,
-			verticaling: false,
 			xStart: 0,
-			yStart: 0,
 			xTotal: 0,
+			xLast: null
+		};
+	};
+	var resetScrollState = function ()
+	{
+		scrollState =
+		{
+			verticaling: false,
+			yStart: 0,
 			yTotal: 0,
-			xLast: null,
 			yLast: null
 		};
 	};
@@ -144,41 +154,53 @@ onload = function ()
 	};
 	var moveStart = function (event)
 	{
+		console.log(animationInProgress,scrollState,slideState,activeState);
 		if (animationInProgress == false)
 		{
-			slideState.active = true;
+			activeState = true;
 		}
 		if (event.type == 'touchstart')
 		{
 			slideState.xStart = event.changedTouches[0].pageX;
-			slideState.yStart = event.changedTouches[0].pageY;
 			slideState.xLast = event.changedTouches[0].pageX;
+			scrollState.yStart = event.changedTouches[0].pageY;
+			scrollState.yLast = event.changedTouches[0].pageY;
 		}
 		else
 		{
 			slideState.xStart = event.x;
-			slideState.yStart = event.y;
 			slideState.xLast = event.x;
+			scrollState.yStart = event.y;
+			scrollState.yLast = event.y;
 		}
+		slideState.xTotal = 0;
+		scrollState.yTotal = 0;
 		event.preventDefault();
 		return false;
 	};
 	var moveEnd = function (event)
 	{
-		var yTotal, distance;
-		slideState.active = false;
-
+		var xDifference, yDifference, distance, _xLast, _yLast, animationDistance;
+		activeState = false;
 
 		if (event.type == 'touchend')
 		{
-			yTotal = slideState.yStart - event.changedTouches[0].pageY;
+			_xLast = event.changedTouches[0].pageX;
+			_yLast = event.changedTouches[0].pageY;
 		}
 		else
 		{
-			yTotal = slideState.yStart - event.y;
+			_xLast = event.x;
+			_yLast = event.y;
 		}
+		yDifference = _yLast - scrollState.yLast;
+		xDifference = _xLast - slideState.xLast;
+		scrollState.yLast = _yLast;
+		slideState.xLast = _xLast;
+		scrollState.yTotal += yDifference;
+		slideState.xTotal += xDifference;
 
-		distance = Math.sqrt((yTotal * yTotal) + (slideState.xTotal * slideState.xTotal));
+		distance = Math.sqrt((scrollState.yTotal * scrollState.yTotal) + (slideState.xTotal * slideState.xTotal));
 
 		if ((distance < tapThreshold) && cardCompression)
 		{
@@ -187,87 +209,103 @@ onload = function ()
 		else
 		{
 			animationInProgress = true;
-			if (slideState.xTotal > slideThreshold)
+			if (scrollState.verticaling == false)
 			{
-				slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
-				slider.style['-webkit-transform'] = "translate3d(600px,0,0) rotate(60deg)";
-				slider.addEventListener( 'webkitTransitionEnd', function (event) {
-					slideContainer.removeChild(slider.parentNode);
-					slideContainer.children[0].style.zIndex = 2;
-					buildCard(1); 
-					animationInProgress = false;
-					updateCompressionStatus();
-				},false);
+				if (slideState.xTotal > slideThreshold)
+				{
+					slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
+					slider.style['-webkit-transform'] = "translate3d(600px,0,0) rotate(60deg)";
+					resetSlideState();
+					slider.addEventListener( 'webkitTransitionEnd', function (event) {
+						slideContainer.removeChild(slider.parentNode);
+						slideContainer.children[0].style.zIndex = 2;
+						buildCard(1); 
+						animationInProgress = false;
+						updateCompressionStatus();
+						resetSlideState(); resetScrollState();
+						scrollState.yCurrent = 0;
+					},false);
+				}
+				else if (slideState.xTotal < -slideThreshold)
+				{
+					slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
+					slider.style['-webkit-transform'] = "translate3d(-600px,0,0) rotate(-60deg)";
+					resetSlideState();
+					slider.addEventListener( 'webkitTransitionEnd', function (event) {
+						slideContainer.removeChild(slider.parentNode);
+						slideContainer.children[0].style.zIndex = 2;
+						buildCard(1);
+						animationInProgress = false;
+						updateCompressionStatus();
+						resetSlideState(); resetScrollState();
+						scrollState.yCurrent = 0;
+					},false);
+				}
+				else
+				{
+					slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
+					slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
+					slider.style['border-color'] = "#353535";
+					slider.addEventListener( 'webkitTransitionEnd', function (event) {
+						slider.style['-webkit-transition'] = "";
+						slider.style['-webkit-transform'] = "";
+						animationInProgress = false;
+						resetSlideState();
+					}, false);
+				}
 			}
-			else if (slideState.xTotal < -slideThreshold)
+			else
 			{
-				slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
-				slider.style['-webkit-transform'] = "translate3d(-600px,0,0) rotate(-60deg)";
-				slider.addEventListener( 'webkitTransitionEnd', function (event) {
-					slideContainer.removeChild(slider.parentNode);
-					slideContainer.children[0].style.zIndex = 2;
-					buildCard(1);
+				animationDistance = 4 * scrollState.yTotal / 3;
+				scrollState.yCurrent -= animationDistance;
+				scrollContainer.style['-webkit-transition'] = "-webkit-transform 250ms ease-in-out";
+				scrollContainer.style['-webkit-transform'] = "translate3d(0,"+ (scrollState.yCurrent) + "px,0)";
+				scrollContainer.addEventListener( 'webkitTransitionEnd', function (event) {
+					scrollContainer.style['-webkit-transition'] = "";
+					scrollContainer.style['-webkit-transition'] = "";
 					animationInProgress = false;
-					updateCompressionStatus();
-				},false);
-			}
-			else 
-			{
-				slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
-				slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
-				slider.style['border-color'] = "#353535";
-				slider.addEventListener( 'webkitTransitionEnd', function (event) {
-					slider.style['-webkit-transition'] = "";
-					slider.style['-webkit-transform'] = "";
-					animationInProgress = false;
+					resetScrollState();resetSlideState();
 				}, false);
 			}
-			resetSlideState();
 		}
 		event.preventDefault();
 		return false;
 	}
 	var swipeMove = function (event)
 	{
-		var xDifference, _xTotal, _yLast, _yDiff;
+		var xDifference, _xLast, _xDiff, _yLast, _yDiff;
 		
 		if (event.type == 'touchmove')
 		{
+			_xLast = event.changedTouches[0].pageX;
 			_yLast = event.changedTouches[0].pageY;
 		}
 		else
 		{
+			_xLast = event.x;
 			_yLast = event.y;
 		}
-		if (slideState.yLast)
-			_yDiff = slideState.yLast - _yLast;
-		slideState.yLast = _yLast;
-		slideState.yTotal = slideState.yStart - slideState.yLast;
-
-		if ((Math.abs(slideState.yTotal) > verticalingThreshold) && (slideState.sliding == false))
+		if (scrollState.yLast && slideState.xLast)
 		{
-			slideState.verticaling = true;
+			_yDiff = _yLast - scrollState.yLast;
+			_xDiff = _xLast - slideState.xLast;
 		}
+		scrollState.yLast = _yLast;
+		slideState.xLast = _xLast;
+		scrollState.yTotal += _yDiff;
+		slideState.xTotal += _xDiff;
 		
-		if (slideState.active)
+		if (activeState)
 		{
-			if (event.type == 'touchmove')
+			if ((Math.abs(scrollState.yTotal) > verticalingThreshold) && (slideState.sliding == false) && (cardCompression == false))
 			{
-				xDifference = event.changedTouches[0].pageX - slideState.xLast;
-				slideState.xLast = event.changedTouches[0].pageX;
+				scrollState.verticaling = true;
 			}
-			else
-			{
-				xDifference = event.x - slideState.xLast;
-				slideState.xLast = event.x;
-			}
-			slideState.xTotal += xDifference;
-			_xTotal = Math.abs(slideState.xTotal);
-			if (_xTotal > tapThreshold)
+			if ((Math.abs(slideState.xTotal) > tapThreshold) && (scrollState.verticaling == false))
 			{
 				slideState.sliding = true;
 			}
-			if (slideState.sliding == true && slideState.verticaling == false)
+			if (slideState.sliding == true)
 			{
 				if (slideState.xTotal < 0)
 				{
@@ -280,8 +318,12 @@ onload = function ()
 				slider.style['-webkit-transform'] = 
 					"translate3d(" + ((slideState.xTotal - tapThreshold) * translationScale) + "px,0,0) rotate(" + ((slideState.xTotal - tapThreshold) * rotationScale) + "deg)";
 			}
-			if (isExpanded && slideState.verticaling && _yDiff)
-				window.scrollBy(0, _yDiff);
+			if (isExpanded && scrollState.verticaling && _yDiff)
+			{
+				scrollState.yCurrent -= _yDiff;
+				scrollContainer.style['-webkit-transform'] = "translate3d(0," + (scrollState.yCurrent - verticalingThreshold) + "px,0)";
+				//window.scrollBy(0, _yDiff);
+			}
 		}
 		event.preventDefault();
 		return false;
