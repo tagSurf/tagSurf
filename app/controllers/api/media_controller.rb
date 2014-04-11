@@ -1,4 +1,4 @@
-class Api::MediaController < ApplicationController
+class Api::MediaController < Api::BaseController
 
   before_action :authenticate_user!
   before_action :find_authenticated_user
@@ -6,10 +6,10 @@ class Api::MediaController < ApplicationController
   def create_vote
     @media = Card.find media_params[:id]
     @vote = media_params[:vote] == 'up' ? true : false
-    @result = Vote.create(voter_id: @user.id, votable_id: @media.id, vote_flag: @vote, votable_type: 'Card')
-    if @result
-      render json: {success: @result}, status: :ok
-    else
+    begin
+      result = Vote.create(voter_type: 'User', voter_id: @user.id, votable_id: @media.id, vote_flag: @vote, votable_type: 'Card')
+      render json: {success: "true"}
+    rescue => e
       render json: {error: "something went wrong"}, status: :unprocessible_entity
     end
   end
