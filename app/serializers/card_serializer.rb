@@ -17,7 +17,7 @@ class CardSerializer < ActiveModel::Serializer
   )
 
   def tagged_as
-    object.section
+    [object.section]
   end
 
   def image_link_medium
