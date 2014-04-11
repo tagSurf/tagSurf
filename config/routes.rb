@@ -19,8 +19,7 @@ Tagsurf::Application.routes.draw do
   get 'history'     => 'client#tag'
 
   namespace :api do
-    # Feed API
-    get 'feed/:tag'    => 'media#next'
+    # Media API
     get 'media/:tag'   => 'media#next'
 
     # Tags API
