@@ -51,21 +51,21 @@ var populateNavbar = function () {
     "<input type='checkbox' name='slider_box' id='slider_box' style='display:none'>",
     "<div id='slide_down_menu' class='pointer'>",
       "<ul>",
-      	"<li>",
+      	"<li><div>",
       	  "<a href='/trending'><img class='menu_icon' src='img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING</a>",
-      	"</li>",
-      	"<li>",
+      	"</div></li>",
+      	"<li><div>",
       	  "<a href='/favorites'><img class='menu_icon' src='img/favorites_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;FAVORITES</a>",
-      	"</li>",
-      	"<li>",
+        "</div></li>",
+        "<li><div>",
       	  "<a href='/submissions'><img class='menu_icon' src='img/submissions_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;SUBMISSIONS</a>",
-      	"</li>",
-        "<li>",
+        "</div></li>",
+        "<li><div>",
           "<a href='/options'><img class='menu_icon' src='img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS</a>",
-        "</li>",
-        "<li>",
+        "</div></li>",
+        "<li><div>",
           "<a id='logout'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGOUT</a>",
-        "</li>",
+        "</div></li>",
       "</ul>",
     "</div>",
   ];
@@ -74,7 +74,6 @@ var populateNavbar = function () {
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
   document.getElementById("logout").onclick = function() {
-    document.cookie = "ts=";
     window.location = "/users/sign_out";
   };
 };

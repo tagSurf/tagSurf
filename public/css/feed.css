@@ -61,13 +61,16 @@ html, body
   z-index: 3;
   position: absolute;
   top: 90px;
-  left: 60px;
+  left: 0px;
+  right: 0px;
+  margin: auto;
   width: 200px;
   height: 160px;
   border-radius: 8px;
   background: white;
-  overflow-y: scroll;
   text-align: left;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 #autocomplete div {
@@ -78,15 +81,12 @@ html, body
 {
   position: absolute;
   top: 85px;
-  -ms-touch-action: none;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
+  width: 100%;
 }
 
 .card-container
 {
   position: relative;
-  min-height: 365px;
   height: auto;
   width: 95%;
   margin: 2.5%;
@@ -124,11 +124,6 @@ html, body
 
 .expand-animation
 {
-  max-height: 280px;
-}
-
-.expand-animation
-{
   transition: all 1s ease-in-out;
   -webkit-transition: all 1s ease-in-out;
 }
@@ -140,10 +135,10 @@ html, body
 .expand-button
 {
   position: relative;
-  bottom: 0;
+  bottom: 10px;
   text-align: center;
 }
 .expanded
 {
-  max-height: 9999px;
+  max-height: 9999px !important;
 }

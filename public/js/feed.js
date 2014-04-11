@@ -21,22 +21,42 @@ onload = function ()
 	// slider stuff
 	var cardIndex = 0;
 	var slideThreshold = 60;
-	var tapThreshold = 20;
+	var verticalingThreshold = 10;
+	var tapThreshold = 5;
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
-	var maxCardHeight = 300;
+	var maxCardHeight = window.innerHeight - 170;
+	var setHeightCss = function() {
+		var heightCss = ".expand-animation { max-height: "
+			+ maxCardHeight + "px; } .card-container { min-height: "
+			+ (maxCardHeight + 65) + "px; }";
+		var heightCssNode = document.createElement("style");
+		heightCssNode.type = "text/css";
+		if (heightCssNode.styleSheet)
+		    heightCssNode.styleSheet.cssText = heightCss;
+		else
+		    heightCssNode.appendChild(document.createTextNode(heightCss));
+		document.getElementsByTagName("head")[0].appendChild(heightCssNode);
+	};
+	setHeightCss();
 	var slideContainer = document.getElementById('slider');
 	var formatter = document.getElementById('formatter');
 	var slider = slideContainer.children[0];
+	var cardCompression = true;
+	var animationInProgress = false;
+	var nextCardCompression = true;
+	var isExpanded = false;
 	var slideState =
 	{
 		active: false,
 		sliding: false,
+		verticaling: false,
 		xStart: 0,
 		yStart: 0,
 		xTotal: 0,
+		yTotal: 0,
 		xLast: null,
-		compressed: true
+		yLast: null
 	};
 	var resetSlideState = function ()
 	{
@@ -44,13 +64,20 @@ onload = function ()
 		{
 			active: false,
 			sliding: false,
+			verticaling: false,
 			xStart: 0,
 			yStart: 0,
 			xTotal: 0,
+			yTotal: 0,
 			xLast: null,
-			compressed: true
+			yLast: null
 		};
 	};
+	var updateCompressionStatus = function ()
+	{
+		cardCompression = nextCardCompression;
+		isExpanded = false;
+	}
 	var buildCard = function (stackIndex)
 	{
 		var imageContainer, textContainer, fullscreenButton, truncatedTitle;
@@ -66,7 +93,11 @@ onload = function ()
 				fullscreenButton.className += ' hider';
 				if (stackIndex != 1)
 				{
-					slideState.compressed = false;
+					cardCompression = false;
+				}
+				else
+				{
+					nextCardCompression = false;
 				}
 			}
 			else
@@ -76,7 +107,11 @@ onload = function ()
 				textContainer.innerHTML = truncatedTitle;
 				if (stackIndex != 1)
 				{
-					slideState.compressed = true;
+					cardCompression = true;
+				}
+				else
+				{
+					nextCardCompression = true;
 				}
 			}
 			slideContainer.innerHTML += formatter.innerHTML;
@@ -108,9 +143,10 @@ onload = function ()
 	};
 	var expandCard = function ()
 	{
-		if (slideState.compressed)
+		if (cardCompression)
 		{
-			slideState.compressed = false;
+			cardCompression = false;
+			isExpanded = true;
 			slider.children[0].className += " expanded";
 			slider.children[1].innerHTML = "<p>" + test_data[cardIndex-2].title + "</p>";
 			slider.children[2].style.visibility = "hidden";
@@ -118,7 +154,10 @@ onload = function ()
 	};
 	var moveStart = function (event)
 	{
-		slideState.active = true;
+		if (animationInProgress == false)
+		{
+			slideState.active = true;
+		}
 		if (event.type == 'touchstart')
 		{
 			slideState.xStart = event.changedTouches[0].pageX;
@@ -131,7 +170,8 @@ onload = function ()
 			slideState.yStart = event.y;
 			slideState.xLast = event.x;
 		}
-		//event.preventDefault();
+		event.preventDefault();
+		return false;
 	};
 	var moveEnd = function (event)
 	{
@@ -150,12 +190,13 @@ onload = function ()
 
 		distance = Math.sqrt((yTotal * yTotal) + (slideState.xTotal * slideState.xTotal));
 
-		if (distance < tapThreshold && slideState.compressed)
+		if ((distance < tapThreshold) && cardCompression)
 		{
-			expandCard();	
+			expandCard();
 		}
 		else
 		{
+			animationInProgress = true;
 			if (slideState.xTotal > slideThreshold)
 			{
 				slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
@@ -163,18 +204,10 @@ onload = function ()
 				slider.addEventListener( 'webkitTransitionEnd', function (event) {
 					slideContainer.removeChild(slider.parentNode);
 					slideContainer.children[0].style.zIndex = 2;
-					buildCard(1); resetSlideState();
+					buildCard(1); 
+					animationInProgress = false;
+					updateCompressionStatus();
 				},false);
-			}
-			else if (Math.abs(slideState.xTotal) < slideThreshold)
-			{
-				slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
-				slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
-				slider.addEventListener( 'webkitTransitionEnd', function (event) {
-					slider.style['-webkit-transition'] = "";
-					slider.style['border-color'] = "#353535";
-					resetSlideState();
-				}, false);
 			}
 			else if (slideState.xTotal < -slideThreshold)
 			{
@@ -183,15 +216,49 @@ onload = function ()
 				slider.addEventListener( 'webkitTransitionEnd', function (event) {
 					slideContainer.removeChild(slider.parentNode);
 					slideContainer.children[0].style.zIndex = 2;
-					buildCard(1); resetSlideState();
+					buildCard(1);
+					animationInProgress = false;
+					updateCompressionStatus();
 				},false);
 			}
+			else 
+			{
+				slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
+				slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
+				slider.style['border-color'] = "#353535";
+				slider.addEventListener( 'webkitTransitionEnd', function (event) {
+					slider.style['-webkit-transition'] = "";
+					slider.style['-webkit-transform'] = "";
+					animationInProgress = false;
+				}, false);
+			}
+			resetSlideState();
 		}
 		event.preventDefault();
+		return false;
 	}
 	var swipeMove = function (event)
 	{
-		var xDifference;
+		var xDifference, _xTotal, _yLast, _yDiff;
+		
+		if (event.type == 'touchmove')
+		{
+			_yLast = event.changedTouches[0].pageY;
+		}
+		else
+		{
+			_yLast = event.y;
+		}
+		if (slideState.yLast)
+			_yDiff = slideState.yLast - _yLast;
+		slideState.yLast = _yLast;
+		slideState.yTotal = slideState.yStart - slideState.yLast;
+
+		if ((Math.abs(slideState.yTotal) > verticalingThreshold) && (slideState.sliding == false))
+		{
+			slideState.verticaling = true;
+		}
+		
 		if (slideState.active)
 		{
 			if (event.type == 'touchmove')
@@ -205,11 +272,12 @@ onload = function ()
 				slideState.xLast = event.x;
 			}
 			slideState.xTotal += xDifference;
-			if (Math.abs(slideState.xTotal) > tapThreshold)
+			_xTotal = Math.abs(slideState.xTotal);
+			if (_xTotal > tapThreshold)
 			{
 				slideState.sliding = true;
 			}
-			if (slideState.sliding == true)
+			if (slideState.sliding == true && slideState.verticaling == false)
 			{
 				if (slideState.xTotal < 0)
 				{
@@ -220,10 +288,13 @@ onload = function ()
 					slider.style['border-color'] = '#8EE5B0';
 				}
 				slider.style['-webkit-transform'] = 
-					"translate3d(" + (slideState.xTotal * translationScale) + "px,0,0) rotate(" + (slideState.xTotal * rotationScale) + "deg)";
-				event.preventDefault();
+					"translate3d(" + ((slideState.xTotal - tapThreshold) * translationScale) + "px,0,0) rotate(" + ((slideState.xTotal - tapThreshold) * rotationScale) + "deg)";
 			}
+			if (isExpanded && slideState.verticaling && _yDiff)
+				window.scrollBy(0, _yDiff);
 		}
+		event.preventDefault();
+		return false;
 	};
 	populateSlider();
 };
