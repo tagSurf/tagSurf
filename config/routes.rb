@@ -29,9 +29,11 @@ Tagsurf::Application.routes.draw do
 
     # Vote API
     get  'votes'                         => 'votes#show'
-    get  'votes/up'                      => 'votes#up'
-    get  'votes/down'                    => 'votes#down'
-    get  'stats'                         => 'votes#stats'
+    get  'votes/up/:media_id'            => 'votes#up'
+    get  'votes/down/:media_id'          => 'votes#down'
+
+    # Users API
+    get  'users/:id/stats'               => 'votes#stats'
 
     # History API
     get  'history/paginated/:limit/:offset'  => 'users#paginated_history'
