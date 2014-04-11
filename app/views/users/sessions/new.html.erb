@@ -14,7 +14,7 @@
 
 <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:role => 'form'} ) do |f| %>
   <center>
-   <img id="tslogo" src="/img/ts_logo_stacked_gray.jpg"></img>
+   <div class="tslogo"></div>
    <%= f.email_field :email, :placeholder => 'email', :class => 'ts-input' %>
    <%= f.password_field :password, :placeholder => 'password', :class => 'ts-input' %>
   </center>
