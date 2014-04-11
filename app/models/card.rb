@@ -37,7 +37,7 @@ class Card < ActiveRecord::Base
     return unless user
     if user.votes.size < 1
       Card.last(n)
-    elsif tag == 'hot'
+    elsif tag == 'trending'
       has_voted = user.votes.pluck(:votable_id) 
       cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('created_at DESC')
       cards
