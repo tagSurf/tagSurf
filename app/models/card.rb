@@ -72,12 +72,14 @@ class Card < ActiveRecord::Base
     tagged.each do |obj|
       next if obj["nsfw"].to_s == 'true'
       next if obj['is_album'].to_s == 'true'
+      Rails.logger.info "**************"
+      Rails.logger.info obj
       card = Card.create({
         remote_id: obj['id'],
         remote_provider: 'imgur',
         remote_created_at: Time.at(obj['datatime'].to_i) || Time.now,
         image_link_original: obj['link'],
-        viral: true,
+        viral: false,
         title: obj['title'],
         description: obj['description'],
         content_type: obj['type'],

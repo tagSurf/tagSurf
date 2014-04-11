@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140405005228) do
+ActiveRecord::Schema.define(version: 20140411195411) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20140405005228) do
     t.string   "remote_provider"
     t.datetime "remote_created_at"
     t.string   "image_link_original"
-    t.string   "title"
+    t.text     "title"
     t.text     "description"
     t.string   "content_type"
     t.boolean  "animated"
