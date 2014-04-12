@@ -30,11 +30,12 @@ class Api::VotesController < Api::BaseController
   end
 
   def stats
-    results = {:user => @user}
-    results['total_votes'] = @user.find_voted_items.count
-    results['up_votes']    = @user.find_up_voted_items.count
-    results['down_votes']  = @user.find_down_voted_items.count
+    @user = User.find params[:id]
     if @user
+      results = {:user => @user}
+      results['total_votes'] = @user.find_voted_items.count
+      results['up_votes']    = @user.find_up_voted_items.count
+      results['down_votes']  = @user.find_down_voted_items.count
       render json: results
     else
       render json: "no user found"
