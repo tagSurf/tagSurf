@@ -139,7 +139,7 @@ onload = function ()
 		slider.addEventListener('mousemove', swipeMove, false);
 		slider.addEventListener('touchstart', moveStart, false);
 		slider.addEventListener('touchmove', swipeMove, false);
-		slider.addEventListener('touchend', moveEnd, false); 
+		slider.addEventListener('touchend', moveEnd, false);
 	};
 	var expandCard = function ()
 	{
@@ -261,7 +261,6 @@ onload = function ()
 				scrollContainer.style['-webkit-transition'] = "-webkit-transform 250ms ease-in-out";
 				scrollContainer.style['-webkit-transform'] = "translate3d(0,"+ (scrollState.yCurrent) + "px,0)";
 				scrollContainer.addEventListener( 'webkitTransitionEnd', function (event) {
-					scrollContainer.style['-webkit-transition'] = "";
 					scrollContainer.style['-webkit-transition'] = "";
 					animationInProgress = false;
 					resetScrollState();resetSlideState();
