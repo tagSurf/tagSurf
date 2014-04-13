@@ -1,6 +1,4 @@
-onload = function() {
-	populateNavbar();
-
+var gallerize = function() {
 	addCss(".modal { -webkit-transform: translate3d("
 		+ window.innerWidth + "px, 0, 0); }");
 
@@ -113,4 +111,14 @@ onload = function() {
 			addHeader("Earlier");
 		addImage(d);
 	});
+
+	var history_slider = document.getElementById("history_slider");
+	if (history_slider)
+		addCss("#history_slider { -webkit-transform: translate3d(0, -"
+			+ (history_slider.offsetHeight + 20) + "px, 0); } #grid { height: "
+			+ (history_slider.offsetHeight - 10) + "px; }");
+};
+
+var slideGallery = function() {
+	toggleClass.call(document.getElementById("history_slider"), "modalslide");
 };

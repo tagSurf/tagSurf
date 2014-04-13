@@ -84,6 +84,7 @@
 .modal {
 	z-index: 10;
 	position: fixed;
+	padding: 5px;
 	top: 60px;
 	bottom: 10px;
 	left: 10px;
@@ -91,7 +92,7 @@
 	background: #2f2f2f;
 	border-radius: 5px;
 	box-shadow: 3px 3px 5px 2px #161617;
-	-webkit-transition: -webkit-transform .25s ease-in-out;
+	-webkit-transition: -webkit-transform 250ms ease-in-out;
 }
 
 .modalslide {
@@ -122,4 +123,9 @@
 	background: #00aeef;
 	border-radius: 5px;
 	padding: 5px;
+}
+
+#grid {
+	overflow-x: hidden;
+	overflow-y: auto;
 }
