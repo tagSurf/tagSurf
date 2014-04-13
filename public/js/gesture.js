@@ -11,6 +11,7 @@ var gesture = {
 		}
 	},
 	vars: {
+		active: false,
 		startTime: null,
 		startPos: null,
 		lastPos: null,
@@ -42,6 +43,7 @@ var gesture = {
 	},
 	onStart: function(e, node) {
 		var v = gesture.vars;
+		v.active = true;
 		v.startTime = Date.now();
 		v.startPos = v.lastPos = gesture.getPos(e);
 		if (v.tapTimeout) {
@@ -55,6 +57,7 @@ var gesture = {
 		var pos = gesture.getPos(e);
 		var diff = gesture.getDiff(v.startPos, pos);
 		var now = Date.now();
+		v.active = false;
 
 		if ( (now - v.startTime < t.swipe.maxTime)
 			&& (diff.distance > t.swipe.minDistance) ) // swipe
@@ -62,15 +65,19 @@ var gesture = {
 		else if ( (now - v.startTime < t.tap.maxTime)
 			&& (diff.distance < t.tap.maxDistance) ) { // tap
 			v.tapCount += 1;
-			v.tapTimeout = setTimeout(gesture.triggerTap, t.tap.waitTime);
+			v.tapTimeout = setTimeout(function() {
+				gesture.triggerTap(node);
+			}, t.tap.waitTime);
 		}
 	},
 	onMove: function(e, node) {
 		var v = gesture.vars;
-		var pos = gesture.getPos(e);
-		var diff = gesture.getDiff(v.lastPos, pos);
-		gesture.triggerDrag(diff.direction, diff.distance, diff.x, diff.y);
-		v.lastPos = pos;
+		if (v.active) {
+			var pos = gesture.getPos(e);
+			var diff = gesture.getDiff(v.lastPos, pos);
+			gesture.triggerDrag(node, diff.direction, diff.distance, diff.x, diff.y);
+			v.lastPos = pos;
+		}
 	},
 	eWrap: function(node) {
 		var e = {};
@@ -97,17 +104,20 @@ var gesture = {
 		gesture.handlers[event][node].push(cb);
 	},
 	triggerSwipe: function(node, direction, distance, dx, dy) {
-		for (var i = 0; i < handlers.swipe[node].length; i++)
-			handlers.swipe[node][i](direction, distance, dx, dy);
+		var handlers = gesture.handlers.swipe[node];
+		for (var i = 0; i < handlers.length; i++)
+			handlers[i](direction, distance, dx, dy);
 	},
 	triggerTap: function(node) {
-		for (var i = 0; i < handlers.tap[node].length; i++)
-			handlers.tap[node][i](gesture.vars.tapCount);
+		var handlers = gesture.handlers.tap[node];
+		for (var i = 0; i < handlers.length; i++)
+			handlers[i](gesture.vars.tapCount);
 		gesture.vars.tapCount = 0;
 		gesture.vars.tapTimeout = null;
 	},
 	triggerDrag: function(node, direction, distance, dx, dy) {
-		for (var i = 0; i < handlers.drag[node].length; i++)
-			handlers.drag[node][i](direction, distance, dx, dy);
+		var handlers = gesture.handlers.drag[node];
+		for (var i = 0; i < handlers.length; i++)
+			handlers[i](direction, distance, dx, dy);
 	}
 };
