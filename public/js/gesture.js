@@ -97,17 +97,17 @@ var gesture = {
 		gesture.handlers[event][node].push(cb);
 	},
 	triggerSwipe: function(node, direction, distance, dx, dy) {
-		for (var i = 0; i < handlers.swipe[node].length)
+		for (var i = 0; i < handlers.swipe[node].length; i++)
 			handlers.swipe[node][i](direction, distance, dx, dy);
 	},
 	triggerTap: function(node) {
-		for (var i = 0; i < handlers.tap[node].length)
+		for (var i = 0; i < handlers.tap[node].length; i++)
 			handlers.tap[node][i](gesture.vars.tapCount);
 		gesture.vars.tapCount = 0;
 		gesture.vars.tapTimeout = null;
 	},
 	triggerDrag: function(node, direction, distance, dx, dy) {
-		for (var i = 0; i < handlers.drag[node].length)
+		for (var i = 0; i < handlers.drag[node].length; i++)
 			handlers.drag[node][i](direction, distance, dx, dy);
 	}
 };
