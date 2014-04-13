@@ -72,7 +72,7 @@ var gesture = {
 		gesture.triggerDrag(diff.direction, diff.distance, diff.x, diff.y);
 		v.lastPos = pos;
 	},
-	eWrap = function(node) {
+	eWrap: function(node) {
 		var e = {};
 		['Start', 'Stop', 'Move'].forEach(function(eName) {
 			e[eName] = function(e) {
@@ -82,7 +82,7 @@ var gesture = {
 			};
 		});
 		return e;
-	};
+	},
 	listen: function(event, node, cb) {
 		if (!gesture.handlers[event][node]) {
 			gesture.handlers[event][node] = [];
