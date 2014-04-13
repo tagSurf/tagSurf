@@ -123,19 +123,19 @@ var gesture = {
 	},
 	triggerSwipe: function(node, direction, distance, dx, dy) {
 		var handlers = gesture.handlers.swipe[node.gid];
-		for (var i = 0; i < handlers.length; i++)
+		if (handlers) for (var i = 0; i < handlers.length; i++)
 			handlers[i](direction, distance, dx, dy);
 	},
 	triggerTap: function(node) {
 		var handlers = gesture.handlers.tap[node.gid];
-		for (var i = 0; i < handlers.length; i++)
+		if (handlers) for (var i = 0; i < handlers.length; i++)
 			handlers[i](gesture.vars.tapCount);
 		gesture.vars.tapCount = 0;
 		gesture.vars.tapTimeout = null;
 	},
 	triggerDrag: function(node, direction, distance, dx, dy) {
 		var handlers = gesture.handlers.drag[node.gid];
-		for (var i = 0; i < handlers.length; i++)
+		if (handlers) for (var i = 0; i < handlers.length; i++)
 			handlers[i](direction, distance, dx, dy);
 	}
 };
