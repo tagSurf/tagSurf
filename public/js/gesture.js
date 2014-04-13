@@ -1,4 +1,5 @@
 var gesture = {
+	gid: 0,
 	thresholds: {
 		swipe: {
 			minDistance: 50,
@@ -90,33 +91,50 @@ var gesture = {
 		});
 		return e;
 	},
-	listen: function(event, node, cb) {
-		if (!gesture.handlers[event][node]) {
-			gesture.handlers[event][node] = [];
-			var e = gesture.eWrap(node);
-			node.addEventListener('mousedown', e.Start, false);
-			node.addEventListener('touchstart', e.Start, false);
-			node.addEventListener('mouseup', e.Stop, false);
-			node.addEventListener('touchend', e.Stop, false);
-			node.addEventListener('mousemove', e.Move, false);
-			node.addEventListener('touchmove', e.Move, false);
+	listen: function(eventName, node, cb) {
+		if (!node.gid) {
+			node.gid = ++gesture.gid;
+			var e = node.listeners = gesture.eWrap(node);
+			node.addEventListener('mousedown', e.Start);
+			node.addEventListener('touchstart', e.Start);
+			node.addEventListener('mouseup', e.Stop);
+			node.addEventListener('touchend', e.Stop);
+			node.addEventListener('mousemove', e.Move);
+			node.addEventListener('touchmove', e.Move);
 		}
-		gesture.handlers[event][node].push(cb);
+		if (!gesture.handlers[eventName][node.gid])
+			gesture.handlers[eventName][node.gid] = [];
+		gesture.handlers[eventName][node.gid].push(cb);
+	},
+	unlisten: function(node) {
+		if (node.gid) {
+			var e = node.listeners;
+			node.removeEventListener('mousedown', e.Start);
+			node.removeEventListener('touchstart', e.Start);
+			node.removeEventListener('mouseup', e.Stop);
+			node.removeEventListener('touchend', e.Stop);
+			node.removeEventListener('mousemove', e.Move);
+			node.removeEventListener('touchmove', e.Move);
+			for (var eventName in gesture.handlers)
+				if (node.gid in gesture.handlers[eventName])
+					delete gesture.handlers[eventName][node.gid];
+			delete node.gid;
+		}
 	},
 	triggerSwipe: function(node, direction, distance, dx, dy) {
-		var handlers = gesture.handlers.swipe[node];
+		var handlers = gesture.handlers.swipe[node.gid];
 		for (var i = 0; i < handlers.length; i++)
 			handlers[i](direction, distance, dx, dy);
 	},
 	triggerTap: function(node) {
-		var handlers = gesture.handlers.tap[node];
+		var handlers = gesture.handlers.tap[node.gid];
 		for (var i = 0; i < handlers.length; i++)
 			handlers[i](gesture.vars.tapCount);
 		gesture.vars.tapCount = 0;
 		gesture.vars.tapTimeout = null;
 	},
 	triggerDrag: function(node, direction, distance, dx, dy) {
-		var handlers = gesture.handlers.drag[node];
+		var handlers = gesture.handlers.drag[node.gid];
 		for (var i = 0; i < handlers.length; i++)
 			handlers[i](direction, distance, dx, dy);
 	}
