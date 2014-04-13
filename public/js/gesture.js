@@ -87,12 +87,12 @@ var gesture = {
 		if (!gesture.handlers[event][node]) {
 			gesture.handlers[event][node] = [];
 			var e = gesture.eWrap(node);
-			node.addEventListener('mousedown', start, false);
-			node.addEventListener('touchstart', start, false);
-			node.addEventListener('mouseup', stop, false);
-			node.addEventListener('touchend', stop, false);
-			node.addEventListener('mousemove', move, false);
-			node.addEventListener('touchmove', move, false);
+			node.addEventListener('mousedown', e.Start, false);
+			node.addEventListener('touchstart', e.Start, false);
+			node.addEventListener('mouseup', e.Stop, false);
+			node.addEventListener('touchend', e.Stop, false);
+			node.addEventListener('mousemove', e.Move, false);
+			node.addEventListener('touchmove', e.Move, false);
 		}
 		gesture.handlers[event][node].push(cb);
 	},
