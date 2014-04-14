@@ -3,13 +3,8 @@
 <% end %>
 
 <% content_for :stylesheets do %>
-  <link rel="icon" type="image/x-icon" href="img/favicon.ico"/>
   <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/login.css">
-<% end %>
-
-<% content_for :javascripts do %>
-  <script src="/js/login.js"></script>
 <% end %>
 
 <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:role => 'form'} ) do |f| %>
