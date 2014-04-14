@@ -120,5 +120,7 @@ var gallerize = function() {
 };
 
 var slideGallery = function() {
-	toggleClass.call(document.getElementById("history_slider"), "modalslide");
+	var hs = document.getElementById("history_slider");
+	hs.style.opacity = "1";
+	toggleClass.call(hs, "modalslide");
 };
