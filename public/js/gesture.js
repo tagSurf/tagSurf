@@ -19,7 +19,7 @@ var gesture = {
 		tapCount: 0,
 		tapTimeout: null
 	},
-	handlers: { drag: {}, swipe: {}, tap: {} },
+	handlers: { drag: {}, swipe: {}, tap: {}, up: {} },
 	getPos: function(e) {
 		var p = {};
 		if (event.type.slice(0, 5) == "touch") {
@@ -70,6 +70,7 @@ var gesture = {
 				gesture.triggerTap(node);
 			}, t.tap.waitTime);
 		}
+		gesture.triggerUp(node);
 	},
 	onMove: function(e, node) {
 		var v = gesture.vars;
@@ -137,5 +138,10 @@ var gesture = {
 		var handlers = gesture.handlers.drag[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
 			handlers[i](direction, distance, dx, dy);
+	},
+	triggerUp: function(node) {
+		var handlers = gesture.handlers.up[node.gid];
+		if (handlers) for (var i = 0; i < handlers.length; i++)
+			handlers[i]();
 	}
 };
