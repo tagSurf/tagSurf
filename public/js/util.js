@@ -36,13 +36,11 @@ var populateNavbar = function () {
   var tag = gallery ? document.location.hash.slice(1) : null;
   var navbar_content = [
     "<div class='favorites-btn'>",
-      "<a href='/favorites'>",
-        "<img src='" + history_icons[(gallery == "favorites" ? "fill" : "blue")] + "'>",
-      "</a>",
+      "<a href='/favorites'><img src='img/favorites_icon_" + (gallery == "favorites" ? "fill" : "blue") + ".png'></a>",
     "</div>",
     "<div id='history-btn'>",
       gallery ? "<a href='/history'>" : "<a>",
-        "<img id='history_icon' src='img/history_icon_" + (gallery == "history" ? "fill" : "blue") + ".png'>",
+        "<img id='history_icon' src='" + history_icons[(gallery == "favorites" ? "fill" : "blue")] + "'>",
       "</a>",
     "</div>",
     "<div class='navbar-center'>",
