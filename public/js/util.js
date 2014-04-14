@@ -40,7 +40,7 @@ var populateNavbar = function () {
     "</div>",
     "<div id='history-btn'>",
       gallery ? "<a href='/history'>" : "<a>",
-        "<img id='history_icon' src='" + history_icons[(gallery == "favorites" ? "fill" : "blue")] + "'>",
+        "<img id='history_icon' src='" + history_icons[(gallery == "history" ? "fill" : "blue")] + "'>",
       "</a>",
     "</div>",
     "<div class='navbar-center'>",
