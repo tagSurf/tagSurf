@@ -51,6 +51,11 @@ onload = function ()
 	animationInProgress = false;
 	var nextCardCompression = true;
 	var isExpanded = false;
+	var zoomState =
+	{
+		zoomed: false,
+		zoomNode: null
+	};
 	var scrollState = 
 	{
 		verticaling: false,
@@ -76,6 +81,32 @@ onload = function ()
 			verticaling: false,
 			yCurrent: 0
 		};
+	};
+	var doubleTap = function ()
+	{
+		var zNode;
+		if (zoomState.zoomed == false)
+		{
+			zNode = slider.cloneNode(true);
+			zNode.classList.add('hider');
+			zoomState.zoomNode = zNode;
+			zoomState.zoomed = true;
+			document.body.appendChild(zNode);
+			gesture.listen("tap",zNode, function (tapCount) {
+				if (tapCount == 2)
+				{
+					doubleTap();
+				}
+			});
+			zNode.style['-webkit-transform'] = "scale(1.5)";
+			zNode.classList.remove('hider');
+		}
+		else
+		{
+			zoomState.zoomed = false;
+			zNode = zoomState.zoomNode;
+			document.body.removeChild(zNode);
+		}
 	};
 	var revertSlider = function ()
 	{
@@ -242,7 +273,7 @@ onload = function ()
 				expandCard();
 				break;
 			case 2:
-				//double tap;
+				doubleTap();
 				break;
 		}
 	};
