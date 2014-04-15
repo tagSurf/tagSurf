@@ -19,6 +19,7 @@ onload = function ()
 	};
 
 	// slider stuff
+	var data;
 	var cardIndex = 0;
 	var slideThreshold = 60;
 	var verticalingThreshold = 10;
@@ -71,7 +72,7 @@ onload = function ()
 	var buildCard = function (stackIndex)
 	{
 		var imageContainer, textContainer, fullscreenButton, truncatedTitle;
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + stackIndex + ";'><div class='image-container expand-animation'><img src='http://" + test_data[cardIndex].src + "'></div><div class='text-container'><p>" + test_data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + stackIndex + ";'><div class='image-container expand-animation'><img src='" + data[cardIndex].image_link_original + "'></div><div class='text-container'><p>" + data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div></div></div>";
 		formatter.innerHTML = cardTemplate;
 		imageContainer = formatter.children[0].children[0].children[0];
 		textContainer = formatter.children[0].children[0].children[1];
@@ -92,7 +93,7 @@ onload = function ()
 			}
 			else
 			{
-				truncatedTitle = test_data[cardIndex].title.trunc(30);
+				truncatedTitle = data[cardIndex].title.trunc(30);
 				truncatedTitle = "<p>" + truncatedTitle + "</p>";
 				textContainer.innerHTML = truncatedTitle;
 				if (stackIndex != 1)
@@ -119,7 +120,10 @@ onload = function ()
 	};
 	var populateSlider = function ()
 	{
-		buildCard(2);
+		xhr("/api/media/funny", function(response_data) {
+			data = response_data.data;
+			buildCard(2);
+		});
 	};
 	var initSliding = function () 
 	{
@@ -138,7 +142,7 @@ onload = function ()
 			cardCompression = false;
 			isExpanded = true;
 			slider.children[0].className += " expanded";
-			slider.children[1].innerHTML = "<p>" + test_data[cardIndex-2].title + "</p>";
+			slider.children[1].innerHTML = "<p>" + data[cardIndex-2].title + "</p>";
 			slider.children[2].style.visibility = "hidden";
 		}
 	};
