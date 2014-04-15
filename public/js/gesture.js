@@ -60,6 +60,7 @@ var gesture = {
 		var now = Date.now();
 		v.active = false;
 
+		gesture.triggerUp(node);
 		if ( (now - v.startTime < t.swipe.maxTime)
 			&& (diff.distance > t.swipe.minDistance) ) // swipe
 			gesture.triggerSwipe(node, diff.direction, diff.distance, diff.x, diff.y);
@@ -70,7 +71,6 @@ var gesture = {
 				gesture.triggerTap(node);
 			}, t.tap.waitTime);
 		}
-		gesture.triggerUp(node);
 	},
 	onMove: function(e, node) {
 		var v = gesture.vars;
