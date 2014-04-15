@@ -147,13 +147,27 @@ onload = function ()
 		}
 	};
 	var vote = function(isUp) {
-		slideContainer.removeChild(slider.parentNode);
-		slideContainer.children[0].style.zIndex = 2;
-		buildCard(1); 
-		animationInProgress = false;
-		updateCompressionStatus();
-		xhr("/api/votes/" + (isUp ? "up/" : "down/") + data[cardIndex-2].id,
-			null, "POST");
+		var transVal = 600;
+		var rotVal = 60;
+		if (!isUp) {
+			transVal *= -1;
+			rotVal *= -1;
+		}
+		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
+		slider.style['-webkit-transform'] = "translate3d(" + transVal + "px,0,0) rotate(" + rotVal + "deg)";
+		slider.addEventListener('webkitTransitionEnd', function () {
+			slideContainer.removeChild(slider.parentNode);
+			slideContainer.children[0].style.zIndex = 2;
+			buildCard(1); 
+			animationInProgress = false;
+			updateCompressionStatus();
+			xhr("/api/votes/" + (isUp ? "up/" : "down/") + data[cardIndex-2].id,
+				null, "POST");
+		}, false);
+	};
+	document.getElementById("favorites-btn").onclick = function() {
+		xhr("/api/favorites/" + data[cardIndex-2].id, null, "POST");
+		vote(true);
 	};
 	var moveStart = function (event)
 	{
@@ -201,17 +215,9 @@ onload = function ()
 		{
 			animationInProgress = true;
 			if (slideState.xTotal > slideThreshold)
-			{
-				slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
-				slider.style['-webkit-transform'] = "translate3d(600px,0,0) rotate(60deg)";
-				slider.addEventListener( 'webkitTransitionEnd', function () { vote(true); }, false);
-			}
+				vote(true);
 			else if (slideState.xTotal < -slideThreshold)
-			{
-				slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
-				slider.style['-webkit-transform'] = "translate3d(-600px,0,0) rotate(-60deg)";
-				slider.addEventListener( 'webkitTransitionEnd', function () { vote(false); }, false);
-			}
+				vote(false);
 			else 
 			{
 				slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";

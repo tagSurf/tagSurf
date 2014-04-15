@@ -32,7 +32,7 @@
   height: 26px;
 }
 
-.favorites-btn
+#favorites-btn
 {
   float:right;
   padding: 10px;
@@ -55,7 +55,7 @@
   height: 36px;
 }
 
-.favorites-btn img
+#favorites-btn img
 {
   width: auto;
   height: 26px;
