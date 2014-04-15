@@ -129,6 +129,11 @@ var gallerize = function(gallery) {
 	};
 	populateGallery();
 
+	window.onscroll = function(e) {
+		if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight)
+			populateGallery();
+	};
+
 	var history_slider = document.getElementById("history_slider");
 	if (history_slider)
 		addCss("#history_slider { -webkit-transform: translate3d(0, -"
