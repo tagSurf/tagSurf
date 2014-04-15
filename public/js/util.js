@@ -86,12 +86,12 @@ var addCss = function(css) {
         n.appendChild(document.createTextNode(css));
     document.getElementsByTagName("head")[0].appendChild(n);
 };
-var xhr = function(path, cb) {
+var xhr = function(path, cb, action) {
   var _xhr = new XMLHttpRequest();
-  _xhr.open("GET", path, true);
+  _xhr.open(action || "GET", path, true);
   _xhr.onreadystatechange = function() {
     if (_xhr.readyState == 4 && _xhr.status == 200)
-      cb(eval("("+_xhr.responseText+")"));
+      cb && cb(eval("("+_xhr.responseText+")"));
   }
   _xhr.send();
 };

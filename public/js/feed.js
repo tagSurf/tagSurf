@@ -146,6 +146,15 @@ onload = function ()
 			slider.children[2].style.visibility = "hidden";
 		}
 	};
+	var vote = function(isUp) {
+		slideContainer.removeChild(slider.parentNode);
+		slideContainer.children[0].style.zIndex = 2;
+		buildCard(1); 
+		animationInProgress = false;
+		updateCompressionStatus();
+		xhr("/api/votes/" + (isUp ? "up/" : "down/") + data[cardIndex-2].id,
+			null, "POST");
+	};
 	var moveStart = function (event)
 	{
 		if (animationInProgress == false)
@@ -195,25 +204,13 @@ onload = function ()
 			{
 				slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
 				slider.style['-webkit-transform'] = "translate3d(600px,0,0) rotate(60deg)";
-				slider.addEventListener( 'webkitTransitionEnd', function (event) {
-					slideContainer.removeChild(slider.parentNode);
-					slideContainer.children[0].style.zIndex = 2;
-					buildCard(1); 
-					animationInProgress = false;
-					updateCompressionStatus();
-				},false);
+				slider.addEventListener( 'webkitTransitionEnd', function () { vote(true); }, false);
 			}
 			else if (slideState.xTotal < -slideThreshold)
 			{
 				slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
 				slider.style['-webkit-transform'] = "translate3d(-600px,0,0) rotate(-60deg)";
-				slider.addEventListener( 'webkitTransitionEnd', function (event) {
-					slideContainer.removeChild(slider.parentNode);
-					slideContainer.children[0].style.zIndex = 2;
-					buildCard(1);
-					animationInProgress = false;
-					updateCompressionStatus();
-				},false);
+				slider.addEventListener( 'webkitTransitionEnd', function () { vote(false); }, false);
 			}
 			else 
 			{
