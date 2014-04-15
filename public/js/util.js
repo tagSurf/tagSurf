@@ -28,6 +28,10 @@ var populateNavbar = function () {
   navbar.id = "navbar";
   var menu_slider = document.createElement("div");
   menu_slider.id = "menu_slider";
+  var history_icons = {
+    fill: 'img/history_icon_fill.png',
+    blue: 'img/history_icon_blue.png'
+  };
   var gallery = whichGallery();
   var tag = gallery ? document.location.hash.slice(1) : null;
   var navbar_content = [
@@ -36,8 +40,10 @@ var populateNavbar = function () {
         "<img src='img/favorites_icon_" + (gallery == "favorites" ? "fill" : "blue") + ".png'>",
       "</a>",
     "</div>",
-    "<div class='history-btn'>",
-      "<a href='/history'><img src='img/history_icon_" + (gallery == "history" ? "fill" : "blue") + ".png'></a>",
+    "<div id='history-btn'>",
+      gallery ? "<a href='/history'>" : "<a>",
+        "<img id='history_icon' src='" + history_icons[(gallery == "history" ? "fill" : "blue")] + "'>",
+      "</a>",
     "</div>",
     "<div class='navbar-center'>",
       "<label for='slider_box' onclick='toggleClass.apply(this,[\"slid\"]);toggleClass.apply(document.getElementById(\"slide_down_menu\"),[\"opened_menu\"]);'>",
@@ -75,6 +81,15 @@ var populateNavbar = function () {
   menu_slider.innerHTML = menu_slider_content.join('\n');
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
+  if (!gallery) {
+    var history_icon = document.getElementById("history_icon");
+    var hist_state = "blue";
+    document.getElementById("history-btn").onclick = function() {
+      hist_state = hist_state == "blue" ? "fill" : "blue";
+      history_icon.src = history_icons[hist_state];
+      slideGallery();
+    };
+  }
   document.getElementById("logout").onclick = function() {
     window.location = "/users/sign_out";
   };

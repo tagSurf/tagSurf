@@ -18,7 +18,7 @@
   z-index: 90;
 }
 
-.history-btn
+#history-btn
 {
   position: relative;
   float:left;
@@ -26,7 +26,7 @@
   left: 10px;
 }
 
-.history-btn img
+#history-btn img
 { 
   width: auto;
   height: 26px;
