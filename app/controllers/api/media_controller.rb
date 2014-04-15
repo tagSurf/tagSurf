@@ -3,6 +3,11 @@ class Api::MediaController < Api::BaseController
   before_action :authenticate_user!
   before_action :find_authenticated_user
 
+  def tags
+    @tags = Tag.all
+    render json: @tags
+  end
+
   def create_vote
     @media = Card.find media_params[:id]
     @vote = media_params[:vote] == 'up' ? true : false
