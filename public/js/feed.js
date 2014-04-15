@@ -2,24 +2,37 @@ onload = function ()
 {
 	populateNavbar();
 
+	var data, current_tag = "funny";
+	var populateSlider = function ()
+	{
+		xhr("/api/media/" + current_tag, function(response_data) {
+			data = response_data.data;
+			slideContainer.innerHTML = "";
+			buildCard(2);
+		});
+	};
+
 	// autocomplete stuff
 	var tinput = document.getElementById("tag-input");
 	var aclist = document.getElementById("autocomplete");
-	test_suggestions.forEach(function(s) {
-		var n = document.createElement("div");
-		n.innerHTML = s;
-		aclist.appendChild(n);
-		n.onclick = function() {
-			aclist.style.display = "none";
-			tinput.value = s;
-		}
+	xhr("/api/tags", function(response_data) {
+		response_data.data.forEach(function(tag) {
+			var n = document.createElement("div");
+			n.innerHTML = tag.name;
+			aclist.appendChild(n);
+			n.onclick = function() {
+				aclist.style.display = "none";
+				tinput.value = tag.name;
+				current_tag = tag.name;
+				populateSlider();
+			}
+		});
 	});
 	tinput.onclick = function() {
 		aclist.style.display = "block";
 	};
 
 	// slider stuff
-	var data;
 	var cardIndex = 0;
 	var slideThreshold = 60;
 	var verticalingThreshold = 10;
@@ -117,13 +130,6 @@ onload = function ()
 				initSliding();
 			}
 		};
-	};
-	var populateSlider = function ()
-	{
-		xhr("/api/media/funny", function(response_data) {
-			data = response_data.data;
-			buildCard(2);
-		});
 	};
 	var initSliding = function () 
 	{
