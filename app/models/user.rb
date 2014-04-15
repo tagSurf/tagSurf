@@ -19,8 +19,16 @@ class User < ActiveRecord::Base
     Time.now > imgur_token_expires_at
   end 
 
-  def vote_history
-    #find_voted_items
+  def find_voted_items
+    Vote.where(voter_id: id)
+  end
+
+  def find_up_voted_items
+    Vote.where(voter_id: id, vote_flag: true)
+  end
+
+  def find_down_voted_items
+    Vote.where(voter_id: id, vote_flag: false)
   end
 
   def refresh_imgur_token

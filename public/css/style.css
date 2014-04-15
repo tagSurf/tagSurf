@@ -22,3 +22,7 @@ a {
 	color: black;
 	text-decoration: none;
 }
+
+.alert-success {
+	display: none;
+}

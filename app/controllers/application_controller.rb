@@ -3,11 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  before_filter :get_tags, :redirect_desktops
-
-  def get_tags
-    @tags = Tag.all
-  end
+  before_filter :redirect_desktops
 
   def redirect_desktops
     return unless Rails.env.production? && !browser.mobile? 

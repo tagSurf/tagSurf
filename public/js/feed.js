@@ -1,6 +1,7 @@
 onload = function ()
 {
 	populateNavbar();
+	gallerize();
 
 	// autocomplete stuff
 	var tinput = document.getElementById("tag-input");
