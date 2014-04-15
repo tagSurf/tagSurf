@@ -89,6 +89,7 @@ onload = function ()
 		else
 		{
 			scrollContainer.style['-webkit-transition'] = "";
+			animationInProgress = false;
 		}
 	};
 	var revertScroller = function (revertHeight)
