@@ -3,17 +3,31 @@ onload = function ()
 	populateNavbar();
 	gallerize();
 
+	var data, current_tag = "funny";
+	var populateSlider = function ()
+	{
+		xhr("/api/media/" + current_tag, function(response_data) {
+			data = response_data.data;
+			slideContainer.innerHTML = "";
+			buildCard(2);
+		});
+	};
+
 	// autocomplete stuff
 	var tinput = document.getElementById("tag-input");
 	var aclist = document.getElementById("autocomplete");
-	test_suggestions.forEach(function(s) {
-		var n = document.createElement("div");
-		n.innerHTML = s;
-		aclist.appendChild(n);
-		n.onclick = function() {
-			aclist.style.display = "none";
-			tinput.value = s;
-		}
+	xhr("/api/tags", function(response_data) {
+		response_data.data.forEach(function(tag) {
+			var n = document.createElement("div");
+			n.innerHTML = tag.name;
+			aclist.appendChild(n);
+			n.onclick = function() {
+				aclist.style.display = "none";
+				tinput.value = tag.name;
+				current_tag = tag.name;
+				populateSlider();
+			}
+		});
 	});
 	tinput.onclick = function() {
 		aclist.style.display = "block";
@@ -138,7 +152,8 @@ onload = function ()
 	{
 		animationInProgress = true;
 		var translateQuantity = 600, rotateQuantity = 60;
-		if (direction == "left")
+		var isUp = direction == "right";
+		if (!isUp)
 		{
 			translateQuantity = -translateQuantity;
 			rotateQuantity = -rotateQuantity;
@@ -152,6 +167,8 @@ onload = function ()
 			updateCompressionStatus();
 			resetSlideState(); 
 			revertScroller(0);
+			xhr("/api/votes/" + (isUp ? "up/" : "down/") + data[cardIndex-2].id,
+				null, "POST");
 		},false);
 	};
 	var swipeCallback = function (direction, distance, dx, dy)
@@ -237,7 +254,7 @@ onload = function ()
 	var buildCard = function (stackIndex)
 	{
 		var imageContainer, textContainer, fullscreenButton, truncatedTitle;
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + stackIndex + ";'><div class='image-container expand-animation'><img src='http://" + test_data[cardIndex].src + "'></div><div class='text-container'><p>" + test_data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + stackIndex + ";'><div class='image-container expand-animation'><img src='" + data[cardIndex].image_link_original + "'></div><div class='text-container'><p>" + data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
@@ -260,7 +277,7 @@ onload = function ()
 			}
 			else
 			{
-				truncatedTitle = test_data[cardIndex].title.trunc(30);
+				truncatedTitle = data[cardIndex].title.trunc(30);
 				truncatedTitle = "<p>" + truncatedTitle + "</p>";
 				textContainer.innerHTML = truncatedTitle;
 				if (stackIndex != 1)
@@ -283,12 +300,7 @@ onload = function ()
 			}
 		};
 	};
-	
-	var populateSlider = function ()
-	{
-		buildCard(2);
-	};
-	var initCardGestures = function () 
+	var initCardGestures = function ()
 	{
 		gesture.listen("swipe", this, swipeCallback);
 		gesture.listen("up", this, upCallback);
@@ -302,9 +314,13 @@ onload = function ()
 			cardCompression = false;
 			isExpanded = true;
 			slider.children[0].className += " expanded";
-			slider.children[1].innerHTML = "<p>" + test_data[cardIndex-2].title + "</p>";
+			slider.children[1].innerHTML = "<p>" + data[cardIndex-2].title + "</p>";
 			slider.children[2].style.visibility = "hidden";
 		}
+	};
+	document.getElementById("favorites-btn").onclick = function() {
+		xhr("/api/favorites/" + data[cardIndex-2].id, null, "POST");
+		swipeSlider("right");
 	};
 	populateSlider();
 };

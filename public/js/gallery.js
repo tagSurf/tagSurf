@@ -1,4 +1,4 @@
-var gallerize = function() {
+var gallerize = function(gallery) {
 	addCss(".modal { -webkit-transform: translate3d("
 		+ window.innerWidth + "px, 0, 0); }");
 
@@ -8,6 +8,7 @@ var gallerize = function() {
 	var week = day * 7;
 	var week2 = week * 2;
 	var blackout, modal, bigpic, picdesc, pictag;
+	gallery = gallery || "history";
 
 	var buildModal = function() {
 		blackout = document.createElement("div");
@@ -51,7 +52,7 @@ var gallerize = function() {
 	var showImage = function(d) {
 		modal.className += " modalslide";
 		blackout.className += " blackfade";
-		bigpic.src = "http://" + d.src;
+		bigpic.src = d.image_link_original;
 		bigpic.style.maxHeight = (modal.clientHeight * 3 / 4) + "px";
 		picdesc.innerHTML = d.title;
 		pictag.innerHTML = "#" + d.tag;
@@ -59,34 +60,35 @@ var gallerize = function() {
 	var addImage = function(d) {
 		var n = document.createElement("div");
 		n.className = "box";
-		n.style.backgroundImage = "url('http://" + d.src + "')";
-		n.style.border = "1px solid " + (d.vote ? "green" : "red");
+		n.style.backgroundImage = "url('" + d.image_link_original + "')";
+		n.style.border = "1px solid " + (d.user_vote ? "green" : "red");
 
 		var top = document.createElement("div");
 		top.className = "overlay tag";
-		top.innerHTML = "#" + d.tag;
+		top.innerHTML = "#" + d.tagged_as[0];
 
 		var spacer = document.createElement("div");
 		spacer.style.paddingTop = "70%";
 
+		var trending = d.up_votes > d.down_votes * 2;
+
 		var bottom = document.createElement("div");
 		bottom.className = "overlay votes";
-		bottom.style.background = d.trending ? "red" : "green";
+		bottom.style.background = trending ? "red" : "green";
 
 		var vote_meter = document.createElement("div");
-		var vtotal = d.likes + d.dislikes;
-		if (d.trending) {
+		if (trending) {
 			vote_meter.className = "yesvotes";
-			vote_meter.style.width = (100 * d.likes / vtotal) + "%";
+			vote_meter.style.width = (100 * d.up_votes / d.total_votes) + "%";
 		} else {
 			vote_meter.className = "novotes";
-			vote_meter.style.width = (100 * d.dislikes / vtotal) + "%";
+			vote_meter.style.width = (100 * d.down_votes / d.total_votes) + "%";
 		}
 		bottom.appendChild(vote_meter);
 
 		var vote_count = document.createElement("div");
 		vote_count.className = "votecount";
-		vote_count.innerHTML = vtotal;
+		vote_count.innerHTML = d.total_votes;
 		bottom.appendChild(vote_count);
 
 		n.appendChild(top);
@@ -99,18 +101,40 @@ var gallerize = function() {
 	};
 
 	buildModal();
-	test_data.forEach(function(d) {
-		var diff = now - new Date(d.date);
-		if (diff < day)
-			addHeader("Today");
-		else if (diff < week)
-			addHeader("This Week");
-		else if (diff < week2)
-			addHeader("Last Week");
-		else
-			addHeader("Earlier");
-		addImage(d);
-	});
+
+	// gallery feed builder
+	var chunk_size = 20;
+	var chunk_offset = 0;
+	// TODO: remove when APIs solidify...
+	var gmap = { history: "history/paginated", favorites: "favorites" };
+	var getPath = function() {
+		if (gallery == "tag")
+			return "/api/media/" + location.hash.slice(1);
+		return "/api/" + (gmap[gallery] || gallery) + "/" + chunk_size + "/" + chunk_offset;
+	};
+	var populateGallery = function() {
+		xhr(getPath(), function(response_data) {
+			response_data.data.forEach(function(d) {
+				var diff = now - new Date(d.date);
+				if (diff < day)
+					addHeader("Today");
+				else if (diff < week)
+					addHeader("This Week");
+				else if (diff < week2)
+					addHeader("Last Week");
+				else
+					addHeader("Earlier");
+				addImage(d);
+			});
+		});
+		chunk_offset += chunk_size;
+	};
+	populateGallery();
+
+	window.onscroll = function(e) {
+		if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight)
+			populateGallery();
+	};
 
 	var history_slider = document.getElementById("history_slider");
 	if (history_slider)
