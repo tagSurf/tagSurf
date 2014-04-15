@@ -35,8 +35,10 @@ var populateNavbar = function () {
   var gallery = whichGallery();
   var tag = gallery ? document.location.hash.slice(1) : null;
   var navbar_content = [
-    "<div class='favorites-btn'>",
-      "<a href='/favorites'><img src='img/favorites_icon_" + (gallery == "favorites" ? "fill" : "blue") + ".png'></a>",
+    "<div id='favorites-btn'>",
+      gallery ? "<a href='/favorites'>" : "<a>",
+        "<img src='img/favorites_icon_" + (gallery == "favorites" ? "fill" : "blue") + ".png'>",
+      "</a>",
     "</div>",
     "<div id='history-btn'>",
       gallery ? "<a href='/history'>" : "<a>",
@@ -100,4 +102,13 @@ var addCss = function(css) {
     else
         n.appendChild(document.createTextNode(css));
     document.getElementsByTagName("head")[0].appendChild(n);
+};
+var xhr = function(path, cb, action) {
+  var _xhr = new XMLHttpRequest();
+  _xhr.open(action || "GET", path, true);
+  _xhr.onreadystatechange = function() {
+    if (_xhr.readyState == 4 && _xhr.status == 200)
+      cb && cb(eval("("+_xhr.responseText+")"));
+  }
+  _xhr.send();
 };
