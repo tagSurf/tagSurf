@@ -96,12 +96,14 @@ onload = function ()
 		animationInProgress = true;
 		scrollContainer.style['-webkit-transition'] = "-webkit-transform 250ms ease-out";
 		scrollContainer.style['-webkit-transform'] = "translate3d(0," + revertHeight + "px,0)";
-		scrollContainer.addEventListener( 'webkitTransitionEnd', function (event) {
+		var scrollEnd = function (event) {
 			scrollState.yCurrent = revertHeight;
 			scrollState.verticaling = false;
 			scrollContainer.style['-webkit-transition'] = "";
 			animationInProgress = false;
-		}, false);
+			scrollContainer.removeEventListener('webkitTransitionEnd', scrollEnd, false);
+		};
+		scrollContainer.addEventListener('webkitTransitionEnd', scrollEnd, false);
 	};
 	var upCallback = function ()
 	{
@@ -140,13 +142,12 @@ onload = function ()
 		}
 		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
 		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px,0,0) rotate(" + rotateQuantity + "deg)";
-		resetSlideState(); 
 		slider.addEventListener( 'webkitTransitionEnd', function (event) {
 			slideContainer.removeChild(slider.parentNode);
 			slideContainer.children[0].style.zIndex = 2;
 			buildCard(1); 
-			animationInProgress = false;
 			updateCompressionStatus();
+			resetSlideState(); 
 			revertScroller(0);
 		},false);
 	};
@@ -157,13 +158,16 @@ onload = function ()
 		if (isExpanded == true &&
 			(direction == "up" || direction == "down"))
 		{
-			animationDistance = dy / 4;
+			animationDistance = dy;
 			scrollState.yCurrent += animationDistance;
 			scrollContainer.style['-webkit-transition'] = "-webkit-transform 250ms ease-out";
 			scrollContainer.style['-webkit-transform'] = "translate3d(0,"+ (scrollState.yCurrent) + "px,0)";
-			scrollContainer.addEventListener( 'webkitTransitionEnd', function (event) {
+			var verticalSwipeEnd = function (event)
+			{
 				boundaryMonitor();
-			}, false);
+				scrollContainer.removeEventListener('webkitTransitionEnd', verticalSwipeEnd, false);
+			};
+			scrollContainer.addEventListener( 'webkitTransitionEnd', verticalSwipeEnd, false);
 		}
 		else if (direction == "left")
 		{
