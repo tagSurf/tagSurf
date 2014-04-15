@@ -1,4 +1,4 @@
 class TagSerializer < ActiveModel::Serializer
-  self.root = false
+  self.root = 'data'
   attributes :name
 end

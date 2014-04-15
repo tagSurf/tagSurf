@@ -5,7 +5,7 @@ class Api::MediaController < Api::BaseController
 
   def tags
     @tags = Tag.all
-    render json: @tags
+    render json: @tags, each_serializer: TagSerializer, root: 'data'
   end
 
   def create_vote
