@@ -80,7 +80,6 @@ html, body
 .card-wrapper
 {
   position: absolute;
-  top: 85px;
   width: 100%;
 }
 
@@ -89,7 +88,7 @@ html, body
   position: relative;
   height: auto;
   width: 95%;
-  margin: 2.5%;
+  margin: 0 2.5% 2.5% 2.5%;
   background: #353535;
   border: #353535 thin solid;
   border-radius: 8px;
@@ -141,4 +140,8 @@ html, body
 .expanded
 {
   max-height: 9999px !important;
+}
+#scroll-container
+{
+  height: auto;
 }
