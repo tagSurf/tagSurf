@@ -105,14 +105,15 @@ var gallerize = function(gallery) {
 	// gallery feed builder
 	var chunk_size = 20;
 	var chunk_offset = 0;
-
 	// TODO: remove when APIs solidify...
 	var gmap = { history: "history/paginated", favorites: "favorites" };
-
+	var getPath = function() {
+		if (gallery == "tag")
+			return "/api/media/" + location.hash.slice(1);
+		return "/api/" + (gmap[gallery] || gallery) + "/" + chunk_size + "/" + chunk_offset;
+	};
 	var populateGallery = function() {
-		var getPath = "/api/" + (gmap[gallery] || gallery) + "/" + chunk_size + "/" + chunk_offset;
-		chunk_offset += chunk_size;
-		xhr(getPath, function(response_data) {
+		xhr(getPath(), function(response_data) {
 			response_data.data.forEach(function(d) {
 				var diff = now - new Date(d.date);
 				if (diff < day)
@@ -126,6 +127,7 @@ var gallerize = function(gallery) {
 				addImage(d);
 			});
 		});
+		chunk_offset += chunk_size;
 	};
 	populateGallery();
 
