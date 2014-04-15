@@ -134,6 +134,7 @@ onload = function ()
 	};
 	var swipeSlider = function (direction)
 	{
+		animationInProgress = true;
 		var translateQuantity = 600, rotateQuantity = 60;
 		if (direction == "left")
 		{
@@ -153,6 +154,8 @@ onload = function ()
 	};
 	var swipeCallback = function (direction, distance, dx, dy)
 	{
+		if (animationInProgress)
+			return;
 		var translateQuantity, rotateQuantity, animationDistance;
 		animationInProgress = true;
 		if (isExpanded == true &&
