@@ -42,7 +42,7 @@ onload = function ()
 	var cardIndex = 0;
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
-	var maxCardHeight = window.innerHeight - 170;
+	var maxCardHeight = window.innerHeight - 180;
 	var slideThreshold = 60;
 	addCss(".expand-animation { max-height: "
 		+ maxCardHeight + "px; } .card-container { min-height: "
