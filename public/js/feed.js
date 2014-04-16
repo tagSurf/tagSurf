@@ -22,18 +22,20 @@ onload = function ()
 	var blackback = document.getElementById("blackback");
 	var tinput = document.getElementById("tag-input");
 	var aclist = document.getElementById("autocomplete");
+	var viewTag = function(tagName) {
+		aclist.style.display = "none";
+		blackback.className = "blackout";
+		current_tag = tinput.value = tagName;
+		populateSlider();
+	};
 	xhr("/api/tags", function(response_data) {
 		response_data.data.forEach(function(tag) {
 			var n = document.createElement("div");
 			n.innerHTML = tag.name;
 			aclist.appendChild(n);
 			n.onclick = function() {
-				aclist.style.display = "none";
-				blackback.className = "blackout";
-				tinput.value = tag.name;
-				current_tag = tag.name;
-				populateSlider();
-			}
+				viewTag(tag.name);
+			};
 		});
 	});
 	tinput.onclick = function() {
@@ -44,6 +46,7 @@ onload = function ()
 		aclist.style.display = "none";
 		blackback.className = "blackout";
 	};
+	inputEnterCallback(tinput, viewTag);
 
 	// slider stuff
 	var cardIndex = 0;

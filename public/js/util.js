@@ -112,3 +112,15 @@ var xhr = function(path, cb, action) {
   }
   _xhr.send();
 };
+var inputEnterCallback = function(n, cb, fid) { // from cantools
+  n.onkeyup = function(e) {
+    e = e || window.event;
+    var code = e.keyCode || e.which;
+    if (code == 13 || code == 3) {
+      // can prevent annoying repeating alert on enter scenarios
+      if (fid)
+        document.getElementById(fid).focus();
+      cb(n.value);
+    }
+  };
+};
