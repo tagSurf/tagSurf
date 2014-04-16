@@ -19,6 +19,7 @@ onload = function ()
 	};
 
 	// autocomplete stuff
+	var blackback = document.getElementById("blackback");
 	var tinput = document.getElementById("tag-input");
 	var aclist = document.getElementById("autocomplete");
 	xhr("/api/tags", function(response_data) {
@@ -28,6 +29,7 @@ onload = function ()
 			aclist.appendChild(n);
 			n.onclick = function() {
 				aclist.style.display = "none";
+				blackback.className = "blackout";
 				tinput.value = tag.name;
 				current_tag = tag.name;
 				populateSlider();
@@ -36,6 +38,11 @@ onload = function ()
 	});
 	tinput.onclick = function() {
 		aclist.style.display = "block";
+		blackback.className = "blackout blackfade";
+	};
+	blackback.onclick = function() {
+		aclist.style.display = "none";
+		blackback.className = "blackout";
 	};
 
 	// slider stuff
