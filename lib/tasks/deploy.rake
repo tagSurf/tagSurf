@@ -96,9 +96,9 @@ namespace :deploy do
 
     puts "=== Tagging release"
     ver = heroku_version(remote)
-    puts "---ver #{ver}"
+    #puts "--- ver #{ver}"
     tag = tag_name(remote, ver)
-    puts ="---tag #{tag}"
+    #puts "--- tag #{tag}"
     system "git tag -a -m \"Pushed to #{remote}\n\
 Branch: #{branch}\n\
 Hash:   #{hash}\" #{tag} #{hash}"
