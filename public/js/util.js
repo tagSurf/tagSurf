@@ -77,15 +77,13 @@ var populateNavbar = function () {
   menu_slider.innerHTML = menu_slider_content.join('\n');
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
-  if (!gallery) {
-    var history_icon = document.getElementById("history_icon");
-    var hist_state = "blue";
-    document.getElementById("history-btn").onclick = function() {
-      hist_state = hist_state == "blue" ? "fill" : "blue";
-      history_icon.src = history_icons[hist_state];
-      slideGallery();
-    };
-  }
+  var history_icon = document.getElementById("history_icon");
+  var hist_state = "blue";
+  document.getElementById("history-btn").onclick = function() {
+    hist_state = hist_state == "blue" ? "fill" : "blue";
+    history_icon.src = history_icons[hist_state];
+    slideGallery();
+  };
   document.getElementById("logout").onclick = function() {
     window.location = "/users/sign_out";
   };

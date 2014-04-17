@@ -75,7 +75,7 @@
 	padding: 5px;
 }
 
-#grid {
+.grid {
 	overflow-x: hidden;
 	overflow-y: auto;
 }
