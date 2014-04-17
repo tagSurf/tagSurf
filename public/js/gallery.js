@@ -7,7 +7,7 @@ var gallerize = function(gallery) {
 	var week = day * 7;
 	var week2 = week * 2;
 	var blackout, modal, bigpic, picdesc, pictag, current_image;
-	var grid = document.createElement("grid");
+	var grid = document.createElement("div");
 	grid.className = "grid";
 
 	if (gallery == "history") {
