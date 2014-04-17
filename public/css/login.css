@@ -49,8 +49,13 @@ html, body {
 	padding: 4px 2%;
 }
 
-.ts-submit-btn {
-	width: 50%;
+.ts-submit-left {
+	width: 60%;
+	float: left;
+}
+
+.ts-submit-right {
+	width: 40%;
 	float: left;
 }
 
