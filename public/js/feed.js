@@ -33,8 +33,9 @@ onload = function ()
 			var n = document.createElement("div");
 			n.innerHTML = tag.name;
 			n.className = "tagline";
-			for (var i = 1; i <= tag.name.length; i++)
-				n.className += " " + tag.name.slice(0, i);
+			var tlower = tag.name.toLowerCase();
+			for (var i = 1; i <= tlower.length; i++)
+				n.className += " " + tlower.slice(0, i);
 			aclist.appendChild(n);
 			n.onclick = function() {
 				viewTag(tag.name);
@@ -60,7 +61,7 @@ onload = function ()
 				hide: true
 			});
 			mod({
-				className: tinput.value,
+				className: tinput.value.toLowerCase(),
 				show: true
 			});
 		} else mod({
