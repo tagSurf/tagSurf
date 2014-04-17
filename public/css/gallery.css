@@ -64,41 +64,6 @@
 	position: relative;
 }
 
-.blackout {
-	pointer-events: none;
-	z-index: 1;
-	position: fixed;
-	top: 50px;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	background: black;
-	opacity: 0;
-	-webkit-transition: opacity .25s ease-in-out;
-}
-
-.blackfade {
-	opacity: 0.5;
-}
-
-.modal {
-	z-index: 10;
-	position: fixed;
-	padding: 5px;
-	top: 60px;
-	bottom: 10px;
-	left: 10px;
-	right: 10px;
-	background: #2f2f2f;
-	border-radius: 5px;
-	box-shadow: 3px 3px 5px 2px #161617;
-	-webkit-transition: -webkit-transform 250ms ease-in-out;
-}
-
-.modalslide {
-	-webkit-transform: translate3d(0, 0, 0) !important;
-}
-
 .bigpic {
 	display: block;
 	width: 90%;

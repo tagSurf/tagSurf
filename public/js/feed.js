@@ -4,40 +4,76 @@ onload = function ()
 	gallerize();
 
 	var data, current_tag = "funny";
-	var populateSlider = function ()
+	var populateSlider = function (update)
 	{
 		xhr("/api/media/" + current_tag, function(response_data) {
-			data = response_data.data;
-			slideContainer.innerHTML = "";
-			buildCard(2);
+			if (update)
+				data = data.concat(response_data.data);
+			else {
+				cardIndex = 0;
+				data = response_data.data;
+				slideContainer.innerHTML = "";
+				buildCard(2);
+			}
 		});
 	};
 
 	// autocomplete stuff
+	var blackback = document.getElementById("blackback");
 	var tinput = document.getElementById("tag-input");
 	var aclist = document.getElementById("autocomplete");
+	var viewTag = function(tagName) {
+		aclist.className = "";
+		blackback.className = "blackout";
+		current_tag = tinput.value = tagName;
+		populateSlider();
+	};
 	xhr("/api/tags", function(response_data) {
 		response_data.data.forEach(function(tag) {
 			var n = document.createElement("div");
 			n.innerHTML = tag.name;
+			n.className = "tagline";
+			for (var i = 1; i <= tag.name.length; i++)
+				n.className += " " + tag.name.slice(0, i);
 			aclist.appendChild(n);
 			n.onclick = function() {
-				aclist.style.display = "none";
-				tinput.value = tag.name;
-				current_tag = tag.name;
-				populateSlider();
-			}
+				viewTag(tag.name);
+			};
 		});
 	});
 	tinput.onclick = function() {
-		aclist.style.display = "block";
+		aclist.className = "autocomplete-open";
+		blackback.className = "blackout blackfade";
+	};
+	blackback.onclick = function() {
+		aclist.className = "";
+		blackback.className = "blackout";
+	};
+	tinput.onkeyup = function(e) {
+		e = e || window.event;
+		var code = e.keyCode || e.which;
+		if (code == 13 || code == 3)
+			viewTag(tinput.value);
+		else if (tinput.value) {
+			mod({
+				className: "tagline",
+				hide: true
+			});
+			mod({
+				className: tinput.value,
+				show: true
+			});
+		} else mod({
+			className: "tagline",
+			show: true
+		});
 	};
 
 	// slider stuff
 	var cardIndex = 0;
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
-	var maxCardHeight = window.innerHeight - 170;
+	var maxCardHeight = window.innerHeight - 180;
 	var slideThreshold = 60;
 	addCss(".expand-animation { max-height: "
 		+ maxCardHeight + "px; } .card-container { min-height: "

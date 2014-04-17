@@ -55,9 +55,9 @@ html, body
   border-bottom-right-radius: 50px;
   border-bottom-left-radius: 0px;
 }
+
 #autocomplete
 {
-  display: none;
   z-index: 3;
   position: absolute;
   top: 90px;
@@ -65,16 +65,21 @@ html, body
   right: 0px;
   margin: auto;
   width: 200px;
-  height: 160px;
+  height: 0px;
   border-radius: 8px;
   background: white;
   text-align: left;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
+  -webkit-transition: height 300ms ease-out;
 }
-
-#autocomplete div {
+#autocomplete div
+{
   padding: 5px;
+}
+.autocomplete-open
+{
+  height: 160px !important;
 }
 
 .card-wrapper

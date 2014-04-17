@@ -36,9 +36,7 @@ var populateNavbar = function () {
   var tag = gallery ? document.location.hash.slice(1) : null;
   var navbar_content = [
     "<div id='favorites-btn'>",
-      gallery ? "<a href='/favorites'>" : "<a>",
-        "<img src='img/favorites_icon_" + (gallery == "favorites" ? "fill" : "blue") + ".png'>",
-      "</a>",
+      "<a><img src='img/favorites_icon_" + (gallery == "favorites" ? "fill" : "blue") + ".png'></a>",
     "</div>",
     "<div id='history-btn'>",
       gallery ? "<a href='/history'>" : "<a>",
@@ -59,21 +57,21 @@ var populateNavbar = function () {
     "<input type='checkbox' name='slider_box' id='slider_box' style='display:none'>",
     "<div id='slide_down_menu' class='pointer'>",
       "<ul>",
-      	"<li><div>",
-      	  "<a href='/trending'><img class='menu_icon' src='img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING</a>",
-      	"</div></li>",
-      	"<li><div>",
-      	  "<a href='/favorites'><img class='menu_icon' src='img/favorites_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;FAVORITES</a>",
-        "</div></li>",
-        "<li><div>",
-      	  "<a href='/submissions'><img class='menu_icon' src='img/submissions_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;SUBMISSIONS</a>",
-        "</div></li>",
-        "<li><div>",
-          "<a href='/options'><img class='menu_icon' src='img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS</a>",
-        "</div></li>",
-        "<li><div>",
-          "<a id='logout'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGOUT</a>",
-        "</div></li>",
+      	"<li><a href='/trending'><div>",
+      	  "<img class='menu_icon' src='img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
+      	"</div></a></li>",
+      	"<li><a href='/favorites'><div>",
+      	  "<img class='menu_icon' src='img/favorites_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;FAVORITES",
+        "</div></a></li>",
+        "<li><a href='/submissions'><div>",
+      	  "<img class='menu_icon' src='img/submissions_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;SUBMISSIONS",
+        "</div></a></li>",
+        "<li><a href='/options'><div>",
+          "<img class='menu_icon' src='img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS",
+        "</div></a></li>",
+        "<li><a id='logout'><div>",
+          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGOUT",
+        "</div></a></li>",
       "</ul>",
     "</div>",
   ];
@@ -111,4 +109,15 @@ var xhr = function(path, cb, action) {
       cb && cb(eval("("+_xhr.responseText+")"));
   }
   _xhr.send();
+};
+var mod = function(opts) {
+  var targets = opts.targets ? opts.targets
+    : (opts.target ? [opts.target]
+    : (opts.className ? document.getElementsByClassName(opts.className)
+    : (opts.id ? [document.getElementById(opts.id)] : [])));
+  var property = opts.property || "display";
+  var value = opts.value ||
+    (opts.show ? "block" : opts.hide ? "none" : "");
+  for (var i = 0; i < targets.length; i++)
+    targets[i].style[property] = value;
 };

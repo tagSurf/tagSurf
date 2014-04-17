@@ -6,17 +6,14 @@ Tagsurf::Application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  #get '/users/sign_up', to: redirect('/feed')
-
   devise_for :users, :controllers => { :sessions => 'sessions' }
  
   # Static Routes
   get 'feed'        => 'client#feed'
-  get 'trending'    => 'client#trending'
   get 'favorites'   => 'client#favorites'
   get 'submissions' => 'client#submissions'
   get 'tag'         => 'client#tag'
-  get 'history'     => 'client#tag'
+  get 'history'     => 'client#history'
 
   namespace :api do
     # Media API

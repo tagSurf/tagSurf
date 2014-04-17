@@ -9,7 +9,7 @@ class ApplicationController < ActionController::Base
     return unless Rails.env.production? && !browser.mobile? 
     unless current_user && current_user.admin? 
       return if request.path == '/device'
-      redirect_to '/device'
+      #redirect_to '/device'
     end
   end 
 
