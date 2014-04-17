@@ -4,15 +4,23 @@ onload = function ()
 	gallerize("history");
 
 	var data, current_tag = "funny";
+	var buffer_minimum = 3;
 	var populateSlider = function (update)
 	{
 		xhr("/api/media/" + current_tag, function(response_data) {
-			if (update)
-				data = data.concat(response_data.data);
-			else {
+			var rdata = response_data.data.sort(function(a,b)
+				{ return a.id > b.id; });
+			if (update) {
+				// this method only nets 5 cards for every 10 cards requested
+				// needs new API!
+				var lastId = data[data.length - 1].id;
+				for (var i = 0; i < rdata.length; i++)
+					if (rdata[i].id > lastId)
+						data.push(rdata[i]);
+			} else {
 				cardIndex = 0;
-				data = response_data.data;
 				slideContainer.innerHTML = "";
+				data = rdata;
 				buildCard(2);
 			}
 		});
@@ -339,7 +347,11 @@ onload = function ()
 			slider = slideContainer.children[0].children[0];
 			initCardGestures.call(slideContainer.children[stackIndex % 2]);
 			formattingContainer.removeChild(formatter);
+
 			++cardIndex;
+			if (data.length == cardIndex + buffer_minimum)
+				populateSlider(true);
+
 			if (slideContainer.children.length < 2)
 			{
 				buildCard(1);
