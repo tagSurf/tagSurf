@@ -71,6 +71,7 @@ onload = function ()
 
 	// slider stuff
 	var cardIndex = 0;
+	var zoomScale = 1.5;
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
 	var maxCardHeight = window.innerHeight - 180;
@@ -90,7 +91,9 @@ onload = function ()
 	var zoomState =
 	{
 		zoomed: false,
-		zoomNode: null
+		zoomNode: null,
+		xCurrent: 0,
+		yCurrent: 0
 	};
 	var scrollState = 
 	{
@@ -118,6 +121,84 @@ onload = function ()
 			yCurrent: 0
 		};
 	};
+	var zoomDragCallback = function (direction, distance, dx, dy)
+	{
+		if (animationInProgress == true)
+		{
+			return;
+		}
+		zoomState.xCurrent += dx;
+		zoomState.yCurrent += dy;
+		zoomState.zoomNode.style['-webkit-transform'] = 
+			"translate3d(" + zoomState.xCurrent +"px," + zoomState.yCurrent + "px,0) scale(" + zoomScale + ")";
+	};
+	var zoomBoundaryMonitor = function ()
+	{
+		var zNode = zoomState.zoomNode,
+			verticalBound = (5 + 3 * zNode.clientHeight / 7),
+			horizontalBound = (5 + 3 * zNode.clientWidth / 7),
+			xRevert = zoomState.xCurrent, yRevert = zoomState.yCurrent;
+		if (zoomState.yCurrent > verticalBound)
+		{
+			yRevert = verticalBound;
+		}
+		else if (zoomState.yCurrent < -verticalBound)
+		{
+			yRevert = -verticalBound;
+		}
+		if (zoomState.xCurrent > horizontalBound)
+		{
+			xRevert = horizontalBound;
+		}
+		else if (zoomState.xCurrent < -horizontalBound)
+		{
+			xRevert = -horizontalBound;
+		}
+		if (xRevert != zoomState.xCurrent || yRevert != zoomState.yCurrent)
+		{
+			revertZoomedNode(xRevert, yRevert);
+		}
+	};
+	var zoomUpCallback = function ()
+	{
+		if (animationInProgress == false)
+		{
+			zoomBoundaryMonitor();
+		}
+	};
+	var revertZoomedNode = function (xRevert, yRevert) 
+	{
+		var zNode = zoomState.zoomNode;
+		zoomState.xCurrent = xRevert;
+		zoomState.yCurrent = yRevert;
+		animationInProgress = true;
+		var zoomSlideEnd = function (event)
+		{
+			zNode.style['-webkit-transition'] = "";
+			animationInProgress = false;
+			zNode.removeEventListener("webkitTransitionEnd", zoomSlideEnd, false);
+		};
+		zNode.addEventListener("webkitTransitionEnd", zoomSlideEnd, false);
+		zNode.style['-webkit-transition'] = "-webkit-transform 500ms ease-out";
+		zNode.style['-webkit-transform'] = "translate3d(" + xRevert + "px," + yRevert + "px,0) scale(" + zoomScale + ")";
+	};
+	var zoomSwipeCallback = function (direction, distance, dx, dy)
+	{
+		var zNode = zoomState.zoomNode;
+		zoomState.xCurrent += dx;
+		zoomState.yCurrent += dy;
+		animationInProgress = true;
+		zNode.style['-webkit-transition'] = "-webkit-transform 250ms ease-out";
+		zNode.style['-webkit-transform'] = 
+			"translate3d(" + zoomState.xCurrent +"px," + zoomState.yCurrent + "px,0) + scale(" + zoomScale + ")";
+		var zoomSwipeEnd = function (event)
+		{
+			zNode.style['-webkit-transition'] = "";
+			animationInProgress = false;
+			zNode.removeEventListener("webkitTransitionEnd", zoomSwipeEnd, false);
+		};
+		zNode.addEventListener("webkitTransitionEnd", zoomSwipeEnd, false);
+	};
 	var doubleTap = function ()
 	{
 		var zNode;
@@ -127,14 +208,20 @@ onload = function ()
 			zNode.classList.add('hider');
 			zoomState.zoomNode = zNode;
 			zoomState.zoomed = true;
+			zoomState.xCurrent = 0;
+			zoomState.yCurrent = 0;
 			document.body.appendChild(zNode);
-			gesture.listen("tap",zNode, function (tapCount) {
+			gesture.listen("tap", zNode, function (tapCount) {
 				if (tapCount == 2)
 				{
 					doubleTap();
 				}
 			});
-			zNode.style['-webkit-transform'] = "scale(1.5)";
+			//gesture.listen("swipe", zNode, zoomSwipeCallback);
+			gesture.listen("drag", zNode, zoomDragCallback);
+			gesture.listen("up", zNode, zoomUpCallback);
+			zNode.style['-webkit-transition'] = "";
+			zNode.style['-webkit-transform'] = "scale(" + zoomScale + ")";
 			zNode.classList.remove('hider');
 		}
 		else
@@ -142,6 +229,7 @@ onload = function ()
 			zoomState.zoomed = false;
 			zNode = zoomState.zoomNode;
 			document.body.removeChild(zNode);
+			zoomState.zoomNode = null;
 		}
 	};
 	var revertSlider = function ()
