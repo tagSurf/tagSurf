@@ -7,7 +7,6 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 	var week = day * 7;
 	var week2 = week * 2;
 	var blackout, modal, bigpic, picdesc, pictag, current_image;
-	var fav_icon = document.getElementById("favorites-icon");
 	var grid = document.createElement("div");
 	grid.className = "grid";
 
@@ -71,6 +70,7 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 
 		modal.onclick = function() {
 			current_image = null;
+			setFavIcon(location.pathname == "/favorites");
 			blackout.className = blackout.className.replace(" blackfade", "");
 			modal.className = modal.className.replace(" modalslide", "");
 		};
@@ -87,10 +87,6 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 		h.innerHTML = headerName;
 		grid.appendChild(h);
 	};
-	var setFavIcon = function() {
-		fav_icon.src = "img/favorites_icon_"
-			+ (current_image.is_favorite ? "fill" : "blue") + ".png";
-	};
 	var showImage = function(d) {
 		current_image = d;
 		modal.className += " modalslide";
@@ -98,7 +94,7 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 		bigpic.src = d.image_link_original;
 		picdesc.innerHTML = d.title;
 		pictag.innerHTML = "#" + d.tagged_as[0];
-		setFavIcon();
+		setFavIcon(current_image.is_favorite);
 	};
 	var addImage = function(d, front) {
 		var n = document.createElement("div");
@@ -190,7 +186,7 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 					current_image.is_favorite = false;
 					xhr("/api/favorites/" + current_image.id, null, "DELETE");
 				}
-				setFavIcon();
+				setFavIcon(current_image.is_favorite);
 			} else if (gallery == "favorites") {
 				xhr("/api/favorites/" + current_image.id, null, "DELETE");
 				grid.removeChild(current_image.node);

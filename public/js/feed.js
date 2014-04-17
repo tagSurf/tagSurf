@@ -357,7 +357,10 @@ onload = function ()
 		}
 	};
 	setStarCallback(function() {
-		xhr("/api/favorites/" + data[cardIndex-2].id, null, "POST");
+		setFavIcon(true);
+		xhr("/api/favorites/" + data[cardIndex-2].id, function() {
+			setFavIcon(false);
+		}, "POST");
 		swipeSlider("right");
 	});
 	populateSlider();
