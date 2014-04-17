@@ -1,7 +1,7 @@
 onload = function ()
 {
 	populateNavbar();
-	gallerize();
+	gallerize("history");
 
 	var data, current_tag = "funny";
 	var populateSlider = function (update)
@@ -19,23 +19,54 @@ onload = function ()
 	};
 
 	// autocomplete stuff
+	var blackback = document.getElementById("blackback");
 	var tinput = document.getElementById("tag-input");
 	var aclist = document.getElementById("autocomplete");
+	var viewTag = function(tagName) {
+		aclist.className = "";
+		blackback.className = "blackout";
+		current_tag = tinput.value = tagName;
+		populateSlider();
+	};
 	xhr("/api/tags", function(response_data) {
 		response_data.data.forEach(function(tag) {
 			var n = document.createElement("div");
 			n.innerHTML = tag.name;
+			n.className = "tagline";
+			for (var i = 1; i <= tag.name.length; i++)
+				n.className += " " + tag.name.slice(0, i);
 			aclist.appendChild(n);
 			n.onclick = function() {
-				aclist.style.display = "none";
-				tinput.value = tag.name;
-				current_tag = tag.name;
-				populateSlider();
-			}
+				viewTag(tag.name);
+			};
 		});
 	});
 	tinput.onclick = function() {
-		aclist.style.display = "block";
+		aclist.className = "autocomplete-open";
+		blackback.className = "blackout blackfade";
+	};
+	blackback.onclick = function() {
+		aclist.className = "";
+		blackback.className = "blackout";
+	};
+	tinput.onkeyup = function(e) {
+		e = e || window.event;
+		var code = e.keyCode || e.which;
+		if (code == 13 || code == 3)
+			viewTag(tinput.value);
+		else if (tinput.value) {
+			mod({
+				className: "tagline",
+				hide: true
+			});
+			mod({
+				className: tinput.value,
+				show: true
+			});
+		} else mod({
+			className: "tagline",
+			show: true
+		});
 	};
 
 	// slider stuff
@@ -156,6 +187,7 @@ onload = function ()
 	var swipeSlider = function (direction)
 	{
 		animationInProgress = true;
+		var activeCard = data[cardIndex-2];
 		var translateQuantity = 600, rotateQuantity = 60;
 		var isUp = direction == "right";
 		if (!isUp)
@@ -172,9 +204,10 @@ onload = function ()
 			updateCompressionStatus();
 			resetSlideState(); 
 			revertScroller(0);
-			xhr("/api/votes/" + (isUp ? "up/" : "down/") + data[cardIndex-2].id,
+			xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id,
 				null, "POST");
-		},false);
+		}, false);
+		addHistoryItem(activeCard);
 	};
 	var swipeCallback = function (direction, distance, dx, dy)
 	{
@@ -323,9 +356,9 @@ onload = function ()
 			slider.children[2].style.visibility = "hidden";
 		}
 	};
-	document.getElementById("favorites-btn").onclick = function() {
+	setStarCallback(function() {
 		xhr("/api/favorites/" + data[cardIndex-2].id, null, "POST");
 		swipeSlider("right");
-	};
+	});
 	populateSlider();
 };

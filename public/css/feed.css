@@ -15,7 +15,6 @@ html, body
 {
   display: inline;
   background: #6a6a6a;
-  color: white;
   padding: 7px 5px 7px 17px;
   border: 0px;
   font-size: 16px;
@@ -33,7 +32,6 @@ html, body
 {
   float: left;
   display: inline;
-  color: white;
   margin:0;
   border: 0px;
   padding: 7px 5px 7px 3px;
@@ -55,9 +53,9 @@ html, body
   border-bottom-right-radius: 50px;
   border-bottom-left-radius: 0px;
 }
+
 #autocomplete
 {
-  display: none;
   z-index: 3;
   position: absolute;
   top: 90px;
@@ -65,16 +63,22 @@ html, body
   right: 0px;
   margin: auto;
   width: 200px;
-  height: 160px;
+  height: 0px;
   border-radius: 8px;
+  color: black;
   background: white;
   text-align: left;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
+  -webkit-transition: height 300ms ease-out;
 }
-
-#autocomplete div {
+#autocomplete div
+{
   padding: 5px;
+}
+.autocomplete-open
+{
+  height: 160px !important;
 }
 
 .card-wrapper
@@ -112,7 +116,6 @@ html, body
 {
   margin: 2.5%;
   text-align: center;
-  color: white;
   font-size: 14px;
 }
 
