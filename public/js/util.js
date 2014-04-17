@@ -48,7 +48,7 @@ var populateNavbar = function () {
         gallery ? (gallery == "tag"
           ? ("<span class='pointer'>#" + tag + "</span>")
           : ("<img class='gallery_icon' src='img/" + gallery + "_icon_gray.png'><span class='pointer'>" + gallery.toUpperCase() + "</span>"))
-        : "<img id='tagsurf-logo' src='img/logo.png'></img>",
+        : "<img id='tagsurf-logo' src='img/logo_big.png'></img>",
         "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='img/down_arrow.png'></img>",
       "</label>",
     "</div>",
