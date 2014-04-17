@@ -5,6 +5,7 @@ class Api::FavoritesController < Api::BaseController
   def create
     @fav = Favorite.new(user_id: @user.id, card_id: fav_params[:card_id]) 
     if @fav.save
+      CreateFavoriteVote.perform_asyc(@fav.id)
       render json: {created: true}, status: :ok
     else
       render json: {created: false, reason: @fav.errors.full_messages.first }, status: :not_implemented 
