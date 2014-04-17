@@ -17,6 +17,10 @@
   z-index: 90;
 }
 
+#history-logo {
+  display: none;
+}
+
 #history-btn
 {
   position: relative;

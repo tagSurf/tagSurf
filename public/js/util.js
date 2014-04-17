@@ -43,10 +43,12 @@ var populateNavbar = function () {
     "</a></div>",
     "<div class='navbar-center'>",
       "<label for='slider_box' onclick='toggleClass.apply(this,[\"slid\"]);toggleClass.apply(document.getElementById(\"slide_down_menu\"),[\"opened_menu\"]);'>",
-        gallery ? (gallery == "tag"
-          ? ("<span class='pointer'>#" + tag + "</span>")
-          : ("<img class='gallery_icon' src='img/" + gallery + "_icon_gray.png'><span class='pointer'>" + gallery.toUpperCase() + "</span>"))
-        : "<img id='tagsurf-logo' src='img/logo_big.png'></img>",
+        "<span id='main-logo'>",
+          gallery ? (gallery == "tag"
+            ? ("<span class='pointer'>#" + tag + "</span>")
+            : ("<img class='gallery_icon' src='img/" + gallery + "_icon_gray.png'><span id='gallery_name' class='pointer'>" + gallery.toUpperCase() + "</span>"))
+          : "<img id='tagsurf-logo' src='img/logo_big.png'></img>",
+        "</span><span id='history-logo'>HISTORY</span>",
         "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='img/down_arrow.png'></img>",
       "</label>",
     "</div>",
@@ -77,11 +79,19 @@ var populateNavbar = function () {
   menu_slider.innerHTML = menu_slider_content.join('\n');
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
+
+  var main_logo = document.getElementById("main-logo");
+  var hist_logo = document.getElementById("history-logo");
   var history_icon = document.getElementById("history_icon");
+  var slider_icon = document.getElementById("slider-icon");
   var hist_state = "blue";
   document.getElementById("history-btn").onclick = function() {
-    hist_state = hist_state == "blue" ? "fill" : "blue";
+    var isOn = hist_state == "blue";
+    hist_state = isOn ? "fill" : "blue";
     history_icon.src = history_icons[hist_state];
+    main_logo.style.display = isOn ? "none" : "inline";
+    hist_logo.style.display = isOn ? "inline" : "none";
+    !gallery && toggleClass.call(slider_icon, "vtop");
     slideGallery();
   };
   document.getElementById("logout").onclick = function() {
