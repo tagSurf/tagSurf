@@ -292,6 +292,10 @@ onload = function ()
 				break;
 		}
 	};
+	var holdCallback = function (duration) {
+		if (duration == 3000)
+			console.log("super vote!");
+	};
 	var updateCompressionStatus = function ()
 	{
 		cardCompression = nextCardCompression;
@@ -352,6 +356,7 @@ onload = function ()
 		gesture.listen("up", this, upCallback);
 		gesture.listen("tap", this, tapCallback);
 		gesture.listen("drag", this, dragCallback);
+		gesture.listen("hold", this, holdCallback);
 	};
 	var expandCard = function ()
 	{
