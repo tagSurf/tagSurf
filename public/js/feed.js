@@ -130,21 +130,21 @@ onload = function ()
 		zoomState.xCurrent += dx;
 		zoomState.yCurrent += dy;
 		zoomState.zoomNode.style['-webkit-transform'] = 
-			"translate3d(" + zoomState.xCurrent +"px," + zoomState.yCurrent + "px,0) scale(" + zoomScale + ")";
+			"translate3d(" + zoomState.xCurrent +"px," + zoomState.yCurrent + "px,0)";
 	};
 	var zoomBoundaryMonitor = function ()
 	{
 		var zNode = zoomState.zoomNode,
-			verticalBound = (5 + 3 * zNode.clientHeight / 7),
-			horizontalBound = (5 + 3 * zNode.clientWidth / 7),
+			topBound = 0, bottomBound = 100 + zNode.clientHeight - window.innerHeight,
+			horizontalBound = (zNode.clientWidth - window.innerWidth - 80), 
 			xRevert = zoomState.xCurrent, yRevert = zoomState.yCurrent;
-		if (zoomState.yCurrent > verticalBound)
+		if (zoomState.yCurrent > topBound)
 		{
-			yRevert = verticalBound;
+			yRevert = topBound;
 		}
-		else if (zoomState.yCurrent < -verticalBound)
+		else if (zoomState.yCurrent < -bottomBound)
 		{
-			yRevert = -verticalBound;
+			yRevert = -bottomBound;
 		}
 		if (zoomState.xCurrent > horizontalBound)
 		{
@@ -180,7 +180,7 @@ onload = function ()
 		};
 		zNode.addEventListener("webkitTransitionEnd", zoomSlideEnd, false);
 		zNode.style['-webkit-transition'] = "-webkit-transform 500ms ease-out";
-		zNode.style['-webkit-transform'] = "translate3d(" + xRevert + "px," + yRevert + "px,0) scale(" + zoomScale + ")";
+		zNode.style['-webkit-transform'] = "translate3d(" + xRevert + "px," + yRevert + "px,0)";
 	};
 	var zoomSwipeCallback = function (direction, distance, dx, dy)
 	{
@@ -190,22 +190,26 @@ onload = function ()
 		animationInProgress = true;
 		zNode.style['-webkit-transition'] = "-webkit-transform 250ms ease-out";
 		zNode.style['-webkit-transform'] = 
-			"translate3d(" + zoomState.xCurrent +"px," + zoomState.yCurrent + "px,0) + scale(" + zoomScale + ")";
+			"translate3d(" + zoomState.xCurrent +"px," + zoomState.yCurrent + "px,0)";
 		var zoomSwipeEnd = function (event)
 		{
 			zNode.style['-webkit-transition'] = "";
 			animationInProgress = false;
+			zoomBoundaryMonitor();
 			zNode.removeEventListener("webkitTransitionEnd", zoomSwipeEnd, false);
 		};
 		zNode.addEventListener("webkitTransitionEnd", zoomSwipeEnd, false);
 	};
 	var doubleTap = function ()
 	{
-		var zNode;
+		var zNode, scaledWidth;
 		if (zoomState.zoomed == false)
 		{
 			zNode = slider.cloneNode(true);
+			scaledWidth = window.innerWidth * zoomScale;
 			zNode.classList.add('hider');
+			zNode.style.width = scaledWidth + "px";
+			zNode.style.left = -(window.innerWidth * (zoomScale - 1) / 2) + "px";
 			zoomState.zoomNode = zNode;
 			zoomState.zoomed = true;
 			zoomState.xCurrent = 0;
@@ -217,11 +221,10 @@ onload = function ()
 					doubleTap();
 				}
 			});
-			//gesture.listen("swipe", zNode, zoomSwipeCallback);
+			gesture.listen("swipe", zNode, zoomSwipeCallback);
 			gesture.listen("drag", zNode, zoomDragCallback);
 			gesture.listen("up", zNode, zoomUpCallback);
 			zNode.style['-webkit-transition'] = "";
-			zNode.style['-webkit-transform'] = "scale(" + zoomScale + ")";
 			zNode.classList.remove('hider');
 		}
 		else
