@@ -147,4 +147,5 @@ var slideGallery = function() {
 	var hs = document.getElementById("history_slider");
 	hs.style.opacity = "1";
 	toggleClass.call(hs, "modalslide");
+	toggleClass.call(document.getElementById("blackback"), "blackfade");
 };

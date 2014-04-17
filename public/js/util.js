@@ -112,3 +112,14 @@ var xhr = function(path, cb, action) {
   }
   _xhr.send();
 };
+var mod = function(opts) {
+  var targets = opts.targets ? opts.targets
+    : (opts.target ? [opts.target]
+    : (opts.className ? document.getElementsByClassName(opts.className)
+    : (opts.id ? [document.getElementById(opts.id)] : [])));
+  var property = opts.property || "display";
+  var value = opts.value ||
+    (opts.show ? "block" : opts.hide ? "none" : "");
+  for (var i = 0; i < targets.length; i++)
+    targets[i].style[property] = value;
+};
