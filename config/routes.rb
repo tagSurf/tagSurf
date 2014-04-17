@@ -13,7 +13,6 @@ Tagsurf::Application.routes.draw do
   get 'favorites'   => 'client#favorites'
   get 'submissions' => 'client#submissions'
   get 'tag'         => 'client#tag'
-  get 'history'     => 'client#history'
 
   namespace :api do
     # Media API
