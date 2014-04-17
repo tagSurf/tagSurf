@@ -29,6 +29,7 @@ class CardSerializer < ActiveModel::Serializer
   end
 
   def user_vote
+    
   end
 
   def total_votes
