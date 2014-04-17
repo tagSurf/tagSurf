@@ -21,7 +21,7 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 		document.body.appendChild(blackback);
 		document.body.appendChild(history_slider);
 		addCss("#history_slider { -webkit-transform: translate3d(0, -"
-			+ (history_slider.offsetHeight + 20) + "px, 0); } .grid { height: "
+			+ (history_slider.offsetHeight + 100) + "px, 0); } .grid { height: "
 			+ (history_slider.offsetHeight - 10) + "px; }");
 		slideGallery = function() {
 			current_image && modal.onclick();
