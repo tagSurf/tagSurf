@@ -22,11 +22,11 @@ var gallerize = function(gallery) {
 		modal.appendChild(bigpic);
 
 		picdesc = document.createElement("div");
-		picdesc.className = "picdesc";
+		picdesc.className = "centered";
 		modal.appendChild(picdesc);
 
 		var pictagbox = document.createElement("div");
-		pictagbox.className = "pictagbox";
+		pictagbox.className = "centered padded";
 		pictag = document.createElement("span");
 		pictag.className = "pictag";
 		pictagbox.appendChild(pictag);
@@ -55,7 +55,6 @@ var gallerize = function(gallery) {
 		modal.className += " modalslide";
 		blackout.className += " blackfade";
 		bigpic.src = d.image_link_original;
-		bigpic.style.maxHeight = (modal.clientHeight * 3 / 4) + "px";
 		picdesc.innerHTML = d.title;
 		pictag.innerHTML = "#" + d.tagged_as[0];
 	};

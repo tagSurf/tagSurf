@@ -9,7 +9,6 @@
 }
 
 .header {
-	color: white;
 	font-size: 140%;
 	clear: both;
 	text-align: center;
@@ -18,7 +17,6 @@
 
 .overlay {
 	height: 10%;
-	color: white;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	text-align: center;
@@ -71,20 +69,7 @@
 	border-radius: 5px;
 }
 
-.picdesc {
-	color: white;
-	text-align: center;
-}
-
-.pictagbox {
-	position: absolute;
-	bottom: 10px;
-	width: 100%;
-	text-align: center;
-}
-
 .pictag {
-	color: white;
 	background: #00aeef;
 	border-radius: 5px;
 	padding: 5px;
