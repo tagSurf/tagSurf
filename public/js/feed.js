@@ -32,6 +32,9 @@ onload = function ()
 		response_data.data.forEach(function(tag) {
 			var n = document.createElement("div");
 			n.innerHTML = tag.name;
+			n.className = "tagline";
+			for (var i = 1; i <= tag.name.length; i++)
+				n.className += " " + tag.name.slice(0, i);
 			aclist.appendChild(n);
 			n.onclick = function() {
 				viewTag(tag.name);
@@ -46,7 +49,25 @@ onload = function ()
 		aclist.style.display = "none";
 		blackback.className = "blackout";
 	};
-	inputEnterCallback(tinput, viewTag);
+	tinput.onkeyup = function(e) {
+		e = e || window.event;
+		var code = e.keyCode || e.which;
+		if (code == 13 || code == 3)
+			viewTag(tinput.value);
+		else if (tinput.value) {
+			mod({
+				className: "tagline",
+				hide: true
+			});
+			mod({
+				className: tinput.value,
+				show: true
+			});
+		} else mod({
+			className: "tagline",
+			show: true
+		});
+	};
 
 	// slider stuff
 	var cardIndex = 0;

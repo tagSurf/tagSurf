@@ -112,15 +112,14 @@ var xhr = function(path, cb, action) {
   }
   _xhr.send();
 };
-var inputEnterCallback = function(n, cb, fid) { // from cantools
-  n.onkeyup = function(e) {
-    e = e || window.event;
-    var code = e.keyCode || e.which;
-    if (code == 13 || code == 3) {
-      // can prevent annoying repeating alert on enter scenarios
-      if (fid)
-        document.getElementById(fid).focus();
-      cb(n.value);
-    }
-  };
+var mod = function(opts) {
+  var targets = opts.targets ? opts.targets
+    : (opts.target ? [opts.target]
+    : (opts.className ? document.getElementsByClassName(opts.className)
+    : (opts.id ? [document.getElementById(opts.id)] : [])));
+  var property = opts.property || "display";
+  var value = opts.value ||
+    (opts.show ? "block" : opts.hide ? "none" : "");
+  for (var i = 0; i < targets.length; i++)
+    targets[i].style[property] = value;
 };
