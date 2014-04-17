@@ -209,6 +209,14 @@ onload = function ()
 		}, false);
 		addHistoryItem(activeCard);
 	};
+	window.onkeyup = function(e) {
+		e = e || window.event;
+		var code = e.keyCode || e.which;
+		if (code == 37)
+			swipeSlider("left");
+		else if (code == 39)
+			swipeSlider("right");
+	};
 	var swipeCallback = function (direction, distance, dx, dy)
 	{
 		if (animationInProgress)
@@ -357,7 +365,10 @@ onload = function ()
 		}
 	};
 	setStarCallback(function() {
-		xhr("/api/favorites/" + data[cardIndex-2].id, null, "POST");
+		setFavIcon(true);
+		xhr("/api/favorites/" + data[cardIndex-2].id, function() {
+			setFavIcon(false);
+		}, "POST");
 		swipeSlider("right");
 	});
 	populateSlider();
