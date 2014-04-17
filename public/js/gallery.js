@@ -68,7 +68,7 @@ var gallerize = function(gallery) {
 		document.body.appendChild(modal);
 	};
 	var addHeader = function(headerName) {
-		var nospace = headerName.replace(/ /g, "");
+		var nospace = gallery + headerName.replace(/ /g, "");
 		if (document.getElementById(nospace))
 			return;
 		var h = document.createElement("div");
