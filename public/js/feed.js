@@ -184,7 +184,7 @@ onload = function ()
 		scrollState.verticaling = false;
 		slideState.sliding = false;
 	};
-	var swipeSlider = function (direction)
+	var swipeSlider = function (direction, cb)
 	{
 		animationInProgress = true;
 		var activeCard = data[cardIndex-2];
@@ -205,7 +205,7 @@ onload = function ()
 			resetSlideState(); 
 			revertScroller(0);
 			xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id,
-				null, "POST");
+				cb, "POST");
 		}, false);
 		addHistoryItem(activeCard);
 	};
@@ -367,9 +367,10 @@ onload = function ()
 	setStarCallback(function() {
 		setFavIcon(true);
 		xhr("/api/favorites/" + data[cardIndex-2].id, function() {
-			setFavIcon(false);
+			swipeSlider("right", function () {
+				setFavIcon(false);
+			});
 		}, "POST");
-		swipeSlider("right");
 	});
 	populateSlider();
 };
