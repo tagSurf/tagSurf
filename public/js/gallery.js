@@ -1,4 +1,4 @@
-var gallerize = function(gallery) {
+var starCallback, gallerize = function(gallery) {
 	addCss(".modal { -webkit-transform: translate3d("
 		+ window.innerWidth + "px, 0, 0); }");
 
@@ -7,6 +7,7 @@ var gallerize = function(gallery) {
 	var week = day * 7;
 	var week2 = week * 2;
 	var blackout, modal, bigpic, picdesc, pictag, current_image;
+	var fav_icon = document.getElementById("favorites-icon");
 	var grid = document.createElement("div");
 	grid.className = "grid";
 
@@ -77,6 +78,10 @@ var gallerize = function(gallery) {
 		h.innerHTML = headerName;
 		grid.appendChild(h);
 	};
+	var setFavIcon = function() {
+		fav_icon.src = "img/favorites_icon_"
+			+ (current_image.is_favorite ? "fill" : "blue") + ".png";
+	};
 	var showImage = function(d) {
 		current_image = d;
 		modal.className += " modalslide";
@@ -84,6 +89,7 @@ var gallerize = function(gallery) {
 		bigpic.src = d.image_link_original;
 		picdesc.innerHTML = d.title;
 		pictag.innerHTML = "#" + d.tagged_as[0];
+		setFavIcon();
 	};
 	var addImage = function(d) {
 		var n = document.createElement("div");
@@ -166,11 +172,24 @@ var gallerize = function(gallery) {
 	};
 
 	document.getElementById("favorites-btn").onclick = function() {
-		if (current_image && gallery == "favorites") {
-			xhr("/api/favorites/" + current_image.id, null, "DELETE");
-			grid.removeChild(current_image.node);
-			modal.onclick();
-		} else
+		if (current_image) {
+			if (gallery == "history") {
+				if (!current_image.is_favorite) {
+					current_image.is_favorite = true;
+					xhr("/api/favorites/" + current_image.id, null, "POST");
+				} else {
+					current_image.is_favorite = false;
+					xhr("/api/favorites/" + current_image.id, null, "DELETE");
+				}
+				setFavIcon();
+			} else if (gallery == "favorites") {
+				xhr("/api/favorites/" + current_image.id, null, "DELETE");
+				grid.removeChild(current_image.node);
+				modal.onclick();
+			}
+		} else if (starCallback)
+			starCallback();
+		else
 			window.open("/favorites");
 	};
 };
@@ -180,4 +199,8 @@ var slideGallery = function() {
 	hs.style.opacity = "1";
 	toggleClass.call(hs, "modalslide");
 	toggleClass.call(document.getElementById("blackback"), "blackfade");
+};
+
+var setStarCallback = function(cb) {
+	starCallback = cb;
 };

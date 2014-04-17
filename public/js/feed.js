@@ -354,9 +354,9 @@ onload = function ()
 			slider.children[2].style.visibility = "hidden";
 		}
 	};
-	document.getElementById("favorites-btn").onclick = function() {
+	setStarCallback(function() {
 		xhr("/api/favorites/" + data[cardIndex-2].id, null, "POST");
 		swipeSlider("right");
-	};
+	});
 	populateSlider();
 };
