@@ -6,9 +6,14 @@ var gesture = {
 			maxTime: 300
 		},
 		tap: {
-			maxDistance: 10,
-			maxTime: 100,
+			maxDistance: 50,
+			maxTime: 200,
 			waitTime: 300
+		},
+		hold: {
+			maxDistance: 50,
+			maxTime: 10000,
+			minTime: 3000
 		}
 	},
 	vars: {
@@ -19,7 +24,7 @@ var gesture = {
 		tapCount: 0,
 		tapTimeout: null
 	},
-	handlers: { drag: {}, swipe: {}, tap: {}, up: {} },
+	handlers: { drag: {}, swipe: {}, tap: {}, up: {}, hold: {} },
 	getPos: function(e) {
 		var p = {};
 		if (event.type.slice(0, 5) == "touch") {
@@ -57,20 +62,23 @@ var gesture = {
 		var t = gesture.thresholds;
 		var pos = gesture.getPos(e);
 		var diff = gesture.getDiff(v.startPos, pos);
-		var now = Date.now();
+		var timeDiff = Date.now() - v.startTime;
 		v.active = false;
 
 		gesture.triggerUp(node);
-		if ( (now - v.startTime < t.swipe.maxTime)
+		if ( (timeDiff < t.swipe.maxTime)
 			&& (diff.distance > t.swipe.minDistance) ) // swipe
 			gesture.triggerSwipe(node, diff.direction, diff.distance, diff.x, diff.y);
-		else if ( (now - v.startTime < t.tap.maxTime)
+		else if ( (timeDiff < t.tap.maxTime)
 			&& (diff.distance < t.tap.maxDistance) ) { // tap
 			v.tapCount += 1;
 			v.tapTimeout = setTimeout(function() {
 				gesture.triggerTap(node);
 			}, t.tap.waitTime);
-		}
+		} else if ( (timeDiff < t.hold.maxTime)
+			&& (timeDiff > t.hold.minTime)
+			&& (diff.distance < t.hold.maxDistance) ) // hold
+				gesture.triggerHold(node, timeDiff);
 	},
 	onMove: function(e, node) {
 		var v = gesture.vars;
@@ -138,6 +146,11 @@ var gesture = {
 		var handlers = gesture.handlers.drag[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
 			handlers[i](direction, distance, dx, dy);
+	},
+	triggerHold: function(node, duration) {
+		var handlers = gesture.handlers.hold[node.gid];
+		if (handlers) for (var i = 0; i < handlers.length; i++)
+			handlers[i](duration);
 	},
 	triggerUp: function(node) {
 		var handlers = gesture.handlers.up[node.gid];
