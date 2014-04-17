@@ -187,6 +187,7 @@ onload = function ()
 	var swipeSlider = function (direction)
 	{
 		animationInProgress = true;
+		var activeCard = data[cardIndex-2];
 		var translateQuantity = 600, rotateQuantity = 60;
 		var isUp = direction == "right";
 		if (!isUp)
@@ -203,9 +204,10 @@ onload = function ()
 			updateCompressionStatus();
 			resetSlideState(); 
 			revertScroller(0);
-			xhr("/api/votes/" + (isUp ? "up/" : "down/") + data[cardIndex-2].id,
+			xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id,
 				null, "POST");
-		},false);
+		}, false);
+		addHistoryItem(activeCard);
 	};
 	var swipeCallback = function (direction, distance, dx, dy)
 	{

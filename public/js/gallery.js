@@ -1,4 +1,4 @@
-var starCallback, slideGallery, gallerize = function(gallery) {
+var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 	addCss(".modal { -webkit-transform: translate3d("
 		+ window.innerWidth + "px, 0, 0); }");
 
@@ -29,6 +29,9 @@ var starCallback, slideGallery, gallerize = function(gallery) {
 			history_slider.style.opacity = "1";
 			toggleClass.call(history_slider, "modalslide");
 			toggleClass.call(document.getElementById("blackback"), "blackfade");
+		};
+		addHistoryItem = function(item) {
+			addImage(item, true);
 		};
 	} else document.body.appendChild(grid);
 
@@ -97,7 +100,7 @@ var starCallback, slideGallery, gallerize = function(gallery) {
 		pictag.innerHTML = "#" + d.tagged_as[0];
 		setFavIcon();
 	};
-	var addImage = function(d) {
+	var addImage = function(d, front) {
 		var n = document.createElement("div");
 		n.className = "box";
 		n.style.backgroundImage = "url('" + d.image_link_original + "')";
@@ -138,7 +141,7 @@ var starCallback, slideGallery, gallerize = function(gallery) {
 			showImage(d);
 		};
 		d.node = n;
-		grid.appendChild(n);
+		front ? grid.insertBefore(n, grid.firstChild) : grid.appendChild(n);
 	};
 
 	// gallery feed builder
