@@ -7,7 +7,7 @@ var gallerize = function(gallery) {
 	var day = 1000 * 60 * 60 * 24;
 	var week = day * 7;
 	var week2 = week * 2;
-	var blackout, modal, bigpic, picdesc, pictag;
+	var blackout, modal, bigpic, picdesc, pictag, current_image;
 	gallery = gallery || "history";
 
 	var buildModal = function() {
@@ -33,6 +33,7 @@ var gallerize = function(gallery) {
 		modal.appendChild(pictagbox);
 
 		modal.onclick = function() {
+			current_image = null;
 			blackout.className = blackout.className.replace(" blackfade", "");
 			modal.className = modal.className.replace(" modalslide", "");
 		};
@@ -50,12 +51,13 @@ var gallerize = function(gallery) {
 		grid.appendChild(h);
 	};
 	var showImage = function(d) {
+		current_image = d;
 		modal.className += " modalslide";
 		blackout.className += " blackfade";
 		bigpic.src = d.image_link_original;
 		bigpic.style.maxHeight = (modal.clientHeight * 3 / 4) + "px";
 		picdesc.innerHTML = d.title;
-		pictag.innerHTML = "#" + d.tag;
+		pictag.innerHTML = "#" + d.tagged_as[0];
 	};
 	var addImage = function(d) {
 		var n = document.createElement("div");
@@ -97,6 +99,7 @@ var gallerize = function(gallery) {
 		n.onclick = function() {
 			showImage(d);
 		};
+		d.node = n;
 		grid.appendChild(n);
 	};
 
@@ -141,6 +144,14 @@ var gallerize = function(gallery) {
 		addCss("#history_slider { -webkit-transform: translate3d(0, -"
 			+ (history_slider.offsetHeight + 20) + "px, 0); } #grid { height: "
 			+ (history_slider.offsetHeight - 10) + "px; }");
+	document.getElementById("favorites-btn").onclick = function() {
+		if (current_image && location.pathname == "/favorites") {
+			xhr("/api/favorites/" + current_image.id, null, "DELETE");
+			grid.removeChild(current_image.node);
+			modal.onclick();
+		} else
+			window.open("/favorites");
+	};
 };
 
 var slideGallery = function() {
