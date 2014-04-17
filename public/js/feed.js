@@ -23,7 +23,7 @@ onload = function ()
 	var tinput = document.getElementById("tag-input");
 	var aclist = document.getElementById("autocomplete");
 	var viewTag = function(tagName) {
-		aclist.style.display = "none";
+		aclist.className = "";
 		blackback.className = "blackout";
 		current_tag = tinput.value = tagName;
 		populateSlider();
@@ -42,11 +42,11 @@ onload = function ()
 		});
 	});
 	tinput.onclick = function() {
-		aclist.style.display = "block";
+		aclist.className = "autocomplete-open";
 		blackback.className = "blackout blackfade";
 	};
 	blackback.onclick = function() {
-		aclist.style.display = "none";
+		aclist.className = "";
 		blackback.className = "blackout";
 	};
 	tinput.onkeyup = function(e) {
