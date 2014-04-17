@@ -1,4 +1,4 @@
-var starCallback, gallerize = function(gallery) {
+var starCallback, slideGallery, gallerize = function(gallery) {
 	addCss(".modal { -webkit-transform: translate3d("
 		+ window.innerWidth + "px, 0, 0); }");
 
@@ -24,6 +24,12 @@ var starCallback, gallerize = function(gallery) {
 		addCss("#history_slider { -webkit-transform: translate3d(0, -"
 			+ (history_slider.offsetHeight + 20) + "px, 0); } .grid { height: "
 			+ (history_slider.offsetHeight - 10) + "px; }");
+		slideGallery = function() {
+			current_image && modal.onclick();
+			history_slider.style.opacity = "1";
+			toggleClass.call(history_slider, "modalslide");
+			toggleClass.call(document.getElementById("blackback"), "blackfade");
+		};
 	} else document.body.appendChild(grid);
 
 	var buildModal = function() {
@@ -192,13 +198,6 @@ var starCallback, gallerize = function(gallery) {
 		else
 			window.open("/favorites");
 	};
-};
-
-var slideGallery = function() {
-	var hs = document.getElementById("history_slider");
-	hs.style.opacity = "1";
-	toggleClass.call(hs, "modalslide");
-	toggleClass.call(document.getElementById("blackback"), "blackfade");
 };
 
 var setStarCallback = function(cb) {
