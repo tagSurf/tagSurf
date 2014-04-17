@@ -11,9 +11,12 @@
 <% content_for :javascripts do %>
   <script src="/js/util.js"></script>
   <script src="/js/gallery.js"></script>
-  <script>populateNavbar(); gallerize("tag");</script>
+  <script>
+  	populateNavbar();
+  	gallerize("history");
+  	gallerize("tag");
+  </script>
 <% end %>
 
 <!-- Place body html below -->
 <div id="nav"></div>
-<div id="grid"></div>

@@ -1,7 +1,7 @@
 onload = function ()
 {
 	populateNavbar();
-	gallerize();
+	gallerize("history");
 
 	var data, current_tag = "funny";
 	var populateSlider = function (update)

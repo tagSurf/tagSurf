@@ -2,33 +2,60 @@ var gallerize = function(gallery) {
 	addCss(".modal { -webkit-transform: translate3d("
 		+ window.innerWidth + "px, 0, 0); }");
 
-	var grid = document.getElementById("grid");
 	var now = new Date();
 	var day = 1000 * 60 * 60 * 24;
 	var week = day * 7;
 	var week2 = week * 2;
 	var blackout, modal, bigpic, picdesc, pictag, current_image;
-	gallery = gallery || "history";
+	var grid = document.createElement("div");
+	grid.className = "grid";
+
+	if (gallery == "history") {
+		var history_slider = document.createElement("div");
+		history_slider.id = "history_slider";
+		history_slider.className = "modal";
+		history_slider.appendChild(grid);
+		var blackback = document.createElement("div");
+		blackback.id = "blackback";
+		blackback.className = "blackout";
+		document.body.appendChild(blackback);
+		document.body.appendChild(history_slider);
+		addCss("#history_slider { -webkit-transform: translate3d(0, -"
+			+ (history_slider.offsetHeight + 20) + "px, 0); } .grid { height: "
+			+ (history_slider.offsetHeight - 10) + "px; }");
+	} else document.body.appendChild(grid);
 
 	var buildModal = function() {
+		blackout = document.getElementById("blackout");
+		if (blackout) { // modal already exists
+			blackout = document.getElementById("blackout");
+			modal = document.getElementById("picbox");
+			bigpic = document.getElementById("bigpic");
+			picdesc = document.getElementById("picdesc");
+			pictag = document.getElementById("pictag");
+			return;
+		}
+
 		blackout = document.createElement("div");
 		blackout.className = "blackout";
 
 		modal = document.createElement("div");
+		modal.id = "picbox"
 		modal.className = "modal";
 
 		bigpic = document.createElement("img");
-		bigpic.className = "bigpic";
+		bigpic.id = bigpic.className = "bigpic";
 		modal.appendChild(bigpic);
 
 		picdesc = document.createElement("div");
+		picdesc.id = "picdesc";
 		picdesc.className = "centered";
 		modal.appendChild(picdesc);
 
 		var pictagbox = document.createElement("div");
 		pictagbox.className = "centered padded";
 		pictag = document.createElement("span");
-		pictag.className = "pictag";
+		pictag.id = pictag.className = "pictag";
 		pictagbox.appendChild(pictag);
 		modal.appendChild(pictagbox);
 
@@ -41,7 +68,7 @@ var gallerize = function(gallery) {
 		document.body.appendChild(modal);
 	};
 	var addHeader = function(headerName) {
-		var nospace = headerName.replace(/ /g, "");
+		var nospace = gallery + headerName.replace(/ /g, "");
 		if (document.getElementById(nospace))
 			return;
 		var h = document.createElement("div");
@@ -102,8 +129,6 @@ var gallerize = function(gallery) {
 		grid.appendChild(n);
 	};
 
-	buildModal();
-
 	// gallery feed builder
 	var chunk_size = 20;
 	var chunk_offset = 0;
@@ -131,20 +156,17 @@ var gallerize = function(gallery) {
 		});
 		chunk_offset += chunk_size;
 	};
+
 	populateGallery();
+	buildModal();
 
 	window.onscroll = function(e) {
 		if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight)
 			populateGallery();
 	};
 
-	var history_slider = document.getElementById("history_slider");
-	if (history_slider)
-		addCss("#history_slider { -webkit-transform: translate3d(0, -"
-			+ (history_slider.offsetHeight + 20) + "px, 0); } #grid { height: "
-			+ (history_slider.offsetHeight - 10) + "px; }");
 	document.getElementById("favorites-btn").onclick = function() {
-		if (current_image && location.pathname == "/favorites") {
+		if (current_image && gallery == "favorites") {
 			xhr("/api/favorites/" + current_image.id, null, "DELETE");
 			grid.removeChild(current_image.node);
 			modal.onclick();
