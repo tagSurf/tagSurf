@@ -4,12 +4,17 @@ onload = function ()
 	gallerize();
 
 	var data, current_tag = "funny";
-	var populateSlider = function ()
+	var populateSlider = function (update)
 	{
 		xhr("/api/media/" + current_tag, function(response_data) {
-			data = response_data.data;
-			slideContainer.innerHTML = "";
-			buildCard(2);
+			if (update)
+				data = data.concat(response_data.data);
+			else {
+				cardIndex = 0;
+				data = response_data.data;
+				slideContainer.innerHTML = "";
+				buildCard(2);
+			}
 		});
 	};
 
@@ -37,7 +42,7 @@ onload = function ()
 	var cardIndex = 0;
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
-	var maxCardHeight = window.innerHeight - 170;
+	var maxCardHeight = window.innerHeight - 180;
 	var slideThreshold = 60;
 	addCss(".expand-animation { max-height: "
 		+ maxCardHeight + "px; } .card-container { min-height: "
