@@ -98,7 +98,7 @@
 #slide_down_menu
 {
   width: 100%;
-  position: fixed;
+  position: absolute;
   top: -330px;
   left: 0px;
 }
