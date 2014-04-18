@@ -20,17 +20,17 @@ module Tagsurf
         Devise::PasswordsController.layout "client"        
     end
 
-    redis_available = true
+   # redis_available = true
 
-    Sidekiq.redis do |connection|
-      begin
-        connection.info
-      rescue Redis::CannotConnectError
-        redis_available = false
-      end
-    end
+   # Sidekiq.redis do |connection|
+   #   begin
+   #     connection.info
+   #   rescue Redis::CannotConnectError
+   #     redis_available = false
+   #   end
+   # end
 
-    CONFIG[:redis_active] = redis_available
+    CONFIG[:redis_active] = true
 
   end
 end
