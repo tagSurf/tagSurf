@@ -12,7 +12,13 @@ class Api::MediaController < Api::BaseController
     @media = Card.find media_params[:id]
     @vote = media_params[:vote] == 'up' ? true : false
     begin
-      result = Vote.create(voter_type: 'User', voter_id: @user.id, votable_id: @media.id, vote_flag: @vote, votable_type: 'Card')
+      result = Vote.create(
+        voter_type: 'User', 
+        voter_id: @user.id, 
+        votable_id: @media.id, 
+        vote_flag: @vote, 
+        votable_type: 'Card'
+      )
       render json: {success: "true"}
     rescue => e
       render json: {error: "something went wrong"}, status: :unprocessible_entity
