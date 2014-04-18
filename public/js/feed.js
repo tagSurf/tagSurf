@@ -318,7 +318,7 @@ onload = function ()
 	var swipeSlider = function (direction, voteAlternative)
 	{
 		animationInProgress = true;
-		var activeCard = data[cardIndex-2];
+		var activeCard = data[cardIndex-3];
 		var translateQuantity = 600, rotateQuantity = 60;
 		var isUp = direction == "right";
 		if (!isUp)
@@ -329,9 +329,12 @@ onload = function ()
 		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
 		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px,0,0) rotate(" + rotateQuantity + "deg)";
 		slider.addEventListener( 'webkitTransitionEnd', function (event) {
+			destroyCardGestures(slider.parentNode);
 			slideContainer.removeChild(slider.parentNode);
+			animationInProgress = false;
+			slideContainer.children[1].style["visibility"] = "visible";
+			buildCard(1, true); 
 			slideContainer.children[0].style.zIndex = 2;
-			buildCard(1); 
 			updateCompressionStatus();
 			resetSlideState(); 
 			revertScroller(0);
@@ -413,6 +416,7 @@ onload = function ()
 	};
 	var tapCallback = function (tapCount)
 	{
+		console.log(cardIndex);
 		switch (tapCount)
 		{
 			case 1:
@@ -428,9 +432,9 @@ onload = function ()
 		cardCompression = nextCardCompression;
 		isExpanded = false;
 	}
-	var buildCard = function (stackIndex)
+	var buildCard = function (stackIndex, invisTrue)
 	{
-		var imageContainer, textContainer, fullscreenButton, truncatedTitle;
+		var imageContainer, textContainer, fullscreenButton, truncatedTitle, card;
 		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + stackIndex + ";'><div class='image-container expand-animation'><img src='" + data[cardIndex].image_link_original + "'></div><div class='text-container'><p>" + data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
@@ -466,9 +470,11 @@ onload = function ()
 					nextCardCompression = true;
 				}
 			}
-			slideContainer.appendChild(formatter.firstChild);
+			card = formatter.firstChild;
+			card.style["visibility"] = invisTrue ? "hidden" : "";
+			slideContainer.appendChild(card);
 			slider = slideContainer.children[0].children[0];
-			initCardGestures.call(slideContainer.children[stackIndex % 2]);
+			initCardGestures.call(card);
 			formattingContainer.removeChild(formatter);
 
 			++cardIndex;
@@ -479,6 +485,10 @@ onload = function ()
 			{
 				buildCard(1);
 			}
+			else if (slideContainer.children.length == 2)
+			{
+				buildCard(1,true);
+			}
 		};
 	};
 	var initCardGestures = function ()
@@ -488,6 +498,13 @@ onload = function ()
 		gesture.listen("tap", this, tapCallback);
 		gesture.listen("drag", this, dragCallback);
 	};
+	var destroyCardGestures = function ()
+	{
+		gesture.unlisten("swipe", this, swipeCallback);
+		gesture.unlisten("up", this, upCallback);
+		gesture.unlisten("tap", this, tapCallback);
+		gesture.unlisten("drag", this, dragCallback);
+	}
 	var expandCard = function ()
 	{
 		if (cardCompression)
@@ -495,13 +512,13 @@ onload = function ()
 			cardCompression = false;
 			isExpanded = true;
 			slider.children[0].className += " expanded";
-			slider.children[1].innerHTML = "<p>" + data[cardIndex-2].title + "</p>";
+			slider.children[1].innerHTML = "<p>" + data[cardIndex-3].title + "</p>";
 			slider.children[2].style.visibility = "hidden";
 		}
 	};
 	setStarCallback(function() {
 		setFavIcon(true);
-		xhr("/api/favorites/" + data[cardIndex-2].id, function() {
+		xhr("/api/favorites/" + data[cardIndex-3].id, function() {
 			swipeSlider("right", function () {
 				setFavIcon(false);
 			});
