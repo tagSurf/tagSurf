@@ -125,7 +125,7 @@ class Card < ActiveRecord::Base
           remote_score: obj['score'],
           remote_up_votes: obj['ups'],
           remote_down_votes: obj['downs'],
-          section: obj['section'],
+          section: obj['section'] || "imgurhot",
           delete_hash: obj['deletehash']
         })
       end
