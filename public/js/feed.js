@@ -4,15 +4,23 @@ onload = function ()
 	gallerize("history");
 
 	var data, current_tag = "funny";
+	var buffer_minimum = 3;
 	var populateSlider = function (update)
 	{
 		xhr("/api/media/" + current_tag, function(response_data) {
-			if (update)
-				data = data.concat(response_data.data);
-			else {
+			var rdata = response_data.data.sort(function(a,b)
+				{ return a.id > b.id; });
+			if (update) {
+				// this method only nets 5 cards for every 10 cards requested
+				// needs new API!
+				var lastId = data[data.length - 1].id;
+				for (var i = 0; i < rdata.length; i++)
+					if (rdata[i].id > lastId)
+						data.push(rdata[i]);
+			} else {
 				cardIndex = 0;
-				data = response_data.data;
 				slideContainer.innerHTML = "";
+				data = rdata;
 				buildCard(2);
 			}
 		});
@@ -317,7 +325,7 @@ onload = function ()
 	var swipeSlider = function (direction, voteAlternative)
 	{
 		animationInProgress = true;
-		var activeCard = data[cardIndex-2];
+		var activeCard = data[cardIndex-3];
 		var translateQuantity = 600, rotateQuantity = 60,
 			verticalQuantity = 0;
 		var isUp = direction == "right";
@@ -334,9 +342,12 @@ onload = function ()
 		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
 		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px," + verticalQuantity + "px,0) rotate(" + rotateQuantity + "deg)";
 		slider.addEventListener( 'webkitTransitionEnd', function (event) {
+			gesture.unlisten(slider.parentNode);
 			slideContainer.removeChild(slider.parentNode);
+			animationInProgress = false;
+			slideContainer.children[1].style["visibility"] = "visible";
+			buildCard(1, true); 
 			slideContainer.children[0].style.zIndex = 2;
-			buildCard(1); 
 			updateCompressionStatus();
 			resetSlideState(); 
 			revertScroller(0);
@@ -448,9 +459,9 @@ onload = function ()
 		cardCompression = nextCardCompression;
 		isExpanded = false;
 	}
-	var buildCard = function (stackIndex)
+	var buildCard = function (stackIndex, invisTrue)
 	{
-		var imageContainer, textContainer, fullscreenButton, truncatedTitle;
+		var imageContainer, textContainer, fullscreenButton, truncatedTitle, card;
 		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + stackIndex + ";'><div class='image-container expand-animation'><img src='" + data[cardIndex].image_link_original + "'></div><div class='text-container'><p>" + data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
@@ -486,14 +497,24 @@ onload = function ()
 					nextCardCompression = true;
 				}
 			}
-			slideContainer.appendChild(formatter.firstChild);
+			card = formatter.firstChild;
+			card.style["visibility"] = invisTrue ? "hidden" : "";
+			slideContainer.appendChild(card);
 			slider = slideContainer.children[0].children[0];
-			initCardGestures.call(slideContainer.children[stackIndex % 2]);
+			initCardGestures.call(card);
 			formattingContainer.removeChild(formatter);
+
 			++cardIndex;
+			if (data.length == cardIndex + buffer_minimum)
+				populateSlider(true);
+
 			if (slideContainer.children.length < 2)
 			{
 				buildCard(1);
+			}
+			else if (slideContainer.children.length == 2)
+			{
+				buildCard(1,true);
 			}
 		};
 	};
@@ -512,13 +533,13 @@ onload = function ()
 			cardCompression = false;
 			isExpanded = true;
 			slider.children[0].className += " expanded";
-			slider.children[1].innerHTML = "<p>" + data[cardIndex-2].title + "</p>";
+			slider.children[1].innerHTML = "<p>" + data[cardIndex-3].title + "</p>";
 			slider.children[2].style.visibility = "hidden";
 		}
 	};
 	setStarCallback(function() {
 		setFavIcon(true);
-		xhr("/api/favorites/" + data[cardIndex-2].id, function() {
+		xhr("/api/favorites/" + data[cardIndex-3].id, function() {
 			swipeSlider("right", function () {
 				setFavIcon(false);
 			});
