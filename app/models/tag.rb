@@ -1,4 +1,6 @@
 class Tag < ActiveRecord::Base
+  
+  has_many :votes
 
   def self.populate_from_existing!
     sections = Card.pluck(:section)  

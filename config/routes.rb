@@ -25,7 +25,7 @@ Tagsurf::Application.routes.draw do
 
     # Vote API
     get  'votes'                         => 'votes#show'
-    post 'votes/:vote/:id'               => 'media#create_vote'
+    post 'votes/:vote/:id/tag/:tag' => 'media#create_vote'
 
     # Users API
     get  'users/:id/stats'               => 'votes#stats'
@@ -37,10 +37,10 @@ Tagsurf::Application.routes.draw do
     get  'history/previous/:id'              => 'users#previous_history'
 
     # Favorites API
+    get  'favorites/paginated/:limit/:offset'      => 'favorites#paginated_history'
     get  'favorites/bracketed/:id'       => 'favorites#bracketed_history'
     get  'favorites/next/:id'            => 'favorites#next_history'
     get  'favorites/previous/:id'        => 'favorites#previous_history'
-    get  'favorites/:limit/:offset'      => 'favorites#paginated_history'
     post 'favorites/:card_id'            => 'favorites#create'
     delete 'favorites/:card_id'          => 'favorites#delete'
   end
