@@ -416,7 +416,6 @@ onload = function ()
 	};
 	var tapCallback = function (tapCount)
 	{
-		console.log(cardIndex);
 		switch (tapCount)
 		{
 			case 1:
