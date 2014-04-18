@@ -38,7 +38,7 @@ class CardSerializer < ActiveModel::Serializer
     h = {
       voted: true,
       vote: 'up',
-      last_tag_voted: 'sometag'
+      tag_voted: object.section
     }
     h
   end
@@ -48,15 +48,15 @@ class CardSerializer < ActiveModel::Serializer
   end
 
   def total_votes
-    object.remote_score.to_s + votes.length.to_s
+    object.remote_score.to_i + votes.length.to_i
   end
 
   def down_votes
-    object.remote_down_votes.to_s + votes.where(vote_flag: false).count.to_s
+    object.remote_down_votes.to_i + votes.where(vote_flag: false).count
   end
 
   def up_votes
-    object.remote_up_votes.to_s + votes.where(vote_flag: false).count.to_s
+    object.remote_up_votes.to_i + votes.where(vote_flag: false).count
   end
 
   def score
