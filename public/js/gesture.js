@@ -19,7 +19,7 @@ var gesture = {
 		tapCount: 0,
 		tapTimeout: null
 	},
-	handlers: { drag: {}, swipe: {}, tap: {}, up: {} },
+	handlers: { drag: {}, swipe: {}, tap: {}, up: {}, down: {} },
 	getPos: function(e) {
 		var p = {};
 		if (event.type.slice(0, 5) == "touch") {
@@ -51,6 +51,7 @@ var gesture = {
 			clearTimeout(v.tapTimeout);
 			v.tapTimeout = null;
 		}
+		return gesture.triggerDown(node);
 	},
 	onStop: function(e, node) {
 		var v = gesture.vars;
@@ -60,7 +61,7 @@ var gesture = {
 		var now = Date.now();
 		v.active = false;
 
-		gesture.triggerUp(node);
+		var returnVal = gesture.triggerUp(node);
 		if ( (now - v.startTime < t.swipe.maxTime)
 			&& (diff.distance > t.swipe.minDistance) ) // swipe
 			gesture.triggerSwipe(node, diff.direction, diff.distance, diff.x, diff.y);
@@ -71,23 +72,23 @@ var gesture = {
 				gesture.triggerTap(node);
 			}, t.tap.waitTime);
 		}
+		return returnVal;
 	},
 	onMove: function(e, node) {
 		var v = gesture.vars;
 		if (v.active) {
 			var pos = gesture.getPos(e);
 			var diff = gesture.getDiff(v.lastPos, pos);
-			gesture.triggerDrag(node, diff.direction, diff.distance, diff.x, diff.y);
 			v.lastPos = pos;
+			return gesture.triggerDrag(node, diff.direction, diff.distance, diff.x, diff.y);
 		}
 	},
 	eWrap: function(node) {
 		var e = {};
 		['Start', 'Stop', 'Move'].forEach(function(eName) {
 			e[eName] = function(e) {
-				gesture['on' + eName](e, node);
-				e.preventDefault();
-				return false;
+				return gesture['on' + eName](e, node)
+					|| e.preventDefault() || false;
 			};
 		});
 		return e;
@@ -135,13 +136,24 @@ var gesture = {
 		gesture.vars.tapTimeout = null;
 	},
 	triggerDrag: function(node, direction, distance, dx, dy) {
+		var returnVal = false;
 		var handlers = gesture.handlers.drag[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
-			handlers[i](direction, distance, dx, dy);
+			returnVal = handlers[i](direction, distance, dx, dy) || returnVal;
+		return returnVal;
 	},
 	triggerUp: function(node) {
+		var returnVal = false;
 		var handlers = gesture.handlers.up[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
-			handlers[i]();
+			returnVal = handlers[i]() || returnVal;
+		return returnVal;
+	},
+	triggerDown: function(node) {
+		var returnVal = false;
+		var handlers = gesture.handlers.down[node.gid];
+		if (handlers) for (var i = 0; i < handlers.length; i++)
+			returnVal = handlers[i]() || returnVal;
+		return returnVal;
 	}
 };

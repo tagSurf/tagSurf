@@ -7,6 +7,7 @@ class Favorite < ActiveRecord::Base
   belongs_to :user
   belongs_to :card
 
+  after_commit :create_vote, on: :create
 
   def self.paginated_history(user_id, limit, offset)
     Card.joins(:favorites).where("favorites.user_id = #{user_id}").order('favorites.id desc').limit(limit).offset(offset)
@@ -40,6 +41,31 @@ class Favorite < ActiveRecord::Base
 
   def self.previous_collection(favorite)
     favorite.prev_cards(10) - [favorite.card]
+  end
+
+  private
+
+  def create_vote
+    if CONFIG[:redis_active]
+      CreateFavoriteVote.perform_async(self.id)
+    else
+      vote = Vote.where(
+        votable_id: self.card.id,
+        votable_type: 'Card',
+        voter_id: self.user.id,
+        voter_type: 'User'
+      ).first
+      unless vote
+        Vote.create!(
+          voter_id: self.user.id,
+          voter_type: 'User',
+          votable_id: self.card.id,
+          votable_type: 'Card',
+          vote_flag: true
+        )
+      end
+
+    end
   end
 
 end
