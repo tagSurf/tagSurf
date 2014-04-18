@@ -185,7 +185,7 @@ onload = function ()
 		scrollState.verticaling = false;
 		slideState.sliding = false;
 	};
-	var swipeSlider = function (direction, cb)
+	var swipeSlider = function (direction, voteAlternative)
 	{
 		animationInProgress = true;
 		var activeCard = data[cardIndex-2];
@@ -205,8 +205,8 @@ onload = function ()
 			updateCompressionStatus();
 			resetSlideState(); 
 			revertScroller(0);
-			xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id,
-				cb, "POST");
+			if (voteAlternative) voteAlternative();
+			else xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id, null, "POST");
 		}, false);
 		addHistoryItem(activeCard);
 	};
