@@ -1,18 +1,20 @@
-<h2>Sign up</h2>
-
-<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
-  <%= devise_error_messages! %>
-
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email, :autofocus => true %></div>
-
-  <div><%= f.label :password %><br />
-  <%= f.password_field :password %></div>
-
-  <div><%= f.label :password_confirmation %><br />
-  <%= f.password_field :password_confirmation %></div>
-
-  <div><%= f.submit "Sign up" %></div>
+<% content_for :title do %>
+  <title>tagSurf</title>
 <% end %>
 
-<%= render "users/shared/links" %>
+<% content_for :stylesheets do %>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/login.css">
+<% end %>
+
+<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name) ) do |f| %>
+  <center>
+    <img id="tslogo" src="/img/ts_logo_stacked_gray.jpg"></img>
+    <%#= f.email_field :email, :placeholder => 'email', :class => 'ts-input', :disabled => true %>
+    <%#= f.password_field :password, :placeholder => 'password', :class => 'ts-input', :disabled => true %>
+    <%#= f.password_field :password_confirmation, :placeholder => 'confirm password', :class => 'ts-input', :disabled => true %>
+    <p>tagSurf is in private beta.</p>
+    <p>Please email <%= mail_to 'beta@tagSurf.co', nil, class: 'ts-blue' %> for more information.</p>
+    <%= link_to 'Log in', user_session_path, class: 'ts-blue' %>
+  </center>
+<% end %>

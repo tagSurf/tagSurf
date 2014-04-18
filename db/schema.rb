@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140405005228) do
+ActiveRecord::Schema.define(version: 20140411233810) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,7 +21,7 @@ ActiveRecord::Schema.define(version: 20140405005228) do
     t.string   "remote_provider"
     t.datetime "remote_created_at"
     t.string   "image_link_original"
-    t.string   "title"
+    t.text     "title"
     t.text     "description"
     t.string   "content_type"
     t.boolean  "animated"
@@ -43,6 +43,8 @@ ActiveRecord::Schema.define(version: 20140405005228) do
     t.integer  "remote_down_votes"
     t.integer  "remote_score"
   end
+
+  add_index "cards", ["remote_id"], name: "index_cards_on_remote_id", unique: true, using: :btree
 
   create_table "favorites", force: true do |t|
     t.integer  "card_id"
@@ -114,6 +116,7 @@ ActiveRecord::Schema.define(version: 20140405005228) do
   end
 
   add_index "votes", ["votable_id", "votable_type", "vote_scope"], name: "index_votes_on_votable_id_and_votable_type_and_vote_scope", using: :btree
+  add_index "votes", ["voter_id", "votable_id", "votable_type"], name: "index_votes_on_voter_id_and_votable_id_and_votable_type", unique: true, using: :btree
   add_index "votes", ["voter_id", "voter_type", "vote_scope"], name: "index_votes_on_voter_id_and_voter_type_and_vote_scope", using: :btree
 
 end

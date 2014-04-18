@@ -39,13 +39,13 @@ class Card < ActiveRecord::Base
       Card.last(n)
     elsif tag == 'trending'
       has_voted = user.votes.pluck(:votable_id) 
-      cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('created_at DESC')
+      cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('remote_score DESC NULLS LAST')
       cards
     else
       has_voted = user.votes.pluck(:votable_id) 
-      cards = Card.where('cards.id not in (?)', has_voted).tagged_with([tag], :any => true).limit(n).order('created_at DESC')
+      cards = Card.where('cards.id not in (?) and cards.section ilike ?', has_voted, tag).limit(n).order('remote_score DESC NULLS LAST')
       if cards.length < 10
-        self.populate_tag(tag)
+        TaggedMediaPopulation.perform_async(tag)
       end
       cards
     end
@@ -69,6 +69,12 @@ class Card < ActiveRecord::Base
   def self.populate_tag(tag) 
     response = RemoteResource.get_tag(tag)
     tagged = response.parsed_response["data"]
+
+    # Create tag if not already in the system
+    unless tag = Tag.where('name ilike ?', tag).first
+      Tag.create(name: tag)
+    end
+
     tagged.each do |obj|
       next if obj["nsfw"].to_s == 'true'
       next if obj['is_album'].to_s == 'true'
@@ -77,6 +83,7 @@ class Card < ActiveRecord::Base
         remote_provider: 'imgur',
         remote_created_at: Time.at(obj['datatime'].to_i) || Time.now,
         image_link_original: obj['link'],
+        viral: false,
         title: obj['title'],
         description: obj['description'],
         content_type: obj['type'],
@@ -84,8 +91,11 @@ class Card < ActiveRecord::Base
         width: obj['width'],
         height: obj['height'],
         size: obj['size'],
-        imgur_views: obj['views'],
-        section: tag,
+        remote_views: obj['views'],
+        remote_score: obj['score'],
+        remote_up_votes: obj['ups'],
+        remote_down_votes: obj['downs'],
+        section: obj['section'],
         delete_hash: obj['deletehash']
       })
       Rails.logger.info "Created #{card.inspect}"
@@ -113,8 +123,8 @@ class Card < ActiveRecord::Base
           size: obj['size'],
           remote_views: obj['views'],
           remote_score: obj['score'],
-          remote_up_votes: obj['up'],
-          remote_down_votes: obj['up'],
+          remote_up_votes: obj['ups'],
+          remote_down_votes: obj['downs'],
           section: obj['section'],
           delete_hash: obj['deletehash']
         })
