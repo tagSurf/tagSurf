@@ -93,8 +93,8 @@ class Card < ActiveRecord::Base
         size: obj['size'],
         remote_views: obj['views'],
         remote_score: obj['score'],
-        remote_up_votes: obj['up'],
-        remote_down_votes: obj['up'],
+        remote_up_votes: obj['ups'],
+        remote_down_votes: obj['downs'],
         section: obj['section'],
         delete_hash: obj['deletehash']
       })
@@ -123,8 +123,8 @@ class Card < ActiveRecord::Base
           size: obj['size'],
           remote_views: obj['views'],
           remote_score: obj['score'],
-          remote_up_votes: obj['up'],
-          remote_down_votes: obj['up'],
+          remote_up_votes: obj['ups'],
+          remote_down_votes: obj['downs'],
           section: obj['section'],
           delete_hash: obj['deletehash']
         })

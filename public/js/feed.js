@@ -90,6 +90,7 @@ onload = function ()
 	animationInProgress = false;
 	var nextCardCompression = true;
 	var isExpanded = false;
+	var superState = false;
 	var zoomState =
 	{
 		zoomed: false,
@@ -282,6 +283,7 @@ onload = function ()
 		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
 		slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
 		slider.style['border-color'] = "#353535";
+		slider.style['background-color'] = "#353535";
 		slider.addEventListener( 'webkitTransitionEnd', function (event) {
 			slider.style['-webkit-transition'] = "";
 			slider.style['-webkit-transform'] = "";
@@ -328,6 +330,11 @@ onload = function ()
 			{
 				if (Math.abs(slideState.xCurrent) < slideThreshold)
 				{
+					if (superState == true)
+					{
+						toggleClass.apply(slider,['super_card']);
+						superState = false;
+					}
 					revertSlider();
 				}
 				else if (slideState.xCurrent > slideThreshold)
@@ -351,15 +358,21 @@ onload = function ()
 	{
 		animationInProgress = true;
 		var activeCard = data[cardIndex-2];
-		var translateQuantity = 600, rotateQuantity = 60;
+		var translateQuantity = 600, rotateQuantity = 60,
+			verticalQuantity = 0;
 		var isUp = direction == "right";
+		if (superState == true)
+		{
+			verticalQuantity = 500;
+		}
 		if (!isUp)
 		{
 			translateQuantity = -translateQuantity;
 			rotateQuantity = -rotateQuantity;
+			verticalQuantity = -verticalQuantity;
 		}
 		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
-		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px,0,0) rotate(" + rotateQuantity + "deg)";
+		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px," + verticalQuantity + "px,0) rotate(" + rotateQuantity + "deg)";
 		slider.addEventListener( 'webkitTransitionEnd', function (event) {
 			slideContainer.removeChild(slider.parentNode);
 			slideContainer.children[0].style.zIndex = 2;
@@ -431,10 +444,18 @@ onload = function ()
 					slideState.xCurrent += dx;
 					if (slideState.xCurrent > 0)
 					{
+						if (superState == true)
+						{
+							slider.style['background-color'] = 'green';
+						}
 						slider.style['border-color'] = 'green';
 					}
 					else if (slideState.xCurrent < 0)
 					{
+						if (superState == true)
+						{
+							slider.style['background-color'] = '#C90016';
+						}
 						slider.style['border-color'] = '#C90016';
 					}
 					slider.style['-webkit-transform'] = 
@@ -455,6 +476,13 @@ onload = function ()
 				break;
 		}
 	};
+	var holdCallback = function (duration) {
+		if (duration == 3000)
+		{
+			superState = true;
+			toggleClass.apply(slider, ['super_card']);
+		}
+	};
 	var updateCompressionStatus = function ()
 	{
 		cardCompression = nextCardCompression;
@@ -463,7 +491,7 @@ onload = function ()
 	var buildCard = function (stackIndex)
 	{
 		var imageContainer, textContainer, fullscreenButton, truncatedTitle;
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + stackIndex + ";'><div class='image-container expand-animation'><img src='" + data[cardIndex].image_link_original + "'></div><div class='text-container'><p>" + data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + stackIndex + ";'><div class='image-container expand-animation'><img src='" + data[cardIndex].image_link_original + "'></div><div class='text-container'><p>" + data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
@@ -515,6 +543,7 @@ onload = function ()
 		gesture.listen("up", this, upCallback);
 		gesture.listen("tap", this, tapCallback);
 		gesture.listen("drag", this, dragCallback);
+		gesture.listen("hold", this, holdCallback);
 	};
 	var expandCard = function ()
 	{
