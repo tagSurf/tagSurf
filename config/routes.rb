@@ -25,7 +25,7 @@ Tagsurf::Application.routes.draw do
 
     # Vote API
     get  'votes'                         => 'votes#show'
-    post 'votes/:vote/:id/tag/:tag' => 'media#create_vote'
+    post 'votes/:vote/:id/tag/:tag'      => 'media#create_vote'
 
     # Users API
     get  'users/:id/stats'               => 'votes#stats'
