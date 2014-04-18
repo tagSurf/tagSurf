@@ -39,11 +39,11 @@ class Card < ActiveRecord::Base
       Card.last(n)
     elsif tag == 'trending'
       has_voted = user.votes.pluck(:votable_id) 
-      cards = Card.where('id not in (?) and viral', has_voted).limit(n).order(:ts_score).order('remote_score DESC NULLS LAST')
+      cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
       cards
     else
       has_voted = user.votes.pluck(:votable_id) 
-      cards = Card.where('cards.id not in (?) and cards.section ilike ?', has_voted, tag).limit(n).order(:ts_score).order('remote_score DESC NULLS LAST')
+      cards = Card.where('cards.id not in (?) and cards.section ilike ?', has_voted, tag).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
       if cards.length < 10
         RequestTaggedMedia.perform_async(tag)
       end
