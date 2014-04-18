@@ -21,7 +21,7 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 		document.body.appendChild(blackback);
 		document.body.appendChild(history_slider);
 		addCss("#history_slider { -webkit-transform: translate3d(0, -"
-			+ (history_slider.offsetHeight + 20) + "px, 0); } .grid { height: "
+			+ (history_slider.offsetHeight + 100) + "px, 0); } .grid { height: "
 			+ (history_slider.offsetHeight - 10) + "px; }");
 		slideGallery = function() {
 			current_image && modal.onclick();
@@ -93,23 +93,24 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 		blackout.className += " blackfade";
 		bigpic.src = d.image_link_original;
 		picdesc.innerHTML = d.title;
-		pictag.innerHTML = "#" + d.tagged_as[0];
+		pictag.innerHTML = "#" + d.tags[0];
 		setFavIcon(current_image.is_favorite);
 	};
 	var addImage = function(d, front) {
 		var n = document.createElement("div");
 		n.className = "box";
 		n.style.backgroundImage = "url('" + d.image_link_original + "')";
-		n.style.border = "1px solid " + (d.user_vote ? "green" : "red");
+		n.style.border = "1px solid " +
+			((d.user_stats.vote == "up")? "green" : "red");
 
 		var top = document.createElement("div");
 		top.className = "overlay tag";
-		top.innerHTML = "#" + d.tagged_as[0];
+		top.innerHTML = "#" + d.tags[0];
 
 		var spacer = document.createElement("div");
 		spacer.style.paddingTop = "70%";
 
-		var trending = d.up_votes > d.down_votes * 2;
+		var trending = d.trend == "up";
 
 		var bottom = document.createElement("div");
 		bottom.className = "overlay votes";

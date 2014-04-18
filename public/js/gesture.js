@@ -3,11 +3,11 @@ var gesture = {
 	thresholds: {
 		swipe: {
 			minDistance: 50,
-			maxTime: 300
+			maxTime: 700
 		},
 		tap: {
 			maxDistance: 50,
-			maxTime: 200,
+			maxTime: 700,
 			waitTime: 300
 		},
 		hold: {
@@ -25,7 +25,7 @@ var gesture = {
 		tapTimeout: null,
 		holdInterval: null
 	},
-	handlers: { drag: {}, swipe: {}, tap: {}, up: {}, hold: {} },
+	handlers: { drag: {}, swipe: {}, tap: {}, up: {}, down: {}, hold: {} },
 	getPos: function(e) {
 		var p = {};
 		if (event.type.slice(0, 5) == "touch") {
@@ -68,6 +68,7 @@ var gesture = {
 			v.holdCount += 1;
 			gesture.triggerHold(node, t.hold.interval * v.holdCount);
 		}, t.hold.interval);
+		return gesture.triggerDown(node);
 	},
 	onStop: function(e, node) {
 		var v = gesture.vars;
@@ -77,7 +78,7 @@ var gesture = {
 		var timeDiff = Date.now() - v.startTime;
 		v.active = false;
 
-		gesture.triggerUp(node);
+		var returnVal = gesture.triggerUp(node);
 		if ( (timeDiff < t.swipe.maxTime)
 			&& (diff.distance > t.swipe.minDistance) ) // swipe
 			gesture.triggerSwipe(node, diff.direction, diff.distance, diff.x, diff.y);
@@ -93,23 +94,23 @@ var gesture = {
 			clearInterval(v.holdInterval);
 			v.holdInterval = null;
 		}
+		return returnVal;
 	},
 	onMove: function(e, node) {
 		var v = gesture.vars;
 		if (v.active) {
 			var pos = gesture.getPos(e);
 			var diff = gesture.getDiff(v.lastPos, pos);
-			gesture.triggerDrag(node, diff.direction, diff.distance, diff.x, diff.y);
 			v.lastPos = pos;
+			return gesture.triggerDrag(node, diff.direction, diff.distance, diff.x, diff.y);
 		}
 	},
 	eWrap: function(node) {
 		var e = {};
 		['Start', 'Stop', 'Move'].forEach(function(eName) {
 			e[eName] = function(e) {
-				gesture['on' + eName](e, node);
-				e.preventDefault();
-				return false;
+				return gesture['on' + eName](e, node)
+					|| e.preventDefault() || false;
 			};
 		});
 		return e;
@@ -157,9 +158,11 @@ var gesture = {
 		gesture.vars.tapTimeout = null;
 	},
 	triggerDrag: function(node, direction, distance, dx, dy) {
+		var returnVal = false;
 		var handlers = gesture.handlers.drag[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
-			handlers[i](direction, distance, dx, dy);
+			returnVal = handlers[i](direction, distance, dx, dy) || returnVal;
+		return returnVal;
 	},
 	triggerHold: function(node, duration) {
 		var handlers = gesture.handlers.hold[node.gid];
@@ -167,8 +170,17 @@ var gesture = {
 			handlers[i](duration);
 	},
 	triggerUp: function(node) {
+		var returnVal = false;
 		var handlers = gesture.handlers.up[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
-			handlers[i]();
+			returnVal = handlers[i]() || returnVal;
+		return returnVal;
+	},
+	triggerDown: function(node) {
+		var returnVal = false;
+		var handlers = gesture.handlers.down[node.gid];
+		if (handlers) for (var i = 0; i < handlers.length; i++)
+			returnVal = handlers[i]() || returnVal;
+		return returnVal;
 	}
 };

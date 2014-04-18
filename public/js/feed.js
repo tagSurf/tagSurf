@@ -33,8 +33,9 @@ onload = function ()
 			var n = document.createElement("div");
 			n.innerHTML = tag.name;
 			n.className = "tagline";
-			for (var i = 1; i <= tag.name.length; i++)
-				n.className += " " + tag.name.slice(0, i);
+			var tlower = tag.name.toLowerCase();
+			for (var i = 1; i <= tlower.length; i++)
+				n.className += " " + tlower.slice(0, i);
 			aclist.appendChild(n);
 			n.onclick = function() {
 				viewTag(tag.name);
@@ -60,7 +61,7 @@ onload = function ()
 				hide: true
 			});
 			mod({
-				className: tinput.value,
+				className: tinput.value.toLowerCase(),
 				show: true
 			});
 		} else mod({
@@ -71,6 +72,7 @@ onload = function ()
 
 	// slider stuff
 	var cardIndex = 0;
+	var zoomScale = 1.5;
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
 	var maxCardHeight = window.innerHeight - 180;
@@ -87,6 +89,13 @@ onload = function ()
 	animationInProgress = false;
 	var nextCardCompression = true;
 	var isExpanded = false;
+	var zoomState =
+	{
+		zoomed: false,
+		zoomNode: null,
+		xCurrent: 0,
+		yCurrent: 0
+	};
 	var scrollState = 
 	{
 		verticaling: false,
@@ -112,6 +121,120 @@ onload = function ()
 			verticaling: false,
 			yCurrent: 0
 		};
+	};
+	var zoomDragCallback = function (direction, distance, dx, dy)
+	{
+		if (animationInProgress == true)
+		{
+			return;
+		}
+		zoomState.xCurrent += dx;
+		zoomState.yCurrent += dy;
+		zoomState.zoomNode.style['-webkit-transform'] = 
+			"translate3d(" + zoomState.xCurrent +"px," + zoomState.yCurrent + "px,0)";
+	};
+	var zoomBoundaryMonitor = function ()
+	{
+		var zNode = zoomState.zoomNode,
+			topBound = 0, bottomBound = 100 + zNode.clientHeight - window.innerHeight,
+			horizontalBound = (zNode.clientWidth - window.innerWidth - 80), 
+			xRevert = zoomState.xCurrent, yRevert = zoomState.yCurrent;
+		if (zoomState.yCurrent > topBound)
+		{
+			yRevert = topBound;
+		}
+		else if (zoomState.yCurrent < -bottomBound)
+		{
+			yRevert = -bottomBound;
+		}
+		if (zoomState.xCurrent > horizontalBound)
+		{
+			xRevert = horizontalBound;
+		}
+		else if (zoomState.xCurrent < -horizontalBound)
+		{
+			xRevert = -horizontalBound;
+		}
+		if (xRevert != zoomState.xCurrent || yRevert != zoomState.yCurrent)
+		{
+			revertZoomedNode(xRevert, yRevert);
+		}
+	};
+	var zoomUpCallback = function ()
+	{
+		if (animationInProgress == false)
+		{
+			zoomBoundaryMonitor();
+		}
+	};
+	var revertZoomedNode = function (xRevert, yRevert) 
+	{
+		var zNode = zoomState.zoomNode;
+		zoomState.xCurrent = xRevert;
+		zoomState.yCurrent = yRevert;
+		animationInProgress = true;
+		var zoomSlideEnd = function (event)
+		{
+			zNode.style['-webkit-transition'] = "";
+			animationInProgress = false;
+			zNode.removeEventListener("webkitTransitionEnd", zoomSlideEnd, false);
+		};
+		zNode.addEventListener("webkitTransitionEnd", zoomSlideEnd, false);
+		zNode.style['-webkit-transition'] = "-webkit-transform 500ms ease-out";
+		zNode.style['-webkit-transform'] = "translate3d(" + xRevert + "px," + yRevert + "px,0)";
+	};
+	var zoomSwipeCallback = function (direction, distance, dx, dy)
+	{
+		var zNode = zoomState.zoomNode;
+		zoomState.xCurrent += dx;
+		zoomState.yCurrent += dy;
+		animationInProgress = true;
+		zNode.style['-webkit-transition'] = "-webkit-transform 250ms ease-out";
+		zNode.style['-webkit-transform'] = 
+			"translate3d(" + zoomState.xCurrent +"px," + zoomState.yCurrent + "px,0)";
+		var zoomSwipeEnd = function (event)
+		{
+			zNode.style['-webkit-transition'] = "";
+			animationInProgress = false;
+			zoomBoundaryMonitor();
+			zNode.removeEventListener("webkitTransitionEnd", zoomSwipeEnd, false);
+		};
+		zNode.addEventListener("webkitTransitionEnd", zoomSwipeEnd, false);
+	};
+	var doubleTap = function ()
+	{
+		var zNode, scaledWidth;
+		if (zoomState.zoomed == false)
+		{
+			zNode = slider.cloneNode(true);
+			scaledWidth = window.innerWidth * zoomScale;
+			zNode.classList.add('hider');
+			zNode.style.width = scaledWidth + "px";
+			zNode.style.left = -(window.innerWidth * (zoomScale - 1) / 2) + "px";
+			zoomState.zoomNode = zNode;
+			zoomState.zoomed = true;
+			zoomState.xCurrent = 0;
+			zoomState.yCurrent = 0;
+			document.body.appendChild(zNode);
+			gesture.listen("tap", zNode, function (tapCount) {
+				if (tapCount == 2)
+				{
+					doubleTap();
+				}
+			});
+			gesture.listen("swipe", zNode, zoomSwipeCallback);
+			gesture.listen("drag", zNode, zoomDragCallback);
+			gesture.listen("up", zNode, zoomUpCallback);
+			zNode.style['-webkit-transition'] = "";
+			zNode.classList.remove('hider');
+		}
+		else
+		{
+			zoomState.zoomed = false;
+			zNode = zoomState.zoomNode;
+			document.body.removeChild(zNode);
+			zoomState.zoomNode = null;
+		}
 	};
 	var revertSlider = function ()
 	{
@@ -184,7 +307,7 @@ onload = function ()
 		scrollState.verticaling = false;
 		slideState.sliding = false;
 	};
-	var swipeSlider = function (direction)
+	var swipeSlider = function (direction, voteAlternative)
 	{
 		animationInProgress = true;
 		var activeCard = data[cardIndex-2];
@@ -204,8 +327,8 @@ onload = function ()
 			updateCompressionStatus();
 			resetSlideState(); 
 			revertScroller(0);
-			xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id,
-				null, "POST");
+			if (voteAlternative) voteAlternative();
+			else xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id, null, "POST");
 		}, false);
 		addHistoryItem(activeCard);
 	};
@@ -288,7 +411,7 @@ onload = function ()
 				expandCard();
 				break;
 			case 2:
-				//double tap;
+				doubleTap();
 				break;
 		}
 	};
@@ -372,9 +495,10 @@ onload = function ()
 	setStarCallback(function() {
 		setFavIcon(true);
 		xhr("/api/favorites/" + data[cardIndex-2].id, function() {
-			setFavIcon(false);
+			swipeSlider("right", function () {
+				setFavIcon(false);
+			});
 		}, "POST");
-		swipeSlider("right");
 	});
 	populateSlider();
 };
