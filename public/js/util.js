@@ -36,19 +36,19 @@ var populateNavbar = function () {
   var tag = gallery ? document.location.hash.slice(1) : null;
   var navbar_content = [
     "<div id='favorites-btn'>",
-      "<a><img src='img/favorites_icon_" + (gallery == "favorites" ? "fill" : "blue") + ".png'></a>",
+      "<a><img id='favorites-icon' src='img/favorites_icon_" + (gallery == "favorites" ? "fill" : "blue") + ".png'></a>",
     "</div>",
-    "<div id='history-btn'>",
-      gallery ? "<a href='/history'>" : "<a>",
-        "<img id='history_icon' src='" + history_icons[(gallery == "history" ? "fill" : "blue")] + "'>",
-      "</a>",
-    "</div>",
+    "<div id='history-btn'><a>",
+      "<img id='history_icon' src='" + history_icons[(gallery == "history" ? "fill" : "blue")] + "'>",
+    "</a></div>",
     "<div class='navbar-center'>",
       "<label for='slider_box' onclick='toggleClass.apply(this,[\"slid\"]);toggleClass.apply(document.getElementById(\"slide_down_menu\"),[\"opened_menu\"]);'>",
-        gallery ? (gallery == "tag"
-          ? ("<span class='pointer'>#" + tag + "</span>")
-          : ("<img class='gallery_icon' src='img/" + gallery + "_icon_gray.png'><span class='pointer'>" + gallery.toUpperCase() + "</span>"))
-        : "<img id='tagsurf-logo' src='img/logo.png'></img>",
+        "<span id='main-logo'>",
+          gallery ? (gallery == "tag"
+            ? ("<span class='pointer'>#" + tag + "</span>")
+            : ("<img class='gallery_icon' src='img/" + gallery + "_icon_gray.png'><span id='gallery_name' class='pointer'>" + gallery.toUpperCase() + "</span>"))
+          : "<img id='tagsurf-logo' src='img/logo_big.png'></img>",
+        "</span><span id='history-logo'>HISTORY</span>",
         "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='img/down_arrow.png'></img>",
       "</label>",
     "</div>",
@@ -57,7 +57,7 @@ var populateNavbar = function () {
     "<input type='checkbox' name='slider_box' id='slider_box' style='display:none'>",
     "<div id='slide_down_menu' class='pointer'>",
       "<ul>",
-      	"<li><a href='/trending'><div>",
+      	"<li><a href='/feed'><div>",
       	  "<img class='menu_icon' src='img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
       	"</div></a></li>",
       	"<li><a href='/favorites'><div>",
@@ -79,18 +79,28 @@ var populateNavbar = function () {
   menu_slider.innerHTML = menu_slider_content.join('\n');
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
-  if (!gallery) {
-    var history_icon = document.getElementById("history_icon");
-    var hist_state = "blue";
-    document.getElementById("history-btn").onclick = function() {
-      hist_state = hist_state == "blue" ? "fill" : "blue";
-      history_icon.src = history_icons[hist_state];
-      slideGallery();
-    };
-  }
+
+  var main_logo = document.getElementById("main-logo");
+  var hist_logo = document.getElementById("history-logo");
+  var history_icon = document.getElementById("history_icon");
+  var slider_icon = document.getElementById("slider-icon");
+  var hist_state = "blue";
+  document.getElementById("history-btn").onclick = function() {
+    var isOn = hist_state == "blue";
+    hist_state = isOn ? "fill" : "blue";
+    history_icon.src = history_icons[hist_state];
+    main_logo.style.display = isOn ? "none" : "inline";
+    hist_logo.style.display = isOn ? "inline" : "none";
+    !gallery && toggleClass.call(slider_icon, "vtop");
+    slideGallery();
+  };
   document.getElementById("logout").onclick = function() {
     window.location = "/users/sign_out";
   };
+};
+var setFavIcon = function(filled) {
+  document.getElementById("favorites-icon").src =
+    "img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
 };
 var addCss = function(css) {
     var n = document.createElement("style");

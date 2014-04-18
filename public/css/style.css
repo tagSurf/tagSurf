@@ -8,6 +8,7 @@ body
 	padding: 0;
 	margin: 0;
 	background-color: #404041;
+	color: white;
 }
 
 html, input[type="submit"] {
@@ -25,6 +26,14 @@ a {
 
 .alert-success {
 	display: none;
+}
+
+.centered {
+	text-align: center;
+}
+
+.padded {
+	padding: 10px;
 }
 
 .blackout {
@@ -56,6 +65,7 @@ a {
 	background: #2f2f2f;
 	border-radius: 5px;
 	box-shadow: 3px 3px 5px 2px #161617;
+	overflow-y: scroll;
 	-webkit-transition: -webkit-transform 250ms ease-in-out;
 }
 

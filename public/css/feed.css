@@ -15,7 +15,6 @@ html, body
 {
   display: inline;
   background: #6a6a6a;
-  color: white;
   padding: 7px 5px 7px 17px;
   border: 0px;
   font-size: 16px;
@@ -33,7 +32,6 @@ html, body
 {
   float: left;
   display: inline;
-  color: white;
   margin:0;
   border: 0px;
   padding: 7px 5px 7px 3px;
@@ -67,6 +65,7 @@ html, body
   width: 200px;
   height: 0px;
   border-radius: 8px;
+  color: black;
   background: white;
   text-align: left;
   overflow-y: scroll;
@@ -117,7 +116,6 @@ html, body
 {
   margin: 2.5%;
   text-align: center;
-  color: white;
   font-size: 14px;
 }
 

@@ -1,7 +1,7 @@
 onload = function ()
 {
 	populateNavbar();
-	gallerize();
+	gallerize("history");
 
 	var data, current_tag = "funny";
 	var populateSlider = function (update)
@@ -33,8 +33,9 @@ onload = function ()
 			var n = document.createElement("div");
 			n.innerHTML = tag.name;
 			n.className = "tagline";
-			for (var i = 1; i <= tag.name.length; i++)
-				n.className += " " + tag.name.slice(0, i);
+			var tlower = tag.name.toLowerCase();
+			for (var i = 1; i <= tlower.length; i++)
+				n.className += " " + tlower.slice(0, i);
 			aclist.appendChild(n);
 			n.onclick = function() {
 				viewTag(tag.name);
@@ -60,7 +61,7 @@ onload = function ()
 				hide: true
 			});
 			mod({
-				className: tinput.value,
+				className: tinput.value.toLowerCase(),
 				show: true
 			});
 		} else mod({
@@ -306,9 +307,10 @@ onload = function ()
 		scrollState.verticaling = false;
 		slideState.sliding = false;
 	};
-	var swipeSlider = function (direction)
+	var swipeSlider = function (direction, voteAlternative)
 	{
 		animationInProgress = true;
+		var activeCard = data[cardIndex-2];
 		var translateQuantity = 600, rotateQuantity = 60;
 		var isUp = direction == "right";
 		if (!isUp)
@@ -325,9 +327,18 @@ onload = function ()
 			updateCompressionStatus();
 			resetSlideState(); 
 			revertScroller(0);
-			xhr("/api/votes/" + (isUp ? "up/" : "down/") + data[cardIndex-2].id,
-				null, "POST");
-		},false);
+			if (voteAlternative) voteAlternative();
+			else xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id, null, "POST");
+		}, false);
+		addHistoryItem(activeCard);
+	};
+	window.onkeyup = function(e) {
+		e = e || window.event;
+		var code = e.keyCode || e.which;
+		if (code == 37)
+			swipeSlider("left");
+		else if (code == 39)
+			swipeSlider("right");
 	};
 	var swipeCallback = function (direction, distance, dx, dy)
 	{
@@ -476,9 +487,13 @@ onload = function ()
 			slider.children[2].style.visibility = "hidden";
 		}
 	};
-	document.getElementById("favorites-btn").onclick = function() {
-		xhr("/api/favorites/" + data[cardIndex-2].id, null, "POST");
-		swipeSlider("right");
-	};
+	setStarCallback(function() {
+		setFavIcon(true);
+		xhr("/api/favorites/" + data[cardIndex-2].id, function() {
+			swipeSlider("right", function () {
+				setFavIcon(false);
+			});
+		}, "POST");
+	});
 	populateSlider();
 };
