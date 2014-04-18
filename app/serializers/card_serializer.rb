@@ -8,7 +8,6 @@ class CardSerializer < ActiveModel::Serializer
     :image_link_original,
     :title, 
     :description,
-    :tagged_as,
     :tags,
     :user_stats,
     :total_votes,
@@ -17,10 +16,6 @@ class CardSerializer < ActiveModel::Serializer
     :score,
     :trend
   )
-
-  def tagged_as
-    [object.section]
-  end
 
   def tags
     [object.section]
