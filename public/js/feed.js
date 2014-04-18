@@ -329,7 +329,7 @@ onload = function ()
 		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
 		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px,0,0) rotate(" + rotateQuantity + "deg)";
 		slider.addEventListener( 'webkitTransitionEnd', function (event) {
-			destroyCardGestures(slider.parentNode);
+			gesture.unlisten(slider.parentNode);
 			slideContainer.removeChild(slider.parentNode);
 			animationInProgress = false;
 			slideContainer.children[1].style["visibility"] = "visible";
@@ -497,13 +497,6 @@ onload = function ()
 		gesture.listen("tap", this, tapCallback);
 		gesture.listen("drag", this, dragCallback);
 	};
-	var destroyCardGestures = function ()
-	{
-		gesture.unlisten("swipe", this, swipeCallback);
-		gesture.unlisten("up", this, upCallback);
-		gesture.unlisten("tap", this, tapCallback);
-		gesture.unlisten("drag", this, dragCallback);
-	}
 	var expandCard = function ()
 	{
 		if (cardCompression)
