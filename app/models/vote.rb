@@ -5,7 +5,8 @@ class Vote < ActiveRecord::Base
   belongs_to :card, :foreign_key => :votable_id
   has_one :tag
 
-  after_commit :relate_tag, on: :create
+  after_commit :relate_tag,        on: :create
+  after_commit :update_card_score, on: :create
 
   def self.paginated_history(user_id, limit, offset) 
     Card.joins(:votes).where("votes.voter_id = #{user_id}").order('votes.id desc').limit(limit).offset(offset)
@@ -46,6 +47,16 @@ class Vote < ActiveRecord::Base
   def relate_tag
     tag = Tag.where(name: self.cached_tag_name).first
     self.update_column("tag_id", tag.id)
+  end
+
+  def update_card_score
+    vote = self
+    card = Card.find(vote.votable_id)
+    if vote.vote_flag 
+      puts "update cached_score"
+    else
+      puts "descrese cached_score"
+    end
   end
     
 end
