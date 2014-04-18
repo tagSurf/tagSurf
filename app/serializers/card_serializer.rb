@@ -9,14 +9,20 @@ class CardSerializer < ActiveModel::Serializer
     :title, 
     :description,
     :tagged_as,
-    :user_vote,
+    :tags
+    :user_stats,
     :total_votes,
     :down_votes,
     :up_votes,
-    :remote_score
+    :score,
+    :trend
   )
 
   def tagged_as
+    [object.section]
+  end
+
+  def tags
     [object.section]
   end
 
@@ -28,20 +34,36 @@ class CardSerializer < ActiveModel::Serializer
     end
   end
 
-  def user_vote
-    
+  def user_stats
+    {
+      voted: true,
+      vote: 'up',
+      last_tag_voted: 'sometag'
+    }
+  end
+
+  def votes
+    @votes = Votes.where(votable_type: 'Card', votable_id: object.id) 
   end
 
   def total_votes
-    #object.votes.size
+    object.remote_score.to_s + votes.length.to_s
   end
 
   def down_votes
-    #object.upvotes.size
+    object.remote_down_votes.to_s + votes.where(vote_flag: false).count.to_s
   end
 
   def up_votes
-    #object.downvotes.size
+    object.remote_up_votes.to_s + votes.where(vote_flag: false).count.to_s
+  end
+
+  def score
+    object.remote_score
+  end
+
+  def trend
+    [*1..10].sample.odd? ? 'up' : 'down'
   end
 
 end
