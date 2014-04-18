@@ -218,6 +218,7 @@ onload = function ()
 			zoomState.zoomed = true;
 			document.body.appendChild(zNode);
 			gesture.listen("tap", zNode, largeZoom);
+			gesture.listen("swipe", zNode, doubleTap);
 			zNode.style['-webkit-transition'] = "";
 			zNode.classList.remove('hider');
 		}
