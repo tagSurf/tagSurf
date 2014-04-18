@@ -1,19 +1,28 @@
 #nav
 {
   height: 50px;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+  background-color: white;
 }
 #navbar
 {
-  position: fixed;
-  width: 100%;
-  height: 50px;
   background-color: white;
+  position: absolute;
+  height: 50px;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
   box-shadow: 0 0 5px 2px rgba(0,0,0,0.5);
   z-index: 100;
 }
 #menu_slider
 {
   position: absolute;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
   z-index: 90;
 }
 
@@ -91,6 +100,7 @@
   width: 100%;
   position: fixed;
   top: -330px;
+  left: 0px;
 }
 
 .vtop
@@ -106,17 +116,22 @@
 
 .opened_menu
 {
-  top: 30px !important;
+  top: 50px !important;
 }
 
 #slide_down_menu ul
 {
-  padding: 0;
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
   list-style: none;
   list-style-type: none;
 }
 #slide_down_menu li
 {
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
   padding-top: 10px;
   padding-bottom: 10px;
   background-color: white;
