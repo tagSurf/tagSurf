@@ -30,7 +30,8 @@ module Tagsurf
    #   end
    # end
 
-    CONFIG[:redis_active] = true
+   redis_active = Rails.env.development? ? false : true
+   CONFIG[:redis_active] = redis_active  
 
   end
 end
