@@ -99,6 +99,56 @@ html, body
   box-shadow: 2px 3px 5px -1px rgba(0,0,0,0.7);
 }
 
+.super_card
+{
+
+  animation: white_background_flash 0.5s 2;
+  -webkit-animation: white_background_flash 0.5s 2;
+  animation-direction: alternate;
+  -webkit-animation-direction: alternate;
+}
+
+.super_card .super_label
+{
+  display: block;
+  animation: fade-in 0.5s;
+  -webkit-animation: fade-in 0.5s;
+}
+.super_label
+{
+  position: absolute;
+  top: 50px;
+  width: 100%;
+  display: none;
+  z-index: 2;
+  font-family: Raleway, sans-serif;
+  font-size: 42px;
+  text-align: center;
+  background: rgba(255,255,255,.8);
+  color: black;
+}
+
+@-webkit-keyframes fade-in
+{
+  from	{opacity: 0}
+  to	{opacity: 1.0;}
+}
+@keyframes white_background_flash
+{
+  from	{opacity: 0}
+  to	{opacity: 1.0;}
+}
+@-webkit-keyframes white_background_flash
+{
+  from	{background: #353535;}
+  to	{background: white;}
+}
+@keyframes white_background_flash
+{
+  from	{background: #353535;}
+  to	{background: white;}
+}
+
 .image-container
 {
   overflow-y: hidden;
