@@ -18,10 +18,6 @@ class CardSerializer < ActiveModel::Serializer
     :trend
   )
 
-  def tagged_as
-    [object.section]
-  end
-
   def tags
     [object.section]
   end
