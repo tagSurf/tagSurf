@@ -18,6 +18,7 @@ gem 'browser', '0.4.1'
 gem 'sidekiq'
 gem 'sinatra', '>= 1.3.0', :require => nil
 gem 'sidetiq'
+gem "sentry-raven", :git => "https://github.com/getsentry/raven-ruby.git"
 
 gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
