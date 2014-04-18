@@ -52,11 +52,12 @@ class Vote < ActiveRecord::Base
   def update_card_score
     vote = self
     card = Card.find(vote.votable_id)
-    if vote.vote_flag 
-      puts "update cached_score"
+    if card && vote.vote_flag 
+      card.update_column("ts_score", card.ts_score + 1)
     else
-      puts "descrese cached_score"
+      # "Do nothing"
     end
+    card.update_column("last_touched", Time.now)
   end
     
 end
