@@ -9,7 +9,7 @@ class CardSerializer < ActiveModel::Serializer
     :title, 
     :description,
     :tagged_as,
-    :tags
+    :tags,
     :user_stats,
     :total_votes,
     :down_votes,
@@ -35,15 +35,16 @@ class CardSerializer < ActiveModel::Serializer
   end
 
   def user_stats
-    {
+    h = {
       voted: true,
       vote: 'up',
       last_tag_voted: 'sometag'
     }
+    h
   end
 
   def votes
-    @votes = Votes.where(votable_type: 'Card', votable_id: object.id) 
+    @votes = Vote.where(votable_type: 'Card', votable_id: object.id) 
   end
 
   def total_votes
