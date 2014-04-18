@@ -45,7 +45,7 @@ class Card < ActiveRecord::Base
       has_voted = user.votes.pluck(:votable_id) 
       cards = Card.where('cards.id not in (?) and cards.section ilike ?', has_voted, tag).limit(n).order('remote_score DESC NULLS LAST')
       if cards.length < 10
-        TaggedMediaPopulation.perform_async(tag)
+        RequestTaggedMedia.perform_async(tag)
       end
       cards
     end
