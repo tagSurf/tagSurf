@@ -112,6 +112,8 @@
 #slide_down_menu ul
 {
   padding: 0;
+  list-style: none;
+  list-style-type: none;
 }
 #slide_down_menu li
 {
