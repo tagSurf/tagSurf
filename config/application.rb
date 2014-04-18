@@ -30,7 +30,6 @@ module Tagsurf
       end
     end
 
-
     CONFIG[:redis_active] = redis_available
 
   end
