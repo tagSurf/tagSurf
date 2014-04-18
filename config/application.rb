@@ -4,6 +4,8 @@ require 'rails/all'
 
 Bundler.require(:default, Rails.env)
 
+CONFIG = {}
+
 module Tagsurf
 
   class Application < Rails::Application
@@ -17,5 +19,19 @@ module Tagsurf
         Devise::UnlocksController.layout "client"            
         Devise::PasswordsController.layout "client"        
     end
+
+    redis_available = true
+
+    Sidekiq.redis do |connection|
+      begin
+        connection.info
+      rescue Redis::CannotConnectError
+        redis_available = false
+      end
+    end
+
+
+    CONFIG[:redis_active] = redis_available
+
   end
 end
