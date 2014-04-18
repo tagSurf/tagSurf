@@ -81,7 +81,7 @@ class Card < ActiveRecord::Base
       card = Card.create({
         remote_id: obj['id'],
         remote_provider: 'imgur',
-        remote_created_at: Time.at(obj['datatime'].to_i) || Time.now,
+        remote_created_at: obj['datatime'],
         image_link_original: obj['link'],
         viral: false,
         title: obj['title'],
@@ -111,7 +111,7 @@ class Card < ActiveRecord::Base
         Card.create({
           remote_id: obj['id'],
           remote_provider: 'imgur',
-          remote_created_at: Time.at(obj['datatime'].to_i) || Time.now,
+          remote_created_at: obj['datatime'],
           image_link_original: obj['link'],
           viral: true,
           title: obj['title'],
