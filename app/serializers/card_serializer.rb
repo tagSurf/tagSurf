@@ -8,7 +8,6 @@ class CardSerializer < ActiveModel::Serializer
     :image_link_original,
     :title, 
     :description,
-    :tagged_as,
     :tags,
     :user_stats,
     :total_votes,
