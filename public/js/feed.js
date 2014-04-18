@@ -80,6 +80,7 @@ onload = function ()
 	addCss(".expand-animation { max-height: "
 		+ maxCardHeight + "px; } .card-container { min-height: "
 		+ (maxCardHeight + 65) + "px; }");
+	addCss(".basic-zoom { z-index: 2; position: absolute; top: 100px;");
 	var scrollContainer = document.getElementById('scroll-container');
 	var slideContainer = document.getElementById('slider');
 	var formattingContainer = document.getElementById('formatter');
@@ -92,6 +93,7 @@ onload = function ()
 	var zoomState =
 	{
 		zoomed: false,
+		large: false,
 		zoomNode: null,
 		xCurrent: 0,
 		yCurrent: 0
@@ -137,7 +139,7 @@ onload = function ()
 	{
 		var zNode = zoomState.zoomNode,
 			topBound = 0, bottomBound = 100 + zNode.clientHeight - window.innerHeight,
-			horizontalBound = (zNode.clientWidth - window.innerWidth - 80), 
+			horizontalBound = ((zNode.clientWidth - window.innerWidth) / 2), 
 			xRevert = zoomState.xCurrent, yRevert = zoomState.yCurrent;
 		if (zoomState.yCurrent > topBound)
 		{
@@ -206,34 +208,71 @@ onload = function ()
 		var zNode, scaledWidth;
 		if (zoomState.zoomed == false)
 		{
-			zNode = slider.cloneNode(true);
-			scaledWidth = window.innerWidth * zoomScale;
-			zNode.classList.add('hider');
-			zNode.style.width = scaledWidth + "px";
-			zNode.style.left = -(window.innerWidth * (zoomScale - 1) / 2) + "px";
+			blackback.className = "blackout blackfade";
+			zNode = slider.firstChild.firstChild.cloneNode(true);
+			scaledWidth = window.innerWidth;
+			zNode.className = 'hider basic-zoom';
+			zNode.style.left = "0px";
+			zNode.style.width = window.innerWidth + "px";
 			zoomState.zoomNode = zNode;
 			zoomState.zoomed = true;
-			zoomState.xCurrent = 0;
-			zoomState.yCurrent = 0;
 			document.body.appendChild(zNode);
-			gesture.listen("tap", zNode, function (tapCount) {
-				if (tapCount == 2)
-				{
-					doubleTap();
-				}
-			});
-			gesture.listen("swipe", zNode, zoomSwipeCallback);
-			gesture.listen("drag", zNode, zoomDragCallback);
-			gesture.listen("up", zNode, zoomUpCallback);
+			gesture.listen("tap", zNode, largeZoom);
 			zNode.style['-webkit-transition'] = "";
 			zNode.classList.remove('hider');
 		}
 		else
 		{
 			zoomState.zoomed = false;
+			blackback.className = "blackout";
 			zNode = zoomState.zoomNode;
 			document.body.removeChild(zNode);
 			zoomState.zoomNode = null;
+		}
+	};
+	var largeZoom = function (tapCount)
+	{
+		if (tapCount == 2)
+		{
+			zoomTap();
+		}
+	};
+	var zoomTap = function ()
+	{
+		var zNode = zoomState.zoomNode, 
+			zoomWidth = zoomScale * zNode.clientWidth,
+			zoomLeft = -((zoomWidth - window.innerWidth) / 2);
+		var zoomUpEnd = function (event)
+		{
+			zNode.style['-webkit-transition'] = "";
+			zNode.removeEventListener("webkitTransitionEnd", zoomUpEnd, false);
+		};
+		zNode.addEventListener("webkitTransitionEnd", zoomUpEnd, false);
+		zNode.style['-webkit-transition'] = "width 250ms ease-in, left 250ms ease-in, -webkit-transform 250ms ease-in";
+		if (zoomState.large == false)
+		{
+			zoomState.large = true;
+			zNode.style.width = zoomWidth + "px";
+			zNode.style.left = zoomLeft + "px";
+			zoomState.xCurrent = 0;
+			zoomState.yCurrent = 0;
+			gesture.unlisten(zNode);
+			gesture.listen("swipe", zNode, zoomSwipeCallback);
+			gesture.listen("drag", zNode, zoomDragCallback);
+			gesture.listen("up", zNode, zoomUpCallback);
+			gesture.listen("tap", zNode, largeZoom);
+		}
+		else
+		{
+			zoomState.large = false;
+			zoomWidth = window.innerWidth + "px";
+			zoomLeft = "0px";
+			zNode.style.width = zoomWidth;
+			zNode.style.left = zoomLeft;
+			zNode.style['-webkit-transform'] = "";
+			gesture.unlisten(zNode);
+			gesture.listen("tap", zNode, largeZoom);
+			gesture.listen("swipe", zNode, doubleTap);
 		}
 	};
 	var revertSlider = function ()
