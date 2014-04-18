@@ -9,6 +9,10 @@ var gesture = {
 			maxDistance: 50,
 			maxTime: 700,
 			waitTime: 300
+		},
+		hold: {
+			maxDistance: 50,
+			interval: 1000
 		}
 	},
 	vars: {
@@ -17,9 +21,11 @@ var gesture = {
 		startPos: null,
 		lastPos: null,
 		tapCount: 0,
-		tapTimeout: null
+		holdCount: 0,
+		tapTimeout: null,
+		holdInterval: null
 	},
-	handlers: { drag: {}, swipe: {}, tap: {}, up: {}, down: {} },
+	handlers: { drag: {}, swipe: {}, tap: {}, up: {}, down: {}, hold: {} },
 	getPos: function(e) {
 		var p = {};
 		if (event.type.slice(0, 5) == "touch") {
@@ -43,6 +49,7 @@ var gesture = {
 		return d;
 	},
 	onStart: function(e, node) {
+		var t = gesture.thresholds;
 		var v = gesture.vars;
 		v.active = true;
 		v.startTime = Date.now();
@@ -51,6 +58,16 @@ var gesture = {
 			clearTimeout(v.tapTimeout);
 			v.tapTimeout = null;
 		}
+		v.holdCount = 0;
+		v.holdInterval = setInterval(function() {
+			if (gesture.getDiff(v.startPos, v.lastPos).distance > t.hold.maxDistance) {
+				clearInterval(v.holdInterval);
+				v.holdInterval = null;
+				return;
+			}
+			v.holdCount += 1;
+			gesture.triggerHold(node, t.hold.interval * v.holdCount);
+		}, t.hold.interval);
 		return gesture.triggerDown(node);
 	},
 	onStop: function(e, node) {
@@ -58,19 +75,24 @@ var gesture = {
 		var t = gesture.thresholds;
 		var pos = gesture.getPos(e);
 		var diff = gesture.getDiff(v.startPos, pos);
-		var now = Date.now();
+		var timeDiff = Date.now() - v.startTime;
 		v.active = false;
 
 		var returnVal = gesture.triggerUp(node);
-		if ( (now - v.startTime < t.swipe.maxTime)
+		if ( (timeDiff < t.swipe.maxTime)
 			&& (diff.distance > t.swipe.minDistance) ) // swipe
 			gesture.triggerSwipe(node, diff.direction, diff.distance, diff.x, diff.y);
-		else if ( (now - v.startTime < t.tap.maxTime)
+		else if ( (timeDiff < t.tap.maxTime)
 			&& (diff.distance < t.tap.maxDistance) ) { // tap
 			v.tapCount += 1;
 			v.tapTimeout = setTimeout(function() {
 				gesture.triggerTap(node);
 			}, t.tap.waitTime);
+		}
+
+		if (v.holdInterval) {
+			clearInterval(v.holdInterval);
+			v.holdInterval = null;
 		}
 		return returnVal;
 	},
@@ -141,6 +163,11 @@ var gesture = {
 		if (handlers) for (var i = 0; i < handlers.length; i++)
 			returnVal = handlers[i](direction, distance, dx, dy) || returnVal;
 		return returnVal;
+	},
+	triggerHold: function(node, duration) {
+		var handlers = gesture.handlers.hold[node.gid];
+		if (handlers) for (var i = 0; i < handlers.length; i++)
+			handlers[i](duration);
 	},
 	triggerUp: function(node) {
 		var returnVal = false;
