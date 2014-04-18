@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140411233810) do
+ActiveRecord::Schema.define(version: 20140418061707) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,8 @@ ActiveRecord::Schema.define(version: 20140411233810) do
     t.integer  "remote_up_votes"
     t.integer  "remote_down_votes"
     t.integer  "remote_score"
+    t.integer  "ts_score",             default: 0,     null: false
+    t.datetime "last_touched"
   end
 
   add_index "cards", ["remote_id"], name: "index_cards_on_remote_id", unique: true, using: :btree
@@ -69,7 +71,8 @@ ActiveRecord::Schema.define(version: 20140411233810) do
   add_index "taggings", ["tag_id", "taggable_id", "taggable_type", "context", "tagger_id", "tagger_type"], name: "taggings_idx", unique: true, using: :btree
 
   create_table "tags", force: true do |t|
-    t.string "name"
+    t.string  "name"
+    t.boolean "fetch_more_content", default: true, null: false
   end
 
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
@@ -113,8 +116,12 @@ ActiveRecord::Schema.define(version: 20140411233810) do
     t.integer  "vote_weight"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "tag_id"
+    t.string   "cached_tag_name"
   end
 
+  add_index "votes", ["cached_tag_name"], name: "index_votes_on_cached_tag_name", using: :btree
+  add_index "votes", ["tag_id"], name: "index_votes_on_tag_id", using: :btree
   add_index "votes", ["votable_id", "votable_type", "vote_scope"], name: "index_votes_on_votable_id_and_votable_type_and_vote_scope", using: :btree
   add_index "votes", ["voter_id", "votable_id", "votable_type"], name: "index_votes_on_voter_id_and_votable_id_and_votable_type", unique: true, using: :btree
   add_index "votes", ["voter_id", "voter_type", "vote_scope"], name: "index_votes_on_voter_id_and_voter_type_and_vote_scope", using: :btree

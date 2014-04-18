@@ -392,7 +392,8 @@ onload = function ()
 			resetSlideState(); 
 			revertScroller(0);
 			if (voteAlternative) voteAlternative();
-			else xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id, null, "POST");
+			else xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id
+				+ "/tag/" + current_tag, null, "POST");
 		}, false);
 		addHistoryItem(activeCard);
 	};

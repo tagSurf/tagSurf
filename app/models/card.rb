@@ -39,13 +39,13 @@ class Card < ActiveRecord::Base
       Card.last(n)
     elsif tag == 'trending'
       has_voted = user.votes.pluck(:votable_id) 
-      cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('remote_score DESC NULLS LAST')
+      cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
       cards
     else
       has_voted = user.votes.pluck(:votable_id) 
-      cards = Card.where('cards.id not in (?) and cards.section ilike ?', has_voted, tag).limit(n).order('remote_score DESC NULLS LAST')
+      cards = Card.where('cards.id not in (?) and cards.section ilike ?', has_voted, tag).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
       if cards.length < 10
-        TaggedMediaPopulation.perform_async(tag)
+        RequestTaggedMedia.perform_async(tag)
       end
       cards
     end
@@ -81,7 +81,7 @@ class Card < ActiveRecord::Base
       card = Card.create({
         remote_id: obj['id'],
         remote_provider: 'imgur',
-        remote_created_at: Time.at(obj['datatime'].to_i) || Time.now,
+        remote_created_at: obj['datatime'],
         image_link_original: obj['link'],
         viral: false,
         title: obj['title'],
@@ -111,7 +111,7 @@ class Card < ActiveRecord::Base
         Card.create({
           remote_id: obj['id'],
           remote_provider: 'imgur',
-          remote_created_at: Time.at(obj['datatime'].to_i) || Time.now,
+          remote_created_at: obj['datatime'],
           image_link_original: obj['link'],
           viral: true,
           title: obj['title'],
@@ -125,7 +125,7 @@ class Card < ActiveRecord::Base
           remote_score: obj['score'],
           remote_up_votes: obj['ups'],
           remote_down_votes: obj['downs'],
-          section: obj['section'],
+          section: obj['section'] || "imgurhot",
           delete_hash: obj['deletehash']
         })
       end

@@ -5,7 +5,7 @@ class Api::TagsController < Api::BaseController
     Tag.all.each do |tag|
       tags << tag.name
     end
-    tags << "hot"
+    tags << "trending"
     render json: tags
   end
 
