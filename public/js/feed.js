@@ -45,16 +45,18 @@ onload = function ()
 	};
 	xhr("/api/tags", null, function(response_data) {
 		response_data.data.forEach(function(tag) {
-			var n = document.createElement("div");
-			n.innerHTML = tag.name;
-			n.className = "tagline";
-			var tlower = tag.name.toLowerCase();
-			for (var i = 1; i <= tlower.length; i++)
-				n.className += " " + tlower.slice(0, i);
-			aclist.appendChild(n);
-			n.onclick = function() {
-				viewTag(tag.name);
-			};
+			if (tag.name) {
+				var n = document.createElement("div");
+				n.innerHTML = tag.name;
+				n.className = "tagline";
+				var tlower = tag.name.toLowerCase();
+				for (var i = 1; i <= tlower.length; i++)
+					n.className += " " + tlower.slice(0, i);
+				aclist.appendChild(n);
+				n.onclick = function() {
+					viewTag(tag.name);
+				};
+			}
 		});
 	});
 	tinput.onclick = function() {
