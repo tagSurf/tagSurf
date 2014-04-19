@@ -1,5 +1,6 @@
 * {
 	box-sizing: border-box;
+	-webkit-overflow-scrolling: touch;
 }
 
 html,
@@ -55,6 +56,7 @@ a {
 }
 
 .modal {
+	overflow-y: auto;
 	z-index: 10;
 	position: fixed;
 	padding: 5px;

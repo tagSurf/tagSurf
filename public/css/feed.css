@@ -69,7 +69,6 @@ html, body
   background: white;
   text-align: left;
   overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
   -webkit-transition: height 300ms ease-out;
 }
 #autocomplete div
