@@ -362,13 +362,15 @@ onload = function ()
 		scrollState.verticaling = false;
 		slideState.sliding = false;
 	};
-	var swipeSlider = function (direction, voteAlternative)
+	var swipeSlider = function (direction, voteAlternative, timeDifference)
 	{
 		animationInProgress = true;
 		var activeCard = data[cardIndex-3];
 		var translateQuantity = 600, rotateQuantity = 60,
 			verticalQuantity = 0;
 		var isUp = direction == "right";
+		var transitionLength = timeDifference || 250;
+		transitionLength += "ms";
 		if (superState == true)
 		{
 			verticalQuantity = 500;
@@ -379,7 +381,7 @@ onload = function ()
 			rotateQuantity = -rotateQuantity;
 			verticalQuantity = -verticalQuantity;
 		}
-		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
+		slider.style['-webkit-transition'] = "-webkit-transform " + transitionLength + "  ease-in";
 		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px," + verticalQuantity + "px,0) rotate(" + rotateQuantity + "deg)";
 		slider.addEventListener( 'webkitTransitionEnd', function (event) {
 			gesture.unlisten(slider.parentNode);
@@ -405,7 +407,7 @@ onload = function ()
 		else if (code == 39)
 			swipeSlider("right");
 	};
-	var swipeCallback = function (direction, distance, dx, dy)
+	var swipeCallback = function (direction, distance, dx, dy, timeDifference)
 	{
 		if (animationInProgress)
 			return;
@@ -427,11 +429,11 @@ onload = function ()
 		}
 		else if (direction == "left")
 		{
-			swipeSlider("left");
+			swipeSlider("left", null, timeDifference);
 		}
 		else if (direction == "right")
 		{
-			swipeSlider("right");
+			swipeSlider("right", null, timeDifference);
 		}
 	};
 	var dragCallback = function (direction, distance, dx, dy)

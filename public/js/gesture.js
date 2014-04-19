@@ -81,7 +81,7 @@ var gesture = {
 		var returnVal = gesture.triggerUp(node);
 		if ( (timeDiff < t.swipe.maxTime)
 			&& (diff.distance > t.swipe.minDistance) ) // swipe
-			gesture.triggerSwipe(node, diff.direction, diff.distance, diff.x, diff.y);
+			gesture.triggerSwipe(node, diff.direction, diff.distance, diff.x, diff.y, timeDiff);
 		else if ( (timeDiff < t.tap.maxTime)
 			&& (diff.distance < t.tap.maxDistance) ) { // tap
 			v.tapCount += 1;
@@ -145,10 +145,10 @@ var gesture = {
 			delete node.gid;
 		}
 	},
-	triggerSwipe: function(node, direction, distance, dx, dy) {
+	triggerSwipe: function(node, direction, distance, dx, dy, timeDifference) {
 		var handlers = gesture.handlers.swipe[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
-			handlers[i](direction, distance, dx, dy);
+			handlers[i](direction, distance, dx, dy, timeDifference);
 	},
 	triggerTap: function(node) {
 		var handlers = gesture.handlers.tap[node.gid];
