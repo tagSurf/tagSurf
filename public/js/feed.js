@@ -3,7 +3,7 @@ onload = function ()
 	populateNavbar();
 	gallerize("history");
 
-	var data, current_tag = "funny";
+	var data, current_tag = "aww";
 	var buffer_minimum = 3;
 	var populateSlider = function (update)
 	{
