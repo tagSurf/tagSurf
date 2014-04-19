@@ -26,6 +26,8 @@ onload = function ()
 		}, function() {
 			if (!update) {
 				data = [];
+				cardIndex = 0;
+				slideContainer.innerHTML = "";
 				buildCard();
 			}
 		});
