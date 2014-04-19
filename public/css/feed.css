@@ -98,6 +98,13 @@ html, body
   box-shadow: 2px 3px 5px -1px rgba(0,0,0,0.7);
 }
 
+.center-label
+{
+  text-align: center;
+  white-space: nowrap;
+  padding-top: 40%;
+}
+
 .super_card
 {
 

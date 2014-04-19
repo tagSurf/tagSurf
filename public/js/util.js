@@ -111,12 +111,17 @@ var addCss = function(css) {
         n.appendChild(document.createTextNode(css));
     document.getElementsByTagName("head")[0].appendChild(n);
 };
-var xhr = function(path, cb, action) {
+var xhr = function(path, action, cb, eb) {
   var _xhr = new XMLHttpRequest();
   _xhr.open(action || "GET", path, true);
   _xhr.onreadystatechange = function() {
-    if (_xhr.readyState == 4 && _xhr.status == 200)
-      cb && cb(eval("("+_xhr.responseText+")"));
+    if (_xhr.readyState == 4) {
+      var resp = eval("("+_xhr.responseText+")");
+      if (_xhr.status == 200)
+        cb && cb(resp);
+      else
+        eb && eb(resp);
+    }
   }
   _xhr.send();
 };

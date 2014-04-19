@@ -3,11 +3,11 @@ onload = function ()
 	populateNavbar();
 	gallerize("history");
 
-	var data, current_tag = "aww";
+	var data, current_tag = "hot";
 	var buffer_minimum = 3;
 	var populateSlider = function (update)
 	{
-		xhr("/api/media/" + current_tag, function(response_data) {
+		xhr("/api/media/" + current_tag, null, function(response_data) {
 			var rdata = response_data.data.sort(function(a,b)
 				{ return a.id > b.id; });
 			if (update) {
@@ -23,6 +23,11 @@ onload = function ()
 				data = rdata;
 				buildCard(2);
 			}
+		}, function() {
+			if (!update) {
+				data = [];
+				buildCard();
+			}
 		});
 	};
 
@@ -36,7 +41,7 @@ onload = function ()
 		current_tag = tinput.value = tagName;
 		populateSlider();
 	};
-	xhr("/api/tags", function(response_data) {
+	xhr("/api/tags", null, function(response_data) {
 		response_data.data.forEach(function(tag) {
 			var n = document.createElement("div");
 			n.innerHTML = tag.name;
@@ -386,16 +391,18 @@ onload = function ()
 			gesture.unlisten(slider.parentNode);
 			slideContainer.removeChild(slider.parentNode);
 			animationInProgress = false;
-			slideContainer.children[1].style["visibility"] = "visible";
 			updateCompressionStatus();
 			buildCard(0);
 			slideContainer.children[0].style.zIndex = 2;
-			slideContainer.children[1].style.zIndex = 1;
+			if (slideContainer.children[1]) {
+				slideContainer.children[1].style.zIndex = 1;
+				slideContainer.children[1].style["visibility"] = "visible";
+			}
 			resetSlideState();
 			revertScroller(0);
 			if (voteAlternative) voteAlternative();
 			else xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id
-				+ "/tag/" + current_tag, null, "POST");
+				+ "/tag/" + current_tag, "POST");
 		}, false);
 		addHistoryItem(activeCard);
 	};
@@ -504,6 +511,17 @@ onload = function ()
 	}
 	var buildCard = function (zIndex)
 	{
+		if (data.length <= cardIndex) {
+			cardIndex = Math.max(cardIndex + 1, 3);
+			var c_wrapper = document.createElement("div");
+			c_wrapper.className = "card-wrapper";
+			var c_container = document.createElement("div");
+			c_container.className = "card-container center-label";
+			c_container.innerHTML = "No more cards in " + current_tag + " feed!";
+			c_wrapper.appendChild(c_container);
+			slideContainer.appendChild(c_wrapper);
+			return console.log("all out!");
+		}
 		var imageContainer, textContainer, fullscreenButton, truncatedTitle, card;
 		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + data[cardIndex].image_link_original + "'></div><div class='text-container'><p>" + data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
@@ -562,11 +580,11 @@ onload = function ()
 	};
 	setStarCallback(function() {
 		setFavIcon(true);
-		xhr("/api/favorites/" + data[cardIndex-3].id, function() {
+		xhr("/api/favorites/" + data[cardIndex-3].id, "POST", function() {
 			swipeSlider("right", function () {
 				setFavIcon(false);
 			});
-		}, "POST");
+		});
 	});
 	populateSlider();
 };

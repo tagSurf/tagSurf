@@ -156,7 +156,7 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 		if (populating)
 			return;
 		populating = true;
-		xhr(getPath(), function(response_data) {
+		xhr(getPath(), null, function(response_data) {
 			response_data.data.forEach(function(d) {
 				var diff = now - new Date(d.date);
 				if (diff < day)
@@ -187,14 +187,14 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 			if (gallery == "history") {
 				if (!current_image.is_favorite) {
 					current_image.is_favorite = true;
-					xhr("/api/favorites/" + current_image.id, null, "POST");
+					xhr("/api/favorites/" + current_image.id, "POST");
 				} else {
 					current_image.is_favorite = false;
-					xhr("/api/favorites/" + current_image.id, null, "DELETE");
+					xhr("/api/favorites/" + current_image.id, "DELETE");
 				}
 				setFavIcon(current_image.is_favorite);
 			} else if (gallery == "favorites") {
-				xhr("/api/favorites/" + current_image.id, null, "DELETE");
+				xhr("/api/favorites/" + current_image.id, "DELETE");
 				grid.removeChild(current_image.node);
 				modal.onclick();
 			}
