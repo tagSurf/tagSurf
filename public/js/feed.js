@@ -522,7 +522,7 @@ onload = function ()
 			c_container.innerHTML = "No more cards in " + current_tag + " feed!";
 			c_wrapper.appendChild(c_container);
 			slideContainer.appendChild(c_wrapper);
-			return console.log("all out!");
+			return;
 		}
 		var imageContainer, textContainer, fullscreenButton, truncatedTitle, card;
 		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + data[cardIndex].image_link_original + "'></div><div class='text-container'><p>" + data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
