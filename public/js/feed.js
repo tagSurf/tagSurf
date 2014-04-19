@@ -94,9 +94,8 @@ onload = function ()
 	var formattingContainer = document.getElementById('formatter');
 	var navBarHeight = document.getElementById('navbar').clientHeight + 15;
 	var slider = slideContainer.children[0];
-	var cardCompression = true;
+	var cardCompression = [false, false, false];
 	animationInProgress = false;
-	var nextCardCompression = true;
 	var isExpanded = false;
 	var superState = false;
 	var zoomState =
@@ -388,10 +387,11 @@ onload = function ()
 			slideContainer.removeChild(slider.parentNode);
 			animationInProgress = false;
 			slideContainer.children[1].style["visibility"] = "visible";
-			buildCard(1, true); 
-			slideContainer.children[0].style.zIndex = 2;
 			updateCompressionStatus();
-			resetSlideState(); 
+			buildCard(0);
+			slideContainer.children[0].style.zIndex = 2;
+			slideContainer.children[1].style.zIndex = 1;
+			resetSlideState();
 			revertScroller(0);
 			if (voteAlternative) voteAlternative();
 			else xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id
@@ -499,13 +499,13 @@ onload = function ()
 	};
 	var updateCompressionStatus = function ()
 	{
-		cardCompression = nextCardCompression;
+		cardCompression.shift();
 		isExpanded = false;
 	}
-	var buildCard = function (stackIndex, invisTrue)
+	var buildCard = function (zIndex)
 	{
 		var imageContainer, textContainer, fullscreenButton, truncatedTitle, card;
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + stackIndex + ";'><div class='image-container expand-animation'><img src='" + data[cardIndex].image_link_original + "'></div><div class='text-container'><p>" + data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + data[cardIndex].image_link_original + "'></div><div class='text-container'><p>" + data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
@@ -517,31 +517,17 @@ onload = function ()
 			{
 				imageContainer.classList.remove("expand-animation");
 				fullscreenButton.className += ' hider';
-				if (stackIndex != 1)
-				{
-					cardCompression = false;
-				}
-				else
-				{
-					nextCardCompression = false;
-				}
+				cardCompression[2 - zIndex] = false;
 			}
 			else
 			{
 				truncatedTitle = data[cardIndex].title.trunc(30);
 				truncatedTitle = "<p>" + truncatedTitle + "</p>";
 				textContainer.innerHTML = truncatedTitle;
-				if (stackIndex != 1)
-				{
-					cardCompression = true;
-				}
-				else
-				{
-					nextCardCompression = true;
-				}
+				cardCompression[2 - zIndex] = true;
 			}
 			card = formatter.firstChild;
-			card.style["visibility"] = invisTrue ? "hidden" : "";
+			card.style["visibility"] = zIndex ? "" : "hidden";
 			slideContainer.appendChild(card);
 			slider = slideContainer.children[0].children[0];
 			initCardGestures.call(card);
@@ -551,14 +537,8 @@ onload = function ()
 			if (data.length == cardIndex + buffer_minimum)
 				populateSlider(true);
 
-			if (slideContainer.children.length < 2)
-			{
-				buildCard(1);
-			}
-			else if (slideContainer.children.length == 2)
-			{
-				buildCard(1,true);
-			}
+			if (zIndex)
+				buildCard(zIndex - 1);
 		};
 	};
 	var initCardGestures = function ()
@@ -571,9 +551,9 @@ onload = function ()
 	};
 	var expandCard = function ()
 	{
-		if (cardCompression)
+		if (cardCompression[0])
 		{
-			cardCompression = false;
+			cardCompression[0] = false;
 			isExpanded = true;
 			slider.children[0].className += " expanded";
 			slider.children[1].innerHTML = "<p>" + data[cardIndex-3].title + "</p>";
