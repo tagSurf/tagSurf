@@ -15,14 +15,16 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 		history_slider.id = "history_slider";
 		history_slider.className = "modal";
 		history_slider.appendChild(grid);
+		grid.className = "histgrid";
 		var blackback = document.createElement("div");
 		blackback.id = "blackback";
 		blackback.className = "blackout";
 		document.body.appendChild(blackback);
 		document.body.appendChild(history_slider);
 		addCss("#history_slider { -webkit-transform: translate3d(0, -"
-			+ (history_slider.offsetHeight + 100) + "px, 0); } .grid { height: "
-			+ (history_slider.offsetHeight - 10) + "px; }");
+			+ (history_slider.offsetHeight + 100) + "px, 0); } .histgrid { height: "
+			+ (history_slider.offsetHeight - 10) + "px; } .grid { height: "
+			+ (window.innerHeight - 50) + "px; }");
 		slideGallery = function() {
 			current_image && modal.onclick();
 			history_slider.style.opacity = "1";
@@ -144,12 +146,16 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 	// gallery feed builder
 	var chunk_size = 20;
 	var chunk_offset = 0;
+	var populating = false;
 	var getPath = function() {
 		if (gallery == "tag")
 			return "/api/media/" + location.hash.slice(1);
 		return "/api/" + gallery + "/paginated/" + chunk_size + "/" + chunk_offset;
 	};
 	var populateGallery = function() {
+		if (populating)
+			return;
+		populating = true;
 		xhr(getPath(), function(response_data) {
 			response_data.data.forEach(function(d) {
 				var diff = now - new Date(d.date);
@@ -163,6 +169,7 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 					addHeader("Earlier");
 				addImage(d);
 			});
+			populating = false;
 		});
 		chunk_offset += chunk_size;
 	};
@@ -170,8 +177,8 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 	populateGallery();
 	buildModal();
 
-	window.onscroll = function(e) {
-		if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight)
+	grid.onscroll = function(e) {
+		if ((grid.scrollTop + grid.scrollHeight) >= grid.offsetHeight)
 			populateGallery();
 	};
 
