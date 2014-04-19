@@ -1,4 +1,4 @@
-var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
+var current_image, starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 	addCss(".modal { -webkit-transform: translate3d("
 		+ window.innerWidth + "px, 0, 0); }");
 
@@ -6,7 +6,7 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 	var day = 1000 * 60 * 60 * 24;
 	var week = day * 7;
 	var week2 = week * 2;
-	var blackout, modal, bigpic, picdesc, pictag, current_image;
+	var blackout, modal, bigpic, picdesc, pictag;
 	var grid = document.createElement("div");
 	grid.className = "grid";
 
@@ -158,6 +158,7 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 		populating = true;
 		xhr(getPath(), null, function(response_data) {
 			response_data.data.forEach(function(d) {
+				d.gallery = gallery;
 				var diff = now - new Date(d.date);
 				if (diff < day)
 					addHeader("Today");
@@ -184,24 +185,26 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 
 	document.getElementById("favorites-btn").onclick = function() {
 		if (current_image) {
-			if (gallery == "history") {
+			if (current_image.gallery == "history") {
 				if (!current_image.is_favorite) {
 					current_image.is_favorite = true;
 					xhr("/api/favorites/" + current_image.id, "POST");
+					if (location.pathname == "/favorites")
+						grid.insertBefore(current_image.node, grid.firstChild);
 				} else {
 					current_image.is_favorite = false;
 					xhr("/api/favorites/" + current_image.id, "DELETE");
+					if (location.pathname == "/favorites")
+						grid.removeChild(current_image.node);
 				}
 				setFavIcon(current_image.is_favorite);
-			} else if (gallery == "favorites") {
+			} else if (current_image.gallery == "favorites") {
 				xhr("/api/favorites/" + current_image.id, "DELETE");
 				grid.removeChild(current_image.node);
 				modal.onclick();
 			}
 		} else if (starCallback)
 			starCallback();
-		else
-			window.open("/favorites");
 	};
 };
 
