@@ -144,12 +144,10 @@ var starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
 	// gallery feed builder
 	var chunk_size = 20;
 	var chunk_offset = 0;
-	// TODO: remove when APIs solidify...
-	var gmap = { history: "history/paginated", favorites: "favorites" };
 	var getPath = function() {
 		if (gallery == "tag")
 			return "/api/media/" + location.hash.slice(1);
-		return "/api/" + (gmap[gallery] || gallery) + "/" + chunk_size + "/" + chunk_offset;
+		return "/api/" + gallery + "/paginated/" + chunk_size + "/" + chunk_offset;
 	};
 	var populateGallery = function() {
 		xhr(getPath(), function(response_data) {
