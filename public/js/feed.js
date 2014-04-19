@@ -380,7 +380,7 @@ onload = function ()
 			rotateQuantity = -rotateQuantity;
 			verticalQuantity = -verticalQuantity;
 		}
-		slider.style['-webkit-transition'] = "-webkit-transform " + transitionLength
+		slider.style['-webkit-transition'] = "-webkit-transform " + transitionLength;
 		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px," + verticalQuantity + "px,0) rotate(" + rotateQuantity + "deg)";
 		slider.addEventListener( 'webkitTransitionEnd', function (event) {
 			gesture.unlisten(slider.parentNode);
