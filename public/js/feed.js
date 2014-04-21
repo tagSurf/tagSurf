@@ -5,19 +5,23 @@ onload = function ()
 
 	var data, current_tag = "trending";
 	var buffer_minimum = 3;
+	var known_keys = {};
 	var populateSlider = function (update)
 	{
 		xhr("/api/media/" + current_tag, null, function(response_data) {
-			var rdata = response_data.data.sort(function(a,b)
-				{ return a.id > b.id; });
+			var rdata = response_data.data;
 			if (update) {
-				// this method only nets 5 cards for every 10 cards requested
+				// this method only nets 4 cards for every 10 cards requested
 				// needs new API!
-				var lastId = data[data.length - 1].id;
-				for (var i = 0; i < rdata.length; i++)
-					if (rdata[i].id > lastId)
+				for (var i = 0; i < rdata.length; i++) {
+					if ( ! (rdata[i].id in known_keys) ) {
 						data.push(rdata[i]);
+						known_keys[rdata[i].id] = true;
+					}
+				}
 			} else {
+				for (var card in rdata)
+					known_keys[rdata[card].id] = true;
 				cardIndex = 0;
 				slideContainer.innerHTML = "";
 				data = rdata;
