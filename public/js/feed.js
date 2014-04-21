@@ -14,7 +14,7 @@ onload = function ()
 				// this method only nets 4 cards for every 10 cards requested
 				// needs new API!
 				for (var i = 0; i < rdata.length; i++) {
-					if ( ! (rdata[i].id in known_keys) ) {
+					if (!known_keys[rdata[i].id]) {
 						data.push(rdata[i]);
 						known_keys[rdata[i].id] = true;
 					}
@@ -338,10 +338,12 @@ onload = function ()
 		var scrollEnd = function (event) {
 			scrollState.yCurrent = revertHeight;
 			scrollState.verticaling = false;
-			scrollContainer.style['-webkit-transition'] = "";
 			animationInProgress = false;
+			clearTimeout(scrollEndTimeout);
+			scrollContainer.style['-webkit-transition'] = "";
 			scrollContainer.removeEventListener('webkitTransitionEnd', scrollEnd, false);
 		};
+		var scrollEndTimeout = setTimeout(scrollEnd, 250);
 		scrollContainer.addEventListener('webkitTransitionEnd', scrollEnd, false);
 	};
 	var upCallback = function ()
@@ -384,7 +386,6 @@ onload = function ()
 			verticalQuantity = 0;
 		var isUp = direction == "right";
 		var transitionLength = timeDifference || 250;
-		transitionLength += "ms";
 		if (superState == true)
 		{
 			verticalQuantity = 500;
@@ -395,12 +396,14 @@ onload = function ()
 			rotateQuantity = -rotateQuantity;
 			verticalQuantity = -verticalQuantity;
 		}
-		slider.style['-webkit-transition'] = "-webkit-transform " + transitionLength;
+		slider.style['-webkit-transition'] = "-webkit-transform " + transitionLength + "ms";
 		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px," + verticalQuantity + "px,0) rotate(" + rotateQuantity + "deg)";
-		slider.addEventListener( 'webkitTransitionEnd', function (event) {
+		var swipeSliderCallback = function (event) {
+			animationInProgress = false;
+			clearTimeout(swipeSliderCallbackTimeout);
+			slider.removeEventListener( 'webkitTransitionEnd', swipeSliderCallback, false);
 			gesture.unlisten(slider.parentNode);
 			slideContainer.removeChild(slider.parentNode);
-			animationInProgress = false;
 			updateCompressionStatus();
 			buildCard(0);
 			slideContainer.children[0].style.zIndex = 2;
@@ -413,7 +416,9 @@ onload = function ()
 			if (voteAlternative) voteAlternative();
 			else xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id
 				+ "/tag/" + current_tag, "POST");
-		}, false);
+		};
+		var swipeSliderCallbackTimeout = setTimeout(swipeSliderCallback, transitionLength);
+		slider.addEventListener( 'webkitTransitionEnd', swipeSliderCallback, false);
 		addHistoryItem(activeCard);
 	};
 	window.onkeyup = function(e) {
