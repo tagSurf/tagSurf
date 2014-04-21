@@ -295,17 +295,28 @@ onload = function ()
 	};
 	var revertSlider = function ()
 	{
-		animationInProgress = true;
-		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
-		slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
-		slider.style['border-color'] = "#353535";
-		slider.style['background-color'] = "#353535";
-		slider.addEventListener( 'webkitTransitionEnd', function (event) {
-			slider.style['-webkit-transition'] = "";
+		if (animationInProgress == true)
+		{
+			return;
+		}
+		if (slideState.yCurrent != 0 || slideState.xCurrent != 0 )
+		{
+			animationInProgress = true;
+			console.log("revertSlider: " + animationInProgress);
+			var transitionTimeout = function (event) {
+				slider.style['-webkit-transition'] = "";
+				slider.style['-webkit-transform'] = "";
+				animationInProgress = false;
+				console.log("revertSlider transitionCallback:" + animationInProgress);
+				resetSlideState();
+			};
+			slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
 			slider.style['-webkit-transform'] = "";
-			animationInProgress = false;
-			resetSlideState();
-		}, false);
+			//slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
+			slider.style['border-color'] = "#353535";
+			slider.style['background-color'] = "#353535";
+			setTimeout(transitionTimeout, 300);
+		}
 	};
 	var boundaryMonitor = function ()
 	{
@@ -322,21 +333,27 @@ onload = function ()
 		{
 			scrollContainer.style['-webkit-transition'] = "";
 			animationInProgress = false;
+			console.log("boundaryMonitor:" + animationInProgress);
 		}
 	};
 	var revertScroller = function (revertHeight)
 	{
-		animationInProgress = true;
-		scrollContainer.style['-webkit-transition'] = "-webkit-transform 250ms ease-out";
-		scrollContainer.style['-webkit-transform'] = "translate3d(0," + revertHeight + "px,0)";
-		var scrollEnd = function (event) {
-			scrollState.yCurrent = revertHeight;
-			scrollState.verticaling = false;
-			scrollContainer.style['-webkit-transition'] = "";
-			animationInProgress = false;
-			scrollContainer.removeEventListener('webkitTransitionEnd', scrollEnd, false);
-		};
-		scrollContainer.addEventListener('webkitTransitionEnd', scrollEnd, false);
+		if (scrollState.yCurrent != revertHeight)
+		{
+			animationInProgress = true;
+			console.log("revertScroller Start:" + animationInProgress);
+			scrollContainer.style['-webkit-transition'] = "-webkit-transform 250ms ease-out";
+			scrollContainer.style['-webkit-transform'] = "translate3d(0," + revertHeight + "px,0)";
+			var scrollEnd = function (event) {
+				scrollState.yCurrent = revertHeight;
+				scrollState.verticaling = false;
+				scrollContainer.style['-webkit-transition'] = "";
+				animationInProgress = false;
+				console.log("revertScroller transitionCallback:" + animationInProgress);
+				scrollContainer.removeEventListener('webkitTransitionEnd', scrollEnd, false);
+			};
+			scrollContainer.addEventListener('webkitTransitionEnd', scrollEnd, false);
+		}
 	};
 	var upCallback = function ()
 	{
@@ -372,7 +389,7 @@ onload = function ()
 	};
 	var swipeSlider = function (direction, voteAlternative, timeDifference)
 	{
-		animationInProgress = true;
+		console.log("cardIndex ", cardIndex);
 		var activeCard = data[cardIndex-3];
 		var translateQuantity = 600, rotateQuantity = 60,
 			verticalQuantity = 0;
@@ -389,12 +406,16 @@ onload = function ()
 			rotateQuantity = -rotateQuantity;
 			verticalQuantity = -verticalQuantity;
 		}
+		//slider.addEventListener( 'webkitTransitionEnd', transitionCallback, false);
+		gesture.unlisten(slider.parentNode);
+		animationInProgress = true;
+		console.log("swipeSlider:" + animationInProgress);
 		slider.style['-webkit-transition'] = "-webkit-transform " + transitionLength;
 		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px," + verticalQuantity + "px,0) rotate(" + rotateQuantity + "deg)";
-		slider.addEventListener( 'webkitTransitionEnd', function (event) {
-			gesture.unlisten(slider.parentNode);
+		var transitionTimeout = function (event) {
 			slideContainer.removeChild(slider.parentNode);
 			animationInProgress = false;
+			console.log("swipeSlider transitionCallback: " + animationInProgress);
 			updateCompressionStatus();
 			buildCard(0);
 			slideContainer.children[0].style.zIndex = 2;
@@ -407,7 +428,11 @@ onload = function ()
 			if (voteAlternative) voteAlternative();
 			else xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id
 				+ "/tag/" + current_tag, "POST");
-		}, false);
+			//slider.removeEventListener("webkitTransitionEnd", transitionCallback, false)
+		};
+		console.log(data);
+		console.log(transitionLength);
+		setTimeout(transitionTimeout, parseInt(transitionLength) + 50);
 		addHistoryItem(activeCard);
 	};
 	window.onkeyup = function(e) {
@@ -424,6 +449,7 @@ onload = function ()
 			return;
 		var translateQuantity, rotateQuantity, animationDistance;
 		animationInProgress = true;
+		console.log("swipeCallback Start: " + animationInProgress);
 		if (isExpanded == true &&
 			(direction == "up" || direction == "down"))
 		{
@@ -434,6 +460,7 @@ onload = function ()
 			var verticalSwipeEnd = function (event)
 			{
 				boundaryMonitor();
+				console.log("swipeCallback verticalSwipeEnd: " + animationInProgress);
 				scrollContainer.removeEventListener('webkitTransitionEnd', verticalSwipeEnd, false);
 			};
 			scrollContainer.addEventListener( 'webkitTransitionEnd', verticalSwipeEnd, false);
