@@ -3,7 +3,7 @@ onload = function ()
 	populateNavbar();
 	gallerize("history");
 
-	var data, current_tag = "hot";
+	var data, current_tag = "trending";
 	var buffer_minimum = 3;
 	var populateSlider = function (update)
 	{
