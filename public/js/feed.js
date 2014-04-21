@@ -300,12 +300,14 @@ onload = function ()
 		slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
 		slider.style['border-color'] = "#353535";
 		slider.style['background-color'] = "#353535";
-		slider.addEventListener( 'webkitTransitionEnd', function (event) {
+		var revertSliderCallback = function (event) {
 			slider.style['-webkit-transition'] = "";
 			slider.style['-webkit-transform'] = "";
 			animationInProgress = false;
 			resetSlideState();
-		}, false);
+			slider.removeEventListener("webkitTransitionEnd", revertSliderCallback, false);
+		};
+		slider.addEventListener( 'webkitTransitionEnd', revertSliderCallback, false);
 	};
 	var boundaryMonitor = function ()
 	{
