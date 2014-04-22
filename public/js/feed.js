@@ -382,14 +382,15 @@ onload = function ()
 		scrollState.verticaling = false;
 		slideState.sliding = false;
 	};
-	var swipeSlider = function (direction, voteAlternative, timeDifference)
+	var swipeSlider = function (direction, voteAlternative, pixelsPerSecond)
 	{
 		animationInProgress = true;
 		var activeCard = data[cardIndex-3];
 		var translateQuantity = 600, rotateQuantity = 60,
 			verticalQuantity = 0;
 		var isUp = direction == "right";
-		var transitionLength = timeDifference || 250;
+		var transitionDistance = translateQuantity - slideState.xCurrent;
+		var transitionDuration = pixelsPerSecond ? (transitionDistance / pixelsPerSecond) : 250;
 		if (superState == true)
 		{
 			verticalQuantity = -500;
@@ -400,7 +401,7 @@ onload = function ()
 			rotateQuantity = -rotateQuantity;
 			verticalQuantity = -verticalQuantity;
 		}
-		slider.style['-webkit-transition'] = "-webkit-transform " + transitionLength + "ms";
+		slider.style['-webkit-transition'] = "-webkit-transform " + transitionDuration + "ms";
 		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px," + verticalQuantity + "px,0) rotate(" + rotateQuantity + "deg)";
 		var swipeSliderCallback = function (event) {
 			animationInProgress = false;
@@ -438,6 +439,7 @@ onload = function ()
 		if (animationInProgress)
 			return;
 		var translateQuantity, rotateQuantity, animationDistance;
+		var pixelsPerSecond = distance / timeDifference;
 		animationInProgress = true;
 		if (isExpanded == true &&
 			(direction == "up" || direction == "down"))
@@ -455,11 +457,11 @@ onload = function ()
 		}
 		else if (direction == "left")
 		{
-			swipeSlider("left", null, timeDifference);
+			swipeSlider("left", null, pixelsPerSecond);
 		}
 		else if (direction == "right")
 		{
-			swipeSlider("right", null, timeDifference);
+			swipeSlider("right", null, pixelsPerSecond);
 		}
 	};
 	var dragCallback = function (direction, distance, dx, dy)
