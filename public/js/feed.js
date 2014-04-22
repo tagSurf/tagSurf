@@ -299,6 +299,8 @@ onload = function ()
 	};
 	var revertSlider = function ()
 	{
+		if (slideState.xCurrent == 0)
+			return;
 		animationInProgress = true;
 		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
 		slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
@@ -332,6 +334,8 @@ onload = function ()
 	};
 	var revertScroller = function (revertHeight)
 	{
+		if (scrollState.yCurrent == 0)
+			return;
 		animationInProgress = true;
 		scrollContainer.style['-webkit-transition'] = "-webkit-transform 250ms ease-out";
 		scrollContainer.style['-webkit-transform'] = "translate3d(0," + revertHeight + "px,0)";
