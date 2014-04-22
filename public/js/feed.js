@@ -422,7 +422,7 @@ onload = function ()
 			else xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id
 				+ "/tag/" + current_tag, "POST");
 		};
-		var swipeSliderCallbackTimeout = setTimeout(swipeSliderCallback, transitionLength);
+		var swipeSliderCallbackTimeout = setTimeout(swipeSliderCallback, transitionDuration + 50);
 		slider.addEventListener( 'webkitTransitionEnd', swipeSliderCallback, false);
 		addHistoryItem(activeCard);
 	};
