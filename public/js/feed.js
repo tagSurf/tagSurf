@@ -388,7 +388,7 @@ onload = function ()
 		var transitionLength = timeDifference || 250;
 		if (superState == true)
 		{
-			verticalQuantity = 500;
+			verticalQuantity = -500;
 		}
 		if (!isUp)
 		{
