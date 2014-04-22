@@ -20,11 +20,12 @@ onload = function ()
 					}
 				}
 			} else {
+				known_keys = {};
 				for (var card in rdata)
 					known_keys[rdata[card].id] = true;
+				data = rdata;
 				cardIndex = 0;
 				slideContainer.innerHTML = "";
-				data = rdata;
 				buildCard(2);
 			}
 		}, function() {
@@ -412,10 +413,8 @@ onload = function ()
 			updateCompressionStatus();
 			buildCard(0);
 			slideContainer.children[0].style.zIndex = 2;
-			if (slideContainer.children[1]) {
+			if (slideContainer.children[1])
 				slideContainer.children[1].style.zIndex = 1;
-				slideContainer.children[1].style["visibility"] = "visible";
-			}
 			resetSlideState();
 			revertScroller(0);
 			if (voteAlternative) voteAlternative();
@@ -544,7 +543,8 @@ onload = function ()
 			return;
 		}
 		var imageContainer, textContainer, fullscreenButton, truncatedTitle, card;
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + data[cardIndex].image_link_medium + "'></div><div class='text-container'><p>" + data[cardIndex].title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+		var c = data[cardIndex];
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + (c.image_link_medium || c.image_link_original) + "'></div><div class='text-container'><p>" + c.title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
@@ -566,7 +566,6 @@ onload = function ()
 				cardCompression[2 - zIndex] = true;
 			}
 			card = formatter.firstChild;
-			card.style["visibility"] = zIndex ? "" : "hidden";
 			slideContainer.appendChild(card);
 			slider = slideContainer.children[0].children[0];
 			initCardGestures.call(card);
