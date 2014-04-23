@@ -445,7 +445,7 @@ onload = function ()
 		{
 			animationDistance = dy;
 			scrollState.yCurrent += 2 * animationDistance;
-			animationDuration = Math.abs(animationDistance) / pixelsPerSecond;
+			animationDuration = Math.abs(2 * animationDistance) / pixelsPerSecond;
 			var verticalSwipeEnd = function (event)
 			{
 				boundaryMonitor();
