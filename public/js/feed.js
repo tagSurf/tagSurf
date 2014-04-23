@@ -453,14 +453,23 @@ onload = function ()
 		if (animationInProgress)
 			return;
 		var translateQuantity, rotateQuantity, animationDistance, animationDuration;
+		var bottomBoundary = window.innerHeight - (navBarHeight + slider.clientHeight + 70);
 		var pixelsPerSecond = distance / timeDifference;
 		animationInProgress = true;
 		if (isExpanded == true &&
 			(direction == "up" || direction == "down"))
 		{
-			animationDistance = dy;
-			scrollState.yCurrent += 2 * animationDistance;
-			animationDuration = Math.abs(2 * animationDistance) / pixelsPerSecond;
+			animationDistance = 2 * dy;
+			scrollState.yCurrent += animationDistance;
+			if (scrollState.yCurrent > 0)
+			{
+				scrollState.yCurrent = 50;
+			}
+			else if (scrollState.yCurrent < bottomBoundary)
+			{
+				scrollState.yCurrent = bottomBoundary - 50;
+			}
+			animationDuration = Math.abs(scrollState.yCurrent) / pixelsPerSecond;
 			var verticalSwipeEnd = function (event)
 			{
 				boundaryMonitor();
