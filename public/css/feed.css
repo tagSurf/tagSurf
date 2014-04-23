@@ -30,6 +30,8 @@ html, body
 }
 #tag-input
 {
+  color: white;
+  font-weight: bold;
   float: left;
   display: inline;
   margin:0;
