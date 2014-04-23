@@ -300,13 +300,13 @@ onload = function ()
 	};
 	var revertSlider = function ()
 	{
+		slider.style['border-color'] = "#353535";
+		slider.style['background-color'] = "#353535";
 		if (slideState.xCurrent == 0)
 			return;
 		animationInProgress = true;
 		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
 		slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
-		slider.style['border-color'] = "#353535";
-		slider.style['background-color'] = "#353535";
 		var revertSliderCallback = function (event) {
 			slider.style['-webkit-transition'] = "";
 			slider.style['-webkit-transform'] = "";
