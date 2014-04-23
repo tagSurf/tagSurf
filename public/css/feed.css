@@ -103,7 +103,7 @@ html, body
   width: 95%;
   margin: 0 2.5% 2.5% 2.5%;
   background: #353535;
-  border: #353535 thin solid;
+  border: 2px solid #353535;
   border-radius: 8px;
   box-shadow: 2px 3px 5px -1px rgba(0,0,0,0.7);
 }
