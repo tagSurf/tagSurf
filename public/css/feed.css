@@ -11,16 +11,14 @@ html, body
   height: 40px;
   margin: 5px auto;
 }
-#static-hash
+#static-icon
 {
   display: inline;
   background: #6a6a6a;
   padding: 7px 5px 7px 17px;
   border: 0px;
-  font-size: 16px;
   width: 27px;
   float: left;
-  font-family: Raleway, sans-serif;
   -moz-border-bottom-left-radius: 50px;
   -moz-border-bottom-top-radius: 50px;
   -webkit-border-bottom-left-radius: 50px;
@@ -28,8 +26,20 @@ html, body
   border-bottom-left-radius: 50px;
   border-top-left-radius: 50px;
 }
+#static-hash
+{
+  font-size: 16px;
+  font-family: Raleway, sans-serif;
+}
+#static-trending
+{
+  width: 16px;
+  margin-left: -5px;
+}
 #tag-input
 {
+  color: white;
+  font-weight: bold;
   float: left;
   display: inline;
   margin:0;
@@ -93,7 +103,7 @@ html, body
   width: 95%;
   margin: 0 2.5% 2.5% 2.5%;
   background: #353535;
-  border: #353535 thin solid;
+  border: 2px solid #353535;
   border-radius: 8px;
   box-shadow: 2px 3px 5px -1px rgba(0,0,0,0.7);
 }
