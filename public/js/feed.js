@@ -75,15 +75,17 @@ onload = function ()
 		blackback.className = "blackout blackfade";
 	};
 	blackback.onclick = function() {
+		tinput.value = current_tag;
 		aclist.className = "";
 		blackback.className = "blackout";
 	};
 	tinput.onkeyup = function(e) {
 		e = e || window.event;
 		var code = e.keyCode || e.which;
-		if (code == 13 || code == 3)
-			viewTag(tinput.value);
-		else if (tinput.value) {
+		if (code == 13 || code == 3) {
+			tinput.blur();
+			tinput.value ? viewTag(tinput.value) : blackback.onclick();
+		} else if (tinput.value) {
 			mod({
 				className: "tagline",
 				hide: true
