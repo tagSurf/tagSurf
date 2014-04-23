@@ -234,6 +234,7 @@ onload = function ()
 			zNode = slider.firstChild.firstChild.cloneNode(true);
 			scaledWidth = window.innerWidth;
 			zNode.className = 'hider basic-zoom';
+			zNode.style.top = "60px";
 			zNode.style.left = "0px";
 			zNode.style.width = window.innerWidth + "px";
 			zoomState.zoomNode = zNode;
@@ -255,7 +256,15 @@ onload = function ()
 	};
 	var largeZoom = function (tapCount)
 	{
-		if (tapCount == 2)
+		if (tapCount == 1)
+		{
+			if (zoomState.large == false)
+			{
+				doubleTap();
+			}
+			
+		}
+		else if (tapCount == 2)
 		{
 			zoomTap();
 		}
