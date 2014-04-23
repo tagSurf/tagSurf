@@ -26,6 +26,13 @@ var gesture = {
 		holdInterval: null
 	},
 	handlers: { drag: {}, swipe: {}, tap: {}, up: {}, down: {}, hold: {} },
+	tuneThresholds: function() {
+		if (!isIos())
+			for (var gest in gesture.thresholds)
+				for (var constraint in gesture.thresholds[gest])
+					if (constraint.slice(3) == "Distance")
+						gesture.thresholds[gest][constraint] /= 2;
+	},
 	getPos: function(e) {
 		var p = {};
 		if (event.type.slice(0, 5) == "touch") {
@@ -184,3 +191,4 @@ var gesture = {
 		return returnVal;
 	}
 };
+gesture.tuneThresholds();
