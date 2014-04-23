@@ -104,11 +104,11 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		n.style.backgroundImage = "url('" +
 			(d.image_link_tiny || d.image_link_medium || d.image_link_original) + "')";
 		n.style.border = "2px solid " +
-			((d.user_stats.vote == "up")? "green" : "red");
+			((d.user_stats.vote == "up") ? "green" : "red");
 
 		var top = document.createElement("div");
 		top.className = "overlay tag";
-		top.innerHTML = "#" + d.tags[0];
+		top.innerHTML = "#" + d.user_stats.tag_voted;
 
 		var spacer = document.createElement("div");
 		spacer.style.paddingTop = "70%";
