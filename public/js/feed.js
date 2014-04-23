@@ -3,9 +3,10 @@ onload = function ()
 	populateNavbar();
 	gallerize("history");
 
-	var data, current_tag = "trending";
-	var buffer_minimum = 3;
-	var known_keys = {};
+	var data, buffer_minimum = 3, known_keys = {},
+		tinput = document.getElementById("tag-input"),
+		current_tag = tinput.value
+			= document.location.hash.slice(1) || "trending";
 	var populateSlider = function (update)
 	{
 		xhr("/api/media/" + current_tag, null, function(response_data) {
@@ -40,7 +41,6 @@ onload = function ()
 
 	// autocomplete stuff
 	var blackback = document.getElementById("blackback");
-	var tinput = document.getElementById("tag-input");
 	var aclist = document.getElementById("autocomplete");
 	var viewTag = function(tagName) {
 		aclist.className = "";
@@ -65,6 +65,7 @@ onload = function ()
 		});
 	});
 	tinput.onclick = function() {
+		tinput.value = "";
 		aclist.className = "autocomplete-open";
 		blackback.className = "blackout blackfade";
 	};
