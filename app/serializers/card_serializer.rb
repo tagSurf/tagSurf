@@ -51,7 +51,7 @@ class CardSerializer < ActiveModel::Serializer
   end
 
   def up_votes
-    object.remote_up_votes.to_i + votes.where(vote_flag: false).count
+    object.remote_up_votes.to_i + votes.where(vote_flag: true).count
   end
 
   def score
