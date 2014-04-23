@@ -300,13 +300,13 @@ onload = function ()
 	};
 	var revertSlider = function ()
 	{
+		slider.style['border-color'] = "#353535";
+		slider.style['background-color'] = "#353535";
 		if (slideState.xCurrent == 0)
 			return;
 		animationInProgress = true;
 		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
 		slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
-		slider.style['border-color'] = "#353535";
-		slider.style['background-color'] = "#353535";
 		var revertSliderCallback = function (event) {
 			slider.style['-webkit-transition'] = "";
 			slider.style['-webkit-transform'] = "";
@@ -402,7 +402,7 @@ onload = function ()
 			rotateQuantity = -rotateQuantity;
 			verticalQuantity = -verticalQuantity;
 		}
-		slider.style['-webkit-transition'] = "-webkit-transform " + transitionDuration + "ms";
+		slider.style['-webkit-transition'] = "-webkit-transform " + Math.abs(transitionDuration) + "ms";
 		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px," + verticalQuantity + "px,0) rotate(" + rotateQuantity + "deg)";
 		var swipeSliderCallback = function (event) {
 			animationInProgress = false;
@@ -437,22 +437,23 @@ onload = function ()
 	{
 		if (animationInProgress)
 			return;
-		var translateQuantity, rotateQuantity, animationDistance;
+		var translateQuantity, rotateQuantity, animationDistance, animationDuration;
 		var pixelsPerSecond = distance / timeDifference;
 		animationInProgress = true;
 		if (isExpanded == true &&
 			(direction == "up" || direction == "down"))
 		{
 			animationDistance = dy;
-			scrollState.yCurrent += animationDistance;
-			scrollContainer.style['-webkit-transition'] = "-webkit-transform 250ms ease-out";
-			scrollContainer.style['-webkit-transform'] = "translate3d(0,"+ (scrollState.yCurrent) + "px,0)";
+			scrollState.yCurrent += 2 * animationDistance;
+			animationDuration = Math.abs(2 * animationDistance) / pixelsPerSecond;
 			var verticalSwipeEnd = function (event)
 			{
 				boundaryMonitor();
 				scrollContainer.removeEventListener('webkitTransitionEnd', verticalSwipeEnd, false);
 			};
 			scrollContainer.addEventListener( 'webkitTransitionEnd', verticalSwipeEnd, false);
+			scrollContainer.style['-webkit-transition'] = "-webkit-transform " + animationDuration + "ms cubic-bezier(0,1,1,1)";
+			scrollContainer.style['-webkit-transform'] = "translate3d(0,"+ (scrollState.yCurrent) + "px,0)";
 		}
 		else if (direction == "left")
 		{
