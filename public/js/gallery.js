@@ -103,7 +103,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		n.className = "box";
 		n.style.backgroundImage = "url('" +
 			(d.image_link_tiny || d.image_link_medium || d.image_link_original) + "')";
-		n.style.border = "1px solid " +
+		n.style.border = "2px solid " +
 			((d.user_stats.vote == "up")? "green" : "red");
 
 		var top = document.createElement("div");
