@@ -4,11 +4,16 @@ onload = function ()
 	gallerize("history");
 
 	var data, buffer_minimum = 3, known_keys = {},
+		staticHash = document.getElementById("static-hash"),
+		staticTrending = document.getElementById("static-trending"),
 		tinput = document.getElementById("tag-input"),
 		current_tag = tinput.value
 			= document.location.hash.slice(1) || "trending";
 	var populateSlider = function (update)
 	{
+		var isTrending = current_tag == "trending";
+		staticHash.className = isTrending ? "hidden" : "";
+		staticTrending.className = isTrending ? "" : "hidden";
 		xhr("/api/media/" + current_tag, null, function(response_data) {
 			var rdata = response_data.data;
 			if (update) {
