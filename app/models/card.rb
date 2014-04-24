@@ -33,7 +33,7 @@ class Card < ActiveRecord::Base
   end
 
   # Display the next card to the user for voting
-  def self.next(user, tag, n=10)
+  def self.next(user, tag, n=20)
     return unless user
     if user.votes.size < 1
       Card.last(n)
@@ -51,7 +51,7 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def Card.next_tagged(user, tag, n=10)
+  def Card.next_tagged(user, tag, n=20)
     return unless user
     if user.votes.size < 1
       Card.first(n)
