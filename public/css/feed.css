@@ -172,6 +172,7 @@ html, body
 
 .image-container img
 {
+  pointer-events: none;
   border-radius: 8px;
   margin: 2.5%;
   width: 95%;
@@ -210,10 +211,6 @@ html, body
 {
   max-height: 9999px !important;
 }
-#scroll-container
-{
-  height: auto;
-}
 .raw_wrapper
 {
   
@@ -226,11 +223,15 @@ html, body
 {
   pointer-events: none;
 }
-.zoom_wrapper
+.zoom_wrapper,
+#scroll-container
 {
   top: 50px;
   overflow: scroll;
   position: absolute;
   width:100%; 
+}
+.zoom_wrapper
+{
   padding-top:20px;
 }

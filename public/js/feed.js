@@ -110,7 +110,7 @@ onload = function ()
 		+ maxCardHeight + "px; } .card-container { min-height: "
 		+ (maxCardHeight + 65) + "px; }");
 	addCss(".basic-zoom { z-index: 2; position: absolute; top: 100px;pointer-events:none;");
-	addCss(".raw_wrapper, .zoom_wrapper {height:" 
+	addCss(".raw_wrapper, .zoom_wrapper, #scroll-container {height:" 
 		+ (window.innerHeight - 50) + "px;}");
 	var scrollContainer = document.getElementById('scroll-container');
 	var slideContainer = document.getElementById('slider');
@@ -224,7 +224,6 @@ onload = function ()
 		{
 			zoomState.large = true;
 			zNode.style.width = zoomWidth + "px";
-			//zNode.style.left = zoomLeft + "px";
 		}
 		else
 		{
@@ -252,41 +251,6 @@ onload = function ()
 		};
 		slider.addEventListener( 'webkitTransitionEnd', revertSliderCallback, false);
 	};
-	var boundaryMonitor = function ()
-	{
-		var bottomBoundary = window.innerHeight - (navBarHeight + slider.clientHeight + 70);
-		if (scrollState.yCurrent > 0)
-		{
-			revertScroller(0);
-		}
-		else if (scrollState.yCurrent < bottomBoundary)
-		{
-			revertScroller(bottomBoundary);
-		}
-		else
-		{
-			scrollContainer.style['-webkit-transition'] = "";
-			animationInProgress = false;
-		}
-	};
-	var revertScroller = function (revertHeight)
-	{
-		if (scrollState.yCurrent == 0)
-			return;
-		animationInProgress = true;
-		scrollContainer.style['-webkit-transition'] = "-webkit-transform 250ms ease-out";
-		scrollContainer.style['-webkit-transform'] = "translate3d(0," + revertHeight + "px,0)";
-		var scrollEnd = function (event) {
-			scrollState.yCurrent = revertHeight;
-			scrollState.verticaling = false;
-			animationInProgress = false;
-			clearTimeout(scrollEndTimeout);
-			scrollContainer.style['-webkit-transition'] = "";
-			scrollContainer.removeEventListener('webkitTransitionEnd', scrollEnd, false);
-		};
-		var scrollEndTimeout = setTimeout(scrollEnd, 250);
-		scrollContainer.addEventListener('webkitTransitionEnd', scrollEnd, false);
-	};
 	var upCallback = function ()
 	{
 		if (animationInProgress == false)
@@ -310,10 +274,6 @@ onload = function ()
 				{
 					swipeSlider("left");
 				}
-			}
-			if (scrollState.verticaling == true)
-			{
-				boundaryMonitor();
 			}
 		}
 		scrollState.verticaling = false;
@@ -384,29 +344,10 @@ onload = function ()
 		var translateQuantity, rotateQuantity, animationDistance, animationDuration;
 		var bottomBoundary = window.innerHeight - (navBarHeight + slider.clientHeight + 70);
 		var pixelsPerSecond = distance / timeDifference;
-		animationInProgress = true;
 		if (isExpanded == true &&
 			(direction == "up" || direction == "down"))
 		{
-			animationDistance = 2 * dy;
-			scrollState.yCurrent += animationDistance;
-			if (scrollState.yCurrent > 0)
-			{
-				scrollState.yCurrent = 50;
-			}
-			else if (scrollState.yCurrent < bottomBoundary)
-			{
-				scrollState.yCurrent = bottomBoundary - 50;
-			}
-			animationDuration = Math.abs(scrollState.yCurrent) / pixelsPerSecond;
-			var verticalSwipeEnd = function (event)
-			{
-				boundaryMonitor();
-				scrollContainer.removeEventListener('webkitTransitionEnd', verticalSwipeEnd, false);
-			};
-			scrollContainer.addEventListener( 'webkitTransitionEnd', verticalSwipeEnd, false);
-			scrollContainer.style['-webkit-transition'] = "-webkit-transform " + animationDuration + "ms cubic-bezier(0,1,1,1)";
-			scrollContainer.style['-webkit-transform'] = "translate3d(0,"+ (scrollState.yCurrent) + "px,0)";
+			return true;
 		}
 		else if (direction == "left")
 		{
@@ -424,12 +365,7 @@ onload = function ()
 			if (isExpanded == true && 
 				(direction == "up" || direction == "down"))
 			{
-				if (slideState.sliding == false)
-				{
-					scrollState.verticaling = true;
-					scrollState.yCurrent += dy / 2;
-					scrollContainer.style['-webkit-transform'] = "translate3d(0," + scrollState.yCurrent + "px,0)";
-				}
+				return true;
 			}
 			else 
 			{
@@ -540,6 +476,7 @@ onload = function ()
 		gesture.listen("tap", this, tapCallback);
 		gesture.listen("drag", this, dragCallback);
 		gesture.listen("hold", this, holdCallback);
+		gesture.listen("down", this, function(){return true;});
 	};
 	var expandCard = function ()
 	{
