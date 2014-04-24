@@ -49,7 +49,7 @@ onload = function ()
 	var viewTag = function(tagName) {
 		location.hash = tagName;
 		aclist.className = "";
-		modal.blackOff();
+		modal.backOff();
 		current_tag = tinput.value = tagName;
 		populateSlider();
 	};
@@ -75,7 +75,8 @@ onload = function ()
 		modal.halfOn(function() {
 			tinput.value = current_tag;
 			aclist.className = "";
-			modal.blackOff();
+			modal.backOff();
+			tinput.blur();
 		});
 	};
 	tinput.onkeyup = function(e) {
@@ -83,7 +84,7 @@ onload = function ()
 		var code = e.keyCode || e.which;
 		if (code == 13 || code == 3) {
 			tinput.blur();
-			tinput.value ? viewTag(tinput.value) : modal.black.onclick();
+			tinput.value ? viewTag(tinput.value) : modal.callBack();
 		} else if (tinput.value) {
 			mod({
 				className: "tagline",
@@ -160,7 +161,7 @@ onload = function ()
 		var zNode, wrapper, gesture_wrapper, scaledWidth;
 		if (zoomState.zoomed == false)
 		{
-			modal.blackOn();
+			modal.backOn();
 			zNode = slider.firstChild.firstChild.cloneNode(true);
 			scaledWidth = window.innerWidth;
 			zNode.className = 'hider basic-zoom';
@@ -187,7 +188,7 @@ onload = function ()
 		else
 		{
 			zoomState.zoomed = false;
-			modal.blackOff();
+			modal.backOff();
 			zNode = zoomState.zoomNode;
 			gesture.unlisten(zNode.parentNode);
 			document.body.removeChild(zNode.parentNode.parentNode);

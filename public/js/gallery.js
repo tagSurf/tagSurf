@@ -18,7 +18,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 			+ (history_slider.offsetHeight - 10) + "px; } .grid { height: "
 			+ (window.innerHeight - 50) + "px; }");
 		slideGallery = function() {
-			current_image && modal.modal.onclick();
+			current_image && modal.callModal();
 			history_slider.style.opacity = "1";
 			toggleClass.call(history_slider, "modalslide");
 		};
@@ -70,10 +70,10 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		modal.modalIn(picbox, function() {
 			current_image = null;
 			setFavIcon(location.pathname == "/favorites");
-			modal.blackOff();
+			modal.backOff();
 			modal.modalOut();
 		});
-		modal.blackOn();
+		modal.backOn();
 		bigpic.src = d.image_link_medium || d.image_link_original;
 		picdesc.innerHTML = d.title;
 		pictag.innerHTML = "#" + d.tags[0];
@@ -183,7 +183,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 			} else if (current_image.gallery == "favorites") {
 				xhr("/api/favorites/" + current_image.id, "DELETE");
 				grid.removeChild(current_image.node);
-				modal.modal.onclick();
+				modal.callModal();
 			}
 		} else if (starCallback)
 			starCallback();
