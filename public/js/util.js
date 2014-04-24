@@ -136,6 +136,6 @@ var mod = function(opts) {
   for (var i = 0; i < targets.length; i++)
     targets[i].style[property] = value;
 };
-var isIos = function() {
+var isIphone = function() {
   return navigator.userAgent.indexOf("iPhone") != -1;
 };

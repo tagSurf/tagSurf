@@ -11,7 +11,7 @@ var gesture = {
 			waitTime: 300
 		},
 		hold: {
-			maxDistance: 50,
+			maxDistance: null, // set to pixel value if desired
 			interval: 1000
 		}
 	},
@@ -27,7 +27,7 @@ var gesture = {
 	},
 	handlers: { drag: {}, swipe: {}, tap: {}, up: {}, down: {}, hold: {} },
 	tuneThresholds: function() {
-		if (!isIos())
+		if (!isIphone())
 			for (var gest in gesture.thresholds)
 				for (var constraint in gesture.thresholds[gest])
 					if (constraint.slice(3) == "Distance")
@@ -67,7 +67,8 @@ var gesture = {
 		}
 		v.holdCount = 0;
 		v.holdInterval = setInterval(function() {
-			if (gesture.getDiff(v.startPos, v.lastPos).distance > t.hold.maxDistance) {
+			if (t.hold.maxDistance && (t.hold.maxDistance <
+				gesture.getDiff(v.startPos, v.lastPos).distance)) {
 				clearInterval(v.holdInterval);
 				v.holdInterval = null;
 				return;
