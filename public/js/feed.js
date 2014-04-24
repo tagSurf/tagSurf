@@ -75,15 +75,17 @@ onload = function ()
 		blackback.className = "blackout blackfade";
 	};
 	blackback.onclick = function() {
+		tinput.value = current_tag;
 		aclist.className = "";
 		blackback.className = "blackout";
 	};
 	tinput.onkeyup = function(e) {
 		e = e || window.event;
 		var code = e.keyCode || e.which;
-		if (code == 13 || code == 3)
-			viewTag(tinput.value);
-		else if (tinput.value) {
+		if (code == 13 || code == 3) {
+			tinput.blur();
+			tinput.value ? viewTag(tinput.value) : blackback.onclick();
+		} else if (tinput.value) {
 			mod({
 				className: "tagline",
 				hide: true
@@ -325,6 +327,7 @@ onload = function ()
 		var translateQuantity = 600, rotateQuantity = 60,
 			verticalQuantity = 0;
 		var isUp = direction == "right";
+		var voteDir = isUp ? "up" : "down";
 		var transitionDistance = translateQuantity - slideState.xCurrent;
 		var transitionDuration = pixelsPerSecond ? (transitionDistance / pixelsPerSecond) : 250;
 		if (superState == true)
@@ -353,11 +356,18 @@ onload = function ()
 			resetSlideState();
 			revertScroller(0);
 			if (voteAlternative) voteAlternative();
-			else xhr("/api/votes/" + (isUp ? "up/" : "down/") + activeCard.id
+			else xhr("/api/votes/" + voteDir + "/" + activeCard.id
 				+ "/tag/" + current_tag, "POST");
 		};
 		var swipeSliderCallbackTimeout = setTimeout(swipeSliderCallback, transitionDuration + 50);
 		slider.addEventListener( 'webkitTransitionEnd', swipeSliderCallback, false);
+
+		// history slider
+		activeCard.total_votes += 1;
+		activeCard[voteDir + "_votes"] += 1;
+		activeCard.user_stats.voted = true;
+		activeCard.user_stats.tag_voted = current_tag;
+		activeCard.user_stats.vote = voteDir;
 		addHistoryItem(activeCard);
 	};
 	window.onkeyup = function(e) {
