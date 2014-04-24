@@ -3,7 +3,7 @@ onload = function ()
 	populateNavbar();
 	gallerize("history");
 
-	var data, buffer_minimum = 3, known_keys = {},
+	var data, buffer_minimum = 5, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
 		staticTrending = document.getElementById("static-trending"),
 		tinput = document.getElementById("tag-input"),
