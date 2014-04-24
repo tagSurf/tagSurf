@@ -23,7 +23,8 @@ var whichGallery = function() {
   return null;
 };
 var slideNavMenu = function() {
-  toggleClass.apply(this, ["slid"]);
+  toggleClass.apply(document.getElementById("slider_label"),
+    ["slid"]);
   toggleClass.apply(document.getElementById("slide_down_menu"),
     ["opened_menu"]);
   modal.backToggle(slideNavMenu, true);
@@ -48,7 +49,7 @@ var populateNavbar = function () {
       "<img id='history_icon' src='" + history_icons[(gallery == "history" ? "fill" : "blue")] + "'>",
     "</a></div>",
     "<div class='navbar-center'>",
-      "<label for='slider_box' onclick='slideNavMenu.apply(this);'>",
+      "<label id='slider_label' for='slider_box' onclick='slideNavMenu();'>",
         "<span id='main-logo'>",
           gallery ? (gallery == "tag"
             ? ("<span class='pointer'>#" + tag + "</span>")
