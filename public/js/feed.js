@@ -47,6 +47,7 @@ onload = function ()
 	// autocomplete stuff
 	var aclist = document.getElementById("autocomplete");
 	var viewTag = function(tagName) {
+		location.hash = tagName;
 		aclist.className = "";
 		modal.blackOff();
 		current_tag = tinput.value = tagName;
