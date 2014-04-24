@@ -45,11 +45,10 @@ onload = function ()
 	};
 
 	// autocomplete stuff
-	var blackback = document.getElementById("blackback");
 	var aclist = document.getElementById("autocomplete");
 	var viewTag = function(tagName) {
 		aclist.className = "";
-		blackback.className = "blackout";
+		modal.blackOff();
 		current_tag = tinput.value = tagName;
 		populateSlider();
 	};
@@ -72,19 +71,18 @@ onload = function ()
 	tinput.onclick = function() {
 		tinput.value = "";
 		aclist.className = "autocomplete-open";
-		blackback.className = "blackout blackfade";
-	};
-	blackback.onclick = function() {
-		tinput.value = current_tag;
-		aclist.className = "";
-		blackback.className = "blackout";
+		modal.halfOn(function() {
+			tinput.value = current_tag;
+			aclist.className = "";
+			modal.blackOff();
+		});
 	};
 	tinput.onkeyup = function(e) {
 		e = e || window.event;
 		var code = e.keyCode || e.which;
 		if (code == 13 || code == 3) {
 			tinput.blur();
-			tinput.value ? viewTag(tinput.value) : blackback.onclick();
+			tinput.value ? viewTag(tinput.value) : modal.black.onclick();
 		} else if (tinput.value) {
 			mod({
 				className: "tagline",
@@ -161,7 +159,7 @@ onload = function ()
 		var zNode, wrapper, gesture_wrapper, scaledWidth;
 		if (zoomState.zoomed == false)
 		{
-			blackback.className = "blackout blackfade";
+			modal.blackOn();
 			zNode = slider.firstChild.firstChild.cloneNode(true);
 			scaledWidth = window.innerWidth;
 			zNode.className = 'hider basic-zoom';
@@ -188,7 +186,7 @@ onload = function ()
 		else
 		{
 			zoomState.zoomed = false;
-			blackback.className = "blackout";
+			modal.blackOff();
 			zNode = zoomState.zoomNode;
 			gesture.unlisten(zNode.parentNode);
 			document.body.removeChild(zNode.parentNode.parentNode);

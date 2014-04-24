@@ -39,7 +39,7 @@ a {
 
 .blackout {
 	pointer-events: none;
-	z-index: 2;
+	z-index: 3;
 	position: fixed;
 	top: 50px;
 	bottom: 0px;
@@ -53,6 +53,11 @@ a {
 .blackfade {
 	pointer-events: auto;
 	opacity: 1.0;
+}
+
+.halffade {
+	pointer-events: auto;
+	opacity: 0.5;
 }
 
 .modal {

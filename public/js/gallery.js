@@ -1,83 +1,59 @@
 var current_image, starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
-	addCss(".modal { -webkit-transform: translate3d("
-		+ window.innerWidth + "px, 0, 0); }");
-
 	var now = new Date();
 	var day = 1000 * 60 * 60 * 24;
 	var week = day * 7;
 	var week2 = week * 2;
-	var blackout, modal, bigpic, picdesc, pictag;
+	var picbox, bigpic, picdesc, pictag;
 	var grid = document.createElement("div");
 	grid.className = "grid";
 
 	if (gallery == "history") {
 		var history_slider = document.createElement("div");
 		history_slider.id = "history_slider";
-		history_slider.className = "modal";
 		history_slider.appendChild(grid);
 		grid.className = "histgrid";
-		var blackback = document.createElement("div");
-		blackback.id = "blackback";
-		blackback.className = "blackout";
-		document.body.appendChild(blackback);
 		document.body.appendChild(history_slider);
 		addCss("#history_slider { -webkit-transform: translate3d(0, -"
 			+ (history_slider.offsetHeight + 100) + "px, 0); } .histgrid { height: "
 			+ (history_slider.offsetHeight - 10) + "px; } .grid { height: "
 			+ (window.innerHeight - 50) + "px; }");
 		slideGallery = function() {
-			current_image && modal.onclick();
+			current_image && modal.modal.onclick();
 			history_slider.style.opacity = "1";
 			toggleClass.call(history_slider, "modalslide");
-			toggleClass.call(document.getElementById("blackback"), "blackfade");
 		};
 		addHistoryItem = function(item) {
 			addImage(item, true);
 		};
 	} else document.body.appendChild(grid);
 
-	var buildModal = function() {
-		blackout = document.getElementById("blackout");
-		if (blackout) { // modal already exists
-			blackout = document.getElementById("blackout");
-			modal = document.getElementById("picbox");
+	var buildPicBox = function() {
+		picbox = document.getElementById("picbox");
+		if (picbox) { // image detail modal frame already exists
 			bigpic = document.getElementById("bigpic");
 			picdesc = document.getElementById("picdesc");
 			pictag = document.getElementById("pictag");
 			return;
 		}
 
-		blackout = document.createElement("div");
-		blackout.className = "blackout";
-
-		modal = document.createElement("div");
-		modal.id = "picbox"
-		modal.className = "modal";
+		picbox = document.createElement("div");
+		picbox.id = "picbox";
 
 		bigpic = document.createElement("img");
-		bigpic.id = bigpic.className = "bigpic";
-		modal.appendChild(bigpic);
+		bigpic.id = "bigpic";
+		picbox.appendChild(bigpic);
 
 		picdesc = document.createElement("div");
 		picdesc.id = "picdesc";
 		picdesc.className = "centered";
-		modal.appendChild(picdesc);
+		picbox.appendChild(picdesc);
 
 		var pictagbox = document.createElement("div");
 		pictagbox.className = "centered padded";
 		pictag = document.createElement("span");
-		pictag.id = pictag.className = "pictag";
+		pictag.id = "pictag";
 		pictagbox.appendChild(pictag);
-		modal.appendChild(pictagbox);
-
-		modal.onclick = function() {
-			current_image = null;
-			setFavIcon(location.pathname == "/favorites");
-			blackout.className = blackout.className.replace(" blackfade", "");
-			modal.className = modal.className.replace(" modalslide", "");
-		};
-		document.body.appendChild(blackout);
-		document.body.appendChild(modal);
+		picbox.appendChild(pictagbox);
 	};
 	var addHeader = function(headerName) {
 		var nospace = gallery + headerName.replace(/ /g, "");
@@ -91,8 +67,13 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 	};
 	var showImage = function(d) {
 		current_image = d;
-		modal.className += " modalslide";
-		blackout.className += " blackfade";
+		modal.modalIn(picbox, function() {
+			current_image = null;
+			setFavIcon(location.pathname == "/favorites");
+			modal.blackOff();
+			modal.modalOut();
+		});
+		modal.blackOn();
 		bigpic.src = d.image_link_medium || d.image_link_original;
 		picdesc.innerHTML = d.title;
 		pictag.innerHTML = "#" + d.tags[0];
@@ -176,8 +157,8 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		chunk_offset += chunk_size;
 	};
 
+	buildPicBox();
 	populateGallery();
-	buildModal();
 
 	grid.onscroll = function(e) {
 		if ((grid.scrollTop + grid.scrollHeight) >= grid.offsetHeight)
@@ -202,7 +183,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 			} else if (current_image.gallery == "favorites") {
 				xhr("/api/favorites/" + current_image.id, "DELETE");
 				grid.removeChild(current_image.node);
-				modal.onclick();
+				modal.modal.onclick();
 			}
 		} else if (starCallback)
 			starCallback();
