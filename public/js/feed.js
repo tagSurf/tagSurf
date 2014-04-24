@@ -108,7 +108,9 @@ onload = function ()
 	addCss(".expand-animation { max-height: "
 		+ maxCardHeight + "px; } .card-container { min-height: "
 		+ (maxCardHeight + 65) + "px; }");
-	addCss(".basic-zoom { z-index: 2; position: absolute; top: 100px;");
+	addCss(".basic-zoom { z-index: 2; position: absolute; top: 100px;pointer-events:none;");
+	addCss(".raw_wrapper, .zoom_wrapper {height:" 
+		+ (window.innerHeight - 50) + "px;}");
 	var scrollContainer = document.getElementById('scroll-container');
 	var slideContainer = document.getElementById('slider');
 	var formattingContainer = document.getElementById('formatter');
@@ -152,102 +154,32 @@ onload = function ()
 			yCurrent: 0
 		};
 	};
-	var zoomDragCallback = function (direction, distance, dx, dy)
-	{
-		if (animationInProgress == true)
-		{
-			return;
-		}
-		zoomState.xCurrent += dx;
-		zoomState.yCurrent += dy;
-		zoomState.zoomNode.style['-webkit-transform'] = 
-			"translate3d(" + zoomState.xCurrent +"px," + zoomState.yCurrent + "px,0)";
-	};
-	var zoomBoundaryMonitor = function ()
-	{
-		var zNode = zoomState.zoomNode,
-			topBound = 0, bottomBound = 100 + zNode.clientHeight - window.innerHeight,
-			horizontalBound = ((zNode.clientWidth - window.innerWidth) / 2), 
-			xRevert = zoomState.xCurrent, yRevert = zoomState.yCurrent;
-		if (zoomState.yCurrent > topBound)
-		{
-			yRevert = topBound;
-		}
-		else if (zoomState.yCurrent < -bottomBound)
-		{
-			yRevert = -bottomBound;
-		}
-		if (zoomState.xCurrent > horizontalBound)
-		{
-			xRevert = horizontalBound;
-		}
-		else if (zoomState.xCurrent < -horizontalBound)
-		{
-			xRevert = -horizontalBound;
-		}
-		if (xRevert != zoomState.xCurrent || yRevert != zoomState.yCurrent)
-		{
-			revertZoomedNode(xRevert, yRevert);
-		}
-	};
-	var zoomUpCallback = function ()
-	{
-		if (animationInProgress == false)
-		{
-			zoomBoundaryMonitor();
-		}
-	};
-	var revertZoomedNode = function (xRevert, yRevert) 
-	{
-		var zNode = zoomState.zoomNode;
-		zoomState.xCurrent = xRevert;
-		zoomState.yCurrent = yRevert;
-		animationInProgress = true;
-		var zoomSlideEnd = function (event)
-		{
-			zNode.style['-webkit-transition'] = "";
-			animationInProgress = false;
-			zNode.removeEventListener("webkitTransitionEnd", zoomSlideEnd, false);
-		};
-		zNode.addEventListener("webkitTransitionEnd", zoomSlideEnd, false);
-		zNode.style['-webkit-transition'] = "-webkit-transform 500ms ease-out";
-		zNode.style['-webkit-transform'] = "translate3d(" + xRevert + "px," + yRevert + "px,0)";
-	};
-	var zoomSwipeCallback = function (direction, distance, dx, dy)
-	{
-		var zNode = zoomState.zoomNode;
-		zoomState.xCurrent += dx;
-		zoomState.yCurrent += dy;
-		animationInProgress = true;
-		zNode.style['-webkit-transition'] = "-webkit-transform 250ms ease-out";
-		zNode.style['-webkit-transform'] = 
-			"translate3d(" + zoomState.xCurrent +"px," + zoomState.yCurrent + "px,0)";
-		var zoomSwipeEnd = function (event)
-		{
-			zNode.style['-webkit-transition'] = "";
-			animationInProgress = false;
-			zoomBoundaryMonitor();
-			zNode.removeEventListener("webkitTransitionEnd", zoomSwipeEnd, false);
-		};
-		zNode.addEventListener("webkitTransitionEnd", zoomSwipeEnd, false);
-	};
 	var doubleTap = function ()
 	{
-		var zNode, scaledWidth;
+		var zNode, wrapper, gesture_wrapper, scaledWidth;
 		if (zoomState.zoomed == false)
 		{
 			blackback.className = "blackout blackfade";
 			zNode = slider.firstChild.firstChild.cloneNode(true);
 			scaledWidth = window.innerWidth;
 			zNode.className = 'hider basic-zoom';
-			zNode.style.top = "60px";
 			zNode.style.left = "0px";
+			zNode.style.top = "10px";
 			zNode.style.width = window.innerWidth + "px";
 			zoomState.zoomNode = zNode;
 			zoomState.zoomed = true;
-			document.body.appendChild(zNode);
-			gesture.listen("tap", zNode, largeZoom);
-			gesture.listen("swipe", zNode, doubleTap);
+			wrapper = document.createElement('div');
+			gesture_wrapper = document.createElement('div');
+			wrapper.className = "zoom_wrapper";
+			gesture_wrapper.className = "raw_wrapper";
+			wrapper.style.zIndex = 3;
+			gesture_wrapper.appendChild(zNode);
+			wrapper.appendChild(gesture_wrapper);
+			document.body.appendChild(wrapper);
+			gesture.listen("tap", zNode.parentNode, largeZoom);
+			gesture.listen("up", zNode.parentNode, function(){return true;});
+			gesture.listen("drag", zNode.parentNode, function(){return true;});
+			gesture.listen("down", zNode.parentNode, function(){return true;});
 			zNode.style['-webkit-transition'] = "";
 			zNode.classList.remove('hider');
 		}
@@ -256,7 +188,8 @@ onload = function ()
 			zoomState.zoomed = false;
 			blackback.className = "blackout";
 			zNode = zoomState.zoomNode;
-			document.body.removeChild(zNode);
+			gesture.unlisten(zNode.parentNode);
+			document.body.removeChild(zNode.parentNode.parentNode);
 			zoomState.zoomNode = null;
 		}
 	};
@@ -278,39 +211,26 @@ onload = function ()
 	var zoomTap = function ()
 	{
 		var zNode = zoomState.zoomNode, 
-			zoomWidth = zoomScale * zNode.clientWidth,
-			zoomLeft = -((zoomWidth - window.innerWidth) / 2);
+			zoomWidth = zoomScale * zNode.clientWidth;
 		var zoomUpEnd = function (event)
 		{
 			zNode.style['-webkit-transition'] = "";
 			zNode.removeEventListener("webkitTransitionEnd", zoomUpEnd, false);
 		};
 		zNode.addEventListener("webkitTransitionEnd", zoomUpEnd, false);
-		zNode.style['-webkit-transition'] = "width 250ms ease-in, left 250ms ease-in, -webkit-transform 250ms ease-in";
+		zNode.style['-webkit-transition'] = "width 250ms ease-in, -webkit-transform 250ms ease-in";
 		if (zoomState.large == false)
 		{
 			zoomState.large = true;
 			zNode.style.width = zoomWidth + "px";
-			zNode.style.left = zoomLeft + "px";
-			zoomState.xCurrent = 0;
-			zoomState.yCurrent = 0;
-			gesture.unlisten(zNode);
-			gesture.listen("swipe", zNode, zoomSwipeCallback);
-			gesture.listen("drag", zNode, zoomDragCallback);
-			gesture.listen("up", zNode, zoomUpCallback);
-			gesture.listen("tap", zNode, largeZoom);
+			//zNode.style.left = zoomLeft + "px";
 		}
 		else
 		{
 			zoomState.large = false;
 			zoomWidth = window.innerWidth + "px";
-			zoomLeft = "0px";
 			zNode.style.width = zoomWidth;
-			zNode.style.left = zoomLeft;
 			zNode.style['-webkit-transform'] = "";
-			gesture.unlisten(zNode);
-			gesture.listen("tap", zNode, largeZoom);
-			gesture.listen("swipe", zNode, doubleTap);
 		}
 	};
 	var revertSlider = function ()

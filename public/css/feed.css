@@ -214,3 +214,23 @@ html, body
 {
   height: auto;
 }
+.raw_wrapper
+{
+  
+  display: inline;
+  top: 0;
+  position: absolute;
+  width:100%; 
+}
+.raw_wrapper img
+{
+  pointer-events: none;
+}
+.zoom_wrapper
+{
+  top: 50px;
+  overflow: scroll;
+  position: absolute;
+  width:100%; 
+  padding-top:20px;
+}
