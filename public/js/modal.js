@@ -31,8 +31,10 @@ var modal = {
 		modal.back.className = "blackout";
 		modal.back.cb = null;
 	},
-	backToggle: function() {
-		toggleClass.call(modal.back, "blackfade");
+	backToggle: function(cb, isHalf) {
+		var backClass = (isHalf ? "half" : "black") + "fade";
+		toggleClass.call(modal.back, backClass);
+		modal.back.cb = modal.back.hasClass(backClass) ? cb : null;
 	},
 	modalIn: function(node, cb) {
 		modal.modal.innerHTML = "";
