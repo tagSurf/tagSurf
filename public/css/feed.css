@@ -227,7 +227,7 @@ html, body
 #scroll-container
 {
   top: 50px;
-  overflow: scroll;
+  overflow: auto;
   position: absolute;
   width:100%; 
 }
