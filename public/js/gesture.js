@@ -80,6 +80,7 @@ var gesture = {
 	},
 	onStop: function(e, node) {
 		var v = gesture.vars;
+		if (!v.active) return;
 		var t = gesture.thresholds;
 		var pos = gesture.getPos(e);
 		var diff = gesture.getDiff(v.startPos, pos);
