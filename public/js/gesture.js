@@ -3,7 +3,7 @@ var gesture = {
 	thresholds: {
 		swipe: {
 			minDistance: 50,
-			maxTime: 700
+			maxTime: 400
 		},
 		tap: {
 			maxDistance: 50,

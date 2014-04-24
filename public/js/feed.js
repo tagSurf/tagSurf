@@ -287,6 +287,8 @@ onload = function ()
 			verticalQuantity = 0;
 		var isUp = direction == "right";
 		var voteDir = isUp ? "up" : "down";
+		var transitionDistance = translateQuantity - slideState.xCurrent;
+		var transitionDuration = pixelsPerSecond ? (transitionDistance / pixelsPerSecond) : 250;
 		if (superState == true)
 		{
 			verticalQuantity = -500;
@@ -297,8 +299,6 @@ onload = function ()
 			rotateQuantity = -rotateQuantity;
 			verticalQuantity = -verticalQuantity;
 		}
-		var transitionDistance = translateQuantity - slideState.xCurrent;
-		var transitionDuration = pixelsPerSecond ? (transitionDistance / pixelsPerSecond) : 250;
 		var swipeSliderCallback = function (event) {
 			animationInProgress = false;
 			clearTimeout(swipeSliderCallbackTimeout);
