@@ -43,7 +43,7 @@ var modal = {
 	backOff: function(onOff) {
 		modal.back.className = "blackout";
 		modal.back.cb = null;
-		onTrans(modal.back, function() {
+		trans(modal.back, function() {
 			onOff && onOff();
 			modal.back.style.opacity = 0;
 			if (modal.back.firstChild)
