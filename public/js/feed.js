@@ -229,6 +229,7 @@ onload = function ()
 		slider.style['border-color'] = "#353535";
 		slider.style['background-color'] = "#353535";
 		slider.lastChild.display = "none";
+		revertStateReset(slider);
 		if (slider.x == 0)
 			return;
 		slider.animating = true;
@@ -237,7 +238,6 @@ onload = function ()
 		var revertSliderCallback = function (event) {
 			slider.style['-webkit-transition'] = "";
 			slider.style['-webkit-transform'] = "";
-			revertStateReset(slider);
 			slider.removeEventListener("webkitTransitionEnd", revertSliderCallback, false);
 		};
 		slider.addEventListener( 'webkitTransitionEnd', revertSliderCallback, false);
