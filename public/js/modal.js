@@ -32,13 +32,17 @@ var modal = {
 		modal.back.className = "blackout blackfade";
 		modal.back.cb = cb;
 	},
-	halfOn: function(cb) {
+	halfOn: function(cb, injectionNode) {
+		if (injectionNode)
+			modal.back.appendChild(injectionNode);
 		modal.back.className = "blackout halffade";
 		modal.back.cb = cb;
 	},
 	backOff: function() {
 		modal.back.className = "blackout";
 		modal.back.cb = null;
+		if (modal.back.firstChild)
+			modal.back.removeChild(modal.back.firstChild);
 	},
 	backToggle: function(cb, isHalf) {
 		var backClass = (isHalf ? "half" : "black") + "fade";

@@ -7,6 +7,7 @@ onload = function ()
 		staticHash = document.getElementById("static-hash"),
 		staticTrending = document.getElementById("static-trending"),
 		tinput = document.getElementById("tag-input"),
+		inputContainer = document.getElementById("input-container"),
 		current_tag = tinput.value
 			= document.location.hash.slice(1) || "trending";
 	var populateSlider = function (update)
@@ -75,9 +76,13 @@ onload = function ()
 		modal.halfOn(function() {
 			tinput.value = current_tag;
 			aclist.className = "";
+			slideContainer.className = "";
+			scrollContainer.insertBefore(inputContainer,
+				scrollContainer.firstChild);
 			modal.backOff();
 			tinput.blur();
-		});
+		}, inputContainer);
+		slideContainer.className = "noinput";
 	};
 	tinput.onkeyup = function(e) {
 		e = e || window.event;
