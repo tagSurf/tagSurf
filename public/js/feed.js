@@ -272,6 +272,12 @@ onload = function ()
 					swipeSlider("left");
 				}
 			}
+			else if (slider.verticaling == true && slider.expanded == true)
+			{
+				slider.verticaling = false;
+				slider.sliding = false;
+				return true;
+			}
 		}
 		slider.verticaling = false;
 		slider.sliding = false;
