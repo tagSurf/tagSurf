@@ -3,11 +3,8 @@ class CardSerializer < ActiveModel::Serializer
 
   attributes( 
     :id,
-    :image_link_medium,
-    :image_link_tiny,
-    :image_link_original,
-    :title, 
-    :description,
+    :image,
+    :caption, 
     :tags,
     :user_stats,
     :total_votes,
@@ -21,12 +18,27 @@ class CardSerializer < ActiveModel::Serializer
     [object.section]
   end
 
-  def image_link_medium
-    if object.animated?
-      object.image_link_original
-    else 
-      object.image_link_medium
-    end
+  def image
+    h = {
+      content_type: object.content_type,
+      animated: object.animated?,
+      tiny:   {url: object.image_link_tiny, width: 50, height: 50},
+      medium: {url: object.image_link_medium, width: 320, height: 320},
+      original: {url: object.image_link_original, width: object.width, height: object.height}
+    }
+    h
+  end
+
+  def caption
+    if object.description
+      object.description
+    else
+      object.title
+    end 
+  end
+
+  def source
+    object.remote_provider
   end
 
   def user_stats
