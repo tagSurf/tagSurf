@@ -10,7 +10,8 @@ var gesture = {
 		tap: {
 			maxDistance: 50,
 			maxTime: 700,
-			waitTime: 300
+			waitTime: 300,
+			maxCount: 2
 		},
 		hold: {
 			maxDistance: null, // set to pixel value if desired
@@ -69,8 +70,8 @@ var gesture = {
 		}
 		v.holdCount = 0;
 		v.holdInterval = setInterval(function() {
-			if (t.hold.maxDistance && (t.hold.maxDistance <
-				gesture.getDiff(v.startPos, v.lastPos).distance)) {
+			if (!v.active || (t.hold.maxDistance && (t.hold.maxDistance <
+				gesture.getDiff(v.startPos, v.lastPos).distance))) {
 				clearInterval(v.holdInterval);
 				v.holdInterval = null;
 				return;
@@ -98,9 +99,13 @@ var gesture = {
 		else if ( (timeDiff < t.tap.maxTime)
 			&& (diff.distance < t.tap.maxDistance) ) { // tap
 			v.tapCount += 1;
-			v.tapTimeout = setTimeout(function() {
+			if (v.tapCount == t.tap.maxCount)
 				gesture.triggerTap(node);
-			}, t.tap.waitTime);
+			else {
+				v.tapTimeout = setTimeout(function() {
+					gesture.triggerTap(node);
+				}, t.tap.waitTime);
+			}
 		}
 
 		if (v.holdInterval) {
