@@ -8,28 +8,41 @@ var modal = {
 		modal.modal.className = "modal";
 		document.body.appendChild(modal.back);
 		document.body.appendChild(modal.modal);
-		gesture.listen("tap", modal.modal, modal.callModal);
-		gesture.listen("swipe", modal.modal, modal.callModal);
 		gesture.listen("tap", modal.back, modal.callBack);
 		gesture.listen("swipe", modal.back, modal.callBack);
+		gesture.listen("tap", modal.modal, modal.callModal);
+		gesture.listen("swipe", modal.modal, modal.callModal);
+		gesture.listen("up", modal.modal, modal._passThrough);
+		gesture.listen("down", modal.modal, modal._passThrough);
+		gesture.listen("drag", modal.modal, modal._passThroughUD);
 	},
-	callModal: function() {
-		modal.modal.cb && modal.modal.cb();
+	_passThrough: function() {
+		return true;
+	},
+	_passThroughUD: function(direction) {
+		return (direction == "up" || direction == "down");
+	},
+	callModal: function(direction) {
+		return modal.modal.cb && modal.modal.cb();
 	},
 	callBack: function() {
-		modal.back.cb && modal.back.cb();
+		return modal.back.cb && modal.back.cb();
 	},
 	backOn: function(cb) {
 		modal.back.className = "blackout blackfade";
 		modal.back.cb = cb;
 	},
-	halfOn: function(cb) {
+	halfOn: function(cb, injectionNode) {
+		if (injectionNode)
+			modal.back.appendChild(injectionNode);
 		modal.back.className = "blackout halffade";
 		modal.back.cb = cb;
 	},
 	backOff: function() {
 		modal.back.className = "blackout";
 		modal.back.cb = null;
+		if (modal.back.firstChild)
+			modal.back.removeChild(modal.back.firstChild);
 	},
 	backToggle: function(cb, isHalf) {
 		var backClass = (isHalf ? "half" : "black") + "fade";

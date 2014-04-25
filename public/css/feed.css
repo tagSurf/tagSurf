@@ -191,6 +191,11 @@ html, body
   overflow: hidden;
 }
 
+.noinput
+{
+  margin-top: 50px;
+}
+
 .expand-animation
 {
   transition: all 1s ease-in-out;
