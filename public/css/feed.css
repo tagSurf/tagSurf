@@ -168,11 +168,11 @@ html, body
 .image-container
 {
   overflow-y: hidden;
+  pointer-events: none;
 }
 
 .image-container img
 {
-  pointer-events: none;
   border-radius: 8px;
   margin: 2.5%;
   width: 95%;

@@ -126,48 +126,31 @@ onload = function ()
 	var formattingContainer = document.getElementById('formatter');
 	var navBarHeight = document.getElementById('navbar').clientHeight + 15;
 	var slider = slideContainer.children[0];
-	var cardCompression = [false, false, false];
-	animationInProgress = false;
-	var isExpanded = false;
-	var superState = false;
-	var zoomState =
+	var setStartState = function (node)
 	{
-		zoomed: false,
-		large: false,
-		zoomNode: null,
-		xCurrent: 0,
-		yCurrent: 0
+		node.x = 0;
+		node.zoomNode = null;
+		node.sliding = false;
+		node.verticaling = false;
+		node.supering = false;
+		node.animating = false;
+		node.compressing = true;
+		node.large = false;
+		node.zoomed = false;
+		node.expanded = false;
 	};
-	var scrollState = 
+	var revertStateReset = function (node)
 	{
-		verticaling: false,
-		yCurrent: 0
-	};
-	var slideState =
-	{
-		sliding: false,
-		xCurrent: 0
-	};
-	var resetSlideState = function ()
-	{
-		slideState =
-		{
-			sliding: false,
-			xCurrent: 0
-		};
-	};
-	var resetScrollState = function ()
-	{
-		scrollState =
-		{
-			verticaling: false,
-			yCurrent: 0
-		};
+		node.x = 0;
+		node.sliding = false;
+		node.verticaling = false;
+		node.supering = false;
+		node.animating = false;
 	};
 	var doubleTap = function ()
 	{
 		var zNode, wrapper, gesture_wrapper, scaledWidth;
-		if (zoomState.zoomed == false)
+		if (slider.zoomed == false)
 		{
 			modal.backOn();
 			zNode = slider.firstChild.firstChild.cloneNode(true);
@@ -176,8 +159,8 @@ onload = function ()
 			zNode.style.left = "0px";
 			zNode.style.top = "10px";
 			zNode.style.width = window.innerWidth + "px";
-			zoomState.zoomNode = zNode;
-			zoomState.zoomed = true;
+			slider.zoomNode = zNode;
+			slider.zoomed = true;
 			wrapper = document.createElement('div');
 			gesture_wrapper = document.createElement('div');
 			wrapper.className = "zoom_wrapper";
@@ -195,19 +178,19 @@ onload = function ()
 		}
 		else
 		{
-			zoomState.zoomed = false;
+			slider.zoomed = false;
 			modal.backOff();
-			zNode = zoomState.zoomNode;
+			zNode = slider.zoomNode;
 			gesture.unlisten(zNode.parentNode);
 			document.body.removeChild(zNode.parentNode.parentNode);
-			zoomState.zoomNode = null;
+			slider.zoomNode = null;
 		}
 	};
 	var largeZoom = function (tapCount)
 	{
 		if (tapCount == 1)
 		{
-			if (zoomState.large == false)
+			if (slider.large == false)
 			{
 				doubleTap();
 			}
@@ -220,7 +203,7 @@ onload = function ()
 	};
 	var zoomTap = function ()
 	{
-		var zNode = zoomState.zoomNode, 
+		var zNode = slider.zoomNode, 
 			zoomWidth = zoomScale * zNode.clientWidth;
 		var zoomUpEnd = function (event)
 		{
@@ -229,14 +212,14 @@ onload = function ()
 		};
 		zNode.addEventListener("webkitTransitionEnd", zoomUpEnd, false);
 		zNode.style['-webkit-transition'] = "width 250ms ease-in, -webkit-transform 250ms ease-in";
-		if (zoomState.large == false)
+		if (slider.large == false)
 		{
-			zoomState.large = true;
+			slider.large = true;
 			zNode.style.width = zoomWidth + "px";
 		}
 		else
 		{
-			zoomState.large = false;
+			slider.large = false;
 			zoomWidth = window.innerWidth + "px";
 			zNode.style.width = zoomWidth;
 			zNode.style['-webkit-transform'] = "";
@@ -246,47 +229,53 @@ onload = function ()
 	{
 		slider.style['border-color'] = "#353535";
 		slider.style['background-color'] = "#353535";
-		if (slideState.xCurrent == 0)
-			return;
-		animationInProgress = true;
-		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
-		slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
-		var revertSliderCallback = function (event) {
-			slider.style['-webkit-transition'] = "";
-			slider.style['-webkit-transform'] = "";
-			animationInProgress = false;
-			resetSlideState();
-			slider.removeEventListener("webkitTransitionEnd", revertSliderCallback, false);
-		};
-		slider.addEventListener( 'webkitTransitionEnd', revertSliderCallback, false);
+		slider.lastChild.display = "none";
+		if (slider.x == 0)
+		{
+			revertStateReset(slider);
+		}
+		else
+		{
+			revertStateReset(slider);
+			var revertSliderCallback = function (event) {
+				slider.style['-webkit-transition'] = "";
+				slider.style['-webkit-transform'] = "";
+				slider.animating = false;
+				slider.removeEventListener("webkitTransitionEnd", revertSliderCallback, false);
+			};
+			slider.addEventListener( 'webkitTransitionEnd', revertSliderCallback, false);
+			slider.animating = true;
+			slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
+			slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
+		}
 	};
 	var upCallback = function ()
 	{
-		if (animationInProgress == false)
+		if (slider.animating == false)
 		{
-			if (slideState.sliding == true)
+			if (slider.sliding == true)
 			{
-				if (Math.abs(slideState.xCurrent) < slideThreshold)
+				if (Math.abs(slider.x) < slideThreshold)
 				{
-					if (superState == true)
+					if (slider.supering == true)
 					{
 						toggleClass.apply(slider,['super_card']);
-						superState = false;
+						slider.supering = false;
 					}
 					revertSlider();
 				}
-				else if (slideState.xCurrent > slideThreshold)
+				else if (slider.x > slideThreshold)
 				{
 					swipeSlider("right");
 				}
-				else if (slideState.xCurrent < -slideThreshold)
+				else if (slider.x < -slideThreshold)
 				{
 					swipeSlider("left");
 				}
 			}
 		}
-		scrollState.verticaling = false;
-		slideState.sliding = false;
+		slider.verticaling = false;
+		slider.sliding = false;
 	};
 	var swipeSlider = function (direction, voteAlternative, pixelsPerSecond)
 	{
@@ -295,9 +284,9 @@ onload = function ()
 			verticalQuantity = 0;
 		var isUp = direction == "right";
 		var voteDir = isUp ? "up" : "down";
-		var transitionDistance = translateQuantity - slideState.xCurrent;
+		var transitionDistance = translateQuantity - slider.x;
 		var transitionDuration = pixelsPerSecond ? (transitionDistance / pixelsPerSecond) : 250;
-		if (superState == true)
+		if (slider.supering == true)
 		{
 			verticalQuantity = -500;
 		}
@@ -308,24 +297,22 @@ onload = function ()
 			verticalQuantity = -verticalQuantity;
 		}
 		var swipeSliderCallback = function (event) {
-			animationInProgress = false;
+			slider.animating = false;
 			clearTimeout(swipeSliderCallbackTimeout);
 			slider.removeEventListener( 'webkitTransitionEnd', swipeSliderCallback, false);
 			gesture.unlisten(slider.parentNode);
 			slideContainer.removeChild(slider.parentNode);
-			updateCompressionStatus();
 			buildCard(0);
 			slideContainer.children[0].style.zIndex = 2;
 			if (slideContainer.children[1])
 				slideContainer.children[1].style.zIndex = 1;
-			resetSlideState();
 			if (voteAlternative) voteAlternative();
 			else xhr("/api/votes/" + voteDir + "/" + activeCard.id
 				+ "/tag/" + current_tag, "POST");
 		};
 		var swipeSliderCallbackTimeout = setTimeout(swipeSliderCallback, transitionDuration + 50);
 		slider.addEventListener( 'webkitTransitionEnd', swipeSliderCallback, false);
-		animationInProgress = true;
+		slider.animating = true;
 		slider.style['-webkit-transition'] = "-webkit-transform " + Math.abs(transitionDuration) + "ms";
 		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px," + verticalQuantity + "px,0) rotate(" + rotateQuantity + "deg)";
 
@@ -345,86 +332,63 @@ onload = function ()
 		else if (code == 39)
 			swipeSlider("right");
 	};
-	var swipeCallback = function (direction, distance, dx, dy, timeDifference)
+	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
-		var pixelsPerSecond = distance / timeDifference;
-		if (animationInProgress)
+		if (slider.animating)
 			return;
-		if (isExpanded == true &&
-			(direction == "up" || direction == "down"))
-		{
+		if (direction == "left" || direction == "right")
+			swipeSlider(direction, null, pixelsPerSecond);
+		else if (slider.expanded)
 			return true;
-		}
-		else if (direction == "left")
-		{
-			swipeSlider("left", null, pixelsPerSecond);
-		}
-		else if (direction == "right")
-		{
-			swipeSlider("right", null, pixelsPerSecond);
-		}
 	};
 	var dragCallback = function (direction, distance, dx, dy)
 	{
-		if (animationInProgress == false)
+		if (slider.animating == false)
 		{
-			if (isExpanded == true && 
+			if (slider.expanded == true && 
 				(direction == "up" || direction == "down"))
 			{
 				return true;
 			}
 			else 
 			{
-				if (scrollState.verticaling == false)
+				if (slider.verticaling == false)
 				{
-					slideState.sliding = true;
-					slideState.xCurrent += dx;
-					if (slideState.xCurrent > 0)
+					 slider.sliding = true;
+					 slider.x += dx;
+					if ( slider.x > 0)
 					{
-						if (superState == true)
+						if (slider.supering == true)
 						{
 							slider.style['background-color'] = 'green';
 						}
 						slider.style['border-color'] = 'green';
 					}
-					else if (slideState.xCurrent < 0)
+					else if ( slider.x < 0)
 					{
-						if (superState == true)
+						if (slider.supering == true)
 						{
 							slider.style['background-color'] = '#C90016';
 						}
 						slider.style['border-color'] = '#C90016';
 					}
 					slider.style['-webkit-transform'] = 
-						"translate3d(" + (slideState.xCurrent * translationScale) + "px,0,0) rotate(" + (slideState.xCurrent * rotationScale) + "deg)";
+						"translate3d(" + ( slider.x * translationScale) + "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
 				}
 			}
 		}
 	};
 	var tapCallback = function (tapCount)
 	{
-		switch (tapCount)
-		{
-			case 1:
-				expandCard();
-				break;
-			case 2:
-				doubleTap();
-				break;
-		}
+		[expandCard, doubleTap][tapCount-1]();
 	};
 	var holdCallback = function (duration) {
 		if (duration == 3000)
 		{
-			superState = true;
+			slider.supering = true;
 			toggleClass.apply(slider, ['super_card']);
 		}
 	};
-	var updateCompressionStatus = function ()
-	{
-		cardCompression.shift();
-		isExpanded = false;
-	}
 	var buildCard = function (zIndex)
 	{
 		if (data.length <= cardIndex) {
@@ -448,24 +412,25 @@ onload = function ()
 		textContainer = formatter.children[0].children[0].children[1];
 		fullscreenButton = formatter.children[0].children[0].children[2];
 		imageContainer.children[0].onload = function () {
+			card = formatter.firstChild.firstChild;
+			setStartState(card);
 			if (imageContainer.children[0].clientHeight + textContainer.clientHeight < maxCardHeight)
 			{
 				imageContainer.classList.remove("expand-animation");
 				fullscreenButton.className += ' hider';
-				cardCompression[2 - zIndex] = false;
+				card.compressing = false;
 			}
 			else
 			{
 				truncatedTitle = data[cardIndex].title.trunc(30);
 				truncatedTitle = "<p>" + truncatedTitle + "</p>";
 				textContainer.innerHTML = truncatedTitle;
-				cardCompression[2 - zIndex] = true;
+				card.compressing = true;
 			}
-			card = formatter.firstChild;
-			slideContainer.appendChild(card);
-			slider = slideContainer.children[0].children[0];
-			initCardGestures.call(card);
+			initCardGestures.call(card.parentNode);
+			slideContainer.appendChild(card.parentNode);
 			formattingContainer.removeChild(formatter);
+			slider = slideContainer.children[0].children[0];
 
 			++cardIndex;
 			if (data.length == cardIndex + buffer_minimum)
@@ -486,10 +451,10 @@ onload = function ()
 	};
 	var expandCard = function ()
 	{
-		if (cardCompression[0])
+		if (slider.compressing)
 		{
-			cardCompression[0] = false;
-			isExpanded = true;
+			slider.compressing = false;
+			slider.expanded = true;
 			slider.children[0].className += " expanded";
 			slider.children[1].innerHTML = "<p>" + data[cardIndex-3].title + "</p>";
 			slider.children[2].style.visibility = "hidden";
