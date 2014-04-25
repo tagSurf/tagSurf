@@ -94,7 +94,7 @@ var gesture = {
 			gesture.triggerSwipe(node, diff.direction,
 				diff.distance, diff.x, diff.y,
 				Math.min(t.swipe.maxDP, Math.max(t.swipe.minDP,
-					diff.distance / timeDiff));
+					diff.distance / timeDiff)));
 		else if ( (timeDiff < t.tap.maxTime)
 			&& (diff.distance < t.tap.maxDistance) ) { // tap
 			v.tapCount += 1;
