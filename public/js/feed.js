@@ -325,9 +325,8 @@ onload = function ()
 		else if (code == 39)
 			swipeSlider("right");
 	};
-	var swipeCallback = function (direction, distance, dx, dy, timeDifference)
+	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
-		var pixelsPerSecond = distance / timeDifference;
 		if (slider.animating)
 			return;
 		if (direction == "left" || direction == "right")
