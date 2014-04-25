@@ -232,7 +232,6 @@ onload = function ()
 		revertStateReset(slider);
 		if (slider.x == 0)
 			return;
-		slider.animating = true;
 		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
 		slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
 		var revertSliderCallback = function (event) {
