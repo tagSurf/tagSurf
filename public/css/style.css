@@ -25,6 +25,10 @@ a {
 	text-decoration: none;
 }
 
+::-webkit-scrollbar { 
+    display: none; 
+}
+
 .alert-success, .hidden {
 	display: none !important;
 }
@@ -35,6 +39,16 @@ a {
 
 .padded {
 	padding: 10px;
+}
+
+.pictags {
+	text-align: center;
+}
+
+.pictags span {
+	background: #00aeef;
+	border-radius: 5px;
+	padding: 5px;
 }
 
 .blackout {

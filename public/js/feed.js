@@ -113,11 +113,11 @@ onload = function ()
 	var zoomScale = 1.5;
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
-	var maxCardHeight = window.innerHeight - 180;
+	var maxCardHeight = window.innerHeight - 200;
 	var slideThreshold = 60;
 	addCss(".expand-animation { max-height: "
 		+ maxCardHeight + "px; } .card-container { min-height: "
-		+ (maxCardHeight + 65) + "px; }");
+		+ (maxCardHeight + 85) + "px; }");
 	addCss(".basic-zoom { z-index: 2; position: absolute; top: 100px;pointer-events:none;");
 	addCss(".raw_wrapper, .zoom_wrapper, #scroll-container {height:" 
 		+ (window.innerHeight - 50) + "px;}");
@@ -402,19 +402,26 @@ onload = function ()
 			slideContainer.appendChild(c_wrapper);
 			return;
 		}
-		var imageContainer, textContainer, fullscreenButton, truncatedTitle, card;
+		var imageContainer, textContainer, picTags, fullscreenButton, truncatedTitle, card;
 		var c = data[cardIndex];
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + (c.image_link_medium || c.image_link_original) + "'></div><div class='text-container'><p>" + c.title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + (c.image_link_medium || c.image_link_original) + "'></div><div class='text-container'><p>" + c.title + "</p></div><div class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		imageContainer = formatter.children[0].children[0].children[0];
 		textContainer = formatter.children[0].children[0].children[1];
-		fullscreenButton = formatter.children[0].children[0].children[2];
+		picTags = formatter.children[0].children[0].children[2];
+		fullscreenButton = formatter.children[0].children[0].children[3];
+		for (var i = 0; i < c.tags.length; i++) {
+			var p = document.createElement("span");
+			p.innerHTML = "#" + c.tags[i];
+			picTags.appendChild(p);
+		}
 		imageContainer.children[0].onload = function () {
 			card = formatter.firstChild.firstChild;
 			setStartState(card);
-			if (imageContainer.children[0].clientHeight + textContainer.clientHeight < maxCardHeight)
+			if (imageContainer.children[0].clientHeight + textContainer.clientHeight
+				+ /* picTags */ 20 < maxCardHeight)
 			{
 				imageContainer.classList.remove("expand-animation");
 				fullscreenButton.className += ' hider';
@@ -425,6 +432,7 @@ onload = function ()
 				truncatedTitle = data[cardIndex].title.trunc(30);
 				truncatedTitle = "<p>" + truncatedTitle + "</p>";
 				textContainer.innerHTML = truncatedTitle;
+				picTags.className += ' hider';
 				card.compressing = true;
 			}
 			initCardGestures.call(card.parentNode);
@@ -457,7 +465,8 @@ onload = function ()
 			slider.expanded = true;
 			slider.children[0].className += " expanded";
 			slider.children[1].innerHTML = "<p>" + data[cardIndex-3].title + "</p>";
-			slider.children[2].style.visibility = "hidden";
+			slider.children[2].style.visibility = "visible";
+			slider.children[3].style.visibility = "hidden";
 		}
 	};
 	setStarCallback(function() {

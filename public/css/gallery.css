@@ -74,12 +74,6 @@
 	border-radius: 5px;
 }
 
-#pictag {
-	background: #00aeef;
-	border-radius: 5px;
-	padding: 5px;
-}
-
 #history_slider {
 	position: fixed;
 	opacity: 0;
