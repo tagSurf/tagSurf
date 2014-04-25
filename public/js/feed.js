@@ -50,12 +50,13 @@ onload = function ()
 	var viewTag = function(tagName) {
 		location.hash = tagName;
 		aclist.className = "";
-		slideContainer.className = "";
-		scrollContainer.insertBefore(inputContainer,
-			scrollContainer.firstChild);
-		modal.backOff();
 		tinput.value = tagName;
 		tinput.blur();
+		modal.backOff(function() {
+			slideContainer.className = "";
+			scrollContainer.insertBefore(inputContainer,
+				scrollContainer.firstChild);
+		});
 		if (tagName != current_tag) {
 			current_tag = tagName;
 			populateSlider();

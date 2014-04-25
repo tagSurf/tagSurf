@@ -146,3 +146,13 @@ var mod = function(opts) {
 var isIphone = function() {
   return navigator.userAgent.indexOf("iPhone") != -1;
 };
+var onTrans = function(node, cb) {
+  var wrapper = function () {
+    node.style['-webkit-transition'] = "";
+    node.removeEventListener("webkitTransitionEnd",
+      wrapper, false);
+    cb();
+  };
+  node.addEventListener("webkitTransitionEnd",
+    wrapper, false);
+};
