@@ -230,16 +230,19 @@ onload = function ()
 		slider.style['background-color'] = "#353535";
 		slider.lastChild.display = "none";
 		revertStateReset(slider);
-		if (slider.x == 0)
-			return;
-		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
-		slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
-		var revertSliderCallback = function (event) {
-			slider.style['-webkit-transition'] = "";
-			slider.style['-webkit-transform'] = "";
-			slider.removeEventListener("webkitTransitionEnd", revertSliderCallback, false);
-		};
-		slider.addEventListener( 'webkitTransitionEnd', revertSliderCallback, false);
+		if (slider.x != 0)
+		{
+			var revertSliderCallback = function (event) {
+				slider.style['-webkit-transition'] = "";
+				slider.style['-webkit-transform'] = "";
+				slider.animating = false;
+				slider.removeEventListener("webkitTransitionEnd", revertSliderCallback, false);
+			};
+			slider.addEventListener( 'webkitTransitionEnd', revertSliderCallback, false);
+			slider.animating = true;
+			slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
+			slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
+		}
 	};
 	var upCallback = function ()
 	{
