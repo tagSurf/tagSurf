@@ -4,8 +4,8 @@ var gesture = {
 		swipe: {
 			minDistance: 50,
 			maxTime: 400,
-			minDP: 100,
-			maxDP: 250
+			minDP: 600,
+			maxDP: 1000
 		},
 		tap: {
 			maxDistance: 50,
