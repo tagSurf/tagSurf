@@ -29,25 +29,26 @@ var modal = {
 		return modal.back.cb && modal.back.cb();
 	},
 	backOn: function(cb) {
+		modal.back.style.opacity = 1;
 		modal.back.className = "blackout blackfade";
 		modal.back.cb = cb;
 	},
 	halfOn: function(cb, injectionNode) {
-		if (injectionNode)
-			modal.back.appendChild(injectionNode);
+		modal.back.style.opacity = 1;
 		modal.back.className = "blackout halffade";
 		modal.back.cb = cb;
+		if (injectionNode)
+			modal.back.appendChild(injectionNode);
 	},
 	backOff: function(onOff) {
 		modal.back.className = "blackout";
 		modal.back.cb = null;
-		if (onOff || modal.back.firstChild) {
-			onTrans(modal.back, function() {
-				onOff && onOff();
-				if (modal.back.firstChild)
-					modal.back.removeChild(modal.back.firstChild);
-			});
-		}
+		onTrans(modal.back, function() {
+			onOff && onOff();
+			modal.back.style.opacity = 0;
+			if (modal.back.firstChild)
+				modal.back.removeChild(modal.back.firstChild);
+		});
 	},
 	backToggle: function(cb, isHalf) {
 		var backClass = (isHalf ? "half" : "black") + "fade";
