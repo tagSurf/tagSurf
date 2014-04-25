@@ -49,7 +49,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		picbox.appendChild(picdesc);
 
 		var pictagbox = document.createElement("div");
-		pictagbox.className = "centered padded";
+		pictagbox.className = "padded pictags";
 		pictag = document.createElement("span");
 		pictag.id = "pictag";
 		pictagbox.appendChild(pictag);

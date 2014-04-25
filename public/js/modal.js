@@ -38,11 +38,16 @@ var modal = {
 		modal.back.className = "blackout halffade";
 		modal.back.cb = cb;
 	},
-	backOff: function() {
+	backOff: function(onOff) {
 		modal.back.className = "blackout";
 		modal.back.cb = null;
-		if (modal.back.firstChild)
-			modal.back.removeChild(modal.back.firstChild);
+		if (onOff || modal.back.firstChild) {
+			onTrans(modal.back, function() {
+				onOff && onOff();
+				if (modal.back.firstChild)
+					modal.back.removeChild(modal.back.firstChild);
+			});
+		}
 	},
 	backToggle: function(cb, isHalf) {
 		var backClass = (isHalf ? "half" : "black") + "fade";
