@@ -6,14 +6,13 @@ String.prototype.trunc = String.prototype.trunc ||
   function(n){
     return this.length>n ? this.substr(0,n-1)+'&hellip;' : this;
 };
-var toggleClass = function (className)
+var toggleClass = function (className, onOrOff)
 {
-  if (this.hasClass(className))
-  {
+  var hasClass = this.hasClass(className);
+  if (hasClass && onOrOff != "on")
     this.classList.remove(className);
-    return;
-  }
-  this.classList.add(className);
+  else if (!hasClass && onOrOff != "off")
+    this.classList.add(className);
 };
 var galleries = ["history", "favorites", "submissions", "tag"];
 var whichGallery = function() {
