@@ -260,7 +260,6 @@ onload = function ()
 					if (slider.supering == true)
 					{
 						toggleClass.apply(slider,['super_card']);
-						slider.supering = false;
 					}
 					revertSlider();
 				}
@@ -280,6 +279,7 @@ onload = function ()
 				return true;
 			}
 		}
+		slider.supering = false;
 		slider.verticaling = false;
 		slider.sliding = false;
 	};
