@@ -50,9 +50,16 @@ onload = function ()
 	var viewTag = function(tagName) {
 		location.hash = tagName;
 		aclist.className = "";
+		slideContainer.className = "";
+		scrollContainer.insertBefore(inputContainer,
+			scrollContainer.firstChild);
 		modal.backOff();
-		current_tag = tinput.value = tagName;
-		populateSlider();
+		tinput.value = tagName;
+		tinput.blur();
+		if (tagName != current_tag) {
+			current_tag = tagName;
+			populateSlider();
+		}
 	};
 	xhr("/api/tags", null, function(response_data) {
 		response_data.data.forEach(function(tag) {
@@ -74,15 +81,10 @@ onload = function ()
 		tinput.value = "";
 		aclist.className = "autocomplete-open";
 		modal.halfOn(function() {
-			tinput.value = current_tag;
-			aclist.className = "";
-			slideContainer.className = "";
-			scrollContainer.insertBefore(inputContainer,
-				scrollContainer.firstChild);
-			modal.backOff();
-			tinput.blur();
+			viewTag(current_tag);
 		}, inputContainer);
 		slideContainer.className = "noinput";
+		tinput.focus();
 	};
 	tinput.onkeyup = function(e) {
 		e = e || window.event;

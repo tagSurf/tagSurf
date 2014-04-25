@@ -67,11 +67,13 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 	};
 	var showImage = function(d) {
 		current_image = d;
-		modal.modalIn(picbox, function() {
-			current_image = null;
-			setFavIcon(location.pathname == "/favorites");
-			modal.backOff();
-			modal.modalOut();
+		modal.modalIn(picbox, function(direction) {
+			if (!isNaN(direction) || direction == "right") {
+				current_image = null;
+				setFavIcon(location.pathname == "/favorites");
+				modal.backOff();
+				modal.modalOut();
+			}
 		});
 		modal.backOn();
 		bigpic.src = d.image_link_medium || d.image_link_original;

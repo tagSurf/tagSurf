@@ -23,7 +23,7 @@ var modal = {
 		return (direction == "up" || direction == "down");
 	},
 	callModal: function(direction) {
-		return modal.modal.cb && modal.modal.cb();
+		return modal.modal.cb && modal.modal.cb(direction);
 	},
 	callBack: function() {
 		return modal.back.cb && modal.back.cb();
