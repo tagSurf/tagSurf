@@ -251,16 +251,14 @@ onload = function ()
 	};
 	var upCallback = function ()
 	{
+		toggleClass.apply(slider,['super_card', 'off']);
+		slider.supering = false;
 		if (slider.animating == false)
 		{
 			if (slider.sliding == true)
 			{
 				if (Math.abs(slider.x) < slideThreshold)
 				{
-					if (slider.supering == true)
-					{
-						toggleClass.apply(slider,['super_card']);
-					}
 					revertSlider();
 				}
 				else if (slider.x > slideThreshold)
@@ -279,7 +277,6 @@ onload = function ()
 				return true;
 			}
 		}
-		slider.supering = false;
 		slider.verticaling = false;
 		slider.sliding = false;
 	};
@@ -354,6 +351,7 @@ onload = function ()
 			if (slider.expanded == true && 
 				(direction == "up" || direction == "down"))
 			{
+				slider.verticaling = true;
 				return true;
 			}
 			else 
@@ -392,7 +390,7 @@ onload = function ()
 		if (duration == 3000)
 		{
 			slider.supering = true;
-			toggleClass.apply(slider, ['super_card']);
+			toggleClass.apply(slider, ['super_card', 'on']);
 		}
 	};
 	var buildCard = function (zIndex)
