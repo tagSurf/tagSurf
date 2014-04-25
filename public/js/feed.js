@@ -169,10 +169,10 @@ onload = function ()
 			gesture_wrapper.appendChild(zNode);
 			wrapper.appendChild(gesture_wrapper);
 			document.body.appendChild(wrapper);
-			gesture.listen("tap", zNode.parentNode, largeZoom);
-			gesture.listen("up", zNode.parentNode, function(){return true;});
-			gesture.listen("drag", zNode.parentNode, function(){return true;});
-			gesture.listen("down", zNode.parentNode, function(){return true;});
+			gesture.listen("tap", zNode.parentNode.parentNode, largeZoom);
+			gesture.listen("up", zNode.parentNode.parentNode, function(){return true;});
+			gesture.listen("drag", zNode.parentNode.parentNode, function(){return true;});
+			gesture.listen("down", zNode.parentNode.parentNode, function(){return true;});
 			zNode.style['-webkit-transition'] = "";
 			zNode.classList.remove('hider');
 		}
@@ -181,7 +181,7 @@ onload = function ()
 			slider.zoomed = false;
 			modal.backOff();
 			zNode = slider.zoomNode;
-			gesture.unlisten(zNode.parentNode);
+			gesture.unlisten(zNode.parentNode.parentNode);
 			document.body.removeChild(zNode.parentNode.parentNode);
 			slider.zoomNode = null;
 		}
@@ -205,8 +205,7 @@ onload = function ()
 	{
 		var zNode = slider.zoomNode, 
 			zoomWidth = zoomScale * zNode.clientWidth;
-		trans(zNode, null,
-			"width 250ms ease-in, -webkit-transform 250ms ease-in");
+		trans(zNode, null, "width 250ms ease-in");
 		if (slider.large == false)
 		{
 			slider.large = true;
@@ -217,7 +216,6 @@ onload = function ()
 			slider.large = false;
 			zoomWidth = window.innerWidth + "px";
 			zNode.style.width = zoomWidth;
-			zNode.style['-webkit-transform'] = "";
 		}
 	};
 	var revertSlider = function ()
@@ -342,7 +340,10 @@ onload = function ()
 			if (slider.expanded == true && 
 				(direction == "up" || direction == "down"))
 			{
-				slider.verticaling = true;
+				if (slider.sliding == false)
+				{
+					slider.verticaling = true;
+				}
 				return true;
 			}
 			else 
