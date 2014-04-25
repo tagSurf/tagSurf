@@ -117,7 +117,7 @@ onload = function ()
 	var slideThreshold = 60;
 	addCss(".expand-animation { max-height: "
 		+ maxCardHeight + "px; } .card-container { min-height: "
-		+ (maxCardHeight + 85) + "px; }");
+		+ (maxCardHeight + 90) + "px; }");
 	addCss(".basic-zoom { z-index: 2; position: absolute; top: 100px;pointer-events:none;");
 	addCss(".raw_wrapper, .zoom_wrapper, #scroll-container {height:" 
 		+ (window.innerHeight - 50) + "px;}");
