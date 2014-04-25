@@ -287,7 +287,6 @@ onload = function ()
 	};
 	var swipeSlider = function (direction, voteAlternative, pixelsPerSecond)
 	{
-		animationInProgress = true;
 		var activeCard = data[cardIndex-3];
 		var translateQuantity = 600, rotateQuantity = 60,
 			verticalQuantity = 0;
@@ -305,8 +304,6 @@ onload = function ()
 			rotateQuantity = -rotateQuantity;
 			verticalQuantity = -verticalQuantity;
 		}
-		slider.style['-webkit-transition'] = "-webkit-transform " + Math.abs(transitionDuration) + "ms";
-		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px," + verticalQuantity + "px,0) rotate(" + rotateQuantity + "deg)";
 		var swipeSliderCallback = function (event) {
 			animationInProgress = false;
 			clearTimeout(swipeSliderCallbackTimeout);
@@ -319,13 +316,15 @@ onload = function ()
 			if (slideContainer.children[1])
 				slideContainer.children[1].style.zIndex = 1;
 			resetSlideState();
-			revertScroller(0);
 			if (voteAlternative) voteAlternative();
 			else xhr("/api/votes/" + voteDir + "/" + activeCard.id
 				+ "/tag/" + current_tag, "POST");
 		};
 		var swipeSliderCallbackTimeout = setTimeout(swipeSliderCallback, transitionDuration + 50);
 		slider.addEventListener( 'webkitTransitionEnd', swipeSliderCallback, false);
+		animationInProgress = true;
+		slider.style['-webkit-transition'] = "-webkit-transform " + Math.abs(transitionDuration) + "ms";
+		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px," + verticalQuantity + "px,0) rotate(" + rotateQuantity + "deg)";
 
 		// history slider
 		activeCard.total_votes += 1;
@@ -345,11 +344,9 @@ onload = function ()
 	};
 	var swipeCallback = function (direction, distance, dx, dy, timeDifference)
 	{
+		var pixelsPerSecond = distance / timeDifference;
 		if (animationInProgress)
 			return;
-		var translateQuantity, rotateQuantity, animationDistance, animationDuration;
-		var bottomBoundary = window.innerHeight - (navBarHeight + slider.clientHeight + 70);
-		var pixelsPerSecond = distance / timeDifference;
 		if (isExpanded == true &&
 			(direction == "up" || direction == "down"))
 		{
