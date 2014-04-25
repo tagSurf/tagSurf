@@ -205,13 +205,8 @@ onload = function ()
 	{
 		var zNode = slider.zoomNode, 
 			zoomWidth = zoomScale * zNode.clientWidth;
-		var zoomUpEnd = function (event)
-		{
-			zNode.style['-webkit-transition'] = "";
-			zNode.removeEventListener("webkitTransitionEnd", zoomUpEnd, false);
-		};
-		zNode.addEventListener("webkitTransitionEnd", zoomUpEnd, false);
-		zNode.style['-webkit-transition'] = "width 250ms ease-in, -webkit-transform 250ms ease-in";
+		trans(zNode, null,
+			"width 250ms ease-in, -webkit-transform 250ms ease-in");
 		if (slider.large == false)
 		{
 			slider.large = true;
@@ -237,16 +232,14 @@ onload = function ()
 		else
 		{
 			revertStateReset(slider);
-			var revertSliderCallback = function (event) {
-				slider.style['-webkit-transition'] = "";
-				slider.style['-webkit-transform'] = "";
-				slider.animating = false;
-				slider.removeEventListener("webkitTransitionEnd", revertSliderCallback, false);
-			};
-			slider.addEventListener( 'webkitTransitionEnd', revertSliderCallback, false);
+			trans(slider,
+				function (event) {
+					slider.animating = false;
+				},
+				"-webkit-transform 250ms ease-in",
+				"translate3d(0,0,0) rotate(0deg)"
+			);
 			slider.animating = true;
-			slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
-			slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
 		}
 	};
 	var upCallback = function ()
@@ -299,25 +292,23 @@ onload = function ()
 			rotateQuantity = -rotateQuantity;
 			verticalQuantity = -verticalQuantity;
 		}
-		var swipeSliderCallback = function (event) {
-			slider.animating = false;
-			clearTimeout(swipeSliderCallbackTimeout);
-			slider.removeEventListener( 'webkitTransitionEnd', swipeSliderCallback, false);
-			gesture.unlisten(slider.parentNode);
-			slideContainer.removeChild(slider.parentNode);
-			buildCard(0);
-			slideContainer.children[0].style.zIndex = 2;
-			if (slideContainer.children[1])
-				slideContainer.children[1].style.zIndex = 1;
-			if (voteAlternative) voteAlternative();
-			else xhr("/api/votes/" + voteDir + "/" + activeCard.id
-				+ "/tag/" + current_tag, "POST");
-		};
-		var swipeSliderCallbackTimeout = setTimeout(swipeSliderCallback, transitionDuration + 50);
-		slider.addEventListener( 'webkitTransitionEnd', swipeSliderCallback, false);
+		trans(slider,
+			function () {
+				slider.animating = false;
+				gesture.unlisten(slider.parentNode);
+				slideContainer.removeChild(slider.parentNode);
+				buildCard(0);
+				slideContainer.children[0].style.zIndex = 2;
+				if (slideContainer.children[1])
+					slideContainer.children[1].style.zIndex = 1;
+				if (voteAlternative) voteAlternative();
+				else xhr("/api/votes/" + voteDir + "/" + activeCard.id
+					+ "/tag/" + current_tag, "POST");
+			},
+			"-webkit-transform " + Math.abs(transitionDuration) + "ms",
+			"translate3d(" + translateQuantity + "px," + verticalQuantity
+				+ "px,0) rotate(" + rotateQuantity + "deg)");
 		slider.animating = true;
-		slider.style['-webkit-transition'] = "-webkit-transform " + Math.abs(transitionDuration) + "ms";
-		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px," + verticalQuantity + "px,0) rotate(" + rotateQuantity + "deg)";
 
 		// history slider
 		activeCard.total_votes += 1;
