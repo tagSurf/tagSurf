@@ -241,3 +241,9 @@ html, body
 {
   padding-top:20px;
 }
+.basic-zoom {
+  z-index: 2;
+  position: absolute;
+  top: 100px;
+  pointer-events: none;
+}

@@ -1,6 +1,6 @@
-Object.prototype.hasClass = function (className) 
+var hasClass = function (node, className) 
 {
-  return this.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(this.className);
+  return node.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(node.className);
 };
 String.prototype.trunc = String.prototype.trunc ||
   function(n){
@@ -8,10 +8,10 @@ String.prototype.trunc = String.prototype.trunc ||
 };
 var toggleClass = function (className, onOrOff)
 {
-  var hasClass = this.hasClass(className);
-  if (hasClass && onOrOff != "on")
+  var classIsOn = hasClass(this, className);
+  if (classIsOn && onOrOff != "on")
     this.classList.remove(className);
-  else if (!hasClass && onOrOff != "off")
+  else if (!classIsOn && onOrOff != "off")
     this.classList.add(className);
 };
 var galleries = ["history", "favorites", "submissions", "tag"];
@@ -76,7 +76,7 @@ var populateNavbar = function () {
           "<img class='menu_icon' src='img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS",
         "</div></a></li>",
         "<li><a id='logout'><div>",
-          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGOUT",
+          "<img class='menu_icon' src='img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGOUT",
         "</div></a></li>",
       "</ul>",
     "</div>",
@@ -108,7 +108,7 @@ var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
     "img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
 };
-var addCss = function(css) {
+var _addCss = function(css) {
     var n = document.createElement("style");
     n.type = "text/css";
     if (n.styleSheet)
@@ -116,6 +116,23 @@ var addCss = function(css) {
     else
         n.appendChild(document.createTextNode(css));
     document.getElementsByTagName("head")[0].appendChild(n);
+};
+var addedCss = [];
+var addCss = function(defobj, noadd) {
+  var s = "", defname;
+  for (defname in defobj)
+    s += defname + " { " + defobj[defname]() + " } ";
+  isNaN(noadd) && addedCss.push(defobj);
+  _addCss(s);
+};
+var maxCardHeight;
+var setMaxCardHeight = function() {
+  maxCardHeight = window.innerHeight - 200;
+};
+setMaxCardHeight();
+window.onresize = function() {
+  setMaxCardHeight();
+  addedCss.forEach(addCss);
 };
 var xhr = function(path, action, cb, eb) {
   var _xhr = new XMLHttpRequest();

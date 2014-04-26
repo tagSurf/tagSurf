@@ -80,6 +80,10 @@ onload = function ()
 	});
 	tinput.onclick = function() {
 		tinput.value = "";
+		mod({
+			className: "tagline",
+			show: true
+		});
 		aclist.className = "autocomplete-open";
 		modal.halfOn(function() {
 			viewTag(current_tag);
@@ -113,18 +117,21 @@ onload = function ()
 	var zoomScale = 1.5;
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
-	var maxCardHeight = window.innerHeight - 200;
 	var slideThreshold = 60;
-	addCss(".expand-animation { max-height: "
-		+ maxCardHeight + "px; } .card-container { min-height: "
-		+ (maxCardHeight + 90) + "px; }");
-	addCss(".basic-zoom { z-index: 2; position: absolute; top: 100px;pointer-events:none;");
-	addCss(".raw_wrapper, .zoom_wrapper, #scroll-container {height:" 
-		+ (window.innerHeight - 50) + "px;}");
+	addCss({
+		".expand-animation": function() {
+			return "max-height: " + maxCardHeight + "px";
+		},
+		".card-container": function() {
+			return "min-height: " + (maxCardHeight + 90) + "px";
+		},
+		".raw_wrapper, .zoom_wrapper, #scroll-container": function() {
+			return "height: " + (window.innerHeight - 50) + "px";
+		}
+	});
 	var scrollContainer = document.getElementById('scroll-container');
 	var slideContainer = document.getElementById('slider');
 	var formattingContainer = document.getElementById('formatter');
-	var navBarHeight = document.getElementById('navbar').clientHeight + 15;
 	var slider = slideContainer.children[0];
 	var setStartState = function (node)
 	{
