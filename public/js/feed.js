@@ -159,14 +159,26 @@ onload = function ()
 		var zNode, wrapper, gesture_wrapper, scaledWidth;
 		if (slider.zoomed == false)
 		{
-			modal.backOn();
-			zNode = slider.firstChild.firstChild.cloneNode(true);
-			scaledWidth = window.innerWidth;
-			zNode.className = 'hider basic-zoom';
-			zNode.style.left = "0px";
-			zNode.style.top = "10px";
-			zNode.style.width = window.innerWidth + "px";
-			slider.zoomNode = zNode;
+			var modalCallback = function ()
+			{
+				if (slider.large == false)
+				{
+					doubleTap();
+					modal.backOff();	
+				}
+			};
+			zNode = slider.zoomNode;
+			if (!zNode)
+			{
+				zNode = slider.firstChild.firstChild.cloneNode(true);
+				scaledWidth = window.innerWidth;
+				zNode.className = 'hider basic-zoom';
+				zNode.style.left = "0px";
+				zNode.style.top = "10px";
+				zNode.style.width = window.innerWidth + "px";
+				slider.zoomNode = zNode;
+			}
+			modal.backOn(modalCallback);
 			slider.zoomed = true;
 			wrapper = document.createElement('div');
 			gesture_wrapper = document.createElement('div');
