@@ -80,6 +80,10 @@ onload = function ()
 	});
 	tinput.onclick = function() {
 		tinput.value = "";
+		mod({
+			className: "tagline",
+			show: true
+		});
 		aclist.className = "autocomplete-open";
 		modal.halfOn(function() {
 			viewTag(current_tag);
