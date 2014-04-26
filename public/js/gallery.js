@@ -13,10 +13,18 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		history_slider.appendChild(grid);
 		grid.className = "histgrid";
 		document.body.appendChild(history_slider);
-		addCss("#history_slider { -webkit-transform: translate3d(0, -"
-			+ (history_slider.offsetHeight + 100) + "px, 0); } .histgrid { height: "
-			+ (history_slider.offsetHeight - 10) + "px; } .grid { height: "
-			+ (window.innerHeight - 50) + "px; }");
+		addCss({
+			"#history_slider": function() {
+				return "-webkit-transform: translate3d(0, -"
+					+ (history_slider.offsetHeight + 100) + "px, 0);";
+			},
+			".histgrid": function() {
+				return "height: " + (history_slider.offsetHeight - 10) + "px;";
+			},
+			".grid": function() {
+				return "height: " + (window.innerHeight - 50) + "px;";
+			}
+		});
 		slideGallery = function() {
 			current_image && modal.callModal();
 			history_slider.style.opacity = "1";

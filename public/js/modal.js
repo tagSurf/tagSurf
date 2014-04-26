@@ -2,8 +2,12 @@ var modal = {
 	back: document.createElement("div"),
 	modal: document.createElement("div"),
 	build: function() {
-		addCss(".modal { -webkit-transform: translate3d("
-			+ window.innerWidth + "px, 0, 0); }");
+		addCss({
+			".modal": function() {
+				return "-webkit-transform: " + "translate3d("
+					+ window.innerWidth + "px, 0, 0);";
+			}
+		});
 		modal.back.className = "blackout";
 		modal.modal.className = "modal";
 		document.body.appendChild(modal.back);
@@ -53,7 +57,7 @@ var modal = {
 	backToggle: function(cb, isHalf) {
 		var backClass = (isHalf ? "half" : "black") + "fade";
 		toggleClass.call(modal.back, backClass);
-		modal.back.cb = modal.back.hasClass(backClass) ? cb : null;
+		modal.back.cb = hasClass(modal.back, backClass) ? cb : null;
 	},
 	modalIn: function(node, cb) {
 		modal.modal.innerHTML = "";
