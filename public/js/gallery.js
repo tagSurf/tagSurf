@@ -84,8 +84,8 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 			}
 		});
 		modal.backOn();
-		bigpic.src = d.image_link_medium || d.image_link_original;
-		picdesc.innerHTML = d.title;
+		bigpic.src = d.image.medium.url || d.image.original.url;
+		picdesc.innerHTML = d.caption;
 		pictag.innerHTML = "#" + d.tags[0];
 		setFavIcon(current_image.is_favorite);
 	};
@@ -93,7 +93,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		var n = document.createElement("div");
 		n.className = "box";
 		n.style.backgroundImage = "url('" +
-			(d.image_link_tiny || d.image_link_medium || d.image_link_original) + "')";
+			(d.image.tiny.url || d.image.medium.url || d.image.original.url) + "')";
 		n.style.border = "2px solid " +
 			((d.user_stats.vote == "up") ? "green" : "red");
 
