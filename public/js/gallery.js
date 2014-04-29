@@ -84,7 +84,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 			}
 		});
 		modal.backOn();
-		bigpic.src = d.image.medium.url || d.image.original.url;
+		bigpic.src = image.get(d, window.innerWidth - 40);
 		picdesc.innerHTML = d.caption;
 		pictag.innerHTML = "#" + d.tags[0];
 		setFavIcon(current_image.is_favorite);
@@ -93,7 +93,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		var n = document.createElement("div");
 		n.className = "box";
 		n.style.backgroundImage = "url('" +
-			(d.image.tiny.url || d.image.medium.url || d.image.original.url) + "')";
+			image.get(d, (window.innerWidth - 40) / 3) + "')";
 		n.style.border = "2px solid " +
 			((d.user_stats.vote == "up") ? "green" : "red");
 
