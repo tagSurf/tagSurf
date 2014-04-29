@@ -4,11 +4,11 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 	var week = day * 7;
 	var week2 = week * 2;
 	var picbox, bigpic, picdesc, pictag;
-	var grid = document.createElement("div");
+	var history_slider, grid = document.createElement("div");
 	grid.className = "grid";
 
 	if (gallery == "history") {
-		var history_slider = document.createElement("div");
+		history_slider = document.createElement("div");
 		history_slider.id = "history_slider";
 		history_slider.appendChild(grid);
 		grid.className = "histgrid";
@@ -170,8 +170,9 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 	buildPicBox();
 	populateGallery();
 
-	grid.onscroll = function(e) {
-		if ((grid.scrollTop + grid.scrollHeight) >= grid.offsetHeight)
+	var scroller = history_slider || grid;
+	scroller.onscroll = function(e) {
+		if ((scroller.scrollTop + scroller.offsetHeight) >= scroller.scrollHeight)
 			populateGallery();
 	};
 
