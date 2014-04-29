@@ -10,7 +10,16 @@ onload = function ()
 		inputContainer = document.getElementById("input-container"),
 		current_tag = tinput.value
 			= document.location.hash.slice(1) || "trending";
-	var populateSlider = function (update)
+	var refreshCards = function(failMsgNode, zIndex) {
+		cardIndex = 0;
+		if (failMsgNode && data.length == 0)
+			failMsgNode.innerHTML = "No more cards in " + current_tag + " feed!";
+		else {
+			slideContainer.innerHTML = "";
+			buildCard(zIndex);
+		}
+	};
+	var populateSlider = function (update, failMsgNode)
 	{
 		var isTrending = current_tag == "trending";
 		staticHash.className = isTrending ? "hidden" : "";
@@ -31,16 +40,12 @@ onload = function ()
 				for (var card in rdata)
 					known_keys[rdata[card].id] = true;
 				data = rdata;
-				cardIndex = 0;
-				slideContainer.innerHTML = "";
-				buildCard(2);
+				refreshCards(failMsgNode, 2);
 			}
 		}, function() {
 			if (!update) {
 				data = [];
-				cardIndex = 0;
-				slideContainer.innerHTML = "";
-				buildCard();
+				refreshCards(failMsgNode);
 			}
 		});
 	};
@@ -412,9 +417,15 @@ onload = function ()
 			c_wrapper.className = "card-wrapper";
 			var c_container = document.createElement("div");
 			c_container.className = "card-container center-label";
-			c_container.innerHTML = "No more cards in " + current_tag + " feed!";
+			var msg = document.createElement("div");
+			msg.innerHTML = "Searching for more cards in " + current_tag + " feed...";
+			var img = document.createElement("img");
+			img.src = "/img/throbber.gif";
+			c_container.appendChild(msg);
+			c_container.appendChild(img);
 			c_wrapper.appendChild(c_container);
 			slideContainer.appendChild(c_wrapper);
+			populateSlider(false, msg);
 			return;
 		}
 		var imageContainer, textContainer, picTags, fullscreenButton, truncatedTitle, card;
@@ -476,7 +487,7 @@ onload = function ()
 	};
 	var expandCard = function (force)
 	{
-		if (slider.compressing || force)
+		if (slider && (slider.compressing || force))
 		{
 			slider.compressing = false;
 			slider.expanded = true;

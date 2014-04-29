@@ -112,8 +112,7 @@ html, body
 .center-label
 {
   text-align: center;
-  white-space: nowrap;
-  padding-top: 40%;
+  padding-top: 30%;
 }
 
 .super_card

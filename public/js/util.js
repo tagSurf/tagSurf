@@ -103,7 +103,12 @@ var populateNavbar = function () {
   document.getElementById("options-btn").onclick = function() {
     var n = document.createElement("div");
     n.className = "center-label";
-    n.innerHTML = "Nothing to see here... yet";
+    var msg = document.createElement("div");
+    msg.innerHTML = "Nothing to see here... yet";
+    var img = document.createElement("img");
+    img.src = "/img/throbber.gif";
+    n.appendChild(msg);
+    n.appendChild(img);
     slideNavMenu();
     modal.modalIn(n, modal.modalOut);
   };
