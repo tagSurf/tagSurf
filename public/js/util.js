@@ -125,14 +125,21 @@ var addCss = function(defobj, noadd) {
   isNaN(noadd) && addedCss.push(defobj);
   _addCss(s);
 };
-var maxCardHeight;
+var getOrientation = function() {
+  return window.innerWidth < window.innerHeight ? "portrait" : "landscape";
+};
+var maxCardHeight, resizeCb;
 var setMaxCardHeight = function() {
   maxCardHeight = window.innerHeight - 200;
+};
+var setResizeCb = function(cb) {
+  resizeCb = cb;
 };
 setMaxCardHeight();
 window.onresize = function() {
   setMaxCardHeight();
   addedCss.forEach(addCss);
+  resizeCb && resizeCb();
 };
 var xhr = function(path, action, cb, eb) {
   var _xhr = new XMLHttpRequest();
