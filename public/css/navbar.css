@@ -40,13 +40,13 @@
 #history-btn img
 { 
   width: auto;
-  height: 26px;
+  height: 25px;
 }
 
 #favorites-btn
 {
   float:right;
-  padding: 10px;
+  padding: 12px 10px 13px 10px;
 }
 
 .gallery_icon {
@@ -63,14 +63,14 @@
 #tagsurf-logo
 {
   width: auto;
-  height: 36px;
-  padding-left: 20px;
+  height: 28px;
+  padding-left: 40px;
 }
 
 #favorites-btn img
 {
   width: auto;
-  height: 26px;
+  height: 25px;
 }
 
 .menu_icon
@@ -83,7 +83,7 @@
 {
   text-align: center;
   font-size: 22px;
-  padding-top: 10px;
+  padding-top: 12px;
   color: black;
 }
 
@@ -106,7 +106,13 @@
 {
   vertical-align: text-top;
 }
-
+#slider-icon
+{
+  vertical-align: super;
+  left: -9px;
+  position: relative;
+  width: 13px;
+}
 .slid #slider-icon
 {
   transform: rotate(180deg);
