@@ -9,7 +9,7 @@ var modal = {
 			}
 		});
 		modal.back.className = "blackout";
-		modal.modal.className = "modal";
+		modal.modal.className = "modal hider";
 		document.body.appendChild(modal.back);
 		document.body.appendChild(modal.modal);
 		gesture.listen("tap", modal.back, modal.callBack);
@@ -68,6 +68,9 @@ var modal = {
 	modalOut: function() {
 		modal.modal.className = "modal";
 		modal.modal.cb = null;
+		trans(modal.modal, function (event){
+			modal.modal.className = "modal hider";
+		});
 	}
 };
 modal.build();

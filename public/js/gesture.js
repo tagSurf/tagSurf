@@ -128,7 +128,7 @@ var gesture = {
 		['Start', 'Stop', 'Move'].forEach(function(eName) {
 			e[eName] = function(e) {
 				return gesture['on' + eName](e, node)
-					|| e.preventDefault() || false;
+					|| (e.preventDefault() && e.stopPropagation()) || false;
 			};
 		});
 		return e;
