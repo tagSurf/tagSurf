@@ -132,6 +132,9 @@ onload = function ()
 		},
 		".raw_wrapper, .zoom_wrapper, #scroll-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
+		},
+		".image-container img": function () {
+			return "width: " + parseInt(window.innerWidth - (14 + .05 * window.innerWidth)) + "px;";
 		}
 	});
 	var scrollContainer = document.getElementById('scroll-container');
@@ -447,7 +450,7 @@ onload = function ()
 			card = formatter.firstChild.firstChild;
 			setStartState(card);
 			if (imageContainer.children[0].clientHeight + textContainer.clientHeight
-				+ /* picTags */ 20 < maxCardHeight)
+				+ /* picTags */ 10 < maxCardHeight)
 			{
 				imageContainer.classList.remove("expand-animation");
 				fullscreenButton.className += ' hider';
