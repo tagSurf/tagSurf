@@ -454,8 +454,10 @@ onload = function ()
 			slideContainer.appendChild(card.parentNode);
 			formattingContainer.removeChild(formatter);
 			slider = slideContainer.children[0].children[0];
-
 			++cardIndex;
+
+			if (getOrientation() == "landscape")
+				expandCard(true);
 			if (data.length == cardIndex + buffer_minimum)
 				populateSlider(true);
 
@@ -472,9 +474,9 @@ onload = function ()
 		gesture.listen("hold", this, holdCallback);
 		gesture.listen("down", this, function(){return true;});
 	};
-	var expandCard = function ()
+	var expandCard = function (force)
 	{
-		if (slider.compressing)
+		if (slider.compressing || force)
 		{
 			slider.compressing = false;
 			slider.expanded = true;
@@ -491,6 +493,10 @@ onload = function ()
 				setFavIcon(false);
 			});
 		});
+	});
+	setResizeCb(function() {
+		if (getOrientation() == "landscape")
+			expandCard(true);
 	});
 	populateSlider();
 };
