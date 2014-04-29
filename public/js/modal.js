@@ -2,10 +2,14 @@ var modal = {
 	back: document.createElement("div"),
 	modal: document.createElement("div"),
 	build: function() {
-		addCss(".modal { -webkit-transform: translate3d("
-			+ window.innerWidth + "px, 0, 0); }");
+		addCss({
+			".modal": function() {
+				return "-webkit-transform: " + "translate3d("
+					+ window.innerWidth + "px, 0, 0);";
+			}
+		});
 		modal.back.className = "blackout";
-		modal.modal.className = "modal";
+		modal.modal.className = "modal hider";
 		document.body.appendChild(modal.back);
 		document.body.appendChild(modal.modal);
 		gesture.listen("tap", modal.back, modal.callBack);
@@ -29,25 +33,31 @@ var modal = {
 		return modal.back.cb && modal.back.cb();
 	},
 	backOn: function(cb) {
+		modal.back.style.opacity = 1;
 		modal.back.className = "blackout blackfade";
 		modal.back.cb = cb;
 	},
 	halfOn: function(cb, injectionNode) {
-		if (injectionNode)
-			modal.back.appendChild(injectionNode);
+		modal.back.style.opacity = 1;
 		modal.back.className = "blackout halffade";
 		modal.back.cb = cb;
+		if (injectionNode)
+			modal.back.appendChild(injectionNode);
 	},
-	backOff: function() {
+	backOff: function(onOff) {
 		modal.back.className = "blackout";
 		modal.back.cb = null;
-		if (modal.back.firstChild)
-			modal.back.removeChild(modal.back.firstChild);
+		trans(modal.back, function() {
+			onOff && onOff();
+			modal.back.style.opacity = 0;
+			if (modal.back.firstChild)
+				modal.back.removeChild(modal.back.firstChild);
+		});
 	},
 	backToggle: function(cb, isHalf) {
 		var backClass = (isHalf ? "half" : "black") + "fade";
 		toggleClass.call(modal.back, backClass);
-		modal.back.cb = modal.back.hasClass(backClass) ? cb : null;
+		modal.back.cb = hasClass(modal.back, backClass) ? cb : null;
 	},
 	modalIn: function(node, cb) {
 		modal.modal.innerHTML = "";
@@ -58,6 +68,9 @@ var modal = {
 	modalOut: function() {
 		modal.modal.className = "modal";
 		modal.modal.cb = null;
+		trans(modal.modal, function (event){
+			modal.modal.className = "modal hider";
+		});
 	}
 };
 modal.build();

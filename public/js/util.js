@@ -1,19 +1,18 @@
-Object.prototype.hasClass = function (className) 
+var hasClass = function (node, className) 
 {
-  return this.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(this.className);
+  return node.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(node.className);
 };
 String.prototype.trunc = String.prototype.trunc ||
   function(n){
     return this.length>n ? this.substr(0,n-1)+'&hellip;' : this;
 };
-var toggleClass = function (className)
+var toggleClass = function (className, onOrOff)
 {
-  if (this.hasClass(className))
-  {
+  var classIsOn = hasClass(this, className);
+  if (classIsOn && onOrOff != "on")
     this.classList.remove(className);
-    return;
-  }
-  this.classList.add(className);
+  else if (!classIsOn && onOrOff != "off")
+    this.classList.add(className);
 };
 var galleries = ["history", "favorites", "submissions", "tag"];
 var whichGallery = function() {
@@ -77,7 +76,7 @@ var populateNavbar = function () {
           "<img class='menu_icon' src='img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS",
         "</div></a></li>",
         "<li><a id='logout'><div>",
-          "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;LOGOUT",
+          "<img class='menu_icon' src='img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGOUT",
         "</div></a></li>",
       "</ul>",
     "</div>",
@@ -109,7 +108,7 @@ var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
     "img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
 };
-var addCss = function(css) {
+var _addCss = function(css) {
     var n = document.createElement("style");
     n.type = "text/css";
     if (n.styleSheet)
@@ -117,6 +116,30 @@ var addCss = function(css) {
     else
         n.appendChild(document.createTextNode(css));
     document.getElementsByTagName("head")[0].appendChild(n);
+};
+var addedCss = [];
+var addCss = function(defobj, noadd) {
+  var s = "", defname;
+  for (defname in defobj)
+    s += defname + " { " + defobj[defname]() + " } ";
+  isNaN(noadd) && addedCss.push(defobj);
+  _addCss(s);
+};
+var getOrientation = function() {
+  return window.innerWidth < window.innerHeight ? "portrait" : "landscape";
+};
+var maxCardHeight, resizeCb;
+var setMaxCardHeight = function() {
+  maxCardHeight = window.innerHeight - 200;
+};
+var setResizeCb = function(cb) {
+  resizeCb = cb;
+};
+setMaxCardHeight();
+window.onresize = function() {
+  setMaxCardHeight();
+  addedCss.forEach(addCss);
+  resizeCb && resizeCb();
 };
 var xhr = function(path, action, cb, eb) {
   var _xhr = new XMLHttpRequest();
@@ -145,4 +168,15 @@ var mod = function(opts) {
 };
 var isIphone = function() {
   return navigator.userAgent.indexOf("iPhone") != -1;
+};
+var trans = function(node, cb, transition, transform) {
+  var wrapper = function () {
+    if (transition) node.style['-webkit-transition'] = "";
+    if (transform) node.style['-webkit-transform'] = "";
+    node.removeEventListener("webkitTransitionEnd", wrapper, false);
+    cb && cb();
+  };
+  node.addEventListener("webkitTransitionEnd", wrapper, false);
+  if (transition) node.style['-webkit-transition'] = transition;
+  if (transform) node.style['-webkit-transform'] = transform;
 };

@@ -50,12 +50,13 @@ onload = function ()
 	var viewTag = function(tagName) {
 		location.hash = tagName;
 		aclist.className = "";
-		slideContainer.className = "";
-		scrollContainer.insertBefore(inputContainer,
-			scrollContainer.firstChild);
-		modal.backOff();
 		tinput.value = tagName;
 		tinput.blur();
+		modal.backOff(function() {
+			slideContainer.className = "";
+			scrollContainer.insertBefore(inputContainer,
+				scrollContainer.firstChild);
+		});
 		if (tagName != current_tag) {
 			current_tag = tagName;
 			populateSlider();
@@ -79,6 +80,10 @@ onload = function ()
 	});
 	tinput.onclick = function() {
 		tinput.value = "";
+		mod({
+			className: "tagline",
+			show: true
+		});
 		aclist.className = "autocomplete-open";
 		modal.halfOn(function() {
 			viewTag(current_tag);
@@ -112,71 +117,69 @@ onload = function ()
 	var zoomScale = 1.5;
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
-	var maxCardHeight = window.innerHeight - 180;
 	var slideThreshold = 60;
-	addCss(".expand-animation { max-height: "
-		+ maxCardHeight + "px; } .card-container { min-height: "
-		+ (maxCardHeight + 65) + "px; }");
-	addCss(".basic-zoom { z-index: 2; position: absolute; top: 100px;pointer-events:none;");
-	addCss(".raw_wrapper, .zoom_wrapper, #scroll-container {height:" 
-		+ (window.innerHeight - 50) + "px;}");
+	addCss({
+		".expand-animation": function() {
+			return "max-height: " + maxCardHeight + "px";
+		},
+		".card-container": function() {
+			return "min-height: " + (maxCardHeight + 90) + "px";
+		},
+		".raw_wrapper, .zoom_wrapper, #scroll-container": function() {
+			return "height: " + (window.innerHeight - 50) + "px";
+		}
+	});
 	var scrollContainer = document.getElementById('scroll-container');
 	var slideContainer = document.getElementById('slider');
 	var formattingContainer = document.getElementById('formatter');
-	var navBarHeight = document.getElementById('navbar').clientHeight + 15;
 	var slider = slideContainer.children[0];
-	var cardCompression = [false, false, false];
-	animationInProgress = false;
-	var isExpanded = false;
-	var superState = false;
-	var zoomState =
+	var setStartState = function (node)
 	{
-		zoomed: false,
-		large: false,
-		zoomNode: null,
-		xCurrent: 0,
-		yCurrent: 0
+		node.x = 0;
+		node.zoomNode = null;
+		node.sliding = false;
+		node.verticaling = false;
+		node.supering = false;
+		node.animating = false;
+		node.compressing = true;
+		node.large = false;
+		node.zoomed = false;
+		node.expanded = false;
 	};
-	var scrollState = 
+	var revertStateReset = function (node)
 	{
-		verticaling: false,
-		yCurrent: 0
-	};
-	var slideState =
-	{
-		sliding: false,
-		xCurrent: 0
-	};
-	var resetSlideState = function ()
-	{
-		slideState =
-		{
-			sliding: false,
-			xCurrent: 0
-		};
-	};
-	var resetScrollState = function ()
-	{
-		scrollState =
-		{
-			verticaling: false,
-			yCurrent: 0
-		};
+		node.x = 0;
+		node.sliding = false;
+		node.verticaling = false;
+		node.supering = false;
+		node.animating = false;
 	};
 	var doubleTap = function ()
 	{
 		var zNode, wrapper, gesture_wrapper, scaledWidth;
-		if (zoomState.zoomed == false)
+		if (slider.zoomed == false)
 		{
-			modal.backOn();
-			zNode = slider.firstChild.firstChild.cloneNode(true);
-			scaledWidth = window.innerWidth;
-			zNode.className = 'hider basic-zoom';
-			zNode.style.left = "0px";
-			zNode.style.top = "10px";
-			zNode.style.width = window.innerWidth + "px";
-			zoomState.zoomNode = zNode;
-			zoomState.zoomed = true;
+			var modalCallback = function ()
+			{
+				if (slider.large == false)
+				{
+					doubleTap();
+					modal.backOff();	
+				}
+			};
+			zNode = slider.zoomNode;
+			if (!zNode)
+			{
+				zNode = slider.firstChild.firstChild.cloneNode(true);
+				scaledWidth = window.innerWidth;
+				zNode.className = 'hider basic-zoom';
+				zNode.style.left = "0px";
+				zNode.style.top = "10px";
+				zNode.style.width = window.innerWidth + "px";
+				slider.zoomNode = zNode;
+			}
+			modal.backOn(modalCallback);
+			slider.zoomed = true;
 			wrapper = document.createElement('div');
 			gesture_wrapper = document.createElement('div');
 			wrapper.className = "zoom_wrapper";
@@ -185,28 +188,28 @@ onload = function ()
 			gesture_wrapper.appendChild(zNode);
 			wrapper.appendChild(gesture_wrapper);
 			document.body.appendChild(wrapper);
-			gesture.listen("tap", zNode.parentNode, largeZoom);
-			gesture.listen("up", zNode.parentNode, function(){return true;});
-			gesture.listen("drag", zNode.parentNode, function(){return true;});
-			gesture.listen("down", zNode.parentNode, function(){return true;});
+			gesture.listen("tap", zNode.parentNode.parentNode, largeZoom);
+			gesture.listen("up", zNode.parentNode.parentNode, function(){return true;});
+			gesture.listen("drag", zNode.parentNode.parentNode, function(){return true;});
+			gesture.listen("down", zNode.parentNode.parentNode, function(){return true;});
 			zNode.style['-webkit-transition'] = "";
 			zNode.classList.remove('hider');
 		}
 		else
 		{
-			zoomState.zoomed = false;
+			slider.zoomed = false;
 			modal.backOff();
-			zNode = zoomState.zoomNode;
-			gesture.unlisten(zNode.parentNode);
+			zNode = slider.zoomNode;
+			gesture.unlisten(zNode.parentNode.parentNode);
 			document.body.removeChild(zNode.parentNode.parentNode);
-			zoomState.zoomNode = null;
+			slider.zoomNode = null;
 		}
 	};
 	var largeZoom = function (tapCount)
 	{
 		if (tapCount == 1)
 		{
-			if (zoomState.large == false)
+			if (slider.large == false)
 			{
 				doubleTap();
 			}
@@ -219,73 +222,73 @@ onload = function ()
 	};
 	var zoomTap = function ()
 	{
-		var zNode = zoomState.zoomNode, 
+		var zNode = slider.zoomNode, 
 			zoomWidth = zoomScale * zNode.clientWidth;
-		var zoomUpEnd = function (event)
+		trans(zNode, null, "width 250ms ease-in");
+		if (slider.large == false)
 		{
-			zNode.style['-webkit-transition'] = "";
-			zNode.removeEventListener("webkitTransitionEnd", zoomUpEnd, false);
-		};
-		zNode.addEventListener("webkitTransitionEnd", zoomUpEnd, false);
-		zNode.style['-webkit-transition'] = "width 250ms ease-in, -webkit-transform 250ms ease-in";
-		if (zoomState.large == false)
-		{
-			zoomState.large = true;
+			slider.large = true;
 			zNode.style.width = zoomWidth + "px";
 		}
 		else
 		{
-			zoomState.large = false;
+			slider.large = false;
 			zoomWidth = window.innerWidth + "px";
 			zNode.style.width = zoomWidth;
-			zNode.style['-webkit-transform'] = "";
 		}
 	};
 	var revertSlider = function ()
 	{
 		slider.style['border-color'] = "#353535";
 		slider.style['background-color'] = "#353535";
-		if (slideState.xCurrent == 0)
-			return;
-		animationInProgress = true;
-		slider.style['-webkit-transition'] = "-webkit-transform 250ms ease-in";
-		slider.style['-webkit-transform'] = "translate3d(0,0,0) rotate(0deg)";
-		var revertSliderCallback = function (event) {
-			slider.style['-webkit-transition'] = "";
-			slider.style['-webkit-transform'] = "";
-			animationInProgress = false;
-			resetSlideState();
-			slider.removeEventListener("webkitTransitionEnd", revertSliderCallback, false);
-		};
-		slider.addEventListener( 'webkitTransitionEnd', revertSliderCallback, false);
+		slider.lastChild.display = "none";
+		if (slider.x == 0)
+		{
+			revertStateReset(slider);
+		}
+		else
+		{
+			revertStateReset(slider);
+			trans(slider,
+				function (event) {
+					slider.animating = false;
+				},
+				"-webkit-transform 250ms ease-in",
+				"translate3d(0,0,0) rotate(0deg)"
+			);
+			slider.animating = true;
+		}
 	};
 	var upCallback = function ()
 	{
-		if (animationInProgress == false)
+		toggleClass.apply(slider,['super_card', 'off']);
+		slider.supering = false;
+		if (slider.animating == false)
 		{
-			if (slideState.sliding == true)
+			if (slider.sliding == true)
 			{
-				if (Math.abs(slideState.xCurrent) < slideThreshold)
+				if (Math.abs(slider.x) < slideThreshold)
 				{
-					if (superState == true)
-					{
-						toggleClass.apply(slider,['super_card']);
-						superState = false;
-					}
 					revertSlider();
 				}
-				else if (slideState.xCurrent > slideThreshold)
+				else if (slider.x > slideThreshold)
 				{
 					swipeSlider("right");
 				}
-				else if (slideState.xCurrent < -slideThreshold)
+				else if (slider.x < -slideThreshold)
 				{
 					swipeSlider("left");
 				}
 			}
+			else if (slider.verticaling == true && slider.expanded == true)
+			{
+				slider.verticaling = false;
+				slider.sliding = false;
+				return true;
+			}
 		}
-		scrollState.verticaling = false;
-		slideState.sliding = false;
+		slider.verticaling = false;
+		slider.sliding = false;
 	};
 	var swipeSlider = function (direction, voteAlternative, pixelsPerSecond)
 	{
@@ -294,9 +297,9 @@ onload = function ()
 			verticalQuantity = 0;
 		var isUp = direction == "right";
 		var voteDir = isUp ? "up" : "down";
-		var transitionDistance = translateQuantity - slideState.xCurrent;
+		var transitionDistance = translateQuantity - slider.x;
 		var transitionDuration = pixelsPerSecond ? (transitionDistance / pixelsPerSecond) : 250;
-		if (superState == true)
+		if (slider.supering == true)
 		{
 			verticalQuantity = -500;
 		}
@@ -306,27 +309,23 @@ onload = function ()
 			rotateQuantity = -rotateQuantity;
 			verticalQuantity = -verticalQuantity;
 		}
-		var swipeSliderCallback = function (event) {
-			animationInProgress = false;
-			clearTimeout(swipeSliderCallbackTimeout);
-			slider.removeEventListener( 'webkitTransitionEnd', swipeSliderCallback, false);
-			gesture.unlisten(slider.parentNode);
-			slideContainer.removeChild(slider.parentNode);
-			updateCompressionStatus();
-			buildCard(0);
-			slideContainer.children[0].style.zIndex = 2;
-			if (slideContainer.children[1])
-				slideContainer.children[1].style.zIndex = 1;
-			resetSlideState();
-			if (voteAlternative) voteAlternative();
-			else xhr("/api/votes/" + voteDir + "/" + activeCard.id
-				+ "/tag/" + current_tag, "POST");
-		};
-		var swipeSliderCallbackTimeout = setTimeout(swipeSliderCallback, transitionDuration + 50);
-		slider.addEventListener( 'webkitTransitionEnd', swipeSliderCallback, false);
-		animationInProgress = true;
-		slider.style['-webkit-transition'] = "-webkit-transform " + Math.abs(transitionDuration) + "ms";
-		slider.style['-webkit-transform'] = "translate3d(" + translateQuantity + "px," + verticalQuantity + "px,0) rotate(" + rotateQuantity + "deg)";
+		trans(slider,
+			function () {
+				slider.animating = false;
+				gesture.unlisten(slider.parentNode);
+				slideContainer.removeChild(slider.parentNode);
+				buildCard(0);
+				slideContainer.children[0].style.zIndex = 2;
+				if (slideContainer.children[1])
+					slideContainer.children[1].style.zIndex = 1;
+				if (voteAlternative) voteAlternative();
+				else xhr("/api/votes/" + voteDir + "/" + activeCard.id
+					+ "/tag/" + current_tag, "POST");
+			},
+			"-webkit-transform " + Math.abs(transitionDuration) + "ms",
+			"translate3d(" + translateQuantity + "px," + verticalQuantity
+				+ "px,0) rotate(" + rotateQuantity + "deg)");
+		slider.animating = true;
 
 		// history slider
 		activeCard.total_votes += 1;
@@ -344,86 +343,67 @@ onload = function ()
 		else if (code == 39)
 			swipeSlider("right");
 	};
-	var swipeCallback = function (direction, distance, dx, dy, timeDifference)
+	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
-		var pixelsPerSecond = distance / timeDifference;
-		if (animationInProgress)
+		if (slider.animating)
 			return;
-		if (isExpanded == true &&
-			(direction == "up" || direction == "down"))
-		{
+		if (direction == "left" || direction == "right")
+			swipeSlider(direction, null, pixelsPerSecond);
+		else if (slider.expanded)
 			return true;
-		}
-		else if (direction == "left")
-		{
-			swipeSlider("left", null, pixelsPerSecond);
-		}
-		else if (direction == "right")
-		{
-			swipeSlider("right", null, pixelsPerSecond);
-		}
 	};
 	var dragCallback = function (direction, distance, dx, dy)
 	{
-		if (animationInProgress == false)
+		if (slider.animating == false)
 		{
-			if (isExpanded == true && 
+			if (slider.expanded == true && 
 				(direction == "up" || direction == "down"))
 			{
+				if (slider.sliding == false)
+				{
+					slider.verticaling = true;
+				}
 				return true;
 			}
 			else 
 			{
-				if (scrollState.verticaling == false)
+				if (slider.verticaling == false)
 				{
-					slideState.sliding = true;
-					slideState.xCurrent += dx;
-					if (slideState.xCurrent > 0)
+					 slider.sliding = true;
+					 slider.x += dx;
+					if ( slider.x > 0)
 					{
-						if (superState == true)
+						if (slider.supering == true)
 						{
 							slider.style['background-color'] = 'green';
 						}
 						slider.style['border-color'] = 'green';
 					}
-					else if (slideState.xCurrent < 0)
+					else if ( slider.x < 0)
 					{
-						if (superState == true)
+						if (slider.supering == true)
 						{
 							slider.style['background-color'] = '#C90016';
 						}
 						slider.style['border-color'] = '#C90016';
 					}
 					slider.style['-webkit-transform'] = 
-						"translate3d(" + (slideState.xCurrent * translationScale) + "px,0,0) rotate(" + (slideState.xCurrent * rotationScale) + "deg)";
+						"translate3d(" + ( slider.x * translationScale) + "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
 				}
 			}
 		}
 	};
 	var tapCallback = function (tapCount)
 	{
-		switch (tapCount)
-		{
-			case 1:
-				expandCard();
-				break;
-			case 2:
-				doubleTap();
-				break;
-		}
+		[expandCard, doubleTap][tapCount-1]();
 	};
 	var holdCallback = function (duration) {
 		if (duration == 3000)
 		{
-			superState = true;
-			toggleClass.apply(slider, ['super_card']);
+			slider.supering = true;
+			toggleClass.apply(slider, ['super_card', 'on']);
 		}
 	};
-	var updateCompressionStatus = function ()
-	{
-		cardCompression.shift();
-		isExpanded = false;
-	}
 	var buildCard = function (zIndex)
 	{
 		if (data.length <= cardIndex) {
@@ -437,36 +417,47 @@ onload = function ()
 			slideContainer.appendChild(c_wrapper);
 			return;
 		}
-		var imageContainer, textContainer, fullscreenButton, truncatedTitle, card;
+		var imageContainer, textContainer, picTags, fullscreenButton, truncatedTitle, card;
 		var c = data[cardIndex];
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + (c.image_link_medium || c.image_link_original) + "'></div><div class='text-container'><p>" + c.title + "</p></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + (c.image_link_medium || c.image_link_original) + "'></div><div class='text-container'><p>" + c.title + "</p></div><div class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		imageContainer = formatter.children[0].children[0].children[0];
 		textContainer = formatter.children[0].children[0].children[1];
-		fullscreenButton = formatter.children[0].children[0].children[2];
+		picTags = formatter.children[0].children[0].children[2];
+		fullscreenButton = formatter.children[0].children[0].children[3];
+		for (var i = 0; i < c.tags.length; i++) {
+			var p = document.createElement("span");
+			p.innerHTML = "#" + c.tags[i];
+			picTags.appendChild(p);
+		}
 		imageContainer.children[0].onload = function () {
-			if (imageContainer.children[0].clientHeight + textContainer.clientHeight < maxCardHeight)
+			card = formatter.firstChild.firstChild;
+			setStartState(card);
+			if (imageContainer.children[0].clientHeight + textContainer.clientHeight
+				+ /* picTags */ 20 < maxCardHeight)
 			{
 				imageContainer.classList.remove("expand-animation");
 				fullscreenButton.className += ' hider';
-				cardCompression[2 - zIndex] = false;
+				card.compressing = false;
 			}
 			else
 			{
 				truncatedTitle = data[cardIndex].title.trunc(30);
 				truncatedTitle = "<p>" + truncatedTitle + "</p>";
 				textContainer.innerHTML = truncatedTitle;
-				cardCompression[2 - zIndex] = true;
+				picTags.className += ' hider';
+				card.compressing = true;
 			}
-			card = formatter.firstChild;
-			slideContainer.appendChild(card);
-			slider = slideContainer.children[0].children[0];
-			initCardGestures.call(card);
+			initCardGestures.call(card.parentNode);
+			slideContainer.appendChild(card.parentNode);
 			formattingContainer.removeChild(formatter);
-
+			slider = slideContainer.children[0].children[0];
 			++cardIndex;
+
+			if (getOrientation() == "landscape")
+				expandCard(true);
 			if (data.length == cardIndex + buffer_minimum)
 				populateSlider(true);
 
@@ -483,15 +474,16 @@ onload = function ()
 		gesture.listen("hold", this, holdCallback);
 		gesture.listen("down", this, function(){return true;});
 	};
-	var expandCard = function ()
+	var expandCard = function (force)
 	{
-		if (cardCompression[0])
+		if (slider.compressing || force)
 		{
-			cardCompression[0] = false;
-			isExpanded = true;
+			slider.compressing = false;
+			slider.expanded = true;
 			slider.children[0].className += " expanded";
 			slider.children[1].innerHTML = "<p>" + data[cardIndex-3].title + "</p>";
-			slider.children[2].style.visibility = "hidden";
+			slider.children[2].style.visibility = "visible";
+			slider.children[3].style.visibility = "hidden";
 		}
 	};
 	setStarCallback(function() {
@@ -501,6 +493,10 @@ onload = function ()
 				setFavIcon(false);
 			});
 		});
+	});
+	setResizeCb(function() {
+		if (getOrientation() == "landscape")
+			expandCard(true);
 	});
 	populateSlider();
 };

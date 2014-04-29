@@ -3,12 +3,15 @@ var gesture = {
 	thresholds: {
 		swipe: {
 			minDistance: 50,
-			maxTime: 400
+			maxTime: 400,
+			minDP: 600,
+			maxDP: 1000
 		},
 		tap: {
 			maxDistance: 50,
 			maxTime: 700,
-			waitTime: 300
+			waitTime: 300,
+			maxCount: 2
 		},
 		hold: {
 			maxDistance: null, // set to pixel value if desired
@@ -67,8 +70,8 @@ var gesture = {
 		}
 		v.holdCount = 0;
 		v.holdInterval = setInterval(function() {
-			if (t.hold.maxDistance && (t.hold.maxDistance <
-				gesture.getDiff(v.startPos, v.lastPos).distance)) {
+			if (!v.active || (t.hold.maxDistance && (t.hold.maxDistance <
+				gesture.getDiff(v.startPos, v.lastPos).distance))) {
 				clearInterval(v.holdInterval);
 				v.holdInterval = null;
 				return;
@@ -89,13 +92,20 @@ var gesture = {
 
 		if ( (timeDiff < t.swipe.maxTime)
 			&& (diff.distance > t.swipe.minDistance) ) // swipe
-			gesture.triggerSwipe(node, diff.direction, diff.distance, diff.x, diff.y, timeDiff);
+			gesture.triggerSwipe(node, diff.direction,
+				diff.distance, diff.x, diff.y,
+				Math.min(t.swipe.maxDP, Math.max(t.swipe.minDP,
+					diff.distance / timeDiff)));
 		else if ( (timeDiff < t.tap.maxTime)
 			&& (diff.distance < t.tap.maxDistance) ) { // tap
 			v.tapCount += 1;
-			v.tapTimeout = setTimeout(function() {
+			if (v.tapCount == t.tap.maxCount)
 				gesture.triggerTap(node);
-			}, t.tap.waitTime);
+			else {
+				v.tapTimeout = setTimeout(function() {
+					gesture.triggerTap(node);
+				}, t.tap.waitTime);
+			}
 		}
 
 		if (v.holdInterval) {
@@ -118,7 +128,7 @@ var gesture = {
 		['Start', 'Stop', 'Move'].forEach(function(eName) {
 			e[eName] = function(e) {
 				return gesture['on' + eName](e, node)
-					|| e.preventDefault() || false;
+					|| e.preventDefault() || e.stopPropagation() || false;
 			};
 		});
 		return e;
@@ -153,10 +163,10 @@ var gesture = {
 			delete node.gid;
 		}
 	},
-	triggerSwipe: function(node, direction, distance, dx, dy, timeDifference) {
+	triggerSwipe: function(node, direction, distance, dx, dy, pixelsPerSecond) {
 		var handlers = gesture.handlers.swipe[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
-			handlers[i](direction, distance, dx, dy, timeDifference);
+			handlers[i](direction, distance, dx, dy, pixelsPerSecond);
 	},
 	triggerTap: function(node) {
 		var handlers = gesture.handlers.tap[node.gid];

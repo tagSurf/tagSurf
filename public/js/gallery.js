@@ -4,19 +4,27 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 	var week = day * 7;
 	var week2 = week * 2;
 	var picbox, bigpic, picdesc, pictag;
-	var grid = document.createElement("div");
+	var history_slider, grid = document.createElement("div");
 	grid.className = "grid";
 
 	if (gallery == "history") {
-		var history_slider = document.createElement("div");
+		history_slider = document.createElement("div");
 		history_slider.id = "history_slider";
 		history_slider.appendChild(grid);
 		grid.className = "histgrid";
 		document.body.appendChild(history_slider);
-		addCss("#history_slider { -webkit-transform: translate3d(0, -"
-			+ (history_slider.offsetHeight + 100) + "px, 0); } .histgrid { height: "
-			+ (history_slider.offsetHeight - 10) + "px; } .grid { height: "
-			+ (window.innerHeight - 50) + "px; }");
+		addCss({
+			"#history_slider": function() {
+				return "-webkit-transform: translate3d(0, -"
+					+ (history_slider.offsetHeight + 100) + "px, 0);";
+			},
+			".histgrid": function() {
+				return "height: " + (history_slider.offsetHeight - 10) + "px;";
+			},
+			".grid": function() {
+				return "height: " + (window.innerHeight - 50) + "px;";
+			}
+		});
 		slideGallery = function() {
 			current_image && modal.callModal();
 			history_slider.style.opacity = "1";
@@ -49,7 +57,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		picbox.appendChild(picdesc);
 
 		var pictagbox = document.createElement("div");
-		pictagbox.className = "centered padded";
+		pictagbox.className = "padded pictags";
 		pictag = document.createElement("span");
 		pictag.id = "pictag";
 		pictagbox.appendChild(pictag);
@@ -68,7 +76,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 	var showImage = function(d) {
 		current_image = d;
 		modal.modalIn(picbox, function(direction) {
-			if (!isNaN(direction) || direction == "right") {
+			if (!direction || !isNaN(direction) || direction == "right") {
 				current_image = null;
 				setFavIcon(location.pathname == "/favorites");
 				modal.backOff();
@@ -162,8 +170,9 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 	buildPicBox();
 	populateGallery();
 
-	grid.onscroll = function(e) {
-		if ((grid.scrollTop + grid.scrollHeight) >= grid.offsetHeight)
+	var scroller = history_slider || grid;
+	scroller.onscroll = function(e) {
+		if ((scroller.scrollTop + scroller.offsetHeight) >= scroller.scrollHeight)
 			populateGallery();
 	};
 

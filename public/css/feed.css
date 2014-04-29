@@ -3,6 +3,7 @@ html, body
   background-color: #494949;
   width: 100%;
   height: auto;
+  overflow-x: none;
 }
 #input-container
 {
@@ -168,11 +169,11 @@ html, body
 .image-container
 {
   overflow-y: hidden;
+  pointer-events: none;
 }
 
 .image-container img
 {
-  pointer-events: none;
   border-radius: 8px;
   margin: 2.5%;
   width: 95%;
@@ -239,4 +240,10 @@ html, body
 .zoom_wrapper
 {
   padding-top:20px;
+}
+.basic-zoom {
+  z-index: 2;
+  position: absolute;
+  top: 100px;
+  pointer-events: none;
 }
