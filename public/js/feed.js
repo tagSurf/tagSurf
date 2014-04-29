@@ -419,7 +419,7 @@ onload = function ()
 		}
 		var imageContainer, textContainer, picTags, fullscreenButton, truncatedTitle, card;
 		var c = data[cardIndex];
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + (c.image_link_medium || c.image_link_original) + "'></div><div class='text-container'><p>" + c.title + "</p></div><div class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + (c.image.medium.url || c.image.original.url) + "'></div><div class='text-container'><p>" + c.caption + "</p></div><div class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
@@ -444,7 +444,7 @@ onload = function ()
 			}
 			else
 			{
-				truncatedTitle = data[cardIndex].title.trunc(30);
+				truncatedTitle = data[cardIndex].caption.trunc(30);
 				truncatedTitle = "<p>" + truncatedTitle + "</p>";
 				textContainer.innerHTML = truncatedTitle;
 				picTags.className += ' hider';
@@ -481,7 +481,7 @@ onload = function ()
 			slider.compressing = false;
 			slider.expanded = true;
 			slider.children[0].className += " expanded";
-			slider.children[1].innerHTML = "<p>" + data[cardIndex-3].title + "</p>";
+			slider.children[1].innerHTML = "<p>" + data[cardIndex-3].caption + "</p>";
 			slider.children[2].style.visibility = "visible";
 			slider.children[3].style.visibility = "hidden";
 		}
