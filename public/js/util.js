@@ -72,7 +72,7 @@ var populateNavbar = function () {
         "<li><a href='/submissions'><div>",
       	  "<img class='menu_icon' src='img/submissions_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;SUBMISSIONS",
         "</div></a></li>",
-        "<li><a href='/options'><div>",
+        "<li><a id='options-btn'><div>",
           "<img class='menu_icon' src='img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS",
         "</div></a></li>",
         "<li><a id='logout'><div>",
@@ -99,6 +99,13 @@ var populateNavbar = function () {
     hist_logo.style.display = isOn ? "inline" : "none";
     !gallery && toggleClass.call(slider_icon, "vtop");
     slideGallery();
+  };
+  document.getElementById("options-btn").onclick = function() {
+    var n = document.createElement("div");
+    n.className = "center-label";
+    n.innerHTML = "Nothing to see here... yet";
+    slideNavMenu();
+    modal.modalIn(n, modal.modalOut);
   };
   document.getElementById("logout").onclick = function() {
     window.location = "/users/sign_out";
