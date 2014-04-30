@@ -83,16 +83,13 @@ html, body {
 
 #ts-login-btn {
 	background-color: #1dafec;
-	border: none;
+	border: solid 12px white;
 	color: white;
 	font-size: 20pt;
-	border-right: 0.3em solid white;
 	border-top-right-radius: 40px;
 	border-bottom-right-radius: 40px;
-	border-top: 0.3em solid white;
-	border-bottom: 0.3em solid white;
-	height: 63px;
-	top: -10px;
+	height: 68px;
+	top: -12px;
 	width: 96.5%;
 	left: -15px;
 	position: relative;
