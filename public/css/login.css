@@ -78,11 +78,13 @@ html, body {
 	height: 44px;
 	position: relative;
 	top: -4px;
-	left: -6px;
+	left: 6px;
 }
 
 #ts-login-btn {
 	background-color: #1dafec;
+	border-left: none;
+	text-align: right;
 	border: solid 12px white;
 	color: white;
 	font-size: 20pt;
@@ -90,8 +92,9 @@ html, body {
 	border-bottom-right-radius: 40px;
 	height: 68px;
 	top: -12px;
-	width: 96.5%;
-	left: -15px;
+	width: 106.5%;
+	left: -45px;
+	padding-right: 40px;
 	position: relative;
 	outline-width: 0;
 	-moz-box-shadow: none !important;
