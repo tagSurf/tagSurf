@@ -470,13 +470,13 @@ onload = function ()
 			slider = slideContainer.children[0].children[0];
 			++cardIndex;
 
-			if (getOrientation() == "landscape")
-				expandCard(true);
 			if (data.length == cardIndex + buffer_minimum)
 				populateSlider(true);
 
 			if (zIndex)
 				buildCard(zIndex - 1);
+			else if (getOrientation() == "landscape" && window.innerHeight < 700)
+				expandCard(true);
 		};
 	};
 	var initCardGestures = function ()
@@ -509,8 +509,9 @@ onload = function ()
 		});
 	});
 	setResizeCb(function() {
-		if (getOrientation() == "landscape")
-			expandCard(true);
+		slideContainer.innerHTML = "";
+		cardIndex = Math.max(0, cardIndex - 3);
+		buildCard(2);
 	});
 	populateSlider();
 };
