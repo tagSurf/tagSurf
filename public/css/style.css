@@ -41,6 +41,10 @@ a {
 	padding: 10px;
 }
 
+.round {
+	border-radius: 5px;
+}
+
 .pictags {
 	text-align: center;
 }
