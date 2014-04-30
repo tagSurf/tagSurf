@@ -185,12 +185,13 @@ onload = function ()
 			zNode = slider.zoomNode;
 			if (!zNode)
 			{
-				zNode = slider.firstChild.firstChild.cloneNode(true);
+				zNode = document.createElement('img');
+				zNode.src = image.get(data[cardIndex - 3]);
 				scaledWidth = window.innerWidth;
 				zNode.className = 'hider basic-zoom';
 				zNode.style.left = "0px";
 				zNode.style.top = "10px";
-				zNode.style.width = window.innerWidth + "px";
+				zNode.style.width = "100%";
 				slider.zoomNode = zNode;
 			}
 			modal.backOn(modalCallback);
