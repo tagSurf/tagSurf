@@ -85,7 +85,7 @@ html, body {
 	background-color: #1dafec;
 	border: none;
 	color: white;
-	font-size: 24px;
+	font-size: 20pt;
 	border-right: 0.3em solid white;
 	border-top-right-radius: 40px;
 	border-bottom-right-radius: 40px;
@@ -93,9 +93,10 @@ html, body {
 	border-bottom: 0.3em solid white;
 	height: 63px;
 	top: -10px;
-	width: 100%;
-	left: -12px;
+	width: 101%;
+	left: -20px;
 	position: relative;
+	outline-width: 0;
 	-moz-box-shadow: none !important;
 	-webkit-box-shadow: none !important;
 	box-shadow: none !important;
@@ -104,11 +105,12 @@ html, body {
 
 .ts-signup-btn{
 	color: inherit;
-	font-size: 24px;
+	font-size: 20pt;
 	position: relative;
-	margin-right: 35px;
+	margin-right: 25px;
 	color: white;
 	top: 2px;
+	left: -3px;
 	text-decoration: none !important;
 }
 
