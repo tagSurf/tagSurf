@@ -14,6 +14,10 @@ Tagsurf::Application.routes.draw do
   get 'submissions' => 'client#submissions'
   get 'tag'         => 'client#tag'
 
+  get 'terms'       => 'client#terms'
+  get 'code'        => 'client#code'
+  get 'sign-up'     => 'client#signup'
+
   namespace :api do
     # Media API
     get 'media/:tag'                     => 'media#next'
