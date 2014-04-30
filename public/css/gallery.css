@@ -69,8 +69,8 @@
 
 #bigpic {
 	display: block;
-	width: 90%;
-	margin: 10px auto;
+	width: 100%;
+	margin-top: 5px;
 	border-radius: 5px;
 }
 
@@ -86,10 +86,17 @@
 	background: #404041;
 	-webkit-transition: -webkit-transform 250ms ease-in-out;
 }
+#votemeter {
+	float: right;
+	width: 40%;
+}
 
 .greenline {
 	border: 1px solid green;
 }
 .redline {
 	border: 1px solid red;
+}
+.blue {
+	color: #1487b7;
 }

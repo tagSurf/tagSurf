@@ -3,7 +3,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 	var day = 1000 * 60 * 60 * 24;
 	var week = day * 7;
 	var week2 = week * 2;
-	var picbox, bigpic, picdesc, pictag;
+	var picbox, topbar, bigpic, picdesc, pictag;
 	var history_slider, grid = document.createElement("div");
 	grid.className = "grid";
 
@@ -35,9 +35,32 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		};
 	} else document.body.appendChild(grid);
 
+	var voteMeter = function(d, trending, fullRound) {
+		var bottom = document.createElement("div");
+		bottom.className = "overlay votes";
+		if (fullRound) bottom.className += " round";
+		bottom.style.background = trending ? "red" : "green";
+
+		var vote_meter = document.createElement("div");
+		if (trending) {
+			vote_meter.className = "yesvotes";
+			vote_meter.style.width = (100 * d.up_votes / d.total_votes) + "%";
+		} else {
+			vote_meter.className = "novotes";
+			vote_meter.style.width = (100 * d.down_votes / d.total_votes) + "%";
+		}
+		bottom.appendChild(vote_meter);
+
+		var vote_count = document.createElement("div");
+		vote_count.className = "votecount";
+		vote_count.innerHTML = d.total_votes;
+		bottom.appendChild(vote_count);
+		return bottom;
+	};
 	var buildPicBox = function() {
 		picbox = document.getElementById("picbox");
 		if (picbox) { // image detail modal frame already exists
+			topbar = document.getElementById("topbar");
 			bigpic = document.getElementById("bigpic");
 			picdesc = document.getElementById("picdesc");
 			pictag = document.getElementById("pictag");
@@ -46,6 +69,13 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 
 		picbox = document.createElement("div");
 		picbox.id = "picbox";
+
+		topbar = document.createElement("div");
+		topbar.id = "topbar";
+		topbar.innerHTML = "<div id='votemeter'></div>"
+			+ "<span class='blue'>#</span>"
+			+ "<span id='toptag'></span>";
+		picbox.appendChild(topbar);
 
 		bigpic = document.createElement("img");
 		bigpic.id = "bigpic";
@@ -89,6 +119,11 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		});
 		votize(modal.modal, d);
 		modal.backOn();
+
+		topbar.firstChild.innerHTML = "";
+		topbar.firstChild.appendChild(voteMeter(d, d.trend == "up", true));
+		topbar.children[2].innerHTML = d.tags[0];
+
 		bigpic.src = image.get(d, window.innerWidth - 40);
 		picdesc.innerHTML = d.caption;
 		pictag.innerHTML = "#" + d.tags[0];
@@ -108,30 +143,9 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		var spacer = document.createElement("div");
 		spacer.style.paddingTop = "70%";
 
-		var trending = d.trend == "up";
-
-		var bottom = document.createElement("div");
-		bottom.className = "overlay votes";
-		bottom.style.background = trending ? "red" : "green";
-
-		var vote_meter = document.createElement("div");
-		if (trending) {
-			vote_meter.className = "yesvotes";
-			vote_meter.style.width = (100 * d.up_votes / d.total_votes) + "%";
-		} else {
-			vote_meter.className = "novotes";
-			vote_meter.style.width = (100 * d.down_votes / d.total_votes) + "%";
-		}
-		bottom.appendChild(vote_meter);
-
-		var vote_count = document.createElement("div");
-		vote_count.className = "votecount";
-		vote_count.innerHTML = d.total_votes;
-		bottom.appendChild(vote_count);
-
 		n.appendChild(top);
 		n.appendChild(spacer);
-		n.appendChild(bottom);
+		n.appendChild(voteMeter(d, d.trend == "up"));
 		n.onclick = function() {
 			showImage(d);
 		};
