@@ -13,6 +13,10 @@ var image = {
 	get: function(d, minWidth) {
 		var i, size;
 
+		// animated cards force original size
+		if (d.image.animated)
+			return d.image.original.url;
+
 		// check cache
 		for (i = 0; i < image.sizes.length; i++) {
 			size = image.sizes[i];
