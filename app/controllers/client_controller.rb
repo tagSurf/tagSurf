@@ -24,13 +24,12 @@ class ClientController < ApplicationController
   def history
   end
 
-  def submissions
-  end
+  def submissions; end
+  def tag; end
+  def desktop; end
 
-  def tag
-  end
-
-  def desktop
-  end
+  def code; end
+  def signup; end
+  def terms; end
 
 end
