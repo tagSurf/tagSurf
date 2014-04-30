@@ -15,6 +15,7 @@ html, body
 #static-icon
 {
   display: inline;
+  font-weight: bold;
   background: #6a6a6a;
   padding: 5px 0 0 14px;
   border: 0px;
@@ -30,6 +31,9 @@ html, body
 }
 #static-hash
 {
+  top: -3px;
+  left: 1px;
+  position: relative;
   font-size: 18px;
   font-family: Raleway, sans-serif;
 }
@@ -41,6 +45,7 @@ html, body
 #tag-input
 {
   color: white;
+  font-weight: bold;
   float: left;
   display: inline;
   margin:0;
