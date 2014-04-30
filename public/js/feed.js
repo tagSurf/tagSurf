@@ -53,6 +53,8 @@ onload = function ()
 	// autocomplete stuff
 	var aclist = document.getElementById("autocomplete");
 	var viewTag = function(tagName) {
+		tagName = typeof tagName == "string" ?
+			tagName : this.innerHTML.slice(1);
 		location.hash = tagName;
 		aclist.className = "";
 		tinput.value = tagName;
@@ -444,6 +446,7 @@ onload = function ()
 		for (var i = 0; i < c.tags.length; i++) {
 			var p = document.createElement("span");
 			p.innerHTML = "#" + c.tags[i];
+			p.onclick = viewTag;
 			picTags.appendChild(p);
 		}
 		imageContainer.children[0].onload = function () {
