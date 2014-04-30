@@ -19,7 +19,7 @@ onload = function ()
 			buildCard(zIndex);
 		}
 	};
-	var populateSlider = function (update, failMsgNode)
+	var populateSlider = function (update, failMsgNode, firstCard)
 	{
 		var isTrending = current_tag == "trending";
 		staticHash.className = isTrending ? "hidden" : "";
@@ -37,6 +37,7 @@ onload = function ()
 				}
 			} else {
 				known_keys = {};
+				firstCard && rdata.unshift(firstCard);
 				for (var card in rdata)
 					known_keys[rdata[card].id] = true;
 				data = rdata;
@@ -53,20 +54,24 @@ onload = function ()
 	// autocomplete stuff
 	var aclist = document.getElementById("autocomplete");
 	var viewTag = function(tagName) {
-		tagName = typeof tagName == "string" ?
-			tagName : this.innerHTML.slice(1);
+		var firstCard;
+		if (typeof tagName == "string") { // tag bar
+			modal.backOff(function() {
+				slideContainer.className = "";
+				scrollContainer.insertBefore(inputContainer,
+					scrollContainer.firstChild);
+			});
+		} else { // tag link
+			tagName = this.innerHTML.slice(1);
+			firstCard = data[cardIndex-3];
+		}
 		location.hash = tagName;
 		aclist.className = "";
 		tinput.value = tagName;
 		tinput.blur();
-		modal.backOff(function() {
-			slideContainer.className = "";
-			scrollContainer.insertBefore(inputContainer,
-				scrollContainer.firstChild);
-		});
 		if (tagName != current_tag) {
 			current_tag = tagName;
-			populateSlider();
+			populateSlider(null, null, firstCard);
 		}
 	};
 	xhr("/api/tags", null, function(response_data) {
