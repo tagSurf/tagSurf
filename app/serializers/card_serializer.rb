@@ -24,6 +24,7 @@ class CardSerializer < ActiveModel::Serializer
       animated: object.animated?,
       tiny:   {url: object.image_link_tiny, width: 50, height: 50},
       medium: {url: object.image_link_medium, width: 320, height: 320},
+      large: {url: object.image_link_large, width: 640, height: 640},
       original: {url: object.image_link_original, width: object.width, height: object.height}
     }
     h
