@@ -73,6 +73,10 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		h.innerHTML = headerName;
 		grid.appendChild(h);
 	};
+	var votize = function(n, d) {
+		n.className += ((d.user_stats.vote == "up")
+			? " green" : " red") + "line";
+	};
 	var showImage = function(d) {
 		current_image = d;
 		modal.modalIn(picbox, function(direction) {
@@ -83,6 +87,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 				modal.modalOut();
 			}
 		});
+		votize(modal.modal, d);
 		modal.backOn();
 		bigpic.src = image.get(d, window.innerWidth - 40);
 		picdesc.innerHTML = d.caption;
@@ -94,8 +99,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		n.className = "box";
 		n.style.backgroundImage = "url('" +
 			image.get(d, (window.innerWidth - 40) / 3) + "')";
-		n.style.border = "2px solid " +
-			((d.user_stats.vote == "up") ? "green" : "red");
+		votize(n, d);
 
 		var top = document.createElement("div");
 		top.className = "overlay tag";

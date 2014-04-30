@@ -86,3 +86,10 @@
 	background: #404041;
 	-webkit-transition: -webkit-transform 250ms ease-in-out;
 }
+
+.greenline {
+	border: 1px solid green;
+}
+.redline {
+	border: 1px solid red;
+}
