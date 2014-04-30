@@ -74,21 +74,28 @@ onload = function ()
 			populateSlider(null, null, firstCard);
 		}
 	};
+	var addTag = function(tagName) {
+		var n = document.createElement("div");
+		n.innerHTML = tagName;
+		n.className = "tagline";
+		var tlower = tagName.toLowerCase();
+		for (var i = 1; i <= tlower.length; i++)
+			n.className += " " + tlower.slice(0, i);
+		aclist.appendChild(n);
+		n.onclick = function() {
+			viewTag(tagName);
+		};
+	};
 	xhr("/api/tags", null, function(response_data) {
+		var hasTrending = false;
 		response_data.data.forEach(function(tag) {
 			if (tag.name) {
-				var n = document.createElement("div");
-				n.innerHTML = tag.name;
-				n.className = "tagline";
-				var tlower = tag.name.toLowerCase();
-				for (var i = 1; i <= tlower.length; i++)
-					n.className += " " + tlower.slice(0, i);
-				aclist.appendChild(n);
-				n.onclick = function() {
-					viewTag(tag.name);
-				};
+				hasTrending = hasTrending || tag.name == "trending";
+				addTag(tag.name);
 			}
 		});
+		if (!hasTrending)
+			addTag("trending");
 	});
 	tinput.onclick = function() {
 		tinput.value = "";
