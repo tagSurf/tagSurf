@@ -41,7 +41,6 @@ html, body
 #tag-input
 {
   color: white;
-  font-weight: bold;
   float: left;
   display: inline;
   margin:0;
@@ -183,6 +182,7 @@ html, body
 .text-container
 {
   margin: 2.5%;
+  padding: 0 10%;
   text-align: center;
   font-size: 14px;
 }
@@ -246,4 +246,24 @@ html, body
   position: absolute;
   top: 100px;
   pointer-events: none;
+}
+
+.icon-line {
+  margin-top: 5px;
+}
+.source-icon {
+  display: block;
+  float: right;
+  height: 30px;
+  margin-top: -5px;
+}
+.tag-callout {
+  font-size: 80%;
+  border: 1px solid #00aeef;
+  border-radius: 5px;
+  padding: 3px;
+}
+.tag-callout img {
+  height: 15px;
+  vertical-align: middle;
 }
