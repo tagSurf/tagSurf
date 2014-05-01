@@ -53,18 +53,16 @@ onload = function ()
 
 	// autocomplete stuff
 	var aclist = document.getElementById("autocomplete");
-	var viewTag = function(tagName) {
+	var viewTag = function(tagName, insertCurrent) {
 		var firstCard;
-		if (typeof tagName == "string") { // tag bar
+		if (insertCurrent) // tag link
+			firstCard = data[cardIndex-3];
+		else // tag bar
 			modal.backOff(function() {
 				slideContainer.className = "";
 				scrollContainer.insertBefore(inputContainer,
 					scrollContainer.firstChild);
 			});
-		} else { // tag link
-			tagName = this.innerHTML.slice(1);
-			firstCard = data[cardIndex-3];
-		}
 		location.hash = tagName;
 		aclist.className = "";
 		tinput.value = tagName;
@@ -458,13 +456,13 @@ onload = function ()
 		picTags = formatter.children[0].children[0].children[3];
 		fullscreenButton = formatter.children[0].children[0].children[4];
 		gesture.listen("up", iconLine.children[1], function() {
-			viewTag(c.tags[0]);
+			viewTag(c.tags[0], true);
 		});
 		c.tags.forEach(function(tag) {
 			var p = document.createElement("span");
 			p.innerHTML = "#" + tag;
 			gesture.listen("up", p, function() {
-				viewTag(tag);
+				viewTag(tag, true);
 			});
 			picTags.appendChild(p);
 		});
@@ -533,7 +531,7 @@ onload = function ()
 	setResizeCb(function() {
 		slideContainer.innerHTML = "";
 		cardIndex = Math.max(0, cardIndex - 3);
-		buildCard(2);
+		data && buildCard(2);
 	});
 	populateSlider();
 };
