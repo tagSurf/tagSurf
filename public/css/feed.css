@@ -261,6 +261,7 @@ html, body
   float: right;
   height: 24px;
   margin-top: -3px;
+  margin-right: 5px;
 }
 .tag-callout {
   font-size: 80%;
