@@ -57,7 +57,17 @@ var modal = {
 	backToggle: function(cb, isHalf) {
 		var backClass = (isHalf ? "half" : "black") + "fade";
 		toggleClass.call(modal.back, backClass);
-		modal.back.cb = hasClass(modal.back, backClass) ? cb : null;
+		if (hasClass(modal.back, backClass)) {
+			modal.back.cb = cb;
+			modal.back.style.opacity = 1;
+		} else {
+			modal.back.cb = null;
+			trans(modal.back, function() {
+				modal.back.style.opacity = 0;
+				if (modal.back.firstChild)
+					modal.back.removeChild(modal.back.firstChild);
+			});
+		}
 	},
 	modalIn: function(node, cb) {
 		modal.modal.innerHTML = "";
