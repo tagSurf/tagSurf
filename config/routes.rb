@@ -14,9 +14,13 @@ Tagsurf::Application.routes.draw do
   get 'submissions' => 'client#submissions'
   get 'tag'         => 'client#tag'
 
+  # Beta access flow, ordered by good path
+  get 'code'        => 'client#access_code'
+  get 'disclaimer'  => 'client#disclaimer'
   get 'terms'       => 'client#terms'
-  get 'code'        => 'client#code'
   get 'sign-up'     => 'client#signup'
+  get 'resend'      => 'client#resend_link'
+  get 'welcome'     => 'client#welcome'
 
   namespace :api do
     # Media API
