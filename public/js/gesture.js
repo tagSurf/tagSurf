@@ -70,6 +70,8 @@ var gesture = {
 			v.tapTimeout = null;
 		}
 		v.holdCount = 0;
+		if (v.holdInterval)
+			clearInterval(v.holdInterval);
 		v.holdInterval = setInterval(function() {
 			if (!v.active || (t.hold.maxDistance && (t.hold.maxDistance <
 				gesture.getDiff(v.startPos, v.lastPos).distance))) {
@@ -107,11 +109,6 @@ var gesture = {
 					gesture.triggerTap(node);
 				}, t.tap.waitTime);
 			}
-		}
-
-		if (v.holdInterval) {
-			clearInterval(v.holdInterval);
-			v.holdInterval = null;
 		}
 		return gesture.triggerUp(node);
 	},
