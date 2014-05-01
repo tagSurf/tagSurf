@@ -446,16 +446,20 @@ onload = function ()
 			populateSlider(false, msg);
 			return;
 		}
-		var imageContainer, textContainer, picTags, fullscreenButton, truncatedTitle, card;
+		var imageContainer, iconLine, textContainer, picTags, fullscreenButton, truncatedTitle, card;
 		var c = data[cardIndex];
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40) + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40) + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		imageContainer = formatter.children[0].children[0].children[0];
+		iconLine = formatter.children[0].children[0].children[1];
 		textContainer = formatter.children[0].children[0].children[2];
 		picTags = formatter.children[0].children[0].children[3];
 		fullscreenButton = formatter.children[0].children[0].children[4];
+		gesture.listen("up", iconLine.children[1], function() {
+			viewTag(c.tags[0]);
+		});
 		c.tags.forEach(function(tag) {
 			var p = document.createElement("span");
 			p.innerHTML = "#" + tag;
