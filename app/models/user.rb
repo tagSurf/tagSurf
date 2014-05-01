@@ -1,10 +1,12 @@
 class User < ActiveRecord::Base
 
-  has_many :votes, :foreign_key => :voter_id
-  has_many :favorites
+  has_many    :votes, :foreign_key => :voter_id
+  has_many    :favorites
+  belongs_to  :access_code
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, 
+         :registerable, :confirmable,
          :omniauthable, :omniauth_providers => [:imgur]
 
   CLIENT_ID = Rails.env.production? ? 'e0d1a9753eaf289' : '63c3978f06dac10'
