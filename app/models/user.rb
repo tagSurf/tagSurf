@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, 
+         :registerable, :confirmable,
          :omniauthable, :omniauth_providers => [:imgur]
 
   CLIENT_ID = Rails.env.production? ? 'e0d1a9753eaf289' : '63c3978f06dac10'
