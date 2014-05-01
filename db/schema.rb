@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140418061707) do
+ActiveRecord::Schema.define(version: 20140501042401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "access_codes", force: true do |t|
+    t.string   "name"
+    t.string   "code"
+    t.boolean  "expires"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "cards", force: true do |t|
     t.string   "remote_id"
@@ -101,6 +111,8 @@ ActiveRecord::Schema.define(version: 20140418061707) do
     t.boolean  "active"
     t.boolean  "beta_user"
     t.boolean  "admin",                  default: false
+    t.integer  "access_code_id"
+    t.boolean  "beta_tester_agreement",  default: false, null: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
