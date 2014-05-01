@@ -4,6 +4,9 @@ class User < ActiveRecord::Base
   has_many    :favorites
   belongs_to  :access_code
 
+
+
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, 
          :registerable, :confirmable,
