@@ -270,5 +270,6 @@ html, body
 }
 .tag-callout img {
   height: 15px;
-  vertical-align: middle;
+  position: relative;
+  top: 3px;
 }
