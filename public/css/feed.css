@@ -99,6 +99,7 @@ html, body
 
 .card-wrapper
 {
+  -webkit-user-select: none;
   position: absolute;
   width: 100%;
 }
