@@ -456,12 +456,14 @@ onload = function ()
 		textContainer = formatter.children[0].children[0].children[2];
 		picTags = formatter.children[0].children[0].children[3];
 		fullscreenButton = formatter.children[0].children[0].children[4];
-		for (var i = 0; i < c.tags.length; i++) {
+		c.tags.forEach(function(tag) {
 			var p = document.createElement("span");
-			p.innerHTML = "#" + c.tags[i];
-			p.onclick = viewTag;
+			p.innerHTML = "#" + tag;
+			gesture.listen("up", p, function() {
+				viewTag(tag);
+			});
 			picTags.appendChild(p);
-		}
+		});
 		imageContainer.children[0].onload = function () {
 			card = formatter.firstChild.firstChild;
 			setStartState(card);
