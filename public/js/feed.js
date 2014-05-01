@@ -252,19 +252,17 @@ onload = function ()
 	};
 	var zoomTap = function ()
 	{
-		var zNode = slider.zoomNode, 
-			zoomWidth = zoomScale * zNode.clientWidth;
+		var zNode = slider.zoomNode;
 		trans(zNode, null, "width 250ms ease-in");
 		if (slider.large == false)
 		{
 			slider.large = true;
-			zNode.style.width = zoomWidth + "px";
+			zNode.style.width = (zoomScale * zNode.clientWidth) + "px";
 		}
 		else
 		{
 			slider.large = false;
-			zoomWidth = window.innerWidth + "px";
-			zNode.style.width = zoomWidth;
+			zNode.style.width = window.innerWidth + "px";
 		}
 	};
 	var revertSlider = function ()

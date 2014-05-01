@@ -181,6 +181,9 @@ var mod = function(opts) {
 var isIphone = function() {
   return navigator.userAgent.indexOf("iPhone") != -1;
 };
+var isMobile = function() {
+  return navigator.userAgent.toLowerCase().indexOf("mobile") != -1;
+};
 var trans = function(node, cb, transition, transform) {
   var wrapper = function () {
     if (transition) node.style['-webkit-transition'] = "";
