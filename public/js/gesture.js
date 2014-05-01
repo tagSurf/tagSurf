@@ -2,13 +2,13 @@ var gesture = {
 	gid: 0,
 	thresholds: {
 		swipe: {
-			minDistance: 50,
+			minDistance: 35,
 			maxTime: 400,
 			minDP: 600,
 			maxDP: 1000
 		},
 		tap: {
-			maxDistance: 50,
+			maxDistance: 35,
 			maxTime: 700,
 			waitTime: 300,
 			maxCount: 2
