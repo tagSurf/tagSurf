@@ -139,10 +139,10 @@ onload = function ()
 	var slideThreshold = 60;
 	addCss({
 		".expand-animation": function() {
-			return "max-height: " + maxCardHeight + "px";
+			return "max-height: " + parseInt(maxCardHeight - window.innerHeight * .02) + "px";
 		},
 		".card-container": function() {
-			return "min-height: " + (maxCardHeight + 120) + "px";
+			return "min-height: " + (maxCardHeight + 130) + "px";
 		},
 		".raw_wrapper, .zoom_wrapper, #scroll-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
@@ -468,7 +468,7 @@ onload = function ()
 			card = formatter.firstChild.firstChild;
 			setStartState(card);
 			if (imageContainer.children[0].clientHeight + textContainer.clientHeight
-				+ /* picTags */ 5 + /* icon bar */ 5 < maxCardHeight)
+				+ /* picTags */ 10 + /* icon bar */ 10 + /* chevron and border*/ 10 < maxCardHeight)
 			{
 				imageContainer.classList.remove("expand-animation");
 				fullscreenButton.className += ' hider';
