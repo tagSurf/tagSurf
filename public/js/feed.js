@@ -19,6 +19,16 @@ onload = function ()
 			buildCard(zIndex);
 		}
 	};
+	var popData = function(rdata) {
+		// this method only nets 4 cards for every 10 cards requested
+		// needs new API!
+		for (var i = 0; i < rdata.length; i++) {
+			if (!known_keys[rdata[i].id]) {
+				data.push(rdata[i]);
+				known_keys[rdata[i].id] = true;
+			}
+		}
+	};
 	var populateSlider = function (update, failMsgNode, firstCard)
 	{
 		var isTrending = current_tag == "trending";
@@ -26,21 +36,20 @@ onload = function ()
 		staticTrending.className = isTrending ? "" : "hidden";
 		xhr("/api/media/" + current_tag, null, function(response_data) {
 			var rdata = response_data.data;
-			if (update) {
-				// this method only nets 4 cards for every 10 cards requested
-				// needs new API!
-				for (var i = 0; i < rdata.length; i++) {
-					if (!known_keys[rdata[i].id]) {
-						data.push(rdata[i]);
-						known_keys[rdata[i].id] = true;
-					}
-				}
-			} else {
+			if (update)
+				popData(rdata);
+			else {
 				known_keys = {};
-				firstCard && rdata.unshift(firstCard);
-				for (var card in rdata)
-					known_keys[rdata[card].id] = true;
-				data = rdata;
+				if (firstCard) {
+					known_keys[firstCard.id] = true;
+					data = [];
+					popData(rdata);
+					data.unshift(firstCard);
+				} else {
+					for (var card in rdata)
+						known_keys[rdata[card].id] = true;
+					data = rdata;
+				}
 				refreshCards(failMsgNode, 2);
 			}
 		}, function() {
