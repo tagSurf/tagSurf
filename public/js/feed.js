@@ -74,21 +74,28 @@ onload = function ()
 			populateSlider(null, null, firstCard);
 		}
 	};
+	var addTag = function(tagName) {
+		var n = document.createElement("div");
+		n.innerHTML = tagName;
+		n.className = "tagline";
+		var tlower = tagName.toLowerCase();
+		for (var i = 1; i <= tlower.length; i++)
+			n.className += " " + tlower.slice(0, i);
+		aclist.appendChild(n);
+		n.onclick = function() {
+			viewTag(tagName);
+		};
+	};
 	xhr("/api/tags", null, function(response_data) {
+		var hasTrending = false;
 		response_data.data.forEach(function(tag) {
 			if (tag.name) {
-				var n = document.createElement("div");
-				n.innerHTML = tag.name;
-				n.className = "tagline";
-				var tlower = tag.name.toLowerCase();
-				for (var i = 1; i <= tlower.length; i++)
-					n.className += " " + tlower.slice(0, i);
-				aclist.appendChild(n);
-				n.onclick = function() {
-					viewTag(tag.name);
-				};
+				hasTrending = hasTrending || tag.name == "trending";
+				addTag(tag.name);
 			}
 		});
+		if (!hasTrending)
+			addTag("trending");
 	});
 	tinput.onclick = function() {
 		tinput.value = "";
@@ -441,7 +448,7 @@ onload = function ()
 		}
 		var imageContainer, textContainer, picTags, fullscreenButton, truncatedTitle, card;
 		var c = data[cardIndex];
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40) + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + ".png'><span class='tag-callout'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40) + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
@@ -449,12 +456,14 @@ onload = function ()
 		textContainer = formatter.children[0].children[0].children[2];
 		picTags = formatter.children[0].children[0].children[3];
 		fullscreenButton = formatter.children[0].children[0].children[4];
-		for (var i = 0; i < c.tags.length; i++) {
+		c.tags.forEach(function(tag) {
 			var p = document.createElement("span");
-			p.innerHTML = "#" + c.tags[i];
-			p.onclick = viewTag;
+			p.innerHTML = "#" + tag;
+			gesture.listen("up", p, function() {
+				viewTag(tag);
+			});
 			picTags.appendChild(p);
-		}
+		});
 		imageContainer.children[0].onload = function () {
 			card = formatter.firstChild.firstChild;
 			setStartState(card);

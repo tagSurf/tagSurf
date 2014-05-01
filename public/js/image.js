@@ -1,12 +1,14 @@
 var image = {
 	width: {
 		original: Infinity,
+		large: 640,
 		medium: 320,
 		tiny: 50
 	},
-	sizes: ["original", "medium", "tiny"],
+	sizes: ["original", "large", "medium", "tiny"],
 	cache: {
 		original: {},
+		large: {},
 		medium: {},
 		tiny: {}
 	},
