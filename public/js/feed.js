@@ -19,6 +19,16 @@ onload = function ()
 			buildCard(zIndex);
 		}
 	};
+	var popData = function(rdata) {
+		// this method only nets 4 cards for every 10 cards requested
+		// needs new API!
+		for (var i = 0; i < rdata.length; i++) {
+			if (!known_keys[rdata[i].id]) {
+				data.push(rdata[i]);
+				known_keys[rdata[i].id] = true;
+			}
+		}
+	};
 	var populateSlider = function (update, failMsgNode, firstCard)
 	{
 		var isTrending = current_tag == "trending";
@@ -26,21 +36,20 @@ onload = function ()
 		staticTrending.className = isTrending ? "" : "hidden";
 		xhr("/api/media/" + current_tag, null, function(response_data) {
 			var rdata = response_data.data;
-			if (update) {
-				// this method only nets 4 cards for every 10 cards requested
-				// needs new API!
-				for (var i = 0; i < rdata.length; i++) {
-					if (!known_keys[rdata[i].id]) {
-						data.push(rdata[i]);
-						known_keys[rdata[i].id] = true;
-					}
-				}
-			} else {
+			if (update)
+				popData(rdata);
+			else {
 				known_keys = {};
-				firstCard && rdata.unshift(firstCard);
-				for (var card in rdata)
-					known_keys[rdata[card].id] = true;
-				data = rdata;
+				if (firstCard) {
+					known_keys[firstCard.id] = true;
+					data = [];
+					popData(rdata);
+					data.unshift(firstCard);
+				} else {
+					for (var card in rdata)
+						known_keys[rdata[card].id] = true;
+					data = rdata;
+				}
 				refreshCards(failMsgNode, 2);
 			}
 		}, function() {
@@ -53,18 +62,16 @@ onload = function ()
 
 	// autocomplete stuff
 	var aclist = document.getElementById("autocomplete");
-	var viewTag = function(tagName) {
+	var viewTag = function(tagName, insertCurrent) {
 		var firstCard;
-		if (typeof tagName == "string") { // tag bar
+		if (insertCurrent) // tag link
+			firstCard = data[cardIndex-3];
+		else // tag bar
 			modal.backOff(function() {
 				slideContainer.className = "";
 				scrollContainer.insertBefore(inputContainer,
 					scrollContainer.firstChild);
 			});
-		} else { // tag link
-			tagName = this.innerHTML.slice(1);
-			firstCard = data[cardIndex-3];
-		}
 		location.hash = tagName;
 		aclist.className = "";
 		tinput.value = tagName;
@@ -446,21 +453,25 @@ onload = function ()
 			populateSlider(false, msg);
 			return;
 		}
-		var imageContainer, textContainer, picTags, fullscreenButton, truncatedTitle, card;
+		var imageContainer, iconLine, textContainer, picTags, fullscreenButton, truncatedTitle, card;
 		var c = data[cardIndex];
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40) + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40) + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		imageContainer = formatter.children[0].children[0].children[0];
+		iconLine = formatter.children[0].children[0].children[1];
 		textContainer = formatter.children[0].children[0].children[2];
 		picTags = formatter.children[0].children[0].children[3];
 		fullscreenButton = formatter.children[0].children[0].children[4];
+		gesture.listen("up", iconLine.children[1], function() {
+			viewTag(c.tags[0], true);
+		});
 		c.tags.forEach(function(tag) {
 			var p = document.createElement("span");
 			p.innerHTML = "#" + tag;
 			gesture.listen("up", p, function() {
-				viewTag(tag);
+				viewTag(tag, true);
 			});
 			picTags.appendChild(p);
 		});
@@ -529,7 +540,7 @@ onload = function ()
 	setResizeCb(function() {
 		slideContainer.innerHTML = "";
 		cardIndex = Math.max(0, cardIndex - 3);
-		buildCard(2);
+		data && buildCard(2);
 	});
 	populateSlider();
 };
