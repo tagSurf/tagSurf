@@ -1,5 +1,7 @@
 class AccessCode < ActiveRecord::Base
 
+  has_many :users
+
   validates_presence_of :name, :code
 
   before_validation(on: :create) do
