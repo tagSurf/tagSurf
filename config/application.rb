@@ -20,18 +20,22 @@ module Tagsurf
         Devise::PasswordsController.layout "client"        
     end
 
-   # redis_available = true
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.smtp_settings = {
+      :address              => "smtp.gmail.com",
+      :port                 => 587,
+      :domain               => "tagsurf.co",
+      :user_name            => "beta@tagsurf.co",
+      :password             => ENV["tagsurf_mail_secret"],
+      :authentication       => 'plain',
+      :enable_starttls_auto => true
+    }
 
-   # Sidekiq.redis do |connection|
-   #   begin
-   #     connection.info
-   #   rescue Redis::CannotConnectError
-   #     redis_available = false
-   #   end
-   # end
+    config.action_mailer.perform_deliveries = true
+    config.action_mailer.raise_delivery_errors = false
 
-   redis_active = Rails.env.development? ? false : true
-   CONFIG[:redis_active] = redis_active  
+    redis_active = Rails.env.development? ? false : true
+    CONFIG[:redis_active] = redis_active  
 
   end
 end
