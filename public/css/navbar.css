@@ -131,6 +131,10 @@
   list-style: none;
   list-style-type: none;
 }
+#slide_down_menu li:first-child
+{
+  border-top: 1px solid lightgray;
+}
 #slide_down_menu li
 {
   width: 100%;
