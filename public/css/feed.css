@@ -107,6 +107,7 @@ html, body
 .card-container
 {
   position: relative;
+  overflow: hidden;
   height: auto;
   width: 95%;
   margin: 0 2.5% 2.5% 2.5%;
