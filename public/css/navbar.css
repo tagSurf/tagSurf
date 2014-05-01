@@ -161,6 +161,8 @@
 {
   width: 200px;
   margin: auto;
+  position: relative;
+  left: 13px;
 }
 #slide_down_menu li.slide_active
 {
