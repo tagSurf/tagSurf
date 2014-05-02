@@ -1,6 +1,6 @@
 Tagsurf::Application.configure do
 
-  config.action_mailer.default_url_options = { host: 'tagsurf.herokuapp.com' }
+  config.action_mailer.default_url_options = { host: 'beta.tagsurf.co' }
   config.action_mailer.raise_delivery_errors = true
 
   config.cache_classes = true
