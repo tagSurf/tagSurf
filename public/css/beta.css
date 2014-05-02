@@ -109,6 +109,7 @@ body
 	background: #1dafec;
 	padding: 10px 20px;
 	border-radius: 30px;
+	cursor: pointer;
 }
 
 .forward {
@@ -122,4 +123,15 @@ body
 	margin-left: -30px;
 	padding-left: 40px;
 	width: 180px;
+}
+
+.modal {
+	top: 10px;
+	bottom: 80px;
+	box-shadow: none;
+	background: white;
+}
+
+.blackout {
+	top: 0px;
 }

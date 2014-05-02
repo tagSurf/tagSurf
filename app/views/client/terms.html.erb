@@ -20,15 +20,32 @@
  <div>
   If you have any questions or concerns about this Service and License Agreement or the Service or Software, please send us a thorough description by email to beta@tagsurf.co.
  </div>
-
- <div id="privacy" class="hidden"><i>
-  <div class="biggest">
-   TAGSURF PRIVACY POLICY
-  </div>
-  Your privacy is critically important to us. At tagSurf we have a few fundamental principles:
- </i></div>
+ <div class="bigger bold blue pointer" id="privacy-btn">
+  PRIVACY POLICY &gt;
+ </div>
 </div>
 <div class="bigger bottom">
  <div class="forward button">I agree</div>
  <div class="back button">Decline</div>
 </div>
+<div class="hidden"><div id="privacy">
+ <div class="biggest">
+  TAGSURF PRIVACY POLICY
+ </div>
+ <div><i>
+  Your privacy is critically important to us. At tagSurf we have a few fundamental principles:
+ </i></div>
+</div></div>
+<script src="/js/util.js"></script>
+<script src="/js/gesture.js"></script>
+<script src="/js/modal.js"></script>
+<script>
+ var removePrivacy = function() {
+  modal.backOff();
+  modal.modalOut();
+ };
+ document.getElementById("privacy-btn").onclick = function() {
+  modal.halfOn(removePrivacy);
+  modal.modalIn(document.getElementById("privacy"), removePrivacy);
+ };
+</script>
