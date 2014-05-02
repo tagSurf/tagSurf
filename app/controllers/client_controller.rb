@@ -5,8 +5,14 @@ class ClientController < ApplicationController
   layout 'client'
 
   def index
-    if current_user
-      redirect_to '/feed'
+    # Decide how to direct the user base on state
+    usr = current_user
+    if usr and usr.confirmed? and usr.welcomed?
+      redirect_to feed_path
+    elsif usr and !usr.confirmed?
+      redirect_to resend_path
+    elsif usr and usr.confirmed? and !usr.welcomed? 
+      redirect_to welcome_path
     else
       redirect_to user_session_path
     end

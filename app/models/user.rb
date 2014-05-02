@@ -18,6 +18,10 @@ class User < ActiveRecord::Base
 
   scope :sorted_history, order("created_at ASC")
 
+  def welcomed?
+    completed_feature_tour?
+  end
+
   def expired_imgur_token?
     Time.now > imgur_token_expires_at
   end 
