@@ -21,7 +21,11 @@ Tagsurf::Application.routes.draw do
   get 'sign-up'     => 'client#signup'
   get 'resend'      => 'client#resend_link'
   get 'welcome'     => 'client#welcome'
-  post 'confirm-beta'        => 'client#confirm_beta_token'
+    
+  # Multi-step beta access flow
+  post 'confirm-beta'              => 'client#confirm_beta_token'
+  post 'confirm-disclaimer'        => 'client#disclaimer_agreement'
+  post 'confirm-terms'             => 'client#terms_agreement'
 
   # User routes
   put 'user'                           => 'users#update'
