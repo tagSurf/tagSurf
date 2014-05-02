@@ -41,6 +41,10 @@ a {
 	padding: 10px;
 }
 
+.bigpadded {
+	padding: 25px;
+}
+
 .round {
 	border-radius: 5px;
 }
@@ -106,6 +110,7 @@ a {
 
 .modal {
 	overflow-y: auto;
+	overflow-x: hidden;
 	z-index: 10;
 	position: fixed;
 	padding: 5px;
