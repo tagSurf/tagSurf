@@ -6,7 +6,6 @@ body
 }
 
 #resend_link {
-	font-size: 160%;
 	font-weight: bold;
 	color: white;
 	background: #1dafec;
@@ -27,6 +26,5 @@ body
 }
 
 .midpad {
-	font-size: 140%;
 	padding: 10px 50px;
 }

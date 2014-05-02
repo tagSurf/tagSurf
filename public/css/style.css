@@ -45,6 +45,18 @@ a {
 	border-radius: 5px;
 }
 
+.big {
+	font-size: 120%;
+}
+
+.bigger {
+	font-size: 140%;
+}
+
+.biggest {
+	font-size: 160%;
+}
+
 .pictags {
 	text-align: center;
 }
