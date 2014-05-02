@@ -11,9 +11,12 @@
  </div>
  <div class="ts-submit-bar">
    <div class="ac-submit-container">
-    <!-- beta code input -->
-    <input id="beta_code_input" type="text" placeholder="beta code">
-    <input id="ac-submit-btn" type="submit" value="submit">
+
+    <%= form_for(:access_code, url: '/confirm-beta', :html => { :method => :post }) do |f| %>
+      <%= f.text_field :access_code, id: 'beta_code_input', placeholder: 'beta code' %>
+      <%= f.submit "submit", id: 'ac-submit-btn' %>
+    <% end %>
+
    </div>
  </div>
 </center>

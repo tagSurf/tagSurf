@@ -21,10 +21,12 @@ Tagsurf::Application.routes.draw do
   get 'sign-up'     => 'client#signup'
   get 'resend'      => 'client#resend_link'
   get 'welcome'     => 'client#welcome'
+  post 'confirm-beta'        => 'client#confirm_beta_token'
 
   # User routes
   put 'user'                           => 'users#update'
 
+  # JSON API
   namespace :api do
 
     # Media API

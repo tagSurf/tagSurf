@@ -1,6 +1,14 @@
 class ClientController < ApplicationController
 
-  before_action :authenticate_user!, except: :index
+  before_action :authenticate_user!, except: [
+    :index, 
+    :access_code,
+    :confirm_beta_token, 
+    :disclaimer,
+    :terms,
+    :signup
+  ]
+
   before_action :confirm_surfable, only: [
     :feed, 
     :favorites, 
@@ -27,6 +35,16 @@ class ClientController < ApplicationController
     end
   end
 
+  def confirm_beta_token
+    code = AccessCode.where(code: beta_code_params[:access_code]).first
+    if code && code.valid?
+      redirect_to disclaimer_path
+    else
+      redirect_to root_path
+    end
+  end
+
+  # Static application
   def trending; end
   def feed; end
   def favorites; end
@@ -44,6 +62,10 @@ class ClientController < ApplicationController
   def welcome; end
 
   private
+
+    def beta_code_params
+      params.require(:access_code).permit(:access_code)
+    end
 
     def confirm_surfable
       unless current_user and current_user.confirmed? and current_user.welcomed?
