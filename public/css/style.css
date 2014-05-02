@@ -61,6 +61,14 @@ a {
 	font-size: 160%;
 }
 
+.bold {
+	font-weight: bold;
+}
+
+.blue {
+	color: #00aeef;
+}
+
 .pictags {
 	text-align: center;
 }
