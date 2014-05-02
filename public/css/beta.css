@@ -5,30 +5,28 @@ body
 	color: black;
 }
 
-#resend_link {
-	font-size: 160%;
-	font-weight: bold;
-	color: white;
-	background: #1dafec;
-	padding: 10px 20px;
-	border-radius: 30px;
-	white-space: nowrap;
-}
-
-.bottom {
-	width: 100%;
-	position: absolute;
-	bottom: 50px;
-	text-align: center;
-}
-
 .logobar img {
 	height: 50px;
-	margin-bottom: 40px;
+}
+
+.content {
+	position: absolute;
+	top: 50px;
+	bottom: 70px;
+	left: 0px;
+	right: 0px;
+	text-align: justify;
+	overflow-y: scroll;
+}
+
+.content div {
+	width: 255px;
+	padding: 5px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 .midpad {
-	font-size: 140%;
 	padding: 10px 50px;
 	text-align: center;
 }
@@ -98,3 +96,30 @@ body
 	font-weight: 200;
 }
 
+.bottom {
+	width: 100%;
+	position: absolute;
+	bottom: 20px;
+}
+
+.button {
+	white-space: nowrap;
+	font-weight: bold;
+	color: white;
+	background: #1dafec;
+	padding: 10px 20px;
+	border-radius: 30px;
+}
+
+.forward {
+	float: right;
+	margin-right: -30px;
+	padding-right: 40px;
+	width: 180px;
+}
+
+.back {
+	width: 180px;
+	margin-left: -30px;
+	padding-left: 40px;
+}
