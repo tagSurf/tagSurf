@@ -1,8 +1,19 @@
-<div class="ts-submit-bar">
- <div class="ts-submit-btn">
-  <div class="border-trim">
-   <!-- beta code input -->
-   <input id="ts-login-btn" type="submit" value="submit">
-  </div>
+<% content_for :stylesheets do %>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/beta.css">
+<% end %>
+
+<center>
+ <div class="tslogo"></div>
+ <div class="ac-text-container">
+  <p>tagSurf is in private beta.</p>
+  <p>Please email beta&#64;tagsurf.co for more information.</p>
  </div>
-</div>
+ <div class="ts-submit-bar">
+   <div class="ac-submit-container">
+    <!-- beta code input -->
+    <input id="beta_code_input" type="text" placeholder="beta code">
+    <input id="ac-submit-btn" type="submit" value="submit">
+   </div>
+ </div>
+</center>

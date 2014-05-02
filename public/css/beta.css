@@ -1,0 +1,267 @@
+html,
+body
+{
+	background-color: white;
+	color: black;
+}
+
+.logobar img {
+	height: 50px;
+	margin-top: 10px;
+}
+
+.content {
+	position: absolute;
+	top: 80px;
+	bottom: 80px;
+	left: 0px;
+	right: 0px;
+	text-align: justify;
+	overflow-y: scroll;
+}
+
+.content div {
+	width: 255px;
+	padding: 5px 0px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.content ul {
+	width: 255px;
+	margin-left: auto;
+	margin-right: auto;
+	-webkit-padding-start: 15px;
+}
+
+.midpad {
+	padding: 10px 50px;
+	text-align: center;
+}
+
+.tslogo
+{
+	margin-top: 10%;
+}
+
+.ac-text-container
+{
+	font-size: 122%;
+	color: #2f2f2f;
+	width: 90%;
+}
+#ac-submit-btn
+{
+	position: relative;
+	top: 6px;
+	letter-spacing: 2px;
+	font-size: 16pt;
+	color: white;
+	font-weight: 200;
+	border: none;
+	outline-width: 0;
+	background: transparent;
+	-moz-box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+	-webkit-appearance: none;
+}
+#beta_code_input
+{
+	font-family: 'Raleway', 'sans-serif';
+	font-size: 80%;
+	position: relative;
+	height: 40px;
+	width: 50%;
+	outline-width: 0;
+	left: 20%;
+	padding-left: 9%;
+	line-height: 20px;
+	border: solid 1px lightgray;
+	background-color: white;
+	border-radius: 40px;
+	-webkit-border-radius: 40px;
+	-webkit-appearance: none;
+	float: left;
+	top: 2px;
+	left: 2px;
+}
+.ac-submit-container
+{
+	height: 68px;
+	background-color: #1dafec;
+	border-radius: 40px;
+	-webkit-border-radius: 40px;
+	width: 85%;
+	border: solid 12px white;
+}
+
+::-webkit-input-placeholder {
+	font-size: 130%;
+	line-height: 20px;
+	height: 20px;
+	font-weight: 200;
+}
+
+.bottom {
+	width: 100%;
+	position: absolute;
+	bottom: 15px;
+}
+
+.button {
+	text-align: center;
+	white-space: nowrap;
+	font-weight: bold;
+	color: white;
+	background: #1dafec;
+	padding: 10px 20px;
+	border-radius: 30px;
+	cursor: pointer;
+}
+
+.forward {
+	float: right;
+	margin-right: -30px;
+	padding-right: 40px;
+	width: 180px;
+}
+
+.back {
+	margin-left: -30px;
+	padding-left: 40px;
+	width: 180px;
+}
+
+.modal {
+	top: 10px;
+	bottom: 80px;
+	box-shadow: none;
+	background: white;
+}
+
+.blackout {
+	top: 0px;
+}
+
+.horizontallogo
+{
+	margin-top: 15px;
+	position: relative;
+	width: 90%;
+}
+.welcome-text-container
+{
+	font-family: 'Raleway', 'sans-serif';
+}
+.welcome-top-title
+{
+	margin-top: 15px;
+	font-size: 22px;
+}
+.welcome-description-text
+{
+	text-align: left;
+	margin: 10px auto;
+	width: 87%;
+	font-size: 13px;
+}
+.welcome-title-text
+{
+	text-align: left;
+	margin: 10px auto;
+	width: 87%;
+	font-size: 20px;
+	color: #1dafec;
+	clear: both;
+}
+#welcome-submit-btn
+{
+
+	font-size: 16px;
+	font-family: 'Raleway', 'sans-serif';
+	color: white;
+	background-color: #1dafec;
+	letter-spacing: 1px;
+	height: 40px;
+	border: none;
+	width: 160px;
+	outline-width: 0;
+	margin-top: 15px;
+	margin-bottom: 25px;
+	border-radius: 40px;
+	-webkit-border-radius: 40px;
+	-moz-box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+	-webkit-appearance: none;
+}
+.sulogo
+{
+	margin-top: 20px;
+	width: 58%;
+}
+.su-user-email
+{
+	margin-top: 12px;
+	margin-bottom: 13px;
+	font-size: 21px;
+}
+.su-container
+{
+	font-family: 'Raleway', 'sans-serif';
+	color: black;
+}
+.su-input-container
+{
+	width: 225px;
+	height: 37px;
+	margin-bottom: 20px;
+	border: solid 1px grey;
+	-moz-border-radius: 50px / 50px;
+	-webkit-border-radius: 50px / 50px;
+	border-radius: 50px / 50px;
+	-webkit-background-clip: padding-box;
+}
+.su-input
+{
+	font-family: 'Raleway', 'sans-serif';
+	width: 203px;
+	height: 31px;
+	color: #000;
+	padding-left: 15px;
+	line-height: 20px;
+	border: solid thin transparent;
+	font-size: 12px;
+	font-weight: 200;
+	background: #fff;
+	outline-width: 0;
+	-moz-border-radius: 50px / 50px;
+	-webkit-border-radius: 50px / 50px;
+	border-radius: 50px / 50px;
+	transition: border-color 200ms;
+	-webkit-background-clip: padding-box;
+}
+#su-submit-btn
+{
+	font-size: 20px;
+	font-family: 'Raleway', 'sans-serif';
+	color: white;
+	background-color: #1dafec;
+	letter-spacing: 1px;
+	height: 45px;
+	border: none;
+	width: 160px;
+	outline-width: 0;
+	margin-bottom: 20px;
+	border-radius: 40px;
+	-webkit-border-radius: 40px;
+	-moz-box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+	-webkit-appearance: none;
+}
+.focused {
+	border-color: #48a4df;
+}
+

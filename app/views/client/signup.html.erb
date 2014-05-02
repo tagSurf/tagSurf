@@ -1,16 +1,21 @@
+<% content_for :stylesheets do %>
+  <link rel="stylesheet" href="/css/beta.css">
+<% end %>
+
 <center>
- <img id="tslogo" src="/img/ts_logo_stacked_gray.jpg"></img>
- <input id="email" class="ts-input" placeholder="email">
- <input id="password" class="ts-input" placeholder="password" type="password">
- <input id="password" class="ts-input" placeholder="password" type="password">
+ <img class="sulogo" src="/img/ts_logo_stacked_gray.jpg"></img>
+ <div class="su-container">
+  <p class="su-user-email">email&#64;domain.com</p>
+  <div class="su-input-container"><input id="password" class="su-input" placeholder="password" type="password"></div>
+  <div class="su-input-container"><input id="repassword" class="su-input" placeholder="re-enter password" type="password"></div>
+  <input id="su-submit-btn" type="submit" value="Submit">
+ </div>
 </center>
-<div class="ts-submit-bar">
- <div class="ts-submit-btn">
-  <div class="border-trim">
-   <input id="ts-login-btn" type="submit" value="log in">
-  </div>
- </div>
- <div class="ts-submit-btn">
-  <a class="ts-signup-btn">sign up</a>
- </div>
-</div>
+<script src="/js/util.js"></script>
+<script>
+var inputs = document.getElementsByClassName("su-input");
+inputs[0].onfocus = function () { toggleClass.apply(inputs[0].parentNode, ["focused"]); };
+inputs[0].onblur = function () { toggleClass.apply(inputs[0].parentNode, ["focused"]); };
+inputs[1].onfocus = function () { toggleClass.apply(inputs[1].parentNode, ["focused"]); };
+inputs[1].onblur = function () { toggleClass.apply(inputs[1].parentNode, ["focused"]); };
+</script>
