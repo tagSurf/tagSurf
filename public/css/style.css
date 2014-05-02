@@ -41,8 +41,40 @@ a {
 	padding: 10px;
 }
 
+.bigpadded {
+	padding: 25px;
+}
+
+.nopad {
+	padding: 0px !important;
+}
+
 .round {
 	border-radius: 5px;
+}
+
+.small {
+	font-size: 80%;
+}
+
+.big {
+	font-size: 120%;
+}
+
+.bigger {
+	font-size: 140%;
+}
+
+.biggest {
+	font-size: 160%;
+}
+
+.bold {
+	font-weight: bold;
+}
+
+.blue {
+	color: #00aeef;
 }
 
 .pictags {
@@ -82,6 +114,7 @@ a {
 
 .modal {
 	overflow-y: auto;
+	overflow-x: hidden;
 	z-index: 10;
 	position: fixed;
 	padding: 5px;
@@ -90,11 +123,49 @@ a {
 	left: 10px;
 	right: 10px;
 	background: #2f2f2f;
-	border-radius: 5px;
+	border-radius: 10px;
 	box-shadow: 3px 3px 5px 2px #161617;
 	-webkit-transition: -webkit-transform 250ms ease-in-out;
 }
 
 .modalslide {
 	-webkit-transform: translate3d(0, 0, 0) !important;
+}
+
+.tslogo {
+  display: block;
+  background-image: url('/img/ts_logo_stacked_grey.png');
+  background-image: -webkit-image-set( url('/img/ts_logo_stacked_gray.jpg') 1x, image-url('/img/ts_logo_stacked_gray2x.jpg') 2x);
+  background-size: cover;
+  width:210px;
+  height:241px;
+  margin:20px auto;
+}
+
+.input-border-container
+{
+	width: 218px;
+	height: 37px;
+	border: solid 1px black;
+	border: solid 1px #000;
+	-moz-border-radius: 50px / 50px;
+	-webkit-border-radius: 50px / 50px;
+	border-radius: 50px / 50px;
+	-webkit-background-clip: padding-box;
+}
+.ts-input {
+	width: 215px;
+	height: 34px;
+	color: #000;
+	margin: 1px;
+	padding-left: 13px;
+	border: solid thin transparent;
+	font-size: 16px;
+	background: #fff;
+	outline-width: 0;
+	-moz-border-radius: 50px / 50px;
+	-webkit-border-radius: 50px / 50px;
+	border-radius: 50px / 50px;
+	transition: border-color 200ms;
+	-webkit-background-clip: padding-box;
 }
