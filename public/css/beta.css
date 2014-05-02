@@ -5,26 +5,55 @@ body
 	color: black;
 }
 
-#resend_link {
-	font-weight: bold;
-	color: white;
-	background: #1dafec;
-	padding: 10px 20px;
-	border-radius: 30px;
-	white-space: nowrap;
+.logobar img {
+	height: 50px;
+}
+
+.content {
+	position: absolute;
+	top: 50px;
+	bottom: 70px;
+	left: 0px;
+	right: 0px;
+	text-align: justify;
+	overflow-y: scroll;
+}
+
+.content div {
+	width: 255px;
+	padding: 5px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.midpad {
+	padding: 10px 50px;
 }
 
 .bottom {
 	width: 100%;
 	position: absolute;
-	bottom: 50px;
+	bottom: 20px;
 }
 
-.logobar img {
-	height: 50px;
-	margin-bottom: 40px;
+.button {
+	white-space: nowrap;
+	font-weight: bold;
+	color: white;
+	background: #1dafec;
+	padding: 10px 20px;
+	border-radius: 30px;
 }
 
-.midpad {
-	padding: 10px 50px;
+.forward {
+	float: right;
+	margin-right: -30px;
+	padding-right: 40px;
+	width: 180px;
+}
+
+.back {
+	width: 180px;
+	margin-left: -30px;
+	padding-left: 40px;
 }

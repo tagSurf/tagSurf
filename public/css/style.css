@@ -45,6 +45,10 @@ a {
 	border-radius: 5px;
 }
 
+.small {
+	font-size: 80%;
+}
+
 .big {
 	font-size: 120%;
 }
