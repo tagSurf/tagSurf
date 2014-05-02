@@ -12,34 +12,6 @@ html, body {
   display: none;
 }
 
-.ts-input {
-	width: 215px;
-	height: 34px;
-	color: #000;
-	margin: 1px;
-	padding-left: 13px;
-	border: solid thin transparent;
-	font-size: 16px;
-	background: #fff;
-	outline-width: 0;
-	-moz-border-radius: 50px / 50px;
-	-webkit-border-radius: 50px / 50px;
-	border-radius: 50px / 50px;
-	transition: border-color 200ms;
-	-webkit-background-clip: padding-box;
-}
-.input-border-container
-{
-	width: 218px;
-	height: 37px;
-	border: solid 1px black;
-	border: solid 1px #000;
-	-moz-border-radius: 50px / 50px;
-	-webkit-border-radius: 50px / 50px;
-	border-radius: 50px / 50px;
-	-webkit-background-clip: padding-box;
-}
-
 .focused {
 	border-color: #48a4df;
 }
