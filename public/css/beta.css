@@ -61,12 +61,13 @@ body
 #beta_code_input
 {
 	font-family: 'Raleway', 'sans-serif';
-	font-size: 75%;
+	font-size: 80%;
 	position: relative;
 	height: 40px;
 	width: 50%;
 	outline-width: 0;
 	left: 20%;
+	padding-left: 9%;
 	line-height: 20px;
 	border: solid 1px lightgray;
 	background-color: white;
@@ -88,8 +89,6 @@ body
 }
 
 ::-webkit-input-placeholder {
-	margin: 0 auto;
-	text-align: center;
 	font-size: 130%;
 	line-height: 20px;
 	height: 20px;
