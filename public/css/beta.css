@@ -155,7 +155,7 @@ a.forward {
 }
 
 a.back {
-  float:left
+  float:left;
 	margin-left: -30px;
 	padding-left: 40px;
 	width: 180px;
