@@ -122,14 +122,14 @@ body
 
 input[type='submit'].button {
   font-size: 100%;
-	text-align: center;
-	white-space: nowrap;
-	font-weight: bold;
-	color: white;
-	background: #1dafec;
-	padding: 10px 20px;
-	border-radius: 30px;
-	cursor: pointer;
+  text-align: center;
+  white-space: nowrap;
+  font-weight: bold;
+  color: white;
+  background: #1dafec;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
   border: none;
 }
 
