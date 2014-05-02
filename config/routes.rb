@@ -22,7 +22,11 @@ Tagsurf::Application.routes.draw do
   get 'resend'      => 'client#resend_link'
   get 'welcome'     => 'client#welcome'
 
+  # User routes
+  put 'user'                           => 'users#update'
+
   namespace :api do
+
     # Media API
     get 'media/:tag'                     => 'media#next'
 

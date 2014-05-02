@@ -28,8 +28,10 @@
   <p class="welcome-description-text">If you have any questions, please drop us a line at beta@tagsurf.co. </p>
   <p class="welcome-title-text">Surf on!</p>
  </div>
- <input id="welcome-submit-btn" type="submit" value="Got it!">
+
+  <%= form_for(current_user, url: user_path, method: :put) do |f| %>
+    <%= f.hidden_field :confirm_feature_tour, value: true %>
+    <%= f.submit "Got it!", class: 'button', id: "welcome-submit-btn" %>
+  <% end %>
+
 </center>
-
-
-

@@ -93,7 +93,6 @@ class Api::UsersController < Api::BaseController
   private
 
     def user_params
-      params.permit(:user, :limit, :offset) 
+      params.permit(:user, :limit, :offset, :email, :confirm_feature_tour) 
     end
-
 end

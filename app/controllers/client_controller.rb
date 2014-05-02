@@ -1,6 +1,15 @@
 class ClientController < ApplicationController
 
   before_action :authenticate_user!, except: :index
+  before_action :confirm_surfable, only: [
+    :feed, 
+    :favorites, 
+    :trending, 
+    :history, 
+    :submissions, 
+    :tag,
+    :desktop 
+  ] 
 
   layout 'client'
 
@@ -33,5 +42,13 @@ class ClientController < ApplicationController
   def signup; end
   def resend_link; end
   def welcome; end
+
+  private
+
+    def confirm_surfable
+      unless current_user and current_user.confirmed? and current_user.welcomed?
+        redirect_to root_path
+      end
+    end
 
 end
