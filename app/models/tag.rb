@@ -2,6 +2,8 @@ class Tag < ActiveRecord::Base
   
   has_many :votes
 
+  validates_presence_of :name
+
   def self.populate_from_existing!
     sections = Card.pluck(:section)  
     available_tags = sections.uniq!

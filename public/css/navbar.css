@@ -63,8 +63,14 @@
 #tagsurf-logo
 {
   width: auto;
-  height: 28px;
-  padding-left: 40px;
+  height: 35px;
+  margin: 0 auto;
+}
+
+#slider_label
+{
+  position: relative;
+  left: 4px;
 }
 
 #favorites-btn img
@@ -83,8 +89,11 @@
 {
   text-align: center;
   font-size: 22px;
-  padding-top: 12px;
+  padding-top: 9px;
   color: black;
+  z-index: -1;
+  position: absolute;
+  width: 100%;
 }
 
 #slider-icon,
@@ -104,11 +113,13 @@
 
 .vtop
 {
-  vertical-align: text-top;
+  vertical-align: super !important;
+  left: -8px;
+  top: -3px;
 }
 #slider-icon
 {
-  vertical-align: super;
+  vertical-align: middle;
   position: relative;
   width: 13px;
 }
@@ -131,6 +142,10 @@
   list-style: none;
   list-style-type: none;
 }
+#slide_down_menu li:first-child
+{
+  border-top: 1px solid lightgray;
+}
 #slide_down_menu li
 {
   width: 100%;
@@ -146,6 +161,8 @@
 {
   width: 200px;
   margin: auto;
+  position: relative;
+  left: 13px;
 }
 #slide_down_menu li.slide_active
 {

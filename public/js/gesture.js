@@ -1,5 +1,6 @@
 var gesture = {
 	gid: 0,
+	returnDefault: false,
 	thresholds: {
 		swipe: {
 			minDistance: 35,
@@ -23,10 +24,18 @@ var gesture = {
 		startTime: null,
 		startPos: null,
 		lastPos: null,
-		tapCount: 0,
 		holdCount: 0,
 		tapTimeout: null,
 		holdInterval: null
+	},
+	events: isMobile() && {
+		Start: "touchstart",
+		Stop: "touchend",
+		Move: "touchmove"
+	} || {
+		Start: "mousedown",
+		Stop: "mouseup",
+		Move: "mousemove"
 	},
 	handlers: { drag: {}, swipe: {}, tap: {}, up: {}, down: {}, hold: {} },
 	tuneThresholds: function() {
@@ -69,6 +78,8 @@ var gesture = {
 			v.tapTimeout = null;
 		}
 		v.holdCount = 0;
+		if (v.holdInterval)
+			clearInterval(v.holdInterval);
 		v.holdInterval = setInterval(function() {
 			if (!v.active || (t.hold.maxDistance && (t.hold.maxDistance <
 				gesture.getDiff(v.startPos, v.lastPos).distance))) {
@@ -98,19 +109,11 @@ var gesture = {
 					diff.distance / timeDiff)));
 		else if ( (timeDiff < t.tap.maxTime)
 			&& (diff.distance < t.tap.maxDistance) ) { // tap
-			v.tapCount += 1;
-			if (v.tapCount == t.tap.maxCount)
+			node.tapCount = (node.tapCount || 0) + 1;
+			if (node.tapCount == t.tap.maxCount)
 				gesture.triggerTap(node);
-			else {
-				v.tapTimeout = setTimeout(function() {
-					gesture.triggerTap(node);
-				}, t.tap.waitTime);
-			}
-		}
-
-		if (v.holdInterval) {
-			clearInterval(v.holdInterval);
-			v.holdInterval = null;
+			else
+				v.tapTimeout = setTimeout(gesture.triggerTap, t.tap.waitTime, node);
 		}
 		return gesture.triggerUp(node);
 	},
@@ -127,7 +130,7 @@ var gesture = {
 		var e = {};
 		['Start', 'Stop', 'Move'].forEach(function(eName) {
 			e[eName] = function(e) {
-				return gesture['on' + eName](e, node)
+				return gesture['on' + eName](e, node) || gesture.returnDefault
 					|| e.preventDefault() || e.stopPropagation() || false;
 			};
 		});
@@ -137,12 +140,8 @@ var gesture = {
 		if (!node.gid) {
 			node.gid = ++gesture.gid;
 			var e = node.listeners = gesture.eWrap(node);
-			node.addEventListener('mousedown', e.Start);
-			node.addEventListener('touchstart', e.Start);
-			node.addEventListener('mouseup', e.Stop);
-			node.addEventListener('touchend', e.Stop);
-			node.addEventListener('mousemove', e.Move);
-			node.addEventListener('touchmove', e.Move);
+			for (var evName in gesture.events)
+				node.addEventListener(gesture.events[evName], e[evName]);
 		}
 		if (!gesture.handlers[eventName][node.gid])
 			gesture.handlers[eventName][node.gid] = [];
@@ -151,12 +150,8 @@ var gesture = {
 	unlisten: function(node) {
 		if (node.gid) {
 			var e = node.listeners;
-			node.removeEventListener('mousedown', e.Start);
-			node.removeEventListener('touchstart', e.Start);
-			node.removeEventListener('mouseup', e.Stop);
-			node.removeEventListener('touchend', e.Stop);
-			node.removeEventListener('mousemove', e.Move);
-			node.removeEventListener('touchmove', e.Move);
+			for (var evName in gesture.events)
+				node.removeEventListener(gesture.events[evName], e[evName]);
 			for (var eventName in gesture.handlers)
 				if (node.gid in gesture.handlers[eventName])
 					delete gesture.handlers[eventName][node.gid];
@@ -171,8 +166,8 @@ var gesture = {
 	triggerTap: function(node) {
 		var handlers = gesture.handlers.tap[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
-			handlers[i](gesture.vars.tapCount);
-		gesture.vars.tapCount = 0;
+			handlers[i](node.tapCount);
+		node.tapCount = 0;
 		gesture.vars.tapTimeout = null;
 	},
 	triggerDrag: function(node, direction, distance, dx, dy) {
