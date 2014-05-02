@@ -98,3 +98,13 @@ a {
 .modalslide {
 	-webkit-transform: translate3d(0, 0, 0) !important;
 }
+
+.tslogo {
+  display: block;
+  background-image: url('/img/ts_logo_stacked_grey.png');
+  background-image: -webkit-image-set( url('/img/ts_logo_stacked_gray.jpg') 1x, image-url('/img/ts_logo_stacked_gray2x.jpg') 2x);
+  background-size: cover;
+  width:210px;
+  height:241px;
+  margin:20px auto;
+}

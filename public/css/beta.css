@@ -32,3 +32,69 @@ body
 	padding: 10px 50px;
 	text-align: center;
 }
+
+.tslogo
+{
+	margin-top: 10%;
+}
+
+.ac-text-container
+{
+	font-size: 122%;
+	color: #2f2f2f;
+	width: 90%;
+}
+#ac-submit-btn
+{
+	position: relative;
+	top: 6px;
+	letter-spacing: 2px;
+	font-size: 16pt;
+	color: white;
+	font-weight: 200;
+	border: none;
+	outline-width: 0;
+	background: transparent;
+	-moz-box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+	-webkit-appearance: none;
+}
+#beta_code_input
+{
+	font-family: 'Raleway', 'sans-serif';
+	font-size: 75%;
+	position: relative;
+	height: 40px;
+	width: 50%;
+	outline-width: 0;
+	left: 20%;
+	line-height: 20px;
+	border: solid 1px lightgray;
+	background-color: white;
+	border-radius: 40px;
+	-webkit-border-radius: 40px;
+	-webkit-appearance: none;
+	float: left;
+	top: 2px;
+	left: 2px;
+}
+.ac-submit-container
+{
+	height: 68px;
+	background-color: #1dafec;
+	border-radius: 40px;
+	-webkit-border-radius: 40px;
+	width: 85%;
+	border: solid 12px white;
+}
+
+::-webkit-input-placeholder {
+	margin: 0 auto;
+	text-align: center;
+	font-size: 130%;
+	line-height: 20px;
+	height: 20px;
+	font-weight: 200;
+}
+
