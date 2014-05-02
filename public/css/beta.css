@@ -19,7 +19,6 @@ body
 	width: 100%;
 	position: absolute;
 	bottom: 50px;
-	text-align: center;
 }
 
 .logobar img {
@@ -30,5 +29,4 @@ body
 .midpad {
 	font-size: 140%;
 	padding: 10px 50px;
-	text-align: center;
 }
