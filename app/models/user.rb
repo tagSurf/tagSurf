@@ -5,8 +5,6 @@ class User < ActiveRecord::Base
   belongs_to  :access_code
 
 
-
-
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, 
          :registerable, :confirmable,
@@ -92,6 +90,12 @@ class User < ActiveRecord::Base
       raise "Only Imgur accounts allowed at this time"
     end
     user
+  end
+
+  protected
+
+  def confirmation_required?
+    false
   end
   
 end
