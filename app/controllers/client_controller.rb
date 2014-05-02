@@ -21,11 +21,11 @@ class ClientController < ApplicationController
   def desktop; end
 
   # Beta access flow
-  def code; end
+  def access_code; end
   def disclaimer; end
   def terms; end
   def signup; end
-  def resend; end
+  def resend_link; end
   def welcome; end
 
 end
