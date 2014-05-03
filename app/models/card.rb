@@ -70,6 +70,7 @@ class Card < ActiveRecord::Base
     response = RemoteResource.get_tag(tag)
     tagged = response.parsed_response["data"]
 
+    return if tag == 'Boobies'
     # Create tag if not already in the system
     unless tag = Tag.where('name ilike ?', tag).first
       Tag.create(name: tag)
