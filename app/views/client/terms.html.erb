@@ -148,6 +148,7 @@
     <%= f.hidden_field :d_accept, value: params[:d_accept] %>
     <%= f.hidden_field :t_accept, value: true %>
     <%= f.submit "I agree", class: 'forward button' %>
+    <a href="/" class="back button">Decline</a>
   <% end %>
 
   <script>
@@ -158,7 +159,6 @@
     };
   </script>
 
-  <a href="/" class="back button">Decline</a>
 </div>
 
 
