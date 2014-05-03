@@ -7,8 +7,6 @@ Tagsurf::Application.routes.draw do
   end
 
   devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions' }
-
-  get 'users' => 'client#index'
  
   # Static Routes
   get 'feed'        => 'client#feed'
