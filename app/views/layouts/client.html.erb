@@ -17,7 +17,7 @@
       <div class="alert alert-<%= name == :notice ? "success" : "danger" %>">
         <!--<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>-->
         <% msg.each do |message| %>
-          <%= content_tag :div, message, class: "flash_#{name}" %></h1>
+          <%= content_tag :div, message, class: "flash #{name}" %></h1>
         <% end %>
       </div>
     <% end %>
