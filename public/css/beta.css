@@ -250,6 +250,11 @@ a.back {
 	border-radius: 50px / 50px;
 	-webkit-background-clip: padding-box;
 }
+
+.su-helper-txt{
+  font-size: 12px;
+}
+
 .su-input
 {
 	font-family: 'Raleway', 'sans-serif';

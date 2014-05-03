@@ -9,6 +9,8 @@
     <%= form_for(User.new, :as => :user, :url => registration_path(:user) ) do |f| %>
       <p class="su-user-email"><%= params[:email] %></p>
 
+      <small class="su-helper-txt">Password must be 8 characters</small>
+
       <div class="su-input-container">
         <%= f.password_field :password, :placeholder => 'password', :class => 'su-input', id: 'password' %>
       </div>
@@ -16,6 +18,7 @@
       <div class="su-input-container">
         <%= f.password_field :password_confirmation, :placeholder => 're-enter password', :class => 'su-input', id: 'repassword' %>
       </div>
+
 
       <%#- too busy to restyle disabled input %>
       <%= f.hidden_field :email, value: params[:email] %>
