@@ -126,8 +126,8 @@ input[type='submit'].button {
   white-space: nowrap;
   font-weight: bold;
   color: white;
-  background: #1dafec !important;
-  opacity: 1.0 !important;
+  background: #1dafec;
+  -webkit-appearance: none;
   padding: 10px 20px;
   border-radius: 30px;
   cursor: pointer;
