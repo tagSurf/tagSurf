@@ -5,9 +5,10 @@ body
 	color: black;
 }
 
-.logobar img {
-	height: 50px;
-	margin-top: 10px;
+.toplogo {
+	width: 255px;
+	display: block;
+	margin: 10px auto;
 }
 
 .content {
@@ -180,6 +181,7 @@ a.back {
 }
 .welcome-text-container
 {
+	width: 255px;
 	font-family: 'Raleway', 'sans-serif';
 }
 .welcome-top-title
@@ -191,21 +193,18 @@ a.back {
 {
 	text-align: left;
 	margin: 10px auto;
-	width: 87%;
 	font-size: 13px;
 }
 .welcome-title-text
 {
 	text-align: left;
 	margin: 10px auto;
-	width: 87%;
 	font-size: 20px;
 	color: #1dafec;
 	clear: both;
 }
 #welcome-submit-btn
 {
-
 	font-size: 16px;
 	font-family: 'Raleway', 'sans-serif';
 	color: white;
