@@ -315,9 +315,11 @@
 <script src="/js/gesture.js"></script>
 <script src="/js/modal.js"></script>
 <script>
- var removePrivacy = function() {
-  modal.backOff();
-  modal.modalOut();
+ var removePrivacy = function(direction) {
+  if (!direction || !isNaN(direction) || direction == "right") {
+   modal.backOff();
+   modal.modalOut();
+  }
  };
  document.getElementById("privacy-btn").onclick = function() {
   modal.halfOn(removePrivacy);
