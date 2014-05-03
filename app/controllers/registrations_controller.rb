@@ -136,7 +136,8 @@ class RegistrationsController < Devise::RegistrationsController
       :password_confirmation,
       :email,
       :beta_tester_agreement,
-      :beta_user
+      :beta_user,
+      :access_code
     )
     # Use devise system in future  
     # devise_parameter_sanitizer.sanitize(:sign_up).inspect
