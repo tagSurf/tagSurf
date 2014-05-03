@@ -5,9 +5,10 @@ body
 	color: black;
 }
 
-.logobar img {
-	height: 50px;
-	margin-top: 10px;
+.toplogo {
+	width: 255px;
+	display: block;
+	margin: 10px auto;
 }
 
 .content {
@@ -127,6 +128,7 @@ input[type='submit'].button {
   font-weight: bold;
   color: white;
   background: #1dafec;
+  -webkit-appearance: none;
   padding: 10px 20px;
   border-radius: 30px;
   cursor: pointer;
@@ -144,6 +146,7 @@ input[type='submit'].button {
 	margin-left: -30px;
 	padding-left: 40px;
 	width: 180px;
+  margin-top:3px;
 }
 
 
@@ -179,6 +182,7 @@ a.back {
 }
 .welcome-text-container
 {
+	width: 255px;
 	font-family: 'Raleway', 'sans-serif';
 }
 .welcome-top-title
@@ -190,21 +194,18 @@ a.back {
 {
 	text-align: left;
 	margin: 10px auto;
-	width: 87%;
 	font-size: 13px;
 }
 .welcome-title-text
 {
 	text-align: left;
 	margin: 10px auto;
-	width: 87%;
 	font-size: 20px;
 	color: #1dafec;
 	clear: both;
 }
 #welcome-submit-btn
 {
-
 	font-size: 16px;
 	font-family: 'Raleway', 'sans-serif';
 	color: white;
@@ -298,5 +299,13 @@ a.back {
 }
 .focused {
 	border-color: #48a4df;
+}
+
+.top-margin{
+  margin-top:10px; 
+}
+
+#get-email-input{
+  margin: 0px; 
 }
 
