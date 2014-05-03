@@ -21,6 +21,7 @@
       <%= f.hidden_field :email, value: params[:email] %>
       <%= f.hidden_field :beta_user, value: true %>
       <%= f.hidden_field :beta_tester_agreement, value: true %>
+      <%= f.hidden_field :access_code, value: params[:code] %>
 
       <%= f.submit 'Submit', id: 'su-submit-btn' %>
        

@@ -79,10 +79,6 @@ class ClientController < ApplicationController
     end
   end
 
-  # Step four
-  def password_submission
-  end
-
   ### End beta access 
 
   # Static application
@@ -99,7 +95,13 @@ class ClientController < ApplicationController
   def disclaimer; end
   def terms; end
   def signup; end
-  def resend_link; end
+
+  def resend_link; 
+    if current_user and current_user.welcomed?
+      redirect_to root_path
+    end
+  end
+
   def welcome; end
 
   private

@@ -13,7 +13,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-    build_resource(sign_up_params)
+    confirm_beta_access(sign_up_params)
 
     resource_saved = resource.save
     yield resource if block_given?
@@ -21,7 +21,8 @@ class RegistrationsController < Devise::RegistrationsController
       if resource.active_for_authentication?
         set_flash_message :notice, :signed_up if is_flashing_format?
         sign_up(resource_name, resource)
-        respond_with resource, location: after_sign_up_path_for(resource)
+        resource.send_confirmation_instructions
+        respond_with resource, location: root_path #after_sign_up_path_for(resource)
       else
         set_flash_message :notice, :"signed_up_but_#{resource.inactive_message}" if is_flashing_format?
         expire_data_after_sign_in!
@@ -98,6 +99,17 @@ class RegistrationsController < Devise::RegistrationsController
   # temporary session data to the newly created user.
   def build_resource(hash=nil)
     self.resource = resource_class.new_with_session(hash || {}, session)
+  end
+
+  # Confirm beta access is valid
+  def confirm_beta_access(hash=nil) 
+    code = AccessCode.where(code: hash[:access_code]).first
+    if code.valid_code?
+      hash['access_code'] = code
+      build_resource(hash)
+    else
+      raise "invalid access code"
+    end
   end
 
   # Signs in a user on sign up. You can overwrite this method in your own
