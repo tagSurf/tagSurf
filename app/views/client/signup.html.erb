@@ -9,7 +9,7 @@
     <%= form_for(User.new, :as => :user, :url => registration_path(:user) ) do |f| %>
       <p class="su-user-email"><%= params[:email] %></p>
 
-      <small class="su-helper-txt">Password must be 8 characters</small>
+      <small class="su-helper-txt">Password must be at least 8 characters</small>
 
       <div class="su-input-container">
         <%= f.password_field :password, :placeholder => 'password', :class => 'su-input', id: 'password' %>

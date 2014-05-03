@@ -243,7 +243,8 @@ a.back {
 {
 	width: 225px;
 	height: 37px;
-	margin-bottom: 20px;
+  margin-top: 4px;
+	margin-bottom: 16px;
 	border: solid 1px grey;
 	-moz-border-radius: 50px / 50px;
 	-webkit-border-radius: 50px / 50px;
@@ -253,6 +254,8 @@ a.back {
 
 .su-helper-txt{
   font-size: 12px;
+  color: #1dafec; 
+  margin-bottom: 4px;
 }
 
 .su-input
