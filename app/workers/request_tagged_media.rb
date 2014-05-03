@@ -5,8 +5,8 @@ class RequestTaggedMedia
   
   include Sidekiq::Worker
 
-  def perform(tag_id)
-    tag = Tag.find tag_id
+  def perform(tag)
+    tag = Tag.where(name: tag)
     Card.populate_tag(tag.name)
   end
 
