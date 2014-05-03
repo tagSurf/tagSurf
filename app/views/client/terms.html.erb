@@ -132,8 +132,8 @@
  <div class="bigger bold blue pointer" id="privacy-btn">
   PRIVACY POLICY &gt;
  </div>
- <div class="input-border-container nopad">
-  <input class="ts-input" type='email' id="get-email-input" onkeyup="updateForm()" placeholder="email" autocomplete="off">
+ <div class="input-border-container nopad top-margin">
+   <input class="ts-input" type='email' id="get-email-input" onkeyup="updateForm()" placeholder="email" autocomplete="off">
  </div>
 </div>
 
@@ -145,6 +145,7 @@
     <%= f.hidden_field :d_accept, value: params[:d_accept] %>
     <%= f.hidden_field :t_accept, value: true %>
     <%= f.submit "I agree", class: 'forward button' %>
+    <a href="/" class="back button">Decline</a>
   <% end %>
 
   <script>
@@ -155,7 +156,6 @@
     };
   </script>
 
-  <a href="/" class="back button">Decline</a>
 </div>
 
 

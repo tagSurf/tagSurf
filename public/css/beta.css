@@ -146,6 +146,7 @@ input[type='submit'].button {
 	margin-left: -30px;
 	padding-left: 40px;
 	width: 180px;
+  margin-top:3px;
 }
 
 
@@ -298,5 +299,9 @@ a.back {
 }
 .focused {
 	border-color: #48a4df;
+}
+
+.top-margin{
+  margin-top:10px; 
 }
 
