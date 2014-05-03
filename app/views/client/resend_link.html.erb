@@ -13,10 +13,15 @@
    A verification link has been sent to:
   </div>
   <div class="midpad">
-   email@domain.com
+   <%= current_user.email %>
   </div>
  </div>
  <div class="biggest bottom">
-  <span class="button">Resend Link</span>
+
+  <%= form_for(User.new, :as => :user, :url => confirmation_path(:user), :html => { :method => :post }) do |f| %>
+    <%= f.hidden_field :email, value: current_user.email %>
+    <%= f.submit "Resend link", class: 'button' %>
+  <% end %>
+
  </div>
 </div>

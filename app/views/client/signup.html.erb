@@ -3,13 +3,31 @@
 <% end %>
 
 <center>
- <img class="sulogo" src="/img/ts_logo_stacked_gray.jpg"></img>
- <div class="su-container">
-  <p class="su-user-email">email&#64;domain.com</p>
-  <div class="su-input-container"><input id="password" class="su-input" placeholder="password" type="password"></div>
-  <div class="su-input-container"><input id="repassword" class="su-input" placeholder="re-enter password" type="password"></div>
-  <input id="su-submit-btn" type="submit" value="Submit">
- </div>
+  <img class="sulogo" src="/img/ts_logo_stacked_gray.jpg"></img>
+  <div class="su-container">
+
+    <%= form_for(User.new, :as => :user, :url => registration_path(:user) ) do |f| %>
+      <p class="su-user-email"><%= params[:email] %></p>
+
+      <div class="su-input-container">
+        <%= f.password_field :password, :placeholder => 'password', :class => 'su-input', id: 'password' %>
+      </div>
+
+      <div class="su-input-container">
+        <%= f.password_field :password_confirmation, :placeholder => 're-enter password', :class => 'su-input', id: 'repassword' %>
+      </div>
+
+      <%#- too busy to restyle disabled input %>
+      <%= f.hidden_field :email, value: params[:email] %>
+      <%= f.hidden_field :beta_user, value: true %>
+      <%= f.hidden_field :beta_tester_agreement, value: true %>
+      <%= f.hidden_field :access_code, value: params[:code] %>
+
+      <%= f.submit 'Submit', id: 'su-submit-btn' %>
+       
+    <% end %>
+
+  </div>
 </center>
 <script src="/js/util.js"></script>
 <script>

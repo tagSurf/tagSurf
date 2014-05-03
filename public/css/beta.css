@@ -120,6 +120,19 @@ body
 	cursor: pointer;
 }
 
+input[type='submit'].button {
+  font-size: 100%;
+  text-align: center;
+  white-space: nowrap;
+  font-weight: bold;
+  color: white;
+  background: #1dafec;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  border: none;
+}
+
 .forward {
 	float: right;
 	margin-right: -30px;
@@ -133,6 +146,20 @@ body
 	width: 180px;
 }
 
+
+a.forward {
+	float: right;
+	margin-right: -30px;
+	padding-right: 40px;
+	width: 180px;
+}
+
+a.back {
+  float:left;
+	margin-left: -30px;
+	padding-left: 40px;
+	width: 180px;
+}
 .modal {
 	top: 10px;
 	bottom: 80px;

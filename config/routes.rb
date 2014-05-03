@@ -6,7 +6,7 @@ Tagsurf::Application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  devise_for :users, :controllers => { :sessions => 'sessions' }
+  devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions' }
  
   # Static Routes
   get 'feed'        => 'client#feed'
@@ -21,8 +21,18 @@ Tagsurf::Application.routes.draw do
   get 'sign-up'     => 'client#signup'
   get 'resend'      => 'client#resend_link'
   get 'welcome'     => 'client#welcome'
+    
+  # Multi-step beta access flow
+  post 'confirm-beta'              => 'client#confirm_beta_token'
+  post 'confirm-disclaimer'        => 'client#disclaimer_agreement'
+  post 'confirm-terms'             => 'client#terms_agreement'
 
+  # User routes
+  put 'user'                           => 'users#update'
+
+  # JSON API
   namespace :api do
+
     # Media API
     get 'media/:tag'                     => 'media#next'
 
