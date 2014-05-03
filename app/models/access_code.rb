@@ -17,7 +17,7 @@ class AccessCode < ActiveRecord::Base
     self.code = (0...size).map{ charset.to_a[rand(charset.size)] }.join
   end
 
-  def valid?
+  def valid_code?
     return true if expires.nil?
   end
 

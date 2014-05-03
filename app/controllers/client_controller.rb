@@ -44,7 +44,7 @@ class ClientController < ApplicationController
   # Step one
   def confirm_beta_token
     code = AccessCode.where(code: beta_code_params[:access_code]).first
-    if code && code.valid?
+    if code && code.valid_code?
       redirect_to "/disclaimer?code=#{code.code}"
     else
       redirect_to :root, error: 'Invalid beta code.'
