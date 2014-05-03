@@ -31,7 +31,7 @@ class RegistrationsController < Devise::RegistrationsController
       end
     else
       clean_up_passwords resource
-      set_flash_message :notice, :"#{resource.errors.full_messages}"
+      flash[:error] = resource.errors.full_messages
       redirect_to "/sign-up?code=#{resource.access_code.code}&d_accept=true&t_accept=true&email=#{resource.email}"
     end
   end
