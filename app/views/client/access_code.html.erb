@@ -7,15 +7,15 @@
  <div class="tslogo"></div>
  <div class="ac-text-container">
   <p>tagSurf is in private beta.</p>
-  <p>Please email beta&#64;tagsurf.co for more information.</p>
+  <p>Please email <a class="blue" href="mailto:beta@tagSurf.co">beta&#64;tagsurf.co</a> for more information.</p>
  </div>
  <div class="ts-submit-bar">
    <div class="ac-submit-container">
 
-    <%= form_for(:access_code, url: '/confirm-beta', :html => { :method => :post }) do |f| %>
-      <%= f.text_field :access_code, id: 'beta_code_input', placeholder: 'beta code' %>
-      <%= f.submit "submit", id: 'ac-submit-btn' %>
-    <% end %>
+     <%= form_for(:access_code, url: '/confirm-beta', :html => { :method => :post }) do |f| %>
+       <%= f.text_field :access_code, id: 'beta_code_input', placeholder: 'beta code' %>
+       <%= f.submit "submit", id: 'ac-submit-btn' %>
+     <% end %>
 
    </div>
  </div>
