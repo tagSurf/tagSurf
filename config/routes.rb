@@ -6,7 +6,7 @@ Tagsurf::Application.routes.draw do
     mount Sidekiq::Web => '/sidekiq'
   end
 
-  devise_for :users, :controllers => { :sessions => 'sessions' }
+  devise_for :users, :controllers => { :registrations => 'registrations', :sessions => 'sessions' }
  
   # Static Routes
   get 'feed'        => 'client#feed'
