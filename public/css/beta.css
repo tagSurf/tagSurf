@@ -113,7 +113,7 @@ body
 .button {
 	text-align: center;
 	white-space: nowrap;
-	font-weight: bold;
+	font-weight: 200;
 	color: white;
 	background: #1dafec;
 	padding: 10px 20px;
@@ -126,7 +126,6 @@ input[type='submit'].button {
   font-weight:200 !important;
   text-align: center;
   white-space: nowrap;
-  font-weight: bold;
   color: white;
   background: #1dafec;
   -webkit-appearance: none;
