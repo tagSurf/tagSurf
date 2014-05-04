@@ -24,13 +24,15 @@ class RegistrationsController < Devise::RegistrationsController
         resource.send_confirmation_instructions
         respond_with resource, location: root_path #after_sign_up_path_for(resource)
       else
+        raise "here".inspect
         set_flash_message :notice, :"signed_up_but_#{resource.inactive_message}" if is_flashing_format?
         expire_data_after_sign_in!
         respond_with resource, location: after_inactive_sign_up_path_for(resource)
       end
     else
       clean_up_passwords resource
-      respond_with resource
+      flash[:error] = resource.errors.full_messages
+      redirect_to "/sign-up?code=#{resource.access_code.code}&d_accept=true&t_accept=true&email=#{resource.email}"
     end
   end
 

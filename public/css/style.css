@@ -10,10 +10,12 @@ body
 	margin: 0;
 	background-color: #404041;
 	color: white;
+  font-weight:200;
 }
 
 html, input[type="submit"] {
 	font-family: 'Raleway', sans-serif;
+  font-weight:200;
 }
 
 a, img, input[type="submit"], .pointer {
@@ -161,6 +163,7 @@ a {
 	padding-left: 13px;
 	border: solid thin transparent;
 	font-size: 16px;
+  font-weight:200;
 	background: #fff;
 	outline-width: 0;
 	-moz-border-radius: 50px / 50px;
