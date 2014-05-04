@@ -19,15 +19,17 @@ onload = function ()
 			buildCard(zIndex);
 		}
 	};
-	var popData = function(rdata) {
+	var popData = function(rdata, firstCard) {
 		// this method only nets 4 cards for every 10 cards requested
 		// needs new API!
+		if (firstCard) known_keys[firstCard.id] = true;
 		for (var i = 0; i < rdata.length; i++) {
 			if (!known_keys[rdata[i].id]) {
 				data.push(rdata[i]);
 				known_keys[rdata[i].id] = true;
 			}
 		}
+		if (firstCard) data.unshift(firstCard);
 	};
 	var populateSlider = function (update, failMsgNode, firstCard)
 	{
@@ -39,17 +41,8 @@ onload = function ()
 			if (update)
 				popData(rdata);
 			else {
-				known_keys = {};
-				if (firstCard) {
-					known_keys[firstCard.id] = true;
-					data = [];
-					popData(rdata);
-					data.unshift(firstCard);
-				} else {
-					for (var card in rdata)
-						known_keys[rdata[card].id] = true;
-					data = rdata;
-				}
+				data = [];
+				popData(rdata, firstCard);
 				refreshCards(failMsgNode, 2);
 			}
 		}, function() {
@@ -78,6 +71,7 @@ onload = function ()
 		tinput.blur();
 		if (tagName != current_tag) {
 			current_tag = tagName;
+			known_keys = {};
 			populateSlider(null, null, firstCard);
 		}
 	};
@@ -320,7 +314,7 @@ onload = function ()
 	};
 	var swipeSlider = function (direction, voteAlternative, pixelsPerSecond)
 	{
-		var activeCard = data[cardIndex-3];
+		var activeCard = data[Math.max(0, cardIndex-3)];
 		var translateQuantity = 600, rotateQuantity = 60,
 			verticalQuantity = 0;
 		var isUp = direction == "right";
@@ -434,8 +428,16 @@ onload = function ()
 	};
 	var buildCard = function (zIndex)
 	{
+		if (slideContainer.firstChild && slideContainer.firstChild.throbbing) {
+			slider = slideContainer.firstChild.firstChild;
+			return populateSlider(false, slider.firstChild);
+		}
+		if (slideContainer.lastChild && slideContainer.lastChild.throbbing) {
+			slider = slideContainer.firstChild.firstChild;
+			return;
+		}
 		if (data.length <= cardIndex) {
-			cardIndex = Math.max(cardIndex + 1, 3);
+			cardIndex += 1;
 			var c_wrapper = document.createElement("div");
 			c_wrapper.className = "card-wrapper";
 			var c_container = document.createElement("div");
@@ -447,8 +449,11 @@ onload = function ()
 			c_container.appendChild(msg);
 			c_container.appendChild(img);
 			c_wrapper.appendChild(c_container);
+			c_wrapper.throbbing = true;
 			slideContainer.appendChild(c_wrapper);
-			populateSlider(false, msg);
+			slider = slideContainer.firstChild.firstChild;
+			if (slideContainer.childNodes.length == 1)
+				populateSlider(false, slider.firstChild);
 			return;
 		}
 		var imageContainer, iconLine, textContainer, picTags, fullscreenButton, truncatedTitle, card;
