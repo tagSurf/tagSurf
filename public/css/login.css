@@ -2,16 +2,6 @@ html, body {
 	background: white;
 }
 
-.alert-danger {
-  background: red;
-  margin-top: 10px;
-  padding: 5px;
-}
-
-.alert-danger button {
-  display: none;
-}
-
 .focused {
 	border-color: #48a4df;
 }

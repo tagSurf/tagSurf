@@ -1,5 +1,10 @@
-<p>Welcome <%= @email %>!</p>
+<p>Welcome to tagSurf Beta!</p>
 
-<p>You can confirm your account email through the link below:</p>
+<p>Please confirm your email by clicking the following link to activate your beta account:<p>
 
-<p><%= link_to 'Confirm my account', confirmation_url(@resource, :confirmation_token => @token) %></p>
+<p><%= link_to 'Confirm email', confirmation_url(@resource, :confirmation_token => @token) %></p>
+
+<p>Questions? Contact us at <%= mail_to 'beta@tagsurf.co' %>
+
+
+

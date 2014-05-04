@@ -1,4 +1,5 @@
 <% content_for :stylesheets do %>
+  <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/css/beta.css">
 <% end %>
 
@@ -12,11 +13,13 @@
       <small class="su-helper-txt">Password must be at least 8 characters</small>
 
       <div class="su-input-container">
-        <%= f.password_field :password, :placeholder => 'password', :class => 'su-input', id: 'password' %>
+        <%= f.password_field :password, :placeholder => 'password', :class => 'su-input', id: 'password', autocomplete: "off", spellcheck: "false", autocapitalize: "off", autocorrect: "off" %>
+ %>
       </div>
 
       <div class="su-input-container">
-        <%= f.password_field :password_confirmation, :placeholder => 're-enter password', :class => 'su-input', id: 'repassword' %>
+        <%= f.password_field :password_confirmation, :placeholder => 're-enter password', :class => 'su-input', id: 'repassword', autocomplete: "off", spellcheck: "false", autocapitalize: "off", autocorrect: "off" %>
+ %>
       </div>
 
 

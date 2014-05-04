@@ -47,7 +47,8 @@ class ClientController < ApplicationController
     if code && code.valid_code?
       redirect_to "/disclaimer?code=#{code.code}"
     else
-      redirect_to :root, error: 'Invalid beta code.'
+      flash[:error] = ["Invalid beta code."]
+      redirect_to :root
     end
   end
 
@@ -68,6 +69,7 @@ class ClientController < ApplicationController
     terms = beta_code_params[:t_accept] 
 
     if User.where(email: email).exists?
+      flash[:error] = ["Email address already registered."]
       redirect_to "/terms?code=#{code}&d_accept=true", error: 'Email already taken. Contact beta@tagsurf.co for more information.'
       return
     end
