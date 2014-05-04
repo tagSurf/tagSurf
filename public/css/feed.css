@@ -45,7 +45,7 @@ html, body
 #tag-input
 {
   color: white;
-  font-weight: bold;
+  font-weight: 200;
   float: left;
   display: inline;
   margin:0;
