@@ -123,6 +123,7 @@ body
 
 input[type='submit'].button {
   font-size: 100%;
+  font-weight:200 !important;
   text-align: center;
   white-space: nowrap;
   font-weight: bold;
@@ -282,6 +283,7 @@ a.back {
 {
 	font-size: 20px;
 	font-family: 'Raleway', 'sans-serif';
+  font-weight:200;
 	color: white;
 	background-color: #1dafec;
 	letter-spacing: 1px;

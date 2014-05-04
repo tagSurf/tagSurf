@@ -47,7 +47,8 @@ class ClientController < ApplicationController
     if code && code.valid_code?
       redirect_to "/disclaimer?code=#{code.code}"
     else
-      redirect_to :root, error: 'Invalid beta code.'
+      flash[:error] = ["Invalid beta code."]
+      redirect_to :root
     end
   end
 

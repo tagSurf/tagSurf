@@ -10,10 +10,12 @@ body
 	margin: 0;
 	background-color: #404041;
 	color: white;
+  font-weight:200;
 }
 
 html, input[type="submit"] {
 	font-family: 'Raleway', sans-serif;
+  font-weight:200;
 }
 
 a, img, input[type="submit"], .pointer {
@@ -161,6 +163,7 @@ a {
 	padding-left: 13px;
 	border: solid thin transparent;
 	font-size: 16px;
+  font-weight:200;
 	background: #fff;
 	outline-width: 0;
 	-moz-border-radius: 50px / 50px;
@@ -169,34 +172,3 @@ a {
 	transition: border-color 200ms;
 	-webkit-background-clip: padding-box;
 }
-
-
-/* Global notification styles */
-.alert{
-  position: absolute;
-  z-index:1000;
-  width: 100%;
-  padding: 5px 30px;
-  background: #ff4800; 
-  opacity: 0.9; 
-  color: white; 
-  font-weight:400; 
-  font-size:13px; 
-}
-
-.flash{
-  margin:10px 0 10px 0;
-}
-
-.shadow {
-  -moz-box-shadow: 0.5px 0.866px 3px 0px rgb( 0, 0, 0 );
-  -webkit-box-shadow: 0.5px 0.866px 3px 0px rgb( 0, 0, 0 ); 
-  box-shadow: 0.5px 0.866px 3px 0px rgb( 0, 0, 0 ); 
-}
-
-.bottom-rounded{
-  border-bottom-left-radius:5px;
-  border-bottom-right-radius:5px;
-}
-
-
