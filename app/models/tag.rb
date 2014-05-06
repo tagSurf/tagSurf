@@ -6,6 +6,10 @@ class Tag < ActiveRecord::Base
 
   default_scope where(:blacklisted => false)
 
+  def self.blacklisted?(tag)
+    CONFIG[:blaclisted_tags].include?(tag.downcase)
+  end
+
   def self.populate_from_existing!
     sections = Card.pluck(:section)  
     available_tags = sections.uniq!

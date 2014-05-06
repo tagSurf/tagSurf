@@ -32,13 +32,9 @@ class Card < ActiveRecord::Base
     self.save
   end
 
-  def blacklisted?(tag)
-    CONFIG[:blaclisted_tags].include?(tag.downcase)
-  end
-
   # Display the next card to the user for voting
   def self.next(user, tag, n=20)
-    if blacklisted?(tag)
+    if Tag.blacklisted?(tag)
       []
     else
       return unless user
@@ -65,7 +61,7 @@ class Card < ActiveRecord::Base
   end
 
   def self.populate_tag(tag) 
-    return if blacklisted?(tag)
+    return if Tag.blacklisted?(tag)
     response = RemoteResource.get_tag(tag)
     tagged = response.parsed_response["data"]
 
