@@ -65,12 +65,17 @@ class ClientController < ApplicationController
   # Step three
   def terms_agreement
     code = AccessCode.where(code: beta_code_params[:access_code]).first.code
-    email = beta_code_params[:email]
     terms = beta_code_params[:t_accept] 
+
+    unless email = beta_code_params[:email]
+      flash[:error] = ["Add an email address to continue"] 
+      redirect_to "/terms?code=#{code}&d_accept=true"
+      return
+    end
 
     if User.where(email: email).exists?
       flash[:error] = ["Email address already registered."]
-      redirect_to "/terms?code=#{code}&d_accept=true", error: 'Email already taken. Contact beta@tagsurf.co for more information.'
+      redirect_to "/terms?code=#{code}&d_accept=true"
       return
     end
     
