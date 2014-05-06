@@ -4,6 +4,8 @@ class Tag < ActiveRecord::Base
 
   validates_presence_of :name
 
+  default_scope where(:blacklisted => false)
+
   def self.populate_from_existing!
     sections = Card.pluck(:section)  
     available_tags = sections.uniq!
