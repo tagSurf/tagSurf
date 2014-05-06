@@ -7,7 +7,7 @@ class Tag < ActiveRecord::Base
   default_scope where(:blacklisted => false)
 
   def self.blacklisted?(tag)
-    CONFIG[:blaclisted_tags].include?(tag.downcase)
+    CONFIG[:blacklisted_tags].include?(tag.downcase)
   end
 
   def self.populate_from_existing!
