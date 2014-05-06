@@ -68,7 +68,7 @@ class ClientController < ApplicationController
     terms = beta_code_params[:t_accept] 
 
     unless email = beta_code_params[:email]
-      flash[:error] = ["Add an email address to continue"] 
+      flash[:error] = ["Enter an email to continue."] 
       redirect_to "/terms?code=#{code}&d_accept=true"
       return
     end
