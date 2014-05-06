@@ -62,7 +62,7 @@ class Card < ActiveRecord::Base
 
   def self.populate_tag(tag) 
     return if Tag.blacklisted?(tag)
-    response = RemoteResource.get_tag(tag)
+    response = RemoteResource.tagged_feed(tag)
     tagged = response.parsed_response["data"]
 
     # Create tag if not already in the system
@@ -70,36 +70,39 @@ class Card < ActiveRecord::Base
       Tag.create(name: tag)
     end
 
-    tagged.each do |obj|
-      next if obj["nsfw"].to_s == 'true'
-      next if obj['is_album'].to_s == 'true'
-      card = Card.create({
-        remote_id: obj['id'],
-        remote_provider: 'imgur',
-        remote_created_at: obj['datatime'],
-        image_link_original: obj['link'],
-        viral: false,
-        title: obj['title'],
-        description: obj['description'],
-        content_type: obj['type'],
-        animated: obj['animated'],
-        width: obj['width'],
-        height: obj['height'],
-        size: obj['size'],
-        remote_views: obj['views'],
-        remote_score: obj['score'],
-        remote_up_votes: obj['ups'],
-        remote_down_votes: obj['downs'],
-        section: obj['section'],
-        delete_hash: obj['deletehash']
-      })
-      Rails.logger.info "Created #{card.inspect}"
+    if tagged
+      tagged.each do |obj|
+        next if obj["nsfw"].to_s == 'true'
+        next if obj['is_album'].to_s == 'true'
+        card = Card.create({
+          remote_id: obj['id'],
+          remote_provider: 'imgur',
+          remote_created_at: obj['datatime'],
+          image_link_original: obj['link'],
+          viral: false,
+          title: obj['title'],
+          description: obj['description'],
+          content_type: obj['type'],
+          animated: obj['animated'],
+          width: obj['width'],
+          height: obj['height'],
+          size: obj['size'],
+          remote_views: obj['views'],
+          remote_score: obj['score'],
+          remote_up_votes: obj['ups'],
+          remote_down_votes: obj['downs'],
+          section: obj['section'],
+          delete_hash: obj['deletehash']
+        })
+        Rails.logger.info "Created #{card.inspect}"
+      end
+    else
+      tag.update_column("fetch_more_content", true)
     end
-
   end
 
   def self.populate_trending!
-    response = RemoteResource.get
+    response = RemoteResource.viral_feed
     fresh_list = response.parsed_response["data"]
     fresh_list.each do |obj|
       if obj['is_album'].to_s == 'false' and obj['nsfw'].to_s == 'false'
