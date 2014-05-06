@@ -51,16 +51,6 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def Card.next_tagged(user, tag, n=20)
-    return unless user
-    if user.votes.size < 1
-      Card.first(n)
-    else
-      has_voted = user.votes.pluck(:votable_id) 
-      Card.where('id not in (?)', has_voted).limit(n).order('created_at DESC')
-    end
-  end
-
   def cache_update_available?
     c = Card.last
     c.try(:created_at) < 20.minutes.ago ? true : false
