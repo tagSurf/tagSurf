@@ -66,8 +66,9 @@ class ClientController < ApplicationController
   def terms_agreement
     code = AccessCode.where(code: beta_code_params[:access_code]).first.code
     terms = beta_code_params[:t_accept] 
+    email = beta_code_params[:email]
 
-    unless email = beta_code_params[:email]
+    unless email.present?
       flash[:error] = ["Enter an email to continue."] 
       redirect_to "/terms?code=#{code}&d_accept=true"
       return
