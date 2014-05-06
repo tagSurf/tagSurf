@@ -34,30 +34,24 @@ class Card < ActiveRecord::Base
 
   # Display the next card to the user for voting
   def self.next(user, tag, n=20)
-    return unless user
-    if user.votes.size < 1
-      Card.last(n)
-    elsif tag == 'trending'
-      has_voted = user.votes.pluck(:votable_id) 
-      cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
-      cards
+    if Tag.blacklisted?(tag)
+      []
     else
-      has_voted = user.votes.pluck(:votable_id) 
-      cards = Card.where('cards.id not in (?) and cards.section ilike ?', has_voted, tag).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
-      if cards.length < 10
-        RequestTaggedMedia.perform_async(tag)
+      return unless user
+      if user.votes.size < 1
+        Card.last(n)
+      elsif tag == 'trending'
+        has_voted = user.votes.pluck(:votable_id) 
+        cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
+        cards
+      else
+        has_voted = user.votes.pluck(:votable_id) 
+        cards = Card.where('cards.id not in (?) and cards.section ilike ?', has_voted, tag).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
+        if cards.length < 10
+          RequestTaggedMedia.perform_async(tag)
+        end
+        cards
       end
-      cards
-    end
-  end
-
-  def Card.next_tagged(user, tag, n=20)
-    return unless user
-    if user.votes.size < 1
-      Card.first(n)
-    else
-      has_voted = user.votes.pluck(:votable_id) 
-      Card.where('id not in (?)', has_voted).limit(n).order('created_at DESC')
     end
   end
 
@@ -67,10 +61,10 @@ class Card < ActiveRecord::Base
   end
 
   def self.populate_tag(tag) 
+    return if Tag.blacklisted?(tag)
     response = RemoteResource.get_tag(tag)
     tagged = response.parsed_response["data"]
 
-    return if tag == 'Boobies'
     # Create tag if not already in the system
     unless tag = Tag.where('name ilike ?', tag).first
       Tag.create(name: tag)

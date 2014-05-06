@@ -1,10 +1,7 @@
 class Api::TagsController < Api::BaseController
 
   def index
-    tags = []
-    Tag.all.each do |tag|
-      tags << tag.name
-    end
+    tags = Tag.pluck(:name)
     tags << "trending"
     render json: tags
   end
