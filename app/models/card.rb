@@ -52,13 +52,6 @@ class Card < ActiveRecord::Base
       end
     end
 
-    #  scaled_height = @width / (@width + @height) * max_width  
-    #  scaled_width = max_width
-    #else
-    #  scaled_width = @height / (@width + @height) * max_width  
-    #  scaled_height = max_width
-    #end
-
     {:width => scaled_width.to_i, :height => scaled_height.to_i}
   end
 
