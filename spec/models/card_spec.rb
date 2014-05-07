@@ -54,7 +54,7 @@ describe Card do
     
     it "should return {} when width is nil" do
       card
-      response = card.scaled_dimensions('small')
+      response = card.scale_dimensions('small')
       expect(response).to eq({})
     end
 

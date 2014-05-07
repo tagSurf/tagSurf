@@ -26,14 +26,10 @@ class Card < ActiveRecord::Base
     CardSerializer
   end
 
-  def scaled_dimensions(size)
-    return 'no party' if width.blank? or height.blank?
-    "party"
+  def scale_dimensions(max_width)
+    return {} if width.blank? or height.blank?
+    {:width => nil, :height => nil}
   end
-
-  def small_dimensions; end
-  def medium_dimensions; end
-  def large_dimensions; end
 
   def create_tagging
     return if section.nil?
