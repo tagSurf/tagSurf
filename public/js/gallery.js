@@ -127,7 +127,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		bigpic.src = image.get(d, window.innerWidth - 40);
 		picdesc.innerHTML = d.caption;
 		pictag.innerHTML = "#" + d.tags[0];
-		setFavIcon(current_image.is_favorite);
+		setFavIcon(current_image.has_favorited);
 	};
 	var addImage = function(d, front) {
 		var n = document.createElement("div");
@@ -206,18 +206,18 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 	document.getElementById("favorites-btn").onclick = function() {
 		if (current_image) {
 			if (current_image.gallery == "history") {
-				if (!current_image.is_favorite) {
-					current_image.is_favorite = true;
+				if (!current_image.has_favorited) {
+					current_image.has_favorited = true;
 					xhr("/api/favorites/" + current_image.id, "POST");
 					if (location.pathname == "/favorites")
 						grid.insertBefore(current_image.node, grid.firstChild);
 				} else {
-					current_image.is_favorite = false;
+					current_image.has_favorited = false;
 					xhr("/api/favorites/" + current_image.id, "DELETE");
 					if (location.pathname == "/favorites")
 						grid.removeChild(current_image.node);
 				}
-				setFavIcon(current_image.is_favorite);
+				setFavIcon(current_image.has_favorited);
 			} else if (current_image.gallery == "favorites") {
 				xhr("/api/favorites/" + current_image.id, "DELETE");
 				grid.removeChild(current_image.node);
