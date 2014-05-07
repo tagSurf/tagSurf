@@ -30,6 +30,14 @@ class CardSerializer < ActiveModel::Serializer
     h
   end
 
+  def user_vote
+    @user_vote ||= Vote.where(voter_id: current_user.id, votable_id: object.id).first
+  end
+
+  def user_favorite
+    @user_fav ||= Favorite.where(user_id: current_user.id, card_id: object.id).first
+  end
+
   def caption
     if object.description
       object.description
@@ -43,12 +51,22 @@ class CardSerializer < ActiveModel::Serializer
   end
 
   def user_stats
-    h = {
-      voted: true,
-      vote: 'up',
-      tag_voted: object.section
+    time = Time.now
+    user = {
+      has_voted: false, 
+      has_favorited: user_favorite.present?, 
+      vote: nil, 
+      tag_voted: object.section,
+      time_discovered: time
     }
-    h
+
+    if user_vote.present?
+      user[:has_voted] = true
+      user[:vote] =  user_vote.try(:vote_flag) ? 'up' : 'down'
+      user[:time_discovered] = user_vote.created_at
+    end
+
+    user 
   end
 
   def votes
