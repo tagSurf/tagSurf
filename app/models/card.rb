@@ -26,6 +26,10 @@ class Card < ActiveRecord::Base
     CardSerializer
   end
 
+  def small_dimensions; end
+  def medium_dimensions; end
+  def large_dimensions; end
+
   def create_tagging
     return if section.nil?
     self.tag_list = self.section
