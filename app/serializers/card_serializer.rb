@@ -1,4 +1,4 @@
-class CardSerializer < ActiveModel::Serializer
+class CardSerializer < BaseSerializer
   self.root = false
 
   attributes( 
@@ -19,15 +19,23 @@ class CardSerializer < ActiveModel::Serializer
   end
 
   def image
-    h = {
+    img = {
       content_type: object.content_type,
       animated: object.animated?,
-      tiny:   {url: object.image_link_tiny, width: 50, height: 50},
-      medium: {url: object.image_link_medium, width: 320, height: 320},
-      large: {url: object.image_link_large, width: 640, height: 640},
+      tiny: {url: object.image_link_tiny, width: 50, height: 50}.merge!(object.scale_dimensions(160)),
+      medium: {url: object.image_link_medium, width: 320, height: 320}.merge!(object.scale_dimensions(320)),
+      large: {url: object.image_link_large, width: 640, height: 640}.merge!(object.scale_dimensions(640)),
       original: {url: object.image_link_original, width: object.width, height: object.height}
     }
-    h
+    img
+  end
+
+  def user_vote
+    @user_vote ||= Vote.where(voter_id: current_user.id, votable_id: object.id).first
+  end
+
+  def user_favorite
+    @user_fav ||= Favorite.where(user_id: current_user.id, card_id: object.id).first
   end
 
   def caption
@@ -43,12 +51,22 @@ class CardSerializer < ActiveModel::Serializer
   end
 
   def user_stats
-    h = {
-      voted: true,
-      vote: 'up',
-      tag_voted: object.section
+    time = Time.now
+    user = {
+      has_voted: false, 
+      has_favorited: user_favorite.present?, 
+      vote: nil, 
+      tag_voted: object.section,
+      time_discovered: time_ago_in_words(time)
     }
-    h
+
+    if user_vote.present?
+      user[:has_voted] = true
+      user[:vote] =  user_vote.try(:vote_flag) ? 'up' : 'down'
+      user[:time_discovered] = time_ago_in_words(user_vote.created_at)
+    end
+
+    user 
   end
 
   def votes

@@ -3,6 +3,11 @@ class Api::MediaController < Api::BaseController
   before_action :authenticate_user!
   before_action :find_authenticated_user
 
+  def show
+    @card = Card.find params[:id]
+    render json: @card
+  end
+
   def tags
     @tags = Tag.all
     render json: @tags, each_serializer: TagSerializer, root: 'data'
@@ -27,15 +32,6 @@ class Api::MediaController < Api::BaseController
 
   def votes
     @tag = Tag.all
-  end
-
-  def show
-    @cards = Card.find media_params[:id]
-    if @card
-      @card
-    else
-      render json: {errors: "no card found"}, status: :not_found
-    end
   end
 
   def next

@@ -26,6 +26,35 @@ class Card < ActiveRecord::Base
     CardSerializer
   end
 
+  def scale_dimensions(max)
+    return {} if width.blank? || height.blank?
+
+    @height = height.to_f
+    @width  = width.to_f
+
+    if @width > @height
+      if @width > max
+        ratio = max / @width
+        scaled_height = height * ratio
+        scaled_width = width * ratio
+      else 
+        scaled_width = width
+        scaled_height = height
+      end
+    else 
+      if @height > max
+        ratio = max / @height
+        scaled_height = height * ratio
+        scaled_width = width * ratio
+      else 
+        scaled_width = width
+        scaled_height = height
+      end
+    end
+
+    {:width => scaled_width.to_i, :height => scaled_height.to_i}
+  end
+
   def create_tagging
     return if section.nil?
     self.tag_list = self.section

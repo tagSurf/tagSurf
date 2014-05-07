@@ -2,7 +2,14 @@ require "spec_helper"
 
 describe Card do
 
-  let(:user) { User.create!(email: 'admin@example.com', password: '12345678', password_confirmation: '12345678', beta_user: true) }
+  let(:user) { User.create!(
+                 email: 'admin@example.com', 
+                 password: '12345678', 
+                 password_confirmation: '12345678', 
+                 slug: '12345678', 
+                 beta_user: true
+               ) 
+              }
 
   
   let(:card) { 
@@ -42,6 +49,40 @@ describe Card do
   }
 
   let(:voted_on_three) { Vote.create!(voter_id: user.id, voter_type: "User", votable_type: "Card", votable_id: card_3.id, vote_flag: true) }
+
+  context :scaled_dimensions do
+    
+    it "should return {} when width is nil" do
+      card
+      response = card.scale_dimensions('small')
+      expect(response).to eq({})
+    end
+
+    it "should scale dimensions to 320" do
+      card.width = 1267
+      card.height = 1267
+      card.save
+      response = card.scale_dimensions(320)
+      expect(response).to eq({:width => 320, :height => 320})
+    end
+
+    it "should scale height to 174" do 
+      card.width = 605 
+      card.height = 330
+      card.save
+      response = card.scale_dimensions(320)
+      expect(response).to eq({:width => 320, :height => 174})
+    end
+
+    it "should scale width to 307" do 
+      card.width = 655
+      card.height = 681 
+      card.save
+      response = card.scale_dimensions(320)
+      expect(response).to eq({:width => 307, :height => 320})
+    end
+
+  end
 
   context :next do
     
