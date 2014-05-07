@@ -189,10 +189,19 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 	populateGallery();
 
 	var scroller = history_slider || grid;
-	scroller.onscroll = function(e) {
-		if ((scroller.scrollTop + scroller.offsetHeight) >= scroller.scrollHeight)
+	gesture.listen("down", scroller, function () {return true;});
+	gesture.listen("drag", scroller, function (direction, distance, dx, dy) {
+		var atBottom = (scroller.scrollHeight - scroller.scrollTop 
+			=== scroller.clientHeight),
+		atTop = (scroller.scrollTop === 0);
+		if ((scroller.scrollTop + scroller.offsetHeight) 
+			>= (scroller.scrollHeight - 100))
 			populateGallery();
-	};
+		if((atTop && direction == "down") ||
+			(atBottom && direction == "up"))
+			return false;
+		return true;
+	});
 
 	document.getElementById("favorites-btn").onclick = function() {
 		if (current_image) {
