@@ -158,11 +158,11 @@ var xhr = function(path, action, cb, eb) {
   _xhr.open(action || "GET", path, true);
   _xhr.onreadystatechange = function() {
     if (_xhr.readyState == 4) {
-      var resp = eval("("+_xhr.responseText+")");
-      if (_xhr.status == 200)
-        cb && cb(resp);
-      else
-        eb && eb(resp);
+      if (_xhr.responseText.charAt(0) == "<" || _xhr.status != 200) {
+        console.log("XHR error! Path:" + path + " Error: " + _xhr.responseText);
+        eb && eb(_xhr.responseText);
+      } else
+        cb && cb(eval("("+_xhr.responseText+")"));
     }
   }
   _xhr.send();
