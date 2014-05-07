@@ -32,6 +32,8 @@ Tagsurf::Application.routes.draw do
 
   # JSON API
   namespace :api do
+  
+    get 'card/:id' => 'media#show'
 
     # Media API
     get 'media/:tag'                     => 'media#next'
