@@ -26,6 +26,11 @@ class Card < ActiveRecord::Base
     CardSerializer
   end
 
+  def scaled_dimensions(size)
+    return 'no party' if width.blank? or height.blank?
+    "party"
+  end
+
   def small_dimensions; end
   def medium_dimensions; end
   def large_dimensions; end
