@@ -1,8 +1,4 @@
 var current_image, starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
-	var now = new Date();
-	var day = 1000 * 60 * 60 * 24;
-	var week = day * 7;
-	var week2 = week * 2;
 	var picbox, topbar, bigpic, picdesc, pictag;
 	var history_slider, grid = document.createElement("div");
 	grid.className = "grid";
@@ -169,15 +165,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		xhr(getPath(), null, function(response_data) {
 			response_data.data.forEach(function(d) {
 				d.gallery = gallery;
-				var diff = now - new Date(d.date);
-				if (diff < day)
-					addHeader("Today");
-				else if (diff < week)
-					addHeader("This Week");
-				else if (diff < week2)
-					addHeader("Last Week");
-				else
-					addHeader("Earlier");
+				addHeader(d.user_stats.time_discovered);
 				addImage(d);
 			});
 			populating = false;
