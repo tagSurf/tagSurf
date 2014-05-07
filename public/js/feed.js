@@ -177,6 +177,24 @@ onload = function ()
 		node.supering = false;
 		node.animating = false;
 	};
+	var zoomDragCallback = function (direction, distance, dx, dy)
+	{
+		var zNodeContainer = slider.zoomNode.parentNode.parentNode,
+		atBottom = (zNodeContainer.scrollHeight - zNodeContainer.scrollTop 
+			=== zNodeContainer.clientHeight),
+		atTop = (zNodeContainer.scrollTop === 0),
+		atLeft = (zNodeContainer.scrollWidth - zNodeContainer.scrollLeft
+			=== zNodeContainer.clientWidth),
+		atRight = (zNodeContainer.scrollLeft === 0);
+		if((atTop && direction == "down") ||
+			(atBottom && direction == "up") ||
+			(atLeft && direction == "left") ||
+			(atRight && direction == "right"))
+		{
+			return;
+		}
+		return true;
+	}
 	var doubleTap = function ()
 	{
 		var zNode, wrapper, gesture_wrapper, scaledWidth;
@@ -214,7 +232,7 @@ onload = function ()
 			document.body.appendChild(wrapper);
 			gesture.listen("tap", zNode.parentNode.parentNode, largeZoom);
 			gesture.listen("up", zNode.parentNode.parentNode, function(){return true;});
-			gesture.listen("drag", zNode.parentNode.parentNode, function(){return true;});
+			gesture.listen("drag", zNode.parentNode.parentNode, zoomDragCallback);
 			gesture.listen("down", zNode.parentNode.parentNode, function(){return true;});
 			zNode.style['-webkit-transition'] = "";
 			zNode.classList.remove('hider');
@@ -376,6 +394,9 @@ onload = function ()
 	};
 	var dragCallback = function (direction, distance, dx, dy)
 	{
+		var atBottom = (scrollContainer.scrollHeight - scrollContainer.scrollTop 
+			=== scrollContainer.clientHeight),
+		atTop = (scrollContainer.scrollTop === 0);
 		if (slider.animating == false)
 		{
 			if (slider.expanded == true && 
@@ -384,6 +405,11 @@ onload = function ()
 				if (slider.sliding == false)
 				{
 					slider.verticaling = true;
+				}
+				if ((atTop && direction == "down") ||
+					(atBottom && direction == "up"))
+				{
+					return false;
 				}
 				return true;
 			}
