@@ -58,6 +58,30 @@ describe Card do
       expect(response).to eq({})
     end
 
+    it "should scale dimensions to 320" do
+      card.width = 1267
+      card.height = 1267
+      card.save
+      response = card.scale_dimensions(320)
+      expect(response).to eq({:width => 320, :height => 320})
+    end
+
+    it "should scale height to 174" do 
+      card.width = 605 
+      card.height = 330
+      card.save
+      response = card.scale_dimensions(320)
+      expect(response).to eq({:width => 320, :height => 174})
+    end
+
+    it "should scale width to 307" do 
+      card.width = 655
+      card.height = 681 
+      card.save
+      response = card.scale_dimensions(320)
+      expect(response).to eq({:width => 307, :height => 320})
+    end
+
   end
 
   context :next do
