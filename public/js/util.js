@@ -142,7 +142,7 @@ var getOrientation = function() {
 };
 var maxCardHeight, resizeCb;
 var setMaxCardHeight = function() {
-  maxCardHeight = window.innerHeight - 230;
+  maxCardHeight = window.innerHeight - 210;
 };
 var setResizeCb = function(cb) {
   resizeCb = cb;
