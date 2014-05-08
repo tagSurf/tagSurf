@@ -472,7 +472,11 @@ onload = function ()
 		}
 	};
 	setStarCallback(function() {
-		if (modal.zoom.zoomed) modal.callZoom(1);
+		if (modal.zoom.zoomed) {
+			if (modal.zoom.large)
+				modal.callZoom(2);
+			modal.callZoom(1);
+		}
 		setFavIcon(true);
 		xhr("/api/favorites/" + data[cardIndex-3].id, "POST", function() {
 			swipeSlider("right", function () {
