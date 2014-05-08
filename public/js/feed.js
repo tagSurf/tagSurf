@@ -139,7 +139,6 @@ onload = function ()
 
 	// slider stuff
 	var cardIndex = 0;
-	var zoomScale = 1.5;
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
 	var slideThreshold = 60;
@@ -164,14 +163,11 @@ onload = function ()
 	var setStartState = function (node)
 	{
 		node.x = 0;
-		node.zoomNode = null;
 		node.sliding = false;
 		node.verticaling = false;
 		node.supering = false;
 		node.animating = false;
 		node.compressing = true;
-		node.large = false;
-		node.zoomed = false;
 		node.expanded = false;
 	};
 	var revertStateReset = function (node)
@@ -182,105 +178,15 @@ onload = function ()
 		node.supering = false;
 		node.animating = false;
 	};
-	var zoomDragCallback = function (direction, distance, dx, dy)
-	{
-		var zNodeContainer = slider.zoomNode.parentNode.parentNode,
-		atBottom = (zNodeContainer.scrollHeight - zNodeContainer.scrollTop 
-			=== zNodeContainer.clientHeight),
-		atTop = (zNodeContainer.scrollTop === 0),
-		atLeft = (zNodeContainer.scrollWidth - zNodeContainer.scrollLeft
-			=== zNodeContainer.clientWidth),
-		atRight = (zNodeContainer.scrollLeft === 0);
-		if((atTop && direction == "down") ||
-			(atBottom && direction == "up") ||
-			(atLeft && direction == "left") ||
-			(atRight && direction == "right"))
-		{
-			return;
-		}
-		return true;
-	}
 	var doubleTap = function ()
 	{
-		var zNode, wrapper, gesture_wrapper, scaledWidth;
-		if (slider.zoomed == false)
+		var modalCallback = function ()
 		{
-			var modalCallback = function ()
-			{
-				if (slider.large == false)
-				{
-					doubleTap();
-					modal.backOff();	
-				}
-			};
-			zNode = slider.zoomNode;
-			if (!zNode)
-			{
-				zNode = document.createElement('img');
-				zNode.src = image.get(data[cardIndex - 3]);
-				scaledWidth = window.innerWidth;
-				zNode.className = 'hider basic-zoom';
-				zNode.style.left = "0px";
-				zNode.style.top = "10px";
-				zNode.style.width = "100%";
-				slider.zoomNode = zNode;
-			}
-			modal.backOn(modalCallback);
-			slider.zoomed = true;
-			wrapper = document.createElement('div');
-			gesture_wrapper = document.createElement('div');
-			wrapper.className = "zoom_wrapper";
-			gesture_wrapper.className = "raw_wrapper";
-			wrapper.style.zIndex = 3;
-			gesture_wrapper.appendChild(zNode);
-			wrapper.appendChild(gesture_wrapper);
-			document.body.appendChild(wrapper);
-			gesture.listen("tap", zNode.parentNode.parentNode, largeZoom);
-			gesture.listen("up", zNode.parentNode.parentNode, function(){return true;});
-			gesture.listen("drag", zNode.parentNode.parentNode, zoomDragCallback);
-			gesture.listen("down", zNode.parentNode.parentNode, function(){return true;});
-			zNode.style['-webkit-transition'] = "";
-			zNode.classList.remove('hider');
-		}
-		else
-		{
-			slider.zoomed = false;
-			modal.backOff();
-			zNode = slider.zoomNode;
-			gesture.unlisten(zNode.parentNode.parentNode);
-			document.body.removeChild(zNode.parentNode.parentNode);
-			slider.zoomNode = null;
-		}
-	};
-	var largeZoom = function (tapCount)
-	{
-		if (tapCount == 1)
-		{
-			if (slider.large == false)
-			{
-				doubleTap();
-			}
-			
-		}
-		else if (tapCount == 2)
-		{
-			zoomTap();
-		}
-	};
-	var zoomTap = function ()
-	{
-		var zNode = slider.zoomNode;
-		trans(zNode, null, "width 250ms ease-in");
-		if (slider.large == false)
-		{
-			slider.large = true;
-			zNode.style.width = (zoomScale * zNode.clientWidth) + "px";
-		}
-		else
-		{
-			slider.large = false;
-			zNode.style.width = window.innerWidth + "px";
-		}
+			modal.zoomOut();
+			modal.backOff();	
+		};
+		modal.zoomIn(data[cardIndex-3], modalCallback);
+		modal.backOn(modalCallback);
 	};
 	var revertSlider = function ()
 	{
@@ -564,6 +470,7 @@ onload = function ()
 		}
 	};
 	setStarCallback(function() {
+		if (modal.zoom.zoomed) modal.callZoom(1);
 		setFavIcon(true);
 		xhr("/api/favorites/" + data[cardIndex-3].id, "POST", function() {
 			swipeSlider("right", function () {
