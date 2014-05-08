@@ -181,6 +181,7 @@ var current_image, favGrid, starCallback, slideGallery,
 	populateGallery();
 
 	var scroller = history_slider || grid;
+	gesture.listen("up", scroller, function () {return true;});
 	gesture.listen("down", scroller, function () {return true;});
 	gesture.listen("drag", scroller, function (direction, distance, dx, dy) {
 		var atBottom = (scroller.scrollHeight - scroller.scrollTop 
