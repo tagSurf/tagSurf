@@ -1,3 +1,4 @@
 function hideAlert(event) {
-  getElementById('alertContainer').style.visibility = 'hidden' 
+  element = document.getElementById('alertContainer');
+  element.style.display = 'none';
 }
