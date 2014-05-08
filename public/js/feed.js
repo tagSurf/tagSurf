@@ -147,7 +147,7 @@ onload = function ()
 			return "max-height: " + parseInt(maxCardHeight - window.innerHeight * .02) + "px";
 		},
 		".card-container": function() {
-			return "min-height: " + (maxCardHeight + 130) + "px";
+			return "min-height: " + (maxCardHeight + 110) + "px";
 		},
 		".raw_wrapper, .zoom_wrapper, #scroll-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
