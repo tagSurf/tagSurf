@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/css/beta.css">
 <% end %>
 
-<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => {:role => 'form'} ) do |f| %>
+<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :method => :put, :html => {:role => 'form'} ) do |f| %>
   <center>
     <div class="tslogo"></div>
     <div class="input-border-container" style="margin-bottom:10px;"><%= f.password_field :password, placeholder: 'password', class: 'su-input' %></div>
