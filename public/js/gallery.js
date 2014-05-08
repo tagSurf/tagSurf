@@ -1,7 +1,10 @@
-var current_image, starCallback, slideGallery, addHistoryItem, gallerize = function(gallery) {
+var current_image, favGrid, starCallback, slideGallery,
+	addHistoryItem, gallerize = function(gallery) {
 	var picbox, topbar, bigpic, picdesc, pictag;
 	var history_slider, grid = document.createElement("div");
 	grid.className = "grid";
+	if (gallery == "favorites")
+		favGrid = grid;
 
 	if (gallery == "history") {
 		history_slider = document.createElement("div");
@@ -108,7 +111,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 		modal.modalIn(picbox, function(direction) {
 			if (!direction || !isNaN(direction) || direction == "right") {
 				current_image = null;
-				setFavIcon(location.pathname == "/favorites");
+				setFavIcon(false);
 				modal.backOff();
 				modal.modalOut();
 			}
@@ -127,6 +130,7 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 	};
 	var addImage = function(d, front) {
 		var n = document.createElement("div");
+		n.id = gallery + d.id;
 		n.className = "box";
 		n.style.backgroundImage = "url('" +
 			image.get(d, (window.innerWidth - 40) / 3) + "')";
@@ -194,16 +198,16 @@ var current_image, starCallback, slideGallery, addHistoryItem, gallerize = funct
 	document.getElementById("favorites-btn").onclick = function() {
 		if (current_image) {
 			if (current_image.gallery == "history") {
+				if (favGrid)
+					var favNode = document.getElementById("favorites" + current_image.id);
 				if (!current_image.user_stats.has_favorited) {
 					current_image.user_stats.has_favorited = true;
 					xhr("/api/favorites/" + current_image.id, "POST");
-					if (location.pathname == "/favorites")
-						grid.insertBefore(current_image.node, grid.firstChild);
+					favGrid && favGrid.insertBefore(favNode, favGrid.firstChild);
 				} else {
 					current_image.user_stats.has_favorited = false;
 					xhr("/api/favorites/" + current_image.id, "DELETE");
-					if (location.pathname == "/favorites")
-						grid.removeChild(current_image.node);
+					favGrid && favGrid.removeChild(favNode);
 				}
 				setFavIcon(current_image.user_stats.has_favorited);
 			} else if (current_image.gallery == "favorites") {
