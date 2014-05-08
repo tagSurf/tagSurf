@@ -55,6 +55,7 @@ onload = function ()
 
 	// autocomplete stuff
 	var aclist = document.getElementById("autocomplete");
+	var acviewing = false;
 	var viewTag = function(tagName, insertCurrent) {
 		var firstCard;
 		if (insertCurrent) // tag link
@@ -65,6 +66,7 @@ onload = function ()
 				scrollContainer.insertBefore(inputContainer,
 					scrollContainer.firstChild);
 			});
+		acviewing = false;
 		location.hash = tagName;
 		aclist.className = "";
 		tinput.value = tagName;
@@ -98,19 +100,22 @@ onload = function ()
 		if (!hasTrending)
 			addTag("trending");
 	});
-	tinput.onclick = function() {
-		tinput.value = "";
-		mod({
-			className: "tagline",
-			show: true
-		});
-		aclist.className = "autocomplete-open";
-		modal.halfOn(function() {
-			viewTag(current_tag);
-		}, inputContainer);
-		slideContainer.className = "noinput";
-		tinput.focus();
-	};
+	gesture.listen("tap", tinput, function(e) {
+		if (!acviewing) {
+			acviewing = true;
+			tinput.value = "";
+			mod({
+				className: "tagline",
+				show: true
+			});
+			aclist.className = "autocomplete-open";
+			modal.halfOn(function() {
+				viewTag(current_tag);
+			}, inputContainer);
+			slideContainer.className = "noinput";
+			tinput.focus();
+		}
+	});
 	tinput.onkeyup = function(e) {
 		e = e || window.event;
 		var code = e.keyCode || e.which;
@@ -142,7 +147,7 @@ onload = function ()
 			return "max-height: " + parseInt(maxCardHeight - window.innerHeight * .02) + "px";
 		},
 		".card-container": function() {
-			return "min-height: " + (maxCardHeight + 130) + "px";
+			return "min-height: " + (maxCardHeight + 110) + "px";
 		},
 		".raw_wrapper, .zoom_wrapper, #scroll-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
@@ -465,6 +470,7 @@ onload = function ()
 		}
 	};
 	setStarCallback(function() {
+		if (modal.zoom.zoomed) modal.callZoom(1);
 		setFavIcon(true);
 		xhr("/api/favorites/" + data[cardIndex-3].id, "POST", function() {
 			swipeSlider("right", function () {
