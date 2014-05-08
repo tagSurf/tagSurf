@@ -11,7 +11,7 @@ class PasswordsController < Devise::PasswordsController
       sign_in(resource_name, resource)
       respond_with resource, location: after_resetting_password_path_for(resource)
     else
-      flash[:notice] = resource.errors.full_messages
+      flash[:error] = resource.errors.full_messages
       respond_with resource
     end
   end
