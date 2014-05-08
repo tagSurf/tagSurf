@@ -57,13 +57,13 @@ class CardSerializer < BaseSerializer
       has_favorited: user_favorite.present?, 
       vote: nil, 
       tag_voted: object.section,
-      time_discovered: time_ago_in_words(time)
+      time_discovered: "#{time_ago_in_words(time)} ago"
     }
 
     if user_vote.present?
       user[:has_voted] = true
       user[:vote] =  user_vote.try(:vote_flag) ? 'up' : 'down'
-      user[:time_discovered] = time_ago_in_words(user_vote.created_at)
+      user[:time_discovered] = "#{time_ago_in_words(time)} ago"
     end
 
     user 
