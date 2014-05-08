@@ -8,6 +8,7 @@ class PasswordsController < Devise::PasswordsController
     
     if resource.errors.empty?
       resource.unlock_access! if unlockable?(resource)
+      flash.discard(:error)
       sign_in(resource_name, resource)
       respond_with resource, location: after_resetting_password_path_for(resource)
     else
