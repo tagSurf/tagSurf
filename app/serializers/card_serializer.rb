@@ -25,6 +25,7 @@ class CardSerializer < BaseSerializer
       tiny: {url: object.image_link_tiny, width: 50, height: 50}.merge!(object.scale_dimensions(160)),
       medium: {url: object.image_link_medium, width: 320, height: 320}.merge!(object.scale_dimensions(320)),
       large: {url: object.image_link_large, width: 640, height: 640}.merge!(object.scale_dimensions(640)),
+      huge: {url: object.image_link_large, width: 1024, height: 1024}.merge!(object.scale_dimensions(1024)),
       original: {url: object.image_link_original, width: object.width, height: object.height}
     }
     img
