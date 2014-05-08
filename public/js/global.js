@@ -1,3 +1,3 @@
 function hideAlert(event) {
-  alert('freedom');
+  getElementById('alertContainer').style.visibility = 'hidden' 
 }
