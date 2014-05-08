@@ -1,12 +1,33 @@
-<h2>Forgot your password?</h2>
-
-<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => { :method => :post }) do |f| %>
-  <%= devise_error_messages! %>
-
-  <div><%= f.label :email %><br />
-  <%= f.email_field :email, :autofocus => true %></div>
-
-  <div><%= f.submit "Send me reset password instructions" %></div>
+<% content_for :title do %>
+  <title>tagSurf</title>
 <% end %>
 
-<%= render "users/shared/links" %>
+<% content_for :stylesheets do %>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/login.css">
+  <link rel="stylesheet" href="/css/beta.css">
+<% end %>
+
+<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => {:role => 'form'} ) do |f| %>
+  <center>
+    <div class="tslogo"></div>
+    <div class="input-border-container" style="margin-bottom:10px;"><%= f.email_field :email, :placeholder => 'email', :class => 'ts-input' %></div>
+    <%= f.submit "Reset password", class: 'button input-width' %>
+  </center>
+<% end %>
+
+<div class="registration-links-container">
+  <%= link_to "Sign in", new_session_path(resource_name), class: 'float-left twelve light-gray regs-link' %>  
+</div>
+
+<script src="/js/util.js"></script>
+<script>
+var inputs = document.getElementsByClassName("ts-input");
+inputs[0].onfocus = function () { toggleClass.apply(inputs[0].parentNode, ["focused"]); };
+inputs[0].onblur = function () { toggleClass.apply(inputs[0].parentNode, ["focused"]); };
+inputs[1].onfocus = function () { toggleClass.apply(inputs[1].parentNode, ["focused"]); };
+inputs[1].onblur = function () { toggleClass.apply(inputs[1].parentNode, ["focused"]); };
+</script>
+
+
+

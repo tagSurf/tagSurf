@@ -77,3 +77,13 @@ html, body {
   margin:20px auto;
 }
 
+.registration-links-container{
+  display:block;
+  width:47px;
+  margin:20px auto;
+}
+
+.regs-link{
+  display:inline-block;
+  margin-right: 12px;
+}

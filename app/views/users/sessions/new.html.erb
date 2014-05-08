@@ -22,7 +22,7 @@
    </div>
   </div>
 <% end %>
-<a class="forgot-password twelve light-gray">Forgot password?</a>
+<%= link_to 'Forgot password?', new_password_path(:user), class: 'forgot-password twelve light-gray' %>
 <script src="/js/util.js"></script>
 <script>
 var inputs = document.getElementsByClassName("ts-input");

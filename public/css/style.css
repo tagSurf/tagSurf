@@ -39,6 +39,14 @@ a {
 	text-align: center;
 }
 
+.float-left{
+  float:left;
+}
+
+.float-right{
+  float:right;
+}
+
 .padded {
 	padding: 10px;
 }
