@@ -247,6 +247,10 @@ html, body
 .zoom_wrapper
 {
   padding-top:20px;
+  opacity: 0;
+  transition: opacity 250ms ease-in-out;
+  -moz-transition: opacity 250ms ease-in-out;
+  -webkit-transition: opacity 250ms ease-in-out;
 }
 .basic-zoom {
   z-index: 2;
