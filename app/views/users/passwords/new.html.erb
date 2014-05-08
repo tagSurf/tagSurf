@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="/css/beta.css">
 <% end %>
 
-<%= form_for(resource, :as => resource_name, :url => password_path(resource_name), :html => {:role => 'form'} ) do |f| %>
+<%= form_for(resource, :as => resource_name, :url => password_path(:user), :html => {:role => 'form'} ) do |f| %>
   <center>
     <div class="tslogo"></div>
     <div class="input-border-container" style="margin-bottom:10px;"><%= f.email_field :email, :placeholder => 'email', :class => 'ts-input' %></div>
@@ -17,7 +17,7 @@
 <% end %>
 
 <div class="registration-links-container">
-  <%= link_to "Sign in", new_session_path(resource_name), class: 'float-left twelve light-gray regs-link' %>  
+  <%= link_to "Sign in", new_session_path(:user), class: 'float-left twelve light-gray regs-link' %>  
 </div>
 
 <script src="/js/util.js"></script>
