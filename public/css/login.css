@@ -70,3 +70,10 @@ html, body {
 .ts-blue{
   color: #1dafec;
 }
+
+.forgot-password{
+  display:block;
+  width:100px;
+  margin:20px auto 10px;
+}
+

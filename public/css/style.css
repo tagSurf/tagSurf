@@ -55,8 +55,16 @@ a {
 	border-radius: 5px;
 }
 
+.twelve{
+  font-size: 12px;
+}
+
 .small {
 	font-size: 80%;
+}
+
+.normal{
+  font-size: 100%;
 }
 
 .big {
@@ -77,6 +85,10 @@ a {
 
 .blue {
 	color: #00aeef;
+}
+
+.light-gray {
+	color: #989898;
 }
 
 .pictags {
