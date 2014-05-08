@@ -195,3 +195,10 @@ var trans = function(node, cb, transition, transform) {
   if (transition) node.style['-webkit-transition'] = transition;
   if (transform) node.style['-webkit-transform'] = transform;
 };
+
+function hideAlert(event) {
+  alert('freedom');
+}
+
+
+
