@@ -14,7 +14,7 @@
 <body>
  
   <% flash.each do |name, msg| %>
-    <div class="alert shadow bottom-rounded alert-<%= name == :notice ? "success" : "danger" %>">
+    <div id="alertContainer" ontouchstart="hideAlert(event);" class="alert shadow bottom-rounded">
       <% if msg.is_a?(Array) %>
         <% msg.each do |message| %>
           <%= content_tag :div, message, class: "flash #{name}" %>
@@ -28,6 +28,8 @@
   <%= yield %>
 
   <%= content_for :javascripts %>
+
+  <script src="/js/global.js"></script>
 
   <script>
     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

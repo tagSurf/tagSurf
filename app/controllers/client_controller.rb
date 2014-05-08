@@ -91,7 +91,9 @@ class ClientController < ApplicationController
 
   # Static application
   def trending; end
-  def feed; end
+  def feed;
+    flash.discard(:notice)
+  end
   def favorites; end
   def history; end
   def submissions; end
