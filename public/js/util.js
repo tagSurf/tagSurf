@@ -162,7 +162,7 @@ var xhr = function(path, action, cb, eb) {
         console.log("XHR error! Path:" + path + " Error: " + _xhr.responseText);
         eb && eb(_xhr.responseText);
       } else
-        cb && cb(eval("("+_xhr.responseText+")"));
+        cb && cb(JSON.parse(_xhr.responseText));
     }
   }
   _xhr.send();
