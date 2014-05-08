@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140506061408) do
+ActiveRecord::Schema.define(version: 20140508042746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 20140506061408) do
     t.integer  "remote_score"
     t.integer  "ts_score",             default: 0,     null: false
     t.datetime "last_touched"
+    t.string   "image_link_huge"
   end
 
   add_index "cards", ["remote_id"], name: "index_cards_on_remote_id", unique: true, using: :btree
