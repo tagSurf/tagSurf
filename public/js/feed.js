@@ -470,6 +470,7 @@ onload = function ()
 		}
 	};
 	setStarCallback(function() {
+		if (modal.zoom.zoomed) modal.callZoom(1);
 		setFavIcon(true);
 		xhr("/api/favorites/" + data[cardIndex-3].id, "POST", function() {
 			swipeSlider("right", function () {

@@ -42,6 +42,7 @@ var modal = {
 		gesture_wrapper.appendChild(zNode);
 		modal.zoom.appendChild(gesture_wrapper);
 		modal.zoom.large = false;
+		modal.zoom.zoomed = false;
 	},
 	_passThrough: function() {
 		return true;
@@ -130,12 +131,14 @@ var modal = {
 		});
 	},
 	zoomIn: function (card, cb) {
+		modal.zoom.zoomed = true;
 		modal.zoom.firstChild.firstChild.src = image.get(card);
 		modal.zoom.cb = cb;
 		modal.zoom.classList.remove('hider');
 		modal.zoom.style['opacity'] = "1.0";
 	},
 	zoomOut: function () {
+		modal.zoom.zoomed = false;
 		modal.zoom.cb = null;
 		modal.zoom.style.opacity = 0;
 		trans(modal.zoom, function (event){
