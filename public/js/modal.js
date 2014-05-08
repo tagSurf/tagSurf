@@ -36,7 +36,8 @@ var modal = {
 		zNode.style.left = "0px";
 		zNode.style.top = "10px";
 		zNode.style.width = "100%";
-		modal.zoom.className = "zoom_wrapper hider";
+		modal.zoom.style.display = "none";
+		modal.zoom.className = "zoom_wrapper";
 		gesture_wrapper.className = "raw_wrapper";
 		modal.zoom.style.zIndex = 3;
 		gesture_wrapper.appendChild(zNode);
@@ -132,14 +133,14 @@ var modal = {
 	zoomIn: function (card, cb) {
 		modal.zoom.firstChild.firstChild.src = image.get(card);
 		modal.zoom.cb = cb;
-		modal.zoom.classList.remove('hider');
+		modal.zoom.style.display = "block";
 		modal.zoom.style['opacity'] = "1.0";
 	},
 	zoomOut: function () {
 		modal.zoom.cb = null;
 		modal.zoom.style.opacity = 0;
 		trans(modal.zoom, function (event){
-			modal.zoom.classList.add('hider');
+			modal.zoom.style.display = "none";
 		});
 	},
 	dragZoom: function (direction, distance, dx, dy) {
