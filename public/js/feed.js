@@ -100,6 +100,8 @@ onload = function ()
 		if (!hasTrending)
 			addTag("trending");
 	});
+	gesture.listen("up", tinput, returnTrue);
+	gesture.listen("down", tinput, returnTrue);
 	gesture.listen("tap", tinput, function(e) {
 		if (!acviewing) {
 			acviewing = true;
@@ -455,7 +457,7 @@ onload = function ()
 		gesture.listen("tap", this, tapCallback);
 		gesture.listen("drag", this, dragCallback);
 		gesture.listen("hold", this, holdCallback);
-		gesture.listen("down", this, function(){return true;});
+		gesture.listen("down", this, returnTrue);
 	};
 	var expandCard = function (force)
 	{

@@ -153,6 +153,7 @@ window.onresize = function() {
   addedCss.forEach(addCss);
   resizeCb && resizeCb();
 };
+var returnTrue = function() { return true; };
 var xhr = function(path, action, cb, eb) {
   var _xhr = new XMLHttpRequest();
   _xhr.open(action || "GET", path, true);
