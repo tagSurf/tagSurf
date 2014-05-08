@@ -20,6 +20,8 @@ class Card < ActiveRecord::Base
     self.image_link_medium = "http://i.imgur.com/#{remote_id}m.#{type}"
     # large 640x640
     self.image_link_large = "http://i.imgur.com/#{remote_id}l.#{type}"
+    # Huge 1024x1024 
+    self.image_link_huge = "http://i.imgur.com/#{remote_id}h.#{type}"
   end
 
   def active_model_serializer
