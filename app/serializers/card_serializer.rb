@@ -5,7 +5,6 @@ class CardSerializer < BaseSerializer
     :id,
     :image,
     :caption, 
-    :trending_tag,
     :tags,
     :user_stats,
     :total_votes,
@@ -14,10 +13,6 @@ class CardSerializer < BaseSerializer
     :score,
     :trend
   )
-
-  def trending_tag
-    tags.first
-  end
 
   def tags
     object.tagged_as
