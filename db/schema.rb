@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140508042746) do
+ActiveRecord::Schema.define(version: 20140509003703) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -55,9 +55,11 @@ ActiveRecord::Schema.define(version: 20140508042746) do
     t.integer  "ts_score",             default: 0,     null: false
     t.datetime "last_touched"
     t.string   "image_link_huge"
+    t.boolean  "repopulate_score",     default: true,  null: false
   end
 
   add_index "cards", ["remote_id"], name: "index_cards_on_remote_id", unique: true, using: :btree
+  add_index "cards", ["repopulate_score"], name: "index_cards_on_repopulate_score", using: :btree
 
   create_table "favorites", force: true do |t|
     t.integer  "card_id"
@@ -133,7 +135,7 @@ ActiveRecord::Schema.define(version: 20140508042746) do
     t.integer  "voter_id"
     t.string   "voter_type"
     t.boolean  "vote_flag"
-    t.string   "vote_scope"
+    t.string   "vote_tag"
     t.integer  "vote_weight"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -143,8 +145,9 @@ ActiveRecord::Schema.define(version: 20140508042746) do
 
   add_index "votes", ["cached_tag_name"], name: "index_votes_on_cached_tag_name", using: :btree
   add_index "votes", ["tag_id"], name: "index_votes_on_tag_id", using: :btree
-  add_index "votes", ["votable_id", "votable_type", "vote_scope"], name: "index_votes_on_votable_id_and_votable_type_and_vote_scope", using: :btree
+  add_index "votes", ["votable_id", "votable_type", "vote_tag"], name: "index_votes_on_votable_id_and_votable_type_and_vote_tag", using: :btree
+  add_index "votes", ["vote_tag"], name: "index_votes_on_vote_tag", using: :btree
   add_index "votes", ["voter_id", "votable_id", "votable_type"], name: "index_votes_on_voter_id_and_votable_id_and_votable_type", unique: true, using: :btree
-  add_index "votes", ["voter_id", "voter_type", "vote_scope"], name: "index_votes_on_voter_id_and_voter_type_and_vote_scope", using: :btree
+  add_index "votes", ["voter_id", "voter_type", "vote_tag"], name: "index_votes_on_voter_id_and_voter_type_and_vote_tag", using: :btree
 
 end

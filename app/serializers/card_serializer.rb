@@ -15,7 +15,9 @@ class CardSerializer < BaseSerializer
   )
 
   def tags
-    [object.section]
+    [
+      object.section
+    ]
   end
 
   def image
