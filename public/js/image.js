@@ -27,7 +27,7 @@ var image = {
 		for (i = 2; i >= 0; i--) {
 			size = image.sizes[i];
 			if (d.image[size].url && d.image[size].width >= minWidth) {
-				image.cache[size][d.id] = d.image[size].url;
+				image.cache[size][d.id] = d.image[size];
 				return image.cache[size][d.id];
 			}
 		}
