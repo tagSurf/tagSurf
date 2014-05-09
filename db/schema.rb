@@ -55,9 +55,11 @@ ActiveRecord::Schema.define(version: 20140509003703) do
     t.integer  "ts_score",             default: 0,     null: false
     t.datetime "last_touched"
     t.string   "image_link_huge"
+    t.boolean  "repopulate_score",     default: true,  null: false
   end
 
   add_index "cards", ["remote_id"], name: "index_cards_on_remote_id", unique: true, using: :btree
+  add_index "cards", ["repopulate_score"], name: "index_cards_on_repopulate_score", using: :btree
 
   create_table "favorites", force: true do |t|
     t.integer  "card_id"
