@@ -41,9 +41,13 @@ var gesture = {
 	tuneThresholds: function() {
 		if (!isIphone())
 			for (var gest in gesture.thresholds)
-				for (var constraint in gesture.thresholds[gest])
-					if (constraint.slice(3) == "Distance")
+				for (var constraint in gesture.thresholds[gest]) {
+					var suffix = constraint.slice(3);
+					if (suffix == "Distance")
 						gesture.thresholds[gest][constraint] /= 2;
+					else if (suffix == "DP")
+						gesture.thresholds[gest][constraint] *= 2;
+				}
 	},
 	getPos: function(e) {
 		var p = {};
