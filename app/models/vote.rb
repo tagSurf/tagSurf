@@ -45,7 +45,7 @@ class Vote < ActiveRecord::Base
   private
 
   def relate_tag
-    tag = Tag.where(name: self.cached_tag_name).first
+    tag = Tag.where(name: self.vote_tag).first
     self.update_column("tag_id", tag.id)
   end
 
