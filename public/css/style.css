@@ -39,6 +39,14 @@ a {
 	text-align: center;
 }
 
+.float-left{
+  float:left;
+}
+
+.float-right{
+  float:right;
+}
+
 .padded {
 	padding: 10px;
 }
@@ -55,8 +63,16 @@ a {
 	border-radius: 5px;
 }
 
+.twelve{
+  font-size: 12px;
+}
+
 .small {
 	font-size: 80%;
+}
+
+.normal{
+  font-size: 100%;
 }
 
 .big {
@@ -77,6 +93,10 @@ a {
 
 .blue {
 	color: #00aeef;
+}
+
+.light-gray {
+	color: #989898;
 }
 
 .pictags {

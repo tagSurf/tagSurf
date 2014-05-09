@@ -70,3 +70,20 @@ html, body {
 .ts-blue{
   color: #1dafec;
 }
+
+.forgot-password{
+  display:block;
+  width:100px;
+  margin:20px auto;
+}
+
+.registration-links-container{
+  display:block;
+  width:55px;
+  margin:20px auto;
+}
+
+.regs-link{
+  display:inline-block;
+  margin-right: 12px;
+}
