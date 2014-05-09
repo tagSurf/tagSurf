@@ -1,8 +1,9 @@
-var current_image, favGrid, starCallback, slideGallery,
+var gnodes = {}, current_image, favGrid, starCallback, slideGallery,
 	addHistoryItem, gallerize = function(gallery) {
 	var picbox, topbar, bigpic, picdesc, pictag;
 	var history_slider, grid = document.createElement("div");
 	grid.className = "grid";
+	gnodes[gallery] = {};
 	if (gallery == "favorites")
 		favGrid = grid;
 
@@ -30,7 +31,7 @@ var current_image, favGrid, starCallback, slideGallery,
 			toggleClass.call(history_slider, "modalslide");
 		};
 		addHistoryItem = function(item) {
-			addImage(item, true);
+			addImage(item, getHeader(item.user_stats.time_discovered));
 		};
 	} else document.body.appendChild(grid);
 
@@ -92,15 +93,21 @@ var current_image, favGrid, starCallback, slideGallery,
 		pictagbox.appendChild(pictag);
 		picbox.appendChild(pictagbox);
 	};
-	var addHeader = function(headerName) {
-		var nospace = gallery + headerName.replace(/ /g, "");
-		if (document.getElementById(nospace))
-			return;
-		var h = document.createElement("div");
-		h.id = nospace;
-		h.className = "header";
-		h.innerHTML = headerName;
-		grid.appendChild(h);
+	var getHeader = function(headerName, gall, g) {
+		headerName = headerName || "Just Now";
+		g = g || grid;
+		var nospace = (gall || gallery) + headerName.replace(/ /g, "");
+		var h = document.getElementById(nospace);
+		if (!h) {
+			h = document.createElement("div");
+			h.id = nospace;
+			h.className = "header";
+			h.innerHTML = headerName;
+			h.cells = [];
+			(headerName == "Just Now" && g.firstChild) ?
+				g.insertBefore(h, g.firstChild) : g.appendChild(h);
+		}
+		return h;
 	};
 	var votize = function(n, d) {
 		n.className += ((d.user_stats.vote == "up")
@@ -128,9 +135,34 @@ var current_image, favGrid, starCallback, slideGallery,
 		pictag.innerHTML = "#" + d.tags[0];
 		setFavIcon(current_image.user_stats.has_favorited);
 	};
-	var addImage = function(d, front) {
+	var updateFavorited = function() {
+		var gall, ndata;
+		for (gall in gnodes) {
+			ndata = gnodes[gall][current_image.id];
+			if (ndata)
+				ndata.user_stats.has_favorited
+					= current_image.user_stats.has_favorited;
+		}
+		setFavIcon(current_image.user_stats.has_favorited);
+	};
+	var removeFavImage = function() {
+		var cid = current_image.id;
+		current_image.user_stats.has_favorited = false;
+		xhr("/api/favorites/" + cid, "DELETE");
+		if (favGrid) {
+			var n = document.getElementById("favorites" + cid);
+			var c = n.header.cells;
+			var i = c.indexOf(cid);
+			n.header.cells = c.slice(0, i).concat(c.slice(i + 1));
+			if (!n.header.cells.length) favGrid.removeChild(n.header);
+			favGrid.removeChild(n);
+		}
+	};
+	var addImage = function(d, header, gall, g) {
+		d.gallery = gall = gall || gallery;
+		g = grid || g;
 		var n = document.createElement("div");
-		n.id = gallery + d.id;
+		n.id = gall + d.id;
 		n.className = "box";
 		n.style.backgroundImage = "url('" +
 			image.get(d, (window.innerWidth - 40) / 3).url + "')";
@@ -149,8 +181,12 @@ var current_image, favGrid, starCallback, slideGallery,
 		n.onclick = function() {
 			showImage(d);
 		};
-		d.node = n;
-		front ? grid.insertBefore(n, grid.firstChild) : grid.appendChild(n);
+
+		n.header = header;
+		n.header.cells.push(d.id);
+		var afterHeader = header.nextSibling;
+		afterHeader ? g.insertBefore(n, g.afterHeader) : g.appendChild(n);
+		gnodes[gall][d.id] = d;
 	};
 
 	// gallery feed builder
@@ -168,9 +204,7 @@ var current_image, favGrid, starCallback, slideGallery,
 		populating = true;
 		xhr(getPath(), null, function(response_data) {
 			response_data.data.forEach(function(d) {
-				d.gallery = gallery;
-				addHeader(d.user_stats.time_discovered);
-				addImage(d);
+				addImage(d, getHeader(d.user_stats.time_discovered));
 			});
 			populating = false;
 		});
@@ -199,21 +233,19 @@ var current_image, favGrid, starCallback, slideGallery,
 	document.getElementById("favorites-btn").onclick = function() {
 		if (current_image) {
 			if (current_image.gallery == "history") {
-				if (favGrid)
-					var favNode = document.getElementById("favorites" + current_image.id);
 				if (!current_image.user_stats.has_favorited) {
 					current_image.user_stats.has_favorited = true;
 					xhr("/api/favorites/" + current_image.id, "POST");
-					favGrid && favGrid.insertBefore(favNode, favGrid.firstChild);
-				} else {
-					current_image.user_stats.has_favorited = false;
-					xhr("/api/favorites/" + current_image.id, "DELETE");
-					favGrid && favGrid.removeChild(favNode);
-				}
-				setFavIcon(current_image.user_stats.has_favorited);
+					if (favGrid)
+						addImage(JSON.parse(JSON.stringify(current_image)),
+							getHeader(current_image.user_stats.time_discovered,
+							"favorites", favGrid));
+				} else
+					removeFavImage();
+				updateFavorited();
 			} else if (current_image.gallery == "favorites") {
-				xhr("/api/favorites/" + current_image.id, "DELETE");
-				grid.removeChild(current_image.node);
+				removeFavImage();
+				updateFavorited();
 				modal.callModal();
 			}
 		} else if (starCallback)
