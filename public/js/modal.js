@@ -133,7 +133,7 @@ var modal = {
 	},
 	zoomIn: function (card, cb) {
 		modal.zoom.zoomed = true;
-		modal.zoom.firstChild.firstChild.src = image.get(card);
+		modal.zoom.firstChild.firstChild.src = image.get(card).url;
 		modal.zoom.cb = cb;
 		modal.zoom.style.display = "block";
 		modal.zoom.style['opacity'] = "1.0";

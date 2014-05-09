@@ -19,7 +19,7 @@ en:
       confirmation_instructions:
         subject: "tagSurf Beta Email Confirmation"
       reset_password_instructions:
-        subject: "Reset password instructions"
+        subject: "Reset tagSurf Password"
       unlock_instructions:
         subject: "Unlock Instructions"
     omniauth_callbacks:
