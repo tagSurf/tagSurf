@@ -59,7 +59,7 @@ onload = function ()
 	var viewTag = function(tagName, insertCurrent) {
 		var firstCard;
 		if (insertCurrent) // tag link
-			firstCard = data[cardIndex-3];
+			firstCard = slider.card;
 		else // tag bar
 			modal.backOff(function() {
 				slideContainer.className = "";
@@ -171,6 +171,7 @@ onload = function ()
 		node.animating = false;
 		node.compressing = true;
 		node.expanded = false;
+		node.card = data[cardIndex];
 	};
 	var revertStateReset = function (node)
 	{
@@ -187,7 +188,7 @@ onload = function ()
 			modal.zoomOut();
 			modal.backOff();	
 		};
-		modal.zoomIn(data[cardIndex-3], modalCallback);
+		modal.zoomIn(slider.card, modalCallback);
 		modal.backOn(modalCallback);
 	};
 	var revertSlider = function ()
@@ -245,7 +246,7 @@ onload = function ()
 	};
 	var swipeSlider = function (direction, voteAlternative, pixelsPerSecond)
 	{
-		var activeCard = data[Math.max(0, cardIndex-3)];
+		var activeCard = slider.card;
 		var translateQuantity = 600, rotateQuantity = 60,
 			verticalQuantity = 0;
 		var isUp = direction == "right";
@@ -429,7 +430,7 @@ onload = function ()
 			}
 			else
 			{
-				truncatedTitle = data[cardIndex].caption.trunc(30);
+				truncatedTitle = card.card.caption.trunc(30);
 				truncatedTitle = "<p>" + truncatedTitle + "</p>";
 				textContainer.innerHTML = truncatedTitle;
 				picTags.className += ' hider';
@@ -466,7 +467,7 @@ onload = function ()
 			slider.compressing = false;
 			slider.expanded = true;
 			slider.children[0].className += " expanded";
-			slider.children[2].innerHTML = "<p>" + data[cardIndex-3].caption + "</p>";
+			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
 			slider.children[3].style.visibility = "visible";
 			slider.children[4].style.visibility = "hidden";
 		}
@@ -478,7 +479,7 @@ onload = function ()
 			modal.callZoom(1);
 		}
 		setFavIcon(true);
-		xhr("/api/favorites/" + data[cardIndex-3].id, "POST", function() {
+		xhr("/api/favorites/" + slider.card.id, "POST", function() {
 			swipeSlider("right", function () {
 				setFavIcon(false);
 			});
