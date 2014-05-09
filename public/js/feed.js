@@ -149,7 +149,7 @@ onload = function ()
 			return "max-height: " + parseInt(maxCardHeight - window.innerHeight * .02) + "px";
 		},
 		".card-container": function() {
-			return "min-height: " + (maxCardHeight + 110) + "px";
+			return "min-height: " + (maxCardHeight + 120) + "px";
 		},
 		".raw_wrapper, .zoom_wrapper, #scroll-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
@@ -246,6 +246,7 @@ onload = function ()
 	};
 	var swipeSlider = function (direction, voteAlternative, pixelsPerSecond)
 	{
+		var _slider = slider;
 		var activeCard = slider.card;
 		var translateQuantity = 600, rotateQuantity = 60,
 			verticalQuantity = 0;
@@ -263,11 +264,11 @@ onload = function ()
 			rotateQuantity = -rotateQuantity;
 			verticalQuantity = -verticalQuantity;
 		}
-		trans(slider,
+		trans(_slider,
 			function () {
-				slider.animating = false;
-				gesture.unlisten(slider.parentNode);
-				slideContainer.removeChild(slider.parentNode);
+				_slider.animating = false;
+				gesture.unlisten(_slider.parentNode);
+				slideContainer.removeChild(_slider.parentNode);
 				buildCard(0);
 				slideContainer.children[0].style.zIndex = 2;
 				if (slideContainer.children[1])
@@ -281,6 +282,7 @@ onload = function ()
 				+ "px,0) rotate(" + rotateQuantity + "deg)");
 		slider.animating = true;
 
+		slider = slider.parentNode.nextSibling.firstChild;
 		// history slider
 		activeCard.total_votes += 1;
 		activeCard[voteDir + "_votes"] += 1;
@@ -366,8 +368,9 @@ onload = function ()
 			toggleClass.apply(slider, ['super_card', 'on']);
 		}
 	};
-	var buildCard = function (zIndex)
+	var dataThrobTest = function ()
 	{
+		var c_wrapper, c_container, msg, img;
 		if (slideContainer.firstChild && slideContainer.firstChild.throbbing) {
 			slider = slideContainer.firstChild.firstChild;
 			return populateSlider(false, slider.firstChild);
@@ -378,13 +381,13 @@ onload = function ()
 		}
 		if (data.length <= cardIndex) {
 			cardIndex += 1;
-			var c_wrapper = document.createElement("div");
+			c_wrapper = document.createElement("div");
 			c_wrapper.className = "card-wrapper";
-			var c_container = document.createElement("div");
+			c_container = document.createElement("div");
 			c_container.className = "card-container center-label";
-			var msg = document.createElement("div");
+			msg = document.createElement("div");
 			msg.innerHTML = "Searching for more cards in " + current_tag + " feed...";
-			var img = document.createElement("img");
+			img = document.createElement("img");
 			img.src = "/img/throbber.gif";
 			c_container.appendChild(msg);
 			c_container.appendChild(img);
@@ -396,8 +399,15 @@ onload = function ()
 				populateSlider(false, slider.firstChild);
 			return;
 		}
-		var imageContainer, iconLine, textContainer, picTags, fullscreenButton, truncatedTitle, card;
-		var c = data[cardIndex];
+		return true;
+	};
+	var buildCard = function (zIndex)
+	{
+		if (!dataThrobTest())
+			return;
+		var imageContainer, iconLine, textContainer, picTags, 
+			fullscreenButton, truncatedTitle, card, 
+			targetHeight, imageData, c = data[cardIndex];
 		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
@@ -418,38 +428,36 @@ onload = function ()
 			});
 			picTags.appendChild(p);
 		});
-		imageContainer.children[0].onload = function () {
-			card = formatter.firstChild.firstChild;
-			setStartState(card);
-			if (imageContainer.children[0].clientHeight + textContainer.clientHeight
-				+ /* picTags */ 10 + /* icon bar */ 10 + /* chevron and border*/ 10 < maxCardHeight)
-			{
-				imageContainer.classList.remove("expand-animation");
-				fullscreenButton.className += ' hider';
-				card.compressing = false;
-			}
-			else
-			{
-				truncatedTitle = card.card.caption.trunc(30);
-				truncatedTitle = "<p>" + truncatedTitle + "</p>";
-				textContainer.innerHTML = truncatedTitle;
-				picTags.className += ' hider';
-				card.compressing = true;
-			}
-			initCardGestures.call(card.parentNode);
-			slideContainer.appendChild(card.parentNode);
-			formattingContainer.removeChild(formatter);
-			slider = slideContainer.children[0].children[0];
-			++cardIndex;
-
-			if (data.length == cardIndex + buffer_minimum)
-				populateSlider(true);
-
-			if (zIndex)
-				buildCard(zIndex - 1);
-			else if (getOrientation() == "landscape" && window.innerHeight < 700)
-				expandCard(true);
-		};
+		card = formatter.firstChild.firstChild;
+		setStartState(card);
+		imageData = image.get(card.card);
+		targetHeight = imageData.height * (window.innerWidth - 40) / imageData.width;
+		if (targetHeight + textContainer.clientHeight + /* picTags */ 10 
+			+ /* icon bar */ 10 + /* chevron and border*/ 10 < maxCardHeight)
+		{
+			imageContainer.classList.remove("expand-animation");
+			fullscreenButton.className += ' hider';
+			card.compressing = false;
+		}
+		else
+		{
+			truncatedTitle = card.card.caption.trunc(30);
+			truncatedTitle = "<p>" + truncatedTitle + "</p>";
+			textContainer.innerHTML = truncatedTitle;
+			picTags.className += ' hider';
+			card.compressing = true;
+		}
+		initCardGestures.call(card.parentNode);
+		slideContainer.appendChild(card.parentNode);
+		formattingContainer.removeChild(formatter);
+		slider = slideContainer.children[0].children[0];
+		++cardIndex;
+		if (data.length == cardIndex + buffer_minimum)
+			populateSlider(true);
+		if (zIndex)
+			buildCard(zIndex - 1);
+		else if (getOrientation() == "landscape" && window.innerHeight < 700)
+			expandCard(true);
 	};
 	var initCardGestures = function ()
 	{
