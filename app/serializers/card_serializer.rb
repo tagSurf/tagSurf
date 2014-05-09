@@ -15,7 +15,9 @@ class CardSerializer < BaseSerializer
   )
 
   def tags
-    [object.section]
+    [
+      object.tags
+    ]
   end
 
   def image
@@ -49,6 +51,9 @@ class CardSerializer < BaseSerializer
 
   def source
     object.remote_provider
+  end
+
+  def tags
   end
 
   def user_stats
