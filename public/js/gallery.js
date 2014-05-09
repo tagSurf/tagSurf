@@ -123,7 +123,7 @@ var current_image, favGrid, starCallback, slideGallery,
 		topbar.firstChild.appendChild(voteMeter(d, d.trend == "up", true));
 		topbar.children[2].innerHTML = d.tags[0];
 
-		bigpic.src = image.get(d, window.innerWidth - 40);
+		bigpic.src = image.get(d, window.innerWidth - 40).url;
 		picdesc.innerHTML = d.caption;
 		pictag.innerHTML = "#" + d.tags[0];
 		setFavIcon(current_image.user_stats.has_favorited);
@@ -133,7 +133,7 @@ var current_image, favGrid, starCallback, slideGallery,
 		n.id = gallery + d.id;
 		n.className = "box";
 		n.style.backgroundImage = "url('" +
-			image.get(d, (window.innerWidth - 40) / 3) + "')";
+			image.get(d, (window.innerWidth - 40) / 3).url + "')";
 		votize(n, d);
 
 		var top = document.createElement("div");

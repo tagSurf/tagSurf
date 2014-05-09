@@ -1,7 +1,8 @@
 var image = {
-	sizes: ["original", "large", "medium", "tiny"],
+	sizes: ["original", "huge", "large", "medium", "tiny"],
 	cache: {
 		original: {},
+		huge: {},
 		large: {},
 		medium: {},
 		tiny: {}
@@ -10,13 +11,12 @@ var image = {
 		var i, size;
 
 		// animated cards and unspecified minWidth force original size
-		if (d.image.animated || !minWidth) {
-			image.cache.original[d.id] = d.image.original.url;
-			return d.image.original.url;
+		if (d.image.animated || !minWidth || image.cache.original[d.id]) {
+			image.cache.original[d.id] = d.image.original;
+			return d.image.original;
 		}
 
 		// check cache
-		d.image.original.width = Infinity;
 		for (i = 0; i < image.sizes.length; i++) {
 			size = image.sizes[i];
 			if (image.cache[size][d.id] && d.image[size].width >= minWidth)
@@ -31,5 +31,7 @@ var image = {
 				return image.cache[size][d.id];
 			}
 		}
+		image.cache.original[d.id] = d.image.original;
+		return d.image.original;
 	}
 };
