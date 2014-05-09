@@ -28,6 +28,10 @@ class Card < ActiveRecord::Base
     CardSerializer
   end
 
+  def tagged_as
+    votes.map(&:vote_tag).uniq
+  end
+
   def scale_dimensions(max)
     return {} if width.blank? || height.blank?
 
