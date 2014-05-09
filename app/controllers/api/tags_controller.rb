@@ -16,13 +16,34 @@ class Api::TagsController < Api::BaseController
   end
 
   def create
+    requested_tag = tag_params[:name]
+
+    unless tag = Tag.where('name ilike ?', requested_tag).first
+      Tag.create(name: tag, user_id: @user.id)
+    end
+
+    if tag_and_vote = tag_params[:vote]
+      vote = Vote.create(
+        vote_tag:   tag_params[:name], 
+        voter_id:   @user.id,  
+        votable_id: card_id,  
+        vote_tag: tag_and_vote
+      )
+    else
+      vote = Vote.create(
+        vote_tag:   tag_params[:name], 
+        voter_id:   @user.id,  
+        votable_id: card_id  
+      )
+    end
+    
     render json: "you didn't create a tag yet"
   end
 
   private
 
     def tag_params
-      params.permit(:name) 
+      params.permit(:name, :card_id, :vote) 
     end
 
 end
