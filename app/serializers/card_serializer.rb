@@ -53,9 +53,6 @@ class CardSerializer < BaseSerializer
     object.remote_provider
   end
 
-  def tags
-  end
-
   def user_stats
     time = Time.now
     user = {
