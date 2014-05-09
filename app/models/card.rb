@@ -32,6 +32,18 @@ class Card < ActiveRecord::Base
     votes.map(&:vote_tag).uniq
   end
 
+  def card_tag_info(tag_name)
+    trend = [*1..10].sample.odd? ? 'up' : 'down' 
+    data = {total_votes: nil, down_votes: nil, up_votes: nil, score: nil, is_trending: false, trend: nil}
+    data[:total_votes]  = Vote.where(votable_id: id, vote_tag: tag).count
+    data[:down_votes]   = Vote.where(votable_id: id, vote_tag: tag, vote_flag: false).count
+    data[:up_votes]     = Vote.where(votable_id: id, vote_tag: tag, vote_flag: true).count
+    data[:is_trending]  = false
+    data[:score]        = (data[:total_votes] - data[:down_votes]) 
+    data[:trend]        = trend 
+    data
+  end
+
   def scale_dimensions(max)
     return {} if width.blank? || height.blank?
 
