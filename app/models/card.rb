@@ -142,7 +142,8 @@ class Card < ActiveRecord::Base
           section: obj['section'],
           delete_hash: obj['deletehash']
         })
-        card.tag_list.add(card.section).save
+        card.tag_list.add(card.section)
+        card.save
         Rails.logger.info "Created #{card.inspect}"
       end
     else
