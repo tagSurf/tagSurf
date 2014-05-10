@@ -22,7 +22,7 @@ class Api::MediaController < Api::BaseController
         votable_id: media_params[:id], 
         vote_flag: @vote, 
         votable_type: 'Card',
-        cached_tag_name: media_params[:tag]
+        vote_flag: media_params[:tag]
       )
       render json: {success: "true"}
     rescue => e

@@ -28,6 +28,23 @@ class Card < ActiveRecord::Base
     CardSerializer
   end
 
+  def tagged_as
+    votes.map(&:vote_tag).uniq
+  end
+
+  def card_tag_info(tag)
+    trend = [*1..10].sample.odd? ? 'up' : 'down' 
+    data = {total_votes: nil, down_votes: nil, up_votes: nil, score: nil, is_trending: false, trend: nil}
+    # Doing count lookups is faster than array actions, but refactor is needed.
+    data[:total_votes]  = Vote.where(votable_id: id, vote_tag: tag).count
+    data[:down_votes]   = Vote.where(votable_id: id, vote_tag: tag, vote_flag: false).count
+    data[:up_votes]     = Vote.where(votable_id: id, vote_tag: tag, vote_flag: true).count
+    data[:is_trending]  = false
+    data[:score]        = (data[:total_votes] - data[:down_votes]) 
+    data[:trend]        = trend 
+    data 
+  end
+
   def scale_dimensions(max)
     return {} if width.blank? || height.blank?
 
@@ -125,6 +142,8 @@ class Card < ActiveRecord::Base
           section: obj['section'],
           delete_hash: obj['deletehash']
         })
+        card.tag_list.add(card.section)
+        card.save
         Rails.logger.info "Created #{card.inspect}"
       end
     else
@@ -137,7 +156,7 @@ class Card < ActiveRecord::Base
     fresh_list = response.parsed_response["data"]
     fresh_list.each do |obj|
       if obj['is_album'].to_s == 'false' and obj['nsfw'].to_s == 'false'
-        Card.create({
+        card = Card.create({
           remote_id: obj['id'],
           remote_provider: 'imgur',
           remote_created_at: obj['datatime'],
@@ -157,6 +176,9 @@ class Card < ActiveRecord::Base
           section: obj['section'] || "imgurhot",
           delete_hash: obj['deletehash']
         })
+
+        card.tag_list.add(card.section, 'trending')
+        card.save
       end
     end
   end
