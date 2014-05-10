@@ -6,6 +6,7 @@ class CardSerializer < BaseSerializer
     :image,
     :caption, 
     :tags,
+    :tags_v2,
     :user_stats,
     :total_votes,
     :down_votes,
@@ -15,6 +16,10 @@ class CardSerializer < BaseSerializer
   )
 
   def tags
+    [object.section]
+  end
+
+  def tags_v2
     current_tags = (object.tag_list + object.tagged_as).uniq
     tagged_objects = []
     current_tags.each do |tag|
