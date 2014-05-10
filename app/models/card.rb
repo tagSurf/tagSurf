@@ -32,7 +32,7 @@ class Card < ActiveRecord::Base
     votes.map(&:vote_tag).uniq
   end
 
-  def card_tag_info(tag_name)
+  def card_tag_info(tag)
     trend = [*1..10].sample.odd? ? 'up' : 'down' 
     data = {total_votes: nil, down_votes: nil, up_votes: nil, score: nil, is_trending: false, trend: nil}
     # Doing count lookups is faster than array actions, but refactor is needed.
@@ -42,7 +42,7 @@ class Card < ActiveRecord::Base
     data[:is_trending]  = false
     data[:score]        = (data[:total_votes] - data[:down_votes]) 
     data[:trend]        = trend 
-    data
+    data 
   end
 
   def scale_dimensions(max)
