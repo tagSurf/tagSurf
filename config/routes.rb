@@ -40,12 +40,12 @@ Tagsurf::Application.routes.draw do
     get 'card/:id' => 'media#show'
 
     # Media API
-    get 'media/:tag'                     => 'media#next'
+    get  'media/:tag'                     => 'media#next'
+    post 'media/:media_id/tags/:name/'    => 'tags#create'
 
     # Tags API
     get  'tags'                          => 'media#tags'
     get  'tags/:name'                    => 'tags#show'
-    post 'tags'                          => 'tags#create'
 
     # Vote API
     get  'votes'                         => 'votes#show'
