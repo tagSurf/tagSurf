@@ -21,7 +21,7 @@ class CardSerializer < BaseSerializer
 
   def tags_v2
     # Fix this fiasco once client is set
-    current_tags = (object.tag_list + object.tagged_as + object.section).uniq
+    current_tags = (object.tag_list + object.tagged_as + [object.section]).uniq
     tagged_objects = []
     current_tags.each do |tag|
       tagged_objects.push("#{tag}" => object.card_tag_info(tag))
