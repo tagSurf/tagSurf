@@ -13,7 +13,7 @@ onload = function ()
 	var refreshCards = function(failMsgNode, zIndex) {
 		cardIndex = 0;
 		if (failMsgNode && data.length == 0)
-			failMsgNode.innerHTML = "No more cards in " + current_tag + " feed!";
+			failMsgNode.innerHTML = "No more cards in <br>#" + current_tag + " feed";
 		else {
 			slideContainer.innerHTML = "";
 			buildCard(zIndex);
@@ -386,7 +386,7 @@ onload = function ()
 			c_container = document.createElement("div");
 			c_container.className = "card-container center-label";
 			msg = document.createElement("div");
-			msg.innerHTML = "Searching for more cards in " + current_tag + " feed...";
+			msg.innerHTML = "Searching for more cards in <br>#" + current_tag + " feed...";
 			img = document.createElement("img");
 			img.src = "/img/throbber.gif";
 			c_container.appendChild(msg);
