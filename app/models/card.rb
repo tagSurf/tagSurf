@@ -117,7 +117,7 @@ class Card < ActiveRecord::Base
 
     # Create tag if not already in the system
     unless tag = Tag.where('name ilike ?', tag).first
-      Tag.create(name: tag)
+      tag = Tag.create(name: tag)
     end
 
     if tagged
@@ -146,7 +146,6 @@ class Card < ActiveRecord::Base
         })
         card.tag_list.add(card.section)
         card.save
-        Rails.logger.info "Created #{card.inspect}"
       end
     else
       tag.update_column("fetch_more_content", true)
