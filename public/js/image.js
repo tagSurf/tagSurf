@@ -7,6 +7,12 @@ var image = {
 		medium: {},
 		tiny: {}
 	},
+	load: function(dlist, minWidth) {
+		dlist.forEach(function(d) {
+			var i = new Image();
+			i.src = image.get(d, minWidth).url;
+		});
+	},
 	get: function(d, minWidth) {
 		var i, size;
 

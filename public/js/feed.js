@@ -22,14 +22,18 @@ onload = function ()
 	var popData = function(rdata, firstCard) {
 		// this method only nets 4 cards for every 10 cards requested
 		// needs new API!
+		var preloads = [];
 		if (firstCard) known_keys[firstCard.id] = true;
 		for (var i = 0; i < rdata.length; i++) {
 			if (!known_keys[rdata[i].id]) {
-				data.push(rdata[i]);
-				known_keys[rdata[i].id] = true;
+				var d = rdata[i];
+				preloads.push(d);
+				data.push(d);
+				known_keys[d.id] = true;
 			}
 		}
 		if (firstCard) data.unshift(firstCard);
+		image.load(preloads, window.innerWidth - 40);
 	};
 	var populateSlider = function (update, failMsgNode, firstCard)
 	{
