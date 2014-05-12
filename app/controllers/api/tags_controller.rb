@@ -49,16 +49,19 @@ class Api::TagsController < Api::BaseController
         )
       end
 
-      if vote.id
-        res = {tag: vote.vote_tag, message: "#{vote.vote_tag} added to media"}
-        if vote.vote_flag
-          res.merge!({vote: tag_params[:vote]}) 
-        end
+      # respond if tagged and voted
+      if vote.try(:id)
+        res = {tag: tag_params[:name], message: "#{vote.vote_tag} and vote added to media"}
+        render json: res, status: :ok
+        return
+      elsif @media.id
+        res = {tag: tag_params[:name], message: "#{tag_params[:name]} added to media"}
         render json: res, status: :ok
         return
       else
         raise 'tag not created'
       end
+
     rescue => e
       render json: "Error: #{e}", status: :unprossible_entity
     end
