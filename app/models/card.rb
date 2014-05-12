@@ -89,12 +89,14 @@ class Card < ActiveRecord::Base
       if user.votes.size < 1
         Card.last(n)
       elsif tag == 'trending'
+        # move has_voted to redis
         has_voted = user.votes.pluck(:votable_id) 
         cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
         cards
       else
+        # move has_voted to redis
         has_voted = user.votes.pluck(:votable_id) 
-        cards = Card.where('cards.id not in (?) and cards.section ilike ?', has_voted, tag).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
+        cards = Card.where('cards.id not in (?), has_voted).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
         if cards.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
@@ -115,7 +117,7 @@ class Card < ActiveRecord::Base
 
     # Create tag if not already in the system
     unless tag = Tag.where('name ilike ?', tag).first
-      Tag.create(name: tag)
+      tag = Tag.create(name: tag)
     end
 
     if tagged
@@ -144,7 +146,6 @@ class Card < ActiveRecord::Base
         })
         card.tag_list.add(card.section)
         card.save
-        Rails.logger.info "Created #{card.inspect}"
       end
     else
       tag.update_column("fetch_more_content", true)
