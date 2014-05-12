@@ -81,21 +81,20 @@ var modal = {
 			}
 		}
 	},
-	backOn: function(cb) {
+	_backOn: function(degree, cb, injectionNode) {
 		modal.back.style.opacity = 1;
-		modal.back.className = "blackout blackfade";
-		trans(modal.back, function() {
-			modal.back.cb = cb;
-		});
-	},
-	halfOn: function(cb, injectionNode) {
-		modal.back.style.opacity = 1;
-		modal.back.className = "blackout halffade";
+		modal.back.className = "blackout " + degree + "fade";
 		trans(modal.back, function() {
 			modal.back.cb = cb;
 		});
 		if (injectionNode)
 			modal.back.appendChild(injectionNode);
+	},
+	backOn: function(cb, injectionNode) {
+		modal._backOn("black", cb, injectionNode);
+	},
+	halfOn: function(cb, injectionNode) {
+		modal._backOn("half", cb, injectionNode);
 	},
 	backOff: function(onOff) {
 		modal.back.className = "blackout";
