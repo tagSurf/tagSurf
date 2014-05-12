@@ -84,12 +84,16 @@ var modal = {
 	backOn: function(cb) {
 		modal.back.style.opacity = 1;
 		modal.back.className = "blackout blackfade";
-		modal.back.cb = cb;
+		trans(modal.back, function() {
+			modal.back.cb = cb;
+		});
 	},
 	halfOn: function(cb, injectionNode) {
 		modal.back.style.opacity = 1;
 		modal.back.className = "blackout halffade";
-		modal.back.cb = cb;
+		trans(modal.back, function() {
+			modal.back.cb = cb;
+		});
 		if (injectionNode)
 			modal.back.appendChild(injectionNode);
 	},

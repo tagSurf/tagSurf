@@ -67,6 +67,7 @@ onload = function ()
 					scrollContainer.firstChild);
 			});
 		acviewing = false;
+		tinput.active = false;
 		location.hash = tagName;
 		aclist.className = "";
 		tinput.value = tagName;
@@ -110,11 +111,15 @@ onload = function ()
 				show: true
 			});
 			modal.halfOn(function() {
-				viewTag(current_tag);
+				if (tinput.active)
+					viewTag(current_tag);
 			}, inputContainer);
 			slideContainer.className = "noinput";
 			aclist.className = "autocomplete-open";
-			trans(aclist, tinput.focus);
+			trans(aclist, function() {
+				tinput.active = true;
+				tinput.focus();
+			});
 			return true;
 		}
 	});
