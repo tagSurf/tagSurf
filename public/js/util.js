@@ -187,12 +187,32 @@ var isMobile = function() {
 };
 var trans = function(node, cb, transition, transform) {
   var wrapper = function () {
-    if (transition) node.style['-webkit-transition'] = "";
+    if (transition) 
+    {
+	if (transition.split(" ").length == 1)
+	{
+		node.classList.remove(transition);
+	}
+	else
+	{
+		node.style['-webkit-transition'] = "";
+	}
+    }
     if (transform) node.style['-webkit-transform'] = "";
     node.removeEventListener("webkitTransitionEnd", wrapper, false);
     cb && cb();
   };
   node.addEventListener("webkitTransitionEnd", wrapper, false);
-  if (transition) node.style['-webkit-transition'] = transition;
+  if (transition) 
+  {
+	if (transition.split(" ").length == 1)
+	{
+		node.classList.add(transition);
+	}
+	else
+	{
+		node.style['-webkit-transition'] = transition;	
+	}
+  }
   if (transform) node.style['-webkit-transform'] = transform;
 };

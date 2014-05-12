@@ -207,7 +207,7 @@ onload = function ()
 				function (event) {
 					slider.animating = false;
 				},
-				"-webkit-transform 250ms ease-in",
+				"swiping",
 				"translate3d(0,0,0) rotate(0deg)"
 			);
 			slider.animating = true;
@@ -227,11 +227,11 @@ onload = function ()
 				}
 				else if (slider.x > slideThreshold)
 				{
-					swipeSlider("right");
+					swipeSlider("right", null, 100);
 				}
 				else if (slider.x < -slideThreshold)
 				{
-					swipeSlider("left");
+					swipeSlider("left", null, 100);
 				}
 			}
 			else if (slider.verticaling == true && slider.expanded == true)
@@ -277,7 +277,7 @@ onload = function ()
 				else xhr("/api/votes/" + voteDir + "/" + activeCard.id
 					+ "/tag/" + current_tag, "POST");
 			},
-			"-webkit-transform " + Math.abs(transitionDuration) + "ms",
+			"swiping",
 			"translate3d(" + translateQuantity + "px," + verticalQuantity
 				+ "px,0) rotate(" + rotateQuantity + "deg)");
 		slider.animating = true;
@@ -304,7 +304,7 @@ onload = function ()
 		if (slider.animating)
 			return;
 		if (direction == "left" || direction == "right")
-			swipeSlider(direction, null, pixelsPerSecond);
+			swipeSlider(direction, null, 700);
 		else if (slider.expanded)
 			return true;
 	};
@@ -459,6 +459,14 @@ onload = function ()
 		else if (getOrientation() == "landscape" && window.innerHeight < 700)
 			expandCard(true);
 	};
+	var downCallback = function ()
+	{
+		if (slider.style["-webkit-transform"] == "")
+		{
+			slider.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
+		}
+		return true;
+	};
 	var initCardGestures = function ()
 	{
 		gesture.listen("swipe", this, swipeCallback);
@@ -466,7 +474,7 @@ onload = function ()
 		gesture.listen("tap", this, tapCallback);
 		gesture.listen("drag", this, dragCallback);
 		gesture.listen("hold", this, holdCallback);
-		gesture.listen("down", this, returnTrue);
+		gesture.listen("down", this, downCallback);
 	};
 	var expandCard = function (force)
 	{
