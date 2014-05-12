@@ -96,7 +96,7 @@ class Card < ActiveRecord::Base
       else
         # move has_voted to redis
         has_voted = user.votes.pluck(:votable_id) 
-        cards = Card.where('cards.id not in (?), has_voted).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
+        cards = Card.where('cards.id not in (?)', has_voted).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
         if cards.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
