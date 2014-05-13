@@ -367,7 +367,7 @@ onload = function ()
 		[expandCard, doubleTap][tapCount-1]();
 	};
 	var holdCallback = function (duration) {
-		if (duration == 1000)
+		if (duration == 3000)
 		{
 			slider.supering = true;
 			toggleClass.apply(slider, ['super_card', 'on']);
