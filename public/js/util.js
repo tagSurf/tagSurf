@@ -216,3 +216,20 @@ var trans = function(node, cb, transition, transform) {
   }
   if (transform) node.style['-webkit-transform'] = transform;
 };
+var anim = function(node, cb, animation) {
+  var wrapper = function () {
+    if (animation) 
+    {
+	node.style['-webkit-animation'] = "";
+	node.style['animation'] = "";
+    }
+    //node.removeEventListener("webkitAnimationEnd", wrapper, false);
+    cb && cb();
+  };
+  node.addEventListener("webkitAnimationEnd", wrapper, false);
+  if (animation) 
+  {
+	node.style['-webkit-animation'] = animation;	
+	node.style['animation'] = animation;	
+  }
+};

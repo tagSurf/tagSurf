@@ -254,6 +254,9 @@ onload = function ()
 		var voteDir = isUp ? "up" : "down";
 		var transitionDistance = translateQuantity - slider.x;
 		var transitionDuration = pixelsPerSecond ? (transitionDistance / pixelsPerSecond) : 250;
+		var translateLast = Math.round(slider.x * translationScale);
+		var rotationLast = Math.round(slider.x * rotationScale);
+		var animationName = "swipe_animation" + translateLast;
 		if (slider.supering == true)
 		{
 			verticalQuantity = -500;
@@ -264,11 +267,11 @@ onload = function ()
 			rotateQuantity = -rotateQuantity;
 			verticalQuantity = -verticalQuantity;
 		}
-		trans(_slider,
+		anim(_slider,
 			function () {
 				_slider.animating = false;
-				gesture.unlisten(_slider.parentNode);
 				slideContainer.removeChild(_slider.parentNode);
+				gesture.unlisten(_slider.parentNode);
 				buildCard(0);
 				slideContainer.children[0].style.zIndex = 2;
 				if (slideContainer.children[1])
@@ -276,12 +279,8 @@ onload = function ()
 				if (voteAlternative) voteAlternative();
 				else xhr("/api/votes/" + voteDir + "/" + activeCard.id
 					+ "/tag/" + current_tag, "POST");
-			},
-			"swiping",
-			"translate3d(" + translateQuantity + "px," + verticalQuantity
-				+ "px,0) rotate(" + rotateQuantity + "deg)");
-		slider.animating = true;
-
+			}, animationName + " 500ms ease-out"
+		);
 		slider = slider.parentNode.nextSibling.firstChild;
 		// history slider
 		activeCard.total_votes += 1;
@@ -304,7 +303,10 @@ onload = function ()
 		if (slider.animating)
 			return;
 		if (direction == "left" || direction == "right")
+		{
+			slider.animating = true;
 			swipeSlider(direction, null, 700);
+		}
 		else if (slider.expanded)
 			return true;
 	};
