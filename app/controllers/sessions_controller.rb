@@ -10,6 +10,7 @@ class SessionsController < Devise::SessionsController
   end
 
   def destroy
+    current_user.forget_me!
     reset_session
     super
   end
