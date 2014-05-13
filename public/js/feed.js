@@ -33,7 +33,7 @@ onload = function ()
 			}
 		}
 		if (firstCard) data.unshift(firstCard);
-		image.load(preloads, window.innerWidth - 40);
+		return preloads;
 	};
 	var populateSlider = function (update, failMsgNode, firstCard)
 	{
@@ -41,14 +41,15 @@ onload = function ()
 		staticHash.className = isTrending ? "hidden" : "";
 		staticTrending.className = isTrending ? "" : "hidden";
 		xhr("/api/media/" + current_tag, null, function(response_data) {
-			var rdata = response_data.data;
+			var preloads, rdata = response_data.data;
 			if (update)
-				popData(rdata);
+				preloads = popData(rdata);
 			else {
 				data = [];
-				popData(rdata, firstCard);
+				preloads = popData(rdata, firstCard).slice(3);
 				refreshCards(failMsgNode, 2);
 			}
+			image.load(preloads, window.innerWidth - 40);
 		}, function() {
 			if (!update) {
 				data = [];
