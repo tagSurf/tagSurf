@@ -191,6 +191,9 @@ var isIphone = function() {
 var isMobile = function() {
   return navigator.userAgent.toLowerCase().indexOf("mobile") != -1;
 };
+var isAndroid = function() {
+  return isMobile() && !isIphone();
+};
 var trans = function(node, cb, transition, transform) {
   var wrapper = function () {
     if (transition) 

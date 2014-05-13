@@ -82,8 +82,6 @@ var gesture = {
 			v.tapTimeout = null;
 		}
 		v.holdCount = 0;
-		if (v.holdInterval)
-			clearInterval(v.holdInterval);
 		v.holdInterval = setInterval(function() {
 			if (!v.active || (t.hold.maxDistance && (t.hold.maxDistance <
 				gesture.getDiff(v.startPos, v.lastPos).distance))) {
@@ -98,6 +96,10 @@ var gesture = {
 	},
 	onStop: function(e, node) {
 		var v = gesture.vars;
+		if (v.holdInterval) {
+			clearInterval(v.holdInterval);
+			v.holdInterval = null;
+		}
 		if (!v.active) return;
 		var t = gesture.thresholds;
 		var pos = gesture.getPos(e);
@@ -127,7 +129,9 @@ var gesture = {
 			var pos = gesture.getPos(e);
 			var diff = gesture.getDiff(v.lastPos, pos);
 			v.lastPos = pos;
-			return gesture.triggerDrag(node, diff.direction, diff.distance, diff.x, diff.y);
+			var dres = gesture.triggerDrag(node, diff.direction, diff.distance, diff.x, diff.y);
+			dres && isAndroid() && gesture.onStop(e, node);
+			return dres;
 		}
 	},
 	eWrap: function(node) {
