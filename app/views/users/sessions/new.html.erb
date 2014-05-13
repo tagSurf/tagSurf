@@ -9,17 +9,18 @@
 
 <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:role => 'form'} ) do |f| %>
   <center>
-   <div class="tslogo"></div>
-   <div class="input-border-container" style="margin-bottom:10px;"><%= f.email_field :email, :placeholder => 'email', :class => 'ts-input' %></div>
-   <div class="input-border-container"><%= f.password_field :password, :placeholder => 'password', :class => 'ts-input' %></div>
+    <div class="tslogo"></div>
+    <div class="input-border-container" style="margin-bottom:10px;"><%= f.email_field :email, :placeholder => 'email', :class => 'ts-input' %></div>
+    <div class="input-border-container"><%= f.password_field :password, :placeholder => 'password', :class => 'ts-input' %></div>
+    <div class="input-checkbox light-gray"><%= f.check_box :remember_me %> <%= f.label :remember_me %></div>
   </center>
   <div class="ts-submit-bar">
-   <div class="ts-submit-left border-trim">
+    <div class="ts-submit-left border-trim">
     <%= f.submit "login", id: "ts-login-btn" %> 
-   </div>
-   <div class="ts-submit-right">
+  </div>
+  <div class="ts-submit-right">
     <a class="ts-signup-btn" href="/code">sign up</a>
-   </div>
+  </div>
   </div>
 <% end %>
 <%= link_to 'Forgot password?', new_password_path(:user), class: 'forgot-password twelve light-gray' %>
