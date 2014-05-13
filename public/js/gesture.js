@@ -129,7 +129,9 @@ var gesture = {
 			var pos = gesture.getPos(e);
 			var diff = gesture.getDiff(v.lastPos, pos);
 			v.lastPos = pos;
-			return gesture.triggerDrag(node, diff.direction, diff.distance, diff.x, diff.y);
+			var dres = gesture.triggerDrag(node, diff.direction, diff.distance, diff.x, diff.y);
+			dres && isAndroid() && gesture.onStop(e, node);
+			return dres;
 		}
 	},
 	eWrap: function(node) {
