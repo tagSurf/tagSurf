@@ -67,6 +67,7 @@ onload = function ()
 					scrollContainer.firstChild);
 			});
 		acviewing = false;
+		tinput.active = false;
 		location.hash = tagName;
 		aclist.className = "";
 		tinput.value = tagName;
@@ -100,9 +101,8 @@ onload = function ()
 		if (!hasTrending)
 			addTag("trending");
 	});
-	gesture.listen("up", tinput, returnTrue);
 	gesture.listen("down", tinput, returnTrue);
-	gesture.listen("tap", tinput, function(e) {
+	gesture.listen("up", tinput, function(e) {
 		if (!acviewing) {
 			acviewing = true;
 			tinput.value = "";
@@ -110,12 +110,17 @@ onload = function ()
 				className: "tagline",
 				show: true
 			});
-			aclist.className = "autocomplete-open";
 			modal.halfOn(function() {
-				viewTag(current_tag);
+				if (tinput.active)
+					viewTag(current_tag);
 			}, inputContainer);
 			slideContainer.className = "noinput";
-			tinput.focus();
+			aclist.className = "autocomplete-open";
+			trans(aclist, function() {
+				tinput.active = true;
+				tinput.focus();
+			});
+			return true;
 		}
 	});
 	tinput.onkeyup = function(e) {

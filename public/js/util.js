@@ -154,16 +154,22 @@ window.onresize = function() {
   resizeCb && resizeCb();
 };
 var returnTrue = function() { return true; };
+var DEBUG = false;
 var xhr = function(path, action, cb, eb) {
   var _xhr = new XMLHttpRequest();
   _xhr.open(action || "GET", path, true);
   _xhr.onreadystatechange = function() {
     if (_xhr.readyState == 4) {
-      if (_xhr.responseText.charAt(0) == "<" || _xhr.status != 200) {
-        console.log("XHR error! Path:" + path + " Error: " + _xhr.responseText);
-        eb && eb(_xhr.responseText);
+      var resp = _xhr.responseText.charAt(0) == "<" ? {
+        "errors": _xhr.responseText
+      } : JSON.parse(_xhr.responseText);
+      if (resp.errors || _xhr.status != 200) {
+        console.log("XHR error! Path:" + path + " Error: "
+          + resp.errors + " Status: " + _xhr.status);
+        if (eb) eb(resp);
+        if (DEBUG) alert("Request failed. Errors: " + resp.errors);
       } else
-        cb && cb(JSON.parse(_xhr.responseText));
+        cb && cb(resp);
     }
   }
   _xhr.send();
@@ -189,14 +195,14 @@ var trans = function(node, cb, transition, transform) {
   var wrapper = function () {
     if (transition) 
     {
-	if (transition.split(" ").length == 1)
-	{
-		node.classList.remove(transition);
-	}
-	else
-	{
-		node.style['-webkit-transition'] = "";
-	}
+      if (transition.split(" ").length == 1)
+      {
+        node.classList.remove(transition);
+      }
+      else
+      {
+        node.style['-webkit-transition'] = "";
+      }
     }
     if (transform) node.style['-webkit-transform'] = "";
     node.removeEventListener("webkitTransitionEnd", wrapper, false);
@@ -205,14 +211,14 @@ var trans = function(node, cb, transition, transform) {
   node.addEventListener("webkitTransitionEnd", wrapper, false);
   if (transition) 
   {
-	if (transition.split(" ").length == 1)
-	{
-		node.classList.add(transition);
-	}
-	else
-	{
-		node.style['-webkit-transition'] = transition;	
-	}
+    if (transition.split(" ").length == 1)
+    {
+      node.classList.add(transition);
+    }
+    else
+    {
+      node.style['-webkit-transition'] = transition;	
+    }
   }
   if (transform) node.style['-webkit-transform'] = transform;
 };
