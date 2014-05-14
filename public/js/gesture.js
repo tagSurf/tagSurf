@@ -98,9 +98,9 @@ var gesture = {
 		}, t.hold.interval);
 		return gesture.triggerDown(node);
 	},
-	onStop: function(e, node) {
+	onStop: function(e, node, delayed) {
 		var v = gesture.vars;
-		if (v.holdInterval) {
+		if (!delayed && v.holdInterval) {
 			clearInterval(v.holdInterval);
 			v.holdInterval = null;
 		}
@@ -134,7 +134,7 @@ var gesture = {
 			v.stopTimeout = null;
 		}
 		v.stopTimeout = setTimeout(gesture.onStop,
-			gesture.thresholds.up.androidDelay, e, node);
+			gesture.thresholds.up.androidDelay, e, node, true);
 	},
 	onMove: function(e, node) {
 		var v = gesture.vars;
