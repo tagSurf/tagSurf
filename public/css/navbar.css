@@ -29,7 +29,7 @@
   display: none;
 }
 
-#history-btn
+#add-btn
 {
   position: relative;
   float:left;
@@ -37,7 +37,7 @@
   left: 10px;
 }
 
-#history-btn img
+#add-btn img
 { 
   width: auto;
   height: 25px;
