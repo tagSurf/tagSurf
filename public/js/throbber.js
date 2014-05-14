@@ -15,13 +15,11 @@ var throbber =
 			throbber.gif.style['top'] = ((window.innerHeight - throbber.gif.offsetHeight) /2) + "px";
 		}
 		throbber.gif.style['left'] = ((window.innerWidth - throbber.gif.offsetWidth) /2) + "px";
-		throbber.gif.style['visibility'] = "visible";
 		throbber.gif.style['opacity'] = "1.0";
 	},
 	off: function ()
 	{
 		trans(throbber.gif, function () {
-			throbber.gif.style['visibility'] = "hidden";
 			throbber.gif.className = "throbber";
 		})
 		throbber.gif.style['opacity'] = "0";
