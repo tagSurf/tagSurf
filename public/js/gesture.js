@@ -125,7 +125,7 @@ var gesture = {
 			else
 				v.tapTimeout = setTimeout(gesture.triggerTap, t.tap.waitTime, node);
 		}
-		return gesture.triggerUp(node);
+		return gesture.triggerUp(node, delayed);
 	},
 	delayedStop: function(e, node) {
 		var v = gesture.vars;
@@ -203,11 +203,11 @@ var gesture = {
 		if (handlers) for (var i = 0; i < handlers.length; i++)
 			handlers[i](duration);
 	},
-	triggerUp: function(node) {
+	triggerUp: function(node, delayed) {
 		var returnVal = false;
 		var handlers = gesture.handlers.up[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
-			returnVal = handlers[i]() || returnVal;
+			returnVal = handlers[i](delayed) || returnVal;
 		return returnVal;
 	},
 	triggerDown: function(node) {
