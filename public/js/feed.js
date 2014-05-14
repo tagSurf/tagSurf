@@ -423,9 +423,12 @@ onload = function ()
 		textContainer = formatter.children[0].children[0].children[2];
 		picTags = formatter.children[0].children[0].children[3];
 		fullscreenButton = formatter.children[0].children[0].children[4];
-		gesture.listen("up", iconLine.children[1], function() {
-			viewTag(c.tags[0], true);
-		});
+		if (current_tag == "trending") {
+			gesture.listen("up", iconLine.children[1], function() {
+				viewTag(c.tags[0], true);
+			});
+		} else
+			iconLine.children[1].style.display = "none";
 		c.tags.forEach(function(tag) {
 			var p = document.createElement("span");
 			p.innerHTML = "#" + tag;
