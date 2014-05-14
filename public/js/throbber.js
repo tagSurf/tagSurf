@@ -5,11 +5,10 @@ var throbber =
 	{
 		throbber.gif.src = "/img/spin_throbber.gif";
 		throbber.gif.className = "throbber";
+		document.body.appendChild(throbber.gif);
 	},
 	on: function (addClass, addNode)
 	{
-		if (addNode) addNode.appendChild(throbber.gif);
-		else document.body.appendChild(throbber.gif);
 		if (addClass) throbber.gif.classList.add(addClass);
 		else
 		{
@@ -24,7 +23,6 @@ var throbber =
 		trans(throbber.gif, function () {
 			throbber.gif.style['visibility'] = "hidden";
 			throbber.gif.className = "throbber";
-			throbber.gif.parentNode.removeChild(throbber.gif);	
 		})
 		throbber.gif.style['opacity'] = "0";
 	}
