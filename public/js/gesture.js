@@ -9,7 +9,7 @@ var gesture = {
 			maxDP: 1000
 		},
 		tap: {
-			maxDistance: 35,
+			maxDistance: 10,
 			maxTime: 700,
 			waitTime: 300,
 			maxCount: 2
