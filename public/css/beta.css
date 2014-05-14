@@ -224,11 +224,24 @@ a.back {
 	box-shadow: none !important;
 	-webkit-appearance: none;
 }
+
 .sulogo
 {
 	margin-top: 20px;
 	width: 58%;
 }
+
+.su-logo-desktop {
+  background-image: url('/img/ts_logo_stacked_gray.png');
+  display:block;
+  margin-top: 20px;
+  width:210px;
+  height:240px;
+  background-size: cover;
+  margin-right:auto; 
+  margin-left:auto; 
+}
+
 .su-user-email
 {
 	margin-top: 12px;
