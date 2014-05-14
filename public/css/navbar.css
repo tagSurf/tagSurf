@@ -82,7 +82,7 @@
 .menu_icon
 {
   width: 22px;
-  height: 22px;
+  height: auto;
 }
 
 .navbar-center
