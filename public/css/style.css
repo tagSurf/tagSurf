@@ -197,3 +197,18 @@ a {
 	transition: border-color 200ms;
 	-webkit-background-clip: padding-box;
 }
+.throbber
+{
+	height: 50px;
+	pointer-events: none;
+	opacity: 0;
+	position: fixed;
+	z-index: 4;
+	-webkit-transition: opacity 500ms;
+	transition: opacity 500ms;
+}
+.throbber-bottom
+{
+	bottom: 5px;
+	height: 30px;
+}
