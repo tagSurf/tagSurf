@@ -17,6 +17,9 @@ var gesture = {
 		hold: {
 			maxDistance: null, // set to pixel value if desired
 			interval: 1000
+		},
+		up: {
+			androidDelay: 500
 		}
 	},
 	vars: {
@@ -26,7 +29,8 @@ var gesture = {
 		lastPos: null,
 		holdCount: 0,
 		tapTimeout: null,
-		holdInterval: null
+		holdInterval: null,
+		stopTimeout: null
 	},
 	events: isMobile() && {
 		Start: "touchstart",
@@ -123,6 +127,15 @@ var gesture = {
 		}
 		return gesture.triggerUp(node);
 	},
+	delayedStop: function(e, node) {
+		var v = gesture.vars;
+		if (v.stopTimeout) {
+			clearTimeout(v.stopTimeout);
+			v.stopTimeout = null;
+		}
+		v.stopTimeout = setTimeout(gesture.onStop,
+			gesture.thresholds.up.androidDelay, e, node);
+	},
 	onMove: function(e, node) {
 		var v = gesture.vars;
 		if (v.active) {
@@ -130,7 +143,7 @@ var gesture = {
 			var diff = gesture.getDiff(v.lastPos, pos);
 			v.lastPos = pos;
 			var dres = gesture.triggerDrag(node, diff.direction, diff.distance, diff.x, diff.y);
-			dres && isAndroid() && gesture.onStop(e, node);
+			dres && isAndroid() && gesture.delayedStop(e, node);
 			return dres;
 		}
 	},
