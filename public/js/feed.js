@@ -16,7 +16,6 @@ onload = function ()
 			failMsgNode.innerHTML = "No more cards in <br>#" + current_tag + " feed";
 			failMsgNode.parentNode.removeChild(failMsgNode.nextSibling);
 		} else {
-			slideContainer.innerHTML = "";
 			buildCard(zIndex);
 		}
 	};
@@ -37,6 +36,12 @@ onload = function ()
 		var isTrending = current_tag == "trending";
 		staticHash.className = isTrending ? "hidden" : "";
 		staticTrending.className = isTrending ? "" : "hidden";
+		if (!update && !failMsgNode)
+		{
+			slideContainer.innerHTML = "";
+			scrollContainer.style.opacity = 0;
+			throbber.on();
+		}
 		xhr("/api/media/" + current_tag, null, function(response_data) {
 			var rdata = response_data.data;
 			if (update)
@@ -460,6 +465,14 @@ onload = function ()
 		slideContainer.appendChild(card.parentNode);
 		formattingContainer.removeChild(formatter);
 		slider = slideContainer.children[0].children[0];
+		if (slider == card)
+		{
+			imageContainer.firstChild.onload = function ()
+			{
+				throbber.off();
+				scrollContainer.style.opacity = 1;
+			};
+		}
 		++cardIndex;
 		if (data.length == cardIndex + buffer_minimum)
 			populateSlider(true);
