@@ -120,6 +120,9 @@ var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
     "img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
 };
+var starCallback, setStarCallback = function(cb) {
+  starCallback = cb;
+};
 var _addCss = function(css) {
     var n = document.createElement("style");
     n.type = "text/css";

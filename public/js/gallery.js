@@ -1,4 +1,4 @@
-var gnodes = {}, current_image, favGrid, starCallback, slideGallery,
+var gnodes = {}, current_image, favGrid, slideGallery,
 	addHistoryItem, gallerize = function(gallery) {
 	var picbox, topbar, bigpic, picdesc, pictag;
 	var history_slider, grid = document.createElement("div");
@@ -7,7 +7,8 @@ var gnodes = {}, current_image, favGrid, starCallback, slideGallery,
 	if (gallery == "favorites")
 		favGrid = grid;
 
-	if (gallery == "history") {
+//	if (gallery == "history") {
+	if (false) { // disabled history slider
 		history_slider = document.createElement("div");
 		history_slider.id = "history_slider";
 		history_slider.appendChild(grid);
@@ -216,7 +217,8 @@ var gnodes = {}, current_image, favGrid, starCallback, slideGallery,
 	buildPicBox();
 	populateGallery();
 
-	var scroller = gallery == "history" ? history_slider : grid;
+//	var scroller = gallery == "history" ? history_slider : grid;
+	var scroller = grid; // disabled history slider
 	gesture.listen("up", scroller, returnTrue);
 	gesture.listen("down", scroller, returnTrue);
 	gesture.listen("drag", scroller, function (direction, distance, dx, dy) {
@@ -235,7 +237,9 @@ var gnodes = {}, current_image, favGrid, starCallback, slideGallery,
 	document.getElementById("favorites-btn").onclick = function() {
 		if (current_image) {
 			if (current_image.gallery == "history") {
-				if (!current_image.user_stats.has_favorited) {
+
+				// removed history slider, eliminating gallery interactions
+				/*if (!current_image.user_stats.has_favorited) {
 					current_image.user_stats.has_favorited = true;
 					xhr("/api/favorites/" + current_image.id, "POST");
 					if (favGrid)
@@ -243,7 +247,9 @@ var gnodes = {}, current_image, favGrid, starCallback, slideGallery,
 							getHeader(current_image.user_stats.time_discovered,
 							"favorites", favGrid));
 				} else
-					removeFavImage();
+					removeFavImage();*/
+				current_image.user_stats.has_favorited = true;
+				xhr("/api/favorites/" + current_image.id, "POST");
 				updateFavorited();
 			} else if (current_image.gallery == "favorites") {
 				removeFavImage();
@@ -253,8 +259,4 @@ var gnodes = {}, current_image, favGrid, starCallback, slideGallery,
 		} else if (starCallback)
 			starCallback();
 	};
-};
-
-var setStarCallback = function(cb) {
-	starCallback = cb;
 };

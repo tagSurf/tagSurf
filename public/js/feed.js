@@ -1,7 +1,6 @@
 onload = function ()
 {
 	populateNavbar();
-	gallerize("history");
 
 	var data, buffer_minimum = 5, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
@@ -300,7 +299,8 @@ onload = function ()
 		activeCard.user_stats.voted = true;
 		activeCard.user_stats.tag_voted = current_tag;
 		activeCard.user_stats.vote = voteDir;
-		addHistoryItem(activeCard);
+		// removed history slider
+//		addHistoryItem(activeCard);
 	};
 	window.onkeyup = function(e) {
 		e = e || window.event;
