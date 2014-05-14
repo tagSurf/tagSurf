@@ -219,7 +219,7 @@ onload = function ()
 			slider.animating = true;
 		}
 	};
-	var upCallback = function ()
+	var upCallback = function (androidSoftUp)
 	{
 		toggleClass.apply(slider,['super_card', 'off']);
 		slider.supering = false;
@@ -227,7 +227,7 @@ onload = function ()
 		{
 			if (slider.sliding == true)
 			{
-				if (Math.abs(slider.x) < slideThreshold)
+				if (androidSoftUp || Math.abs(slider.x) < slideThreshold)
 				{
 					revertSlider();
 				}

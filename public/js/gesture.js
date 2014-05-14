@@ -17,6 +17,9 @@ var gesture = {
 		hold: {
 			maxDistance: null, // set to pixel value if desired
 			interval: 1000
+		},
+		up: {
+			androidDelay: 600
 		}
 	},
 	vars: {
@@ -26,7 +29,8 @@ var gesture = {
 		lastPos: null,
 		holdCount: 0,
 		tapTimeout: null,
-		holdInterval: null
+		holdInterval: null,
+		stopTimeout: null
 	},
 	events: isMobile() && {
 		Start: "touchstart",
@@ -51,7 +55,7 @@ var gesture = {
 	},
 	getPos: function(e) {
 		var p = {};
-		if (event.type.slice(0, 5) == "touch") {
+		if (e.type.slice(0, 5) == "touch") {
 			p.x = e.changedTouches[0].pageX;
 			p.y = e.changedTouches[0].pageY;
 		} else {
@@ -94,9 +98,9 @@ var gesture = {
 		}, t.hold.interval);
 		return gesture.triggerDown(node);
 	},
-	onStop: function(e, node) {
+	onStop: function(e, node, delayed) {
 		var v = gesture.vars;
-		if (v.holdInterval) {
+		if (!delayed && v.holdInterval) {
 			clearInterval(v.holdInterval);
 			v.holdInterval = null;
 		}
@@ -121,7 +125,16 @@ var gesture = {
 			else
 				v.tapTimeout = setTimeout(gesture.triggerTap, t.tap.waitTime, node);
 		}
-		return gesture.triggerUp(node);
+		return gesture.triggerUp(node, delayed);
+	},
+	delayedStop: function(e, node) {
+		var v = gesture.vars;
+		if (v.stopTimeout) {
+			clearTimeout(v.stopTimeout);
+			v.stopTimeout = null;
+		}
+		v.stopTimeout = setTimeout(gesture.onStop,
+			gesture.thresholds.up.androidDelay, e, node, true);
 	},
 	onMove: function(e, node) {
 		var v = gesture.vars;
@@ -130,7 +143,7 @@ var gesture = {
 			var diff = gesture.getDiff(v.lastPos, pos);
 			v.lastPos = pos;
 			var dres = gesture.triggerDrag(node, diff.direction, diff.distance, diff.x, diff.y);
-			dres && isAndroid() && gesture.onStop(e, node);
+			dres && isAndroid() && gesture.delayedStop(e, node);
 			return dres;
 		}
 	},
@@ -190,11 +203,11 @@ var gesture = {
 		if (handlers) for (var i = 0; i < handlers.length; i++)
 			handlers[i](duration);
 	},
-	triggerUp: function(node) {
+	triggerUp: function(node, delayed) {
 		var returnVal = false;
 		var handlers = gesture.handlers.up[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
-			returnVal = handlers[i]() || returnVal;
+			returnVal = handlers[i](delayed) || returnVal;
 		return returnVal;
 	},
 	triggerDown: function(node) {
