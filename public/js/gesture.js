@@ -19,7 +19,7 @@ var gesture = {
 			interval: 1000
 		},
 		up: {
-			androidDelay: 500
+			androidDelay: 1000
 		}
 	},
 	vars: {
