@@ -202,11 +202,13 @@ var gnodes = {}, current_image, favGrid, starCallback, slideGallery,
 		if (populating)
 			return;
 		populating = true;
+		throbber.on('throbber-bottom');
 		xhr(getPath(), null, function(response_data) {
 			response_data.data.forEach(function(d) {
 				addImage(d, getHeader(d.user_stats.time_discovered));
 			});
 			populating = false;
+			throbber.off();
 		});
 		chunk_offset += chunk_size;
 	};
@@ -214,7 +216,7 @@ var gnodes = {}, current_image, favGrid, starCallback, slideGallery,
 	buildPicBox();
 	populateGallery();
 
-	var scroller = history_slider || grid;
+	var scroller = gallery == "history" ? history_slider : grid;
 	gesture.listen("up", scroller, returnTrue);
 	gesture.listen("down", scroller, returnTrue);
 	gesture.listen("drag", scroller, function (direction, distance, dx, dy) {
@@ -222,7 +224,7 @@ var gnodes = {}, current_image, favGrid, starCallback, slideGallery,
 			=== scroller.clientHeight),
 		atTop = (scroller.scrollTop === 0);
 		if ((scroller.scrollTop + scroller.offsetHeight) 
-			>= (scroller.scrollHeight - 100))
+			>= (scroller.scrollHeight - 200))
 			populateGallery();
 		if((atTop && direction == "down") ||
 			(atBottom && direction == "up"))
