@@ -15,6 +15,7 @@ gem 'underscore-rails', '1.5.2'
 gem 'acts-as-taggable-on', '3.0.1'
 gem "active_model_serializers", '0.8.1'
 gem 'browser', '0.4.1'
+gem 'analytics-ruby', '~>1.0'
 gem 'sidekiq'
 gem 'sinatra', '>= 1.3.0', :require => nil
 gem 'sidetiq'
