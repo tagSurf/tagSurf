@@ -22,6 +22,14 @@ class ClientController < ApplicationController
     :desktop 
   ] 
 
+  before_action :redirect_desktops, only: [
+    :feed,
+    :favorites,
+    :trending, 
+    :submissions,
+    :tag 
+  ]
+
   layout 'client'
 
   def index
@@ -113,6 +121,7 @@ class ClientController < ApplicationController
   end
 
   def welcome; end
+  def device; end
 
   private
 
