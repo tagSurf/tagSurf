@@ -284,7 +284,7 @@ onload = function ()
 				if (voteAlternative) voteAlternative();
 				else xhr("/api/votes/" + voteDir + "/" + activeCard.id
 					+ "/tag/" + current_tag, "POST");
-			}, animationName + " 500ms ease-out"
+			}, animationName + " 250ms ease-out"
 		);
 		slider = slider.parentNode.nextSibling.firstChild;
 		// history slider
