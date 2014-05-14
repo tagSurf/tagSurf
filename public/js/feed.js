@@ -12,9 +12,10 @@ onload = function ()
 			= document.location.hash.slice(1) || "trending";
 	var refreshCards = function(failMsgNode, zIndex) {
 		cardIndex = 0;
-		if (failMsgNode && data.length == 0)
+		if (failMsgNode && data.length == 0) {
 			failMsgNode.innerHTML = "No more cards in <br>#" + current_tag + " feed";
-		else {
+			failMsgNode.parentNode.removeChild(failMsgNode.nextSibling);
+		} else {
 			slideContainer.innerHTML = "";
 			buildCard(zIndex);
 		}
