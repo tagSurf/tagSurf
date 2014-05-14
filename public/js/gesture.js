@@ -55,7 +55,7 @@ var gesture = {
 	},
 	getPos: function(e) {
 		var p = {};
-		if (event.type.slice(0, 5) == "touch") {
+		if (e.type.slice(0, 5) == "touch") {
 			p.x = e.changedTouches[0].pageX;
 			p.y = e.changedTouches[0].pageY;
 		} else {
