@@ -175,6 +175,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			]
 		*/
 		// the API shouldn't return data formatted like this
+		pictags.innerHTML = "";
 		d.tags_v2.forEach(function(objwrap) {
 			for (var tagName in objwrap) if (tagName) {
 				var p = document.createElement("div");
