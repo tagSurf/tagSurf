@@ -34,7 +34,14 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		addHistoryItem = function(item) {
 			addImage(item, getHeader(item.user_stats.time_discovered));
 		};
-	} else document.body.appendChild(grid);
+	} else {
+		addCss({
+			".grid": function() {
+				return "height: " + (window.innerHeight - 50) + "px;";
+			}
+		});
+		document.body.appendChild(grid);
+	}
 
 	var voteMeter = function(d, trending, fullRound) {
 		var bottom = document.createElement("div");
