@@ -96,8 +96,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		picbox.appendChild(picdesc);
 
 		pictags = document.createElement("div");
-		pictags.id = "pictags";
-		pictags.className = "pictagtable";
+		pictags.id = pictags.className = "pictags";
 		picbox.appendChild(pictags);
 	};
 	var getHeader = function(headerName, gall, g) {

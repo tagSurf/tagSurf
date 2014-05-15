@@ -115,17 +115,11 @@ a {
 	font-size: 80%;
 }
 
-.pictagtable {
-	display: table;
-	border-collapse: separate;
-	border-spacing: 5px;
-	margin: auto;
-}
-
 .pictagcell {
-	display: table-cell;
+	display: inline-block;
 	background: #00aeef;
 	border-radius: 5px;
+	margin: 5px;
 	cursor: pointer;
 }
 
