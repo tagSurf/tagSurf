@@ -14,6 +14,8 @@ onload = function ()
 		if (failMsgNode && data.length == 0) {
 			failMsgNode.innerHTML = "No more cards in <br>#" + current_tag + " feed";
 			failMsgNode.parentNode.removeChild(failMsgNode.nextSibling);
+			scrollContainer.style.opacity = 1;
+			throbber.off();
 		} else {
 			buildCard(zIndex);
 		}
