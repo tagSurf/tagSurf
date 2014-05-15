@@ -47,7 +47,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		var bottom = document.createElement("div");
 		bottom.className = "overlay votes";
 		if (fullRound) bottom.className += " round";
-		bottom.style.background = trending ? "red" : "green";
+		bottom.style.background = trending ? "red" : "#00a651";
 
 		var vote_meter = document.createElement("div");
 		if (trending) {
