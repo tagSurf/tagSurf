@@ -1,7 +1,6 @@
 onload = function ()
 {
 	populateNavbar();
-	gallerize("history");
 
 	var data, buffer_minimum = 5, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
@@ -15,6 +14,8 @@ onload = function ()
 		if (failMsgNode && data.length == 0) {
 			failMsgNode.innerHTML = "No more cards in <br>#" + current_tag + " feed";
 			failMsgNode.parentNode.removeChild(failMsgNode.nextSibling);
+			scrollContainer.style.opacity = 1;
+			throbber.off();
 		} else {
 			buildCard(zIndex);
 		}
@@ -300,7 +301,8 @@ onload = function ()
 		activeCard.user_stats.voted = true;
 		activeCard.user_stats.tag_voted = current_tag;
 		activeCard.user_stats.vote = voteDir;
-		addHistoryItem(activeCard);
+		// removed history slider
+//		addHistoryItem(activeCard);
 	};
 	window.onkeyup = function(e) {
 		e = e || window.event;
