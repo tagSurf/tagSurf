@@ -47,6 +47,10 @@ a {
   float:right;
 }
 
+.smallpadded {
+	padding: 5px;
+}
+
 .padded {
 	padding: 10px;
 }
@@ -109,6 +113,14 @@ a {
 	padding: 5px;
 	cursor: pointer;
 	font-size: 80%;
+}
+
+.pictagcell {
+	display: inline-block;
+	background: #00aeef;
+	border-radius: 5px;
+	margin: 5px;
+	cursor: pointer;
 }
 
 .blackout {
