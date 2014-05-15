@@ -62,7 +62,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 
 		var vote_count = document.createElement("div");
 		vote_count.className = "votecount";
-		vote_count.innerHTML = d.total_votes;
+		vote_count.innerHTML = d.score;
 		bottom.appendChild(vote_count);
 		return bottom;
 	};
