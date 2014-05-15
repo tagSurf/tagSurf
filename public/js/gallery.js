@@ -185,7 +185,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 				p.appendChild(t);
 				p.appendChild(voteMeter(objwrap[tagName]))
 				gesture.listen("up", p, function() {
-					viewTag(tagName, true);
+					location = "/feed#" + tagName;
 				});
 				pictags.appendChild(p);
 			}
