@@ -47,7 +47,7 @@ var populateNavbar = function () {
   var tag = gallery ? document.location.hash.slice(1) : null;
   var navbar_content = [
     "<div id='favorites-btn'>",
-      "<a><img id='favorites-icon' src='img/favorites_icon_blue.png'></a>",
+      "<a onclick='starCallback();'><img id='favorites-icon' src='img/favorites_icon_blue.png'></a>",
     "</div>",
     "<div id='add-btn'><a>",
       "<img id='add_icon' src='img/add_icon_blue.png'>",
