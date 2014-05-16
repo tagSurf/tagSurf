@@ -38,6 +38,7 @@ var slideAddBar = function() {
   add_icon.src = add_icons[add_state];
   toggleClass.apply(document.getElementById("tag_adder"),
     ["opened_menu"]);
+  document.getElementById("tag_adder").firstChild.value = "#newtag";
   modal.backToggle(slideAddBar, true);
 };
 var populateNavbar = function () {
@@ -93,7 +94,7 @@ var populateNavbar = function () {
     "</div>",
   ];
   var tag_adder_content = [
-    "<input placeholder='#newtag'>",
+    "<input value='#newtag'>",
     "<img src='img/add_tag_button.png'>"
   ];
   navbar.innerHTML = navbar_content.join('\n');
@@ -103,6 +104,16 @@ var populateNavbar = function () {
   nav.appendChild(menu_slider);
   nav.appendChild(tag_adder);
 
+  tag_adder.firstChild.onclick = function() {
+    tag_adder.firstChild.value = "#";
+    return true;
+  };
+  tag_adder.firstChild.nextSibling.onclick = function() {
+    var newtag = tag_adder.firstChild.value.slice(1);
+    if (!newtag || newtag == "newtag") return;
+    xhr("/api/media/" + currentMedia.id + "/tag/" + newtag, "POST", slideAddBar);
+    addCallback && addCallback(newtag);
+  };
   add_icon = document.getElementById("add-icon");
   document.getElementById("options-btn").onclick = function() {
     var n = document.createElement("div");
@@ -126,6 +137,12 @@ var setFavIcon = function(filled) {
 };
 var starCallback, setStarCallback = function(cb) {
   starCallback = cb;
+};
+var addCallback, setAddCallback = function(cb) {
+  addCallback = cb;
+};
+var currentMedia, setCurrentMedia = function(d) {
+  currentMedia = d;
 };
 var _addCss = function(css) {
     var n = document.createElement("style");

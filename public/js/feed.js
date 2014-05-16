@@ -295,6 +295,7 @@ onload = function ()
 		slider.animating = true;
 
 		slider = slider.parentNode.nextSibling.firstChild;
+		setCurrentMedia(slider.card);
 		// history slider
 		activeCard.total_votes += 1;
 		activeCard[voteDir + "_votes"] += 1;
@@ -469,6 +470,7 @@ onload = function ()
 		slider = slideContainer.children[0].children[0];
 		if (slider == card)
 		{
+			setCurrentMedia(slider.card);
 			imageContainer.firstChild.onload = function ()
 			{
 				throbber.off();
@@ -512,6 +514,9 @@ onload = function ()
 			slider.children[4].style.visibility = "hidden";
 		}
 	};
+	setAddCallback(function(tagName) {
+		alert("NEW TAG: " + tagName);
+	});
 	setStarCallback(function() {
 		if (modal.zoom.zoomed) {
 			if (modal.zoom.large)
