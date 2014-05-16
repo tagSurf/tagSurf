@@ -45,10 +45,19 @@
 {
 	height: 12px;
 }
+#topbar #votemeter
+{
+	margin-top: 3px;
+}
 #topbar .votecount
 {
 	font-size: 12px;
 	line-height: 12px;
+}
+img[src="img/history_icon_gray.png"]
+{
+	top: 1px;
+	position: relative;
 }
 #toptag
 {
