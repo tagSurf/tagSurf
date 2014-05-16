@@ -43,9 +43,9 @@ var slideNavMenu = function() {
   addBarSlid && slideAddBar();
   navMenuSlid = !navMenuSlid;
   toggleClass.apply(document.getElementById("slider_label"),
-    ["slid"]);
+    ["slid", navMenuSlid ? "on" : "off"]);
   toggleClass.apply(document.getElementById("slide_down_menu"),
-    ["opened_menu"]);
+    ["opened_menu", navMenuSlid ? "on" : "off"]);
   modal.backToggle(slideNavMenu, true);
 };
 var add_icon, add_state = "blue", add_icons = {
@@ -61,7 +61,7 @@ var slideAddBar = function() {
   add_state = addBarSlid ? "fill" : "blue";
   add_icon.src = add_icons[add_state];
   toggleClass.apply(document.getElementById("tag_adder"),
-    ["opened_menu"]);
+    ["opened_menu", addBarSlid ? "on" : "off"]);
   document.getElementById("tag_adder").firstChild.value = "#newtag";
   modal.backToggle(slideAddBar, true);
 };
