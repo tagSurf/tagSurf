@@ -434,7 +434,9 @@ onload = function ()
 			});
 		} else
 			iconLine.children[1].style.display = "none";
-		c.tags.forEach(function(tag) { tagCard(tag, picTags); });
+		c.tags_v2.forEach(function(tagobj) {
+			tagCard(Object.keys(tagobj)[0], picTags);
+		});
 		card = formatter.firstChild.firstChild;
 		setStartState(card);
 		imageData = image.get(card.card);
