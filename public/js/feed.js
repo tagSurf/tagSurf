@@ -150,7 +150,7 @@ onload = function ()
 			return "max-height: " + parseInt(maxCardHeight - window.innerHeight * .04) + "px";
 		},
 		".card-container": function() {
-			return "min-height: " + (maxCardHeight + 120) + "px";
+			return "min-height: " + (maxCardHeight + 140) + "px";
 		},
 		".raw_wrapper, .zoom_wrapper, #scroll-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
@@ -441,11 +441,11 @@ onload = function ()
 		setStartState(card);
 		imageData = image.get(card.card);
 		targetHeight = imageData.height * (window.innerWidth - 40) / imageData.width;
-		if (targetHeight + textContainer.clientHeight + /* picTags */ 10 
-			+ /* icon bar */ 10 + /* chevron and border*/ 10 < maxCardHeight)
+		if (targetHeight + textContainer.scrollHeight + picTags.scrollHeight 
+			+ iconLine.scrollHeight < (maxCardHeight + 80))
 		{
 			imageContainer.classList.remove("expand-animation");
-			fullscreenButton.className += ' hider';
+			fullscreenButton.className += ' hidden';
 			card.compressing = false;
 		}
 		else
@@ -503,7 +503,7 @@ onload = function ()
 			slider.children[0].className += " expanded";
 			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
 			slider.children[3].style.visibility = "visible";
-			slider.children[4].style.visibility = "hidden";
+			slider.children[4].style.display = "none";
 		}
 	};
 	setAddCallback(function(tag) {
