@@ -106,11 +106,9 @@ var modal = {
 	_backOn: function(degree, cb, injectionNode) {
 		modal.back.style.opacity = 1;
 		modal.back.className = "blackout " + degree + "fade";
+		modal.back.cb = cb;
 		modal.trans.on();
-		trans(modal.back, function() {
-			modal.back.cb = cb;
-			modal.trans.off();
-		});
+		trans(modal.back, modal.trans.off);
 		if (injectionNode)
 			modal.back.appendChild(injectionNode);
 	},
