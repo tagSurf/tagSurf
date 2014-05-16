@@ -37,7 +37,7 @@ onload = function ()
 		var isTrending = current_tag == "trending";
 		staticHash.className = isTrending ? "hidden" : "";
 		staticTrending.className = isTrending ? "" : "hidden";
-		if (!update && !failMsgNode)
+		if (!update)
 		{
 			slideContainer.innerHTML = "";
 			scrollContainer.style.opacity = 0;
@@ -173,7 +173,7 @@ onload = function ()
 	var scrollContainer = document.getElementById('scroll-container');
 	var slideContainer = document.getElementById('slider');
 	var formattingContainer = document.getElementById('formatter');
-	var slider = slideContainer.children[0];
+	var slider;
 	var setStartState = function (node)
 	{
 		node.x = 0;
