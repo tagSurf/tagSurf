@@ -115,10 +115,7 @@ var modal = {
 		if (!modal.back.on) {
 			modal.back.on = true;
 			modal.trans.on();
-			trans(modal.back, function() {
-				modal.back.on = false;
-				modal.trans.off();
-			});
+			trans(modal.back, modal.trans.off);
 		}
 		if (injectionNode)
 			modal.back.appendChild(injectionNode);
@@ -138,13 +135,17 @@ var modal = {
 		modal.back.className = "blackout";
 		modal.back.cb = null;
 		modal.trans.on();
-		trans(modal.back, function() {
-			onOff && onOff();
-			modal.back.style.opacity = 0;
-			if (modal.back.firstChild)
-				modal.back.removeChild(modal.back.firstChild);
-			modal.trans.off();
-		});
+		if (modal.back.on) {
+			modal.back.on = false;
+			modal.trans.on();
+			trans(modal.back, function() {
+				onOff && onOff();
+				modal.back.style.opacity = 0;
+				if (modal.back.firstChild)
+					modal.back.removeChild(modal.back.firstChild);
+				modal.trans.off();
+			});
+		}
 	},
 	backToggle: function(cb, isHalf) {
 		var backClass = (isHalf ? "half" : "black") + "fade";
