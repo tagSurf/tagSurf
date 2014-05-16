@@ -108,9 +108,11 @@ a {
 }
 
 .pictags span {
+	display: inline-block;
 	background: #00aeef;
 	border-radius: 5px;
 	padding: 5px;
+	margin: 5px;
 	cursor: pointer;
 	font-size: 80%;
 }

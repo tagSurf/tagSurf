@@ -295,6 +295,7 @@ onload = function ()
 		slider.animating = true;
 
 		slider = slider.parentNode.nextSibling.firstChild;
+		setCurrentMedia(slider.card);
 		// history slider
 		activeCard.total_votes += 1;
 		activeCard[voteDir + "_votes"] += 1;
@@ -381,6 +382,14 @@ onload = function ()
 			toggleClass.apply(slider, ['super_card', 'on']);
 		}
 	};
+	var tagCard = function(tag, picTags) {
+		var p = document.createElement("span");
+		p.innerHTML = "#" + tag;
+		gesture.listen("up", p, function() {
+			viewTag(tag, true);
+		});
+		picTags.appendChild(p);
+	};
 	var dataThrobTest = function ()
 	{
 		var c_wrapper, c_container, msg, img;
@@ -421,7 +430,7 @@ onload = function ()
 		var imageContainer, iconLine, textContainer, picTags, 
 			fullscreenButton, truncatedTitle, card, 
 			targetHeight, imageData, c = data[cardIndex];
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
@@ -436,14 +445,7 @@ onload = function ()
 			});
 		} else
 			iconLine.children[1].style.display = "none";
-		c.tags.forEach(function(tag) {
-			var p = document.createElement("span");
-			p.innerHTML = "#" + tag;
-			gesture.listen("up", p, function() {
-				viewTag(tag, true);
-			});
-			picTags.appendChild(p);
-		});
+		c.tags.forEach(function(tag) { tagCard(tag, picTags); });
 		card = formatter.firstChild.firstChild;
 		setStartState(card);
 		imageData = image.get(card.card);
@@ -469,6 +471,7 @@ onload = function ()
 		slider = slideContainer.children[0].children[0];
 		if (slider == card)
 		{
+			setCurrentMedia(slider.card);
 			imageContainer.firstChild.onload = function ()
 			{
 				throbber.off();
@@ -512,6 +515,9 @@ onload = function ()
 			slider.children[4].style.visibility = "hidden";
 		}
 	};
+	setAddCallback(function(tag) {
+		tagCard(tag, document.getElementById("pictags" + slider.card.id));
+	});
 	setStarCallback(function() {
 		if (modal.zoom.zoomed) {
 			if (modal.zoom.large)
