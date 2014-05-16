@@ -249,7 +249,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 
 		var spacer = document.createElement("div");
 		var boxWidth = Math.round((window.innerWidth - 6) * .2975),
-			spacerHeight = (boxWidth - 26),
+			spacerHeight = (boxWidth - 28),
 			spacerHeightPercent = Math.round(100 * (spacerHeight / boxWidth));
 		spacer.style.paddingTop = spacerHeightPercent + "%";
 
