@@ -47,7 +47,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		var bottom = document.createElement("div");
 		bottom.className = "overlay votes";
 		if (fullRound) bottom.className += " round";
-		bottom.style.background = trending ? "red" : "green";
+		bottom.style.background = trending ? "#ff0000" : "#00a651";
 
 		var vote_meter = document.createElement("div");
 		if (trending) {
@@ -132,7 +132,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			}
 		});
 		votize(modal.modal, d);
-		modal.backOn();
+		modal.backOn(null, null, "0.35");
 
 		topbar.firstChild.innerHTML = "";
 		topbar.firstChild.appendChild(voteMeter(d, d.trend == "up", true));
@@ -181,7 +181,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		top.innerHTML = "#" + d.user_stats.tag_voted;
 
 		var spacer = document.createElement("div");
-		spacer.style.paddingTop = "70%";
+		spacer.style.paddingTop = "58%";
 
 		n.appendChild(top);
 		n.appendChild(spacer);
