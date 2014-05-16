@@ -513,6 +513,16 @@ onload = function ()
 		}
 	};
 	setAddCallback(function(tag) {
+		var objwrap = {};
+		objwrap[tag] = {
+			total_votes: 0,
+			down_votes: 0,
+			up_votes: 0,
+			score: 0,
+			is_trending: false,
+			trend: "up"
+		};
+		slider.card.tags_v2.push(objwrap);
 		tagCard(tag, document.getElementById("pictags" + slider.card.id));
 	});
 	setStarCallback(function() {
