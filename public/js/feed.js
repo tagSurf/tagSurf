@@ -147,10 +147,10 @@ onload = function ()
 	var slideThreshold = 60;
 	addCss({
 		".expand-animation": function() {
-			return "max-height: " + parseInt(maxCardHeight - window.innerHeight * .04) + "px";
+			return "max-height: " + parseInt(maxCardHeight + 60 - window.innerHeight * .04) + "px";
 		},
 		".card-container": function() {
-			return "min-height: " + (maxCardHeight + 120) + "px";
+			return "min-height: " + (maxCardHeight + 140) + "px";
 		},
 		".raw_wrapper, .zoom_wrapper, #scroll-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
@@ -434,16 +434,24 @@ onload = function ()
 			});
 		} else
 			iconLine.children[1].style.display = "none";
-		c.tags.forEach(function(tag) { tagCard(tag, picTags); });
+		c.tags_v2.sort(function(a, b) {
+			var aName = Object.keys(a)[0];
+			var bName = Object.keys(b)[0];
+			return a[aName].score < b[bName].score;
+		});
+		c.tags_v2.forEach(function(tagobj) {
+			var t = Object.keys(tagobj)[0];
+			t && tagCard(t, picTags);
+		});
 		card = formatter.firstChild.firstChild;
 		setStartState(card);
 		imageData = image.get(card.card);
 		targetHeight = imageData.height * (window.innerWidth - 40) / imageData.width;
-		if (targetHeight + textContainer.clientHeight + /* picTags */ 10 
-			+ /* icon bar */ 10 + /* chevron and border*/ 10 < maxCardHeight)
+		if (targetHeight + textContainer.scrollHeight + picTags.scrollHeight 
+			+ iconLine.scrollHeight < (maxCardHeight + 80))
 		{
 			imageContainer.classList.remove("expand-animation");
-			fullscreenButton.className += ' hider';
+			fullscreenButton.className += ' hidden';
 			card.compressing = false;
 		}
 		else
@@ -451,7 +459,7 @@ onload = function ()
 			truncatedTitle = card.card.caption.trunc(25);
 			truncatedTitle = "<p>" + truncatedTitle + "</p>";
 			textContainer.innerHTML = truncatedTitle;
-			picTags.className += ' hider';
+			picTags.className += ' hidden';
 			card.compressing = true;
 		}
 		initCardGestures.call(card.parentNode);
@@ -500,8 +508,8 @@ onload = function ()
 			slider.expanded = true;
 			slider.children[0].className += " expanded";
 			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
-			slider.children[3].style.visibility = "visible";
-			slider.children[4].style.visibility = "hidden";
+			toggleClass.call(slider.children[3], "hidden");
+			toggleClass.call(slider.children[4], "hidden");
 		}
 	};
 	setAddCallback(function(tag) {

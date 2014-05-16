@@ -141,6 +141,10 @@ var populateNavbar = function () {
       tag_adder.firstChild.blur();
       tag_adder.firstChild.nextSibling.onclick();
     }
+    if (tag_adder.firstChild.value.length == 0)
+    {
+	tag_adder.firstChild.value = '#';
+    }
     return true;
   };
   add_icon = document.getElementById("add-icon");
@@ -196,7 +200,7 @@ var getOrientation = function() {
 };
 var maxCardHeight, resizeCb;
 var setMaxCardHeight = function() {
-  maxCardHeight = window.innerHeight - 220;
+  maxCardHeight = window.innerHeight - 240;
 };
 var setResizeCb = function(cb) {
   resizeCb = cb;
