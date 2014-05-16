@@ -147,7 +147,7 @@ onload = function ()
 	var slideThreshold = 60;
 	addCss({
 		".expand-animation": function() {
-			return "max-height: " + parseInt(maxCardHeight - window.innerHeight * .04) + "px";
+			return "max-height: " + parseInt(maxCardHeight + 60 - window.innerHeight * .04) + "px";
 		},
 		".card-container": function() {
 			return "min-height: " + (maxCardHeight + 140) + "px";
