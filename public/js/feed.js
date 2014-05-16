@@ -19,9 +19,8 @@ onload = function ()
 		if (failMsgNode && data.length == 0) {
 			failMsgNode.innerHTML = "No more cards in <br>#" + current_tag + " feed";
 			failMsgNode.parentNode.removeChild(failMsgNode.nextSibling);
-			scrollContainer.style.opacity = 1;
-			throbber.off();
 		} else {
+			slideContainer.innerHTML = "";
 			buildCard(zIndex);
 		}
 	};
@@ -42,7 +41,7 @@ onload = function ()
 		var isTrending = current_tag == "trending";
 		staticHash.className = isTrending ? "hidden" : "";
 		staticTrending.className = isTrending ? "" : "hidden";
-		if (!update)
+		if (!update && !failMsgNode)
 		{
 			slideContainer.innerHTML = "";
 			scrollContainer.style.opacity = 0;
@@ -405,6 +404,8 @@ onload = function ()
 			c_wrapper.throbbing = true;
 			slideContainer.appendChild(c_wrapper);
 			slider = slideContainer.firstChild.firstChild;
+			throbber.off();
+			scrollContainer.style.opacity = 1;
 			if (slideContainer.childNodes.length == 1)
 				populateSlider(false, slider.firstChild);
 			return;
