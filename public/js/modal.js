@@ -5,6 +5,21 @@ var modal = {
 	constants: {
 		zoomScale: 1.5
 	},
+	trans: {
+		animating: false,
+		callback: null,
+		on: function(cb) {
+			modal.trans.animating = true;
+			modal.trans.callback = cb;
+		},
+		off: function() {
+			modal.trans.animating = false;
+			if (modal.trans.callback) {
+				modal.trans.callback();
+				modal.trans.callback = null;
+			}
+		}
+	},
 	build: function() {
 		addCss({
 			".modal": function() {
@@ -52,12 +67,18 @@ var modal = {
 		return (direction == "up" || direction == "down");
 	},
 	callModal: function(direction) {
+		if (modal.trans.animating)
+			return modal.trans.on(modal.callModal);
 		return modal.modal.cb && modal.modal.cb(direction);
 	},
 	callBack: function() {
+		if (modal.trans.animating)
+			return modal.trans.on(modal.callBack);
 		return modal.back.cb && modal.back.cb();
 	},
 	callZoom: function(tapCount) {
+		if (modal.trans.animating)
+			return modal.trans.on(modal.callZoom);
 		if (tapCount == 1)
 		{
 			if (modal.zoom.large == false)
@@ -68,7 +89,8 @@ var modal = {
 		else if (tapCount == 2)
 		{
 			var zNode = modal.zoom.firstChild.firstChild;
-			trans(zNode, null, "width 250ms ease-in");
+			modal.trans.on();
+			trans(zNode, modal.trans.off, "width 250ms ease-in");
 			if (modal.zoom.large == false)
 			{
 				modal.zoom.large = true;
@@ -84,8 +106,10 @@ var modal = {
 	_backOn: function(degree, cb, injectionNode) {
 		modal.back.style.opacity = 1;
 		modal.back.className = "blackout " + degree + "fade";
+		modal.trans.on();
 		trans(modal.back, function() {
 			modal.back.cb = cb;
+			modal.trans.off();
 		});
 		if (injectionNode)
 			modal.back.appendChild(injectionNode);
@@ -99,11 +123,13 @@ var modal = {
 	backOff: function(onOff) {
 		modal.back.className = "blackout";
 		modal.back.cb = null;
+		modal.trans.on();
 		trans(modal.back, function() {
 			onOff && onOff();
 			modal.back.style.opacity = 0;
 			if (modal.back.firstChild)
 				modal.back.removeChild(modal.back.firstChild);
+			modal.trans.off();
 		});
 	},
 	backToggle: function(cb, isHalf) {
@@ -114,10 +140,12 @@ var modal = {
 			modal.back.style.opacity = 1;
 		} else {
 			modal.back.cb = null;
+			modal.trans.on();
 			trans(modal.back, function() {
 				modal.back.style.opacity = 0;
 				if (modal.back.firstChild)
 					modal.back.removeChild(modal.back.firstChild);
+				modal.trans.off();
 			});
 		}
 	},
@@ -130,8 +158,10 @@ var modal = {
 	modalOut: function() {
 		modal.modal.className = "modal";
 		modal.modal.cb = null;
+		modal.trans.on();
 		trans(modal.modal, function (event){
 			modal.modal.className = "modal hider";
+			modal.trans.off();
 		});
 	},
 	zoomIn: function (card, cb) {
@@ -145,8 +175,10 @@ var modal = {
 		modal.zoom.zoomed = false;
 		modal.zoom.cb = null;
 		modal.zoom.style.opacity = 0;
+		modal.trans.on();
 		trans(modal.zoom, function (event){
 			modal.zoom.style.display = "none";
+			modal.trans.off();
 		});
 	},
 	dragZoom: function (direction, distance, dx, dy) {
