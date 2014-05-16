@@ -124,15 +124,24 @@ var populateNavbar = function () {
   nav.appendChild(menu_slider);
   nav.appendChild(tag_adder);
 
-  tag_adder.firstChild.onclick = function() {
-    tag_adder.firstChild.value = "#";
-    return true;
-  };
   tag_adder.firstChild.nextSibling.onclick = function() {
     var newtag = tag_adder.firstChild.value.slice(1);
     if (!newtag || newtag == "newtag") return;
     xhr("/api/media/" + currentMedia.id + "/tags/" + newtag, "POST", slideAddBar);
     addCallback && addCallback(newtag);
+  };
+  tag_adder.firstChild.onclick = function() {
+    tag_adder.firstChild.value = "#";
+    return true;
+  };
+  tag_adder.firstChild.onkeyup = function(e) {
+    e = e || window.event;
+    var code = e.keyCode || e.which;
+    if (code == 13 || code == 3) {
+      tag_adder.firstChild.blur();
+      tag_adder.firstChild.nextSibling.onclick();
+    }
+    return true;
   };
   add_icon = document.getElementById("add-icon");
   document.getElementById("options-btn").onclick = function() {
