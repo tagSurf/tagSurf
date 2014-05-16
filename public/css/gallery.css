@@ -101,7 +101,11 @@
 	display: block;
 	width: 100%;
 	margin-top: 5px;
-	border-radius: 5px;
+	border-radius: 4px;
+}
+#picdesc
+{
+	font-size: 11pt;
 }
 
 #history_slider {
