@@ -435,7 +435,8 @@ onload = function ()
 		} else
 			iconLine.children[1].style.display = "none";
 		c.tags_v2.forEach(function(tagobj) {
-			tagCard(Object.keys(tagobj)[0], picTags);
+			var t = Object.keys(tagobj)[0];
+			t && tagCard(t, picTags);
 		});
 		card = formatter.firstChild.firstChild;
 		setStartState(card);
