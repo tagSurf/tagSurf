@@ -147,7 +147,7 @@ onload = function ()
 	var slideThreshold = 60;
 	addCss({
 		".expand-animation": function() {
-			return "max-height: " + parseInt(maxCardHeight - window.innerHeight * .02) + "px";
+			return "max-height: " + parseInt(maxCardHeight - window.innerHeight * .04) + "px";
 		},
 		".card-container": function() {
 			return "min-height: " + (maxCardHeight + 120) + "px";
@@ -448,7 +448,7 @@ onload = function ()
 		}
 		else
 		{
-			truncatedTitle = card.card.caption.trunc(30);
+			truncatedTitle = card.card.caption.trunc(25);
 			truncatedTitle = "<p>" + truncatedTitle + "</p>";
 			textContainer.innerHTML = truncatedTitle;
 			picTags.className += ' hider';
