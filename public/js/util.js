@@ -93,13 +93,9 @@ var populateNavbar = function () {
       "</ul>",
     "</div>",
   ];
-  var tag_adder_content = [
-    "<input value='#newtag'>",
-    "<img src='img/add_tag_button.png'>"
-  ];
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
-  tag_adder.innerHTML = tag_adder_content.join('\n');
+  tag_adder.innerHTML = "<input value='#newtag'><img src='img/add_tag_button.png'>";
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
   nav.appendChild(tag_adder);
@@ -111,7 +107,7 @@ var populateNavbar = function () {
   tag_adder.firstChild.nextSibling.onclick = function() {
     var newtag = tag_adder.firstChild.value.slice(1);
     if (!newtag || newtag == "newtag") return;
-    xhr("/api/media/" + currentMedia.id + "/tag/" + newtag, "POST", slideAddBar);
+    xhr("/api/media/" + currentMedia.id + "/tags/" + newtag, "POST", slideAddBar);
     addCallback && addCallback(newtag);
   };
   add_icon = document.getElementById("add-icon");
