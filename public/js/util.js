@@ -28,20 +28,26 @@ var slideNavMenu = function() {
     ["opened_menu"]);
   modal.backToggle(slideNavMenu, true);
 };
+var add_icon, add_state = "blue", add_icons = {
+  fill: 'img/add_icon_fill.png',
+  blue: 'img/add_icon_blue.png'
+};
+var slideAddBar = function() {
+  var isOn = add_state == "blue";
+  add_state = isOn ? "fill" : "blue";
+  add_icon.src = add_icons[add_state];
+  toggleClass.apply(document.getElementById("tag_adder"),
+    ["opened_menu"]);
+  modal.backToggle(slideAddBar, true);
+};
 var populateNavbar = function () {
   var nav = document.getElementById("nav");
   var navbar = document.createElement("div");
   navbar.id = "navbar";
   var menu_slider = document.createElement("div");
   menu_slider.id = "menu_slider";
-
-  // commenting out -- use similar for tag adding
-  /*
-  var history_icons = {
-    fill: 'img/history_icon_fill.png',
-    blue: 'img/history_icon_blue.png'
-  };
-  */
+  var tag_adder = document.createElement("div");
+  tag_adder.id = "tag_adder";
 
   var gallery = whichGallery();
   var tag = gallery ? document.location.hash.slice(1) : null;
@@ -49,9 +55,9 @@ var populateNavbar = function () {
     "<div id='favorites-btn'>",
       "<a onclick='starCallback();'><img id='favorites-icon' src='img/favorites_icon_blue.png'></a>",
     "</div>",
-    "<div id='add-btn'><a>",
-      "<img id='add_icon' src='img/add_icon_blue.png'>",
-    "</a></div>",
+    "<div id='add-btn'>",
+      "<a onclick='slideAddBar();'><img id='add-icon' src='img/add_icon_blue.png'></a>",
+    "</div>",
     "<div class='navbar-center'>",
       "<label id='slider_label' for='slider_box' onclick='slideNavMenu();'>",
         "<span id='main-logo'>",
@@ -86,30 +92,15 @@ var populateNavbar = function () {
       "</ul>",
     "</div>",
   ];
+  var tag_adder_content = [];
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
+  tag_adder.innerHTML = tag_adder_content.join('\n');
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
+  nav.appendChild(tag_adder);
 
-  var main_logo = document.getElementById("main-logo");
-  var slider_icon = document.getElementById("slider-icon");
-
-  // commenting out for now -- use similar logic for tag adder
-  /*
-  var hist_logo = document.getElementById("history-logo");
-  var history_icon = document.getElementById("history_icon");
-  var hist_state = "blue";
-  document.getElementById("history-btn").onclick = function() {
-    var isOn = hist_state == "blue";
-    hist_state = isOn ? "fill" : "blue";
-    history_icon.src = history_icons[hist_state];
-    main_logo.style.display = isOn ? "none" : "inline";
-    hist_logo.style.display = isOn ? "inline" : "none";
-    !gallery && toggleClass.call(slider_icon, "vtop");
-    slideGallery();
-  };
-  */
-
+  add_icon = document.getElementById("add-icon");
   document.getElementById("options-btn").onclick = function() {
     var n = document.createElement("div");
     n.className = "center-label";
