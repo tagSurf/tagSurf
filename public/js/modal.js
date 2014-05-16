@@ -7,17 +7,18 @@ var modal = {
 	},
 	trans: {
 		animating: false,
-		callback: null,
+		cbs: [],
 		on: function(cb) {
 			modal.trans.animating = true;
-			modal.trans.callback = cb;
+			modal.trans.cbs.push(cb);
 		},
 		off: function() {
 			modal.trans.animating = false;
-			if (modal.trans.callback) {
-				modal.trans.callback();
-				modal.trans.callback = null;
+			for (var i = 0; i < modal.trans.cbs.length; i++) {
+				if (modal.trans.animating) break;
+				modal.trans.cbs[i]();
 			}
+			modal.trans.cbs = modal.trans.cbs.slice(i);
 		}
 	},
 	build: function() {
