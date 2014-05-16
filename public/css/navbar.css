@@ -26,6 +26,7 @@
 }
 #tag_adder
 {
+  text-align: center;
   position: absolute;
   width: 100%;
   height: 50px;
@@ -34,6 +35,21 @@
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
   z-index: 90;
+}
+#tag_adder input {
+  vertical-align: top;
+  font-size: 120%;
+  width: 80%;
+  height: 30px;
+  margin: 10px 0;
+  padding-left: 10px;
+  border-radius: 15px;
+  border: 1px solid #00aeef;
+  color: #00aeef;
+}
+#tag_adder img {
+  height: 30px;
+  margin: 10px 0px 10px -10px;
 }
 
 #history-logo {

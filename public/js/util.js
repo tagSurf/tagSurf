@@ -92,7 +92,10 @@ var populateNavbar = function () {
       "</ul>",
     "</div>",
   ];
-  var tag_adder_content = [];
+  var tag_adder_content = [
+    "<input placeholder='#newtag'>",
+    "<img src='img/add_tag_button.png'>"
+  ];
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
   tag_adder.innerHTML = tag_adder_content.join('\n');
