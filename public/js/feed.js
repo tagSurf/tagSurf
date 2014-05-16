@@ -454,7 +454,7 @@ onload = function ()
 			truncatedTitle = card.card.caption.trunc(25);
 			truncatedTitle = "<p>" + truncatedTitle + "</p>";
 			textContainer.innerHTML = truncatedTitle;
-			picTags.className += ' hider';
+			picTags.className += ' hidden';
 			card.compressing = true;
 		}
 		initCardGestures.call(card.parentNode);
@@ -503,8 +503,8 @@ onload = function ()
 			slider.expanded = true;
 			slider.children[0].className += " expanded";
 			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
-			slider.children[3].style.visibility = "visible";
-			slider.children[4].style.display = "none";
+			toggleClass.call(slider.children[3], "hidden");
+			toggleClass.call(slider.children[4], "hidden");
 		}
 	};
 	setAddCallback(function(tag) {
