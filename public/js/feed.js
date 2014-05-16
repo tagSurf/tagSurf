@@ -2,21 +2,25 @@ onload = function ()
 {
 	populateNavbar();
 
+	// defined in util for autocomplete
+	// integration with other sliding elements
+	tinput = document.getElementById("tag-input");
+	current_tag = tinput.value
+		= document.location.hash.slice(1) || "trending";
+	inputContainer = document.getElementById("input-container");
+	scrollContainer = document.getElementById('scroll-container');
+	slideContainer = document.getElementById('slider');
+
 	var data, buffer_minimum = 5, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
-		staticTrending = document.getElementById("static-trending"),
-		tinput = document.getElementById("tag-input"),
-		inputContainer = document.getElementById("input-container"),
-		current_tag = tinput.value
-			= document.location.hash.slice(1) || "trending";
+		staticTrending = document.getElementById("static-trending");
 	var refreshCards = function(failMsgNode, zIndex) {
 		cardIndex = 0;
 		if (failMsgNode && data.length == 0) {
 			failMsgNode.innerHTML = "No more cards in <br>#" + current_tag + " feed";
 			failMsgNode.parentNode.removeChild(failMsgNode.nextSibling);
-			scrollContainer.style.opacity = 1;
-			throbber.off();
 		} else {
+			slideContainer.innerHTML = "";
 			buildCard(zIndex);
 		}
 	};
@@ -37,7 +41,7 @@ onload = function ()
 		var isTrending = current_tag == "trending";
 		staticHash.className = isTrending ? "hidden" : "";
 		staticTrending.className = isTrending ? "" : "hidden";
-		if (!update)
+		if (!update && !failMsgNode)
 		{
 			slideContainer.innerHTML = "";
 			scrollContainer.style.opacity = 0;
@@ -61,28 +65,13 @@ onload = function ()
 	};
 
 	// autocomplete stuff
-	var aclist = document.getElementById("autocomplete");
-	var acviewing = false;
+	aclist = document.getElementById("autocomplete");
 	var viewTag = function(tagName, insertCurrent) {
-		var firstCard;
-		if (insertCurrent) // tag link
-			firstCard = slider.card;
-		else // tag bar
-			modal.backOff(function() {
-				slideContainer.className = "";
-				scrollContainer.insertBefore(inputContainer,
-					scrollContainer.firstChild);
-			});
-		acviewing = false;
-		tinput.active = false;
-		location.hash = tagName;
-		aclist.className = "";
-		tinput.value = tagName;
-		tinput.blur();
+		closeAutoComplete(tagName, !!insertCurrent);
 		if (tagName != current_tag) {
 			current_tag = tagName;
 			known_keys = {};
-			populateSlider(null, null, firstCard);
+			populateSlider(null, null, insertCurrent ? slider.card : null);
 		}
 	};
 	var addTag = function(tagName) {
@@ -158,7 +147,7 @@ onload = function ()
 	var slideThreshold = 60;
 	addCss({
 		".expand-animation": function() {
-			return "max-height: " + parseInt(maxCardHeight - window.innerHeight * .02) + "px";
+			return "max-height: " + parseInt(maxCardHeight - window.innerHeight * .04) + "px";
 		},
 		".card-container": function() {
 			return "min-height: " + (maxCardHeight + 120) + "px";
@@ -170,8 +159,6 @@ onload = function ()
 			return "width: " + parseInt(window.innerWidth - (14 + .05 * window.innerWidth)) + "px;";
 		}
 	});
-	var scrollContainer = document.getElementById('scroll-container');
-	var slideContainer = document.getElementById('slider');
 	var formattingContainer = document.getElementById('formatter');
 	var slider;
 	var setStartState = function (node)
@@ -295,6 +282,7 @@ onload = function ()
 		slider.animating = true;
 
 		slider = slider.parentNode.nextSibling.firstChild;
+		setCurrentMedia(slider.card);
 		// history slider
 		activeCard.total_votes += 1;
 		activeCard[voteDir + "_votes"] += 1;
@@ -381,6 +369,14 @@ onload = function ()
 			toggleClass.apply(slider, ['super_card', 'on']);
 		}
 	};
+	var tagCard = function(tag, picTags) {
+		var p = document.createElement("span");
+		p.innerHTML = "#" + tag;
+		gesture.listen("up", p, function() {
+			viewTag(tag, true);
+		});
+		picTags.appendChild(p);
+	};
 	var dataThrobTest = function ()
 	{
 		var c_wrapper, c_container, msg, img;
@@ -408,6 +404,8 @@ onload = function ()
 			c_wrapper.throbbing = true;
 			slideContainer.appendChild(c_wrapper);
 			slider = slideContainer.firstChild.firstChild;
+			throbber.off();
+			scrollContainer.style.opacity = 1;
 			if (slideContainer.childNodes.length == 1)
 				populateSlider(false, slider.firstChild);
 			return;
@@ -421,7 +419,7 @@ onload = function ()
 		var imageContainer, iconLine, textContainer, picTags, 
 			fullscreenButton, truncatedTitle, card, 
 			targetHeight, imageData, c = data[cardIndex];
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
@@ -436,14 +434,7 @@ onload = function ()
 			});
 		} else
 			iconLine.children[1].style.display = "none";
-		c.tags.forEach(function(tag) {
-			var p = document.createElement("span");
-			p.innerHTML = "#" + tag;
-			gesture.listen("up", p, function() {
-				viewTag(tag, true);
-			});
-			picTags.appendChild(p);
-		});
+		c.tags.forEach(function(tag) { tagCard(tag, picTags); });
 		card = formatter.firstChild.firstChild;
 		setStartState(card);
 		imageData = image.get(card.card);
@@ -457,7 +448,7 @@ onload = function ()
 		}
 		else
 		{
-			truncatedTitle = card.card.caption.trunc(30);
+			truncatedTitle = card.card.caption.trunc(25);
 			truncatedTitle = "<p>" + truncatedTitle + "</p>";
 			textContainer.innerHTML = truncatedTitle;
 			picTags.className += ' hider';
@@ -469,6 +460,7 @@ onload = function ()
 		slider = slideContainer.children[0].children[0];
 		if (slider == card)
 		{
+			setCurrentMedia(slider.card);
 			imageContainer.firstChild.onload = function ()
 			{
 				throbber.off();
@@ -512,6 +504,9 @@ onload = function ()
 			slider.children[4].style.visibility = "hidden";
 		}
 	};
+	setAddCallback(function(tag) {
+		tagCard(tag, document.getElementById("pictags" + slider.card.id));
+	});
 	setStarCallback(function() {
 		if (modal.zoom.zoomed) {
 			if (modal.zoom.large)
