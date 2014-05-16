@@ -2,13 +2,18 @@ onload = function ()
 {
 	populateNavbar();
 
+	// defined in util for autocomplete
+	// integration with other sliding elements
+	tinput = document.getElementById("tag-input");
+	current_tag = tinput.value
+		= document.location.hash.slice(1) || "trending";
+	inputContainer = document.getElementById("input-container");
+	scrollContainer = document.getElementById('scroll-container');
+	slideContainer = document.getElementById('slider');
+
 	var data, buffer_minimum = 5, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
-		staticTrending = document.getElementById("static-trending"),
-		tinput = document.getElementById("tag-input"),
-		inputContainer = document.getElementById("input-container"),
-		current_tag = tinput.value
-			= document.location.hash.slice(1) || "trending";
+		staticTrending = document.getElementById("static-trending");
 	var refreshCards = function(failMsgNode, zIndex) {
 		cardIndex = 0;
 		if (failMsgNode && data.length == 0) {
@@ -61,28 +66,13 @@ onload = function ()
 	};
 
 	// autocomplete stuff
-	var aclist = document.getElementById("autocomplete");
-	var acviewing = false;
+	aclist = document.getElementById("autocomplete");
 	var viewTag = function(tagName, insertCurrent) {
-		var firstCard;
-		if (insertCurrent) // tag link
-			firstCard = slider.card;
-		else // tag bar
-			modal.backOff(function() {
-				slideContainer.className = "";
-				scrollContainer.insertBefore(inputContainer,
-					scrollContainer.firstChild);
-			});
-		acviewing = false;
-		tinput.active = false;
-		location.hash = tagName;
-		aclist.className = "";
-		tinput.value = tagName;
-		tinput.blur();
+		closeAutoComplete(tagName, !!insertCurrent);
 		if (tagName != current_tag) {
 			current_tag = tagName;
 			known_keys = {};
-			populateSlider(null, null, firstCard);
+			populateSlider(null, null, insertCurrent ? slider.card : null);
 		}
 	};
 	var addTag = function(tagName) {
@@ -170,8 +160,6 @@ onload = function ()
 			return "width: " + parseInt(window.innerWidth - (14 + .05 * window.innerWidth)) + "px;";
 		}
 	});
-	var scrollContainer = document.getElementById('scroll-container');
-	var slideContainer = document.getElementById('slider');
 	var formattingContainer = document.getElementById('formatter');
 	var slider;
 	var setStartState = function (node)

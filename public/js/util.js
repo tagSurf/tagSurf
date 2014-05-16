@@ -21,8 +21,25 @@ var whichGallery = function() {
       return galleries[i];
   return null;
 };
+
+// autocomplete stuff
+var aclist, current_tag, tinput, inputContainer, slideContainer, scrollContainer
+  acviewing = false, closeAutoComplete = function(tagName, noBlur) {
+    !noBlur && modal.backOff(function() {
+      slideContainer.className = "";
+      scrollContainer.insertBefore(inputContainer,
+        scrollContainer.firstChild);
+    });
+    acviewing = false;
+    tinput.active = false;
+    aclist.className = "";
+    location.hash = tinput.value = tagName || current_tag;
+    tinput.blur();
+  };
+
 var navMenuSlid = false;
 var slideNavMenu = function() {
+  acviewing && closeAutoComplete();
   addBarSlid && slideAddBar();
   navMenuSlid = !navMenuSlid;
   toggleClass.apply(document.getElementById("slider_label"),
@@ -37,6 +54,7 @@ var add_icon, add_state = "blue", add_icons = {
 };
 var addBarSlid = false;
 var slideAddBar = function() {
+  acviewing && closeAutoComplete();
   navMenuSlid && slideNavMenu();
   addBarSlid = !addBarSlid;
   if (addBarSlid && !currentMedia) return;
