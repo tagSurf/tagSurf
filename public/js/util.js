@@ -21,7 +21,10 @@ var whichGallery = function() {
       return galleries[i];
   return null;
 };
+var navMenuSlid = false;
 var slideNavMenu = function() {
+  addBarSlid && slideAddBar();
+  navMenuSlid = !navMenuSlid;
   toggleClass.apply(document.getElementById("slider_label"),
     ["slid"]);
   toggleClass.apply(document.getElementById("slide_down_menu"),
@@ -32,10 +35,12 @@ var add_icon, add_state = "blue", add_icons = {
   fill: 'img/add_icon_fill.png',
   blue: 'img/add_icon_blue.png'
 };
+var addBarSlid = false;
 var slideAddBar = function() {
-  var isOn = add_state == "blue";
-  if (isOn && !currentMedia) return;
-  add_state = isOn ? "fill" : "blue";
+  navMenuSlid && slideNavMenu();
+  addBarSlid = !addBarSlid;
+  if (addBarSlid && !currentMedia) return;
+  add_state = addBarSlid ? "fill" : "blue";
   add_icon.src = add_icons[add_state];
   toggleClass.apply(document.getElementById("tag_adder"),
     ["opened_menu"]);
@@ -140,7 +145,7 @@ var addCallback, setAddCallback = function(cb) {
 };
 var currentMedia, setCurrentMedia = function(d) {
   currentMedia = d;
-  if (!d && add_state == "fill") slideAddBar();
+  if (!d && addBarSlid) slideAddBar();
 };
 var _addCss = function(css) {
     var n = document.createElement("style");
