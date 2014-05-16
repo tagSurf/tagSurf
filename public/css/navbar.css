@@ -47,6 +47,7 @@
   border: 1px solid #00aeef;
   color: #00aeef;
   outline-width: 0;
+  -webkit-appearance: none;
 }
 #tag_adder img {
   height: 30px;
