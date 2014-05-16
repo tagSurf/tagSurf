@@ -119,6 +119,19 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		n.className += ((d.user_stats.vote == "up")
 			? " green" : " red") + "line";
 	};
+	var buildTagBlock = function(objwrap, tagName) {
+		var p = document.createElement("div");
+		p.className = "pictagcell";
+		var t = document.createElement("div");
+		t.className = "smallpadded";
+		t.innerHTML = "#" + tagName;
+		p.appendChild(t);
+		p.appendChild(voteMeter(objwrap[tagName]))
+		gesture.listen("up", p, function() {
+			location = "/feed#" + tagName;
+		});
+		pictags.appendChild(p);
+	};
 	var showImage = function(d) {
 		current_image = d;
 		setCurrentMedia(current_image);
@@ -179,22 +192,24 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		// the API shouldn't return data formatted like this
 		pictags.innerHTML = "";
 		d.tags_v2.forEach(function(objwrap) {
-			for (var tagName in objwrap) if (tagName) {
-				var p = document.createElement("div");
-				p.className = "pictagcell";
-				var t = document.createElement("div");
-				t.className = "smallpadded";
-				t.innerHTML = "#" + tagName;
-				p.appendChild(t);
-				p.appendChild(voteMeter(objwrap[tagName]))
-				gesture.listen("up", p, function() {
-					location = "/feed#" + tagName;
-				});
-				pictags.appendChild(p);
-			}
+			for (var tagName in objwrap) if (tagName)
+				buildTagBlock(objwrap, tagName);
 		});
 		setFavIcon(current_image.user_stats.has_favorited);
 	};
+	setAddCallback(function(tag) {
+		var objwrap = {};
+		objwrap[tag] = {
+			total_votes: 0,
+			down_votes: 0,
+			up_votes: 0,
+			score: 0,
+			is_trending: false,
+			trend: "up"
+		};
+		current_image.tags_v2.push(objwrap);
+		buildTagBlock(objwrap, tag);
+	});
 	var updateFavorited = function() {
 		var gall, ndata;
 		for (gall in gnodes) {
