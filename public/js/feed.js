@@ -434,6 +434,11 @@ onload = function ()
 			});
 		} else
 			iconLine.children[1].style.display = "none";
+		c.tags_v2.sort(function(a, b) {
+			var aName = Object.keys(a)[0];
+			var bName = Object.keys(b)[0];
+			return a[aName].score < b[bName].score;
+		});
 		c.tags_v2.forEach(function(tagobj) {
 			var t = Object.keys(tagobj)[0];
 			t && tagCard(t, picTags);
