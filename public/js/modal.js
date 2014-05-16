@@ -10,7 +10,7 @@ var modal = {
 		cbs: [],
 		on: function(cb) {
 			modal.trans.animating = true;
-			modal.trans.cbs.push(cb);
+			cb && modal.trans.cbs.push(cb);
 		},
 		off: function() {
 			modal.trans.animating = false;
