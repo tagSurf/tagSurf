@@ -108,6 +108,7 @@ a {
 }
 
 .pictags span {
+	display: inline-block;
 	background: #00aeef;
 	border-radius: 5px;
 	padding: 5px;
