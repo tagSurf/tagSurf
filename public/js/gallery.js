@@ -121,10 +121,12 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 	};
 	var showImage = function(d) {
 		current_image = d;
+		setCurrentMedia(current_image);
 		modal.modalIn(picbox, function(direction) {
 			if (!direction || !isNaN(direction) || direction == "right") {
 				current_image = null;
 				setFavIcon(false);
+				setCurrentMedia();
 				modal.backOff();
 				modal.modalOut();
 			}

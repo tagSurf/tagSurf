@@ -34,6 +34,7 @@ var add_icon, add_state = "blue", add_icons = {
 };
 var slideAddBar = function() {
   var isOn = add_state == "blue";
+  if (isOn && !currentMedia) return;
   add_state = isOn ? "fill" : "blue";
   add_icon.src = add_icons[add_state];
   toggleClass.apply(document.getElementById("tag_adder"),
@@ -139,6 +140,7 @@ var addCallback, setAddCallback = function(cb) {
 };
 var currentMedia, setCurrentMedia = function(d) {
   currentMedia = d;
+  if (!d && add_state == "fill") slideAddBar();
 };
 var _addCss = function(css) {
     var n = document.createElement("style");
