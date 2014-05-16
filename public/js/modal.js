@@ -81,8 +81,8 @@ var modal = {
 			}
 		}
 	},
-	_backOn: function(degree, cb, injectionNode) {
-		modal.back.style.opacity = 1;
+	_backOn: function(degree, cb, injectionNode, opacity) {
+		modal.back.style.opacity = opacity ? opacity : 1;
 		modal.back.className = "blackout " + degree + "fade";
 		trans(modal.back, function() {
 			modal.back.cb = cb;
@@ -90,8 +90,8 @@ var modal = {
 		if (injectionNode)
 			modal.back.appendChild(injectionNode);
 	},
-	backOn: function(cb, injectionNode) {
-		modal._backOn("black", cb, injectionNode);
+	backOn: function(cb, injectionNode, opacity) {
+		modal._backOn("black", cb, injectionNode, opacity);
 	},
 	halfOn: function(cb, injectionNode) {
 		modal._backOn("half", cb, injectionNode);
