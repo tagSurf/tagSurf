@@ -145,7 +145,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			}
 		});
 		votize(modal.modal, d);
-		modal.backOn();
+		modal.backOn(null, null, "0.35");
 
 		topbar.firstChild.innerHTML = "";
 		topbar.firstChild.appendChild(voteMeter(d, true));
@@ -248,7 +248,10 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		top.innerHTML = "#" + d.user_stats.tag_voted;
 
 		var spacer = document.createElement("div");
-		spacer.style.paddingTop = "70%";
+		var boxWidth = Math.round((window.innerWidth - 6) * .2975),
+			spacerHeight = (boxWidth - 28),
+			spacerHeightPercent = Math.round(100 * (spacerHeight / boxWidth));
+		spacer.style.paddingTop = spacerHeightPercent + "%";
 
 		n.appendChild(top);
 		n.appendChild(spacer);

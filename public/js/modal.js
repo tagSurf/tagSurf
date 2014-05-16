@@ -103,13 +103,13 @@ var modal = {
 			}
 		}
 	},
-	_backOn: function(degree, cb, injectionNode) {
+	_backOn: function(degree, cb, injectionNode, opacity) {
 		if (modal.trans.animating) {
 			return modal.trans.on(function() {
 				modal._backOn(degree, cb, injectionNode);
 			});
 		}
-		modal.back.style.opacity = 1;
+		modal.back.style.opacity = opacity ? opacity : 1;
 		modal.back.className = "blackout " + degree + "fade";
 		modal.back.cb = cb;
 		if (!modal.back.on) {
@@ -123,8 +123,8 @@ var modal = {
 		if (injectionNode)
 			modal.back.appendChild(injectionNode);
 	},
-	backOn: function(cb, injectionNode) {
-		modal._backOn("black", cb, injectionNode);
+	backOn: function(cb, injectionNode, opacity) {
+		modal._backOn("black", cb, injectionNode, opacity);
 	},
 	halfOn: function(cb, injectionNode) {
 		modal._backOn("half", cb, injectionNode);
