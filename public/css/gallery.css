@@ -36,7 +36,7 @@
 }
 
 .yesvotes {
-	background-color: green;
+	background-color: #00a651;
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
 	border-top-right-radius: 5px;
@@ -92,7 +92,7 @@
 }
 
 .greenline {
-	border: 1px solid green;
+	border: 1px solid #00a651;
 }
 .redline {
 	border: 1px solid red;

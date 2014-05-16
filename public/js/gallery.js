@@ -1,6 +1,6 @@
 var gnodes = {}, current_image, favGrid, slideGallery,
 	addHistoryItem, gallerize = function(gallery) {
-	var picbox, topbar, bigpic, picdesc, pictag;
+	var picbox, topbar, bigpic, picdesc, pictags;
 	var history_slider, grid = document.createElement("div");
 	grid.className = "grid";
 	gnodes[gallery] = {};
@@ -43,11 +43,12 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		document.body.appendChild(grid);
 	}
 
-	var voteMeter = function(d, trending, fullRound) {
+	var voteMeter = function(d, fullRound) {
+		var trending = d.trend == "up";
 		var bottom = document.createElement("div");
 		bottom.className = "overlay votes";
 		if (fullRound) bottom.className += " round";
-		bottom.style.background = trending ? "red" : "green";
+		bottom.style.background = trending ? "red" : "#00a651";
 
 		var vote_meter = document.createElement("div");
 		if (trending) {
@@ -61,7 +62,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 
 		var vote_count = document.createElement("div");
 		vote_count.className = "votecount";
-		vote_count.innerHTML = d.total_votes;
+		vote_count.innerHTML = d.score;
 		bottom.appendChild(vote_count);
 		return bottom;
 	};
@@ -71,7 +72,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			topbar = document.getElementById("topbar");
 			bigpic = document.getElementById("bigpic");
 			picdesc = document.getElementById("picdesc");
-			pictag = document.getElementById("pictag");
+			pictags = document.getElementById("pictags");
 			return;
 		}
 
@@ -94,12 +95,9 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		picdesc.className = "centered";
 		picbox.appendChild(picdesc);
 
-		var pictagbox = document.createElement("div");
-		pictagbox.className = "padded pictags";
-		pictag = document.createElement("span");
-		pictag.id = "pictag";
-		pictagbox.appendChild(pictag);
-		picbox.appendChild(pictagbox);
+		pictags = document.createElement("div");
+		pictags.id = pictags.className = "pictags";
+		picbox.appendChild(pictags);
 	};
 	var getHeader = function(headerName, gall, g) {
 		headerName = headerName || "Just Now";
@@ -135,12 +133,64 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		modal.backOn();
 
 		topbar.firstChild.innerHTML = "";
-		topbar.firstChild.appendChild(voteMeter(d, d.trend == "up", true));
+		topbar.firstChild.appendChild(voteMeter(d, true));
 		topbar.children[2].innerHTML = d.tags[0];
 
 		bigpic.src = image.get(d, window.innerWidth - 40).url;
 		picdesc.innerHTML = d.caption;
-		pictag.innerHTML = "#" + d.tags[0];
+		
+		// tags_v2 example:
+		/*
+			[
+				{
+					"pics": {
+						"total_votes":15,
+						"down_votes":1,
+						"up_votes":14,
+						"score":14,
+						"is_trending":false,
+						"trend":"down"
+					}
+				},
+				{
+					"trending": {
+						"total_votes":0,
+						"down_votes":0,
+						"up_votes":0,
+						"score":0,
+						"is_trending":false,
+						"trend":"up"
+					}
+				},
+				{
+					"": {
+						"total_votes":4,
+						"down_votes":3,
+						"up_votes":1,
+						"score":1,
+						"is_trending":false,
+						"trend":"down"
+					}
+				}
+			]
+		*/
+		// the API shouldn't return data formatted like this
+		pictags.innerHTML = "";
+		d.tags_v2.forEach(function(objwrap) {
+			for (var tagName in objwrap) if (tagName) {
+				var p = document.createElement("div");
+				p.className = "pictagcell";
+				var t = document.createElement("div");
+				t.className = "smallpadded";
+				t.innerHTML = "#" + tagName;
+				p.appendChild(t);
+				p.appendChild(voteMeter(objwrap[tagName]))
+				gesture.listen("up", p, function() {
+					location = "/feed#" + tagName;
+				});
+				pictags.appendChild(p);
+			}
+		});
 		setFavIcon(current_image.user_stats.has_favorited);
 	};
 	var updateFavorited = function() {
@@ -185,7 +235,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 
 		n.appendChild(top);
 		n.appendChild(spacer);
-		n.appendChild(voteMeter(d, d.trend == "up"));
+		n.appendChild(voteMeter(d));
 		n.onclick = function() {
 			showImage(d);
 		};
