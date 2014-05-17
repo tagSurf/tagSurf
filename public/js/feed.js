@@ -412,6 +412,39 @@ onload = function ()
 		}
 		return true;
 	};
+	var formatCardContents = function (node, imageData)
+	{
+		var card = node || slider, imageContainer = card.firstChild,
+			fullscreenButton = card.children[4], truncatedTitle,
+			picTags = card.children[3], textContainer = card.children[2],
+			iconLine = card.children[1], targetHeight = imageData ? 
+			imageData.height * (window.innerWidth - 40) / imageData.width :
+			card.firstChild.scrollHeight;
+		if (node && (targetHeight + textContainer.scrollHeight 
+			+ picTags.scrollHeight + iconLine.scrollHeight 
+			< (maxCardHeight + 80)))
+		{
+			imageContainer.classList.remove("expand-animation");
+			fullscreenButton.className += ' hidden';
+			card.compressing = false;
+		}
+		else
+		{
+			if (node)
+			{
+				truncatedTitle = card.card.caption.trunc(25);
+				truncatedTitle = "<p>" + truncatedTitle + "</p>";
+				textContainer.innerHTML = truncatedTitle;
+				picTags.className += ' hidden';
+				card.compressing = true;
+			}
+			else
+			{
+				card.compressing = false;
+				card.expanded = true;
+			}
+		}
+	};
 	var buildCard = function (zIndex)
 	{
 		if (!dataThrobTest())
@@ -446,22 +479,7 @@ onload = function ()
 		card = formatter.firstChild.firstChild;
 		setStartState(card);
 		imageData = image.get(card.card);
-		targetHeight = imageData.height * (window.innerWidth - 40) / imageData.width;
-		if (targetHeight + textContainer.scrollHeight + picTags.scrollHeight 
-			+ iconLine.scrollHeight < (maxCardHeight + 80))
-		{
-			imageContainer.classList.remove("expand-animation");
-			fullscreenButton.className += ' hidden';
-			card.compressing = false;
-		}
-		else
-		{
-			truncatedTitle = card.card.caption.trunc(25);
-			truncatedTitle = "<p>" + truncatedTitle + "</p>";
-			textContainer.innerHTML = truncatedTitle;
-			picTags.className += ' hidden';
-			card.compressing = true;
-		}
+		formatCardContents(card, imageData);
 		initCardGestures.call(card.parentNode);
 		slideContainer.appendChild(card.parentNode);
 		formattingContainer.removeChild(formatter);
@@ -524,6 +542,7 @@ onload = function ()
 		};
 		slider.card.tags_v2.push(objwrap);
 		tagCard(tag, document.getElementById("pictags" + slider.card.id));
+		formatCardContents();
 	});
 	setStarCallback(function() {
 		if (modal.zoom.zoomed) {
