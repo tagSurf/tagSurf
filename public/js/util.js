@@ -24,8 +24,12 @@ var whichGallery = function() {
 
 // autocomplete stuff
 var aclist, current_tag, tinput, inputContainer, slideContainer, scrollContainer
-  acviewing = false, closeAutoComplete = function(tagName, noBlur) {
-    !noBlur && modal.backOff(function() {
+  acviewing = false, closeAutoComplete = function(tagName, noback) {
+    if (noback) {
+      slideContainer.className = "";
+      scrollContainer.insertBefore(inputContainer,
+        scrollContainer.firstChild);
+    } else modal.backOff(function() {
       slideContainer.className = "";
       scrollContainer.insertBefore(inputContainer,
         scrollContainer.firstChild);
@@ -38,32 +42,32 @@ var aclist, current_tag, tinput, inputContainer, slideContainer, scrollContainer
   };
 
 var navMenuSlid = false;
-var slideNavMenu = function() {
-  acviewing && closeAutoComplete();
-  addBarSlid && slideAddBar();
+var slideNavMenu = function(noback) {
+  acviewing && closeAutoComplete(null, true);
+  addBarSlid && slideAddBar(true);
   navMenuSlid = !navMenuSlid;
   toggleClass.apply(document.getElementById("slider_label"),
-    ["slid"]);
+    ["slid", navMenuSlid ? "on" : "off"]);
   toggleClass.apply(document.getElementById("slide_down_menu"),
-    ["opened_menu"]);
-  modal.backToggle(slideNavMenu, true);
+    ["opened_menu", navMenuSlid ? "on" : "off"]);
+  if (!noback) navMenuSlid ? modal.halfOn(slideNavMenu) : modal.backOff();
 };
 var add_icon, add_state = "blue", add_icons = {
   fill: 'img/add_icon_fill.png',
   blue: 'img/add_icon_blue.png'
 };
 var addBarSlid = false;
-var slideAddBar = function() {
-  acviewing && closeAutoComplete();
-  navMenuSlid && slideNavMenu();
+var slideAddBar = function(noback) {
+  acviewing && closeAutoComplete(null, true);
+  navMenuSlid && slideNavMenu(true);
   addBarSlid = !addBarSlid;
   if (addBarSlid && !currentMedia) return;
   add_state = addBarSlid ? "fill" : "blue";
   add_icon.src = add_icons[add_state];
   toggleClass.apply(document.getElementById("tag_adder"),
-    ["opened_menu"]);
+    ["opened_menu", addBarSlid ? "on" : "off"]);
   document.getElementById("tag_adder").firstChild.value = "#newtag";
-  modal.backToggle(slideAddBar, true);
+  if (!noback) addBarSlid ? modal.halfOn(slideAddBar) : modal.backOff();
 };
 var populateNavbar = function () {
   var nav = document.getElementById("nav");

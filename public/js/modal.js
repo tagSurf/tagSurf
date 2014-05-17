@@ -5,6 +5,21 @@ var modal = {
 	constants: {
 		zoomScale: 1.5
 	},
+	trans: {
+		animating: false,
+		callback: null,
+		on: function(cb) {
+			modal.trans.animating = true;
+			if (cb) modal.trans.callback = cb;
+		},
+		off: function() {
+			modal.trans.animating = false;
+			if (modal.trans.callback) {
+				modal.trans.callback();
+				modal.trans.callback = null;
+			}
+		}
+	},
 	build: function() {
 		addCss({
 			".modal": function() {
@@ -82,11 +97,19 @@ var modal = {
 		}
 	},
 	_backOn: function(degree, cb, injectionNode, opacity) {
+		if (modal.trans.animating) {
+			return modal.trans.on(function() {
+				modal._backOn(degree, cb, injectionNode, opacity);
+			});
+		}
 		modal.back.style.opacity = opacity ? opacity : 1;
 		modal.back.className = "blackout " + degree + "fade";
-		trans(modal.back, function() {
-			modal.back.cb = cb;
-		});
+		modal.back.cb = cb;
+		if (!modal.back.on) {
+			modal.back.on = true;
+			modal.trans.on();
+			trans(modal.back, modal.trans.off);
+		}
 		if (injectionNode)
 			modal.back.appendChild(injectionNode);
 	},
@@ -97,29 +120,36 @@ var modal = {
 		modal._backOn("half", cb, injectionNode);
 	},
 	backOff: function(onOff) {
+		if (modal.trans.animating) {
+			return modal.trans.on(function() {
+				modal.backOff(onOff);
+			});
+		}
 		modal.back.className = "blackout";
 		modal.back.cb = null;
-		trans(modal.back, function() {
+		if (modal.back.on) {
+			modal.back.on = false;
+			modal.trans.on();
+			trans(modal.back, function() {
+				onOff && onOff();
+				modal.back.style.opacity = 0;
+				if (modal.back.firstChild)
+					modal.back.removeChild(modal.back.firstChild);
+				modal.trans.off();
+			});
+		} else {
 			onOff && onOff();
-			modal.back.style.opacity = 0;
 			if (modal.back.firstChild)
 				modal.back.removeChild(modal.back.firstChild);
-		});
+		}
 	},
 	backToggle: function(cb, isHalf) {
 		var backClass = (isHalf ? "half" : "black") + "fade";
 		toggleClass.call(modal.back, backClass);
 		if (hasClass(modal.back, backClass)) {
-			modal.back.cb = cb;
-			modal.back.style.opacity = 1;
-		} else {
-			modal.back.cb = null;
-			trans(modal.back, function() {
-				modal.back.style.opacity = 0;
-				if (modal.back.firstChild)
-					modal.back.removeChild(modal.back.firstChild);
-			});
-		}
+			isHalf ? modal.halfOn(cb) : modal.backOn(cb);
+		} else
+			modal.backOff();
 	},
 	modalIn: function(node, cb) {
 		modal.modal.innerHTML = "";
