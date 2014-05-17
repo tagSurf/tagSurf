@@ -68,8 +68,11 @@ var modal = {
 		return (direction == "up" || direction == "down");
 	},
 	callModal: function(direction) {
-		if (modal.trans.animating)
-			return modal.trans.on(modal.callModal);
+		if (modal.trans.animating) {
+			return modal.trans.on(function() {
+				modal.callModal(direction);
+			});
+		}
 		return modal.modal.cb && modal.modal.cb(direction);
 	},
 	callBack: function() {
@@ -78,8 +81,11 @@ var modal = {
 		return modal.back.cb && modal.back.cb();
 	},
 	callZoom: function(tapCount) {
-		if (modal.trans.animating)
-			return modal.trans.on(modal.callZoom);
+		if (modal.trans.animating) {
+			return modal.trans.on(function() {
+				modal.callZoom(tapCount);
+			});
+		}
 		if (tapCount == 1)
 		{
 			if (modal.zoom.large == false)
