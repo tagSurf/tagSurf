@@ -3,17 +3,28 @@ var modal = {
 	modal: document.createElement("div"),
 	zoom: document.createElement("div"),
 	constants: {
-		zoomScale: 1.5
+		zoomScale: 1.5,
+		transTimeout: 500
 	},
 	trans: {
 		animating: false,
 		cbs: [],
+		timeout: null,
 		on: function(cb) {
 			modal.trans.animating = true;
 			cb && modal.trans.cbs.push(cb);
+			if (modal.trans.timeout) {
+				clearTimeout(modal.trans.timeout);
+				modal.trans.timeout = null;
+			}
+			modal.trans.timeout = setTimeout(modal.trans.off, modal.constants.transTimeout);
 		},
 		off: function() {
 			modal.trans.animating = false;
+			if (modal.trans.timeout) {
+				clearTimeout(modal.trans.timeout);
+				modal.trans.timeout = null;
+			}
 			for (var i = 0; i < modal.trans.cbs.length; i++) {
 				if (modal.trans.animating) break;
 				modal.trans.cbs[i]();

@@ -46,7 +46,7 @@ var slideNavMenu = function() {
     ["slid", navMenuSlid ? "on" : "off"]);
   toggleClass.apply(document.getElementById("slide_down_menu"),
     ["opened_menu", navMenuSlid ? "on" : "off"]);
-  modal.backToggle(slideNavMenu, true);
+  navMenuSlid ? modal.halfOn(slideNavMenu) : modal.backOff();
 };
 var add_icon, add_state = "blue", add_icons = {
   fill: 'img/add_icon_fill.png',
@@ -63,7 +63,7 @@ var slideAddBar = function() {
   toggleClass.apply(document.getElementById("tag_adder"),
     ["opened_menu", addBarSlid ? "on" : "off"]);
   document.getElementById("tag_adder").firstChild.value = "#newtag";
-  modal.backToggle(slideAddBar, true);
+  addBarSlid ? modal.halfOn(slideAddBar) : modal.backOff();
 };
 var populateNavbar = function () {
   var nav = document.getElementById("nav");
