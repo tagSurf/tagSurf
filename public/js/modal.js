@@ -141,7 +141,6 @@ var modal = {
 		}
 		modal.back.className = "blackout";
 		modal.back.cb = null;
-		modal.trans.on();
 		if (modal.back.on) {
 			modal.back.on = false;
 			modal.trans.on();
