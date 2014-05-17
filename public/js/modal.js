@@ -10,6 +10,7 @@ var modal = {
 		animating: false,
 		cbs: [],
 		timeout: null,
+		processing: false,
 		on: function(cb) {
 			modal.trans.animating = true;
 			cb && modal.trans.cbs.push(cb);
@@ -25,11 +26,15 @@ var modal = {
 				clearTimeout(modal.trans.timeout);
 				modal.trans.timeout = null;
 			}
-			for (var i = 0; i < modal.trans.cbs.length; i++) {
-				if (modal.trans.animating) break;
-				modal.trans.cbs[i]();
+			if (!modal.trans.processing) {
+				modal.trans.processing = true;
+				for (var i = 0; i < modal.trans.cbs.length; i++) {
+					if (modal.trans.animating) break;
+					modal.trans.cbs[i]();
+				}
+				modal.trans.cbs = modal.trans.cbs.slice(i);
+				modal.trans.processing = false;
 			}
-			modal.trans.cbs = modal.trans.cbs.slice(i);
 		}
 	},
 	build: function() {
