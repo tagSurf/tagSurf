@@ -8,12 +8,11 @@ var modal = {
 	},
 	trans: {
 		animating: false,
-		cbs: [],
+		callback: null,
 		timeout: null,
-		processing: false,
 		on: function(cb) {
 			modal.trans.animating = true;
-			cb && modal.trans.cbs.push(cb);
+			if (cb) modal.trans.callback = cb;
 			if (modal.trans.timeout) {
 				clearTimeout(modal.trans.timeout);
 				modal.trans.timeout = null;
@@ -26,14 +25,9 @@ var modal = {
 				clearTimeout(modal.trans.timeout);
 				modal.trans.timeout = null;
 			}
-			if (!modal.trans.processing) {
-				modal.trans.processing = true;
-				for (var i = 0; i < modal.trans.cbs.length; i++) {
-					if (modal.trans.animating) break;
-					modal.trans.cbs[i]();
-				}
-				modal.trans.cbs = modal.trans.cbs.slice(i);
-				modal.trans.processing = false;
+			if (modal.trans.callback) {
+				modal.trans.callback();
+				modal.trans.callback = null;
 			}
 		}
 	},
@@ -84,24 +78,12 @@ var modal = {
 		return (direction == "up" || direction == "down");
 	},
 	callModal: function(direction) {
-		if (modal.trans.animating) {
-			return modal.trans.on(function() {
-				modal.callModal(direction);
-			});
-		}
 		return modal.modal.cb && modal.modal.cb(direction);
 	},
 	callBack: function() {
-		if (modal.trans.animating)
-			return modal.trans.on(modal.callBack);
 		return modal.back.cb && modal.back.cb();
 	},
 	callZoom: function(tapCount) {
-		if (modal.trans.animating) {
-			return modal.trans.on(function() {
-				modal.callZoom(tapCount);
-			});
-		}
 		if (tapCount == 1)
 		{
 			if (modal.zoom.large == false)
@@ -112,8 +94,7 @@ var modal = {
 		else if (tapCount == 2)
 		{
 			var zNode = modal.zoom.firstChild.firstChild;
-			modal.trans.on();
-			trans(zNode, modal.trans.off, "width 250ms ease-in");
+			trans(zNode, null, "width 250ms ease-in");
 			if (modal.zoom.large == false)
 			{
 				modal.zoom.large = true;
@@ -167,6 +148,10 @@ var modal = {
 					modal.back.removeChild(modal.back.firstChild);
 				modal.trans.off();
 			});
+		} else {
+			onOff && onOff();
+			if (modal.back.firstChild)
+				modal.back.removeChild(modal.back.firstChild);
 		}
 	},
 	backToggle: function(cb, isHalf) {
@@ -186,10 +171,8 @@ var modal = {
 	modalOut: function() {
 		modal.modal.className = "modal";
 		modal.modal.cb = null;
-		modal.trans.on();
 		trans(modal.modal, function (event){
 			modal.modal.className = "modal hider";
-			modal.trans.off();
 		});
 	},
 	zoomIn: function (card, cb) {
@@ -203,10 +186,8 @@ var modal = {
 		modal.zoom.zoomed = false;
 		modal.zoom.cb = null;
 		modal.zoom.style.opacity = 0;
-		modal.trans.on();
 		trans(modal.zoom, function (event){
 			modal.zoom.style.display = "none";
-			modal.trans.off();
 		});
 	},
 	dragZoom: function (direction, distance, dx, dy) {
