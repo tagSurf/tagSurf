@@ -185,12 +185,14 @@ html, body
 {
   overflow-y: hidden;
   pointer-events: none;
+  -webkit-overflow-scrolling: none;
 }
 
 .image-container img
 {
   border-radius: 5px;
   height: auto;
+  -webkit-overflow-scrolling: none;
 }
 
 .text-container
