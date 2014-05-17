@@ -129,7 +129,7 @@ var modal = {
 	_backOn: function(degree, cb, injectionNode, opacity) {
 		if (modal.trans.animating) {
 			return modal.trans.on(function() {
-				modal._backOn(degree, cb, injectionNode);
+				modal._backOn(degree, cb, injectionNode, opacity);
 			});
 		}
 		modal.back.style.opacity = opacity ? opacity : 1;
