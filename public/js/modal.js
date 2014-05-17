@@ -3,28 +3,17 @@ var modal = {
 	modal: document.createElement("div"),
 	zoom: document.createElement("div"),
 	constants: {
-		zoomScale: 1.5,
-		transTimeout: 500
+		zoomScale: 1.5
 	},
 	trans: {
 		animating: false,
 		callback: null,
-		timeout: null,
 		on: function(cb) {
 			modal.trans.animating = true;
 			if (cb) modal.trans.callback = cb;
-			if (modal.trans.timeout) {
-				clearTimeout(modal.trans.timeout);
-				modal.trans.timeout = null;
-			}
-			modal.trans.timeout = setTimeout(modal.trans.off, modal.constants.transTimeout);
 		},
 		off: function() {
 			modal.trans.animating = false;
-			if (modal.trans.timeout) {
-				clearTimeout(modal.trans.timeout);
-				modal.trans.timeout = null;
-			}
 			if (modal.trans.callback) {
 				modal.trans.callback();
 				modal.trans.callback = null;
