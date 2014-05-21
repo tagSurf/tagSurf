@@ -21,6 +21,10 @@ body
 	overflow-y: scroll;
 }
 
+.content-adjust{
+  bottom: 116px;
+}
+
 .content div {
 	width: 255px;
 	padding: 5px 0px;
@@ -317,6 +321,10 @@ a.back {
 
 .top-margin{
   margin-top:10px; 
+}
+
+.input-margin{
+  margin: 10px auto 5px;
 }
 
 #get-email-input{
