@@ -51,7 +51,7 @@ class ClientController < ApplicationController
   def confirm_beta_token
     code = AccessCode.where(code: beta_code_params[:access_code]).first
     if code && code.valid_code?
-      redirect_to "/disclaimer?code=#{code.code}"
+      redirect_to "/terms?code=#{code.code}&d_accept=true"
     else
       flash[:error] = ["Invalid beta code."]
       redirect_to :root
@@ -59,16 +59,6 @@ class ClientController < ApplicationController
   end
 
   # Step two
-  def disclaimer_agreement
-    code = AccessCode.where(code: beta_code_params[:access_code]).first.code
-    if beta_code_params[:d_accept] == 'true' and code
-      redirect_to "/terms?code=#{code}&d_accept=true"
-    else
-      redirect_to root_path, status: :not_authorized
-    end
-  end
-
-  # Step three
   def terms_agreement
     code = AccessCode.where(code: beta_code_params[:access_code]).first.code
     terms = beta_code_params[:t_accept] 
@@ -128,7 +118,7 @@ class ClientController < ApplicationController
     end
 
     def confirm_surfable
-      unless current_user and current_user.confirmed? and current_user.welcomed?
+      unless current_user and current_user.confirmed?
         redirect_to root_path
       end
     end

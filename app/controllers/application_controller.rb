@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   def redirect_desktops
     return if browser.mobile?
     return if browser.tablet?
-    unless  current_user && current_user.admin? 
+    unless current_user && current_user.admin? 
       redirect_to '/desktop'
     end
   end 
