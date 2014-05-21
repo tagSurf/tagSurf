@@ -35,11 +35,11 @@ class ClientController < ApplicationController
   def index
     # Decide how to direct the user base on state
     usr = current_user
-    if usr and usr.confirmed? and usr.welcomed?
+    if usr and usr.confirmed?
       redirect_to feed_path
     elsif usr and !usr.confirmed?
       redirect_to resend_path
-    elsif usr and usr.confirmed? 
+    else 
       redirect_to user_session_path
     end
   end
