@@ -240,7 +240,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		n.id = gall + d.id;
 		n.className = "box";
 		n.style.backgroundImage = "url('" +
-			image.get(d, (window.innerWidth - 40) / 3).url + "')";
+			image.get(d, (window.innerWidth - 40) / 3, true).url + "')";
 		votize(n, d);
 
 		var top = document.createElement("div");
@@ -256,6 +256,8 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		n.appendChild(top);
 		n.appendChild(spacer);
 		n.appendChild(voteMeter(d));
+		if (d.image.animated)
+			spacer.className = "playoverlay";
 		n.onclick = function() {
 			showImage(d);
 		};
