@@ -290,3 +290,13 @@ html, body
   position: relative;
   top: 3px;
 }
+.active-tag-callout
+{
+  background-color: #00aeef;
+  color: #404041;
+}
+.active-pictag
+{
+  color: #404041;
+  background-color: #00719C !important;
+}

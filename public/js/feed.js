@@ -372,7 +372,11 @@ onload = function ()
 	var tagCard = function(tag, picTags) {
 		var p = document.createElement("span");
 		p.innerHTML = "#" + tag;
+		gesture.listen("down", p, function() {
+			p.classList.add("active-pictag");
+		});
 		gesture.listen("up", p, function() {
+			p.classList.remove("active-pictag");
 			viewTag(tag, true);
 		});
 		picTags.appendChild(p);
@@ -462,7 +466,13 @@ onload = function ()
 		picTags = formatter.children[0].children[0].children[3];
 		fullscreenButton = formatter.children[0].children[0].children[4];
 		if (current_tag == "trending") {
+			gesture.listen("down", iconLine.children[1], function() {
+				iconLine.children[1].classList.add("active-tag-callout");
+				iconLine.children[1].firstChild.src = "/img/trending_icon_gray.png";
+			});
 			gesture.listen("up", iconLine.children[1], function() {
+				iconLine.children[1].classList.remove("active-tag-callout");
+				iconLine.children[1].firstChild.src = "/img/trending_icon_blue.png";
 				viewTag(c.tags[0], true);
 			});
 		} else
