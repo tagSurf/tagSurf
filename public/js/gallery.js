@@ -256,6 +256,8 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		n.appendChild(top);
 		n.appendChild(spacer);
 		n.appendChild(voteMeter(d));
+		if (d.image.animated)
+			spacer.className = "playoverlay";
 		n.onclick = function() {
 			showImage(d);
 		};
