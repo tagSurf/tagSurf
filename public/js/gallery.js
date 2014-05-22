@@ -240,7 +240,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		n.id = gall + d.id;
 		n.className = "box";
 		n.style.backgroundImage = "url('" +
-			image.get(d, (window.innerWidth - 40) / 3).url + "')";
+			image.get(d, (window.innerWidth - 40) / 3, true).url + "')";
 		votize(n, d);
 
 		var top = document.createElement("div");
