@@ -10,6 +10,16 @@ onload = function ()
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
+	
+	var scrollCallback = function (event)
+	{
+		slider.style['transform-origin'] = "0 " + scrollContainer.scrollTop + 'px';
+		slider.style['-webkit-transform-origin'] = "0 " + scrollContainer.scrollTop + 'px';
+		slider.lastChild.previousSibling.style.top = (50 + scrollContainer.scrollTop) + 'px';
+		console.log(event);
+		//var translatePercentage = 
+	};
+	scrollContainer.addEventListener('scroll', scrollCallback, false); 
 
 	var data, buffer_minimum = 5, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
@@ -304,7 +314,9 @@ onload = function ()
 	window.onkeyup = function(e) {
 		e = e || window.event;
 		var code = e.keyCode || e.which;
-		if (code == 37)
+		if (code == 32)
+			expandCard();
+		else if (code == 37)
 			swipeSlider("left");
 		else if (code == 39)
 			swipeSlider("right");
@@ -355,7 +367,6 @@ onload = function ()
 						if (thumbContainer.firstChild.style.opacity == 0)
 						{
 							thumbContainer.firstChild.style.opacity = 0.8;
-							debugger;
 						}
 						if (thumbContainer.lastChild.style.opacity == .8)
 						{
