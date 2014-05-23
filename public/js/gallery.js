@@ -145,7 +145,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			}
 		});
 		votize(modal.modal, d);
-		modal.backOn(null, null, "0.35");
+		modal.backOn();
 
 		topbar.firstChild.innerHTML = "";
 		topbar.firstChild.appendChild(voteMeter(d, true));
