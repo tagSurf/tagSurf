@@ -362,13 +362,13 @@ onload = function ()
 	{
 		if (tapCount == 1)
 		{
-			if (!slider.expanded)
-			{
-				expandCard();
-			}
-			else
+			if (slider.compressing == false)
 			{
 				callZoomModal();
+			}
+			else if (slider.expanded == false)
+			{
+				expandCard();
 			}
 		}
 	};
