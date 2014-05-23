@@ -180,7 +180,7 @@ onload = function ()
 		node.supering = false;
 		node.animating = false;
 	};
-	var doubleTap = function ()
+	var callZoomModal = function ()
 	{
 		var modalCallback = function ()
 		{
@@ -360,7 +360,17 @@ onload = function ()
 	};
 	var tapCallback = function (tapCount)
 	{
-		[expandCard, doubleTap][tapCount-1]();
+		if (tapCount == 1)
+		{
+			if (!slider.expanded)
+			{
+				expandCard();
+			}
+			else
+			{
+				callZoomModal();
+			}
+		}
 	};
 	var holdCallback = function (duration) {
 		if (duration == 3000)
