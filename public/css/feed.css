@@ -300,3 +300,29 @@ html, body
   color: #404041;
   background-color: #00719C !important;
 }
+
+#thumb-vote-container
+{
+  pointer-events: none;
+  position: absolute;
+  top: 50px;
+  width: 100%;
+  z-index: 2;
+}
+
+.thumb_up
+{
+  opacity: 0;
+  float: left;
+  width: 40%;
+  -webkit-transition: opacity 250ms;
+  transition: opacity 250ms;
+}
+.thumb_down
+{
+  opacity: 0;
+  float: right;
+  width: 40%;
+  -webkit-transition: opacity 250ms;
+  transition: opacity 250ms;
+}

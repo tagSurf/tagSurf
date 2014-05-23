@@ -192,9 +192,18 @@ onload = function ()
 	};
 	var revertSlider = function ()
 	{
-		slider.style['border-color'] = "#353535";
+		var thumbContainer = slider.lastChild.previousSibling;
 		slider.style['background-color'] = "#353535";
 		slider.lastChild.display = "none";
+
+		if (thumbContainer.firstChild.style.opacity > 0)
+		{
+			thumbContainer.firstChild.style.opacity = 0;
+		}
+		if (thumbContainer.lastChild.style.opacity > 0)
+		{
+			thumbContainer.lastChild.style.opacity = 0;
+		}
 		if (slider.x == 0)
 		{
 			revertStateReset(slider);
@@ -313,7 +322,8 @@ onload = function ()
 	{
 		var atBottom = (scrollContainer.scrollHeight - scrollContainer.scrollTop 
 			=== scrollContainer.clientHeight),
-		atTop = (scrollContainer.scrollTop === 0);
+		atTop = (scrollContainer.scrollTop === 0), 
+		thumbContainer = slider.lastChild.previousSibling;
 		if (slider.animating == false)
 		{
 			if (slider.expanded == true && 
@@ -342,7 +352,15 @@ onload = function ()
 						{
 							slider.style['background-color'] = 'green';
 						}
-						slider.style['border-color'] = 'green';
+						if (thumbContainer.firstChild.style.opacity == 0)
+						{
+							thumbContainer.firstChild.style.opacity = 0.8;
+							debugger;
+						}
+						if (thumbContainer.lastChild.style.opacity == .8)
+						{
+							thumbContainer.lastChild.style.opacity = 0;
+						}
 					}
 					else if ( slider.x < 0)
 					{
@@ -350,7 +368,14 @@ onload = function ()
 						{
 							slider.style['background-color'] = '#C90016';
 						}
-						slider.style['border-color'] = '#C90016';
+						if (thumbContainer.lastChild.style.opacity == 0)
+						{
+							thumbContainer.lastChild.style.opacity = .8;
+						}
+						if (thumbContainer.firstChild.style.opacity == .8)
+						{
+							thumbContainer.firstChild.style.opacity = 0;
+						}
 					}
 					slider.style['-webkit-transform'] = 
 						"translate3d(" + ( slider.x * translationScale) + "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
@@ -456,7 +481,7 @@ onload = function ()
 		var imageContainer, iconLine, textContainer, picTags, 
 			fullscreenButton, truncatedTitle, card, 
 			targetHeight, imageData, c = data[cardIndex];
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb_up' src='/img/thumbsup.png'><img class='thumb_down' src='/img/thumbsdown.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
