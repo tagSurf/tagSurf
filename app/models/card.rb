@@ -95,11 +95,11 @@ class Card < ActiveRecord::Base
       if tag == 'trending'
         # Move vote streams to redis
         has_voted_ids = user.votes.pluck(:votable_id) 
-        staffpicked_ids = @cards.tagged_with('staffpicks').pluck(:id)
+        staffpicks_ids = @cards.tagged_with('staffpicks').pluck(:id)
         viral_ids = @cards.where(viral: true).pluck(:id)
 
         # Remove media which the user has voted on
-        staffpick_ids = staffpicked_ids - has_voted_ids
+        staffpicks_ids = staffpicks_ids - has_voted_ids
 
         # Avoid the extra query if no staffpicks left
         # Reserving optimization for the move to Redis objects
