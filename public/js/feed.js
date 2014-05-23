@@ -381,6 +381,15 @@ onload = function ()
 		});
 		picTags.appendChild(p);
 	};
+	var expandTimeout;
+	var setSlider = function(s) {
+		slider = s || slideContainer.firstChild.firstChild;
+		if (expandTimeout) {
+			clearTimeout(expandTimeout);
+			expandTimeout = null;
+		}
+		expandTimeout = setTimeout(expandCard, 1500);
+	};
 	var dataThrobTest = function ()
 	{
 		var c_wrapper, c_container, msg, img;
