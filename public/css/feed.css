@@ -308,21 +308,25 @@ html, body
   top: 50px;
   width: 100%;
   z-index: 2;
+  text-align: center;
 }
 
 .thumb_up
 {
+  display: inline;
   opacity: 0;
-  float: left;
   width: 40%;
+  margin-right: 10px;
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
 }
 .thumb_down
 {
+  display: inline;
   opacity: 0;
-  float: right;
   width: 40%;
+  position: relative;
+  top: 55px;
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
 }
