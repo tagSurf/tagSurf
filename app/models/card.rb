@@ -85,9 +85,9 @@ class Card < ActiveRecord::Base
     if Tag.blacklisted?(tag)
       []
     else
-      return unless user
+      return [] unless user
       if user.votes.size < 1
-        Card.last(n)
+        Card.tagged_with('staffpicks', :wild => true).limit(n).order('created_at DESC NULLS LAST')
       elsif tag == 'trending'
         # move has_voted to redis
         has_voted = user.votes.pluck(:votable_id) 
