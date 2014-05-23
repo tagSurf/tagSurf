@@ -91,9 +91,8 @@ class Card < ActiveRecord::Base
       []
     else
       @cards = Card.all
-      has_voted_ids = user.votes.pluck(:votable_id) 
-      if tag == 'trending'
 
+      if tag == 'trending'
         # Move vote streams to redis
         has_voted_ids = user.votes.pluck(:votable_id) 
         staffpicked_ids = @cards.tagged_with('staffpicks').pluck(:id)
@@ -102,7 +101,7 @@ class Card < ActiveRecord::Base
         # Remove media which the user has voted on
         staffpick_ids = staffpicked_ids - has_voted_ids
 
-        # Avoid the expensive queries no staff picks
+        # Avoid the extra query if no staffpicks left
         # Reserving optimization for the move to Redis objects
         if staffpicks_ids.present?
           if staffpicks_ids.length < 20
@@ -111,14 +110,14 @@ class Card < ActiveRecord::Base
             media_ids = staffpick_ids + additional_media
 
             # Custom sort order for collections
-            # TODO Move to activerecord module
+            # TODO Move to Activerecord extension
             sort_order = media_ids.collect{|id| "id = #{id} desc"}.join(',')
             @cards =  @cards.where('id in (?)', media_ids).limit(n).order(sort_order)
           else
             @cards =  @cards.where('id in (?)', staffpick_ids).limit(n).order('ts_score DESC NULLS LAST')
           end
         else
-          @cards = @cards.where('id not in (?) and id in (?)', has_voted_ids, viral_ids).limit(n).order('ts_score DESC NULLS LAST')
+          @cards = @cards.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
         end
       else
         @cards = @cards.where('cards.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
