@@ -13,8 +13,8 @@ onload = function ()
 	
 	var scrollCallback = function (event)
 	{
-		slider.style['transform-origin'] = "0 " + scrollContainer.scrollTop + 'px';
-		slider.style['-webkit-transform-origin'] = "0 " + scrollContainer.scrollTop + 'px';
+		slider.style['transform-origin'] = "center " + scrollContainer.scrollTop + 'px';
+		slider.style['-webkit-transform-origin'] = "center " + scrollContainer.scrollTop + 'px';
 		slider.lastChild.previousSibling.style.top = (50 + scrollContainer.scrollTop) + 'px';
 		console.log(event);
 		//var translatePercentage = 
