@@ -384,7 +384,7 @@ onload = function ()
 			clearTimeout(expandTimeout);
 			expandTimeout = null;
 		}
-		expandTimeout = setTimeout(expandCard, 2000);
+		expandTimeout = setTimeout(expandCard, 1500);
 	};
 	var dataThrobTest = function ()
 	{
