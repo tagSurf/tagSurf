@@ -87,16 +87,16 @@ class Card < ActiveRecord::Base
     else
       return [] unless user
       if user.votes.size < 1
-        Card.tagged_with('staffpicks', :wild => true).limit(n).order('created_at DESC NULLS LAST')
+        Card.tagged_with('staffpicks', :wild => true).limit(n).order('ts_score DESC NULLS LAST')
       elsif tag == 'trending'
         # move has_voted to redis
         has_voted = user.votes.pluck(:votable_id) 
-        cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
+        cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('ts_score DESC NULLS LAST')
         cards
       else
         # move has_voted to redis
         has_voted = user.votes.pluck(:votable_id) 
-        cards = Card.where('cards.id not in (?)', has_voted).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
+        cards = Card.where('cards.id not in (?)', has_voted).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
         if cards.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
