@@ -101,9 +101,10 @@ class Card < ActiveRecord::Base
 
         # Avoid the arel table if no more staff picks
         if unvoted_staff_picks_ids.present?
-          @cards = @cards.where('id not in (?) and in (?) OR in (?)', has_voted_ids, viral_ids, staff_picked_ids).limit(n).order('ts_score DESC NULLS LAST')
+          sorted_staff_media_ids = staff_picked_ids.collect{|staff_pick| "id = #{staff_pick}"}   
+          @cards = @cards.where('id not in (?) and id in (?) OR id in (?)', has_voted_ids, viral_ids, staff_picked_ids).limit(n).order(sorted_staff_media_ids.join(','))
         else
-          @cards = @cards.where('id not in (?) and in (?) OR in (?)', has_voted_ids, viral_ids).limit(n).order('ts_score DESC NULLS LAST')
+          @cards = @cards.where('id not in (?) and id in (?)', has_voted_ids, viral_ids).limit(n).order('ts_score DESC NULLS LAST')
         end
         @cards
       else
