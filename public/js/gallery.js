@@ -285,7 +285,8 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		throbber.on('throbber-bottom');
 		xhr(getPath(), null, function(response_data) {
 			response_data.data.forEach(function(d) {
-				addImage(d, getHeader(d.user_stats.time_discovered));
+				addImage(d, getHeader(gallery == "favorites" ?
+					d.user_stats.time_favorited : d.user_stats.time_discovered));
 			});
 			populating = false;
 			throbber.off();
