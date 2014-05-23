@@ -77,6 +77,9 @@ class CardSerializer < BaseSerializer
       user[:has_voted] = true
       user[:vote] =  user_vote.try(:vote_flag) ? 'up' : 'down'
       user[:time_discovered] = "#{time_ago_in_words(user_vote.created_at)} ago"
+    end
+
+    if user_favorite.present?
       user[:time_favorited] = "#{time_ago_in_words(user_favorite.created_at)} ago"
     end
 
