@@ -80,27 +80,39 @@ class Card < ActiveRecord::Base
     self.save
   end
 
-  # Display the next card to the user for voting
+  # Gather the next set of cards for feeds 
   def self.next(user, tag, n=20)
     if Tag.blacklisted?(tag)
       []
+    elsif user.nil?
+      # Cards available for non-authed preview
+      # Not implemented
+      []
     else
-      return [] unless user
-      if user.votes.size < 1
-        Card.tagged_with('staffpicks', :wild => true).limit(n).order('ts_score DESC NULLS LAST')
-      elsif tag == 'trending'
-        # move has_voted to redis
-        has_voted = user.votes.pluck(:votable_id) 
-        cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('ts_score DESC NULLS LAST')
-        cards
+      @cards = Card.all
+      has_voted_ids = user.votes.pluck(:votable_id) 
+      if tag == 'trending'
+
+        # move vote streams to redis
+        has_voted_ids = user.votes.pluck(:votable_id) 
+        staff_picked_ids = @cards.tagged_with('staffpicks').pluck(:id)
+        viral_ids = @cards.where(viral: true).pluck(:id)
+        unvoted_staff_pick_ids = staff_picked_ids - has_voted_ids
+
+        # Avoid the arel table if no more staff picks
+        if unvoted_staff_picks_ids.present?
+          @cards = @cards.where('id not in (?) and in (?) OR in (?)', has_voted_ids, viral_ids, staff_picked_ids).limit(n).order('ts_score DESC NULLS LAST')
+        else
+          @cards = @cards.where('id not in (?) and in (?) OR in (?)', has_voted_ids, viral_ids).limit(n).order('ts_score DESC NULLS LAST')
+        end
+        @cards
       else
         # move has_voted to redis
-        has_voted = user.votes.pluck(:votable_id) 
-        cards = Card.where('cards.id not in (?)', has_voted).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
-        if cards.length < 10
+        @cards = @cards.where('cards.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+        if @cards.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
-        cards
+        @cards
       end
     end
   end
