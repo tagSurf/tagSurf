@@ -524,7 +524,8 @@ onload = function ()
 		{
 			slider.compressing = false;
 			slider.expanded = true;
-			slider.children[0].className += " expanded";
+			if (slider.children[0].className.indexOf("expanded") == -1)
+				slider.children[0].className += " expanded";
 			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
 			toggleClass.call(slider.children[3], "hidden");
 			toggleClass.call(slider.children[4], "hidden");
@@ -560,7 +561,10 @@ onload = function ()
 	setResizeCb(function() {
 		slideContainer.innerHTML = "";
 		cardIndex = Math.max(0, cardIndex - 3);
-		data && buildCard(2);
+		if (data) {
+			buildCard(2);
+			expandCard(true);
+		}
 	});
 	populateSlider();
 };
