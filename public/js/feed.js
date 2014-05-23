@@ -281,7 +281,7 @@ onload = function ()
 				+ "px,0) rotate(" + rotateQuantity + "deg)");
 		slider.animating = true;
 
-		slider = slider.parentNode.nextSibling.firstChild;
+		setSlider(slider.parentNode.nextSibling.firstChild);
 		setCurrentMedia(slider.card);
 		// history slider
 		activeCard.total_votes += 1;
@@ -381,15 +381,24 @@ onload = function ()
 		});
 		picTags.appendChild(p);
 	};
+	var expandTimeout;
+	var setSlider = function(s) {
+		slider = s || slideContainer.firstChild.firstChild;
+		if (expandTimeout) {
+			clearTimeout(expandTimeout);
+			expandTimeout = null;
+		}
+		expandTimeout = setTimeout(expandCard, 1500);
+	};
 	var dataThrobTest = function ()
 	{
 		var c_wrapper, c_container, msg, img;
 		if (slideContainer.firstChild && slideContainer.firstChild.throbbing) {
-			slider = slideContainer.firstChild.firstChild;
+			setSlider();
 			return populateSlider(false, slider.firstChild);
 		}
 		if (slideContainer.lastChild && slideContainer.lastChild.throbbing) {
-			slider = slideContainer.firstChild.firstChild;
+			setSlider();
 			return;
 		}
 		if (data.length <= cardIndex) {
@@ -407,7 +416,7 @@ onload = function ()
 			c_wrapper.appendChild(c_container);
 			c_wrapper.throbbing = true;
 			slideContainer.appendChild(c_wrapper);
-			slider = slideContainer.firstChild.firstChild;
+			setSlider();
 			throbber.off();
 			scrollContainer.style.opacity = 1;
 			if (slideContainer.childNodes.length == 1)
@@ -493,7 +502,7 @@ onload = function ()
 		initCardGestures.call(card.parentNode);
 		slideContainer.appendChild(card.parentNode);
 		formattingContainer.removeChild(formatter);
-		slider = slideContainer.children[0].children[0];
+		setSlider();
 		if (slider == card)
 		{
 			setCurrentMedia(slider.card);
