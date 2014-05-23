@@ -81,6 +81,7 @@ class Card < ActiveRecord::Base
   end
 
   # Gather the next set of cards for feeds 
+  # The brains of tagSurf feeds 
   def self.next(user, tag, n=20)
     if Tag.blacklisted?(tag)
       []
@@ -93,28 +94,39 @@ class Card < ActiveRecord::Base
       has_voted_ids = user.votes.pluck(:votable_id) 
       if tag == 'trending'
 
-        # move vote streams to redis
+        # Move vote streams to redis
         has_voted_ids = user.votes.pluck(:votable_id) 
-        staff_picked_ids = @cards.tagged_with('staffpicks').pluck(:id)
+        staffpicked_ids = @cards.tagged_with('staffpicks').pluck(:id)
         viral_ids = @cards.where(viral: true).pluck(:id)
-        unvoted_staff_pick_ids = staff_picked_ids - has_voted_ids
 
-        # Avoid the arel table if no more staff picks
-        if unvoted_staff_picks_ids.present?
-          sorted_staff_media_ids = staff_picked_ids.collect{|staff_pick| "id = #{staff_pick}"}   
-          @cards = @cards.where('id not in (?) and id in (?) OR id in (?)', has_voted_ids, viral_ids, staff_picked_ids).limit(n).order(sorted_staff_media_ids.join(','))
+        # Remove media which the user has voted on
+        staffpick_ids = staffpicked_ids - has_voted_ids
+
+        # Avoid the expensive queries no staff picks
+        # Reserving optimization for the move to Redis objects
+        if staffpicks_ids.present?
+          if staffpicks_ids.length < 20
+            trending_limit = staffpicks_ids.length - n
+            additional_media = Card.where('id not in (?) and id in (?)', has_voted_ids, viral_ids).limit(trending_limit).order('ts_score DESC NULLS LAST').map(&:id)
+            media_ids = staffpick_ids + additional_media
+
+            # Custom sort order for collections
+            # TODO Move to activerecord module
+            sort_order = media_ids.collect{|id| "id = #{id} desc"}.join(',')
+            @cards =  @cards.where('id in (?)', media_ids).limit(n).order(sort_order)
+          else
+            @cards =  @cards.where('id in (?)', staffpick_ids).limit(n).order('ts_score DESC NULLS LAST')
+          end
         else
           @cards = @cards.where('id not in (?) and id in (?)', has_voted_ids, viral_ids).limit(n).order('ts_score DESC NULLS LAST')
         end
-        @cards
       else
-        # move has_voted to redis
         @cards = @cards.where('cards.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
         if @cards.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
-        @cards
       end
+      @cards
     end
   end
 
