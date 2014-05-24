@@ -24,19 +24,25 @@ class Api::TagsController < Api::BaseController
 
     begin
 
-
       # Todo check blacklist
-      # Todo check is user able to add tag
+
       # Check if tag exists
-      if Tag.where('name ilike ?', tag_params[:name]).first
-        @tag = tag_params[:name]
+      if tag = Tag.where('name ilike ?', tag_params[:name]).first
+        @tag = tag.name
       else
         @tag = Tag.create!(name: tag_params[:name], created_by: @user.id, fetch_more_content: true).name
+      end
+
+      # Check if user can add a specific tag
+      # Right now we only filter on 'StaffPicks'
+      if @tag == 'StaffPicks' and !@user.admin?
+        render json: "Only Staff can add StaffPicks", status: :not_authorized 
+        return
       end
     
       # Set tagging on media
       @media = Card.find tag_params[:media_id]
-      @media.tag_list.add tag_params[:name] 
+      @media.tag_list.add @tag
       @media.save! 
 
       if tag_params[:vote].present?
