@@ -80,28 +80,52 @@ class Card < ActiveRecord::Base
     self.save
   end
 
-  # Display the next card to the user for voting
+  # Gather the next set of cards for feeds 
+  # The brains of tagSurf feeds 
   def self.next(user, tag, n=20)
     if Tag.blacklisted?(tag)
       []
+    elsif user.nil?
+      # Cards available for non-authed preview
+      # Not implemented
+      []
     else
-      return unless user
-      if user.votes.size < 1
-        Card.last(n)
-      elsif tag == 'trending'
-        # move has_voted to redis
-        has_voted = user.votes.pluck(:votable_id) 
-        cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
-        cards
+      @cards = Card.all
+
+      if tag == 'trending'
+        # Move vote streams to redis
+        has_voted_ids = user.votes.pluck(:votable_id) 
+        staffpick_ids = @cards.tagged_with('StaffPicks').pluck(:id)
+        viral_ids = @cards.where(viral: true).pluck(:id)
+
+        # Remove media which the user has voted on
+        staffpick_ids = staffpick_ids - has_voted_ids
+
+        # Avoid the extra query if no staffpicks left
+        # Reserving optimization for the move to Redis objects
+        if staffpick_ids.present?
+          if staffpick_ids.length < 20
+            trending_limit = n - staffpick_ids.length
+            additional_media = Card.where('id not in (?) and id in (?)', has_voted_ids, viral_ids).limit(trending_limit).order('ts_score DESC NULLS LAST').map(&:id)
+            media_ids = staffpick_ids + additional_media
+
+            # Custom sort order for collections
+            # TODO Move to Activerecord extension
+            sort_order = media_ids.collect{|id| "id = #{id} desc"}.join(',')
+            @cards =  @cards.where('id in (?)', media_ids).limit(n).order(sort_order)
+          else
+            @cards =  @cards.where('id in (?)', staffpick_ids).limit(n).order('ts_score DESC NULLS LAST')
+          end
+        else
+          @cards = @cards.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
+        end
       else
-        # move has_voted to redis
-        has_voted = user.votes.pluck(:votable_id) 
-        cards = Card.where('cards.id not in (?)', has_voted).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
-        if cards.length < 10
+        @cards = @cards.where('cards.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+        if @cards.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
-        cards
       end
+      @cards
     end
   end
 
@@ -139,6 +163,7 @@ class Card < ActiveRecord::Base
           size: obj['size'],
           remote_views: obj['views'],
           remote_score: obj['score'],
+          ts_score: obj['score'],
           remote_up_votes: obj['ups'],
           remote_down_votes: obj['downs'],
           section: obj['section'],
@@ -172,6 +197,7 @@ class Card < ActiveRecord::Base
           size: obj['size'],
           remote_views: obj['views'],
           remote_score: obj['score'],
+          ts_score: obj['score'],
           remote_up_votes: obj['ups'],
           remote_down_votes: obj['downs'],
           section: obj['section'] || "imgurhot",
