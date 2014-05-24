@@ -394,6 +394,7 @@ onload = function ()
 	var expandTimeout;
 	var setSlider = function(s) {
 		slider = s || slideContainer.firstChild.firstChild;
+		setCurrentMedia(slider.card);
 		if (expandTimeout) {
 			clearTimeout(expandTimeout);
 			expandTimeout = null;
@@ -515,13 +516,20 @@ onload = function ()
 		setSlider();
 		if (slider == card)
 		{
-			setCurrentMedia(slider.card);
 			imageContainer.firstChild.onload = function ()
 			{
 				throbber.off();
 				scrollContainer.style.opacity = 1;
 			};
 		}
+		imageContainer.firstChild.onerror = function() {
+			slideContainer.removeChild(card.parentNode);
+			if (slider == card) {
+				throbber.off();
+				scrollContainer.style.opacity = 1;
+			}
+			buildCard();
+		};
 		++cardIndex;
 		if (data.length == cardIndex + buffer_minimum)
 			populateSlider(true);
