@@ -103,7 +103,7 @@ class ClientController < ApplicationController
   def signup; end
 
   def resend_link; 
-    if current_user and current_user.welcomed?
+    if current_user and current_user.confirmed?
       redirect_to root_path
     end
   end

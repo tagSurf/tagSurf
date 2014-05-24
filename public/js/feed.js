@@ -190,7 +190,7 @@ onload = function ()
 		node.supering = false;
 		node.animating = false;
 	};
-	var doubleTap = function ()
+	var callZoomModal = function ()
 	{
 		var modalCallback = function ()
 		{
@@ -300,7 +300,7 @@ onload = function ()
 				+ "px,0) rotate(" + rotateQuantity + "deg)");
 		slider.animating = true;
 
-		slider = slider.parentNode.nextSibling.firstChild;
+		setSlider(slider.parentNode.nextSibling.firstChild);
 		setCurrentMedia(slider.card);
 		// history slider
 		activeCard.total_votes += 1;
@@ -396,7 +396,17 @@ onload = function ()
 	};
 	var tapCallback = function (tapCount)
 	{
-		[expandCard, doubleTap][tapCount-1]();
+		if (tapCount == 1)
+		{
+			if (slider.compressing == false)
+			{
+				callZoomModal();
+			}
+			else if (slider.expanded == false)
+			{
+				expandCard();
+			}
+		}
 	};
 	var holdCallback = function (duration) {
 		if (duration == 3000)
@@ -417,15 +427,24 @@ onload = function ()
 		});
 		picTags.appendChild(p);
 	};
+	var expandTimeout;
+	var setSlider = function(s) {
+		slider = s || slideContainer.firstChild.firstChild;
+		if (expandTimeout) {
+			clearTimeout(expandTimeout);
+			expandTimeout = null;
+		}
+		expandTimeout = setTimeout(expandCard, 1500);
+	};
 	var dataThrobTest = function ()
 	{
 		var c_wrapper, c_container, msg, img;
 		if (slideContainer.firstChild && slideContainer.firstChild.throbbing) {
-			slider = slideContainer.firstChild.firstChild;
+			setSlider();
 			return populateSlider(false, slider.firstChild);
 		}
 		if (slideContainer.lastChild && slideContainer.lastChild.throbbing) {
-			slider = slideContainer.firstChild.firstChild;
+			setSlider();
 			return;
 		}
 		if (data.length <= cardIndex) {
@@ -443,7 +462,7 @@ onload = function ()
 			c_wrapper.appendChild(c_container);
 			c_wrapper.throbbing = true;
 			slideContainer.appendChild(c_wrapper);
-			slider = slideContainer.firstChild.firstChild;
+			setSlider();
 			throbber.off();
 			scrollContainer.style.opacity = 1;
 			if (slideContainer.childNodes.length == 1)
@@ -529,7 +548,7 @@ onload = function ()
 		initCardGestures.call(card.parentNode);
 		slideContainer.appendChild(card.parentNode);
 		formattingContainer.removeChild(formatter);
-		slider = slideContainer.children[0].children[0];
+		setSlider();
 		if (slider == card)
 		{
 			setCurrentMedia(slider.card);
@@ -570,7 +589,8 @@ onload = function ()
 		{
 			slider.compressing = false;
 			slider.expanded = true;
-			slider.children[0].className += " expanded";
+			if (slider.children[0].className.indexOf("expanded") == -1)
+				slider.children[0].className += " expanded";
 			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
 			toggleClass.call(slider.children[3], "hidden");
 			toggleClass.call(slider.children[4], "hidden");
@@ -606,7 +626,10 @@ onload = function ()
 	setResizeCb(function() {
 		slideContainer.innerHTML = "";
 		cardIndex = Math.max(0, cardIndex - 3);
-		data && buildCard(2);
+		if (data) {
+			buildCard(2);
+			expandCard(true);
+		}
 	});
 	populateSlider();
 };
