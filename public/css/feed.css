@@ -308,7 +308,6 @@ html, body
   top: 50px;
   width: 100%;
   z-index: 2;
-  text-align: center;
 }
 
 .thumb_up
@@ -316,7 +315,7 @@ html, body
   display: inline;
   opacity: 0;
   width: 40%;
-  margin-right: 10px;
+  margin: 0 10px;
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
 }
@@ -329,4 +328,6 @@ html, body
   top: 55px;
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
+  float: right;
+  margin-right: 20px;
 }
