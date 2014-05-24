@@ -85,6 +85,7 @@ var modal = {
 				modal.zoom.large = false;
 				trans(zNode, null, "width 250ms ease-in");
 				zNode.style.width = window.innerWidth + "px";
+				return modal.zoom.cb && modal.zoom.cb();
 			}
 		}
 		else if (tapCount == 2)
