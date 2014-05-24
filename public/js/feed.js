@@ -523,7 +523,7 @@ onload = function ()
 			};
 		}
 		imageContainer.firstChild.onerror = function() {
-			slideContainer.removeChild(slider.parentNode);
+			slideContainer.removeChild(card.parentNode);
 			if (slider == card) {
 				throbber.off();
 				scrollContainer.style.opacity = 1;
