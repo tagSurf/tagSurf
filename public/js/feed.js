@@ -575,7 +575,7 @@ onload = function ()
 		if (zIndex)
 			buildCard(zIndex - 1);
 		else if (getOrientation() == "landscape" && window.innerHeight < 700)
-			expandCard(true);
+			expandCard();
 	};
 	var downCallback = function ()
 	{
@@ -594,9 +594,9 @@ onload = function ()
 		gesture.listen("hold", this, holdCallback);
 		gesture.listen("down", this, downCallback);
 	};
-	var expandCard = function (force)
+	var expandCard = function ()
 	{
-		if (slider && (slider.compressing || force))
+		if (slider && slider.compressing)
 		{
 			slider.compressing = false;
 			slider.expanded = true;
@@ -639,7 +639,7 @@ onload = function ()
 		cardIndex = Math.max(0, cardIndex - 3);
 		if (data) {
 			buildCard(2);
-			expandCard(true);
+			expandCard();
 		}
 	});
 	populateSlider();

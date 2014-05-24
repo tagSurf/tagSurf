@@ -156,7 +156,7 @@ a {
 	overflow-y: auto;
 	overflow-x: hidden;
 	z-index: 10;
-	position: fixed;
+	position: absolute;
 	padding: 5px;
 	top: 60px;
 	bottom: 10px;

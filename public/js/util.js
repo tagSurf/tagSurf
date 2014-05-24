@@ -50,7 +50,7 @@ var slideNavMenu = function(noback) {
     ["slid", navMenuSlid ? "on" : "off"]);
   toggleClass.apply(document.getElementById("slide_down_menu"),
     ["opened_menu", navMenuSlid ? "on" : "off"]);
-  if (noback != true && !modal.zoom.zoomed)
+  if (noback != true && !modal.zoom.zoomed && !modal.modal.on)
     navMenuSlid ? modal.halfOn(slideNavMenu) : modal.backOff();
 };
 var add_icon, add_state = "blue", add_icons = {
@@ -68,7 +68,7 @@ var slideAddBar = function(noback) {
   toggleClass.apply(document.getElementById("tag_adder"),
     ["opened_menu", addBarSlid ? "on" : "off"]);
   document.getElementById("tag_adder").firstChild.value = "#newtag";
-  if (noback != true && !modal.zoom.zoomed)
+  if (noback != true && !modal.zoom.zoomed && !modal.modal.on)
     addBarSlid ? modal.halfOn(slideAddBar) : modal.backOff();
 };
 var populateNavbar = function () {

@@ -154,12 +154,14 @@ var modal = {
 			modal.backOff();
 	},
 	modalIn: function(node, cb) {
+		modal.modal.on = true;
 		modal.modal.innerHTML = "";
 		modal.modal.appendChild(node);
 		modal.modal.cb = cb;
 		modal.modal.className = "modal modalslide";
 	},
 	modalOut: function() {
+		modal.modal.on = false;
 		modal.modal.className = "modal";
 		modal.modal.cb = null;
 		trans(modal.modal, function (event){
