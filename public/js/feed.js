@@ -622,6 +622,8 @@ onload = function ()
 		formatCardContents();
 	});
 	setStarCallback(function() {
+		slider.style['border-color'] = "green";
+		slider.lastChild.previousSibling.firstChild.style.opacity = 0.8;
 		if (modal.zoom.zoomed) {
 			if (modal.zoom.large)
 				modal.callZoom(2);
