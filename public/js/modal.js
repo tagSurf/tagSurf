@@ -96,6 +96,12 @@ var modal = {
 				trans(zNode, null, "width 250ms ease-in");
 				zNode.style.width = (modal.constants.zoomScale * zNode.clientWidth) + "px";
 			}
+			else
+			{
+				modal.zoom.large = false;
+				trans(zNode, null, "width 250ms ease-in");
+				zNode.style.width = window.innerWidth + "px";
+			}
 		}
 	},
 	_backOn: function(degree, cb, injectionNode, opacity) {
