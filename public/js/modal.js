@@ -73,26 +73,27 @@ var modal = {
 		return modal.back.cb && modal.back.cb();
 	},
 	callZoom: function(tapCount) {
+		var zNode = modal.zoom.firstChild.firstChild;
 		if (tapCount == 1)
 		{
 			if (modal.zoom.large == false)
 			{
 				return modal.zoom.cb && modal.zoom.cb();
 			}
-		}
-		else if (tapCount == 2)
-		{
-			var zNode = modal.zoom.firstChild.firstChild;
-			trans(zNode, null, "width 250ms ease-in");
-			if (modal.zoom.large == false)
-			{
-				modal.zoom.large = true;
-				zNode.style.width = (modal.constants.zoomScale * zNode.clientWidth) + "px";
-			}
 			else
 			{
 				modal.zoom.large = false;
+				trans(zNode, null, "width 250ms ease-in");
 				zNode.style.width = window.innerWidth + "px";
+			}
+		}
+		else if (tapCount == 2)
+		{
+			if (modal.zoom.large == false)
+			{
+				modal.zoom.large = true;
+				trans(zNode, null, "width 250ms ease-in");
+				zNode.style.width = (modal.constants.zoomScale * zNode.clientWidth) + "px";
 			}
 		}
 	},
