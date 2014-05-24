@@ -203,6 +203,7 @@ onload = function ()
 	var revertSlider = function ()
 	{
 		var thumbContainer = slider.lastChild.previousSibling;
+		slider.style['border-color'] = "#353535";
 		slider.style['background-color'] = "#353535";
 		slider.lastChild.display = "none";
 
@@ -360,6 +361,7 @@ onload = function ()
 					 slider.x += dx;
 					if ( slider.x > 0)
 					{
+						slider.style['border-color'] = "green";
 						if (slider.supering == true)
 						{
 							slider.style['background-color'] = 'green';
@@ -375,6 +377,7 @@ onload = function ()
 					}
 					else if ( slider.x < 0)
 					{
+						slider.style['border-color'] = "#C90016";
 						if (slider.supering == true)
 						{
 							slider.style['background-color'] = '#C90016';
