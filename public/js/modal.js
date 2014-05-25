@@ -22,13 +22,13 @@ var modal = {
 	},
 	build: function() {
 		addCss({
-			".modal": function() {
+			".modalout": function() {
 				return "-webkit-transform: " + "translate3d("
 					+ window.innerWidth + "px, 0, 0);";
 			}
 		});
-		modal.back.className = "blackout";
-		modal.modal.className = "modal hider";
+		modal.back.className = "blackout disabled";
+		modal.modal.className = "modal disabled";
 		modal._buildZoom();
 		document.body.appendChild(modal.back);
 		document.body.appendChild(modal.modal);
@@ -140,7 +140,7 @@ var modal = {
 			modal.trans.on();
 			trans(modal.back, function() {
 				onOff && onOff();
-				modal.back.style.opacity = 0;
+				modal.back.className = "blackout disabled";
 				if (modal.back.firstChild)
 					modal.back.removeChild(modal.back.firstChild);
 				modal.trans.off();
@@ -164,14 +164,17 @@ var modal = {
 		modal.modal.innerHTML = "";
 		modal.modal.appendChild(node);
 		modal.modal.cb = cb;
-		modal.modal.className = "modal modalslide";
+		modal.modal.className = "modal modalout disabled";
+		setTimeout(function() {
+			modal.modal.className = "modal modalslide";
+		}, 0);
 	},
 	modalOut: function() {
 		modal.modal.on = false;
-		modal.modal.className = "modal";
+		modal.modal.className = "modal modalout";
 		modal.modal.cb = null;
 		trans(modal.modal, function (event){
-			modal.modal.className = "modal hider";
+			modal.modal.className = "modal disabled";
 		});
 	},
 	zoomIn: function (card, cb) {
