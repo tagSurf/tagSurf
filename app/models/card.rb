@@ -120,7 +120,7 @@ class Card < ActiveRecord::Base
           @cards = @cards.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
         end
       else
-        @cards = Cards.where('cards.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+        @cards = Card.where('cards.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
         if @cards.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
