@@ -195,10 +195,8 @@ onload = function ()
 		var modalCallback = function ()
 		{
 			modal.zoomOut();
-			modal.backOff();	
 		};
 		modal.zoomIn(slider.card, modalCallback);
-		modal.backOn(modalCallback);
 	};
 	var revertSlider = function ()
 	{
