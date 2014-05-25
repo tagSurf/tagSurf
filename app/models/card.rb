@@ -91,10 +91,10 @@ class Card < ActiveRecord::Base
       []
     else
       @cards = Card.all
+      has_voted_ids = user.votes.pluck(:votable_id) 
 
       if tag == 'trending'
         # Move vote streams to redis
-        has_voted_ids = user.votes.pluck(:votable_id) 
         staffpick_ids = @cards.tagged_with('StaffPicks').pluck(:id)
         viral_ids = @cards.where(viral: true).pluck(:id)
 
