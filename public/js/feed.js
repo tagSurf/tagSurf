@@ -10,6 +10,16 @@ onload = function ()
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
+	
+	var scrollCallback = function (event)
+	{
+		slider.style['transform-origin'] = "center " + scrollContainer.scrollTop + 'px';
+		slider.style['-webkit-transform-origin'] = "center " + scrollContainer.scrollTop + 'px';
+		slider.lastChild.previousSibling.style.top = (50 + scrollContainer.scrollTop) + 'px';
+		console.log(event);
+		//var translatePercentage = 
+	};
+	scrollContainer.addEventListener('scroll', scrollCallback, false); 
 
 	var data, buffer_minimum = 5, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
@@ -192,9 +202,19 @@ onload = function ()
 	};
 	var revertSlider = function ()
 	{
+		var thumbContainer = slider.lastChild.previousSibling;
 		slider.style['border-color'] = "#353535";
 		slider.style['background-color'] = "#353535";
 		slider.lastChild.display = "none";
+
+		if (thumbContainer.firstChild.style.opacity > 0)
+		{
+			thumbContainer.firstChild.style.opacity = 0;
+		}
+		if (thumbContainer.lastChild.style.opacity > 0)
+		{
+			thumbContainer.lastChild.style.opacity = 0;
+		}
 		if (slider.x == 0)
 		{
 			revertStateReset(slider);
@@ -295,7 +315,9 @@ onload = function ()
 	window.onkeyup = function(e) {
 		e = e || window.event;
 		var code = e.keyCode || e.which;
-		if (code == 37)
+		if (code == 32)
+			expandCard();
+		else if (code == 37)
 			swipeSlider("left");
 		else if (code == 39)
 			swipeSlider("right");
@@ -313,7 +335,8 @@ onload = function ()
 	{
 		var atBottom = (scrollContainer.scrollHeight - scrollContainer.scrollTop 
 			=== scrollContainer.clientHeight),
-		atTop = (scrollContainer.scrollTop === 0);
+		atTop = (scrollContainer.scrollTop === 0), 
+		thumbContainer = slider.lastChild.previousSibling;
 		if (slider.animating == false)
 		{
 			if (slider.expanded == true && 
@@ -338,19 +361,35 @@ onload = function ()
 					 slider.x += dx;
 					if ( slider.x > 0)
 					{
+						slider.style['border-color'] = "green";
 						if (slider.supering == true)
 						{
 							slider.style['background-color'] = 'green';
 						}
-						slider.style['border-color'] = 'green';
+						if (thumbContainer.firstChild.style.opacity == 0)
+						{
+							thumbContainer.firstChild.style.opacity = 0.8;
+						}
+						if (thumbContainer.lastChild.style.opacity == .8)
+						{
+							thumbContainer.lastChild.style.opacity = 0;
+						}
 					}
 					else if ( slider.x < 0)
 					{
+						slider.style['border-color'] = "#C90016";
 						if (slider.supering == true)
 						{
 							slider.style['background-color'] = '#C90016';
 						}
-						slider.style['border-color'] = '#C90016';
+						if (thumbContainer.lastChild.style.opacity == 0)
+						{
+							thumbContainer.lastChild.style.opacity = .8;
+						}
+						if (thumbContainer.firstChild.style.opacity == .8)
+						{
+							thumbContainer.firstChild.style.opacity = 0;
+						}
 					}
 					slider.style['-webkit-transform'] = 
 						"translate3d(" + ( slider.x * translationScale) + "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
@@ -394,6 +433,7 @@ onload = function ()
 	var expandTimeout;
 	var setSlider = function(s) {
 		slider = s || slideContainer.firstChild.firstChild;
+		setCurrentMedia(slider.card);
 		if (expandTimeout) {
 			clearTimeout(expandTimeout);
 			expandTimeout = null;
@@ -475,7 +515,7 @@ onload = function ()
 		var imageContainer, iconLine, textContainer, picTags, 
 			fullscreenButton, truncatedTitle, card, 
 			targetHeight, imageData, c = data[cardIndex];
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb_up' src='/img/thumbsup.png'><img class='thumb_down' src='/img/thumbsdown.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		var formatter = document.createElement('div');
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
@@ -515,20 +555,27 @@ onload = function ()
 		setSlider();
 		if (slider == card)
 		{
-			setCurrentMedia(slider.card);
 			imageContainer.firstChild.onload = function ()
 			{
 				throbber.off();
 				scrollContainer.style.opacity = 1;
 			};
 		}
+		imageContainer.firstChild.onerror = function() {
+			slideContainer.removeChild(card.parentNode);
+			if (slider == card) {
+				throbber.off();
+				scrollContainer.style.opacity = 1;
+			}
+			buildCard();
+		};
 		++cardIndex;
 		if (data.length == cardIndex + buffer_minimum)
 			populateSlider(true);
 		if (zIndex)
 			buildCard(zIndex - 1);
 		else if (getOrientation() == "landscape" && window.innerHeight < 700)
-			expandCard(true);
+			expandCard();
 	};
 	var downCallback = function ()
 	{
@@ -547,9 +594,9 @@ onload = function ()
 		gesture.listen("hold", this, holdCallback);
 		gesture.listen("down", this, downCallback);
 	};
-	var expandCard = function (force)
+	var expandCard = function ()
 	{
-		if (slider && (slider.compressing || force))
+		if (slider && slider.compressing)
 		{
 			slider.compressing = false;
 			slider.expanded = true;
@@ -575,6 +622,8 @@ onload = function ()
 		formatCardContents();
 	});
 	setStarCallback(function() {
+		slider.style['border-color'] = "green";
+		slider.lastChild.previousSibling.firstChild.style.opacity = 0.8;
 		if (modal.zoom.zoomed) {
 			if (modal.zoom.large)
 				modal.callZoom(2);
@@ -592,7 +641,7 @@ onload = function ()
 		cardIndex = Math.max(0, cardIndex - 3);
 		if (data) {
 			buildCard(2);
-			expandCard(true);
+			expandCard();
 		}
 	});
 	populateSlider();

@@ -73,25 +73,33 @@ var modal = {
 		return modal.back.cb && modal.back.cb();
 	},
 	callZoom: function(tapCount) {
+		var zNode = modal.zoom.firstChild.firstChild;
 		if (tapCount == 1)
 		{
 			if (modal.zoom.large == false)
 			{
 				return modal.zoom.cb && modal.zoom.cb();
 			}
+			else
+			{
+				modal.zoom.large = false;
+				trans(zNode, null, "width 250ms ease-in");
+				zNode.style.width = window.innerWidth + "px";
+				return modal.zoom.cb && modal.zoom.cb();
+			}
 		}
 		else if (tapCount == 2)
 		{
-			var zNode = modal.zoom.firstChild.firstChild;
-			trans(zNode, null, "width 250ms ease-in");
 			if (modal.zoom.large == false)
 			{
 				modal.zoom.large = true;
+				trans(zNode, null, "width 250ms ease-in");
 				zNode.style.width = (modal.constants.zoomScale * zNode.clientWidth) + "px";
 			}
 			else
 			{
 				modal.zoom.large = false;
+				trans(zNode, null, "width 250ms ease-in");
 				zNode.style.width = window.innerWidth + "px";
 			}
 		}
@@ -152,12 +160,14 @@ var modal = {
 			modal.backOff();
 	},
 	modalIn: function(node, cb) {
+		modal.modal.on = true;
 		modal.modal.innerHTML = "";
 		modal.modal.appendChild(node);
 		modal.modal.cb = cb;
 		modal.modal.className = "modal modalslide";
 	},
 	modalOut: function() {
+		modal.modal.on = false;
 		modal.modal.className = "modal";
 		modal.modal.cb = null;
 		trans(modal.modal, function (event){
