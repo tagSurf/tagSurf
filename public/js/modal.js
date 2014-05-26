@@ -36,7 +36,7 @@ var modal = {
 		gesture.listen("tap", modal.zoom, modal.callZoom);
 		gesture.listen("tap", modal.back, modal.callBack);
 		gesture.listen("swipe", modal.back, modal.callBack);
-		gesture.listen("tap", modal.modal, modal.callModal);
+		gesture.listen("tap", modal.modal, modal.zoomModal);
 		gesture.listen("swipe", modal.modal, modal.callModal);
 		gesture.listen("drag", modal.zoom, modal.dragZoom);
 		gesture.listen("down", modal.zoom, modal._passThrough);
@@ -54,7 +54,9 @@ var modal = {
 		modal.zoom.style.display = "none";
 		modal.zoom.className = "zoom_wrapper";
 		gesture_wrapper.className = "raw_wrapper";
-		modal.zoom.style.zIndex = 3;
+		gesture_wrapper.style.height = (window.innerHeight - 110) + 'px';
+		modal.zoom.style.zIndex = 11;
+		modal.zoom.style.height = (window.innerHeight - 50) + 'px';
 		gesture_wrapper.appendChild(zNode);
 		modal.zoom.appendChild(gesture_wrapper);
 		modal.zoom.large = false;
@@ -65,6 +67,9 @@ var modal = {
 	},
 	_passThroughUD: function(direction) {
 		return (direction == "up" || direction == "down");
+	},
+	zoomModal: function () {
+		return modal.modal.zcb && modal.modal.zcb();
 	},
 	callModal: function(direction) {
 		return modal.modal.cb && modal.modal.cb(direction);
@@ -159,11 +164,12 @@ var modal = {
 		} else
 			modal.backOff();
 	},
-	modalIn: function(node, cb) {
+	modalIn: function(node, cb, zcb) {
 		modal.modal.on = true;
 		modal.modal.innerHTML = "";
 		modal.modal.appendChild(node);
 		modal.modal.cb = cb;
+		modal.modal.zcb = zcb;
 		modal.modal.className = "modal modalout disabled";
 		setTimeout(function() {
 			modal.modal.className = "modal modalslide";

@@ -143,7 +143,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 				modal.backOff();
 				modal.modalOut();
 			}
-		});
+		}, function() { modal.zoomIn(d, modal.zoomOut); });
 		votize(modal.modal, d);
 		modal.backOn();
 

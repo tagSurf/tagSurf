@@ -5,6 +5,17 @@ html, body
   height: auto;
   overflow-x: none;
 }
+#scroll-container
+{
+  top: 50px;
+  overflow: auto;
+  position: absolute;
+  width:100%; 
+  opacity: 0;
+  transition: opacity 500ms ease-in-out;
+  -moz-transition: opacity 500ms ease-in-out;
+  -webkit-transition: opacity 500ms ease-in-out;
+}
 #input-container
 {
   text-align: center;
@@ -234,41 +245,6 @@ html, body
 {
   max-height: 9999px !important;
 }
-.raw_wrapper
-{
-  
-  display: inline;
-  top: 0;
-  position: absolute;
-  width:100%; 
-}
-.raw_wrapper img
-{
-  pointer-events: none;
-}
-.zoom_wrapper,
-#scroll-container
-{
-  top: 50px;
-  overflow: auto;
-  position: absolute;
-  width:100%; 
-  opacity: 0;
-  transition: opacity 500ms ease-in-out;
-  -moz-transition: opacity 500ms ease-in-out;
-  -webkit-transition: opacity 500ms ease-in-out;
-}
-.zoom_wrapper
-{
-  padding-top:20px;
-}
-.basic-zoom {
-  z-index: 2;
-  position: absolute;
-  top: 100px;
-  pointer-events: none;
-}
-
 .icon-line {
   margin-top: 5px;
 }
