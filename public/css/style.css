@@ -128,9 +128,8 @@ a {
 }
 
 .blackout {
-	opacity: 0;
 	pointer-events: none;
-	z-index: -3;
+	z-index: 3;
 	position: fixed;
 	top: 50px;
 	bottom: 0px;
@@ -142,13 +141,11 @@ a {
 
 .blackfade {
 	pointer-events: auto;
-	z-index: 3;
 	background-color: rgba(0, 0, 0, 1);
 }
 
 .halffade {
 	pointer-events: auto;
-	z-index: 3;
 	background-color: rgba(0, 0, 0, 0.7);
 }
 
@@ -170,6 +167,12 @@ a {
 
 .modalslide {
 	-webkit-transform: translate3d(0, 0, 0) !important;
+}
+
+.disabled {
+	z-index: -5 !important;
+	opacity: 0;
+	-webkit-transition: none !important;
 }
 
 .tslogo {
