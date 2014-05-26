@@ -190,14 +190,6 @@ onload = function ()
 		node.supering = false;
 		node.animating = false;
 	};
-	var callZoomModal = function ()
-	{
-		var modalCallback = function ()
-		{
-			modal.zoomOut();
-		};
-		modal.zoomIn(slider.card, modalCallback);
-	};
 	var revertSlider = function ()
 	{
 		var thumbContainer = slider.lastChild.previousSibling;
@@ -401,7 +393,7 @@ onload = function ()
 		{
 			if (slider.compressing == false)
 			{
-				callZoomModal();
+				modal.zoomIn(slider.card, modal.zoomOut);
 			}
 			else if (slider.expanded == false)
 			{
