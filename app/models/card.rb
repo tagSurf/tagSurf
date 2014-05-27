@@ -137,7 +137,7 @@ class Card < ActiveRecord::Base
     response = RemoteResource.tagged_feed(tag)
 
     if response.nil? or response.parsed_response.nil?
-      raise "Failed to fetch with #{tag}, response:#{reponse}"
+      raise "Failed to fetch with #{tag}, response:#{response}"
     end
 
     tagged = response.parsed_response["data"]
