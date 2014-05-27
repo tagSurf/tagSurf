@@ -22,10 +22,11 @@ class Api::MediaController < Api::BaseController
         votable_id: media_params[:id], 
         vote_flag: @vote, 
         votable_type: 'Card',
-        vote_flag: media_params[:tag]
+        vote_flag: media_params[:vote],
+        vote_tag: media_params[:tag]
       )
       if result.try(:id)
-        IncrementMediaVoteCount.perform_async(tag_params[:media_id])
+        IncrementMediaVoteCount.perform_async(media_params[:media_id])
         render json: {success: "true"}
       else
         raise "Unable to write vote"
