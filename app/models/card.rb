@@ -98,7 +98,6 @@ class Card < ActiveRecord::Base
       has_voted_ids = user.votes.pluck(:votable_id) 
 
       if tag == 'trending'
-        # Move vote streams to redis
         staffpick_ids = @cards.tagged_with('StaffPicks').pluck(:id)
         viral_ids = @cards.where(viral: true).pluck(:id)
 
@@ -133,11 +132,6 @@ class Card < ActiveRecord::Base
     end
   end
 
-  def cache_update_available?
-    c = Card.last
-    c.try(:created_at) < 20.minutes.ago ? true : false
-  end
-
   def self.populate_tag(tag) 
     return if Tag.blacklisted?(tag)
     response = RemoteResource.tagged_feed(tag)
@@ -167,7 +161,7 @@ class Card < ActiveRecord::Base
           size: obj['size'],
           remote_views: obj['views'],
           remote_score: obj['score'],
-          ts_score: obj['score'],
+          ts_score: (obj['score'] + (Time.new.to_i - 1000000000)),
           remote_up_votes: obj['ups'],
           remote_down_votes: obj['downs'],
           section: obj['section'],
@@ -201,7 +195,7 @@ class Card < ActiveRecord::Base
           size: obj['size'],
           remote_views: obj['views'],
           remote_score: obj['score'],
-          ts_score: obj['score'],
+          ts_score: (obj['score'] + (Time.new.to_i - 1000000000)),
           remote_up_votes: obj['ups'],
           remote_down_votes: obj['downs'],
           section: obj['section'] || "imgurhot",
