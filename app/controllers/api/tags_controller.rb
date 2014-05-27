@@ -58,6 +58,7 @@ class Api::TagsController < Api::BaseController
       # respond if tagged and voted
       if vote.try(:id)
         res = {tag: tag_params[:name], message: "#{vote.vote_tag} and vote added to media", vote: "#{vote.vote_flag}"}
+        IncrementMediaVoteCount.perform_async(tag_params[:media_id])
         render json: res, status: :ok
         return
       elsif @media.id

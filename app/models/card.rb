@@ -1,5 +1,9 @@
 class Card < ActiveRecord::Base
 
+  # Setup Redis-objects on Cards
+  include Redis::Objects
+  counter :up_votes
+
   acts_as_taggable
 
   has_many :votes, :foreign_key => :votable_id

@@ -164,6 +164,8 @@ GEM
     redis (3.0.7)
     redis-namespace (1.4.1)
       redis (~> 3.0.4)
+    redis-objects (0.9.1)
+      redis (>= 3.0.2)
     rspec-collection_matchers (0.0.3)
       rspec-expectations (>= 2.99.0.beta1)
     rspec-core (3.0.0.beta2)
@@ -259,6 +261,7 @@ DEPENDENCIES
   pg (= 0.17.0)
   rails (= 4.0.2)
   rails_12factor
+  redis-objects
   rspec-rails (~> 3.0.0.beta)
   sass-rails (~> 4.0.0)
   sentry-raven!
