@@ -15,15 +15,15 @@ class Api::UsersController < Api::BaseController
     vote = Vote.where(votable_id: params[:id], voter_id: @user.id).first
 
     unless vote
-      render json: {error: "no votes for card: #{params[:id]} and user" }, status: :not_found
+      render json: {error: "no votes for media: #{params[:id]} and user" }, status: :not_found
       return
     end
 
-    @cards = Vote.bracketed_collection(vote)
-    if @cards.present?
-      render json: @cards, each_serializer: CardSerializer, root: 'data'
+    @media = Vote.bracketed_collection(vote)
+    if @media.present?
+      render json: @media, each_serializer: MediaSerializer, root: 'data'
     else
-      render json: {error: 'no cards found'}, status: :not_found
+      render json: {error: 'no media found'}, status: :not_found
     end
   end
 
@@ -31,15 +31,15 @@ class Api::UsersController < Api::BaseController
     vote = Vote.where(votable_id: params[:id], voter_id: @user.id).first
 
     unless vote
-      render json: {error: "no votes for card: #{params[:id]} and user" }, status: :not_found
+      render json: {error: "no votes for media: #{params[:id]} and user" }, status: :not_found
       return
     end
 
-    @cards = Vote.next_collection(vote)
-    if @cards.present?
-      render json: @cards, each_serializer: CardSerializer, root: 'data'
+    @media = Vote.next_collection(vote)
+    if @media.present?
+      render json: @media, each_serializer: MediaSerializer, root: 'data'
     else
-      render json: {error: 'no cards found'}, status: :not_found
+      render json: {error: 'no media found'}, status: :not_found
     end
 
   end
@@ -48,15 +48,15 @@ class Api::UsersController < Api::BaseController
     vote = Vote.where(votable_id: params[:id], voter_id: @user.id).first
 
     unless vote
-      render json: {error: "no votes for card: #{params[:id]} and user" }, status: :not_found
+      render json: {error: "no votes for media: #{params[:id]} and user" }, status: :not_found
       return
     end
 
-    @cards = Vote.previous_collection(vote)
-    if @cards.present?
-      render json: @cards, each_serializer: CardSerializer, root: 'data'
+    @media = Vote.previous_collection(vote)
+    if @media.present?
+      render json: @media, each_serializer: MediaSerializer, root: 'data'
     else
-      render json: {error: 'no cards found'}, status: :not_found
+      render json: {error: 'no media found'}, status: :not_found
     end
   end
 
