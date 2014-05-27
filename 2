@@ -1,4 +1,4 @@
-class Media < ActiveRecord::Base
+class Card < ActiveRecord::Base
 
   include Redis::Objects
   counter :up_votes
@@ -28,7 +28,7 @@ class Media < ActiveRecord::Base
   end
 
   def active_model_serializer
-    MediaSerializer
+    CardSerializer
   end
 
   def tagged_as
@@ -84,7 +84,7 @@ class Media < ActiveRecord::Base
     self.save
   end
 
-  # Gather the next set of media for feeds 
+  # Gather the next set of cards for feeds 
   # The brains of tagSurf feeds 
   def self.next(user, tag, n=20)
     if Tag.blacklisted?(tag)
@@ -207,8 +207,8 @@ class Media < ActiveRecord::Base
           delete_hash: obj['deletehash']
         })
 
-        media.tag_list.add(media.section, 'trending')
-        media.save
+        card.tag_list.add(card.section, 'trending')
+        card.save
       end
     end
   end
