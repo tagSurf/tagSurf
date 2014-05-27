@@ -1,6 +1,5 @@
 class Card < ActiveRecord::Base
 
-  # Setup Redis-objects on Cards
   include Redis::Objects
   counter :up_votes
 
