@@ -8,7 +8,7 @@ class TaggedMediaPopulation
     batch = Tag.where(fetch_more_content: true).limit(25)
     if batch.present?
       batch.each do |tag|
-        Card.populate_tag(tag.name)
+        Media.populate_tag(tag.name)
         tag.update_column("fetch_more_content", false)
       end
     else
