@@ -6,10 +6,9 @@ class Vote < ActiveRecord::Base
   has_one :tag
 
   after_commit :relate_tag,        on: :create
-  after_commit :update_card_score, on: :create
 
   def self.paginated_history(user_id, limit, offset) 
-    Card.joins(:votes).where("votes.voter_id = #{user_id}").order('votes.id desc').limit(limit).offset(offset)
+    Media.joins(:votes).where("votes.voter_id = #{user_id}").order('votes.id desc').limit(limit).offset(offset)
   end
 
   def prev_cards(n=2)
@@ -48,16 +47,5 @@ class Vote < ActiveRecord::Base
     tag = Tag.where(name: self.vote_tag).first
     self.update_column("tag_id", tag.id)
   end
-
-  def update_card_score
-    vote = self
-    card = Card.find(vote.votable_id)
-    if card && vote.vote_flag 
-      card.update_column("ts_score", card.ts_score + 1)
-    else
-      # "Do nothing"
-    end
-    card.update_column("last_touched", Time.now)
-  end
-    
+   
 end

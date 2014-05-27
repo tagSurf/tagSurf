@@ -6,6 +6,7 @@ class IncrementMediaVoteCount
     return unless card
     media.up_votes.increment
     media.ts_score = media.ts_score + 1000000
+    media.last_touched = Time.now
     media.save
   end
 
