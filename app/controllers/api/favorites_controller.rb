@@ -3,7 +3,7 @@ class Api::FavoritesController < Api::BaseController
   before_filter :find_authenticated_user 
 
   def create
-    @fav = Favorite.new(user_id: @user.id, card_id: fav_params[:card_id]) 
+    @fav = Favorite.new(user_id: @user.id, media_id: fav_params[:card_id]) 
     if @fav.save
       render json: {created: true}, status: :ok
     else
@@ -12,7 +12,7 @@ class Api::FavoritesController < Api::BaseController
   end
 
   def delete
-    @fav = Favorite.where(user_id: @user.id, card_id: fav_params[:card_id]).first
+    @fav = Favorite.where(user_id: @user.id, media_id: fav_params[:card_id]).first
     if @fav && @fav.destroy
       render json: {removed: true}, status: :ok
     else
@@ -29,64 +29,62 @@ class Api::FavoritesController < Api::BaseController
       @limit = 50
     end
 
-    @cards = Favorite.paginated_history(current_user.id, @limit, @offset)
-    if @cards
-      render json: @cards, root: 'data'
+    @media = Favorite.paginated_history(current_user.id, @limit, @offset)
+    if @media
+      render json: @media, root: 'data'
     else
       render json: "Nothing here"
     end
   end
 
   def bracketed_history
-    favorite = Favorite.where(card_id: params[:id], user_id: @user.id).first
+    favorite = Favorite.where(media_id: params[:id], user_id: @user.id).first
 
     unless favorite
       render json: {error: "no favorites for card: #{params[:id]} and user" }, status: :not_found
       return
     end
 
-    @cards = Favorite.bracketed_collection(favorite)
-    if @cards.present?
-      render json: @cards, each_serializer: CardSerializer, root: 'data'
+    @media = Favorite.bracketed_collection(favorite)
+    if @media.present?
+      render json: @media, each_serializer: MediaSerializer, root: 'data'
     else
-      render json: {error: 'no cards found'}, status: :not_found
+      render json: {error: 'no media found'}, status: :not_found
     end
   end
 
   def next_history
-    favorite = Favorite.where(card_id: params[:id], user_id: @user.id).first
+    favorite = Favorite.where(media_id: params[:id], user_id: @user.id).first
 
     unless favorite
-      render json: {error: "no favorites for card: #{params[:id]} and user" }, status: :not_found
+      render json: {error: "no favorites for media: #{params[:id]} and user" }, status: :not_found
       return
     end
 
-    @cards = Favorite.next_collection(favorite)
-    if @cards.present?
-      render json: @cards, each_serializer: CardSerializer, root: 'data'
+    @media = Favorite.next_collection(favorite)
+    if @media.present?
+      render json: @media, each_serializer: MediaSerializer, root: 'data'
     else
-      render json: {error: 'no cards found'}, status: :not_found
+      render json: {error: 'no media found'}, status: :not_found
     end
 
   end
 
   def previous_history
-    favorite = Favorite.where(card_id: params[:id], user_id: @user.id).first
+    favorite = Favorite.where(media_id: params[:id], user_id: @user.id).first
 
     unless favorite
-      render json: {error: "no favorites for card: #{params[:id]} and user" }, status: :not_found
+      render json: {error: "no favorites for media: #{params[:id]} and user" }, status: :not_found
       return
     end
 
-    @cards = Favorite.previous_collection(favorite)
-    if @cards.present?
-      render json: @cards, each_serializer: CardSerializer, root: 'data'
+    @media = Favorite.previous_collection(favorite)
+    if @media.present?
+      render json: @media, each_serializer: MediaSerializer, root: 'data'
     else
-      render json: {error: 'no cards found'}, status: :not_found
+      render json: {error: 'no media found'}, status: :not_found
     end
   end
-
-
 
   private
 
