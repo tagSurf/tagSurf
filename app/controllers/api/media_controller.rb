@@ -24,7 +24,12 @@ class Api::MediaController < Api::BaseController
         votable_type: 'Card',
         vote_flag: media_params[:tag]
       )
-      render json: {success: "true"}
+      if result.try(:id)
+        IncrementMediaVoteCount.perform_async(tag_params[:media_id])
+        render json: {success: "true"}
+      else
+        raise "Unable to write vote"
+      end
     rescue => e
       render json: {error: "something went wrong: #{e}"}, status: :unprocessible_entity
     end

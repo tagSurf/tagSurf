@@ -4,7 +4,7 @@ class IncrementMediaVoteCount
   def perform(media_id)
     card = Card.find_by(id: media_id)
     return unless card
-    card.up_vote.increment
+    card.up_votes.increment
   end
 
 end
