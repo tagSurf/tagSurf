@@ -1,28 +1,28 @@
 class Favorite < ActiveRecord::Base
 
   validates_presence_of :user_id
-  validates_presence_of :card_id
-  validates_uniqueness_of :card_id, :scope => :user_id, :message => "already favorited by user."
+  validates_presence_of :media_id
+  validates_uniqueness_of :media_id, :scope => :user_id, :message => "already favorited by user."
 
   belongs_to :user
-  belongs_to :card
+  belongs_to :media
 
   after_commit :create_vote, on: :create
 
   def self.paginated_history(user_id, limit, offset)
-    Card.joins(:favorites).where("favorites.user_id = #{user_id}").order('favorites.id desc').limit(limit).offset(offset)
+    Media.joins(:favorites).where("favorites.user_id = #{user_id}").order('favorites.id desc').limit(limit).offset(offset)
   end
 
   def prev_cards(n=2)
-    cards = []
-    user.favorites.includes(:card).where("favorites.id < ?", id).order("id DESC").limit(n).each {|v| cards << v.card }
-    cards
+    media = []
+    user.favorites.includes(:media).where("favorites.id < ?", id).order("id DESC").limit(n).each {|v| media << v.media }
+    media
   end
 
   def next_cards(n=2)
-    cards = []
-    user.favorites.includes(:card).where("favorites.id > ?", id).order("id ASC").limit(n).each {|v| cards << v.card }
-    cards
+    media = []
+    user.favorites.includes(:media).where("favorites.id > ?", id).order("id ASC").limit(n).each {|v| media << v.media }
+    media
   end
 
   # Places the requested card in the center of a collection of 21 cards
@@ -30,7 +30,7 @@ class Favorite < ActiveRecord::Base
   def self.bracketed_collection(favorite)
     collection = []
     collection << favorite.next_cards.reverse!
-    collection << favorite.card
+    collection << favorite.media
     collection << favorite.prev_cards
     collection.flatten
   end
@@ -50,17 +50,17 @@ class Favorite < ActiveRecord::Base
       CreateFavoriteVote.perform_async(self.id)
     else
       vote = Vote.where(
-        votable_id: self.card.id,
-        votable_type: 'Card',
-        voter_id: self.user.id,
+        votable_id: self.media_id,
+        votable_type: 'Media',
+        voter_id: self.user_id,
         voter_type: 'User'
       ).first
       unless vote
         Vote.create!(
-          voter_id: self.user.id,
+          voter_id: self.user_id,
           voter_type: 'User',
-          votable_id: self.card.id,
-          votable_type: 'Card',
+          votable_id: self.media_id,
+          votable_type: 'Media',
           vote_flag: true
         )
       end
