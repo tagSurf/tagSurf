@@ -87,7 +87,7 @@ class MediaSerializer < BaseSerializer
   end
 
   def votes
-    @votes = Vote.where(votable_type: 'Card', votable_id: object.id) 
+    @votes = Vote.where(votable_type: 'Media', votable_id: object.id) 
   end
 
   def total_votes
