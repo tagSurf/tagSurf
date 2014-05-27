@@ -4,7 +4,7 @@ class Api::MediaController < Api::BaseController
   before_action :find_authenticated_user
 
   def show
-    @card = Card.find params[:id]
+    @card = Media.find params[:id]
     render json: @card
   end
 
@@ -21,7 +21,7 @@ class Api::MediaController < Api::BaseController
         voter_id: @user.id, 
         votable_id: media_params[:id], 
         vote_flag: @vote, 
-        votable_type: 'Card',
+        votable_type: 'Media',
         vote_tag: media_params[:tag]
       )
       if vote.try(:id)
@@ -41,7 +41,7 @@ class Api::MediaController < Api::BaseController
   end
 
   def next
-    @cards = Card.next(@user, media_params[:tag])
+    @cards = Media.next(@user, media_params[:tag])
     if @cards.present?
       render json: @cards, root: "data"
     else
