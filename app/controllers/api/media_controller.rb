@@ -16,7 +16,7 @@ class Api::MediaController < Api::BaseController
   def create_vote
     @vote = media_params[:vote] == 'up' ? true : false
     begin
-      result = Vote.create(
+      vote = Vote.create(
         voter_type: 'User', 
         voter_id: @user.id, 
         votable_id: media_params[:id], 
@@ -24,8 +24,9 @@ class Api::MediaController < Api::BaseController
         votable_type: 'Card',
         vote_tag: media_params[:tag]
       )
-      if result.try(:id)
-        IncrementMediaVoteCount.perform_async(media_params[:media_id]) if result.vote_flag
+      if vote.try(:id)
+        @user.voted_on << vote.id
+        IncrementMediaVoteCount.perform_async(media_params[:media_id]) if vote.vote_flag
         render json: {success: "true"}
       else
         raise "Unable to write vote"
