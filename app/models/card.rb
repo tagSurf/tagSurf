@@ -135,6 +135,11 @@ class Card < ActiveRecord::Base
   def self.populate_tag(tag) 
     return if Tag.blacklisted?(tag)
     response = RemoteResource.tagged_feed(tag)
+
+    if response.nil? or response.parsed_response.nil?
+      raise "Failed to fetch with #{tag}, response:#{reponse}"
+    end
+
     tagged = response.parsed_response["data"]
 
     # Create tag if not already in the system
