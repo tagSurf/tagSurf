@@ -25,7 +25,7 @@ class Api::MediaController < Api::BaseController
         vote_tag: media_params[:tag]
       )
       if result.try(:id)
-        IncrementMediaVoteCount.perform_async(media_params[:media_id])
+        IncrementMediaVoteCount.perform_async(media_params[:media_id]) if result.vote_flag
         render json: {success: "true"}
       else
         raise "Unable to write vote"
