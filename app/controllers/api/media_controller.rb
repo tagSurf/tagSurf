@@ -22,7 +22,6 @@ class Api::MediaController < Api::BaseController
         votable_id: media_params[:id], 
         vote_flag: @vote, 
         votable_type: 'Card',
-        vote_flag: media_params[:vote],
         vote_tag: media_params[:tag]
       )
       if result.try(:id)

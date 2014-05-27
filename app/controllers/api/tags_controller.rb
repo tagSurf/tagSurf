@@ -47,6 +47,7 @@ class Api::TagsController < Api::BaseController
 
       if tag_params[:vote].present?
         vote = Vote.create!(
+          voter_type: 'User',
           vote_tag:   @tag, 
           voter_id:   @user.id,  
           votable_id: tag_params[:media_id],  
