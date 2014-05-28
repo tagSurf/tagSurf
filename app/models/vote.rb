@@ -12,15 +12,15 @@ class Vote < ActiveRecord::Base
   end
 
   def prev_cards(n=2)
-    cards = []
-    user.votes.includes(:card).where("votes.id > ?", id).order("id ASC").limit(n).each {|v| cards << v.card }
-    cards
+    media = []
+    user.votes.includes(:media).where("votes.id > ?", id).order("id ASC").limit(n).each {|v| media  << v.media }
+    media
   end
 
   def next_cards(n=2)
-    cards = []
-    user.votes.includes(:card).where("votes.id < ?", id).order("id DESC").limit(n).each {|v| cards << v.card }
-    cards
+    media = []
+    user.votes.includes(:media).where("votes.id < ?", id).order("id DESC").limit(n).each {|v| media << v.media }
+    media
   end
 
   # Places the requested card in the center of a collection of 21 cards

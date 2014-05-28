@@ -41,11 +41,11 @@ class Api::MediaController < Api::BaseController
   end
 
   def next
-    @cards = Media.next(@user, media_params[:tag])
-    if @cards.present?
-      render json: @cards, root: "data"
+    @media = Media.next(@user, media_params[:tag])
+    if @media.present?
+      render json: @media, root: "data"
     else
-      render json: {errors: 'no cards found'}, status: :not_found
+      render json: {errors: 'no media found'}, status: :not_found
     end
   end
 
