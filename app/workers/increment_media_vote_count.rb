@@ -3,7 +3,7 @@ class IncrementMediaVoteCount
 
   def perform(media_id)
     media = Media.find_by(id: media_id)
-    return unless card
+    return unless media
     media.up_votes.increment
     media.ts_score = media.ts_score + 1000000
     media.last_touched = Time.now
