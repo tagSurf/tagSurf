@@ -15,23 +15,19 @@ class Api::MediaController < Api::BaseController
 
   def create_vote
     @vote = media_params[:vote] == 'up' ? true : false
-    begin
-      vote = Vote.create(
-        voter_type: 'User', 
-        voter_id: @user.id, 
-        votable_id: media_params[:id], 
-        vote_flag: @vote, 
-        votable_type: 'Media',
-        vote_tag: media_params[:tag]
-      )
-      if vote.try(:id)
-        @user.voted_on << vote.id
-        IncrementMediaVoteCount.perform_async(media_params[:media_id]) if vote.vote_flag
-        render json: {success: "true"}
-      else
-        raise "Unable to write vote"
-      end
-    rescue => e
+    @user.voted_on << media_params[:id]
+    vote = Vote.create(
+      voter_type: 'User', 
+      voter_id: @user.id, 
+      votable_id: media_params[:id], 
+      vote_flag: @vote, 
+      votable_type: 'Media',
+      vote_tag: media_params[:tag]
+    )
+    if vote
+      IncrementMediaVoteCount.perform_async(media_params[:media_id]) if vote.vote_flag
+      render json: {success: "true"}
+    else
       render json: {error: "something went wrong: #{e}"}, status: :unprocessible_entity
     end
   end
