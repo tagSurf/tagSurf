@@ -18,7 +18,11 @@ class DegradeSevenDayScore
       7.days.ago
     )
     media.each do |m|
-      score_bonus = m.remote_score.to_i + (m.up_votes.to_i * 1000000)
+      if m.up_votes.to_i > 0
+        score_bonus = m.remote_score.to_i + (m.up_votes.to_i * 1000000)
+      else
+        score_bonus = m.remote_score.to_i
+      end
       m.update_columns(time_bonus_expired: true, ts_score: score_bonus)
     end
   end
