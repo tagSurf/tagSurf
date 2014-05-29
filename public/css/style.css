@@ -208,8 +208,8 @@ a {
 	margin: 1px;
 	padding-left: 13px;
 	border: solid thin transparent;
-	font-size: 16px;
-  font-weight:200;
+	font-size: 120%;
+	font-weight:200;
 	background: #fff;
 	outline-width: 0;
 	-moz-border-radius: 50px / 50px;
