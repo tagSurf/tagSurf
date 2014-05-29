@@ -126,7 +126,7 @@ class Media < ActiveRecord::Base
           @media = @media.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
         end
       else
-        @media = Media.where('id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+        @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
         if @media.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
