@@ -46,6 +46,8 @@ class Favorite < ActiveRecord::Base
   private
 
   def create_vote
+    user = User.find(self.user_id)
+    user.voted_on << self.media_id
     if CONFIG[:redis_active]
       CreateFavoriteVote.perform_async(self.id)
     else
