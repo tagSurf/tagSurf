@@ -11,7 +11,7 @@ class Tag < ActiveRecord::Base
   end
 
   def self.populate_from_existing!
-    sections = Card.pluck(:section)  
+    sections = Media.pluck(:section)  
     available_tags = sections.uniq!
     available_tags.each do |name|
       Tag.create(name: name)
@@ -19,7 +19,7 @@ class Tag < ActiveRecord::Base
   end
 
   def self.populate!
-    Card.pluck(:section).uniq.each do |name|
+    Media.pluck(:section).uniq.each do |name|
       begin
         Tag.create(name: name)
       rescue ActiveRecord::RecordNotUnique => e

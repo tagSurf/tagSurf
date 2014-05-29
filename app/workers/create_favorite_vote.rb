@@ -5,17 +5,17 @@ class CreateFavoriteVote
     begin
       fav = Favorite.find(favorite_id)
       vote = Vote.where(
-        votable_id: fav.card.id, 
-        votable_type: 'Card', 
-        voter_id: fav.user.id, 
+        votable_id: fav.media_id, 
+        votable_type: 'Media', 
+        voter_id: fav.user_id, 
         voter_type: 'User'
       ).first
       unless vote
         Vote.create!(
-          voter_id: fav.user.id,
+          voter_id: fav.user_id,
           voter_type: 'User',
-          votable_id: fav.card.id,
-          votable_type: 'Card',
+          votable_id: fav.media_id,
+          votable_type: 'Media',
           vote_flag: true
         )
       end

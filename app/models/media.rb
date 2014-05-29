@@ -1,6 +1,5 @@
-class Card < ActiveRecord::Base
+class Media < ActiveRecord::Base
 
-  # Setup Redis-objects on Cards
   include Redis::Objects
   counter :up_votes
 
@@ -29,14 +28,15 @@ class Card < ActiveRecord::Base
   end
 
   def active_model_serializer
-    CardSerializer
+    MediaSerializer
   end
 
   def tagged_as
     votes.map(&:vote_tag).uniq
   end
 
-  def card_tag_info(tag)
+  # TODO Redisify
+  def media_tag_info(tag)
     trend = [*1..10].sample.odd? ? 'up' : 'down' 
     data = {total_votes: nil, down_votes: nil, up_votes: nil, score: nil, is_trending: false, trend: nil}
     # Doing count lookups is faster than array actions, but refactor is needed.
@@ -84,22 +84,25 @@ class Card < ActiveRecord::Base
     self.save
   end
 
-  # Gather the next set of cards for feeds 
+  # Gather the next set of media for feeds 
   # The brains of tagSurf feeds 
   def self.next(user, tag, n=20)
     if Tag.blacklisted?(tag)
       []
     elsif user.nil?
-      # Cards available for non-authed preview
+      # Media available for non-authed preview
       # Not implemented
       []
     else
-      @cards = Card.all
-      has_voted_ids = user.votes.pluck(:votable_id) 
+      @media = Media.all
+
+      unless has_voted_ids = user.voted_on.present? && user.voted_on.to_a
+        has_voted_ids = user.votes.pluck(:votable_id) 
+      end
 
       if tag == 'trending'
-        staffpick_ids = @cards.tagged_with('StaffPicks').pluck(:id)
-        viral_ids = @cards.where(viral: true).pluck(:id)
+        staffpick_ids = @media.tagged_with('StaffPicks').pluck(:id)
+        viral_ids = @media.where(viral: true).pluck(:id)
 
         # Remove media which the user has voted on
         staffpick_ids = staffpick_ids - has_voted_ids
@@ -109,26 +112,26 @@ class Card < ActiveRecord::Base
         if staffpick_ids.present?
           if staffpick_ids.length < 20
             trending_limit = n - staffpick_ids.length
-            additional_media = Card.where('id not in (?) and id in (?)', has_voted_ids, viral_ids).limit(trending_limit).order('ts_score DESC NULLS LAST').map(&:id)
+            additional_media = Media.where('id not in (?) and id in (?)', has_voted_ids, viral_ids).limit(trending_limit).order('ts_score DESC NULLS LAST').map(&:id)
             media_ids = staffpick_ids + additional_media
 
             # Custom sort order for collections
             # TODO Move to Activerecord extension
             sort_order = media_ids.collect{|id| "id = #{id} desc"}.join(',')
-            @cards =  @cards.where('id in (?)', media_ids).limit(n).order(sort_order)
+            @media =  @media.where('id in (?)', media_ids).limit(n).order(sort_order)
           else
-            @cards =  @cards.where('id in (?)', staffpick_ids).limit(n).order('ts_score DESC NULLS LAST')
+            @media =  @media.where('id in (?)', staffpick_ids).limit(n).order('ts_score DESC NULLS LAST')
           end
         else
-          @cards = @cards.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
+          @media = @media.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
         end
       else
-        @cards = Card.where('cards.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
-        if @cards.length < 10
+        @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+        if @media.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
       end
-      @cards
+      @media
     end
   end
 
@@ -137,7 +140,7 @@ class Card < ActiveRecord::Base
     response = RemoteResource.tagged_feed(tag)
 
     if response.nil? or response.parsed_response.nil?
-      raise "Failed to fetch with #{tag}, response:#{response}"
+      raise "Failed to fetch with #{tag}, response:#{reponse}"
     end
 
     tagged = response.parsed_response["data"]
@@ -151,7 +154,7 @@ class Card < ActiveRecord::Base
       tagged.each do |obj|
         next if obj["nsfw"].to_s == 'true'
         next if obj['is_album'].to_s == 'true'
-        card = Card.create({
+        media = Media.create({
           remote_id: obj['id'],
           remote_provider: 'imgur',
           remote_created_at: obj['datatime'],
@@ -172,8 +175,8 @@ class Card < ActiveRecord::Base
           section: obj['section'],
           delete_hash: obj['deletehash']
         })
-        card.tag_list.add(card.section)
-        card.save
+        media.tag_list.add(media.section)
+        media.save
       end
     else
       tag.update_column("fetch_more_content", true)
@@ -185,7 +188,7 @@ class Card < ActiveRecord::Base
     fresh_list = response.parsed_response["data"]
     fresh_list.each do |obj|
       if obj['is_album'].to_s == 'false' and obj['nsfw'].to_s == 'false'
-        card = Card.create({
+        media = Media.create({
           remote_id: obj['id'],
           remote_provider: 'imgur',
           remote_created_at: obj['datatime'],
@@ -207,8 +210,8 @@ class Card < ActiveRecord::Base
           delete_hash: obj['deletehash']
         })
 
-        card.tag_list.add(card.section, 'trending')
-        card.save
+        media.tag_list.add(media.section, 'trending')
+        media.save
       end
     end
   end

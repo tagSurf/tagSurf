@@ -7,7 +7,7 @@ class RequestTaggedMedia
 
   def perform(tag)
     tag = Tag.where(name: tag)
-    Card.populate_tag(tag.name)
+    Media.populate_tag(tag.name)
   end
 
 end

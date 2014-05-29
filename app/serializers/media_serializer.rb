@@ -1,4 +1,4 @@
-class CardSerializer < BaseSerializer
+class MediaSerializer < BaseSerializer
   self.root = false
 
   attributes( 
@@ -24,7 +24,7 @@ class CardSerializer < BaseSerializer
     current_tags = (object.tag_list + object.tagged_as + [object.section]).uniq
     tagged_objects = []
     current_tags.each do |tag|
-      tagged_objects.push("#{tag}" => object.card_tag_info(tag))
+      tagged_objects.push("#{tag}" => object.media_tag_info(tag))
     end
     tagged_objects
   end
@@ -47,7 +47,7 @@ class CardSerializer < BaseSerializer
   end
 
   def user_favorite
-    @user_fav ||= Favorite.where(user_id: current_user.id, card_id: object.id).first
+    @user_fav ||= Favorite.where(user_id: current_user.id, media_id: object.id).first
   end
 
   def caption
@@ -87,7 +87,7 @@ class CardSerializer < BaseSerializer
   end
 
   def votes
-    @votes = Vote.where(votable_type: 'Card', votable_id: object.id) 
+    @votes = Vote.where(votable_type: 'Media', votable_id: object.id) 
   end
 
   def total_votes

@@ -7,11 +7,11 @@ class Api::TagsController < Api::BaseController
   end
 
   def show
-    @cards = Card.tagged_with(tag_params['name']).order('created_at DESC')
-    if @cards
-      render json: @cards 
+    @media = Media.tagged_with(tag_params['name']).order('created_at DESC')
+    if @media
+      render json: @media
     else
-      render json: "no cards with that tag"
+      render json: "no media with that tag"
     end
   end
 
@@ -41,7 +41,7 @@ class Api::TagsController < Api::BaseController
       end
     
       # Set tagging on media
-      @media = Card.find tag_params[:media_id]
+      @media = Media.find tag_params[:media_id]
       @media.tag_list.add @tag
       @media.save! 
 
@@ -51,7 +51,7 @@ class Api::TagsController < Api::BaseController
           vote_tag:   @tag, 
           voter_id:   @user.id,  
           votable_id: tag_params[:media_id],  
-          votable_type: 'Card',
+          votable_type: 'Media',
           vote_flag: (tag_params[:vote] == 'up')
         )
       end

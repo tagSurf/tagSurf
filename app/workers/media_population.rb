@@ -5,6 +5,6 @@ class MediaPopulation
   recurrence { hourly.minute_of_hour(0, 15, 30, 45) }
 
   def perform
-    Card.populate_trending!
+    Media.populate_trending!
   end
 end

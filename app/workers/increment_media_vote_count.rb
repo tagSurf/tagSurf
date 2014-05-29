@@ -2,11 +2,12 @@ class IncrementMediaVoteCount
   include Sidekiq::Worker
 
   def perform(media_id)
-    card = Card.find_by(id: media_id)
-    return unless card
-    card.up_votes.increment
-    card.ts_score = card.ts_score + 1000000
-    card.save
+    media = Media.find_by(id: media_id)
+    return unless media
+    media.up_votes.increment
+    media.ts_score = media.ts_score + 1000000
+    media.last_touched = Time.now
+    media.save
   end
 
 end
