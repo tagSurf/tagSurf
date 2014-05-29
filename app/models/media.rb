@@ -96,11 +96,11 @@ class Media < ActiveRecord::Base
     else
       @media = Media.all
 
-      unless has_voted_ids = user.voted_on.present? && user.voted_on.to_a
-        has_voted_ids = user.votes.pluck(:votable_id) 
-      end
+      #unless has_voted_ids = user.voted_on.present? && user.voted_on.to_a
+      has_voted_ids = user.votes.pluck(:votable_id) 
+      #end
 
-      has_voted_ids = has_voted_ids.collect {|v| v.to_i } 
+      #has_voted_ids = has_voted_ids.collect {|v| v.to_i } 
 
       if tag == 'trending'
         staffpick_ids = @media.tagged_with('StaffPicks').pluck(:id)
