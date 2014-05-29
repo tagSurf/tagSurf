@@ -56,18 +56,19 @@ html, body
 #tag-input
 {
   color: white;
-  font-weight: 200;
+  font-weight: 100;
   float: left;
   display: inline;
   margin:0;
   border: 0px;
   padding: 7px 5px 7px 5px;
-  font-size: 110%;
+  font-size: 120%;
   width: 180px;
   height: 29px;
   outline-width: 0;
   font-family: 'Raleway', sans-serif;
   background: #6a6a6a;
+  -webkit-appearance: none;
   -moz-border-bottom-top-radius: 50px;
   -moz-border-bottom-left-radius: 0px;
   -moz-border-bottom-bottom-radius: 0px;
