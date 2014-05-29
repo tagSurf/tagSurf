@@ -100,6 +100,8 @@ class Media < ActiveRecord::Base
         has_voted_ids = user.votes.pluck(:votable_id) 
       end
 
+      has_voted_ids = has_voted_ids.collect {|v| v.to_i } 
+
       if tag == 'trending'
         staffpick_ids = @media.tagged_with('StaffPicks').pluck(:id)
         viral_ids = @media.where(viral: true).pluck(:id)
