@@ -48,7 +48,16 @@ describe Media do
     )
   }
 
-  let(:voted_on_three) { Vote.create!(voter_id: user.id, voter_type: "User", votable_type: "Media", votable_id: media_3.id, vote_flag: true) }
+  let(:voted_on_three) { 
+    Vote.create!(
+      voter_id: user.id, 
+      voter_type: "User", 
+      votable_type: "Media", 
+      votable_id: media_3.id, 
+      vote_flag: true, 
+      vote_tag: 'funny'
+    ) 
+  }
 
   context :scaled_dimensions do
     
@@ -86,14 +95,15 @@ describe Media do
 
   context :next do
     
-    it "should order by ts_score then remote_score" do
+    it "should order by ts_score" do
       media
       media_2
       media_3
       voted_on_three
+      raise user.votes.inspect
       
-      media = Media.next(user, "funny") 
-      expect(media.first.remote_id).to eq "chicken"
+      rendered_media = Media.next(user, "funny") 
+      expect(rendered_media.remote_id).to eq "chicken"
     end
   end
 

@@ -34,7 +34,7 @@ gem 'omniauth-oauth2', '1.0.3'
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'
   gem 'debugger'
+  gem 'factory_girl'
 end
 
 gem 'compass-rails', '1.1.3'
-gem 'apipie-rails'
