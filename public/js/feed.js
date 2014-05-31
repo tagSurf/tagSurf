@@ -1,5 +1,6 @@
 onload = function ()
 {
+	carousel.on();
 	populateNavbar();
 
 	// defined in util for autocomplete
