@@ -35,6 +35,16 @@ a {
 	display: none !important;
 }
 
+.tcell {
+	display: table-cell;
+}
+
+.delNode {
+	padding: 0px 5px;
+	margin: 0px 5px;
+	border-left: 1px solid white;
+}
+
 .centered {
 	text-align: center;
 }

@@ -119,13 +119,19 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		n.className += ((d.user_stats.vote == "up")
 			? " green" : " red") + "line";
 	};
-	var buildTagBlock = function(objwrap, tagName) {
+	var buildTagBlock = function(objwrap, tagName, canDelete) {
 		var p = document.createElement("div");
 		p.className = "pictagcell";
 		var t = document.createElement("div");
-		t.className = "smallpadded";
+		t.className = "smallpadded tcell";
 		t.innerHTML = "#" + tagName;
 		p.appendChild(t);
+		if (canDelete) {
+			var delNode = document.createElement("div");
+			delNode.className = "delNode tcell";
+			delNode.innerHTML = "x";
+			p.appendChild(delNode);
+		}
 		p.appendChild(voteMeter(objwrap[tagName]))
 		gesture.listen("up", p, function() {
 			location = "/feed#" + tagName;
@@ -208,7 +214,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			trend: "up"
 		};
 		current_image.tags_v2.push(objwrap);
-		buildTagBlock(objwrap, tag);
+		buildTagBlock(objwrap, tag, true);
 	});
 	var updateFavorited = function() {
 		var gall, ndata;
