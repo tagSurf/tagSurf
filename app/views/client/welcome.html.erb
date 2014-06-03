@@ -1,35 +1,19 @@
 <% content_for :stylesheets do %>
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/beta.css">
+  <link rel="stylesheet" href="/css/carousel.css">
 <% end %>
+<% content_for :javascripts do %>
+  <script src="/js/util.js"></script>
+  <script src="/js/gesture.js"></script>
+  <script src="/js/drag.js"></script>
+  <script src="/js/carousel.js"></script>
+  <script src="/js/welcome.js"></script>
+<% end %>
+<!--
 <center>
- <img class="toplogo" src="/img/ts_logo_horiz_gray.png">
-
- <div class="welcome-text-container">
-  <p class="welcome-top-title">Welcome to tagSurf beta!</p>
-  <p class="welcome-description-text">Before you start surfing, here are a few tips:</p>
-  <p class="welcome-title-text">Trending Feed</p>
-  <p class="welcome-description-text">You’ll start in the Trending feed, which is a collection of all viral content on tagSurf.</p>
-  <p class="welcome-title-text">Swipe Voting</p>
-  <p class="welcome-description-text">While you surf, swipe right if you like the content; swipe left if you don’t. </p>
-  <p class="welcome-title-text">Card Format, Expanding Content & Zooming</p>
-  <p class="welcome-description-text">Expanding Cards: single tap the card to expand the content and see more info around tags and captions. </p>
-  <p class="welcome-description-text">Double tap the image for an even bigger view.</p>
-  <p class="welcome-description-text">Double tap again to zoom in more then double tap to zoom back out. A single tap will return you to the feed. </p>
-  <p class="welcome-title-text">Hashtags (#) on tagSurf</p>
-  <p class="welcome-description-text">Those things on the bottom of the card are tags. Tap one to explore a new feed. </p>
-  <p class="welcome-title-text">tag Search</p>
-  <p class="welcome-description-text">The search bar on top lets you easily change the tag you’re surfing. Play around here to find your favorite tags and feeds. </p>
-  <p class="welcome-title-text">Browser Compatibility </p>
-  <p class="welcome-description-text">We’re building tagSurf to be compatible with all devices and browsers, but at this time we see the best performance on iPhone devices with mobile Safari. Your experience on other platforms may vary.</p>
-  <p class="welcome-title-text">Contact Us</p>
-  <p class="welcome-description-text">If you have any questions, please drop us a line at beta@tagsurf.co. </p>
-  <p class="welcome-title-text">Surf on!</p>
- </div>
-
   <%= form_for(current_user, url: user_path, method: :put) do |f| %>
     <%= f.hidden_field :confirm_feature_tour, value: true %>
     <%= f.submit "Got it!", class: 'button', id: "welcome-submit-btn" %>
   <% end %>
-
 </center>
+-->

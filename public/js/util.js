@@ -2,6 +2,9 @@ var hasClass = function (node, className)
 {
   return node.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(node.className);
 };
+Number.prototype.mod = function(n) {
+  return ((this%n)+n)%n;
+}
 String.prototype.trunc = String.prototype.trunc ||
   function(n){
     return this.length>n ? this.substr(0,n-1)+'&hellip;' : this;

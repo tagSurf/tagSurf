@@ -1,6 +1,7 @@
 var carousel = 
 {
 	view: document.createElement('div'),
+	activeCircle: null,
 	translateDistance: window.innerWidth,
 	animating: false,
 	xPosition: 0,
@@ -18,16 +19,32 @@ var carousel =
 				return "width: " + window.innerWidth + "px";
 			}
 		});
-		var index, container = document.createElement('div'),
+		var index, changeOrder, container = document.createElement('div'),
 			orderIndication = document.createElement('div'),
 			circlesContainer = document.createElement('div'),
-			endButton = document.createElement('input');
+			endButton = document.createElement('div');
+		var orderIndicationCallback = function (direction) {
+			 if (direction == "left")
+			 {
+				carousel.activeCircle.classList.remove('active_circle');
+				carousel.activeCircle.nextSibling.classList.add('active_circle');
+				carousel.activeCircle = carousel.activeCircle.nextSibling;
+			 }
+			 if (direction == "right")
+			 {
+				carousel.activeCircle.classList.remove('active_circle');
+				carousel.activeCircle.previousSibling.classList.add('active_circle');
+				carousel.activeCircle = carousel.activeCircle.previousSibling;
+			 }
+		};
 		carousel.view.id = "carousel";
 		container.className = "carousel_container";
 		orderIndication.className = "carousel_order_indicator";
 		endButton.className = "end_tutorial_btn";
-		endButton.type = "button";
-		endButton.value = "Got it!";
+		endButton.innerHTML = "Got it!";
+		gesture.listen("tap", endButton, function(){carousel.off();});
+		drag.makeDraggable(container, "vertical", carousel.translateDistance, 
+			orderIndicationCallback);
 		orderIndication.appendChild(circlesContainer);
 		orderIndication.appendChild(endButton);
 		carousel.view.appendChild(container);
@@ -39,7 +56,7 @@ var carousel =
 				'/img/tutorial/tutorial_' + index + '.png');
 		}
 		carousel._populate();
-		gesture.listen("swipe", carousel.view, carousel.swipeCallback);
+		//gesture.listen("swipe", carousel.view, carousel.swipeCallback);
 	},
 	_populate: function ()
 	{
@@ -52,10 +69,14 @@ var carousel =
 			image.src = carousel.images[index];
 			container.appendChild(image);
 			circle = document.createElement('div');
-			circle.className = "indicator_circle" + 
-				((index == 0) ? " active_circle" : "");
+			circle.className = "indicator_circle";
+			if (index == 0)
+			{
+				circle.className +=  " active_circle";
+				carousel.activeCircle = circle;
+			}
 			carousel.view.firstChild.appendChild(container);
-			carousel.view.lastChild.appendChild(circle);
+			carousel.view.lastChild.firstChild.appendChild(circle);
 		}
 	},
 	dragCallback: function ()
@@ -67,11 +88,11 @@ var carousel =
 			translateToXPx = carousel.xPosition;
 		if (direction == "left")
 		{
-			translateToXPx += carousel.translateDistance;
+			translateToXPx -= carousel.translateDistance;
 		}
 		else if (direction == "right")
 		{
-			translateToXPx -= carousel.translateDistance;
+			translateToXPx += carousel.translateDistance;
 		}
 		else
 		{
