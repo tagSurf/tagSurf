@@ -1,6 +1,6 @@
 var drag =
 {
-	makeDraggable: function (node, constraint, interval, boundaries endCallback)
+	makeDraggable: function (node, constraint, interval, endCallback)
 	{
 		var downCallback, upCallback, dragCallback;
 		downCallback = function () 
@@ -25,7 +25,7 @@ var drag =
 					yMod = node.yDrag % interval;
 					if (yMod != 0)
 					{
-						if (yMod <= (interval / 2))
+						if (Math.abs(yMod) <= (interval / 2))
 						{
 							node.yDrag -= yMod;
 							direction = "down";
@@ -42,15 +42,15 @@ var drag =
 					xMod = node.xDrag % interval;
 					if (xMod != 0)
 					{
-						if (xMod > (interval / 2))
+						if (Math.abs(xMod) <= (interval / 2))
 						{
 							node.xDrag -= xMod;
-							direction = "left";
+							direction = (xMod < 0) ? "right" : "left";
 						}
 						else
 						{
 							node.xDrag += (interval - xMod);
-							direction = "right";
+							direction = (xMod < 0) ? "left" : "right";
 						}
 					}
 				}
