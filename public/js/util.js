@@ -147,6 +147,7 @@ var populateNavbar = function () {
     var newtag = tag_adder.firstChild.value.slice(1);
     if (!newtag || newtag == "newtag") return;
     newtags.push(newtag);
+    slideAddBar();
     addCallback && addCallback(newtag);
   };
   tag_adder.firstChild.onclick = function() {
