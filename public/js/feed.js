@@ -419,6 +419,10 @@ onload = function ()
 			var delNode = document.createElement("div");
 			delNode.className = "smallpadded delNode tcell";
 			delNode.innerHTML = "x";
+			delNode.onclick = function() {
+				rmTag(tag);
+				picTags.removeChild(p);
+			};
 			p.appendChild(delNode);
 		}
 		gesture.listen("down", p, function() {

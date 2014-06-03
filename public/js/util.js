@@ -71,6 +71,19 @@ var slideAddBar = function(noback) {
   if (noback != true && !modal.zoom.zoomed && !modal.modal.on)
     addBarSlid ? modal.halfOn(slideAddBar) : modal.backOff();
 };
+
+// tagging stuff
+var newtags = [];
+var pushTags = function() {
+  while (newtags.length)
+    xhr("/api/media/" + currentMedia.id + "/tags/" + newtags.shift(), "POST");
+};
+var rmTag = function(tname) {
+  var i = newtags.indexOf(tname);
+  if (i != -1)
+    newtags = newtags.slice(0, i).concat(newtags.slice(i+1));
+};
+
 var populateNavbar = function () {
   var nav = document.getElementById("nav");
   var navbar = document.createElement("div");
@@ -133,7 +146,7 @@ var populateNavbar = function () {
   tag_adder.firstChild.nextSibling.onclick = function() {
     var newtag = tag_adder.firstChild.value.slice(1);
     if (!newtag || newtag == "newtag") return;
-    xhr("/api/media/" + currentMedia.id + "/tags/" + newtag, "POST", slideAddBar);
+    newtags.push(newtag);
     addCallback && addCallback(newtag);
   };
   tag_adder.firstChild.onclick = function() {

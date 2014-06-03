@@ -130,6 +130,10 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			var delNode = document.createElement("div");
 			delNode.className = "smallpadded delNode tcell";
 			delNode.innerHTML = "x";
+			delNode.onclick = function() {
+				rmTag(tagName);
+				pictags.removeChild(p);
+			};
 			p.appendChild(delNode);
 		}
 		p.appendChild(voteMeter(objwrap[tagName]))
