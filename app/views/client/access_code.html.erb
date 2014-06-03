@@ -13,7 +13,7 @@
    <div class="ac-submit-container">
 
      <%= form_for(:access_code, url: '/confirm-beta', :html => { :method => :post }) do |f| %>
-       <%= f.text_field :access_code, id: 'beta_code_input', placeholder: 'beta code', autocomplete: "off", spellcheck: "false", autocapitalize: "off", autocorrect: "off" %>
+       <%= f.text_field :access_code, id: 'beta_code_input', placeholder: 'beta code', autocomplete: "off", spellcheck: "false", autocapitalize: "off", autocorrect: "off", class: 'bigplace' %>
        <%= f.submit "submit", id: 'ac-submit-btn' %>
      <% end %>
 
