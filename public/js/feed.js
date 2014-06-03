@@ -408,9 +408,19 @@ onload = function ()
 			toggleClass.apply(slider, ['super_card', 'on']);
 		}
 	};
-	var tagCard = function(tag, picTags) {
-		var p = document.createElement("span");
-		p.innerHTML = "#" + tag;
+	var tagCard = function(tag, picTags, canDelete) {
+		var p = document.createElement("div");
+		p.className = "pictagcell";
+		var tNode = document.createElement("div");
+		tNode.className = "smallpadded tcell";
+		tNode.innerHTML = "#" + tag;
+		p.appendChild(tNode);
+		if (canDelete) {
+			var delNode = document.createElement("div");
+			delNode.className = "smallpadded delNode tcell";
+			delNode.innerHTML = "x";
+			p.appendChild(delNode);
+		}
 		gesture.listen("down", p, function() {
 			p.classList.add("active-pictag");
 		});
@@ -608,7 +618,8 @@ onload = function ()
 			trend: "up"
 		};
 		slider.card.tags_v2.push(objwrap);
-		tagCard(tag, document.getElementById("pictags" + slider.card.id));
+		tagCard(tag,
+			document.getElementById("pictags" + slider.card.id), true);
 		formatCardContents();
 	});
 	setStarCallback(function() {

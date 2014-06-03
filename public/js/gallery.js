@@ -123,12 +123,12 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		var p = document.createElement("div");
 		p.className = "pictagcell";
 		var t = document.createElement("div");
-		t.className = "smallpadded tcell";
+		t.className = "smallpadded midsize tcell";
 		t.innerHTML = "#" + tagName;
 		p.appendChild(t);
 		if (canDelete) {
 			var delNode = document.createElement("div");
-			delNode.className = "delNode tcell";
+			delNode.className = "smallpadded delNode tcell";
 			delNode.innerHTML = "x";
 			p.appendChild(delNode);
 		}
