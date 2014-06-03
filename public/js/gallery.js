@@ -130,15 +130,15 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			var delNode = document.createElement("div");
 			delNode.className = "smallpadded delNode tcell";
 			delNode.innerHTML = "x";
-			delNode.onclick = function() {
-				rmTag(tagName);
-				pictags.removeChild(p);
-			};
 			p.appendChild(delNode);
 		}
 		p.appendChild(voteMeter(objwrap[tagName]))
 		gesture.listen("up", p, function() {
-			location = "/feed#" + tagName;
+			if (canDelete) {
+				rmTag(tagName);
+				pictags.removeChild(p);
+			} else
+				location = "/feed#" + tagName;
 		});
 		pictags.appendChild(p);
 	};
@@ -147,6 +147,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		setCurrentMedia(current_image);
 		modal.modalIn(picbox, function(direction) {
 			if (!direction || !isNaN(direction) || direction == "right") {
+				pushTags();
 				current_image = null;
 				setFavIcon(false);
 				setCurrentMedia();

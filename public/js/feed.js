@@ -16,7 +16,7 @@ onload = function ()
 		slider.style['transform-origin'] = "center " + scrollContainer.scrollTop + 'px';
 		slider.style['-webkit-transform-origin'] = "center " + scrollContainer.scrollTop + 'px';
 		slider.lastChild.previousSibling.style.top = (50 + scrollContainer.scrollTop) + 'px';
-		console.log(event);
+//		console.log(event);
 		//var translatePercentage = 
 	};
 	scrollContainer.addEventListener('scroll', scrollCallback, false); 
@@ -291,6 +291,7 @@ onload = function ()
 				+ "px,0) rotate(" + rotateQuantity + "deg)");
 		slider.animating = true;
 
+		pushTags();
 		setSlider(slider.parentNode.nextSibling.firstChild);
 		setCurrentMedia(slider.card);
 		// history slider
@@ -419,10 +420,6 @@ onload = function ()
 			var delNode = document.createElement("div");
 			delNode.className = "smallpadded delNode tcell";
 			delNode.innerHTML = "x";
-			delNode.onclick = function() {
-				rmTag(tag);
-				picTags.removeChild(p);
-			};
 			p.appendChild(delNode);
 		}
 		gesture.listen("down", p, function() {
@@ -430,7 +427,11 @@ onload = function ()
 		});
 		gesture.listen("up", p, function() {
 			p.classList.remove("active-pictag");
-			viewTag(tag, true);
+			if (canDelete) {
+				rmTag(tag);
+				picTags.removeChild(p);
+			} else
+				viewTag(tag, true);
 		});
 		picTags.appendChild(p);
 	};
