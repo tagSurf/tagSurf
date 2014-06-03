@@ -101,7 +101,7 @@ body
 	border: solid 12px white;
 }
 
-::-webkit-input-placeholder {
+.bigplace::-webkit-input-placeholder {
 	font-size: 130%;
 	line-height: 20px;
 	height: 20px;
