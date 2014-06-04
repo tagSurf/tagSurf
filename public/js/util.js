@@ -79,9 +79,22 @@ var pushTags = function() {
     xhr("/api/media/" + currentMedia.id + "/tags/" + newtags.shift(), "POST");
 };
 var rmTag = function(tname) {
+  // remove from sensible new tags array
   var i = newtags.indexOf(tname);
   if (i != -1)
     newtags = newtags.slice(0, i).concat(newtags.slice(i+1));
+
+  // remove from unwieldy tags_v2 embedded object array
+  var tIndex = -1;
+  var tobjs = currentMedia.tags_v2;
+  for (var i = 0; i < tobjs.length; i++) {
+    if (Object.keys(tobjs[i])[0] == tname) {
+      tIndex = i;
+      break;
+    }
+  }
+  if (tIndex != -1)
+    tobjs = tobjs.slice(0, tIndex).concat(tobjs.slice(tIndex + 1));
 };
 
 var populateNavbar = function () {
