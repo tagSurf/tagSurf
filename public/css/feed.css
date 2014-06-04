@@ -91,6 +91,16 @@ html, body
   border-radius: 8px;
   color: black;
 }
+#add_tag_autocomplete {
+  top: 43px;
+  left: 20px;
+  width: 240px;
+  padding: 0px 7px;
+  border-radius: 4px;
+  border: 1px solid #00aeef;
+  color: #00aeef;
+  font-weight: bold;
+}
 .autocomplete {
   z-index: 4;
   position: absolute;

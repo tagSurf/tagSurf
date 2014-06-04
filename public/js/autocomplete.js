@@ -13,7 +13,11 @@ var autocomplete = {
 		cb && trans(autocomplete.nodes[listName], cb);
 	},
 	retract: function(listName) {
-	    autocomplete.nodes[listName].className = "autocomplete";
+		var acnode = autocomplete.nodes[listName];
+		acnode.className = "autocomplete";
+		trans(acnode, function() {
+			acnode.className = "autocomplete hider";
+		});
 	},
 	tapTag: function(tagName, listName, insertCurrent) {
 		closeAutoComplete(tagName, !!insertCurrent);

@@ -151,11 +151,12 @@ var populateNavbar = function () {
   ];
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
-  tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='img/add_tag_button.png'>";
+  tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='img/add_tag_button.png'><div id='add_tag_autocomplete' class='autocomplete hider'></div>";
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
   nav.appendChild(tag_adder);
 
+  autocomplete.register("add_tag_autocomplete");
   tag_adder.firstChild.nextSibling.onclick = function() {
     var newtag = tag_adder.firstChild.value.slice(1);
     if (!newtag || newtag == "newtag") return;
@@ -165,6 +166,7 @@ var populateNavbar = function () {
   };
   tag_adder.firstChild.onclick = function() {
     tag_adder.firstChild.value = "#";
+    autocomplete.expand("add_tag_autocomplete");
     return true;
   };
   tag_adder.firstChild.onkeyup = function(e) {
@@ -176,7 +178,7 @@ var populateNavbar = function () {
     }
     if (tag_adder.firstChild.value.length == 0)
     {
-	tag_adder.firstChild.value = '#';
+    	tag_adder.firstChild.value = '#';
     }
     return true;
   };
