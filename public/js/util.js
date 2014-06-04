@@ -74,6 +74,32 @@ var slideAddBar = function(noback) {
   if (noback != true && !modal.zoom.zoomed && !modal.modal.on)
     addBarSlid ? modal.halfOn(slideAddBar) : modal.backOff();
 };
+
+// tagging stuff
+var newtags = [];
+var pushTags = function() {
+  while (newtags.length)
+    xhr("/api/media/" + currentMedia.id + "/tags/" + newtags.shift(), "POST");
+};
+var rmTag = function(tname) {
+  // remove from sensible new tags array
+  var i = newtags.indexOf(tname);
+  if (i != -1)
+    newtags = newtags.slice(0, i).concat(newtags.slice(i+1));
+
+  // remove from unwieldy tags_v2 embedded object array
+  var tIndex = -1;
+  var tobjs = currentMedia.tags_v2;
+  for (var i = 0; i < tobjs.length; i++) {
+    if (Object.keys(tobjs[i])[0] == tname) {
+      tIndex = i;
+      break;
+    }
+  }
+  if (tIndex != -1)
+    tobjs = tobjs.slice(0, tIndex).concat(tobjs.slice(tIndex + 1));
+};
+
 var populateNavbar = function () {
   var nav = document.getElementById("nav");
   var navbar = document.createElement("div");
@@ -136,7 +162,8 @@ var populateNavbar = function () {
   tag_adder.firstChild.nextSibling.onclick = function() {
     var newtag = tag_adder.firstChild.value.slice(1);
     if (!newtag || newtag == "newtag") return;
-    xhr("/api/media/" + currentMedia.id + "/tags/" + newtag, "POST", slideAddBar);
+    newtags.push(newtag);
+    slideAddBar();
     addCallback && addCallback(newtag);
   };
   tag_adder.firstChild.onclick = function() {
@@ -215,7 +242,11 @@ var setResizeCb = function(cb) {
   resizeCb = cb;
 };
 setMaxCardHeight();
+var lastWidth = window.innerWidth;
 window.onresize = function() {
+  if (lastWidth == window.innerWidth)
+    return;
+  lastWidth = window.innerWidth;
   setMaxCardHeight();
   addedCss.forEach(addCss);
   resizeCb && resizeCb();
