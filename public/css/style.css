@@ -276,3 +276,39 @@ a {
   pointer-events: none;
 }
 
+#autocomplete
+{
+  top: 90px;
+  left: 0px;
+  right: 0px;
+  width: 200px;
+  border-radius: 8px;
+  color: black;
+}
+#add_tag_autocomplete {
+  top: 43px;
+  left: 20px;
+  padding: 0px 7px;
+  border-radius: 4px;
+  border: 1px solid #00aeef;
+  color: #00aeef;
+  font-weight: bold;
+}
+.autocomplete {
+  z-index: 4;
+  position: absolute;
+  margin: auto;
+  height: 0px;
+  background: white;
+  text-align: left;
+  overflow-y: scroll;
+  -webkit-transition: height 300ms ease-out;
+}
+.autocomplete div
+{
+  padding: 5px;
+}
+.autocomplete-open
+{
+  height: 150px !important;
+}
