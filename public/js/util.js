@@ -177,10 +177,9 @@ var populateNavbar = function () {
       tag_adder.firstChild.nextSibling.onclick();
     },
     keyUpCb: function() {
-      if (tag_adder.firstChild.value.length == 0)
-      {
-        tag_adder.firstChild.value = '#';
-      }
+      var ti = tag_adder.firstChild;
+      if (ti.value.charAt(0) != "#")
+        ti.value = "#" + ti.value.replace(/#/g, "");
     },
     expandCb: function() {
       tag_adder.firstChild.value = "#";
