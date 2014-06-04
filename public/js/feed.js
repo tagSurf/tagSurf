@@ -409,14 +409,21 @@ onload = function ()
 			toggleClass.apply(slider, ['super_card', 'on']);
 		}
 	};
-	var tagCard = function(tag, picTags, canDelete) {
+	var isMine = function(tag) {
+		var tobjs = slider.card.tags_v2;
+		for (var i = 0; i < tobjs.length; i++)
+			if (Object.keys(tobjs[i])[0] == tag)
+				return tobjs[i][tag].user_owned;
+	};
+	var tagCard = function(tag, picTags) {
+		var ismine = slider && isMine(tag);
 		var p = document.createElement("div");
 		p.className = "pictagcell";
 		var tNode = document.createElement("div");
 		tNode.className = "smallpadded tcell";
 		tNode.innerHTML = "#" + tag;
 		p.appendChild(tNode);
-		if (canDelete) {
+		if (ismine) {
 			var delNode = document.createElement("div");
 			delNode.className = "smallpadded delNode tcell";
 			delNode.innerHTML = "x";
@@ -427,7 +434,7 @@ onload = function ()
 		});
 		gesture.listen("up", p, function() {
 			p.classList.remove("active-pictag");
-			if (canDelete) {
+			if (ismine) {
 				rmTag(tag);
 				picTags.removeChild(p);
 			} else
@@ -620,11 +627,11 @@ onload = function ()
 			up_votes: 0,
 			score: 0,
 			is_trending: false,
-			trend: "up"
+			trend: "up",
+			user_owned: true
 		};
 		slider.card.tags_v2.push(objwrap);
-		tagCard(tag,
-			document.getElementById("pictags" + slider.card.id), true);
+		tagCard(tag, document.getElementById("pictags" + slider.card.id));
 		formatCardContents();
 	});
 	setStarCallback(function() {
