@@ -9,11 +9,7 @@
   <script src="/js/carousel.js"></script>
   <script src="/js/welcome.js"></script>
 <% end %>
-<!--
-<center>
-  <%= form_for(current_user, url: user_path, method: :put) do |f| %>
+  <%= form_for(current_user, url: user_path, method: :put, class: 'hidden') do |f| %>
     <%= f.hidden_field :confirm_feature_tour, value: true %>
-    <%= f.submit "Got it!", class: 'button', id: "welcome-submit-btn" %>
+    <%= f.submit "Got it!", class: 'button hidden', id: "welcome-submit-btn" %>
   <% end %>
-</center>
--->

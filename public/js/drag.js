@@ -5,7 +5,9 @@ var drag =
 		var downCallback, upCallback, dragCallback;
 		downCallback = function () 
 		{
+			if (node.animating) return;
 			node.dragging = true;
+			node.animating = false;
 			if (!node.xDrag)
 			{
 				node.xDrag = 0;
@@ -14,6 +16,8 @@ var drag =
 			{
 				node.yDrag = 0;
 			}
+			node.xDragStart = node.xDrag;
+			node.yDragStart = node.yDrag;
 		};
 		upCallback = function () {
 			var xMod = 0, yMod = 0, direction = null;
@@ -45,20 +49,30 @@ var drag =
 						if (Math.abs(xMod) <= (interval / 2))
 						{
 							node.xDrag -= xMod;
-							direction = (xMod < 0) ? "right" : "left";
 						}
 						else
 						{
-							node.xDrag += (interval - xMod);
-							direction = (xMod < 0) ? "left" : "right";
+							node.xDrag -= (interval + xMod);
+						}
+						if (node.xDrag < node.xDragStart)
+						{
+							direction = "left";
+						}
+						else if (node.xDrag > node.xDragStart)
+						{
+							direction = "right";
+						}
+						else
+						{
+							direction = "hold";
 						}
 					}
 				}
-				if (direction != null && node.animating == false)
+				if (direction && node.animating == false)
 				{
 					node.animating = true;
 					trans(node, function () { node.animating = false;},
-						"webkit-transform 300ms ease-out");
+						"-webkit-transform 300ms ease-out");
 					node.style['-webkit-transform'] = 
 						"translate3d(" + node.xDrag + "px," + 
 						node.yDrag + "px,0)";
@@ -79,7 +93,12 @@ var drag =
 				}
 				if (constraint != "horizontal")
 				{
-					node.xDrag += dx;
+					if (Math.abs(node.xDrag) < 
+						(carousel.view.firstChild.scrollWidth - 
+						 (2 * carousel.view.clientWidth / 3)))
+					{
+						node.xDrag += dx;
+					}
 				}
 				node.style['-webkit-transform'] = 
 					"translate3d(" + node.xDrag + "px," + 

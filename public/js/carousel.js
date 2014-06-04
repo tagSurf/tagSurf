@@ -24,13 +24,15 @@ var carousel =
 			circlesContainer = document.createElement('div'),
 			endButton = document.createElement('div');
 		var orderIndicationCallback = function (direction) {
-			 if (direction == "left")
+			 if (direction == "left" && 
+				carousel.activeCircle.nextSibling)
 			 {
 				carousel.activeCircle.classList.remove('active_circle');
 				carousel.activeCircle.nextSibling.classList.add('active_circle');
 				carousel.activeCircle = carousel.activeCircle.nextSibling;
 			 }
-			 if (direction == "right")
+			 if (direction == "right" &&
+				carousel.activeCircle.previousSibling)
 			 {
 				carousel.activeCircle.classList.remove('active_circle');
 				carousel.activeCircle.previousSibling.classList.add('active_circle');
@@ -42,7 +44,10 @@ var carousel =
 		orderIndication.className = "carousel_order_indicator";
 		endButton.className = "end_tutorial_btn";
 		endButton.innerHTML = "Got it!";
-		gesture.listen("tap", endButton, function(){carousel.off();});
+		gesture.listen("tap", endButton, function() {
+			carousel.off();
+			document.forms[0].submit();
+		});
 		drag.makeDraggable(container, "vertical", carousel.translateDistance, 
 			orderIndicationCallback);
 		orderIndication.appendChild(circlesContainer);
