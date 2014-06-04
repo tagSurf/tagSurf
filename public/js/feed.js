@@ -48,7 +48,7 @@ onload = function ()
 			container.style.visibility = "visible";			
 			container.style.zIndex = "100";			
 			container.style.opacity = 1;			
-		}, 30000);
+		}, 20000);
 	};
 	
 	var scrollCallback = function (event)
