@@ -3,6 +3,7 @@ var carousel =
 	view: document.createElement('div'),
 	activeCircle: null,
 	translateDistance: window.innerWidth,
+	inactivityTimeout: null,
 	animating: false,
 	xPosition: 0,
 	images: [],
@@ -46,6 +47,8 @@ var carousel =
 		}
 		carousel._populate();
 		gesture.listen("swipe", carousel.view.firstChild, carousel.swipeCallback);
+		gesture.listen("up", carousel.view.firstChild, carousel.upCallback);
+		gesture.listen("down", carousel.view.firstChild, carousel.downCallback);
 	},
 	orderIndicationCallback: function (direction) {
 		 if (direction == "left" && 
@@ -84,15 +87,11 @@ var carousel =
 			carousel.view.lastChild.firstChild.appendChild(circle);
 		}
 	},
-	dragCallback: function ()
-	{
-	},
 	swipeCallback: function (direction, distance, dx, dy, pixelsPerSecond)
 	{
 		var container = carousel.view.firstChild, 
 			xMod = container.xDrag % carousel.translateDistance;
-		console.log("SWIPE");
-		if (container.xDrag < 0 && container.xDrag >=
+		if (container.xDrag <= 0 && container.xDrag >
 			-(container.scrollWidth - carousel.translateDistance) &&
 			carousel.animating == false)
 		{
@@ -119,14 +118,22 @@ var carousel =
 	},
 	upCallback: function ()
 	{
+		carousel.inactivityTimeout = setInterval(function(){
+			carousel.swipeCallback("left");
+		},15000);
 	},
 	downCallback: function ()
 	{
+		clearInterval(carousel.inactivityTimeout);
+		carousel.inactivityTimeout = null;
 	},
 	on: function ()
 	{
 		carousel.view.style.visibility = "visible";
 		carousel.view.style.opacity = 1;
+		carousel.inactivityTimeout = setInterval(function(){
+			carousel.swipeCallback("left");
+		},15000);
 	},
 	off: function ()
 	{
@@ -134,6 +141,7 @@ var carousel =
 		trans(carousel.view, function(){
 			carousel.view.style.visibility = "hidden";
 		});
+		clearInterval(carousel.inactivityTimeout);
 	},
 };
 carousel._build();

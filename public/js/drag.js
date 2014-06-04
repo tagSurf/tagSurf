@@ -3,19 +3,13 @@ var drag =
 	makeDraggable: function (node, constraint, interval, endCallback)
 	{
 		var downCallback, upCallback, dragCallback;
+		node.xDrag = 0;
+		node.yDrag = 0;
 		downCallback = function () 
 		{
 			if (node.animating) return;
 			node.dragging = true;
 			node.animating = false;
-			if (!node.xDrag)
-			{
-				node.xDrag = 0;
-			}
-			if (!node.yDrag)
-			{
-				node.yDrag = 0;
-			}
 			node.xDragStart = node.xDrag;
 			node.yDragStart = node.yDrag;
 		};
