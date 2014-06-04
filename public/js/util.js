@@ -23,7 +23,7 @@ var whichGallery = function() {
 };
 
 // autocomplete stuff
-var aclist, current_tag, tinput, inputContainer, slideContainer, scrollContainer
+var current_tag, tinput, inputContainer, slideContainer, scrollContainer
   acviewing = false, closeAutoComplete = function(tagName, noback) {
     if (noback) {
       slideContainer.className = "";
@@ -36,7 +36,7 @@ var aclist, current_tag, tinput, inputContainer, slideContainer, scrollContainer
     });
     acviewing = false;
     tinput.active = false;
-    aclist.className = "";
+    autocomplete.retract("autocomplete");
     location.hash = tinput.value = tagName || current_tag;
     tinput.blur();
   };
