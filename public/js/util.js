@@ -59,6 +59,8 @@ var addBarSlid = false;
 var slideAddBar = function(noback) {
   autocomplete.viewing.autocomplete
     && closeAutoComplete(null, true);
+  autocomplete.viewing.add_tag_autocomplete
+    && autocomplete.retract("add_tag_autocomplete");
   navMenuSlid && slideNavMenu(true);
   addBarSlid = !addBarSlid;
   if (addBarSlid && !currentMedia) return;
