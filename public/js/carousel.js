@@ -5,7 +5,6 @@ var carousel =
 	translateDistance: window.innerWidth,
 	inactivityTimeout: null,
 	animating: false,
-	xPosition: 0,
 	images: [],
 	_build: function ()
 	{
@@ -40,7 +39,7 @@ var carousel =
 		carousel.view.appendChild(container);
 		carousel.view.appendChild(orderIndication);
 		document.body.appendChild(carousel.view);
-		for (index = 1; index <= 5; ++index)
+		for (index = 1; index <= 6; ++index)
 		{
 			carousel.images.push(
 				'/img/tutorial/tutorial_' + index + '.png');
@@ -120,7 +119,7 @@ var carousel =
 	{
 		carousel.inactivityTimeout = setInterval(function(){
 			carousel.swipeCallback("left");
-		},15000);
+		},5000);
 	},
 	downCallback: function ()
 	{
@@ -133,7 +132,7 @@ var carousel =
 		carousel.view.style.opacity = 1;
 		carousel.inactivityTimeout = setInterval(function(){
 			carousel.swipeCallback("left");
-		},15000);
+		},5000);
 	},
 	off: function ()
 	{
