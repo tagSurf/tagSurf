@@ -22,7 +22,7 @@ var drag =
 		upCallback = function () {
 			var xMod = 0, yMod = 0, direction = null;
 			node.dragging = false;
-			if (interval)
+			if (interval && node.animating == false)
 			{
 				if (constraint != "vertical")
 				{

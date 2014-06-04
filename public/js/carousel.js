@@ -23,22 +23,6 @@ var carousel =
 			orderIndication = document.createElement('div'),
 			circlesContainer = document.createElement('div'),
 			endButton = document.createElement('div');
-		var orderIndicationCallback = function (direction) {
-			 if (direction == "left" && 
-				carousel.activeCircle.nextSibling)
-			 {
-				carousel.activeCircle.classList.remove('active_circle');
-				carousel.activeCircle.nextSibling.classList.add('active_circle');
-				carousel.activeCircle = carousel.activeCircle.nextSibling;
-			 }
-			 if (direction == "right" &&
-				carousel.activeCircle.previousSibling)
-			 {
-				carousel.activeCircle.classList.remove('active_circle');
-				carousel.activeCircle.previousSibling.classList.add('active_circle');
-				carousel.activeCircle = carousel.activeCircle.previousSibling;
-			 }
-		};
 		carousel.view.id = "carousel";
 		container.className = "carousel_container";
 		orderIndication.className = "carousel_order_indicator";
@@ -49,7 +33,7 @@ var carousel =
 			document.forms[0].submit();
 		});
 		drag.makeDraggable(container, "vertical", carousel.translateDistance, 
-			orderIndicationCallback);
+			carousel.orderIndicationCallback);
 		orderIndication.appendChild(circlesContainer);
 		orderIndication.appendChild(endButton);
 		carousel.view.appendChild(container);
@@ -61,7 +45,23 @@ var carousel =
 				'/img/tutorial/tutorial_' + index + '.png');
 		}
 		carousel._populate();
-		//gesture.listen("swipe", carousel.view, carousel.swipeCallback);
+		gesture.listen("swipe", carousel.view.firstChild, carousel.swipeCallback);
+	},
+	orderIndicationCallback: function (direction) {
+		 if (direction == "left" && 
+			carousel.activeCircle.nextSibling)
+		 {
+			carousel.activeCircle.classList.remove('active_circle');
+			carousel.activeCircle.nextSibling.classList.add('active_circle');
+			carousel.activeCircle = carousel.activeCircle.nextSibling;
+		 }
+		 if (direction == "right" &&
+			carousel.activeCircle.previousSibling)
+		 {
+			carousel.activeCircle.classList.remove('active_circle');
+			carousel.activeCircle.previousSibling.classList.add('active_circle');
+			carousel.activeCircle = carousel.activeCircle.previousSibling;
+		 }
 	},
 	_populate: function ()
 	{
@@ -90,30 +90,31 @@ var carousel =
 	swipeCallback: function (direction, distance, dx, dy, pixelsPerSecond)
 	{
 		var container = carousel.view.firstChild, 
-			translateToXPx = carousel.xPosition;
-		if (direction == "left")
-		{
-			translateToXPx -= carousel.translateDistance;
-		}
-		else if (direction == "right")
-		{
-			translateToXPx += carousel.translateDistance;
-		}
-		else
-		{
-			return;
-		}
-		if (translateToXPx < 0 && translateToXPx >=
-			-(carousel.translateDistance * carousel.images.length) &&
+			xMod = container.xDrag % carousel.translateDistance;
+		console.log("SWIPE");
+		if (container.xDrag < 0 && container.xDrag >=
+			-(container.scrollWidth - carousel.translateDistance) &&
 			carousel.animating == false)
 		{
-			translateToXPx += "px";
+			if (direction == "right")
+			{
+				container.xDrag -= xMod;
+			}
+			else if (direction == "left")
+			{
+				container.xDrag -= (carousel.translateDistance + xMod);
+			}
+			else
+			{
+				return;
+			}
+			carousel.orderIndicationCallback(direction);
 			trans(container, function() {
-				carousel.animating = false;
+				container.animating = false;
 			}, "-webkit-transform 300ms ease-out");
-			carousel.animating = true;
+			container.animating = true;
 			container.style['-webkit-transform'] = 
-				"translate3d(" + translateToXPx + ",0,0)";
+				"translate3d(" + container.xDrag + "px,0,0)";
 		}
 	},
 	upCallback: function ()
