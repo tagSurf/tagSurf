@@ -9,11 +9,11 @@ var autocomplete = {
 		});
 	},
 	expand: function(listName, cb) {
-	    autocomplete.nodes[listName].className = "autocomplete-open";
+	    autocomplete.nodes[listName].className = "autocomplete autocomplete-open";
 		cb && trans(autocomplete.nodes[listName], cb);
 	},
 	retract: function(listName) {
-	    autocomplete.nodes[listName].className = "";
+	    autocomplete.nodes[listName].className = "autocomplete";
 	},
 	tapTag: function(tagName, listName, insertCurrent) {
 		closeAutoComplete(tagName, !!insertCurrent);

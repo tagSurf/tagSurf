@@ -84,22 +84,24 @@ html, body
 
 #autocomplete
 {
-  z-index: 4;
-  position: absolute;
   top: 90px;
   left: 0px;
   right: 0px;
-  margin: auto;
   width: 200px;
-  height: 0px;
   border-radius: 8px;
   color: black;
+}
+.autocomplete {
+  z-index: 4;
+  position: absolute;
+  margin: auto;
+  height: 0px;
   background: white;
   text-align: left;
   overflow-y: scroll;
   -webkit-transition: height 300ms ease-out;
 }
-#autocomplete div
+.autocomplete div
 {
   padding: 5px;
 }
