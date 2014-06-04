@@ -156,6 +156,11 @@ var populateNavbar = function () {
   nav.appendChild(menu_slider);
   nav.appendChild(tag_adder);
 
+  addCss({
+    "#add_tag_autocomplete": function() {
+      return "width: " + (tag_adder.firstChild.clientWidth - 10) + "px";
+    }
+  });
   autocomplete.register("add_tag_autocomplete");
   tag_adder.firstChild.nextSibling.onclick = function() {
     var newtag = tag_adder.firstChild.value.slice(1);
