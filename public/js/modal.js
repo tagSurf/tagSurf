@@ -36,7 +36,7 @@ var modal = {
 		gesture.listen("tap", modal.zoom, modal.callZoom);
 		gesture.listen("tap", modal.back, modal.callBack);
 		gesture.listen("swipe", modal.back, modal.callBack);
-		gesture.listen("tap", modal.modal, modal.zoomModal);
+		gesture.listen("tap", modal.modal, modal.callModal);
 		gesture.listen("swipe", modal.modal, modal.callModal);
 		gesture.listen("drag", modal.zoom, modal.dragZoom);
 		gesture.listen("down", modal.zoom, modal._passThrough);

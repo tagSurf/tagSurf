@@ -88,6 +88,9 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 
 		bigpic = document.createElement("img");
 		bigpic.id = "bigpic";
+		gesture.listen("down", bigpic, returnTrue);
+		gesture.listen("drag", bigpic, returnTrue);
+		gesture.listen("tap", bigpic, function(){modal.zoomModal();return true;});
 		picbox.appendChild(bigpic);
 
 		picdesc = document.createElement("div");
