@@ -1,0 +1,71 @@
+#carousel
+{
+	position: absolute;
+	top: 0;
+	z-index: 1000;
+	visibility: hidden;
+	opacity: 0;
+	overflow-x: scroll;
+	overflow-y: none;
+	transition: opacity 500ms ease-in-out;
+	-moz-transition: opacity 500ms ease-in-out;
+	-webkit-transition: opacity 500ms ease-in-out;
+}
+.indicator_circle
+{
+	margin: 0 3px;
+	display: inline-block;
+	border-radius: 50%;
+	background-color: #6a6a6a;
+	width: 7px;
+	height: 7px;
+}
+.active_circle
+{
+	background-color: white;
+}
+.carousel_container
+{
+	background-color: #404041;
+	height: 100%;
+	white-space: nowrap;
+}
+.carousel_image_container
+{
+	height: 100%;
+	text-align: center;
+	clear: both;
+	display: inline-block;
+}
+.carousel_image_container img
+{
+	position: relative;
+	top: 5px;
+	height: 85%;
+	display: inline-block;
+	clear:both;
+}
+.carousel_order_indicator
+{
+	text-align: center;
+	position: absolute;
+	bottom: 5px;
+	width: 100%;
+}
+.end_tutorial_btn
+{
+	display: inline-block;
+	color: white;
+	background: #00aeef;
+	border-radius: 5px;
+	padding: 5px;
+	margin: 5px;
+	cursor: pointer;
+	font-size: 100%;
+	letter-spacing: 2px;
+	width: 100px;
+	padding-top: 6px;
+	height: 30px;
+	font-weight: 300;
+}
+

@@ -10,14 +10,52 @@ onload = function ()
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
+	reminderTimeout = null;
+
+	var setReminderTimeout = function ()
+	{
+		var reminderContainer = document.createElement('div'),
+			leftImage = new Image(), rightImage = new Image();
+		var closeReminderCallback = function (direction)
+		{
+			if (direction != "up" && direction != "down")
+			{
+				reminderContainer.style.opacity = 0;			
+				trans(reminderContainer, function() {
+					reminderContainer.parentNode.removeChild(reminderContainer);
+				});
+			}
+		};
+		reminderContainer.id = "reminder_container";
+		leftImage.id = "reminder_left";
+		leftImage.src = "/img/reminder_left.png";
+		rightImage.id = "reminder_right";
+		rightImage.src = "/img/reminder_right.png";
+		reminderContainer.appendChild(leftImage);
+		reminderContainer.appendChild(rightImage);
+		gesture.listen("drag", reminderContainer, function (direction) {
+			if (direction != "left" && direction != "right")
+			{
+				return true;
+			}
+		});
+		gesture.listen("down", reminderContainer, returnTrue);
+		gesture.listen("tap", reminderContainer, closeReminderCallback);
+		gesture.listen("swipe", reminderContainer, closeReminderCallback);
+		document.body.appendChild(reminderContainer);
+		reminderTimeout = setTimeout(function () {
+			var container = document.getElementById("reminder_container");
+			container.style.visibility = "visible";			
+			container.style.zIndex = "100";			
+			container.style.opacity = 1;			
+		}, 30000);
+	};
 	
 	var scrollCallback = function (event)
 	{
 		slider.style['transform-origin'] = "center " + scrollContainer.scrollTop + 'px';
 		slider.style['-webkit-transform-origin'] = "center " + scrollContainer.scrollTop + 'px';
 		slider.lastChild.previousSibling.style.top = (50 + scrollContainer.scrollTop) + 'px';
-//		console.log(event);
-		//var translatePercentage = 
 	};
 	scrollContainer.addEventListener('scroll', scrollCallback, false); 
 
@@ -540,6 +578,11 @@ onload = function ()
 	};
 	var downCallback = function ()
 	{
+		if (reminderTimeout)
+		{
+			document.body.removeChild(document.getElementById("reminder_container"));
+			clearTimeout(reminderTimeout);
+		}
 		if (slider.style["-webkit-transform"] == "")
 		{
 			slider.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
@@ -607,4 +650,5 @@ onload = function ()
 		}
 	});
 	populateSlider();
+	setReminderTimeout();
 };

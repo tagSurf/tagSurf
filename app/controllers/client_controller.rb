@@ -35,10 +35,12 @@ class ClientController < ApplicationController
   def index
     # Decide how to direct the user base on state
     usr = current_user
-    if usr and usr.confirmed?
+    if usr and usr.confirmed? and usr.welcomed?
       redirect_to feed_path
     elsif usr and !usr.confirmed?
       redirect_to resend_path
+    elsif usr and usr.confirmed? and !usr.welcomed? 
+      redirect_to welcome_path
     else 
       redirect_to user_session_path
     end
@@ -103,7 +105,7 @@ class ClientController < ApplicationController
   def signup; end
 
   def resend_link; 
-    if current_user and current_user.confirmed?
+    if current_user and current_user.confirmed? 
       redirect_to root_path
     end
   end
@@ -118,7 +120,7 @@ class ClientController < ApplicationController
     end
 
     def confirm_surfable
-      unless current_user and current_user.confirmed?
+      unless current_user and current_user.confirmed? and current_user.welcomed?
         redirect_to root_path
       end
     end
