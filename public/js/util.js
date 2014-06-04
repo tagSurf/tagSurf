@@ -23,8 +23,8 @@ var whichGallery = function() {
 };
 
 // autocomplete stuff
-var current_tag, tinput, inputContainer, slideContainer, scrollContainer
-  acviewing = false, closeAutoComplete = function(tagName, noback) {
+var current_tag, tinput, inputContainer, slideContainer,
+  scrollContainer, closeAutoComplete = function(tagName, noback) {
     if (noback) {
       slideContainer.className = "";
       scrollContainer.insertBefore(inputContainer,
@@ -34,16 +34,14 @@ var current_tag, tinput, inputContainer, slideContainer, scrollContainer
       scrollContainer.insertBefore(inputContainer,
         scrollContainer.firstChild);
     });
-    acviewing = false;
     tinput.active = false;
-    autocomplete.retract("autocomplete");
     location.hash = tinput.value = tagName || current_tag;
-    tinput.blur();
   };
 
 var navMenuSlid = false;
 var slideNavMenu = function(noback) {
-  acviewing && closeAutoComplete(null, true);
+  autocomplete.viewing.autocomplete
+    && closeAutoComplete(null, true);
   addBarSlid && slideAddBar(true);
   navMenuSlid = !navMenuSlid;
   toggleClass.apply(document.getElementById("slider_label"),
@@ -59,7 +57,8 @@ var add_icon, add_state = "blue", add_icons = {
 };
 var addBarSlid = false;
 var slideAddBar = function(noback) {
-  acviewing && closeAutoComplete(null, true);
+  autocomplete.viewing.autocomplete
+    && closeAutoComplete(null, true);
   navMenuSlid && slideNavMenu(true);
   addBarSlid = !addBarSlid;
   if (addBarSlid && !currentMedia) return;
@@ -156,12 +155,6 @@ var populateNavbar = function () {
   nav.appendChild(menu_slider);
   nav.appendChild(tag_adder);
 
-  addCss({
-    "#add_tag_autocomplete": function() {
-      return "width: " + (tag_adder.firstChild.clientWidth - 10) + "px";
-    }
-  });
-  autocomplete.register("add_tag_autocomplete");
   tag_adder.firstChild.nextSibling.onclick = function() {
     var newtag = tag_adder.firstChild.value.slice(1);
     if (!newtag || newtag == "newtag") return;
@@ -169,24 +162,30 @@ var populateNavbar = function () {
     slideAddBar();
     addCallback && addCallback(newtag);
   };
-  tag_adder.firstChild.onclick = function() {
-    tag_adder.firstChild.value = "#";
-    autocomplete.expand("add_tag_autocomplete");
-    return true;
-  };
-  tag_adder.firstChild.onkeyup = function(e) {
-    e = e || window.event;
-    var code = e.keyCode || e.which;
-    if (code == 13 || code == 3) {
-      tag_adder.firstChild.blur();
+  addCss({
+    "#add_tag_autocomplete": function() {
+      return "width: " + (tag_adder.firstChild.clientWidth - 10) + "px";
+    }
+  });
+  autocomplete.register("add_tag_autocomplete", tag_adder.firstChild, {
+    enterCb: function() {
+      autocomplete.tapTag(tag_adder.firstChild.value.slice(1),
+        "add_tag_autocomplete");
+    },
+    tapCb: function(tagName) {
+      tag_adder.firstChild.value = "#" + tagName;
       tag_adder.firstChild.nextSibling.onclick();
+    },
+    keyUpCb: function() {
+      if (tag_adder.firstChild.value.length == 0)
+      {
+        tag_adder.firstChild.value = '#';
+      }
+    },
+    expandCb: function() {
+      tag_adder.firstChild.value = "#";
     }
-    if (tag_adder.firstChild.value.length == 0)
-    {
-    	tag_adder.firstChild.value = '#';
-    }
-    return true;
-  };
+  });
   add_icon = document.getElementById("add-icon");
   document.getElementById("options-btn").onclick = function() {
     var n = document.createElement("div");

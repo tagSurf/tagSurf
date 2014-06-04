@@ -75,56 +75,29 @@ onload = function ()
 	};
 
 	// autocomplete stuff
-	autocomplete.register("autocomplete", function(tagName, insertCurrent) {
-		if (tagName != current_tag) {
-			current_tag = tagName;
-			known_keys = {};
-			populateSlider(null, null, insertCurrent ? slider.card : null);
-		}
-	});
-	gesture.listen("down", tinput, returnTrue);
-	gesture.listen("up", tinput, function(e) {
-		if (!acviewing) {
-			acviewing = true;
+	autocomplete.register("autocomplete", tinput, {
+		tapCb: function(tagName, insertCurrent) {
+			closeAutoComplete(tagName, !!insertCurrent);
+			if (tagName != current_tag) {
+				current_tag = tagName;
+				known_keys = {};
+				populateSlider(null, null, insertCurrent ? slider.card : null);
+			}
+		},
+		expandCb: function() {
 			tinput.value = "";
-			mod({
-				className: "tagline",
-				show: true
-			});
 			modal.halfOn(function() {
 				if (tinput.active)
 					autocomplete.tapTag(current_tag, "autocomplete");
 			}, inputContainer);
 			slideContainer.className = "noinput";
-			autocomplete.expand("autocomplete", function() {
-				tinput.active = true;
-				tinput.focus();
-			});
-			return true;
-		}
-	});
-	tinput.onkeyup = function(e) {
-		e = e || window.event;
-		var code = e.keyCode || e.which;
-		if (code == 13 || code == 3) {
-			tinput.blur();
+		},
+		enterCb: function() {
 			tinput.value ?
 				autocomplete.tapTag(tinput.value, "autocomplete") :
 				modal.callBack();
-		} else if (tinput.value) {
-			mod({
-				className: "tagline",
-				hide: true
-			});
-			mod({
-				className: tinput.value.toLowerCase(),
-				show: true
-			});
-		} else mod({
-			className: "tagline",
-			show: true
-		});
-	};
+		}
+	});
 
 	// slider stuff
 	var cardIndex = 0;
