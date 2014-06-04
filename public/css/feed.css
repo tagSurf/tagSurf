@@ -204,10 +204,6 @@ html, body
   -webkit-transition: all 1s ease-in-out;
 }
 
-.hider
-{
-  visibility: hidden;
-}
 .expand-button
 {
   position: absolute;
