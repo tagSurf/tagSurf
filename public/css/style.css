@@ -35,6 +35,14 @@ a {
 	display: none !important;
 }
 
+.tcell {
+	display: table-cell;
+}
+
+.delNode {
+	border-left: 1px solid white;
+}
+
 .centered {
 	text-align: center;
 }
@@ -48,7 +56,10 @@ a {
 }
 
 .smallpadded {
-	padding: 2px;
+	padding: 3px 5px;
+}
+
+.midsize {
 	font-size: 11pt;
 	font-weight: 300;
 }

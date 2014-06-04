@@ -123,12 +123,22 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		var p = document.createElement("div");
 		p.className = "pictagcell";
 		var t = document.createElement("div");
-		t.className = "smallpadded";
+		t.className = "smallpadded midsize tcell";
 		t.innerHTML = "#" + tagName;
 		p.appendChild(t);
+		if (objwrap.user_owned) {
+			var delNode = document.createElement("div");
+			delNode.className = "smallpadded delNode tcell";
+			delNode.innerHTML = "x";
+			p.appendChild(delNode);
+		}
 		p.appendChild(voteMeter(objwrap[tagName]))
 		gesture.listen("up", p, function() {
-			location = "/feed#" + tagName;
+			if (objwrap.user_owned) {
+				rmTag(tagName);
+				pictags.removeChild(p);
+			} else
+				location = "/feed#" + tagName;
 		});
 		pictags.appendChild(p);
 	};
@@ -137,6 +147,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		setCurrentMedia(current_image);
 		modal.modalIn(picbox, function(direction) {
 			if (!direction || !isNaN(direction) || direction == "right") {
+				pushTags();
 				current_image = null;
 				setFavIcon(false);
 				setCurrentMedia();
@@ -205,7 +216,8 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			up_votes: 0,
 			score: 0,
 			is_trending: false,
-			trend: "up"
+			trend: "up",
+			user_owned: true
 		};
 		current_image.tags_v2.push(objwrap);
 		buildTagBlock(objwrap, tag);

@@ -16,7 +16,7 @@ onload = function ()
 		slider.style['transform-origin'] = "center " + scrollContainer.scrollTop + 'px';
 		slider.style['-webkit-transform-origin'] = "center " + scrollContainer.scrollTop + 'px';
 		slider.lastChild.previousSibling.style.top = (50 + scrollContainer.scrollTop) + 'px';
-		console.log(event);
+//		console.log(event);
 		//var translatePercentage = 
 	};
 	scrollContainer.addEventListener('scroll', scrollCallback, false); 
@@ -291,6 +291,7 @@ onload = function ()
 				+ "px,0) rotate(" + rotateQuantity + "deg)");
 		slider.animating = true;
 
+		pushTags();
 		setSlider(slider.parentNode.nextSibling.firstChild);
 		setCurrentMedia(slider.card);
 		// history slider
@@ -408,15 +409,36 @@ onload = function ()
 			toggleClass.apply(slider, ['super_card', 'on']);
 		}
 	};
+	var isMine = function(tag) {
+		var tobjs = slider.card.tags_v2;
+		for (var i = 0; i < tobjs.length; i++)
+			if (Object.keys(tobjs[i])[0] == tag)
+				return tobjs[i][tag].user_owned;
+	};
 	var tagCard = function(tag, picTags) {
-		var p = document.createElement("span");
-		p.innerHTML = "#" + tag;
+		var ismine = slider && isMine(tag);
+		var p = document.createElement("div");
+		p.className = "pictagcell";
+		var tNode = document.createElement("div");
+		tNode.className = "smallpadded tcell";
+		tNode.innerHTML = "#" + tag;
+		p.appendChild(tNode);
+		if (ismine) {
+			var delNode = document.createElement("div");
+			delNode.className = "smallpadded delNode tcell";
+			delNode.innerHTML = "x";
+			p.appendChild(delNode);
+		}
 		gesture.listen("down", p, function() {
 			p.classList.add("active-pictag");
 		});
 		gesture.listen("up", p, function() {
 			p.classList.remove("active-pictag");
-			viewTag(tag, true);
+			if (ismine) {
+				rmTag(tag);
+				picTags.removeChild(p);
+			} else
+				viewTag(tag, true);
 		});
 		picTags.appendChild(p);
 	};
@@ -605,7 +627,8 @@ onload = function ()
 			up_votes: 0,
 			score: 0,
 			is_trending: false,
-			trend: "up"
+			trend: "up",
+			user_owned: true
 		};
 		slider.card.tags_v2.push(objwrap);
 		tagCard(tag, document.getElementById("pictags" + slider.card.id));
