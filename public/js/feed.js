@@ -4,6 +4,7 @@ onload = function ()
 
 	// defined in util for autocomplete
 	// integration with other sliding elements
+	sinput = document.getElementById("search-input");
 	tinput = document.getElementById("tag-input");
 	current_tag = tinput.value
 		= document.location.hash.slice(1) || "trending";
@@ -86,9 +87,6 @@ onload = function ()
 	};
 	var populateSlider = function (update, failMsgNode, firstCard)
 	{
-		var isTrending = current_tag == "trending";
-		staticHash.className = isTrending ? "hidden" : "";
-		staticTrending.className = isTrending ? "" : "hidden";
 		if (!update && !failMsgNode)
 		{
 			slideContainer.innerHTML = "";
@@ -582,6 +580,7 @@ onload = function ()
 		{
 			document.body.removeChild(document.getElementById("reminder_container"));
 			clearTimeout(reminderTimeout);
+			reminderTimeout = null;
 		}
 		if (slider.style["-webkit-transform"] == "")
 		{
