@@ -66,6 +66,11 @@ html, body
   float: left;
   display: inline;
   position: relative;
+  color: white;
+  font-weight: 100;
+  float: left;
+  display: inline;
+  position: relative;
   top: -2px;
   left: 4px;
   margin:0;
@@ -228,6 +233,7 @@ html, body
   overflow-y: hidden;
   pointer-events: none;
   -webkit-overflow-scrolling: none;
+  margin-bottom: 8px;
 }
 
 .image-container img
@@ -277,7 +283,7 @@ html, body
   max-height: 9999px !important;
 }
 .icon-line {
-  margin-top: 5px;
+  /*margin-top: 8px;*/
 }
 .source-icon {
   display: block;
