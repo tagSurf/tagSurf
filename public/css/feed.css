@@ -19,13 +19,17 @@ html, body
 #input-container
 {
   text-align: center;
-  width: 209px;
+  width: 275px;
   height: 29px;
+  padding: 0 11px;
   margin: 6px auto;
+  overflow: hidden;
 }
 #static-icon
 {
   display: inline;
+  position: relative;
+  left: 4px;
   font-weight: bold;
   background: #6a6a6a;
   padding: 7px 0 0 14px;
@@ -55,16 +59,22 @@ html, body
 }
 #tag-input
 {
+  -webkit-appearance: none;
+  z-index: 2;
   color: white;
   font-weight: 100;
   float: left;
   display: inline;
+  position: relative;
+  top: -2px;
+  left: 4px;
   margin:0;
-  border: 0px;
+  border: 2px solid #494949;
+  border-left: none;
   padding: 7px 5px 7px 5px;
   font-size: 120%;
   width: 180px;
-  height: 29px;
+  height: 33px;
   outline-width: 0;
   font-family: 'Raleway', sans-serif;
   background: #6a6a6a;
@@ -81,7 +91,28 @@ html, body
   border-bottom-right-radius: 50px;
   border-bottom-left-radius: 0px;
 }
-
+#search-input
+{
+  position: relative;
+  float: right;
+  z-index: 1;
+  display: inline;
+  left: -4px;
+  height: 29px;
+  width: 46px;
+  background-color: #00aeef;
+  -webkit-border-top-right-radius: 50px;
+  -webkit-border-bottom-right-radius: 50px;
+  border-top-right-radius: 50px;
+  border-bottom-right-radius: 50px;
+}
+#search-input img
+{
+  float: right;
+  height: 20px;
+  margin-top: 4px;
+  margin-right: 11px;
+}
 #autocomplete
 {
   z-index: 4;
