@@ -48,7 +48,7 @@ onload = function ()
 			container.style.visibility = "visible";			
 			container.style.zIndex = "100";			
 			container.style.opacity = 1;			
-		}, 30000);
+		}, 20000);
 	};
 	
 	var scrollCallback = function (event)
@@ -113,80 +113,29 @@ onload = function ()
 	};
 
 	// autocomplete stuff
-	aclist = document.getElementById("autocomplete");
-	var viewTag = function(tagName, insertCurrent) {
-		closeAutoComplete(tagName, !!insertCurrent);
-		if (tagName != current_tag) {
-			current_tag = tagName;
-			known_keys = {};
-			populateSlider(null, null, insertCurrent ? slider.card : null);
-		}
-	};
-	var addTag = function(tagName) {
-		var n = document.createElement("div");
-		n.innerHTML = tagName;
-		n.className = "tagline";
-		var tlower = tagName.toLowerCase();
-		for (var i = 1; i <= tlower.length; i++)
-			n.className += " " + tlower.slice(0, i);
-		aclist.appendChild(n);
-		n.onclick = function() {
-			viewTag(tagName);
-		};
-	};
-	xhr("/api/tags", null, function(response_data) {
-		var hasTrending = false;
-		response_data.data.forEach(function(tag) {
-			if (tag.name) {
-				hasTrending = hasTrending || tag.name == "trending";
-				addTag(tag.name);
+	autocomplete.register("autocomplete", tinput, {
+		tapCb: function(tagName, insertCurrent) {
+			closeAutoComplete(tagName, !!insertCurrent);
+			if (tagName != current_tag) {
+				current_tag = tagName;
+				known_keys = {};
+				populateSlider(null, null, insertCurrent ? slider.card : null);
 			}
-		});
-		if (!hasTrending)
-			addTag("trending");
-	});
-	gesture.listen("down", tinput, returnTrue);
-	gesture.listen("up", tinput, function(e) {
-		if (!acviewing) {
-			acviewing = true;
+		},
+		expandCb: function() {
 			tinput.value = "";
-			mod({
-				className: "tagline",
-				show: true
-			});
 			modal.halfOn(function() {
 				if (tinput.active)
-					viewTag(current_tag);
+					autocomplete.tapTag(current_tag, "autocomplete");
 			}, inputContainer);
 			slideContainer.className = "noinput";
-			aclist.className = "autocomplete-open";
-			trans(aclist, function() {
-				tinput.active = true;
-				tinput.focus();
-			});
-			return true;
+		},
+		enterCb: function() {
+			tinput.value ?
+				autocomplete.tapTag(tinput.value, "autocomplete") :
+				modal.callBack();
 		}
 	});
-	tinput.onkeyup = function(e) {
-		e = e || window.event;
-		var code = e.keyCode || e.which;
-		if (code == 13 || code == 3) {
-			tinput.blur();
-			tinput.value ? viewTag(tinput.value) : modal.callBack();
-		} else if (tinput.value) {
-			mod({
-				className: "tagline",
-				hide: true
-			});
-			mod({
-				className: tinput.value.toLowerCase(),
-				show: true
-			});
-		} else mod({
-			className: "tagline",
-			show: true
-		});
-	};
 
 	// slider stuff
 	var cardIndex = 0;
@@ -476,7 +425,7 @@ onload = function ()
 				rmTag(tag);
 				picTags.removeChild(p);
 			} else
-				viewTag(tag, true);
+				autocomplete.tapTag(tag, "autocomplete", true);
 		});
 		picTags.appendChild(p);
 	};
@@ -582,7 +531,7 @@ onload = function ()
 			gesture.listen("up", iconLine.children[1], function() {
 				iconLine.children[1].classList.remove("active-tag-callout");
 				iconLine.children[1].firstChild.src = "/img/trending_icon_blue.png";
-				viewTag(c.tags[0], true);
+				autocomplete.tapTag(c.tags[0], "autocomplete", true);
 			});
 		} else
 			iconLine.children[1].style.display = "none";

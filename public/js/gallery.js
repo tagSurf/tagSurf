@@ -140,7 +140,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		t.className = "smallpadded midsize tcell";
 		t.innerHTML = "#" + tagName;
 		p.appendChild(t);
-		if (objwrap.user_owned) {
+		if (objwrap[tagName].user_owned) {
 			var delNode = document.createElement("div");
 			delNode.className = "smallpadded delNode tcell";
 			delNode.innerHTML = "x";
@@ -148,7 +148,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		}
 		p.appendChild(voteMeter(objwrap[tagName]))
 		gesture.listen("up", p, function() {
-			if (objwrap.user_owned) {
+			if (objwrap[tagName].user_owned) {
 				rmTag(tagName);
 				pictags.removeChild(p);
 			} else

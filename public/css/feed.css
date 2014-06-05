@@ -82,32 +82,6 @@ html, body
   border-bottom-left-radius: 0px;
 }
 
-#autocomplete
-{
-  z-index: 4;
-  position: absolute;
-  top: 90px;
-  left: 0px;
-  right: 0px;
-  margin: auto;
-  width: 200px;
-  height: 0px;
-  border-radius: 8px;
-  color: black;
-  background: white;
-  text-align: left;
-  overflow-y: scroll;
-  -webkit-transition: height 300ms ease-out;
-}
-#autocomplete div
-{
-  padding: 5px;
-}
-.autocomplete-open
-{
-  height: 150px !important;
-}
-
 .card-wrapper
 {
   -webkit-user-select: none;
@@ -231,10 +205,6 @@ html, body
   -webkit-transition: all 1s ease-in-out;
 }
 
-.hider
-{
-  visibility: hidden;
-}
 .expand-button
 {
   position: absolute;
