@@ -40,7 +40,10 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 				return "height: " + (window.innerHeight - 50) + "px;";
 			}
 		});
-		document.body.appendChild(grid);
+		var gridwrapper = document.createElement("div");
+		gridwrapper.className = "gridwrapper";
+		gridwrapper.appendChild(grid);
+		document.body.appendChild(gridwrapper);
 	}
 
 	var voteMeter = function(d, fullRound) {
@@ -323,21 +326,13 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 	buildPicBox();
 	populateGallery();
 
-//	var scroller = gallery == "history" ? history_slider : grid;
-	var scroller = grid; // disabled history slider
-	gesture.listen("up", scroller, returnTrue);
-	gesture.listen("down", scroller, returnTrue);
-	gesture.listen("drag", scroller, function (direction, distance, dx, dy) {
-		var atBottom = (scroller.scrollHeight - scroller.scrollTop 
-			=== scroller.clientHeight),
-		atTop = (scroller.scrollTop === 0);
-		if ((scroller.scrollTop + scroller.offsetHeight) 
-			>= (scroller.scrollHeight - 200))
-			populateGallery();
-		if((atTop && direction == "down") ||
-			(atBottom && direction == "up"))
-			return false;
-		return true;
+	drag.makeDraggable(grid, {
+		constraint: "horizontal",
+		drag: function() {
+			if ((grid.scrollTop + grid.offsetHeight) 
+				>= (grid.scrollHeight - 200))
+				populateGallery();
+		}
 	});
 
 	document.getElementById("favorites-btn").onclick = function() {

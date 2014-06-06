@@ -1,7 +1,32 @@
 var drag =
 {
-	makeDraggable: function (node, constraint, interval, endCallback)
+	_direction2constraint: {
+		up: "horizontal",
+		down: "horizontal",
+		left: "vertical",
+		right: "vertical"
+	},
+	nativeScroll: function (node, opts)
 	{
+		gesture.listen("up", n, returnTrue);
+		gesture.listen("down", n, returnTrue);
+		gesture.listen("drag", n, function (direction, distance, dx, dy) {
+			var atBottom = (n.scrollHeight - n.scrollTop 
+				=== n.clientHeight),
+			atTop = (n.scrollTop === 0);
+			opts.drag && opts.drag(direction, distance, dx, dy);
+			if((atTop && direction == "down") ||
+				(atBottom && direction == "up"))
+				return false;
+			return !opts.constraint ||
+				opts.constraint == drag._direction2constraint[direction];
+		});
+	},
+	makeDraggable: function (node, opts)
+	{
+		opts = opts || {};
+		if (!opts.interval && isIphone())
+			return drag.nativeScroll(node, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback;
 		node.xDrag = 0;
 		node.yDrag = 0;
@@ -19,20 +44,20 @@ var drag =
 			node.dragging = false;
 			if (node.animating == false)
 			{
-				if (interval)
+				if (opts.interval)
 				{
-					if (constraint != "vertical")
+					if (opts.constraint != "vertical")
 					{
-						yMod = node.yDrag % interval;
+						yMod = node.yDrag % opts.interval;
 						if (yMod != 0)
 						{
-							if (Math.abs(yMod) <= (interval / 2))
+							if (Math.abs(yMod) <= (opts.interval / 2))
 							{
 								node.yDrag -= yMod;
 							}
 							else
 							{
-								node.yDrag -= (interval + yMod);
+								node.yDrag -= (opts.interval + yMod);
 							}
 							if (node.yDrag < node.yDragStart)
 							{
@@ -48,18 +73,18 @@ var drag =
 							}
 						}
 					}
-					if (constraint != "horizontal")
+					if (opts.constraint != "horizontal")
 					{
-						xMod = node.xDrag % interval;
+						xMod = node.xDrag % opts.interval;
 						if (xMod != 0)
 						{
-							if (Math.abs(xMod) <= (interval / 2))
+							if (Math.abs(xMod) <= (opts.interval / 2))
 							{
 								node.xDrag -= xMod;
 							}
 							else
 							{
-								node.xDrag -= (interval + xMod);
+								node.xDrag -= (opts.interval + xMod);
 							}
 							if (node.xDrag < node.xDragStart)
 							{
@@ -87,7 +112,7 @@ var drag =
 				}
 				else	//boundary checking
 				{
-					if (constraint != "horizontal")
+					if (opts.constraint != "horizontal")
 					{
 						if (node.xDrag > 0)
 						{
@@ -103,7 +128,7 @@ var drag =
 							direction = "left";
 						}
 					}
-					if (constraint != "vertical")
+					if (opts.constraint != "vertical")
 					{
 						if (node.yDrag > 0)
 						{
@@ -129,18 +154,17 @@ var drag =
 							node.yDrag + "px,0)";
 					}
 				}
-				if (endCallback)
+				if (opts.up)
 				{
 					console.log("endCallback");
-					endCallback(direction);
+					opts.up(direction);
 				}
 			}
 		};
 		dragCallback = function (direction, distance, dx, dy) {
-			var verticalTranslate, horizontalTranslate;
 			if (node.dragging)
 			{
-				if (constraint != "vertical")
+				if (opts.constraint != "vertical")
 				{
 					if (Math.abs(node.yDrag) < 
 						(node.scrollHeight - 
@@ -149,7 +173,7 @@ var drag =
 						node.yDrag += dy;
 					}
 				}
-				if (constraint != "horizontal")
+				if (opts.constraint != "horizontal")
 				{
 					if (Math.abs(node.xDrag) < 
 						(node.scrollWidth - 
@@ -161,15 +185,16 @@ var drag =
 				node.style['-webkit-transform'] = 
 					"translate3d(" + node.xDrag + "px," + 
 					node.yDrag + "px,0)";
+				opts.drag && opts.drag(direction, distance, dx, dy);
 			}
 		};
 		swipeCallback =  function (direction, distance, dx, dy, pixelsPerSecond)
 		{
-			var xMod = interval ? node.xDrag % interval : -dx;
-			var yMod = interval ? node.yDrag % interval : -dy;
+			var xMod = opts.interval ? node.xDrag % opts.interval : -dx;
+			var yMod = opts.interval ? node.yDrag % opts.interval : -dy;
 			if (node.animating == false)
 			{
-				if (constraint != "horizontal" && node.xDrag <= 0 && 
+				if (opts.constraint != "horizontal" && node.xDrag <= 0 && 
 					Math.abs(node.xDrag) < (node.scrollWidth - 
 					node.parentNode.clientWidth))
 				{
@@ -179,14 +204,14 @@ var drag =
 					}
 					else if (direction == "left")
 					{
-						node.xDrag += (interval ? -(interval + xMod) : xMod);
+						node.xDrag += (opts.interval ? -(opts.interval + xMod) : xMod);
 					}
 					else
 					{
 						return;
 					}
 				}
-				if (constraint != "vertical" && node.yDrag <= 0 
+				if (opts.constraint != "vertical" && node.yDrag <= 0 
 					&& Math.abs(node.yDrag) < (node.scrollHeight - 
 					node.parentNode.clientWidth))
 				{
@@ -196,7 +221,7 @@ var drag =
 					}
 					else if (direction == "down")
 					{
-						node.yDrag += (interval ? -(interval + yMod) : yMod);
+						node.yDrag += (opts.interval ? -(opts.interval + yMod) : yMod);
 					}
 					else
 					{
