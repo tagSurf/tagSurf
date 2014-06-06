@@ -130,16 +130,16 @@ var drag =
 					}
 					if (opts.constraint != "vertical")
 					{
-						if (node.yDrag > 0)
+						if (node.yDrag < 0)
 						{
 							node.yDrag = 0;
 							boundaryReached = true;
 							direction = "up";
 						}
-						else if (Math.abs(node.yDrag) > 
+						else if (node.yDrag > 
 							(node.scrollHeight - node.parentNode.clientHeight))
 						{
-							node.yDrag = -(node.scrollHeight - node.parentNode.clientHeight);
+							node.yDrag = node.scrollHeight - node.parentNode.clientHeight;
 							boundaryReached = true;
 							direction = "down";
 						}

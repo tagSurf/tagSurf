@@ -36,8 +36,8 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		};
 	} else {
 		addCss({
-			".grid": function() {
-				return "height: " + (window.innerHeight - 50) + "px;";
+			".gridwrapper": function() {
+				return "height: " + (window.innerHeight - 50) + "px;width:" + window.innerWidth + "px";
 			}
 		});
 		var gridwrapper = document.createElement("div");
