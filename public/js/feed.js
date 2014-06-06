@@ -24,6 +24,7 @@ onload = function ()
 				reminderContainer.style.opacity = 0;			
 				trans(reminderContainer, function() {
 					reminderContainer.parentNode.removeChild(reminderContainer);
+					reminderTimeout = null;
 				});
 			}
 		};
