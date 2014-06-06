@@ -45,7 +45,7 @@ var carousel =
 				'/img/tutorial/tutorial_' + index + '.png');
 		}
 		carousel._populate();
-		gesture.listen("swipe", carousel.view.firstChild, carousel.swipeCallback);
+		//gesture.listen("swipe", carousel.view.firstChild, carousel.swipeCallback);
 		gesture.listen("up", carousel.view.firstChild, carousel.upCallback);
 		gesture.listen("down", carousel.view.firstChild, carousel.downCallback);
 	},
