@@ -354,8 +354,11 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 							"favorites", favGrid));
 				} else
 					removeFavImage();*/
-				current_image.user_stats.has_favorited = true;
-				xhr("/api/favorites/" + current_image.id, "POST");
+				current_image.user_stats.has_favorited =
+					!current_image.user_stats.has_favorited;
+				xhr("/api/favorites/" + current_image.id,
+					current_image.user_stats.has_favorited
+						? "POST" : "DELETE");
 				updateFavorited();
 			} else if (current_image.gallery == "favorites") {
 				removeFavImage();
