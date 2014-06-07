@@ -100,7 +100,7 @@ var drag =
 							}
 						}
 					}
-					if (direction && node.animating == false)
+					if (direction)
 					{
 						node.animating = true;
 						trans(node, function () { node.animating = false;},
@@ -166,8 +166,7 @@ var drag =
 			{
 				if (opts.constraint != "vertical")
 				{
-					if (Math.abs(node.yDrag) < 
-						(node.scrollHeight - 
+					if (node.yDrag < -(node.scrollHeight - 
 						 (2 * node.parentNode.clientHeight / 3)))
 					{
 						node.yDrag += dy;
@@ -212,8 +211,8 @@ var drag =
 					}
 				}
 				if (opts.constraint != "vertical" && node.yDrag <= 0 
-					&& Math.abs(node.yDrag) < (node.scrollHeight - 
-					node.parentNode.clientWidth))
+					&& node.yDrag < -(node.scrollHeight - 
+					node.parentNode.clientHeight))
 				{
 					if (direction == "up")
 					{
@@ -230,7 +229,6 @@ var drag =
 				}
 				//carousel.orderIndicationCallback(direction);
 				trans(node, function() {
-					console.log("drag-swipe");
 					node.animating = false;
 					upCallback();//legit?
 				}, "-webkit-transform 300ms ease-out");
