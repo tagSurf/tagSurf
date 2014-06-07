@@ -300,7 +300,8 @@ var isAndroid = function() {
   return isMobile() && !isIphone();
 };
 var trans = function(node, cb, transition, transform) {
-  var transTimeout, isClass = transition.split(" ").length == 1;
+  var transTimeout,
+    isClass = transition && transition.split(" ").length == 1;
   var wrapper = function () {
     if (transition) {
       if (isClass)
