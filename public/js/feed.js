@@ -541,7 +541,7 @@ onload = function ()
 		});
 		c.tags_v2.forEach(function(tagobj) {
 			var t = Object.keys(tagobj)[0];
-			t && tagCard(t, picTags);
+			t && t != "trending" && tagCard(t, picTags);
 		});
 		card = formatter.firstChild.firstChild;
 		setStartState(card);
