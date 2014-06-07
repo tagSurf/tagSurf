@@ -308,8 +308,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 	drag.makeDraggable(grid, {
 		constraint: "horizontal",
 		drag: function() {
-			if ((gridwrapper.scrollTop + gridwrapper.offsetHeight)
-				>= (gridwrapper.scrollHeight))
+			if ((grid.scrollTop + grid.offsetHeight) >= grid.scrollHeight)
 				populateGallery();
 		}
 	});
