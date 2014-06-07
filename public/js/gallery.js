@@ -294,10 +294,10 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			gesture.triggerDrag(grid, direction, distance, dx, dy);
 		});
 		gesture.listen("up", n, function() {
-			if (grid.dragging)
-				gesture.triggerUp(grid);
-			else
-				showImage(d);
+			gesture.triggerUp(grid);
+		});
+		gesture.listen("tap", n, function() {
+			grid.dragging || showImage(d);
 		});
 
 		n.header = header;
