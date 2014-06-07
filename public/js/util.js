@@ -300,32 +300,31 @@ var isAndroid = function() {
   return isMobile() && !isIphone();
 };
 var trans = function(node, cb, transition, transform) {
+  var transTimeout, isClass = transition.split(" ").length == 1;
   var wrapper = function () {
-    if (transition) 
-    {
-      if (transition.split(" ").length == 1)
-      {
+    if (transition) {
+      if (isClass)
         node.classList.remove(transition);
-      }
-      else
-      {
+      else {
         node.style['-webkit-transition'] = "";
       }
     }
     if (transform) node.style['-webkit-transform'] = "";
+    if (transTimeout) {
+      clearTimeout(transTimeout);
+      transTimeout = null;
+    }
     node.removeEventListener("webkitTransitionEnd", wrapper, false);
     cb && cb();
   };
   node.addEventListener("webkitTransitionEnd", wrapper, false);
-  if (transition) 
-  {
-    if (transition.split(" ").length == 1)
-    {
+  if (transition) {
+    if (isClass)
       node.classList.add(transition);
-    }
-    else
-    {
-      node.style['-webkit-transition'] = transition;	
+    else {
+      node.style['-webkit-transition'] = transition;
+      transTimeout = setTimeout(wrapper,
+        parseInt(transition.split(" ")[1]));
     }
   }
   if (transform) node.style['-webkit-transform'] = transform;
