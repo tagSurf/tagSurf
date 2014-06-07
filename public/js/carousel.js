@@ -32,8 +32,11 @@ var carousel =
 			carousel.off();
 			document.forms[0].submit();
 		});
-		drag.makeDraggable(container, "vertical", carousel.translateDistance, 
-			carousel.orderIndicationCallback);
+		drag.makeDraggable(container, {
+			constraint: "vertical",
+			interval: carousel.translateDistance, 
+			up: carousel.orderIndicationCallback
+		});
 		orderIndication.appendChild(circlesContainer);
 		orderIndication.appendChild(endButton);
 		carousel.view.appendChild(container);
