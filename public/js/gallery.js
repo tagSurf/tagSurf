@@ -259,9 +259,13 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			spacer.className = "playoverlay";
 		gesture.listen("down", n, function() {
 			gesture.triggerDown(grid);
+			if (isIphone())
+				return true;
 		});
 		gesture.listen("drag", n, function(direction, distance, dx, dy) {
 			gesture.triggerDrag(grid, direction, distance, dx, dy);
+			if (isIphone())
+				return true;
 		});
 		gesture.listen("up", n, function() {
 			gesture.triggerUp(grid);
