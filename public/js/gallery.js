@@ -1,50 +1,20 @@
 var gnodes = {}, current_image, favGrid, slideGallery,
 	addHistoryItem, gallerize = function(gallery) {
 	var picbox, topbar, bigpic, picdesc, pictags;
-	var history_slider, grid = document.createElement("div");
+	var grid = document.createElement("div");
+	var gridwrapper = document.createElement("div");
 	grid.className = "grid";
+	gridwrapper.className = "gridwrapper";
 	gnodes[gallery] = {};
-	if (gallery == "favorites")
-		favGrid = grid;
-
-//	if (gallery == "history") {
-	if (false) { // disabled history slider
-		history_slider = document.createElement("div");
-		history_slider.id = "history_slider";
-		history_slider.appendChild(grid);
-		grid.className = "histgrid";
-		document.body.appendChild(history_slider);
-		addCss({
-			"#history_slider": function() {
-				return "-webkit-transform: translate3d(0, -"
-					+ (history_slider.offsetHeight + 100) + "px, 0);";
-			},
-			".histgrid": function() {
-				return "height: " + (history_slider.offsetHeight - 10) + "px;";
-			},
-			".grid": function() {
-				return "height: " + (window.innerHeight - 50) + "px;";
-			}
-		});
-		slideGallery = function() {
-			current_image && modal.callModal();
-			history_slider.style.opacity = "1";
-			toggleClass.call(history_slider, "modalslide");
-		};
-		addHistoryItem = function(item) {
-			addImage(item, getHeader(item.user_stats.time_discovered));
-		};
-	} else {
-		addCss({
-			".gridwrapper": function() {
-				return "height: " + (window.innerHeight - 50) + "px;width:" + window.innerWidth + "px";
-			}
-		});
-		var gridwrapper = document.createElement("div");
-		gridwrapper.className = "gridwrapper";
-		gridwrapper.appendChild(grid);
-		document.body.appendChild(gridwrapper);
-	}
+	if (gallery == "favorites") favGrid = grid;
+	addCss({
+		".gridwrapper": function() {
+			return "height: " + (window.innerHeight - 50) +
+				"px; width:" + window.innerWidth + "px";
+		}
+	});
+	gridwrapper.appendChild(grid);
+	document.body.appendChild(gridwrapper);
 
 	var voteMeter = function(d, fullRound) {
 		var trending = d.trend == "up";
@@ -328,7 +298,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			});
 			populating = false;
 			throbber.off();
-		});
+		}, function() { populating = false; });
 		chunk_offset += chunk_size;
 	};
 
@@ -338,8 +308,8 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 	drag.makeDraggable(grid, {
 		constraint: "horizontal",
 		drag: function() {
-			if ((grid.scrollTop + grid.offsetHeight) 
-				>= (grid.scrollHeight - 200))
+			if ((gridwrapper.scrollTop + gridwrapper.offsetHeight)
+				>= (gridwrapper.scrollHeight))
 				populateGallery();
 		}
 	});
@@ -347,17 +317,6 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 	document.getElementById("favorites-btn").onclick = function() {
 		if (current_image) {
 			if (current_image.gallery == "history") {
-
-				// removed history slider, eliminating gallery interactions
-				/*if (!current_image.user_stats.has_favorited) {
-					current_image.user_stats.has_favorited = true;
-					xhr("/api/favorites/" + current_image.id, "POST");
-					if (favGrid)
-						addImage(JSON.parse(JSON.stringify(current_image)),
-							getHeader(current_image.user_stats.time_discovered,
-							"favorites", favGrid));
-				} else
-					removeFavImage();*/
 				current_image.user_stats.has_favorited =
 					!current_image.user_stats.has_favorited;
 				xhr("/api/favorites/" + current_image.id,
