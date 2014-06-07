@@ -12,11 +12,10 @@ var drag =
 		gesture.listen("down", n, returnTrue);
 		gesture.listen("drag", n, function (direction, distance, dx, dy) {
 			var atBottom = (n.scrollHeight - n.scrollTop 
-				=== n.clientHeight),
-			atTop = (n.scrollTop === 0);
+				=== n.clientHeight), atTop = (n.scrollTop === 0);
 			opts.drag && opts.drag(direction, distance, dx, dy);
-			if((atTop && direction == "down") ||
-				(atBottom && direction == "up"))
+			if((atTop && direction == "up") ||
+				(atBottom && direction == "down"))
 				return false;
 			return !opts.constraint ||
 				opts.constraint == drag._direction2constraint[direction];
