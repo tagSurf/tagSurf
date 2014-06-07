@@ -287,9 +287,18 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		n.appendChild(voteMeter(d));
 		if (d.image.animated)
 			spacer.className = "playoverlay";
-		n.onclick = function() {
-			showImage(d);
-		};
+		gesture.listen("down", n, function() {
+			gesture.triggerDown(grid);
+		});
+		gesture.listen("drag", n, function(direction, distance, dx, dy) {
+			gesture.triggerDrag(grid, direction, distance, dx, dy);
+		});
+		gesture.listen("up", n, function() {
+			if (grid.dragging)
+				gesture.triggerUp(grid);
+			else
+				showImage(d);
+		});
 
 		n.header = header;
 		n.header.cells.push(d.id);
