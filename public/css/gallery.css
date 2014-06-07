@@ -99,6 +99,10 @@ img[src="img/history_icon_gray.png"]
 	font-size: 9pt;
 	line-height: 15px;
 }
+.grid
+{
+	overflow: auto;
+}
 
 .gridwrapper {
 	overflow-x: hidden;

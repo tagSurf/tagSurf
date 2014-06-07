@@ -130,16 +130,16 @@ var drag =
 					}
 					if (opts.constraint != "vertical")
 					{
-						if (node.yDrag < 0)
+						if (node.yDrag > 0)
 						{
 							node.yDrag = 0;
 							boundaryReached = true;
 							direction = "up";
 						}
-						else if (node.yDrag > 
-							(node.scrollHeight - node.parentNode.clientHeight))
+						else if (node.yDrag < 
+							-(node.scrollHeight - node.parentNode.clientHeight))
 						{
-							node.yDrag = node.scrollHeight - node.parentNode.clientHeight;
+							node.yDrag = -(node.scrollHeight - node.parentNode.clientHeight);
 							boundaryReached = true;
 							direction = "down";
 						}
@@ -167,7 +167,7 @@ var drag =
 				node.dragging = true;
 				if (opts.constraint != "vertical")
 				{
-					if (node.yDrag < -(node.scrollHeight - 
+					if (node.yDrag > -(node.scrollHeight - 
 						 (2 * node.parentNode.clientHeight / 3)))
 					{
 						node.yDrag += dy;
@@ -212,16 +212,16 @@ var drag =
 					}
 				}
 				if (opts.constraint != "vertical" && node.yDrag <= 0 
-					&& node.yDrag < -(node.scrollHeight - 
+					&& node.yDrag > -(node.scrollHeight - 
 					node.parentNode.clientHeight))
 				{
 					if (direction == "up")
 					{
-						node.yDrag -= yMod;
+						node.yDrag += yMod;
 					}
 					else if (direction == "down")
 					{
-						node.yDrag += (opts.interval ? -(opts.interval + yMod) : yMod);
+						node.yDrag += (opts.interval ? -(opts.interval + yMod) : -yMod);
 					}
 					else
 					{
