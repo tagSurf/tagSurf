@@ -33,7 +33,8 @@ var drag =
 		downCallback = function () 
 		{
 			if (node.animating) return;
-			node.dragging = true;
+			node.dragging = false;
+			node.touchedDown = true;
 			node.animating = false;
 			node.xDragStart = node.xDrag;
 			node.yDragStart = node.yDrag;
@@ -41,7 +42,7 @@ var drag =
 		upCallback = function () {
 			var xMod = 0, yMod = 0, direction = null, 
 				boundaryReached = false;
-			node.dragging = false;
+			node.touchedDown = node.dragging = false;
 			if (node.animating == false)
 			{
 				if (opts.interval)
@@ -162,8 +163,9 @@ var drag =
 			}
 		};
 		dragCallback = function (direction, distance, dx, dy) {
-			if (node.dragging)
+			if (node.touchedDown)
 			{
+				node.dragging = true;
 				if (opts.constraint != "vertical")
 				{
 					if (node.yDrag < -(node.scrollHeight - 
