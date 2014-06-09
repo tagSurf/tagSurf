@@ -38,9 +38,8 @@ var drag =
 			node.xDragStart = node.xDrag;
 			node.yDragStart = node.yDrag;
 		};
-		upCallback = function () {
-			var xMod = 0, yMod = 0, direction = null, 
-				boundaryReached = false;
+		upCallback = function (direction) {
+			var xMod = 0, yMod = 0, boundaryReached = false;
 			node.touchedDown = node.dragging = false;
 			if (node.animating == false)
 			{
@@ -231,7 +230,7 @@ var drag =
 				//carousel.orderIndicationCallback(direction);
 				trans(node, function() {
 					node.animating = false;
-					upCallback();//legit?
+					upCallback(direction);//legit?
 				}, "-webkit-transform 300ms ease-out");
 				node.animating = true;
 				node.style['-webkit-transform'] = 
