@@ -6,16 +6,16 @@ var drag =
 		left: "vertical",
 		right: "vertical"
 	},
-	nativeScroll: function (node, opts)
+	nativeScroll: function (n, opts)
 	{
 		gesture.listen("up", n, returnTrue);
 		gesture.listen("down", n, returnTrue);
 		gesture.listen("drag", n, function (direction, distance, dx, dy) {
-			var atBottom = (n.scrollHeight - n.scrollTop 
-				=== n.clientHeight), atTop = (n.scrollTop === 0);
+			var atBottom = (n.parentNode.scrollHeight - n.parentNode.scrollTop 
+				=== n.parentNode.clientHeight), atTop = (n.parentNode.scrollTop === 0);
 			opts.drag && opts.drag(direction, distance, dx, dy);
-			if((atTop && direction == "up") ||
-				(atBottom && direction == "down"))
+			if((atTop && direction == "down") ||
+				(atBottom && direction == "up"))
 				return false;
 			return !opts.constraint ||
 				opts.constraint == drag._direction2constraint[direction];
