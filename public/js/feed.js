@@ -4,7 +4,6 @@ onload = function ()
 
 	// defined in util for autocomplete
 	// integration with other sliding elements
-	sinput = document.getElementById("search-input");
 	tinput = document.getElementById("tag-input");
 	current_tag = tinput.value
 		= document.location.hash.slice(1) || "trending";
@@ -112,7 +111,7 @@ onload = function ()
 	};
 
 	// autocomplete stuff
-	autocomplete.register("autocomplete", tinput, {
+	var autocompleteCbs = {
 		tapCb: function(tagName, insertCurrent) {
 			closeAutoComplete(tagName, !!insertCurrent);
 			if (tagName != current_tag) {
@@ -134,7 +133,10 @@ onload = function ()
 				autocomplete.tapTag(tinput.value, "autocomplete") :
 				modal.callBack();
 		}
-	});
+	};
+	autocomplete.register("autocomplete", tinput, autocompleteCbs);
+	gesture.listen("tap", document.getElementById("search-input"),
+		autocompleteCbs.enterCb);
 
 	// slider stuff
 	var cardIndex = 0;
