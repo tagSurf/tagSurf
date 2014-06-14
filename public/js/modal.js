@@ -40,9 +40,6 @@ var modal = {
 		gesture.listen("swipe", modal.modal, modal.callModal);
 		gesture.listen("drag", modal.zoom, modal.dragZoom);
 		gesture.listen("down", modal.zoom, modal._passThrough);
-		gesture.listen("up", modal.modal, modal._passThrough);
-		gesture.listen("down", modal.modal, modal._passThrough);
-		gesture.listen("drag", modal.modal, modal._passThroughUD);
 	},
 	_buildZoom: function() {
 		var zNode = document.createElement('img'), 
@@ -167,6 +164,18 @@ var modal = {
 	modalIn: function(node, cb, zcb) {
 		modal.modal.on = true;
 		modal.modal.innerHTML = "";
+		drag.makeDraggable(node, {
+			constraint: "horizontal",
+			force: true,
+			up: function (direction) {
+				if (direction == 'left' ||
+					direction == 'right')
+				{
+
+					modal.callModal();
+				}
+			},
+		});
 		modal.modal.appendChild(node);
 		modal.modal.cb = cb;
 		modal.modal.zcb = zcb;
