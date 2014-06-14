@@ -24,11 +24,12 @@ var drag =
 	makeDraggable: function (node, opts)
 	{
 		opts = opts || {};
-		if (!opts.interval && isIphone())
+		if (!opts.interval && isIphone() && !opts.force)
 			return drag.nativeScroll(node, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback;
 		node.xDrag = 0;
 		node.yDrag = 0;
+		node.style['-webkit-transform'] = "translate3d(0,0,0)";
 		downCallback = function () 
 		{
 			if (node.animating) return;
