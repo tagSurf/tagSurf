@@ -61,14 +61,27 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 
 		bigpic = document.createElement("img");
 		bigpic.id = "bigpic";
-		gesture.listen("down", bigpic, returnTrue);
-		gesture.listen("drag", bigpic, function (direction) {
+		gesture.listen("up", bigpic, function() {
+			gesture.triggerUp(picbox);
+		});
+		gesture.listen("tap", bigpic, function() {
+			picbox.dragging || modal.zoomModal();
+			//return true?
+		});
+		gesture.listen("down", bigpic, function() {
+			gesture.triggerDown(picbox);
+			if (isIphone())
+				return true;
+		});
+		gesture.listen("drag", bigpic, function (direction, distance, dx, dy) {
+			gesture.triggerDrag(picbox, direction, distance, dx, dy);
 			if (direction == "down" || direction == "up")
 			{
 				return true;
 			}
+			if (isIphone())
+				return true;
 		});
-		gesture.listen("tap", bigpic, function(){modal.zoomModal();return true;});
 		gesture.listen("swipe", bigpic, function (direction) {
 			if (direction != "up" && direction != "down")
 			{
