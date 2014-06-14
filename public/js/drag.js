@@ -240,6 +240,9 @@ var drag =
 			}
 		};
 
+		if (node.isDraggable)
+			gesture.unlisten(node);
+		node.isDraggable = true;
 		gesture.listen("drag", node, dragCallback);
 		gesture.listen("down", node, downCallback);
 		gesture.listen("swipe", node, swipeCallback);
