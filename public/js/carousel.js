@@ -32,8 +32,11 @@ var carousel =
 			carousel.off();
 			document.forms[0].submit();
 		});
-		drag.makeDraggable(container, "vertical", carousel.translateDistance, 
-			carousel.orderIndicationCallback);
+		drag.makeDraggable(container, {
+			constraint: "vertical",
+			interval: carousel.translateDistance, 
+			up: carousel.orderIndicationCallback
+		});
 		orderIndication.appendChild(circlesContainer);
 		orderIndication.appendChild(endButton);
 		carousel.view.appendChild(container);
@@ -45,7 +48,7 @@ var carousel =
 				'/img/tutorial/tutorial_' + index + '.png');
 		}
 		carousel._populate();
-		gesture.listen("swipe", carousel.view.firstChild, carousel.swipeCallback);
+		//gesture.listen("swipe", carousel.view.firstChild, carousel.swipeCallback);
 		gesture.listen("up", carousel.view.firstChild, carousel.upCallback);
 		gesture.listen("down", carousel.view.firstChild, carousel.downCallback);
 	},

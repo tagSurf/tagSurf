@@ -40,9 +40,6 @@ var modal = {
 		gesture.listen("swipe", modal.modal, modal.callModal);
 		gesture.listen("drag", modal.zoom, modal.dragZoom);
 		gesture.listen("down", modal.zoom, modal._passThrough);
-		gesture.listen("up", modal.modal, modal._passThrough);
-		gesture.listen("down", modal.modal, modal._passThrough);
-		gesture.listen("drag", modal.modal, modal._passThroughUD);
 	},
 	_buildZoom: function() {
 		var zNode = document.createElement('img'), 
@@ -168,6 +165,7 @@ var modal = {
 		modal.modal.on = true;
 		modal.modal.innerHTML = "";
 		modal.modal.appendChild(node);
+		modal.modal.style.display = "block";
 		modal.modal.cb = cb;
 		modal.modal.zcb = zcb;
 		modal.modal.className = "modal modalout disabled";
@@ -181,6 +179,7 @@ var modal = {
 		modal.modal.cb = null;
 		trans(modal.modal, function (event){
 			modal.modal.className = "modal disabled";
+			modal.modal.style.display = "none";
 		});
 	},
 	zoomIn: function (card, cb) {

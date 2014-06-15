@@ -1,47 +1,20 @@
 var gnodes = {}, current_image, favGrid, slideGallery,
 	addHistoryItem, gallerize = function(gallery) {
 	var picbox, topbar, bigpic, picdesc, pictags;
-	var history_slider, grid = document.createElement("div");
+	var grid = document.createElement("div");
+	var gridwrapper = document.createElement("div");
 	grid.className = "grid";
+	gridwrapper.className = "gridwrapper";
 	gnodes[gallery] = {};
-	if (gallery == "favorites")
-		favGrid = grid;
-
-//	if (gallery == "history") {
-	if (false) { // disabled history slider
-		history_slider = document.createElement("div");
-		history_slider.id = "history_slider";
-		history_slider.appendChild(grid);
-		grid.className = "histgrid";
-		document.body.appendChild(history_slider);
-		addCss({
-			"#history_slider": function() {
-				return "-webkit-transform: translate3d(0, -"
-					+ (history_slider.offsetHeight + 100) + "px, 0);";
-			},
-			".histgrid": function() {
-				return "height: " + (history_slider.offsetHeight - 10) + "px;";
-			},
-			".grid": function() {
-				return "height: " + (window.innerHeight - 50) + "px;";
-			}
-		});
-		slideGallery = function() {
-			current_image && modal.callModal();
-			history_slider.style.opacity = "1";
-			toggleClass.call(history_slider, "modalslide");
-		};
-		addHistoryItem = function(item) {
-			addImage(item, getHeader(item.user_stats.time_discovered));
-		};
-	} else {
-		addCss({
-			".grid": function() {
-				return "height: " + (window.innerHeight - 50) + "px;";
-			}
-		});
-		document.body.appendChild(grid);
-	}
+	if (gallery == "favorites") favGrid = grid;
+	addCss({
+		".gridwrapper": function() {
+			return "height: " + (window.innerHeight - 50) +
+				"px; width:" + window.innerWidth + "px";
+		}
+	});
+	gridwrapper.appendChild(grid);
+	document.body.appendChild(gridwrapper);
 
 	var voteMeter = function(d, fullRound) {
 		var trending = d.trend == "up";
@@ -88,20 +61,55 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 
 		bigpic = document.createElement("img");
 		bigpic.id = "bigpic";
-		gesture.listen("down", bigpic, returnTrue);
-		gesture.listen("drag", bigpic, function (direction) {
+		gesture.listen("up", bigpic, function() {
+			gesture.triggerUp(picbox);
+		});
+		gesture.listen("tap", bigpic, function() {
+			picbox.dragging || modal.zoomModal();
+			//return true?
+		});
+		gesture.listen("down", bigpic, function() {
+			gesture.triggerDown(picbox);
+			if (isIphone())
+				return true;
+		});
+		gesture.listen("drag", bigpic, function (direction, distance, dx, dy) {
+			gesture.triggerDrag(picbox, direction, distance, dx, dy);
 			if (direction == "down" || direction == "up")
 			{
 				return true;
 			}
+			if (isIphone())
+				return true;
 		});
-		gesture.listen("tap", bigpic, function(){modal.zoomModal();return true;});
 		gesture.listen("swipe", bigpic, function (direction) {
 			if (direction != "up" && direction != "down")
 			{
 				modal.callModal();
 			}
 		});
+		bigpic.onload = function (event)
+		{
+			if (modal.modal.offsetHeight < picbox.scrollHeight)
+			{
+				drag.makeDraggable(picbox, {
+					constraint: "horizontal",
+					force: true,
+					up: function (direction) {
+						if (direction == 'left' ||
+							direction == 'right')
+						{
+							modal.callModal();
+						}
+					},
+				});
+			}
+			else
+			{
+				picbox.style['-webkit-transform'] = "translate3d(0,0,0)";
+				gesture.unlisten(picbox);
+			}
+		};
 		picbox.appendChild(bigpic);
 
 		picdesc = document.createElement("div");
@@ -284,9 +292,22 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		n.appendChild(voteMeter(d));
 		if (d.image.animated)
 			spacer.className = "playoverlay";
-		n.onclick = function() {
-			showImage(d);
-		};
+		gesture.listen("down", n, function() {
+			gesture.triggerDown(grid);
+			if (isIphone())
+				return true;
+		});
+		gesture.listen("drag", n, function(direction, distance, dx, dy) {
+			gesture.triggerDrag(grid, direction, distance, dx, dy);
+			if (isIphone())
+				return true;
+		});
+		gesture.listen("up", n, function() {
+			gesture.triggerUp(grid);
+		});
+		gesture.listen("tap", n, function() {
+			grid.dragging || showImage(d);
+		});
 
 		n.header = header;
 		n.header.cells.push(d.id);
@@ -316,44 +337,24 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			});
 			populating = false;
 			throbber.off();
-		});
+		}, function() { populating = false; });
 		chunk_offset += chunk_size;
 	};
 
 	buildPicBox();
 	populateGallery();
 
-//	var scroller = gallery == "history" ? history_slider : grid;
-	var scroller = grid; // disabled history slider
-	gesture.listen("up", scroller, returnTrue);
-	gesture.listen("down", scroller, returnTrue);
-	gesture.listen("drag", scroller, function (direction, distance, dx, dy) {
-		var atBottom = (scroller.scrollHeight - scroller.scrollTop 
-			=== scroller.clientHeight),
-		atTop = (scroller.scrollTop === 0);
-		if ((scroller.scrollTop + scroller.offsetHeight) 
-			>= (scroller.scrollHeight - 200))
-			populateGallery();
-		if((atTop && direction == "down") ||
-			(atBottom && direction == "up"))
-			return false;
-		return true;
+	drag.makeDraggable(grid, {
+		constraint: "horizontal",
+		drag: function() {
+			if ((grid.scrollTop + grid.offsetHeight) >= grid.scrollHeight)
+				populateGallery();
+		}
 	});
 
 	document.getElementById("favorites-btn").onclick = function() {
 		if (current_image) {
 			if (current_image.gallery == "history") {
-
-				// removed history slider, eliminating gallery interactions
-				/*if (!current_image.user_stats.has_favorited) {
-					current_image.user_stats.has_favorited = true;
-					xhr("/api/favorites/" + current_image.id, "POST");
-					if (favGrid)
-						addImage(JSON.parse(JSON.stringify(current_image)),
-							getHeader(current_image.user_stats.time_discovered,
-							"favorites", favGrid));
-				} else
-					removeFavImage();*/
 				current_image.user_stats.has_favorited =
 					!current_image.user_stats.has_favorited;
 				xhr("/api/favorites/" + current_image.id,
