@@ -88,6 +88,28 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 				modal.callModal();
 			}
 		});
+		bigpic.onload = function (event)
+		{
+			if (modal.modal.offsetHeight < picbox.scrollHeight)
+			{
+				drag.makeDraggable(picbox, {
+					constraint: "horizontal",
+					force: true,
+					up: function (direction) {
+						if (direction == 'left' ||
+							direction == 'right')
+						{
+							modal.callModal();
+						}
+					},
+				});
+			}
+			else
+			{
+				picbox.style['-webkit-transform'] = "translate3d(0,0,0)";
+				gesture.unlisten(picbox);
+			}
+		};
 		picbox.appendChild(bigpic);
 
 		picdesc = document.createElement("div");
