@@ -164,19 +164,8 @@ var modal = {
 	modalIn: function(node, cb, zcb) {
 		modal.modal.on = true;
 		modal.modal.innerHTML = "";
-		drag.makeDraggable(node, {
-			constraint: "horizontal",
-			force: true,
-			up: function (direction) {
-				if (direction == 'left' ||
-					direction == 'right')
-				{
-
-					modal.callModal();
-				}
-			},
-		});
 		modal.modal.appendChild(node);
+		modal.modal.style.display = "block";
 		modal.modal.cb = cb;
 		modal.modal.zcb = zcb;
 		modal.modal.className = "modal modalout disabled";
@@ -190,6 +179,7 @@ var modal = {
 		modal.modal.cb = null;
 		trans(modal.modal, function (event){
 			modal.modal.className = "modal disabled";
+			modal.modal.style.display = "none";
 		});
 	},
 	zoomIn: function (card, cb) {
