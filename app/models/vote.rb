@@ -6,6 +6,7 @@ class Vote < ActiveRecord::Base
   has_one :tag
 
   after_commit :relate_tag,        on: :create
+  after_commit :update_tag_feed,   if: :persisted?
 
   def self.paginated_history(user_id, limit, offset) 
     Media.joins(:votes).where("votes.voter_id = #{user_id}").order('votes.id desc').limit(limit).offset(offset)
@@ -46,6 +47,11 @@ class Vote < ActiveRecord::Base
   def relate_tag
     tag = Tag.where(name: self.vote_tag).first
     self.update_column("tag_id", tag.id)
+  end
+
+  def update_tag_feed
+    tag = Tag.where(name: self.vote_tag).first
+    tag.tag_feed[tag.name] = Vote.where(votable_id: id, vote_tag: tag).count
   end
    
 end
