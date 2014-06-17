@@ -5,8 +5,10 @@ class RequestTaggedMedia
   
   include Sidekiq::Worker
 
-  def perform(tag)
-    tag = Tag.where(name: tag)
+  def perform(tag_name)
+    unless tag = Tag.where('name ilike ?', tag_name).first
+      tag = Tag.create!(name: tag_name)
+    end
     Media.populate_tag(tag.name)
   end
 

@@ -137,19 +137,19 @@ class Media < ActiveRecord::Base
     end
   end
 
-  def self.populate_tag(tag) 
-    return if Tag.blacklisted?(tag)
-    response = RemoteResource.tagged_feed(tag)
+  def self.populate_tag(tag_name) 
+    return if Tag.blacklisted?(tag_name)
+    response = RemoteResource.tagged_feed(tag_name)
 
     if response.nil? or response.parsed_response.nil?
-      raise "Failed to fetch with #{tag}, response:#{reponse}"
+      raise "Failed to fetch with #{tag_name}, response:#{reponse}"
     end
 
     tagged = response.parsed_response["data"]
 
     # Create tag if not already in the system
-    unless tag = Tag.where('name ilike ?', tag).first
-      tag = Tag.create(name: tag)
+    unless tag = Tag.where('name ilike ?', tag_name).first
+      tag = Tag.create(name: tag_name)
     end
 
     if tagged
