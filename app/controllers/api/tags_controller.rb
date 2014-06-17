@@ -1,9 +1,11 @@
 class Api::TagsController < Api::BaseController
 
-  def index
-    tags = Tag.pluck(:name)
-    tags << "trending"
+  def tag_feed
+    tags = Tag.current_feed(false)
     render json: tags
+  end
+
+  def search
   end
 
   def show

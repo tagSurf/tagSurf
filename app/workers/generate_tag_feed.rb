@@ -3,7 +3,7 @@ class GenerateTagFeed
 
   def perform
     tags = Tag.all
-    tag.each do |tag|
+    tags.each do |tag|
       votes = Vote.where(vote_tag: tag.name).count
       if Tag.blacklisted?(tag.name)
         tag.tag_feed.delete(tag.name)

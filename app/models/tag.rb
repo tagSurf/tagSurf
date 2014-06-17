@@ -9,6 +9,40 @@ class Tag < ActiveRecord::Base
 
   default_scope where(:blacklisted => false)
 
+  def self.current_feed(scores=true)
+    @obj = Tag.new
+    if @obj.tag_feed.members.any?
+      if scores
+        @obj.serialize(@obj.tag_feed.members(withscores: true).reverse, true)
+      else
+        @obj.serialize(@obj.tag_feed.members.reverse)
+      end
+    else
+      tags = Tag.pluck(:name)
+      GenerateTagFeed.perform_async
+      @obj.serialize(tags)
+    end
+      
+  end
+
+  # When dealing with Redis objects we cannot use ActiveModel serializers
+  # TODO Create module and include where needed
+  def serialize(tag_name_array, withscores=false)
+    results = {data: []}
+    if withscores
+      # Not doing anything different here yet.
+      # Can adjust to key:value in json if needed
+      tag_name_array.each do |tag_name|
+        results[:data] << tag_name
+      end
+    else
+      tag_name_array.each do |tag_name|
+        results[:data] << tag_name
+      end
+    end
+    return results
+  end
+
   def self.blacklisted?(tag)
     CONFIG[:blacklisted_tags].include?(tag.downcase)
   end
@@ -30,10 +64,6 @@ class Tag < ActiveRecord::Base
         raise "Something else happened #{e}"
       end
     end
-  end
-
-  def self.mega_tag!
-    # create tagging associations for all cards with sections
   end
 
 end
