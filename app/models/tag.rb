@@ -1,4 +1,7 @@
 class Tag < ActiveRecord::Base
+
+  include Redis::Objects
+  sorted_set :tag_feed, :global => true
   
   has_many :votes
 
