@@ -33,11 +33,11 @@ class Tag < ActiveRecord::Base
       # Not doing anything different here yet.
       # Can adjust to key:value in json if needed
       tag_name_array.each do |tag_name|
-        results[:data] << tag_name
+        results[:data] << {name: tag_name[0], votes: tag_name[1]}
       end
     else
       tag_name_array.each do |tag_name|
-        results[:data] << tag_name
+        results[:data] << {name: tag_name}
       end
     end
     return results
