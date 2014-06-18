@@ -261,6 +261,7 @@ DEPENDENCIES
   pg (= 0.17.0)
   rails (= 4.0.2)
   rails_12factor
+  redis
   redis-objects (= 0.9.1)
   rspec-rails (~> 3.0.0.beta)
   sass-rails (~> 4.0.0)

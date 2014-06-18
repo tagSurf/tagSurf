@@ -46,6 +46,7 @@ Tagsurf::Application.routes.draw do
 
     # Tags API
     get  'tags'                          => 'tags#tag_feed'
+    get  'tags/search'                        => 'tags#search'
     get  'tags/:name'                    => 'tags#show'
 
     # Vote API

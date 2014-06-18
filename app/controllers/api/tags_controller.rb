@@ -6,6 +6,12 @@ class Api::TagsController < Api::BaseController
   end
 
   def search
+    if tag_params[:query]
+      tags = Tag.autocomplete(false)
+      render json: tags
+    else
+      render json: "Must submit a search query. Example: http://domain.com/api/tags/search?query=example", status: :not_found
+    end
   end
 
   def show
@@ -17,6 +23,7 @@ class Api::TagsController < Api::BaseController
     end
   end
 
+  # Creates new tag on media and upvote for that item
   def create
   
     if tag_params[:media_id].blank? || tag_params[:name].blank?
@@ -25,7 +32,6 @@ class Api::TagsController < Api::BaseController
     end
 
     begin
-
       # Todo check blacklist
 
       # Check if tag exists
@@ -62,6 +68,7 @@ class Api::TagsController < Api::BaseController
       if vote.try(:id)
         res = {tag: tag_params[:name], message: "#{vote.vote_tag} and vote added to media", vote: "#{vote.vote_flag}"}
         @user.voted_on << vote.id
+        tag.tag_feed.
         IncrementMediaVoteCount.perform_async(tag_params[:media_id], result.vote_flag)
 
         render json: res, status: :ok
@@ -82,7 +89,7 @@ class Api::TagsController < Api::BaseController
   private
 
     def tag_params
-      params.permit(:name, :media_id, :vote) 
+      params.permit(:name, :media_id, :vote, :query) 
     end
 
 end

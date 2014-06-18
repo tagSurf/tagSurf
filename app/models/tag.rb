@@ -25,6 +25,10 @@ class Tag < ActiveRecord::Base
       
   end
 
+  def self.autocomplete(query)
+    tag_feed.redis.zrangebylex("tag::tag_feed","[#{query}","[#{query}\xff",["LIMIT","0","10"])
+  end
+
   # When dealing with Redis objects we cannot use ActiveModel serializers
   # TODO Create module and include where needed
   def serialize(tag_name_array, withscores=false)
