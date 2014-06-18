@@ -8,11 +8,6 @@ class Api::MediaController < Api::BaseController
     render json: @card
   end
 
-  def tags
-    @tags = Tag.all
-    render json: @tags, each_serializer: TagSerializer, root: 'data'
-  end
-
   def create_vote
     @vote = media_params[:vote] == 'up' ? true : false
     @user.voted_on << media_params[:id]

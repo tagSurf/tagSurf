@@ -45,7 +45,8 @@ Tagsurf::Application.routes.draw do
     post 'media/:media_id/tags/:name/'    => 'tags#create'
 
     # Tags API
-    get  'tags'                          => 'media#tags'
+    get  'tags'                          => 'tags#tag_feed'
+    get  'tags/search'                        => 'tags#search'
     get  'tags/:name'                    => 'tags#show'
 
     # Vote API

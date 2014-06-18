@@ -1,9 +1,17 @@
 class Api::TagsController < Api::BaseController
 
-  def index
-    tags = Tag.pluck(:name)
-    tags << "trending"
+  def tag_feed
+    tags = Tag.current_feed(false)
     render json: tags
+  end
+
+  def search
+    if tag_params[:query]
+      tags = Tag.autocomplete(tag_params[:query])
+      render json: tags
+    else
+      render json: "Must submit a search query. Example: http://domain.com/api/tags/search?query=example", status: :not_found
+    end
   end
 
   def show
@@ -15,6 +23,7 @@ class Api::TagsController < Api::BaseController
     end
   end
 
+  # Creates new tag on media and upvote for that item
   def create
   
     if tag_params[:media_id].blank? || tag_params[:name].blank?
@@ -23,7 +32,6 @@ class Api::TagsController < Api::BaseController
     end
 
     begin
-
       # Todo check blacklist
 
       # Check if tag exists
@@ -80,7 +88,7 @@ class Api::TagsController < Api::BaseController
   private
 
     def tag_params
-      params.permit(:name, :media_id, :vote) 
+      params.permit(:name, :media_id, :vote, :query) 
     end
 
 end
