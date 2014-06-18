@@ -7,7 +7,7 @@ class Api::TagsController < Api::BaseController
 
   def search
     if tag_params[:query]
-      tags = Tag.autocomplete(false)
+      tags = Tag.autocomplete(tag_params[query])
       render json: tags
     else
       render json: "Must submit a search query. Example: http://domain.com/api/tags/search?query=example", status: :not_found
