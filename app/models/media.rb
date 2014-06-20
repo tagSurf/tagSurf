@@ -86,7 +86,7 @@ class Media < ActiveRecord::Base
 
   # Gather the next set of media for feeds 
   # The brains of tagSurf feeds 
-  def self.next(user, tag, n=20)
+  def self.next(user, tag, remote_id=nil, n=20)
     if Tag.blacklisted?(tag)
       []
     elsif user.nil?
@@ -96,12 +96,11 @@ class Media < ActiveRecord::Base
     else
       @media = Media.all
 
-      # Migrate to Redis
-      #unless has_voted_ids = user.voted_on.present? && user.voted_on.to_a
+      # Migrate has_voted_ids to Redis
+      # unless has_voted_ids = user.voted_on.present? && user.voted_on.to_a
+      # has_voted_ids = has_voted_ids.collect {|v| v.to_i } 
+      # end
       has_voted_ids = user.votes.pluck(:votable_id) 
-      #has_voted_ids = has_voted_ids.collect {|v| v.to_i } 
-      #end
-
 
       if tag == 'trending'
         staffpick_ids = @media.tagged_with('StaffPicks').pluck(:id)
@@ -134,6 +133,11 @@ class Media < ActiveRecord::Base
           RequestTaggedMedia.perform_async(tag)
         end
       end
+
+      if remote_id.present?
+        @media = Media.where(remote_id: id) + @media
+      end
+
       @media
     end
   end
