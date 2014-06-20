@@ -12,11 +12,26 @@ class MediaSerializer < BaseSerializer
     :down_votes,
     :up_votes,
     :score,
+    :type,
+    :permissions,
     :trend
   )
 
   def media
     @object ||= object
+  end
+
+  def type
+    media.ts_type
+  end
+
+  def permissions
+    perms = {}
+    perms[:votable] = true
+    unless current_user
+      perms[:votable] = false
+    end
+    perms
   end
 
   def tags

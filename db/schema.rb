@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140528055056) do
+ActiveRecord::Schema.define(version: 20140620045045) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -62,11 +62,12 @@ ActiveRecord::Schema.define(version: 20140528055056) do
     t.integer  "remote_up_votes"
     t.integer  "remote_down_votes"
     t.integer  "remote_score"
-    t.integer  "ts_score",             default: 0,     null: false
+    t.integer  "ts_score",             default: 0,         null: false
     t.datetime "last_touched"
     t.string   "image_link_huge"
-    t.boolean  "repopulate_score",     default: true,  null: false
-    t.boolean  "time_bonus_expired",   default: false, null: false
+    t.boolean  "repopulate_score",     default: true,      null: false
+    t.boolean  "time_bonus_expired",   default: false,     null: false
+    t.string   "ts_type",              default: "content", null: false
   end
 
   add_index "media", ["remote_id"], name: "index_media_on_remote_id", unique: true, using: :btree
