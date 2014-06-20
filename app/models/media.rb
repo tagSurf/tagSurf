@@ -96,9 +96,7 @@ class Media < ActiveRecord::Base
         @media  = @media.where(viral).limit(n).order('ts_score DESC NULLS LAST')
       else
         @media = @media.tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')  
-        if @media.length < 10
-          RequestTaggedMedia.perform_async(tag)
-        end
+        repopulate_collection(@media)
       end
 
     # Authenticated users
@@ -136,9 +134,7 @@ class Media < ActiveRecord::Base
         end
       else
         @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
-        if @media.length < 10
-          RequestTaggedMedia.perform_async(tag)
-        end
+        repopulate_collection(@media)
       end
     end
 
@@ -147,7 +143,24 @@ class Media < ActiveRecord::Base
       @media = @media.uniq_by(&:remote_id)
     end
 
+    # Change to user.nil?
+    if user
+      #@login_card = Media.where(ts_type: 'login')
+      @login_card = Media.where(id: 2)
+      @relation = Media.where(id: nil)
+      @media.each_slice(3) do |cards|
+        @relation << cards + @login_card
+      end
+      @media = @relation.flatten!
+    end
+
     @media
+  end
+
+  def repopulate_collection(media_collection)
+    if media.length < 10
+      RequestTaggedMedia.perform_async(tag)
+    end
   end
 
 
