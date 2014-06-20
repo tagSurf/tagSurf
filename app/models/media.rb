@@ -142,7 +142,7 @@ class Media < ActiveRecord::Base
     response = RemoteResource.tagged_feed(tag_name)
 
     if response.nil? or response.parsed_response.nil?
-      raise "Failed to fetch with #{tag_name}, response:#{reponse}"
+      raise "Failed to fetch with #{tag_name}, response:#{response}"
     end
 
     tagged = response.parsed_response["data"]
