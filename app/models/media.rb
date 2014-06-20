@@ -87,15 +87,19 @@ class Media < ActiveRecord::Base
   # Gather the next set of media for feeds 
   # The brains of tagSurf feeds 
   def self.next(user, tag, remote_id=nil, n=20)
-    if Tag.blacklisted?(tag)
-      []
-    elsif user.nil?
-      # Media available for non-authed preview
-      # Not implemented
-      []
-    else
-      @media = Media.all
+    return [] if Tag.blacklisted?(tag)
+    @media = Media.all
 
+    # Media available for non-authed preview
+    if user.nil?
+      if tag == 'trending'
+        @media  = @media.where(viral).limit(n).order('ts_score DESC NULLS LAST')
+      else
+        @media = @media.tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')  
+      end
+
+    # Authenticated users
+    else
       # Migrate has_voted_ids to Redis
       # unless has_voted_ids = user.voted_on.present? && user.voted_on.to_a
       # has_voted_ids = has_voted_ids.collect {|v| v.to_i } 
@@ -118,7 +122,7 @@ class Media < ActiveRecord::Base
             media_ids = staffpick_ids + additional_media
 
             # Custom sort order for collections
-            # TODO Move to Activerecord extension
+            # TODO candidate for Activerecord extension
             sort_order = media_ids.collect{|id| "id = #{id} desc"}.join(',')
             @media =  @media.where('id in (?)', media_ids).limit(n).order(sort_order)
           else
@@ -133,14 +137,16 @@ class Media < ActiveRecord::Base
           RequestTaggedMedia.perform_async(tag)
         end
       end
-
-      if remote_id.present?
-        @media = Media.where(remote_id: remote_id) + @media
-      end
-
-      @media
     end
+
+    if remote_id.present?
+      @media = Media.where(remote_id: remote_id) + @media
+      @media = @media.uniq_by(&:remote_id)
+    end
+
+    @media
   end
+
 
   def self.populate_tag(tag_name) 
     return if Tag.blacklisted?(tag_name)
