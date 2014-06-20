@@ -96,6 +96,9 @@ class Media < ActiveRecord::Base
         @media  = @media.where(viral).limit(n).order('ts_score DESC NULLS LAST')
       else
         @media = @media.tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')  
+        if @media.length < 10
+          RequestTaggedMedia.perform_async(tag)
+        end
       end
 
     # Authenticated users
