@@ -3,17 +3,18 @@ class MediaSerializer < BaseSerializer
 
   attributes( 
     :id,
+    :remote_id,
     :image,
     :caption, 
     :tags,
     :tags_v2,
     :user_stats,
+    :permissions,
     :total_votes,
     :down_votes,
     :up_votes,
     :score,
     :type,
-    :permissions,
     :trend
   )
 

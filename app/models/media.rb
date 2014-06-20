@@ -135,7 +135,7 @@ class Media < ActiveRecord::Base
       end
 
       if remote_id.present?
-        @media = Media.where(remote_id: id) + @media
+        @media = Media.where(remote_id: remote_id) + @media
       end
 
       @media
