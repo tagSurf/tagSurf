@@ -143,13 +143,12 @@ class Media < ActiveRecord::Base
       @media = @media.uniq_by(&:remote_id)
     end
 
-    # Change to user.nil?
-    if user
-      #@login_card = Media.where(ts_type: 'login')
-      @login_card = Media.where(id: 2)
+    # Embedds login card every third card
+    if user.nil?
+      @login_card = Media.where(ts_type: 'login')
       @relation = Media.where(id: nil)
-      @media.each_slice(3) do |cards|
-        @relation << cards + @login_card
+      @media.each_slice(3) do |media|
+        @relation << media + @login_card
       end
       @media = @relation.flatten!
     end
