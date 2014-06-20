@@ -181,8 +181,8 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		modal.backOn();
 
 		topbar.firstChild.innerHTML = "";
-		topbar.firstChild.appendChild(voteMeter(d, true));
-		topbar.children[2].innerHTML = d.tags[0];
+		topbar.firstChild.appendChild(voteMeter(d.tags_v2, true));
+		topbar.children[2].innerHTML = Object.keys(d.tags_v2)[0];
 
 		bigpic.src = image.get(d, window.innerWidth - 40).url;
 		picdesc.innerHTML = d.caption;

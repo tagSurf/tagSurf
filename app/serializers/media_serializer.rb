@@ -20,7 +20,7 @@ class MediaSerializer < BaseSerializer
   end
 
   def tags
-    [media.section]
+    tags_v2
   end
 
   def tags_v2
