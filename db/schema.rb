@@ -72,6 +72,7 @@ ActiveRecord::Schema.define(version: 20140620045045) do
 
   add_index "media", ["remote_id"], name: "index_media_on_remote_id", unique: true, using: :btree
   add_index "media", ["repopulate_score"], name: "index_media_on_repopulate_score", using: :btree
+  add_index "media", ["ts_type"], name: "index_media_on_ts_type", using: :btree
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"

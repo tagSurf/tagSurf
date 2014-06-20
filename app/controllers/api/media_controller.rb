@@ -1,14 +1,14 @@
 class Api::MediaController < Api::BaseController
 
-  before_action :authenticate_user!
   before_action :find_authenticated_user
 
-  def show
-    @card = Media.find params[:id]
-    render json: @card
-  end
-
   def create_vote
+
+    unless @user
+      render json: {error: "must be logged in to vote"}, status: :not_authorized
+      return
+    end 
+
     @vote = media_params[:vote] == 'up' ? true : false
     @user.voted_on << media_params[:id]
     vote = Vote.create(
@@ -25,10 +25,6 @@ class Api::MediaController < Api::BaseController
     else
       render json: {error: "something went wrong: #{e}"}, status: :unprocessible_entity
     end
-  end
-
-  def votes
-    @tag = Tag.all
   end
 
   def next
