@@ -76,13 +76,17 @@ onload = function ()
 	var popData = function(rdata, firstCard) {
 		// this method only nets 4 cards for every 10 cards requested
 		// needs new API!
+		var i, gifs = [], nongifs = [];
 		if (firstCard) known_keys[firstCard.id] = true;
-		for (var i = 0; i < rdata.length; i++) {
+		for (i = 0; i < rdata.length; i++) {
 			if (!known_keys[rdata[i].id]) {
-				data.push(rdata[i]);
-				known_keys[rdata[i].id] = true;
+				var d = rdata[i];
+				(d.image.animated ? gifs : nongifs).push(d);
+				known_keys[d.id] = true;
 			}
 		}
+		for (i = 0; i < nongifs.length; i++) data.push(nongifs[i]);
+		for (i = 0; i < gifs.length; i++) data.push(gifs[i]);
 		if (firstCard) data.unshift(firstCard);
 	};
 	var populateSlider = function (update, failMsgNode, firstCard)
