@@ -146,7 +146,7 @@ class Media < ActiveRecord::Base
     end
 
     # Embedds login card every third card
-    if user
+    if user.nil?
       @login_card = Media.unscoped.where(ts_type: 'login').limit(1)
       # creates an empty relation
       @relation = Media.where(id: nil)
