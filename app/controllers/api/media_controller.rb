@@ -37,8 +37,9 @@ class Api::MediaController < Api::BaseController
   end
 
   def next
-    if @user.nil
+    unless @user
       render json: {errors: 'must be logged in to view feed.'}, status: :unauthorized
+      return
     end
       
     @media = Media.next(@user, media_params[:tag])
