@@ -38,6 +38,7 @@ GEM
       tzinfo (~> 0.3.37)
     acts-as-taggable-on (3.0.1)
       rails (>= 3, < 5)
+    analytics-ruby (1.1.0)
     apipie-rails (0.1.2)
       json
       rails (>= 3.0.10)
@@ -163,6 +164,8 @@ GEM
     redis (3.0.7)
     redis-namespace (1.4.1)
       redis (~> 3.0.4)
+    redis-objects (0.9.1)
+      redis (>= 3.0.2)
     rspec-collection_matchers (0.0.3)
       rspec-expectations (>= 2.99.0.beta1)
     rspec-core (3.0.0.beta2)
@@ -240,6 +243,7 @@ PLATFORMS
 DEPENDENCIES
   active_model_serializers (= 0.8.1)
   acts-as-taggable-on (= 3.0.1)
+  analytics-ruby (~> 1.0)
   apipie-rails
   bootstrap-sass (~> 3.0.3.0)
   browser (= 0.4.1)
@@ -257,6 +261,8 @@ DEPENDENCIES
   pg (= 0.17.0)
   rails (= 4.0.2)
   rails_12factor
+  redis
+  redis-objects (= 0.9.1)
   rspec-rails (~> 3.0.0.beta)
   sass-rails (~> 4.0.0)
   sentry-raven!

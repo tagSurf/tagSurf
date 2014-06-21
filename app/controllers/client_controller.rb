@@ -22,6 +22,14 @@ class ClientController < ApplicationController
     :desktop 
   ] 
 
+  before_action :redirect_desktops, only: [
+    :feed,
+    :favorites,
+    :trending, 
+    :submissions,
+    :tag 
+  ]
+
   layout 'client'
 
   def index
@@ -33,7 +41,7 @@ class ClientController < ApplicationController
       redirect_to resend_path
     elsif usr and usr.confirmed? and !usr.welcomed? 
       redirect_to welcome_path
-    else
+    else 
       redirect_to user_session_path
     end
   end
@@ -45,7 +53,7 @@ class ClientController < ApplicationController
   def confirm_beta_token
     code = AccessCode.where(code: beta_code_params[:access_code]).first
     if code && code.valid_code?
-      redirect_to "/disclaimer?code=#{code.code}"
+      redirect_to "/terms?code=#{code.code}&d_accept=true"
     else
       flash[:error] = ["Invalid beta code."]
       redirect_to :root
@@ -53,16 +61,6 @@ class ClientController < ApplicationController
   end
 
   # Step two
-  def disclaimer_agreement
-    code = AccessCode.where(code: beta_code_params[:access_code]).first.code
-    if beta_code_params[:d_accept] == 'true' and code
-      redirect_to "/terms?code=#{code}&d_accept=true"
-    else
-      redirect_to root_path, status: :not_authorized
-    end
-  end
-
-  # Step three
   def terms_agreement
     code = AccessCode.where(code: beta_code_params[:access_code]).first.code
     terms = beta_code_params[:t_accept] 
@@ -107,12 +105,13 @@ class ClientController < ApplicationController
   def signup; end
 
   def resend_link; 
-    if current_user and current_user.welcomed?
+    if current_user and current_user.confirmed? 
       redirect_to root_path
     end
   end
 
   def welcome; end
+  def device; end
 
   private
 

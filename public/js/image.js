@@ -13,11 +13,11 @@ var image = {
 			i.src = image.get(d, minWidth).url;
 		});
 	},
-	get: function(d, minWidth) {
+	get: function(d, minWidth, isGallery) {
 		var i, size;
 
 		// animated cards and unspecified minWidth force original size
-		if (d.image.animated || !minWidth || image.cache.original[d.id]) {
+		if ((!isGallery && d.image.animated) || !minWidth || image.cache.original[d.id]) {
 			image.cache.original[d.id] = d.image.original;
 			return d.image.original;
 		}

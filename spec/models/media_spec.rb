@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Card do
+describe Media do
 
   let(:user) { User.create!(
                  email: 'admin@example.com', 
@@ -12,8 +12,8 @@ describe Card do
               }
 
   
-  let(:card) { 
-    Card.create!(
+  let(:media) { 
+    Media.create!(
       image_link_original: "http://i.imgur.com/vW5QZE1.png",  
       remote_id: "vW5QZE1", 
       remote_provider: 'imgur', 
@@ -24,8 +24,8 @@ describe Card do
     )
   }
 
-  let(:card_2) {
-    Card.create!(
+  let(:media_2) {
+    Media.create!(
       image_link_original: "http://i.imgur.com/chicken.png",  
       remote_id: "chicken", 
       remote_provider: 'imgur', 
@@ -36,8 +36,8 @@ describe Card do
     )
   }
 
-  let(:card_3) {
-    Card.create!(
+  let(:media_3) {
+    Media.create!(
       image_link_original: "http://i.imgur.com/foobar.png",  
       remote_id: "foobaz", 
       remote_provider: 'imgur', 
@@ -48,37 +48,37 @@ describe Card do
     )
   }
 
-  let(:voted_on_three) { Vote.create!(voter_id: user.id, voter_type: "User", votable_type: "Card", votable_id: card_3.id, vote_flag: true) }
+  let(:voted_on_three) { Vote.create!(voter_id: user.id, voter_type: "User", votable_type: "Media", votable_id: media_3.id, vote_flag: true) }
 
   context :scaled_dimensions do
     
     it "should return {} when width is nil" do
-      card
-      response = card.scale_dimensions('small')
+      media
+      response = media.scale_dimensions('small')
       expect(response).to eq({})
     end
 
     it "should scale dimensions to 320" do
-      card.width = 1267
-      card.height = 1267
-      card.save
-      response = card.scale_dimensions(320)
+      media.width = 1267
+      media.height = 1267
+      media.save
+      response = media.scale_dimensions(320)
       expect(response).to eq({:width => 320, :height => 320})
     end
 
     it "should scale height to 174" do 
-      card.width = 605 
-      card.height = 330
-      card.save
-      response = card.scale_dimensions(320)
+      media.width = 605 
+      media.height = 330
+      media.save
+      response = media.scale_dimensions(320)
       expect(response).to eq({:width => 320, :height => 174})
     end
 
     it "should scale width to 307" do 
-      card.width = 655
-      card.height = 681 
-      card.save
-      response = card.scale_dimensions(320)
+      media.width = 655
+      media.height = 681 
+      media.save
+      response = media.scale_dimensions(320)
       expect(response).to eq({:width => 307, :height => 320})
     end
 
@@ -87,31 +87,31 @@ describe Card do
   context :next do
     
     it "should order by ts_score then remote_score" do
-      card
-      card_2
-      card_3
+      media
+      media_2
+      media_3
       voted_on_three
       
-      cards = Card.next(user, "funny") 
-      expect(cards.first.remote_id).to eq "chicken"
+      media = Media.next(user, "funny") 
+      expect(media.first.remote_id).to eq "chicken"
     end
   end
 
   context :resize_image_links do 
     it "creates a thumbnail image link" do
-      expect(card.image_link_thumbnail).to eq("http://i.imgur.com/vW5QZE1t.png")
+      expect(media.image_link_thumbnail).to eq("http://i.imgur.com/vW5QZE1t.png")
     end
 
     it "creates a tiny image link" do
-      expect(card.image_link_tiny).to eq("http://i.imgur.com/vW5QZE1s.png")
+      expect(media.image_link_tiny).to eq("http://i.imgur.com/vW5QZE1s.png")
     end
 
     it "creates a medium image link" do
-      expect(card.image_link_medium).to eq("http://i.imgur.com/vW5QZE1m.png")
+      expect(media.image_link_medium).to eq("http://i.imgur.com/vW5QZE1m.png")
     end
 
     it "creates a large image link" do
-      expect(card.image_link_large).to eq("http://i.imgur.com/vW5QZE1l.png")
+      expect(media.image_link_large).to eq("http://i.imgur.com/vW5QZE1l.png")
     end
 
   end

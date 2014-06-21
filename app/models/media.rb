@@ -1,4 +1,7 @@
-class Card < ActiveRecord::Base
+class Media < ActiveRecord::Base
+
+  include Redis::Objects
+  counter :up_votes
 
   acts_as_taggable
 
@@ -25,14 +28,15 @@ class Card < ActiveRecord::Base
   end
 
   def active_model_serializer
-    CardSerializer
+    MediaSerializer
   end
 
   def tagged_as
     votes.map(&:vote_tag).uniq
   end
 
-  def card_tag_info(tag)
+  # TODO Redisify
+  def media_tag_info(tag)
     trend = [*1..10].sample.odd? ? 'up' : 'down' 
     data = {total_votes: nil, down_votes: nil, up_votes: nil, score: nil, is_trending: false, trend: nil}
     # Doing count lookups is faster than array actions, but refactor is needed.
@@ -80,51 +84,79 @@ class Card < ActiveRecord::Base
     self.save
   end
 
-  # Display the next card to the user for voting
+  # Gather the next set of media for feeds 
+  # The brains of tagSurf feeds 
   def self.next(user, tag, n=20)
     if Tag.blacklisted?(tag)
       []
+    elsif user.nil?
+      # Media available for non-authed preview
+      # Not implemented
+      []
     else
-      return unless user
-      if user.votes.size < 1
-        Card.last(n)
-      elsif tag == 'trending'
-        # move has_voted to redis
-        has_voted = user.votes.pluck(:votable_id) 
-        cards = Card.where('id not in (?) and viral', has_voted).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
-        cards
+      @media = Media.all
+
+      #unless has_voted_ids = user.voted_on.present? && user.voted_on.to_a
+      has_voted_ids = user.votes.pluck(:votable_id) 
+      #end
+
+      #has_voted_ids = has_voted_ids.collect {|v| v.to_i } 
+
+      if tag == 'trending'
+        staffpick_ids = @media.tagged_with('StaffPicks').pluck(:id)
+        viral_ids = @media.where(viral: true).pluck(:id)
+
+        # Remove media which the user has voted on
+        staffpick_ids = staffpick_ids - has_voted_ids
+
+        # Avoid the extra query if no staffpicks left
+        # Reserving optimization for the move to Redis objects
+        if staffpick_ids.present?
+          if staffpick_ids.length < 20
+            trending_limit = n - staffpick_ids.length
+            additional_media = Media.where('id not in (?) and id in (?)', has_voted_ids, viral_ids).limit(trending_limit).order('ts_score DESC NULLS LAST').map(&:id)
+            media_ids = staffpick_ids + additional_media
+
+            # Custom sort order for collections
+            # TODO Move to Activerecord extension
+            sort_order = media_ids.collect{|id| "id = #{id} desc"}.join(',')
+            @media =  @media.where('id in (?)', media_ids).limit(n).order(sort_order)
+          else
+            @media =  @media.where('id in (?)', staffpick_ids).limit(n).order('ts_score DESC NULLS LAST')
+          end
+        else
+          @media = @media.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
+        end
       else
-        # move has_voted to redis
-        has_voted = user.votes.pluck(:votable_id) 
-        cards = Card.where('cards.id not in (?)', has_voted).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC').order('remote_score DESC NULLS LAST')
-        if cards.length < 10
+        @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+        if @media.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
-        cards
       end
+      @media
     end
   end
 
-  def cache_update_available?
-    c = Card.last
-    c.try(:created_at) < 20.minutes.ago ? true : false
-  end
+  def self.populate_tag(tag_name) 
+    return if Tag.blacklisted?(tag_name)
+    response = RemoteResource.tagged_feed(tag_name)
 
-  def self.populate_tag(tag) 
-    return if Tag.blacklisted?(tag)
-    response = RemoteResource.tagged_feed(tag)
+    if response.nil? or response.parsed_response.nil?
+      raise "Failed to fetch with #{tag_name}, response:#{response}"
+    end
+
     tagged = response.parsed_response["data"]
 
     # Create tag if not already in the system
-    unless tag = Tag.where('name ilike ?', tag).first
-      tag = Tag.create(name: tag)
+    unless tag = Tag.where('name ilike ?', tag_name).first
+      tag = Tag.create(name: tag_name)
     end
 
     if tagged
       tagged.each do |obj|
         next if obj["nsfw"].to_s == 'true'
         next if obj['is_album'].to_s == 'true'
-        card = Card.create({
+        media = Media.create({
           remote_id: obj['id'],
           remote_provider: 'imgur',
           remote_created_at: obj['datatime'],
@@ -139,13 +171,14 @@ class Card < ActiveRecord::Base
           size: obj['size'],
           remote_views: obj['views'],
           remote_score: obj['score'],
+          ts_score: (obj['score'] + (Time.new.to_i - 1000000000)),
           remote_up_votes: obj['ups'],
           remote_down_votes: obj['downs'],
           section: obj['section'],
           delete_hash: obj['deletehash']
         })
-        card.tag_list.add(card.section)
-        card.save
+        media.tag_list.add(media.section)
+        media.save
       end
     else
       tag.update_column("fetch_more_content", true)
@@ -157,7 +190,7 @@ class Card < ActiveRecord::Base
     fresh_list = response.parsed_response["data"]
     fresh_list.each do |obj|
       if obj['is_album'].to_s == 'false' and obj['nsfw'].to_s == 'false'
-        card = Card.create({
+        media = Media.create({
           remote_id: obj['id'],
           remote_provider: 'imgur',
           remote_created_at: obj['datatime'],
@@ -172,14 +205,15 @@ class Card < ActiveRecord::Base
           size: obj['size'],
           remote_views: obj['views'],
           remote_score: obj['score'],
+          ts_score: (obj['score'] + (Time.new.to_i - 1000000000)),
           remote_up_votes: obj['ups'],
           remote_down_votes: obj['downs'],
           section: obj['section'] || "imgurhot",
           delete_hash: obj['deletehash']
         })
 
-        card.tag_list.add(card.section, 'trending')
-        card.save
+        media.tag_list.add(media.section, 'trending')
+        media.save
       end
     end
   end

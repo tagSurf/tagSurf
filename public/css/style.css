@@ -34,6 +34,18 @@ a {
 .alert-success, .hidden {
 	display: none !important;
 }
+.hider
+{
+	visibility: hidden;
+}
+
+.tcell {
+	display: table-cell;
+}
+
+.delNode {
+	border-left: 1px solid white;
+}
 
 .centered {
 	text-align: center;
@@ -45,6 +57,15 @@ a {
 
 .float-right{
   float:right;
+}
+
+.smallpadded {
+	padding: 3px 5px;
+}
+
+.midsize {
+	font-size: 11pt;
+	font-weight: 300;
 }
 
 .padded {
@@ -104,15 +125,24 @@ a {
 }
 
 .pictags span {
+	display: inline-block;
 	background: #00aeef;
 	border-radius: 5px;
 	padding: 5px;
+	margin: 5px;
 	cursor: pointer;
 	font-size: 80%;
 }
 
+.pictagcell {
+	display: inline-block;
+	background: #00aeef;
+	border-radius: 5px;
+	margin: 5px;
+	cursor: pointer;
+}
+
 .blackout {
-	opacity: 0;
 	pointer-events: none;
 	z-index: 3;
 	position: fixed;
@@ -138,7 +168,7 @@ a {
 	overflow-y: auto;
 	overflow-x: hidden;
 	z-index: 10;
-	position: fixed;
+	position: absolute;
 	padding: 5px;
 	top: 60px;
 	bottom: 10px;
@@ -152,6 +182,13 @@ a {
 
 .modalslide {
 	-webkit-transform: translate3d(0, 0, 0) !important;
+}
+
+.disabled {
+	z-index: -5 !important;
+	opacity: 0;
+	-webkit-transition: none !important;
+	pointer-events: none;
 }
 
 .tslogo {
@@ -174,6 +211,12 @@ a {
 	border-radius: 50px / 50px;
 	-webkit-background-clip: padding-box;
 }
+
+.input-checkbox{
+  margin:10px 0 0 0;
+}
+
+
 .ts-input {
 	width: 215px;
 	height: 34px;
@@ -181,8 +224,8 @@ a {
 	margin: 1px;
 	padding-left: 13px;
 	border: solid thin transparent;
-	font-size: 16px;
-  font-weight:200;
+	font-size: 120%;
+	font-weight:200;
 	background: #fff;
 	outline-width: 0;
 	-moz-border-radius: 50px / 50px;
@@ -190,4 +233,87 @@ a {
 	border-radius: 50px / 50px;
 	transition: border-color 200ms;
 	-webkit-background-clip: padding-box;
+}
+.throbber
+{
+	height: 50px;
+	pointer-events: none;
+	opacity: 0;
+	position: fixed;
+	z-index: 4;
+	-webkit-transition: opacity 500ms;
+	transition: opacity 500ms;
+}
+.throbber-bottom
+{
+	bottom: 5px;
+	height: 30px;
+}
+.raw_wrapper
+{
+  
+  display: inline;
+  top: 0;
+  position: absolute;
+  width:100%; 
+}
+.raw_wrapper img
+{
+  pointer-events: none;
+}
+.zoom_wrapper
+{
+  top: 50px;
+  overflow: auto;
+  position: absolute;
+  width:100%; 
+  opacity: 0;
+  padding-top:20px;
+  background-color: rgba(0, 0, 0, 1);
+  transition: opacity 500ms ease-in-out;
+  -moz-transition: opacity 500ms ease-in-out;
+  -webkit-transition: opacity 500ms ease-in-out;
+}
+.basic-zoom {
+  z-index: 11;
+  position: absolute;
+  top: 100px;
+  pointer-events: none;
+}
+
+#autocomplete
+{
+  top: 90px;
+  left: 0px;
+  right: 0px;
+  width: 200px;
+  border-radius: 8px;
+  color: black;
+}
+#add_tag_autocomplete {
+  top: 43px;
+  left: 20px;
+  padding: 0px 7px;
+  border-radius: 4px;
+  border: 1px solid #00aeef;
+  color: #00aeef;
+  font-weight: bold;
+}
+.autocomplete {
+  z-index: 4;
+  position: absolute;
+  margin: auto;
+  height: 0px;
+  background: white;
+  text-align: left;
+  overflow-y: scroll;
+  -webkit-transition: height 300ms ease-out;
+}
+.autocomplete div
+{
+  padding: 5px;
+}
+.autocomplete-open
+{
+  height: 150px !important;
 }

@@ -21,6 +21,10 @@ body
 	overflow-y: scroll;
 }
 
+.content-adjust{
+  bottom: 116px;
+}
+
 .content div {
 	width: 255px;
 	padding: 5px 0px;
@@ -97,7 +101,7 @@ body
 	border: solid 12px white;
 }
 
-::-webkit-input-placeholder {
+.bigplace::-webkit-input-placeholder {
 	font-size: 130%;
 	line-height: 20px;
 	height: 20px;
@@ -224,11 +228,24 @@ a.back {
 	box-shadow: none !important;
 	-webkit-appearance: none;
 }
+
 .sulogo
 {
 	margin-top: 20px;
 	width: 58%;
 }
+
+.su-logo-desktop {
+  background-image: url('/img/ts_logo_stacked_gray.png');
+  display:block;
+  margin-top: 20px;
+  width:210px;
+  height:240px;
+  background-size: cover;
+  margin-right:auto; 
+  margin-left:auto; 
+}
+
 .su-user-email
 {
 	margin-top: 12px;
@@ -304,6 +321,10 @@ a.back {
 
 .top-margin{
   margin-top:10px; 
+}
+
+.input-margin{
+  margin: 10px auto 5px;
 }
 
 #get-email-input{

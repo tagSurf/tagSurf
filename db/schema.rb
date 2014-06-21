@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140509053336) do
+ActiveRecord::Schema.define(version: 20140528055056) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,7 +26,17 @@ ActiveRecord::Schema.define(version: 20140509053336) do
     t.datetime "updated_at"
   end
 
-  create_table "cards", force: true do |t|
+  create_table "favorites", force: true do |t|
+    t.integer  "media_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "favorites", ["media_id"], name: "index_favorites_on_media_id", using: :btree
+  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id", using: :btree
+
+  create_table "media", force: true do |t|
     t.string   "remote_id"
     t.string   "remote_provider"
     t.datetime "remote_created_at"
@@ -56,20 +66,11 @@ ActiveRecord::Schema.define(version: 20140509053336) do
     t.datetime "last_touched"
     t.string   "image_link_huge"
     t.boolean  "repopulate_score",     default: true,  null: false
+    t.boolean  "time_bonus_expired",   default: false, null: false
   end
 
-  add_index "cards", ["remote_id"], name: "index_cards_on_remote_id", unique: true, using: :btree
-  add_index "cards", ["repopulate_score"], name: "index_cards_on_repopulate_score", using: :btree
-
-  create_table "favorites", force: true do |t|
-    t.integer  "card_id"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "favorites", ["card_id"], name: "index_favorites_on_card_id", using: :btree
-  add_index "favorites", ["user_id"], name: "index_favorites_on_user_id", using: :btree
+  add_index "media", ["remote_id"], name: "index_media_on_remote_id", unique: true, using: :btree
+  add_index "media", ["repopulate_score"], name: "index_media_on_repopulate_score", using: :btree
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"

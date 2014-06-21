@@ -2,6 +2,9 @@ var hasClass = function (node, className)
 {
   return node.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(node.className);
 };
+Number.prototype.mod = function(n) {
+  return ((this%n)+n)%n;
+}
 String.prototype.trunc = String.prototype.trunc ||
   function(n){
     return this.length>n ? this.substr(0,n-1)+'&hellip;' : this;
@@ -21,32 +24,101 @@ var whichGallery = function() {
       return galleries[i];
   return null;
 };
-var slideNavMenu = function() {
+
+// autocomplete stuff
+var current_tag, tinput, inputContainer, slideContainer,
+  scrollContainer, closeAutoComplete = function(tagName, noback) {
+    if (noback) {
+      slideContainer.className = "";
+      scrollContainer.insertBefore(inputContainer,
+        scrollContainer.firstChild);
+    } else modal.backOff(function() {
+      slideContainer.className = "";
+      scrollContainer.insertBefore(inputContainer,
+        scrollContainer.firstChild);
+    });
+    tinput.active = false;
+    location.hash = tinput.value = tagName || current_tag;
+  };
+
+var navMenuSlid = false;
+var slideNavMenu = function(noback) {
+  autocomplete.viewing.autocomplete
+    && closeAutoComplete(null, true);
+  addBarSlid && slideAddBar(true);
+  navMenuSlid = !navMenuSlid;
   toggleClass.apply(document.getElementById("slider_label"),
-    ["slid"]);
+    ["slid", navMenuSlid ? "on" : "off"]);
   toggleClass.apply(document.getElementById("slide_down_menu"),
-    ["opened_menu"]);
-  modal.backToggle(slideNavMenu, true);
+    ["opened_menu", navMenuSlid ? "on" : "off"]);
+  if (noback != true && !modal.zoom.zoomed && !modal.modal.on)
+    navMenuSlid ? modal.halfOn(slideNavMenu) : modal.backOff();
 };
+var add_icon, add_state = "blue", add_icons = {
+  fill: 'img/add_icon_fill.png',
+  blue: 'img/add_icon_blue.png'
+};
+var addBarSlid = false;
+var slideAddBar = function(noback) {
+  autocomplete.viewing.autocomplete
+    && closeAutoComplete(null, true);
+  autocomplete.viewing.add_tag_autocomplete
+    && autocomplete.retract("add_tag_autocomplete");
+  navMenuSlid && slideNavMenu(true);
+  addBarSlid = !addBarSlid;
+  if (addBarSlid && !currentMedia) return;
+  add_state = addBarSlid ? "fill" : "blue";
+  add_icon.src = add_icons[add_state];
+  toggleClass.apply(document.getElementById("tag_adder"),
+    ["opened_menu", addBarSlid ? "on" : "off"]);
+  document.getElementById("tag_adder").firstChild.value = "#newtag";
+  if (noback != true && !modal.zoom.zoomed && !modal.modal.on)
+    addBarSlid ? modal.halfOn(slideAddBar) : modal.backOff();
+};
+
+// tagging stuff
+var newtags = [];
+var pushTags = function() {
+  while (newtags.length)
+    xhr("/api/media/" + currentMedia.id + "/tags/" + newtags.shift(), "POST");
+};
+var rmTag = function(tname) {
+  // remove from sensible new tags array
+  var i = newtags.indexOf(tname);
+  if (i != -1)
+    newtags = newtags.slice(0, i).concat(newtags.slice(i+1));
+
+  // remove from unwieldy tags_v2 embedded object array
+  var tIndex = -1;
+  var tobjs = currentMedia.tags_v2;
+  for (var i = 0; i < tobjs.length; i++) {
+    if (Object.keys(tobjs[i])[0] == tname) {
+      tIndex = i;
+      break;
+    }
+  }
+  if (tIndex != -1)
+    tobjs = tobjs.slice(0, tIndex).concat(tobjs.slice(tIndex + 1));
+};
+
 var populateNavbar = function () {
   var nav = document.getElementById("nav");
   var navbar = document.createElement("div");
   navbar.id = "navbar";
   var menu_slider = document.createElement("div");
   menu_slider.id = "menu_slider";
-  var history_icons = {
-    fill: 'img/history_icon_fill.png',
-    blue: 'img/history_icon_blue.png'
-  };
+  var tag_adder = document.createElement("div");
+  tag_adder.id = "tag_adder";
+
   var gallery = whichGallery();
   var tag = gallery ? document.location.hash.slice(1) : null;
   var navbar_content = [
     "<div id='favorites-btn'>",
-      "<a><img id='favorites-icon' src='img/favorites_icon_blue.png'></a>",
+      "<a onclick='starCallback();'><img id='favorites-icon' src='img/favorites_icon_blue.png'></a>",
     "</div>",
-    "<div id='history-btn'><a>",
-      "<img id='history_icon' src='" + history_icons[(gallery == "history" ? "fill" : "blue")] + "'>",
-    "</a></div>",
+    "<div id='add-btn'>",
+      "<a onclick='slideAddBar();'><img id='add-icon' src='img/add_icon_blue.png'></a>",
+    "</div>",
     "<div class='navbar-center'>",
       "<label id='slider_label' for='slider_box' onclick='slideNavMenu();'>",
         "<span id='main-logo'>",
@@ -69,8 +141,8 @@ var populateNavbar = function () {
       	"<li><a href='/favorites'><div>",
       	  "<img class='menu_icon' src='img/favorites_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;FAVORITES",
         "</div></a></li>",
-        "<li><a href='/submissions'><div>",
-      	  "<img class='menu_icon' src='img/submissions_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;SUBMISSIONS",
+        "<li><a href='/history'><div>",
+      	  "<img class='menu_icon' src='img/history_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;HISTORY",
         "</div></a></li>",
         "<li><a id='options-btn'><div>",
           "<img class='menu_icon' src='img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS",
@@ -83,23 +155,42 @@ var populateNavbar = function () {
   ];
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
+  tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='img/add_tag_button.png'><div id='add_tag_autocomplete' class='autocomplete hider'></div>";
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
+  nav.appendChild(tag_adder);
 
-  var main_logo = document.getElementById("main-logo");
-  var hist_logo = document.getElementById("history-logo");
-  var history_icon = document.getElementById("history_icon");
-  var slider_icon = document.getElementById("slider-icon");
-  var hist_state = "blue";
-  document.getElementById("history-btn").onclick = function() {
-    var isOn = hist_state == "blue";
-    hist_state = isOn ? "fill" : "blue";
-    history_icon.src = history_icons[hist_state];
-    main_logo.style.display = isOn ? "none" : "inline";
-    hist_logo.style.display = isOn ? "inline" : "none";
-    !gallery && toggleClass.call(slider_icon, "vtop");
-    slideGallery();
+  tag_adder.firstChild.nextSibling.onclick = function() {
+    var newtag = tag_adder.firstChild.value.slice(1);
+    if (!newtag || newtag == "newtag") return;
+    newtags.push(newtag);
+    slideAddBar();
+    addCallback && addCallback(newtag);
   };
+  addCss({
+    "#add_tag_autocomplete": function() {
+      return "width: " + (tag_adder.firstChild.clientWidth - 10) + "px";
+    }
+  });
+  autocomplete.register("add_tag_autocomplete", tag_adder.firstChild, {
+    enterCb: function() {
+      autocomplete.tapTag(tag_adder.firstChild.value.slice(1),
+        "add_tag_autocomplete");
+    },
+    tapCb: function(tagName) {
+      tag_adder.firstChild.value = "#" + tagName;
+      tag_adder.firstChild.nextSibling.onclick();
+    },
+    keyUpCb: function() {
+      var ti = tag_adder.firstChild;
+      if (ti.value.charAt(0) != "#")
+        ti.value = "#" + ti.value.replace(/#/g, "");
+    },
+    expandCb: function() {
+      tag_adder.firstChild.value = "#";
+    }
+  });
+  add_icon = document.getElementById("add-icon");
   document.getElementById("options-btn").onclick = function() {
     var n = document.createElement("div");
     n.className = "center-label";
@@ -119,6 +210,16 @@ var populateNavbar = function () {
 var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
     "img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
+};
+var starCallback, setStarCallback = function(cb) {
+  starCallback = cb;
+};
+var addCallback, setAddCallback = function(cb) {
+  addCallback = cb;
+};
+var currentMedia, setCurrentMedia = function(d) {
+  currentMedia = d;
+  if (!d && addBarSlid) slideAddBar();
 };
 var _addCss = function(css) {
     var n = document.createElement("style");
@@ -142,13 +243,17 @@ var getOrientation = function() {
 };
 var maxCardHeight, resizeCb;
 var setMaxCardHeight = function() {
-  maxCardHeight = window.innerHeight - 220;
+  maxCardHeight = window.innerHeight - 240;
 };
 var setResizeCb = function(cb) {
   resizeCb = cb;
 };
 setMaxCardHeight();
+var lastWidth = window.innerWidth;
 window.onresize = function() {
+  if (lastWidth == window.innerWidth)
+    return;
+  lastWidth = window.innerWidth;
   setMaxCardHeight();
   addedCss.forEach(addCss);
   resizeCb && resizeCb();
@@ -191,33 +296,36 @@ var isIphone = function() {
 var isMobile = function() {
   return navigator.userAgent.toLowerCase().indexOf("mobile") != -1;
 };
+var isAndroid = function() {
+  return isMobile() && !isIphone();
+};
 var trans = function(node, cb, transition, transform) {
+  var transTimeout,
+    isClass = transition && transition.split(" ").length == 1;
   var wrapper = function () {
-    if (transition) 
-    {
-      if (transition.split(" ").length == 1)
-      {
+    if (transition) {
+      if (isClass)
         node.classList.remove(transition);
-      }
-      else
-      {
+      else {
         node.style['-webkit-transition'] = "";
       }
     }
     if (transform) node.style['-webkit-transform'] = "";
+    if (transTimeout) {
+      clearTimeout(transTimeout);
+      transTimeout = null;
+    }
     node.removeEventListener("webkitTransitionEnd", wrapper, false);
     cb && cb();
   };
   node.addEventListener("webkitTransitionEnd", wrapper, false);
-  if (transition) 
-  {
-    if (transition.split(" ").length == 1)
-    {
+  if (transition) {
+    if (isClass)
       node.classList.add(transition);
-    }
-    else
-    {
-      node.style['-webkit-transition'] = transition;	
+    else {
+      node.style['-webkit-transition'] = transition;
+      transTimeout = setTimeout(wrapper,
+        parseInt(transition.split(" ")[1]));
     }
   }
   if (transform) node.style['-webkit-transform'] = transform;

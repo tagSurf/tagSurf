@@ -6,22 +6,22 @@ class Vote < ActiveRecord::Base
   has_one :tag
 
   after_commit :relate_tag,        on: :create
-  after_commit :update_card_score, on: :create
+  after_commit :update_tag_feed,   if: :persisted?
 
   def self.paginated_history(user_id, limit, offset) 
-    Card.joins(:votes).where("votes.voter_id = #{user_id}").order('votes.id desc').limit(limit).offset(offset)
+    Media.joins(:votes).where("votes.voter_id = #{user_id}").order('votes.id desc').limit(limit).offset(offset)
   end
 
   def prev_cards(n=2)
-    cards = []
-    user.votes.includes(:card).where("votes.id > ?", id).order("id ASC").limit(n).each {|v| cards << v.card }
-    cards
+    media = []
+    user.votes.includes(:media).where("votes.id > ?", id).order("id ASC").limit(n).each {|v| media  << v.media }
+    media
   end
 
   def next_cards(n=2)
-    cards = []
-    user.votes.includes(:card).where("votes.id < ?", id).order("id DESC").limit(n).each {|v| cards << v.card }
-    cards
+    media = []
+    user.votes.includes(:media).where("votes.id < ?", id).order("id DESC").limit(n).each {|v| media << v.media }
+    media
   end
 
   # Places the requested card in the center of a collection of 21 cards
@@ -49,15 +49,9 @@ class Vote < ActiveRecord::Base
     self.update_column("tag_id", tag.id)
   end
 
-  def update_card_score
-    vote = self
-    card = Card.find(vote.votable_id)
-    if card && vote.vote_flag 
-      card.update_column("ts_score", card.ts_score + 1)
-    else
-      # "Do nothing"
-    end
-    card.update_column("last_touched", Time.now)
+  def update_tag_feed
+    tag = Tag.where(name: self.vote_tag).first
+    tag.tag_feed[tag.name] = Vote.where(vote_tag: tag).count
   end
-    
+   
 end
