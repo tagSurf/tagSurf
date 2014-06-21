@@ -29,17 +29,19 @@ class MediaSerializer < BaseSerializer
   def permissions
     perms = {}
     perms[:votable] = true
-    unless current_user
+    if current_user.nil? || media.ts_type == 'login'
       perms[:votable] = false
     end
     perms
   end
 
   def tags
+    return [] if media.ts_type == 'login'
     [media.section]
   end
 
   def tags_v2
+    return [] if media.ts_type == 'login'
     # Fix this fiasco once client is set
     current_tags = (media.tag_list + media.tagged_as + [media.section]).uniq
     tagged_medias = []
@@ -50,6 +52,7 @@ class MediaSerializer < BaseSerializer
   end
 
   def image
+    return {} if media.ts_type == 'login'
     img = {
       content_type: media.content_type,
       animated: media.animated?,
@@ -63,14 +66,17 @@ class MediaSerializer < BaseSerializer
   end
 
   def user_vote
+    return nil if media.ts_type == 'login'
     @user_vote ||= Vote.where(voter_id: current_user.id, votable_id: media.id).first
   end
 
   def user_favorite
+    return nil if media.ts_type == 'login'
     @user_fav ||= Favorite.where(user_id: current_user.id, media_id: media.id).first
   end
 
   def caption
+    return nil if media.ts_type == 'login'
     if media.description
       media.description
     else
@@ -79,10 +85,12 @@ class MediaSerializer < BaseSerializer
   end
 
   def source
+    return nil if media.ts_type == 'login'
     media.remote_provider
   end
 
   def user_stats
+    return nil if media.ts_type == 'login'
     time = Time.now
     user = {
       has_voted: false, 
@@ -107,26 +115,32 @@ class MediaSerializer < BaseSerializer
   end
 
   def votes
+    return nil if media.ts_type == 'login'
     @votes = Vote.where(votable_type: 'Media', votable_id: media.id) 
   end
 
   def total_votes
+    return nil if media.ts_type == 'login'
     media.remote_score.to_i + votes.length.to_i
   end
 
   def down_votes
+    return nil if media.ts_type == 'login'
     media.remote_down_votes.to_i + votes.where(vote_flag: false).count
   end
 
   def up_votes
+    return nil if media.ts_type == 'login'
     media.remote_up_votes.to_i + votes.where(vote_flag: true).count
   end
 
   def score
+    return nil if media.ts_type == 'login'
     media.remote_score
   end
 
   def trend
+    return nil if media.ts_type == 'login'
     [*1..10].sample.odd? ? 'up' : 'down'
   end
 

@@ -10,6 +10,8 @@ class Media < ActiveRecord::Base
 
   validates_uniqueness_of :remote_id, :image_link_original
 
+  default_scope { where(ts_type: 'content') }
+
   # Imgur specific
   before_create :resize_image_links
   def resize_image_links
@@ -144,8 +146,9 @@ class Media < ActiveRecord::Base
     end
 
     # Embedds login card every third card
-    if user.nil?
-      @login_card = Media.where(ts_type: 'login')
+    if user
+      @login_card = Media.unscoped.where(ts_type: 'login').limit(1)
+      # creates an empty relation
       @relation = Media.where(id: nil)
       @media.each_slice(3) do |media|
         @relation << media + @login_card

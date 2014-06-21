@@ -5,7 +5,7 @@ class Api::MediaController < Api::BaseController
   def create_vote
 
     unless @user
-      render json: {error: "must be logged in to vote"}, status: :not_authorized
+      render json: {error: "must be logged in to vote"}, status: :unauthorized
       return
     end 
 
@@ -37,6 +37,10 @@ class Api::MediaController < Api::BaseController
   end
 
   def next
+    if @user.nil
+      render json: {errors: 'must be logged in to view feed.'}, status: :unauthorized
+    end
+      
     @media = Media.next(@user, media_params[:tag])
     if @media.present?
       render json: @media, root: "data"
