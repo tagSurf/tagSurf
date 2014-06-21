@@ -144,4 +144,6 @@ class MediaSerializer < BaseSerializer
     [*1..10].sample.odd? ? 'up' : 'down'
   end
 
+  
+
 end
