@@ -10,6 +10,8 @@ class Media < ActiveRecord::Base
 
   validates_uniqueness_of :remote_id, :image_link_original
 
+  default_scope { where(ts_type: 'content') }
+
   # Imgur specific
   before_create :resize_image_links
   def resize_image_links
@@ -86,21 +88,26 @@ class Media < ActiveRecord::Base
 
   # Gather the next set of media for feeds 
   # The brains of tagSurf feeds 
-  def self.next(user, tag, n=20)
-    if Tag.blacklisted?(tag)
-      []
-    elsif user.nil?
-      # Media available for non-authed preview
-      # Not implemented
-      []
+  def self.next(user, tag, remote_id=nil, n=20)
+    return [] if Tag.blacklisted?(tag)
+    @media = Media.all
+
+    # Media available for non-authed preview
+    if user.nil?
+      if tag == 'trending'
+        @media  = @media.where(viral: true).limit(n).order('ts_score DESC NULLS LAST')
+      else
+        @media = @media.tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')  
+        repopulate_collection(@media)
+      end
+
+    # Authenticated users
     else
-      @media = Media.all
-
-      #unless has_voted_ids = user.voted_on.present? && user.voted_on.to_a
+      # Migrate has_voted_ids to Redis
+      # unless has_voted_ids = user.voted_on.present? && user.voted_on.to_a
+      # has_voted_ids = has_voted_ids.collect {|v| v.to_i } 
+      # end
       has_voted_ids = user.votes.pluck(:votable_id) 
-      #end
-
-      #has_voted_ids = has_voted_ids.collect {|v| v.to_i } 
 
       if tag == 'trending'
         staffpick_ids = @media.tagged_with('StaffPicks').pluck(:id)
@@ -118,7 +125,7 @@ class Media < ActiveRecord::Base
             media_ids = staffpick_ids + additional_media
 
             # Custom sort order for collections
-            # TODO Move to Activerecord extension
+            # TODO candidate for Activerecord extension
             sort_order = media_ids.collect{|id| "id = #{id} desc"}.join(',')
             @media =  @media.where('id in (?)', media_ids).limit(n).order(sort_order)
           else
@@ -129,13 +136,35 @@ class Media < ActiveRecord::Base
         end
       else
         @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
-        if @media.length < 10
-          RequestTaggedMedia.perform_async(tag)
-        end
+        repopulate_collection(@media)
       end
-      @media
+    end
+
+    if remote_id.present?
+      @media = Media.where(remote_id: remote_id) + @media
+      @media = @media.uniq_by(&:remote_id)
+    end
+
+    # Embedds login card every third card
+    if user.nil?
+      @login_card = Media.unscoped.where(ts_type: 'login').limit(1)
+      # creates an empty relation
+      @relation = Media.where(id: nil)
+      @media.each_slice(3) do |media|
+        @relation << media + @login_card
+      end
+      @media = @relation.flatten!
+    end
+
+    @media
+  end
+
+  def repopulate_collection(media_collection)
+    if media.length < 10
+      RequestTaggedMedia.perform_async(tag)
     end
   end
+
 
   def self.populate_tag(tag_name) 
     return if Tag.blacklisted?(tag_name)
