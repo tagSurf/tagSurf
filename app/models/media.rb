@@ -98,7 +98,9 @@ class Media < ActiveRecord::Base
         @media  = @media.where(viral: true).limit(n).order('ts_score DESC NULLS LAST')
       else
         @media = @media.tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')  
-        repopulate_collection(@media)
+        if @media.length < 10
+          RequestTaggedMedia.perform_async(tag)
+        end
       end
 
     # Authenticated users
@@ -136,7 +138,9 @@ class Media < ActiveRecord::Base
         end
       else
         @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
-        repopulate_collection(@media)
+        if @media.length < 10
+          RequestTaggedMedia.perform_async(tag)
+        end
       end
     end
 
@@ -158,13 +162,6 @@ class Media < ActiveRecord::Base
 
     @media
   end
-
-  def repopulate_collection(media_collection)
-    if media.length < 10
-      RequestTaggedMedia.perform_async(tag)
-    end
-  end
-
 
   def self.populate_tag(tag_name) 
     return if Tag.blacklisted?(tag_name)
