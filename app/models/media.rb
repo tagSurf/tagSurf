@@ -95,7 +95,7 @@ class Media < ActiveRecord::Base
     # Media available for non-authed preview
     if user.nil?
       if tag == 'trending'
-        @media  = @media.where(viral).limit(n).order('ts_score DESC NULLS LAST')
+        @media  = @media.where(viral: true).limit(n).order('ts_score DESC NULLS LAST')
       else
         @media = @media.tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')  
         repopulate_collection(@media)
