@@ -28,7 +28,7 @@ class Api::MediaController < Api::BaseController
   end
 
   def share_feed
-    @media = Media.next(@user, media_params[:tag], media_params[:remote_id])
+    @media = Media.next(@user, media_params[:tag], media_params[:id])
     if @media.present?
       render json: @media, root: "data"
     else
@@ -53,7 +53,7 @@ class Api::MediaController < Api::BaseController
   private
 
     def media_params
-      params.permit(:id, :vote, :tag, :remote_id)
+      params.permit(:id, :vote, :tag)
     end
 
     def find_authenticated_user
