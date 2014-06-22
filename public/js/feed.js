@@ -488,6 +488,10 @@ onload = function ()
 			iconLine = card.children[1], targetHeight = imageData ? 
 			imageData.height * (window.innerWidth - 40) / imageData.width :
 			card.firstChild.scrollHeight;
+		if (node && node.card.image.animated && !imageContainer.firstChild.classList.contains('translate-z'))
+		{
+			imageContainer.firstChild.classList.add('translate-z');
+		}
 		if (node && (targetHeight + textContainer.scrollHeight 
 			+ picTags.scrollHeight + iconLine.scrollHeight 
 			< (maxCardHeight + 80)))
