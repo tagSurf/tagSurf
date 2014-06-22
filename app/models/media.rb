@@ -144,7 +144,7 @@ class Media < ActiveRecord::Base
       end
     end
 
-    if remote_id.present?
+    if id.present?
       @media = Media.where(id: id) + @media
       @media = @media.uniq_by(&:id)
     end
