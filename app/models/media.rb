@@ -88,7 +88,7 @@ class Media < ActiveRecord::Base
 
   # Gather the next set of media for feeds 
   # The brains of tagSurf feeds 
-  def self.next(user, tag, remote_id=nil, n=20)
+  def self.next(user, tag, id=nil, n=20)
     return [] if Tag.blacklisted?(tag)
     @media = Media.all
 
@@ -145,8 +145,8 @@ class Media < ActiveRecord::Base
     end
 
     if remote_id.present?
-      @media = Media.where(remote_id: remote_id) + @media
-      @media = @media.uniq_by(&:remote_id)
+      @media = Media.where(id: id) + @media
+      @media = @media.uniq_by(&:id)
     end
 
     # Embedds login card every third card
