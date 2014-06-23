@@ -54,11 +54,20 @@ onload = function ()
 	
 	var scrollCallback = function (event)
 	{
-		slider.style['transform-origin'] = "center " + scrollContainer.scrollTop + 'px';
-		slider.style['-webkit-transform-origin'] = "center " + scrollContainer.scrollTop + 'px';
-		slider.lastChild.previousSibling.style.top = (50 + scrollContainer.scrollTop) + 'px';
+		var trueScrollTop = scrollContainer.scrollTop ? scrollContainer.scrollTop
+			: (scrollContainer.yDrag ? -scrollContainer.yDrag : 0);
+		slider.style['transform-origin'] = "center " + trueScrollTop + 'px';
+		slider.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
+		slider.lastChild.previousSibling.style.top = (50 + trueScrollTop) + 'px';
 	};
 	scrollContainer.addEventListener('scroll', scrollCallback, false); 
+	if (isAndroid())
+	{
+		drag.makeDraggable(scrollContainer, {
+			constraint: "horizontal",
+			drag: scrollCallback
+		});
+	}
 
 	var data, buffer_minimum = 5, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
@@ -150,7 +159,7 @@ onload = function ()
 		".card-container": function() {
 			return "min-height: " + (maxCardHeight + 140) + "px";
 		},
-		".raw_wrapper, .zoom_wrapper, #scroll-container": function() {
+		".raw_wrapper, .zoom_wrapper, #scroll-container, #scroll-container-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
 		},
 		".image-container img": function () {
@@ -216,6 +225,10 @@ onload = function ()
 		slider.supering = false;
 		if (slider.animating == false)
 		{
+			if (isAndroid())
+			{
+				gesture.triggerUp(scrollContainer);
+			}
 			if (slider.sliding == true)
 			{
 				if (androidSoftUp || Math.abs(slider.x) < slideThreshold)
@@ -324,6 +337,11 @@ onload = function ()
 				if (slider.sliding == false)
 				{
 					slider.verticaling = true;
+				}
+				if (isAndroid())
+				{
+					gesture.triggerDrag(scrollContainer, direction, distance, dx, dy);
+					return true;
 				}
 				if ((atTop && direction == "down") ||
 					(atBottom && direction == "up"))
@@ -580,6 +598,11 @@ onload = function ()
 	};
 	var downCallback = function ()
 	{
+
+		if (isAndroid())
+		{
+			gesture.triggerDown(scrollContainer);
+		}
 		if (reminderTimeout)
 		{
 			document.body.removeChild(document.getElementById("reminder_container"));
