@@ -11,6 +11,7 @@ class Api::MediaController < Api::BaseController
 
     @vote = media_params[:vote] == 'up' ? true : false
     @user.voted_on << media_params[:id]
+
     vote = Vote.create(
       voter_type: 'User', 
       voter_id: @user.id, 
@@ -19,6 +20,7 @@ class Api::MediaController < Api::BaseController
       votable_type: 'Media',
       vote_tag: media_params[:tag]
     )
+
     if vote
       IncrementMediaVoteCount.perform_async(media_params[:id], vote.vote_flag)
       render json: {success: "true"}
