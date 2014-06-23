@@ -77,6 +77,12 @@ html, body {
   margin:20px auto;
 }
 
+.link-to-login{
+  display:block;
+  width:204px;
+  margin:-4px auto;
+}
+
 .registration-links-container{
   display:block;
   width:55px;

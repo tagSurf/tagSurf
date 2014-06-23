@@ -270,7 +270,17 @@ a.back {
 	-webkit-background-clip: padding-box;
 }
 
+.light-bottom-margin{
+  margin-bottom: 4px; 
+}
+
 .su-helper-txt{
+  font-size: 12px;
+  color: #1dafec; 
+  margin-bottom: 4px;
+}
+
+.su-helper-link{
   font-size: 12px;
   color: #1dafec; 
   margin-bottom: 4px;

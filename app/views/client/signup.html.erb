@@ -1,16 +1,19 @@
 <% content_for :stylesheets do %>
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/login.css">
   <link rel="stylesheet" href="/css/beta.css">
 <% end %>
 
-<center>
-  <img class="sulogo" src="/img/ts_logo_stacked_gray.png"></img>
-  <div class="su-container">
+<%= form_for(User.new, :as => :user, :url => registration_path(:user) ) do |f| %>
+  <center>
+    <img class="tslogo" src="/img/ts_logo_stacked_gray.png"></img>
+    <div class="su-container">
 
-    <%= form_for(User.new, :as => :user, :url => registration_path(:user) ) do |f| %>
-      <p class="su-user-email"><%= params[:email] %></p>
+      <div class="su-input-container light-bottom-margin">
+        <%= f.email_field :email, :placeholder => 'email', :class => 'su-input bigplace', id: 'email', autocomplete: "off", spellcheck: "false", autocapitalize: "off", autocorrect: "off" %>
+      </div>
 
-      <small class="su-helper-txt">Password must be at least 8 characters</small>
+      <small class="su-helper-txt black">Password must be at least 8 characters</small>
 
       <div class="su-input-container">
         <%= f.password_field :password, :placeholder => 'password', :class => 'su-input bigplace', id: 'password', autocomplete: "off", spellcheck: "false", autocapitalize: "off", autocorrect: "off" %>
@@ -20,24 +23,21 @@
         <%= f.password_field :password_confirmation, :placeholder => 're-enter password', :class => 'su-input bigplace', id: 'repassword', autocomplete: "off", spellcheck: "false", autocapitalize: "off", autocorrect: "off" %>
       </div>
 
-
-      <%#- too busy to restyle disabled input %>
-      <%= f.hidden_field :email, value: params[:email] %>
-      <%= f.hidden_field :beta_user, value: true %>
-      <%= f.hidden_field :beta_tester_agreement, value: true %>
-      <%= f.hidden_field :access_code, value: params[:code] %>
-
       <%= f.submit 'Submit', id: 'su-submit-btn' %>
-       
-    <% end %>
 
-  </div>
-</center>
+    </div>
+  </center>
+<% end %>
+
+<%= link_to "Already have an account? <span class='ts-blue'>Login here.</span>".html_safe, '/users/sign_in', class: 'link-to-login twelve light-gray' %>
+
 <script src="/js/util.js"></script>
 <script>
 var inputs = document.getElementsByClassName("su-input");
 inputs[0].onfocus = function () { toggleClass.apply(inputs[0].parentNode, ["focused"]); };
 inputs[0].onblur = function () { toggleClass.apply(inputs[0].parentNode, ["focused"]); };
 inputs[1].onfocus = function () { toggleClass.apply(inputs[1].parentNode, ["focused"]); };
-inputs[1].onblur = function () { toggleClass.apply(inputs[1].parentNode, ["focused"]); };
+inputs[1].onfocus = function () { toggleClass.apply(inputs[1].parentNode, ["focused"]); };
+inputs[2].onblur = function () { toggleClass.apply(inputs[2].parentNode, ["focused"]); };
+inputs[2].onblur = function () { toggleClass.apply(inputs[2].parentNode, ["focused"]); };
 </script>
