@@ -13,7 +13,7 @@
         <%= f.email_field :email, :placeholder => 'email', :class => 'su-input bigplace', id: 'email', autocomplete: "off", spellcheck: "false", autocapitalize: "off", autocorrect: "off" %>
       </div>
 
-      <small class="su-helper-txt black">Password must be at least 8 characters</small>
+      <small class="su-helper-txt">Password must be at least 8 characters</small>
 
       <div class="su-input-container">
         <%= f.password_field :password, :placeholder => 'password', :class => 'su-input bigplace', id: 'password', autocomplete: "off", spellcheck: "false", autocapitalize: "off", autocorrect: "off" %>
@@ -24,12 +24,15 @@
       </div>
 
       <%= f.submit 'Submit', id: 'su-submit-btn' %>
+      
 
     </div>
   </center>
 <% end %>
 
-<%= link_to "Already have an account? <span class='ts-blue'>Login here.</span>".html_safe, '/users/sign_in', class: 'link-to-login twelve light-gray' %>
+<%= link_to "<span class='ts-blue'>Already have an account?</span> Login here.".html_safe, '/users/sign_in', class: 'link-to-login twelve light-gray' %>
+
+<small class="su-helper-txt disclaimer">By registering with tagSurf you agree to the <a href="/terms">Terms of Use</a> and <a href="/privacy">Privacy Policy</a>.</small>
 
 <script src="/js/util.js"></script>
 <script>

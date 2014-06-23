@@ -80,7 +80,7 @@ html, body {
 .link-to-login{
   display:block;
   width:204px;
-  margin:-4px auto;
+  margin:-10px auto 10px;
 }
 
 .registration-links-container{
