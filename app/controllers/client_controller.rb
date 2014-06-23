@@ -24,6 +24,7 @@ class ClientController < ApplicationController
 
   before_action :redirect_desktops, only: [
     :feed,
+    :share,
     :favorites,
     :trending, 
     :submissions,
@@ -97,6 +98,13 @@ class ClientController < ApplicationController
   def submissions; end
   def tag; end
   def desktop; end
+
+  # Share routes
+  def share
+    
+  end
+
+
 
   # Beta access flow
   def access_code; end

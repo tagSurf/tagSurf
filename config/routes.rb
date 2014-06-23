@@ -13,11 +13,13 @@ Tagsurf::Application.routes.draw do
                      }
  
   # Static Routes
-  get 'feed'        => 'client#feed'
-  get 'history'     => 'client#history'
-  get 'favorites'   => 'client#favorites'
-  get 'submissions' => 'client#submissions'
-  get 'tag'         => 'client#tag'
+  get 'feed'            => 'client#feed'
+  get 'share/:tag'      => 'client#share'
+  get 'share/:tag/:id'  => 'client#share'
+  get 'history'         => 'client#history'
+  get 'favorites'       => 'client#favorites'
+  get 'submissions'     => 'client#submissions'
+  get 'tag'             => 'client#tag'
 
   # Beta access flow, ordered by good path
   get 'code'        => 'client#access_code'
