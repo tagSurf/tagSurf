@@ -30,6 +30,8 @@ var drag =
 		node.xDrag = 0;
 		node.yDrag = 0;
 		node.style['-webkit-transform'] = "translate3d(0,0,0)";
+		node.style.overflow = "visible";
+		node.parentNode.style.overflow = "visible";
 		downCallback = function () 
 		{
 			if (node.animating) return;
