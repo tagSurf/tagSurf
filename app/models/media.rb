@@ -88,16 +88,17 @@ class Media < ActiveRecord::Base
 
   # Gather the next set of media for feeds 
   # The brains of tagSurf feeds 
-  def self.next(user, tag, id=nil, n=20)
+  # TODO Move list of params to options hash
+  def self.next(user, tag, id=nil, offset=0, n=20)
     return [] if Tag.blacklisted?(tag)
     @media = Media.all
 
     # Media available for non-authed preview
     if user.nil?
       if tag == 'trending'
-        @media  = @media.where(viral: true).limit(n).order('ts_score DESC NULLS LAST')
+        @media  = @media.where(viral: true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
       else
-        @media = @media.tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')  
+        @media = @media.tagged_with(tag, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')  
         if @media.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
@@ -144,7 +145,7 @@ class Media < ActiveRecord::Base
       end
     end
 
-    if id.present?
+    if id.present? and offset > 0
       @media = Media.where(id: id) + @media
       @media = @media.uniq_by(&:id)
     end
