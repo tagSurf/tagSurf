@@ -290,6 +290,7 @@ a.back {
   display:block;
   width: 220px;
   margin:0 auto;
+  padding-bottom: 15px;
   text-align:center;
 }
 
