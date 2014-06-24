@@ -6,6 +6,7 @@ class ClientController < ApplicationController
     :confirm_beta_token, 
     :disclaimer,
     :terms,
+    :share,
     :signup,
     :disclaimer_agreement,
     :terms_agreement,
@@ -18,18 +19,8 @@ class ClientController < ApplicationController
     :trending, 
     :history, 
     :submissions, 
-    :tag,
-    :desktop 
+    :tag
   ] 
-
-  before_action :redirect_desktops, only: [
-    :feed,
-    :share,
-    :favorites,
-    :trending, 
-    :submissions,
-    :tag 
-  ]
 
   layout 'client'
 
@@ -97,14 +88,7 @@ class ClientController < ApplicationController
   def history; end
   def submissions; end
   def tag; end
-  def desktop; end
-
-  # Share routes
-  def share
-    
-  end
-
-
+  def share; end
 
   # Beta access flow
   def access_code; end
