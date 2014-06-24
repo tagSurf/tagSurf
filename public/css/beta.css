@@ -293,6 +293,11 @@ a.back {
   text-align:center;
 }
 
+.disclaimer > a{
+  font-weight:500;
+  color:#272727;
+}
+
 .su-input
 {
 	font-family: 'Raleway', 'sans-serif';

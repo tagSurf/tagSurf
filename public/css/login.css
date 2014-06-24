@@ -79,8 +79,10 @@ html, body {
 
 .link-to-login{
   display:block;
-  width:204px;
+  width:210px;
   margin:-10px auto 10px;
+  color:#272727;
+  font-weight:500;
 }
 
 .registration-links-container{
