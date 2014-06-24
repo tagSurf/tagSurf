@@ -20,13 +20,11 @@ class ClientController < ApplicationController
     :trending, 
     :history, 
     :submissions, 
-    :tag,
-    :desktop 
+    :tag
   ] 
 
   before_action :redirect_desktops, only: [
     :feed,
-    :share,
     :favorites,
     :trending, 
     :submissions,
@@ -100,7 +98,6 @@ class ClientController < ApplicationController
   def submissions; end
   def tag; end
   def desktop; end
-
   def share; end
 
   # Beta access flow

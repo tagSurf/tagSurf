@@ -30,7 +30,7 @@ class Api::MediaController < Api::BaseController
   end
 
   def share_feed
-    @media = Media.next(@user, media_params[:tag], media_params[:id], media_params[:offset], media_params[:limit])
+    @media = Media.next(@user, media_params[:tag], {id: media_params[:id], offset: media_params[:offset], limit: media_params[:limit]})
     if @media.present?
       render json: @media, root: "data"
     else

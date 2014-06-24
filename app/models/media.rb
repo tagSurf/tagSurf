@@ -89,7 +89,11 @@ class Media < ActiveRecord::Base
   # Gather the next set of media for feeds 
   # The brains of tagSurf feeds 
   # TODO Move list of params to options hash
-  def self.next(user, tag, id=nil, offset=0, n=20)
+  def self.next(user, tag, options = {})
+    offset = options[:offset].nil? ? 0 : options[:offset]
+    n = options[:limit].nil? ?  20 : options[:limit]
+    id = options[:id]
+       
     return [] if Tag.blacklisted?(tag)
     @media = Media.all
 
@@ -145,7 +149,7 @@ class Media < ActiveRecord::Base
       end
     end
 
-    if id.present? and offset > 0
+    if id.present? and offset < 1
       @media = Media.where(id: id) + @media
       @media = @media.uniq_by(&:id)
     end
