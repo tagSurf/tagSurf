@@ -90,9 +90,9 @@ class Media < ActiveRecord::Base
   # The brains of tagSurf feeds 
   # TODO Move list of params to options hash
   def self.next(user, tag, options = {})
-    offset = options[:offset].nil? ? 0 : options[:offset]
-    n = options[:limit].nil? ?  20 : options[:limit]
-    id = options[:id]
+    offset = options[:offset].nil? ? 0 : options[:offset].to_i
+    n = options[:limit].nil? ?  20 : options[:limit].to_i
+    id = options[:id].to_i
        
     return [] if Tag.blacklisted?(tag)
     @media = Media.all
