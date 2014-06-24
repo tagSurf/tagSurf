@@ -6,6 +6,8 @@ class ClientController < ApplicationController
     :confirm_beta_token, 
     :disclaimer,
     :terms,
+    :desktop,
+    :share,
     :signup,
     :disclaimer_agreement,
     :terms_agreement,
@@ -99,12 +101,7 @@ class ClientController < ApplicationController
   def tag; end
   def desktop; end
 
-  # Share routes
-  def share
-    
-  end
-
-
+  def share; end
 
   # Beta access flow
   def access_code; end
