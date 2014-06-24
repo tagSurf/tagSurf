@@ -158,7 +158,7 @@ class Media < ActiveRecord::Base
       @login_card = Media.unscoped.where(ts_type: 'login').limit(1)
       # creates an empty relation
       @relation = Media.where(id: nil)
-      @media.each_slice(3) do |media|
+      @media.each_slice(4) do |media|
         @relation << media + @login_card
       end
       @media = @relation.flatten!
