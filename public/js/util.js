@@ -120,7 +120,7 @@ var populateNavbar = function () {
       "<a onclick='slideAddBar();'><img id='add-icon' src='img/add_icon_blue.png'></a>",
     "</div>",
     "<div class='navbar-center'>",
-      "<label id='slider_label' for='slider_box' onclick='slideNavMenu();'>",
+      "<label id='slider_label' for='slider_box' ontouchmove='return false;' onclick='slideNavMenu();'>",
         "<span id='main-logo'>",
           gallery ? (gallery == "tag"
             ? ("<span class='pointer'>#" + tag + "</span>")
