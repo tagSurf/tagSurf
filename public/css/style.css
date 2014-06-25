@@ -317,3 +317,10 @@ a {
 {
   height: 150px !important;
 }
+.hardware-acceleration
+{
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  backface-visibility: hidden;
+  perspective: 1000;
+}

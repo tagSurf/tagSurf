@@ -29,6 +29,7 @@ var drag =
 		var downCallback, upCallback, dragCallback, swipeCallback;
 		node.xDrag = 0;
 		node.yDrag = 0;
+		node.classList.add('hardware-acceleration');
 		node.style['-webkit-transform'] = "translate3d(0,0,0)";
 		node.style.overflow = "visible";
 		node.parentNode.style.overflow = "visible";
