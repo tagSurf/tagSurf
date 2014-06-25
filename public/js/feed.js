@@ -60,7 +60,7 @@ onload = function ()
 		slider.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
 		slider.lastChild.previousSibling.style.top = (50 + trueScrollTop) + 'px';
 	};
-	scrollContainer.addEventListener('scroll', scrollCallback, false); 
+//	scrollContainer.addEventListener('scroll', scrollCallback, false); 
 	if (isAndroid())
 	{
 		drag.makeDraggable(scrollContainer, {
@@ -248,7 +248,7 @@ onload = function ()
 			{
 				slider.verticaling = false;
 				slider.sliding = false;
-				return true;
+//				return true;
 			}
 		}
 		slider.verticaling = false;
@@ -341,14 +341,14 @@ onload = function ()
 				if (isAndroid())
 				{
 					gesture.triggerDrag(scrollContainer, direction, distance, dx, dy);
-					return true;
+//					return true;
 				}
 				if ((atTop && direction == "down") ||
 					(atBottom && direction == "up"))
 				{
 					return false;
 				}
-				return true;
+//				return true;
 			}
 			else 
 			{
@@ -613,7 +613,7 @@ onload = function ()
 		{
 			slider.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
 		}
-		return true;
+//		return true;
 	};
 	var initCardGestures = function ()
 	{
