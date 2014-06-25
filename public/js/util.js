@@ -60,8 +60,10 @@ var add_icon, add_state = "blue", add_icons = {
 };
 var addBarSlid = false;
 var slideAddBar = function(noback) {
-  autocomplete.viewing.autocomplete
-    && closeAutoComplete(null, true);
+  if (autocomplete.viewing.autocomplete) {
+    autocomplete.retract("autocomplete");
+    closeAutoComplete(null, true);
+  }
   autocomplete.viewing.add_tag_autocomplete
     && autocomplete.retract("add_tag_autocomplete");
   navMenuSlid && slideNavMenu(true);
