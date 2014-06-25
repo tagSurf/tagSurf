@@ -145,7 +145,7 @@ a {
 .blackout {
 	pointer-events: none;
 	z-index: 3;
-	position: fixed;
+	position: absolute;
 	top: 50px;
 	bottom: 0px;
 	left: 0px;
