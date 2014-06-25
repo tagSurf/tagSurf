@@ -60,14 +60,10 @@ onload = function ()
 		slider.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
 		slider.lastChild.previousSibling.style.top = (50 + trueScrollTop) + 'px';
 	};
-//	scrollContainer.addEventListener('scroll', scrollCallback, false); 
-	if (isAndroid())
-	{
-		drag.makeDraggable(scrollContainer, {
-			constraint: "horizontal",
-			drag: scrollCallback
-		});
-	}
+	drag.makeDraggable(scrollContainer, {
+		constraint: "horizontal",
+		drag: scrollCallback
+	});
 
 	var data, buffer_minimum = 5, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
@@ -225,10 +221,7 @@ onload = function ()
 		slider.supering = false;
 		if (slider.animating == false)
 		{
-			if (isAndroid())
-			{
-				gesture.triggerUp(scrollContainer);
-			}
+			gesture.triggerUp(scrollContainer);
 			if (slider.sliding == true)
 			{
 				if (androidSoftUp || Math.abs(slider.x) < slideThreshold)
@@ -338,17 +331,12 @@ onload = function ()
 				{
 					slider.verticaling = true;
 				}
-				if (isAndroid())
-				{
-					gesture.triggerDrag(scrollContainer, direction, distance, dx, dy);
-//					return true;
-				}
+				gesture.triggerDrag(scrollContainer, direction, distance, dx, dy);
 				if ((atTop && direction == "down") ||
 					(atBottom && direction == "up"))
 				{
 					return false;
 				}
-//				return true;
 			}
 			else 
 			{
@@ -598,11 +586,7 @@ onload = function ()
 	};
 	var downCallback = function ()
 	{
-
-		if (isAndroid())
-		{
-			gesture.triggerDown(scrollContainer);
-		}
+		gesture.triggerDown(scrollContainer);
 		if (reminderTimeout)
 		{
 			document.body.removeChild(document.getElementById("reminder_container"));
@@ -613,7 +597,6 @@ onload = function ()
 		{
 			slider.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
 		}
-//		return true;
 	};
 	var initCardGestures = function ()
 	{
