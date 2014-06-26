@@ -154,7 +154,8 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			delNode.innerHTML = "x";
 			p.appendChild(delNode);
 		}
-		p.appendChild(voteMeter(objwrap[tagName]))
+		// voteMeters in galleries go away until we have more users
+		// p.appendChild(voteMeter(objwrap[tagName]));
 		gesture.listen("up", p, function() {
 			if (objwrap[tagName].user_owned) {
 				rmTag(tagName);

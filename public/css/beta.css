@@ -102,8 +102,8 @@ body
 }
 
 .bigplace::-webkit-input-placeholder {
-	font-size: 130%;
-	line-height: 20px;
+	font-size: 100%;
+	line-height: 25px;
 	height: 20px;
 	font-weight: 200;
 }
@@ -262,12 +262,16 @@ a.back {
 	width: 225px;
 	height: 37px;
   margin-top: 4px;
-	margin-bottom: 16px;
+	margin-bottom: 10px;
 	border: solid 1px grey;
 	-moz-border-radius: 50px / 50px;
 	-webkit-border-radius: 50px / 50px;
 	border-radius: 50px / 50px;
 	-webkit-background-clip: padding-box;
+}
+
+.light-bottom-margin{
+  margin-bottom: 4px; 
 }
 
 .su-helper-txt{
@@ -276,16 +280,41 @@ a.back {
   margin-bottom: 4px;
 }
 
+.su-helper-link{
+  font-size: 12px;
+  color: #1dafec; 
+  margin-bottom: 4px;
+}
+
+.disclaimer{
+  display:block;
+  width: 220px;
+  margin:0 auto;
+  padding-bottom: 15px;
+  text-align:center;
+}
+
+.disclaimer > a{
+  font-weight:500;
+  color:#272727;
+}
+
+.disclaimer-link{
+	font-weight:500;
+	color:#272727;
+}
+
 .su-input
 {
 	font-family: 'Raleway', 'sans-serif';
 	width: 203px;
 	height: 31px;
 	color: #000;
-	padding-left: 15px;
-	line-height: 20px;
+	padding-top: 10px;
+	padding-left: 5px;
+	line-height: 25px;
 	border: solid thin transparent;
-	font-size: 12px;
+	font-size: 20px;
 	font-weight: 200;
 	background: #fff;
 	outline-width: 0;

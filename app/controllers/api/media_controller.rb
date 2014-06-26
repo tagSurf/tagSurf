@@ -11,6 +11,7 @@ class Api::MediaController < Api::BaseController
 
     @vote = media_params[:vote] == 'up' ? true : false
     @user.voted_on << media_params[:id]
+
     vote = Vote.create(
       voter_type: 'User', 
       voter_id: @user.id, 
@@ -19,8 +20,9 @@ class Api::MediaController < Api::BaseController
       votable_type: 'Media',
       vote_tag: media_params[:tag]
     )
+
     if vote
-      IncrementMediaVoteCount.perform_async(media_params[:media_id], vote.vote_flag)
+      IncrementMediaVoteCount.perform_async(media_params[:id], vote.vote_flag)
       render json: {success: "true"}
     else
       render json: {error: "something went wrong: #{e}"}, status: :unprocessible_entity
@@ -28,7 +30,15 @@ class Api::MediaController < Api::BaseController
   end
 
   def share_feed
-    @media = Media.next(@user, media_params[:tag], media_params[:remote_id])
+    @media = Media.next(
+      @user, 
+      media_params[:tag], 
+      {
+        :id => media_params[:id], 
+        :limit => media_params[:limit],
+        :offset => media_params[:offset] 
+      }
+    )
     if @media.present?
       render json: @media, root: "data"
     else
@@ -53,7 +63,7 @@ class Api::MediaController < Api::BaseController
   private
 
     def media_params
-      params.permit(:id, :vote, :tag, :remote_id)
+      params.permit(:id, :vote, :tag, :offset, :limit)
     end
 
     def find_authenticated_user
