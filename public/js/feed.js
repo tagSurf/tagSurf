@@ -337,6 +337,7 @@ onload = function ()
 				{
 					return false;
 				}
+				return true;
 			}
 			else 
 			{
@@ -597,6 +598,7 @@ onload = function ()
 		{
 			slider.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
 		}
+		return true;
 	};
 	var initCardGestures = function ()
 	{
