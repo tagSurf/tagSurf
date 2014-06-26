@@ -88,16 +88,20 @@ class Media < ActiveRecord::Base
 
   # Gather the next set of media for feeds 
   # The brains of tagSurf feeds 
-  def self.next(user, tag, remote_id=nil, n=20)
+  def self.next(user, tag, options = {})
+    offset = options[:offset].nil? ? 0 : options[:offset].to_i
+    n = options[:limit].nil? ?  20 : options[:limit].to_i
+    id = options[:id].to_i
+       
     return [] if Tag.blacklisted?(tag)
     @media = Media.all
 
     # Media available for non-authed preview
     if user.nil?
       if tag == 'trending'
-        @media  = @media.where(viral: true).limit(n).order('ts_score DESC NULLS LAST')
+        @media  = @media.where(viral: true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
       else
-        @media = @media.tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')  
+        @media = @media.tagged_with(tag, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')  
         if @media.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
@@ -144,9 +148,9 @@ class Media < ActiveRecord::Base
       end
     end
 
-    if remote_id.present?
-      @media = Media.where(remote_id: remote_id) + @media
-      @media = @media.uniq_by(&:remote_id)
+    if id.present? and offset < 1
+      @media = Media.where(id: id) + @media
+      @media = @media.uniq_by(&:id)
     end
 
     # Embedds login card every third card
@@ -154,7 +158,7 @@ class Media < ActiveRecord::Base
       @login_card = Media.unscoped.where(ts_type: 'login').limit(1)
       # creates an empty relation
       @relation = Media.where(id: nil)
-      @media.each_slice(3) do |media|
+      @media.each_slice(4) do |media|
         @relation << media + @login_card
       end
       @media = @relation.flatten!

@@ -51,7 +51,7 @@ class Vote < ActiveRecord::Base
 
   def update_tag_feed
     tag = Tag.where(name: self.vote_tag).first
-    tag.tag_feed[tag.name] = Vote.where(vote_tag: tag).count
+    tag.tag_feed[tag.name] = Vote.where(vote_tag: tag.name).count
   end
    
 end

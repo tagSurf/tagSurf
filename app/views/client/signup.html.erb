@@ -1,14 +1,17 @@
 <% content_for :stylesheets do %>
   <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/login.css">
   <link rel="stylesheet" href="/css/beta.css">
 <% end %>
 
-<center>
-  <img class="sulogo" src="/img/ts_logo_stacked_gray.png"></img>
-  <div class="su-container">
+<%= form_for(User.new, :as => :user, :url => registration_path(:user) ) do |f| %>
+  <center>
+    <img class="tslogo" src="/img/ts_logo_stacked_gray.png"></img>
+    <div class="su-container">
 
-    <%= form_for(User.new, :as => :user, :url => registration_path(:user) ) do |f| %>
-      <p class="su-user-email"><%= params[:email] %></p>
+      <div class="su-input-container light-bottom-margin">
+        <%= f.email_field :email, :placeholder => 'email', :class => 'su-input bigplace', id: 'email', autocomplete: "off", spellcheck: "false", autocapitalize: "off", autocorrect: "off" %>
+      </div>
 
       <small class="su-helper-txt">Password must be at least 8 characters</small>
 
@@ -20,24 +23,210 @@
         <%= f.password_field :password_confirmation, :placeholder => 're-enter password', :class => 'su-input bigplace', id: 'repassword', autocomplete: "off", spellcheck: "false", autocapitalize: "off", autocorrect: "off" %>
       </div>
 
-
-      <%#- too busy to restyle disabled input %>
-      <%= f.hidden_field :email, value: params[:email] %>
-      <%= f.hidden_field :beta_user, value: true %>
-      <%= f.hidden_field :beta_tester_agreement, value: true %>
-      <%= f.hidden_field :access_code, value: params[:code] %>
-
       <%= f.submit 'Submit', id: 'su-submit-btn' %>
-       
-    <% end %>
+      
 
+    </div>
+  </center>
+<% end %>
+
+<%= link_to "<span class='ts-blue'>Already have an account?</span> Login here.".html_safe, '/users/sign_in', class: 'link-to-login twelve light-gray' %>
+
+<small class="su-helper-txt disclaimer">By registering with tagSurf you agree to our <div class="disclaimer-link inline bold" id="terms-lnk">Terms of Use</div> and <div class="disclaimer-link inline bold" id="privacy-lnk">Privacy Policy</div>.</small>
+
+
+<div class="hidden"><div id="terms">
+ <div class="bigger bigpadded">
+  TAGSURF TERMS AND CONDITIONS
+ </div>
+ <div class="small content">
+
+ TOS GOES HERE
+
+ </div>
+ <div class="bigger bottom">
+  <div class="forward button">Close</div>
+ </div>
+</div></div>
+
+
+<div class="hidden"><div id="privacy">
+ <div class="bigger bigpadded">
+  TAGSURF PRIVACY POLICY
+ </div>
+ <div class="small content">
+  <div><i>
+   Your privacy is critically important to us. At tagSurf we have a few fundamental principles:
+  </i></div>
+  <ul>
+   <li>
+    We don't ask you for personal information unless we truly need it.
+   </li>
+   <li>
+    We don't share your personal information with anyone except to comply with the law, develop our products, or protect our rights.
+   </li>
+   <li>
+    We don't store personal information on our servers unless required for the ongoing operation of one of our services.
+   </li>
+  </ul>
+  <div>
+   Below is our privacy policy which incorporates these goals: (Note this privacy policy is available under a Creative Commons Sharealike license originally provided by Automattic (WordPress.com), which means you’re more than welcome to repurpose it for your own use, just make sure to replace references to tagSurf with ones to your service.)
   </div>
-</center>
+  <div>
+   If you have questions about deleting or correcting your personal data please contact us at <a class="blue" href="mailto:beta@tagSurf.co">beta@tagSurf.co</a>.
+  </div>
+  <div>
+   tagSurf Corp. (“tagSurf”) operates several websites including tagSurf.co.  It is tagSurf’s policy to respect your privacy regarding any information we may collect while operating our websites.
+  </div>
+  <div class="bold">
+   Website Visitors
+  </div>
+  <div>
+   Like most website operators, tagSurf collects non-personally identifiable information of the sort that web browsers and servers typically make available, such as the browser type, language preference, referring site, and the date and time of each visitor request. tagSurf’s purpose in collecting non-personally identifying information is to better understand how tagSurf’s visitors use its website. From time to time, tagSurf may release non-personally identifiable information in the aggregate, e.g., by publishing a report on trends in the usage of its website.
+  </div>
+  <div>
+   tagSurf also collects potentially PERSONALLY-IDENTIFIABLE INFORMATION like Internet Protocol (IP) addresses for logged in users and for users who post content or leave comments on tagSurf websites. tagSurf only discloses logged in user and commenter IP addresses under the same circumstances that it uses and discloses all personally identifiable information as described below.
+  </div>
+  <div class="bold">
+   Gathering of PERSONALLY-IDENTIFIABLE INFORMATION
+  </div>
+  <div>
+   Certain visitors to tagSurf’s websites choose to interact with tagSurf in ways that require tagSurf to gather PERSONALLY-IDENTIFIABLE INFORMATION. Examples of PERSONALLY-IDENTIFIABLE INFORMATION include name, email address, mailing address, mobile phone number, and credit card or other billing information. PERSONALLY-IDENTIFIABLE INFORMATION also includes other information, such as date of birth, geographic area, or preferences, when any such information is linked to information that identifies a specific individual. The amount and type of information that tagSurf gathers depends on the nature of the interaction. For example, we ask visitors who sign up for an account at tagSurf.co to provide an email address. 
+  </div>
+  <div>
+   tagSurf may also obtain information, including PERSONALLY-IDENTIFIABLE INFORMATION, from third parties and sources, such as our partners, advertisers, and public databases. If we combine or associate information from other sources with PERSONALLY-IDENTIFIABLE INFORMATION that we collect through tagSurf’s websites, we will treat the combined information as PERSONALLY IDENTIFIABLE INFORMATION. 
+  </div>
+  <div>
+   tagSurf does not disclose PERSONALLY-IDENTIFIABLE INFORMATION other than as described below.  Visitors can always refuse to supply PERSONALLY-IDENTIFIABLE INFORMATION, with the caveat that it may prevent them from engaging in many website-related activities.
+  </div>
+  <div class="bold">
+   Aggregated Statistics
+  </div>
+  <div>
+   tagSurf may collect statistics about the behavior of visitors to its websites. For instance, tagSurf may monitor the most popular content on the tagSurf.co site or use screening services to prevent the upload of spam or Not Safe For Work (NSFW) content to tagSurf. tagSurf may display this information publicly or provide it to others. However, TAGSURF DOES NOT DISCLOSE PERSONALLY-IDENTIFIABLE INFORMATION OTHER THAN AS DESCRIBED BELOW.
+  </div>
+  <div class="bold">
+   Protection of Certain PERSONALLY-IDENTIFIABLE INFORMATION
+  </div>
+  <div>
+   tagSurf discloses potentially personally identifiable and PERSONALLY-IDENTIFIABLE INFORMATION only to those of its employees, contractors and affiliated organizations that (i) need to know that information in order to process it on tagSurf’s behalf or to provide services available at tagSurf’s websites, and (ii) that have agreed not to disclose it to others. Some of those employees, contractors and affiliated organizations may be located outside of your home country; by using tagSurf’s websites, you consent to the transfer of such information to them. TAGSURF WILL NOT RENT OR SELL POTENTIALLY PERSONALLY-IDENTIFIABLE AND PERSONALLY-IDENTIFIABLE INFORMATION TO ANYONE. 
+  </div>
+  <div>
+   OTHER THAN TO ITS EMPLOYEES, CONTRACTORS AND AFFILIATED ORGANIZATIONS, AS DESCRIBED ABOVE, TAGSURF ONLY DISCLOSES POTENTIALLY PERSONALLY-IDENTIFIABLE AND PERSONALLY-IDENTIFIABLE INFORMATION IN RESPONSE TO A SUBPOENA, COURT ORDER OR OTHER GOVERNMENTAL REQUEST, OR WHEN TAGSURF BELIEVES IN GOOD FAITH THAT DISCLOSURE IS REASONABLY NECESSARY TO PROTECT THE PROPERTY OR RIGHTS OF TAGSURF, THIRD PARTIES OR THE PUBLIC AT LARGE. 
+  </div>
+  <div>
+   If you are a registered user of a tagSurf website and have supplied your email address, tagSurf may occasionally send you an email to tell you about new features, solicit your feedback, or just keep you up to date with what’s going on with tagSurf and our products. If you send us a request (for example via a support email or via one of our feedback mechanisms), we reserve the right to publish it in order to help us clarify or respond to your request or to help us support other users. tagSurf takes all measures reasonably necessary to protect against the unauthorized access, use, alteration or destruction of potentially personally identifiable and personally identifiable information.
+  </div>
+  <div class="bold">
+   Anonymity
+  </div>
+  <div>
+   Protecting user anonymity is a top priority at tagSurf. tagSurf does not disclose any PERSONALLY-IDENTIFIABLE INFORMATION to non-administrative users of tagSurf websites except as documented by this privacy policy. Any links between your user account and your activity on tagSurf sites are protected through a secure separation on our servers, the key to which is only made available to select tagSurf employees and contractors for use in developing and troubleshooting our services.
+  </div>
+  <div>
+   If you knowingly use your tagSurf account to upload NSFW content, engage in cyber-bullying, or use tagSurf to participate in illegal activities, you waive all anonymity protection and acknowledge that in such cases we may publicly disclose some or all of your account activity in association with your PERSONALLY-IDENTIFIABLE INFORMATION as is necessary to cooperate with law enforcement entities or otherwise stop such behavior as quickly as possible. 
+  </div>
+  <div class="bold">
+   Cookies
+  </div>
+  <div>
+   A cookie is a string of information that a website stores on a visitor’s computer, and that the visitor’s browser provides to the website each time the visitor returns. tagSurf uses cookies to help tagSurf identify and track visitors, their usage of tagSurf website, and their website access preferences. tagSurf visitors who do not wish to have cookies placed on their computers should set their browsers to refuse cookies before using tagSurf’s websites, with the drawback that most features of tagSurf’s websites may not function properly without the aid of cookies used to authenticate server requests.
+  </div>
+  <div>
+   tagSurf may also use “pixel tags,” “web beacons,” “clear GIFs” or similar means (individually or collectively “Pixel Tags”) in connection with our services to collect usage, demographic and geographical location data.  A Pixel Tag is an electronic image, often a single pixel, that is ordinarily not visible to users and may be associated with cookies on a user’s hard drive.  Pixel Tags allow us to count users who have visited certain pages of the Site, to deliver branded services and to help determine the effectiveness of promotional or advertising campaigns.
+  </div>
+  <div class="bold">
+   Business Transfers
+  </div>
+  <div>
+   If tagSurf, or substantially all of its assets, were acquired, or in the unlikely event that tagSurf goes out of business or enters bankruptcy, user information would be one of the assets that is transferred or acquired by a third party. You acknowledge that such transfers may occur, and that any acquirer of tagSurf may continue to use your personal information as set forth in this policy.
+  </div>
+  <div class="bold">
+   Ads
+  </div>
+  <div>
+   Ads appearing on any of our websites may be delivered to users by advertising partners, who may set cookies. These cookies allow the ad server to recognize your computer each time they send you an online advertisement to compile information about you or others who use your computer. This information allows ad networks to, among other things, deliver targeted advertisements that they believe will be of most interest to you. This Privacy Policy covers the use of cookies by tagSurf and does not cover the use of cookies by any advertisers.
+  </div>
+  <div class="bold">
+   No Children under 13 
+  </div>
+  <div>
+   Although we welcome users from all walks of life, our site is not aimed at children, and the United States government has put limits on our ability to accept users under a certain age through the Children's Online Privacy Protection Act of 1998. Individuals under the age of 13 may not create an account with us. If you believe someone 12 or younger is using our site without parental consent, please contact us at <a class="blue" href="mailto:beta@tagSurf.co">beta@tagSurf.co</a>.
+  </div>
+  <div class="bold">
+   Links to Other Sites
+  </div>
+  <div>
+   Our websites contain links to other websites and online services.  If you choose to visit a third party service or an advertiser by “clicking on” a third party link, you will be directed to that third party’s website or online service.  The fact that we link to a website, content or present a banner ad or other type of advertisement is not an endorsement, authorization or representation of our affiliation with that third party, nor is it an endorsement of their privacy or information security policies or practices.  Other websites and services follow different rules regarding the use or disclosure of the personal information you submit to them.  We encourage you to read the privacy policies or statements of the other websites and services you use.  We do not exercise control over third party websites or services.
+  </div>
+  <div class="bold">
+   Publishing to Other Sites
+  </div>
+  <div>
+   Some tagSurf sites may allow you to upload content for publishing or hosting under your accounts at third party websites and social networks. Content uploaded to third party services through tagSurf is subject to the privacy policies and terms of use of these services. We encourage you to read the privacy policies or statements of the other websites and services you use.  We do not exercise control over third party websites or services.
+  </div>
+  <div class="bold">
+   Security Measures
+  </div>
+  <div>
+   Although tagSurf will take reasonable precautions to keep your PERSONALLY-IDENTIFIABLE INFORMATION private, please be aware that no security measures are perfect or impenetrable. We are not responsible for circumvention of any privacy settings or security measures on the tagSurf. Additionally, we cannot control the actions of other users with whom you may choose to share your information. Further, even after information posted on the Service is removed, caching and archiving services may have saved that information, and other users or third parties may have copied or stored the information available on the Service. We cannot and do not guarantee that information you post on or transmit to the Service will not be viewed by unauthorized persons. 
+  </div>
+  <div class="bold">
+   International Visitors
+  </div>
+  <div>
+   tagSurf’s services are  hosted in the United States and are  intended for visitors located within the United States. If you choose to access our services from the European Union or other regions of the world with laws governing data collection and use that may differ from U.S. law, then please note that you are transferring your PERSONALLY-IDENTIFIABLE INFORMATION outside of those regions to the United States for storage and processing. Also, we may transfer your data from the U.S. to other countries or regions in connection with storage and processing of data, fulfilling your requests, and operating the websites. By providing any information, including PERSONALLY IDENTIFIABLE INFORMATION, to tagSurf you consent to such transfer, storage, and processing. 
+  </div>
+  <div class="bold">
+   Privacy Policy Changes
+  </div>
+  <div>
+   Although most changes are likely to be minor, tagSurf may change its Privacy Policy from time to time, and in tagSurf’s sole discretion. tagSurf encourages visitors to frequently check this page for any changes to its Privacy Policy. In the event that the modifications materially alter your rights or obligations hereunder, we will make reasonable efforts to notify you of the change. For example, we may send a message to your email address, if we have one on file, or generate a pop-up or similar notification the first time you visit a tagSurf website after such material changes are made. Your continued use of this site after any change in this Privacy Policy will constitute your acceptance of such change.
+  </div>
+  <div class="bold">
+   Our Contact Information
+  </div>
+  <div>
+   Please contact us with any questions or comments about this Policy, your personal information, our use and disclosure practices, or your consent choices by email at <a class="blue" href="mailto:beta@tagSurf.co">beta@tagSurf.co</a>.
+  </div>
+  <div>
+   PO Box 641384
+   <br>
+   San Francisco, CA 94164
+  </div>
+ </div>
+ <div class="bigger bottom">
+  <div class="forward button">Close</div>
+ </div>
+</div></div>
+
 <script src="/js/util.js"></script>
+<script src="/js/gesture.js"></script>
+<script src="/js/modal.js"></script>
+
 <script>
 var inputs = document.getElementsByClassName("su-input");
 inputs[0].onfocus = function () { toggleClass.apply(inputs[0].parentNode, ["focused"]); };
 inputs[0].onblur = function () { toggleClass.apply(inputs[0].parentNode, ["focused"]); };
 inputs[1].onfocus = function () { toggleClass.apply(inputs[1].parentNode, ["focused"]); };
-inputs[1].onblur = function () { toggleClass.apply(inputs[1].parentNode, ["focused"]); };
+inputs[1].onfocus = function () { toggleClass.apply(inputs[1].parentNode, ["focused"]); };
+inputs[2].onblur = function () { toggleClass.apply(inputs[2].parentNode, ["focused"]); };
+inputs[2].onblur = function () { toggleClass.apply(inputs[2].parentNode, ["focused"]); };
+</script>
+
+<script>
+ var removeModal = function(direction) {
+  if (!direction || !isNaN(direction) || direction == "right") {
+   modal.backOff();
+   modal.modalOut();
+  }
+ };
+  document.getElementById("terms-lnk").onclick = function() {
+  modal.halfOn(removeModal);
+  modal.modalIn(document.getElementById("terms"), removeModal);
+ };
+ document.getElementById("privacy-lnk").onclick = function() {
+  modal.halfOn(removeModal);
+  modal.modalIn(document.getElementById("privacy"), removeModal);
+ };
 </script>

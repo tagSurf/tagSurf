@@ -11,13 +11,17 @@ Tagsurf::Application.routes.draw do
                        sessions: 'sessions',  
                        passwords: 'passwords'
                      }
+
+  get 'users/sign_up', to: redirect('/sign-up')
  
   # Static Routes
-  get 'feed'        => 'client#feed'
-  get 'history'     => 'client#history'
-  get 'favorites'   => 'client#favorites'
-  get 'submissions' => 'client#submissions'
-  get 'tag'         => 'client#tag'
+  get 'feed'            => 'client#feed'
+  get 'share/:tag'      => 'client#share'
+  get 'share/:tag/:id'  => 'client#share'
+  get 'history'         => 'client#history'
+  get 'favorites'       => 'client#favorites'
+  get 'submissions'     => 'client#submissions'
+  get 'tag'             => 'client#tag'
 
   # Beta access flow, ordered by good path
   get 'code'        => 'client#access_code'
@@ -42,7 +46,7 @@ Tagsurf::Application.routes.draw do
 
     # Media API
     get  'media/:tag'                     => 'media#next'
-    get  'shares/:tag/:remote_id'         => 'media#share_feed'
+    get  'shares/:tag/:id/:limit/:offset' => 'media#share_feed'
     post 'media/:media_id/tags/:name/'    => 'tags#create'
 
     # Tags API
