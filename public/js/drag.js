@@ -13,19 +13,25 @@ var drag =
 		gesture.listen("drag", n, function (direction, distance, dx, dy) {
 			var atBottom = (n.parentNode.scrollHeight - n.parentNode.scrollTop 
 				=== n.parentNode.clientHeight), atTop = (n.parentNode.scrollTop === 0);
-			opts.drag && opts.drag(direction, distance, dx, dy);
+			if (opts.drag) 
+				opts.drag(direction, distance, dx, dy);
 			if((atTop && direction == "down") ||
 				(atBottom && direction == "up"))
 				return false;
 			return !opts.constraint ||
 				opts.constraint == drag._direction2constraint[direction];
 		});
+		n.parentNode.addEventListener('scroll', function (event) {
+			if (opts.drag) 
+				opts.drag(event);
+			return true;
+		}, false);
 	},
 	makeDraggable: function (node, opts)
 	{
 		opts = opts || {};
 		if (!opts.interval && isIphone() && !opts.force)
-			return drag.nativeScroll(node, opts);
+			return drag.nativeScroll(node.firstChild, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback;
 		node.xDrag = 0;
 		node.yDrag = 0;
