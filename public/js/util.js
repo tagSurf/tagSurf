@@ -129,7 +129,7 @@ var populateNavbar = function () {
             : ("<img class='gallery_icon' src='img/" + gallery + "_icon_gray.png'><span id='gallery_name' class='pointer'>" + gallery.toUpperCase() + "</span>"))
           : "<img id='tagsurf-logo' src='img/logo_big.png'></img>",
         "</span><span id='history-logo'>HISTORY</span>",
-        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='img/down_arrow.png'></img>",
+        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='img/down_arrow_nav.png'></img>",
       "</label>",
     "</div>",
   ];
