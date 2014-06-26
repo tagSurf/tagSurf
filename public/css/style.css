@@ -31,6 +31,12 @@ a {
     display: none; 
 }
 
+.inline {
+	display: inline-block;
+}
+.bold { 
+	font-weight: bold;
+}
 .alert-success, .hidden {
 	display: none !important;
 }
