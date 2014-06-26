@@ -11,6 +11,8 @@ Tagsurf::Application.routes.draw do
                        sessions: 'sessions',  
                        passwords: 'passwords'
                      }
+
+  get 'users/sign_up', to: redirect('/sign-up')
  
   # Static Routes
   get 'feed'            => 'client#feed'
