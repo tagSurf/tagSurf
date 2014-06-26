@@ -34,6 +34,22 @@
 
 <small class="su-helper-txt disclaimer">By registering with tagSurf you agree to our <div class="disclaimer-link inline bold" id="terms-lnk">Terms of Use</div> and <div class="disclaimer-link inline bold" id="privacy-lnk">Privacy Policy</div>.</small>
 
+
+<div class="hidden"><div id="terms">
+ <div class="bigger bigpadded">
+  TAGSURF TERMS AND CONDITIONS
+ </div>
+ <div class="small content">
+
+ TOS GOES HERE
+
+ </div>
+ <div class="bigger bottom">
+  <div class="forward button">Close</div>
+ </div>
+</div></div>
+
+
 <div class="hidden"><div id="privacy">
  <div class="bigger bigpadded">
   TAGSURF PRIVACY POLICY
@@ -184,23 +200,6 @@
  </div>
 </div></div>
 
-
-<div class="hidden"><div id="terms">
- <div class="bigger bigpadded">
-  TAGSURF TERMS AND CONDITIONS
- </div>
- <div class="small content">
-
- TOS GOES HERE
-
- </div>
- <div class="bigger bottom">
-  <div class="forward button">Close</div>
- </div>
-</div></div>
-
-
-
 <script src="/js/util.js"></script>
 <script src="/js/gesture.js"></script>
 <script src="/js/modal.js"></script>
@@ -222,12 +221,12 @@ inputs[2].onblur = function () { toggleClass.apply(inputs[2].parentNode, ["focus
    modal.modalOut();
   }
  };
+  document.getElementById("terms-lnk").onclick = function() {
+  modal.halfOn(removeModal);
+  modal.modalIn(document.getElementById("terms"), removeModal);
+ };
  document.getElementById("privacy-lnk").onclick = function() {
   modal.halfOn(removeModal);
   modal.modalIn(document.getElementById("privacy"), removeModal);
- };
- document.getElementById("terms-lnk").onclick = function() {
-  modal.halfOn(removeModal);
-  modal.modalIn(document.getElementById("terms"), removeModal);
  };
 </script>
