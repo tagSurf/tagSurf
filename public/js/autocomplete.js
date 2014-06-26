@@ -9,6 +9,7 @@ var autocomplete = {
 			autocomplete.data = response_data.data;
 			autocomplete._update();
 		});
+		console.log("populate autocomplete");
 	},
 	expand: function(listName, cb) {
 		autocomplete.viewing[listName] = true;
@@ -41,6 +42,7 @@ var autocomplete = {
 		n.onclick = function() {
 			autocomplete.tapTag(tagName, listName);
 		};
+		console.log("adding new tag");
 	},
 	_update: function() {
 		if (autocomplete.data) for (var listName in autocomplete.nodes) {
@@ -54,6 +56,7 @@ var autocomplete = {
 			if (!hasTrending)
 				autocomplete.addTag("trending", listName);
 		}
+		console.log("update ", listName);
 	},
 	register: function(listName, tinput, opts) {
 		opts = opts || {};

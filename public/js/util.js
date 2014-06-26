@@ -174,7 +174,7 @@ var populateNavbar = function () {
       return "width: " + (tag_adder.firstChild.clientWidth - 10) + "px";
     }
   });
-  autocomplete.register("add_tag_autocomplete", tag_adder.firstChild, {
+  autocomplete.register("add_tag_autocomplete" , tag_adder.firstChild, {
     enterCb: function() {
       autocomplete.tapTag(tag_adder.firstChild.value.slice(1),
         "add_tag_autocomplete");
@@ -191,7 +191,8 @@ var populateNavbar = function () {
     expandCb: function() {
       tag_adder.firstChild.value = "#";
     }
-  });
+  }
+  );
   add_icon = document.getElementById("add-icon");
   document.getElementById("options-btn").onclick = function() {
     var n = document.createElement("div");
