@@ -31,7 +31,7 @@ var drag =
 	{
 		opts = opts || {};
 		if (!opts.interval && isIphone() && !opts.force)
-			return drag.nativeScroll(node.firstChild, opts);
+			return drag.nativeScroll(node, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback;
 		node.xDrag = 0;
 		node.yDrag = 0;
@@ -165,7 +165,6 @@ var drag =
 				}
 				if (opts.up)
 				{
-					console.log("endCallback");
 					opts.up(direction);
 				}
 			}
@@ -194,7 +193,8 @@ var drag =
 				node.style['-webkit-transform'] = 
 					"translate3d(" + node.xDrag + "px," + 
 					node.yDrag + "px,0)";
-				opts.drag && opts.drag(direction, distance, dx, dy);
+				if (opts.drag) 
+					opts.drag(direction, distance, dx, dy);
 			}
 		};
 		swipeCallback =  function (direction, distance, dx, dy, pixelsPerSecond)

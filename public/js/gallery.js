@@ -345,10 +345,12 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 	buildPicBox();
 	populateGallery();
 
-	drag.makeDraggable(gridwrapper, {
+	drag.makeDraggable(grid, {
 		constraint: "horizontal",
-		drag: function() {
-			if ((gridwrapper.scrollTop + gridwrapper.offsetHeight) >= grid.scrollHeight)
+		drag: function(direction, distance, dx, dy) {
+			var trueScrollTop = gridwrapper.scrollTop ? gridwrapper.scrollTop
+				: (grid.yDrag ? -grid.yDrag : 0);
+			if ((trueScrollTop + gridwrapper.offsetHeight) >= gridwrapper.scrollHeight)
 				populateGallery();
 		}
 	});
