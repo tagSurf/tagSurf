@@ -136,6 +136,19 @@ namespace :deploy do
     hash = commit_hash
 
     puts
+    puts "=== Installing and compiling assets"
+    system "bundle exec rake tmp:clear"
+    puts `bundle exec rake assets:precompile PRECOMPILATION=true RAILS_ENV=#{env}`
+    unless $? == 0
+      system "git checkout -"
+      abort 'Could not precompile assets!'
+    end
+
+    system "git add -f public/assets"
+    system "git commit --no-verify -m 'Precompiling assets'"
+
+
+    puts
     puts "=== Pushing to #{remote}"
     puts `git push -f #{remote} HEAD:master`
     unless $? == 0
