@@ -201,11 +201,6 @@ Hash:   #{hash}\" #{tag} #{hash}"
     deploy 'staging'
   end
 
-  desc "Deploys the attached project to staging2"
-  task :staging2 => [:clean!, :good_remotes!] do
-    deploy 'staging', 'staging2'
-  end
-
   desc "Deploys the attached project to production"
   task :production => [:clean!, :good_remotes!] do
     deploy 'production'
@@ -279,9 +274,9 @@ Hash:   #{hash}\" #{tag} #{hash}"
       puts bad_remotes.map { |remote| remote.join("\t") }
       puts
     end
-    missing_remotes = %w(production staging staging2)-git_remotes.map(&:first)
+    missing_remotes = %w(production staging)-git_remotes.map(&:first)
     unless missing_remotes.empty?
-      puts 'You should have the git remotes: production, staging and staging2.'
+      puts 'You should have the git remotes: production and staging.'
       puts "You are missing: #{missing_remotes.join(', ')}"
       puts
     end
@@ -293,7 +288,7 @@ Hash:   #{hash}\" #{tag} #{hash}"
 end
 
 task :deploy do
-  puts 'Usage: rake deploy:[staging, staging2 or production]'
+  puts 'Usage: rake deploy:[staging or production]'
   puts '       rake deploy:status'
   puts '       rake deploy:setup'
 end
