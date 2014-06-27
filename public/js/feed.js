@@ -309,19 +309,15 @@ onload = function ()
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
-		if (slider.animating)
-			return;
-		if (direction == "left" || direction == "right")
+		if (!slider.animating && (direction == "left" || direction == "right"))
 			swipeSlider(direction, null, 700);
-		else if (slider.expanded)
-			return true;
 	};
 	var dragCallback = function (direction, distance, dx, dy)
 	{
 		var atBottom = (scrollContainer.scrollHeight - scrollContainer.scrollTop 
 			=== scrollContainer.clientHeight),
-		atTop = (scrollContainer.scrollTop === 0), 
-		thumbContainer = slider.lastChild.previousSibling;
+			atTop = (scrollContainer.scrollTop === 0),
+			thumbContainer = slider.lastChild.previousSibling;
 		if (slider.animating == false)
 		{
 			if (slider.expanded == true && 
