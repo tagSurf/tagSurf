@@ -151,7 +151,7 @@ a {
 .blackout {
 	pointer-events: none;
 	z-index: 3;
-	position: absolute;
+	position: fixed;
 	top: 50px;
 	bottom: 0px;
 	left: 0px;
@@ -174,7 +174,7 @@ a {
 	overflow-y: auto;
 	overflow-x: hidden;
 	z-index: 10;
-	position: absolute;
+	position: fixed;
 	padding: 5px;
 	top: 60px;
 	bottom: 10px;
