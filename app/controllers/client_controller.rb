@@ -103,8 +103,8 @@ class ClientController < ApplicationController
   end
 
   def welcome
-    if current_user.welcomeed?
-      redirect_to :feed
+    if current_user.welcomed?
+      redirect_to feed_path
     end
   end
 
