@@ -1,4 +1,4 @@
-APP = 'fscommunityapi'
+APP = 'tagsurf'
 
 def repo_branch
   `git rev-parse --abbrev-ref HEAD`.strip()
@@ -190,14 +190,7 @@ Hash:   #{hash}\" #{tag} #{hash}"
 
   desc "Checks if the heroku remotes are correct"
   task :good_remotes! do
-    bad_remotes = heroku_apps.reject { |remote, app| 
-      puts "FREEDOM"
-      puts remote
-      puts app
-      puts APP
-      puts "FREEDOM"
-      app.starts_with?(APP) 
-    }.map(&:first)
+    bad_remotes = heroku_apps.reject { |remote, app| app.starts_with?(APP) }.map(&:first)
     unless bad_remotes.empty?
       #abort "You have misconfigured git remotes: #{bad_remotes.join(', ')}"
     end
