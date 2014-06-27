@@ -39,9 +39,6 @@ GEM
     acts-as-taggable-on (3.0.1)
       rails (>= 3, < 5)
     analytics-ruby (1.1.0)
-    apipie-rails (0.1.2)
-      json
-      rails (>= 3.0.10)
     arel (4.0.1)
     atomic (1.1.14)
     bcrypt-ruby (3.1.2)
@@ -244,7 +241,6 @@ DEPENDENCIES
   active_model_serializers (= 0.8.1)
   acts-as-taggable-on (= 3.0.1)
   analytics-ruby (~> 1.0)
-  apipie-rails
   bootstrap-sass (~> 3.0.3.0)
   browser (= 0.4.1)
   coffee-rails (~> 4.0.0)
