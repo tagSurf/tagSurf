@@ -60,8 +60,10 @@ var add_icon, add_state = "blue", add_icons = {
 };
 var addBarSlid = false;
 var slideAddBar = function(noback) {
-  autocomplete.viewing.autocomplete
-    && closeAutoComplete(null, true);
+  if (autocomplete.viewing.autocomplete) {
+    autocomplete.retract("autocomplete");
+    closeAutoComplete(null, true);
+  }
   autocomplete.viewing.add_tag_autocomplete
     && autocomplete.retract("add_tag_autocomplete");
   navMenuSlid && slideNavMenu(true);
@@ -120,14 +122,14 @@ var populateNavbar = function () {
       "<a onclick='slideAddBar();'><img id='add-icon' src='img/add_icon_blue.png'></a>",
     "</div>",
     "<div class='navbar-center'>",
-      "<label id='slider_label' for='slider_box' onclick='slideNavMenu();'>",
+      "<label id='slider_label' for='slider_box' ontouchmove='return false;' onclick='slideNavMenu();'>",
         "<span id='main-logo'>",
           gallery ? (gallery == "tag"
             ? ("<span class='pointer'>#" + tag + "</span>")
             : ("<img class='gallery_icon' src='img/" + gallery + "_icon_gray.png'><span id='gallery_name' class='pointer'>" + gallery.toUpperCase() + "</span>"))
           : "<img id='tagsurf-logo' src='img/logo_big.png'></img>",
         "</span><span id='history-logo'>HISTORY</span>",
-        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='img/down_arrow.png'></img>",
+        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='img/down_arrow_nav.png'></img>",
       "</label>",
     "</div>",
   ];

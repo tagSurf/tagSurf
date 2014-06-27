@@ -38,4 +38,3 @@ group :development, :test do
 end
 
 gem 'compass-rails', '1.1.3'
-gem 'apipie-rails'
