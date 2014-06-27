@@ -88,6 +88,7 @@ class ClientController < ApplicationController
   def submissions; end
   def tag; end
   def share; end
+  def device; end
 
   # Beta access flow
   def access_code; end
@@ -101,8 +102,12 @@ class ClientController < ApplicationController
     end
   end
 
-  def welcome; end
-  def device; end
+  def welcome
+    if current_user.welcomed?
+      redirect_to feed_path
+    end
+  end
+
 
   private
 
