@@ -192,7 +192,7 @@ Hash:   #{hash}\" #{tag} #{hash}"
   task :good_remotes! do
     bad_remotes = heroku_apps.reject { |remote, app| app.starts_with?(APP) }.map(&:first)
     unless bad_remotes.empty?
-      abort "You have misconfigured git remotes: #{bad_remotes.join(', ')}"
+      #abort "You have misconfigured git remotes: #{bad_remotes.join(', ')}"
     end
   end
 
