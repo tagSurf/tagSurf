@@ -35,7 +35,8 @@
 <small class="su-helper-txt disclaimer">By registering with tagSurf you agree to our <div class="disclaimer-link inline bold" id="terms-lnk">Terms of Use</div> and <div class="disclaimer-link inline bold" id="privacy-lnk">Privacy Policy</div>.</small>
 
 
-<div class="hidden"><div id="terms">
+<div id="contenthider" class="hidden">
+<div id="terms">
  <div class="bigger bigpadded">
   TAGSURF TERMS AND CONDITIONS
  </div>
@@ -47,10 +48,9 @@
  <div class="bigger bottom">
   <div class="forward button">Close</div>
  </div>
-</div></div>
+</div>
 
-
-<div class="hidden"><div id="privacy">
+<div id="privacy">
  <div class="bigger bigpadded">
   TAGSURF PRIVACY POLICY
  </div>
@@ -215,18 +215,22 @@ inputs[2].onblur = function () { toggleClass.apply(inputs[2].parentNode, ["focus
 </script>
 
 <script>
+ var curContent;
  var removeModal = function(direction) {
   if (!direction || !isNaN(direction) || direction == "right") {
    modal.backOff();
    modal.modalOut();
+   document.getElementById("contenthider").appendChild(curContent);
   }
  };
   document.getElementById("terms-lnk").onclick = function() {
   modal.halfOn(removeModal);
-  modal.modalIn(document.getElementById("terms"), removeModal);
+  curContent = document.getElementById("terms");
+  modal.modalIn(curContent, removeModal);
  };
  document.getElementById("privacy-lnk").onclick = function() {
   modal.halfOn(removeModal);
-  modal.modalIn(document.getElementById("privacy"), removeModal);
+  curContent = document.getElementById("privacy");
+  modal.modalIn(curContent, removeModal);
  };
 </script>
