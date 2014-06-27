@@ -215,6 +215,7 @@ inputs[2].onblur = function () { toggleClass.apply(inputs[2].parentNode, ["focus
 </script>
 
 <script>
+ gesture.returnDefault = true;
  var curContent;
  var removeModal = function(direction) {
   if (!direction || !isNaN(direction) || direction == "right") {
