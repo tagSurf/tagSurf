@@ -27,17 +27,16 @@ class ClientController < ApplicationController
   def index
     # Decide how to direct the user base on state
     usr = current_user
-    if usr and usr.confirmed? and usr.welcomed?
+    if usr and usr.welcomed?
       redirect_to feed_path
-    elsif usr and !usr.confirmed?
-      redirect_to resend_path
-    elsif usr and usr.confirmed? and !usr.welcomed? 
+    elsif usr and !usr.welcomed? 
       redirect_to welcome_path
     else 
       redirect_to user_session_path
     end
   end
 
+  # !!! Deprecated !!!
   # Beta access post requests
   # Multi-setp form throug POST requests
 
@@ -89,6 +88,7 @@ class ClientController < ApplicationController
   def submissions; end
   def tag; end
   def share; end
+  def device; end
 
   # Beta access flow
   def access_code; end
@@ -102,17 +102,28 @@ class ClientController < ApplicationController
     end
   end
 
-  def welcome; end
-  def device; end
+  def welcome
+    if current_user.welcomed?
+      redirect_to feed_path
+    end
+  end
+
 
   private
 
     def beta_code_params
-      params.require(:access_code).permit(:access_code, :d_accept, :t_accept, :email, :password, :password_confirmation)
+      params.require(:access_code).permit(
+        :access_code, 
+        :d_accept, 
+        :t_accept, 
+        :email, 
+        :password, 
+        :password_confirmation
+      )
     end
 
     def confirm_surfable
-      unless current_user and current_user.confirmed? and current_user.welcomed?
+      unless current_user and current_user.welcomed?
         redirect_to root_path
       end
     end
