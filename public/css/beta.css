@@ -39,6 +39,19 @@ body
 	-webkit-padding-start: 15px;
 }
 
+.content ol {
+	width: 255px;
+	margin-left: auto;
+	margin-right: auto;
+	-webkit-padding-start: 15px;
+}
+
+.abcs {
+	list-style-type: lower-alpha;
+}
+
+.
+
 .midpad {
 	padding: 10px 50px;
 	text-align: center;
