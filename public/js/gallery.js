@@ -70,7 +70,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		});
 		gesture.listen("down", bigpic, function() {
 			gesture.triggerDown(picbox);
-			if (isIphone())
+			if (!isAndroid())
 				return true;
 		});
 		gesture.listen("drag", bigpic, function (direction, distance, dx, dy) {
@@ -79,7 +79,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			{
 				return true;
 			}
-			if (isIphone())
+			if (!isAndroid())
 				return true;
 		});
 		gesture.listen("swipe", bigpic, function (direction) {
@@ -295,12 +295,17 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			spacer.className = "playoverlay";
 		gesture.listen("down", n, function() {
 			gesture.triggerDown(grid);
-			if (isIphone())
+			if (!isAndroid())
 				return true;
 		});
 		gesture.listen("drag", n, function(direction, distance, dx, dy) {
 			gesture.triggerDrag(grid, direction, distance, dx, dy);
-			if (isIphone())
+			if (!isAndroid())
+				return true;
+		});
+		gesture.listen("swipe", n, function(direction, distance, dx, dy) {
+			gesture.triggerSwipe(grid, direction, distance, dx, dy);
+			if (!isAndroid())
 				return true;
 		});
 		gesture.listen("up", n, function() {
