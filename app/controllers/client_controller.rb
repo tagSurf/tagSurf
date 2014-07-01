@@ -87,7 +87,6 @@ class ClientController < ApplicationController
   def history; end
   def submissions; end
   def tag; end
-  def share; end
   def device; end
 
   # Beta access flow
@@ -95,6 +94,11 @@ class ClientController < ApplicationController
   def disclaimer; end
   def terms; end
   def signup; end
+
+  def share
+    @media = Media.find(params[:id])
+  end
+
 
   def resend_link; 
     if current_user and current_user.confirmed? 

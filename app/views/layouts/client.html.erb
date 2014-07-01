@@ -8,6 +8,14 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="mobile-web-app-capable" content="yes">
   -->
+  <% if @media %>
+    <meta property="og:title" content="<%= "tagSurf - #{@media.title} %>" />
+    <meta property="og:image" content="<%= @media.image_link_original %>" />
+    <meta property="og:image:type" content="<%= @media.content_type %>" />
+    <meta property="og:image:width" content="<%= @media.width %>" />
+    <meta property="og:image:height" content="<% @media.height %>" />
+  <% end %>
+    
   <link rel="apple-touch-startup-image" href="/img/ts_splash_screen.png" />
   <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Raleway:100,200,300,500" />
   <%= favicon_link_tag '/img/ts_icon_gray_50.png', :rel => 'apple-touch-icon-precomposed', :type => 'image/png', :sizes => '50x50' %>
