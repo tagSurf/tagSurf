@@ -74,16 +74,28 @@ onload = function ()
 		}
 	};
 	var popData = function(rdata, firstCard) {
-		// this method only nets 4 cards for every 10 cards requested
-		// needs new API!
+		var i, starters = [], others = [], preloads = [];
+
 		if (firstCard) known_keys[firstCard.id] = true;
-		for (var i = 0; i < rdata.length; i++) {
+		for (i = 0; i < rdata.length; i++) {
 			if (!known_keys[rdata[i].id]) {
-				data.push(rdata[i]);
-				known_keys[rdata[i].id] = true;
+				var d = rdata[i];
+				((!d.image.animated && starters.length < 3)
+					? starters : others).push(d);
+				known_keys[d.id] = true;
 			}
 		}
+		for (i = 0; i < starters.length; i++) data.push(starters[i]);
+		for (i = 0; i < others.length; i++) data.push(others[i]);
 		if (firstCard) data.unshift(firstCard);
+		return preloads;
+	};
+	var cardsToLoad = [];
+	var preloadCards = function() {
+		if (cardsToLoad.length) {
+			image.load(cardsToLoad, window.innerWidth - 40);
+			cardsToLoad = [];
+		}
 	};
 	var populateSlider = function (update, failMsgNode, firstCard)
 	{
@@ -96,10 +108,10 @@ onload = function ()
 		xhr("/api/media/" + current_tag, null, function(response_data) {
 			var rdata = response_data.data;
 			if (update)
-				popData(rdata);
+				cardsToLoad = cardsToLoad.concat(popData(rdata));
 			else {
 				data = [];
-				popData(rdata, firstCard);
+				cardsToLoad = cardsToLoad.concat(popData(rdata, firstCard).slice(3));
 				refreshCards(failMsgNode, 2);
 			}
 		}, function() {
@@ -273,6 +285,7 @@ onload = function ()
 				if (voteAlternative) voteAlternative();
 				else xhr("/api/votes/" + voteDir + "/" + activeCard.id
 					+ "/tag/" + current_tag, "POST");
+				preloadCards();
 			},
 			"swiping",
 			"translate3d(" + translateQuantity + "px," + verticalQuantity
@@ -484,6 +497,10 @@ onload = function ()
 			iconLine = card.children[1], targetHeight = imageData ? 
 			imageData.height * (window.innerWidth - 40) / imageData.width :
 			card.firstChild.scrollHeight;
+		if (node && node.card.image.animated && !imageContainer.firstChild.classList.contains('translate-z'))
+		{
+			imageContainer.firstChild.classList.add('translate-z');
+		}
 		if (node && (targetHeight + textContainer.scrollHeight 
 			+ picTags.scrollHeight + iconLine.scrollHeight 
 			< (maxCardHeight + 80)))
@@ -560,6 +577,7 @@ onload = function ()
 			{
 				throbber.off();
 				scrollContainer.style.opacity = 1;
+				preloadCards();
 			};
 		}
 		imageContainer.firstChild.onerror = function() {

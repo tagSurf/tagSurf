@@ -7,6 +7,31 @@ var image = {
 		medium: {},
 		tiny: {}
 	},
+	_load: {
+		max: 10,
+		count: 0,
+		list: []
+	},
+	load: function(dlist, minWidth) {
+		var load = image._load;
+		dlist.forEach(function(d) {
+			if (load.count >= load.max) {
+				load.list.push(d);
+				return;
+			}
+			load.count += 1;
+			var i = new Image();
+			i.src = image.get(d, minWidth).url;
+			i.onload = i.onerror = function() {
+				load.count -= 1;
+				if (load.count < load.max && load.list.length) {
+					var loadList = load.list;
+					load.list = [];
+					image.load(loadList, minWidth);
+				}
+			};
+		});
+	},
 	get: function(d, minWidth, isGallery) {
 		var i, size;
 
