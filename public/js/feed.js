@@ -89,6 +89,13 @@ onload = function ()
 		if (firstCard) data.unshift(firstCard);
 		return preloads;
 	};
+	var cardsToLoad = [];
+	var preloadCards = function() {
+		if (cardsToLoad.length) {
+			image.load(cardsToLoad, window.innerWidth - 40);
+			cardsToLoad = [];
+		}
+	};
 	var populateSlider = function (update, failMsgNode, firstCard)
 	{
 		if (!update && !failMsgNode)
@@ -98,15 +105,14 @@ onload = function ()
 			throbber.on();
 		}
 		xhr("/api/media/" + current_tag, null, function(response_data) {
-			var preloads, rdata = response_data.data;
+			var rdata = response_data.data;
 			if (update)
-				preloads = popData(rdata);
+				cardsToLoad = cardsToLoad.concat(popData(rdata));
 			else {
 				data = [];
-				preloads = popData(rdata, firstCard).slice(3);
+				cardsToLoad = cardsToLoad.concat(popData(rdata, firstCard).slice(3));
 				refreshCards(failMsgNode, 2);
 			}
-			image.load(preloads, window.innerWidth - 40);
 		}, function() {
 			if (!update) {
 				data = [];
@@ -278,6 +284,7 @@ onload = function ()
 				if (voteAlternative) voteAlternative();
 				else xhr("/api/votes/" + voteDir + "/" + activeCard.id
 					+ "/tag/" + current_tag, "POST");
+				preloadCards();
 			},
 			"swiping",
 			"translate3d(" + translateQuantity + "px," + verticalQuantity
@@ -569,6 +576,7 @@ onload = function ()
 			{
 				throbber.off();
 				scrollContainer.style.opacity = 1;
+				preloadCards();
 			};
 		}
 		imageContainer.firstChild.onerror = function() {
