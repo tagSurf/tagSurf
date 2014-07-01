@@ -403,6 +403,7 @@ onload = function ()
 		}
 	};
 	var isMine = function(tag) {
+		if (!slider.card) return;
 		var tobjs = slider.card.tags_v2;
 		for (var i = 0; i < tobjs.length; i++)
 			if (Object.keys(tobjs[i])[0] == tag)
