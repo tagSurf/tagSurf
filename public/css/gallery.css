@@ -107,7 +107,6 @@ img[src="img/history_icon_gray.png"]
 .gridwrapper {
 	overflow-x: hidden;
 	overflow-y: auto;
-	padding: 0 1.75%;
 	position: relative;
 }
 
