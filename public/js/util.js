@@ -292,6 +292,9 @@ var mod = function(opts) {
   for (var i = 0; i < targets.length; i++)
     targets[i].style[property] = value;
 };
+var isIos = function() {
+  return navigator.userAgent.toLowerCase().indexOf("apple") != -1;
+};
 var isIphone = function() {
   return navigator.userAgent.indexOf("iPhone") != -1;
 };
