@@ -11,6 +11,10 @@ body
 	margin: 10px auto;
 }
 
+.scroller {
+	overflow-y: scroll;
+}
+
 .content {
 	position: absolute;
 	top: 80px;
