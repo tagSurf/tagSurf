@@ -76,7 +76,8 @@ onload = function ()
 	var popData = function(rdata, firstCard) {
 		// this method only nets 4 cards for every 10 cards requested
 		// needs new API!
-		var i, gifs = [], nongifs = [];
+		var i, gifs = [], nongifs = [], preloads = [];
+
 		if (firstCard) known_keys[firstCard.id] = true;
 		for (i = 0; i < rdata.length; i++) {
 			if (!known_keys[rdata[i].id]) {
@@ -88,6 +89,14 @@ onload = function ()
 		for (i = 0; i < nongifs.length; i++) data.push(nongifs[i]);
 		for (i = 0; i < gifs.length; i++) data.push(gifs[i]);
 		if (firstCard) data.unshift(firstCard);
+		return preloads;
+	};
+	var cardsToLoad = [];
+	var preloadCards = function() {
+		if (cardsToLoad.length) {
+			image.load(cardsToLoad, window.innerWidth - 40);
+			cardsToLoad = [];
+		}
 	};
 	var populateSlider = function (update, failMsgNode, firstCard)
 	{
@@ -100,10 +109,10 @@ onload = function ()
 		xhr("/api/media/" + current_tag, null, function(response_data) {
 			var rdata = response_data.data;
 			if (update)
-				popData(rdata);
+				cardsToLoad = cardsToLoad.concat(popData(rdata));
 			else {
 				data = [];
-				popData(rdata, firstCard);
+				cardsToLoad = cardsToLoad.concat(popData(rdata, firstCard).slice(3));
 				refreshCards(failMsgNode, 2);
 			}
 		}, function() {
@@ -277,6 +286,7 @@ onload = function ()
 				if (voteAlternative) voteAlternative();
 				else xhr("/api/votes/" + voteDir + "/" + activeCard.id
 					+ "/tag/" + current_tag, "POST");
+				preloadCards();
 			},
 			"swiping",
 			"translate3d(" + translateQuantity + "px," + verticalQuantity
@@ -488,6 +498,10 @@ onload = function ()
 			iconLine = card.children[1], targetHeight = imageData ? 
 			imageData.height * (window.innerWidth - 40) / imageData.width :
 			card.firstChild.scrollHeight;
+		if (node && node.card.image.animated && !imageContainer.firstChild.classList.contains('translate-z'))
+		{
+			imageContainer.firstChild.classList.add('translate-z');
+		}
 		if (node && (targetHeight + textContainer.scrollHeight 
 			+ picTags.scrollHeight + iconLine.scrollHeight 
 			< (maxCardHeight + 80)))
@@ -564,6 +578,7 @@ onload = function ()
 			{
 				throbber.off();
 				scrollContainer.style.opacity = 1;
+				preloadCards();
 			};
 		}
 		imageContainer.firstChild.onerror = function() {
