@@ -350,7 +350,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 	buildPicBox();
 	populateGallery();
 
-	drag.makeDraggable(grid, {
+	drag.makeDraggable(gridwrapper, {
 		constraint: "horizontal",
 		drag: function(direction, distance, dx, dy) {
 			var trueScrollTop = gridwrapper.scrollTop ? gridwrapper.scrollTop

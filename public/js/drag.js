@@ -21,7 +21,7 @@ var drag =
 			return !opts.constraint ||
 				opts.constraint == drag._direction2constraint[direction];
 		});
-		n.parentNode.addEventListener('scroll', function (event) {
+		n.addEventListener('scroll', function (event) {
 			if (opts.drag) 
 				opts.drag(event);
 			return true;
@@ -31,7 +31,7 @@ var drag =
 	{
 		opts = opts || {};
 		if (!opts.interval && isIos() && !opts.force)
-			return drag.nativeScroll(node, opts);
+			return drag.nativeScroll(node.firstChild, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback;
 		node.xDrag = 0;
 		node.yDrag = 0;
