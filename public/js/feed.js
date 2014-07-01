@@ -74,20 +74,19 @@ onload = function ()
 		}
 	};
 	var popData = function(rdata, firstCard) {
-		// this method only nets 4 cards for every 10 cards requested
-		// needs new API!
-		var i, gifs = [], nongifs = [], preloads = [];
+		var i, starters = [], others = [], preloads = [];
 
 		if (firstCard) known_keys[firstCard.id] = true;
 		for (i = 0; i < rdata.length; i++) {
 			if (!known_keys[rdata[i].id]) {
 				var d = rdata[i];
-				(d.image.animated ? gifs : nongifs).push(d);
+				((!d.image.animated && starters.length < 3)
+					? starters : others).push(d);
 				known_keys[d.id] = true;
 			}
 		}
-		for (i = 0; i < nongifs.length; i++) data.push(nongifs[i]);
-		for (i = 0; i < gifs.length; i++) data.push(gifs[i]);
+		for (i = 0; i < starters.length; i++) data.push(starters[i]);
+		for (i = 0; i < others.length; i++) data.push(others[i]);
 		if (firstCard) data.unshift(firstCard);
 		return preloads;
 	};
