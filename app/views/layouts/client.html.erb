@@ -10,7 +10,8 @@
   -->
   <% if @media %>
     <meta property="og:url" content='<%= request.original_url %>' />
-    <meta property="og:title" content='<%= "tagSurf - #{@media.title}" %>' />
+    <meta property="og:title" content='<%= @media.title %>' />
+    <meta property="og:site_name" content='<%= "tagSurf" %>' />
     <meta property="og:description" content='<%= @media.description %>' />
     <meta property="og:image" content="<%= @media.image_link_original %>" />
     <meta property="og:image:type" content="<%= @media.content_type %>" />
