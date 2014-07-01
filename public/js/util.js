@@ -55,8 +55,8 @@ var slideNavMenu = function(noback) {
     navMenuSlid ? modal.halfOn(slideNavMenu) : modal.backOff();
 };
 var add_icon, add_state = "blue", add_icons = {
-  fill: 'img/add_icon_fill.png',
-  blue: 'img/add_icon_blue.png'
+  fill: '/img/add_icon_fill.png',
+  blue: '/img/add_icon_blue.png'
 };
 var addBarSlid = false;
 var slideAddBar = function(noback) {
@@ -116,20 +116,20 @@ var populateNavbar = function () {
   var tag = gallery ? document.location.hash.slice(1) : null;
   var navbar_content = [
     "<div id='favorites-btn'>",
-      "<a onclick='starCallback();'><img id='favorites-icon' src='img/favorites_icon_blue.png'></a>",
+      "<a onclick='starCallback();'><img id='favorites-icon' src='/img/favorites_icon_blue.png'></a>",
     "</div>",
     "<div id='add-btn'>",
-      "<a onclick='slideAddBar();'><img id='add-icon' src='img/add_icon_blue.png'></a>",
+      "<a onclick='slideAddBar();'><img id='add-icon' src='/img/add_icon_blue.png'></a>",
     "</div>",
     "<div class='navbar-center'>",
       "<label id='slider_label' for='slider_box' ontouchmove='return false;' onclick='slideNavMenu();'>",
         "<span id='main-logo'>",
           gallery ? (gallery == "tag"
             ? ("<span class='pointer'>#" + tag + "</span>")
-            : ("<img class='gallery_icon' src='img/" + gallery + "_icon_gray.png'><span id='gallery_name' class='pointer'>" + gallery.toUpperCase() + "</span>"))
-          : "<img id='tagsurf-logo' src='img/logo_big.png'></img>",
+            : ("<img class='gallery_icon' src='/img/" + gallery + "_icon_gray.png'><span id='gallery_name' class='pointer'>" + gallery.toUpperCase() + "</span>"))
+          : "<img id='tagsurf-logo' src='/img/logo_big.png'></img>",
         "</span><span id='history-logo'>HISTORY</span>",
-        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='img/down_arrow_nav.png'></img>",
+        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='/img/down_arrow_nav.png'></img>",
       "</label>",
     "</div>",
   ];
@@ -138,26 +138,26 @@ var populateNavbar = function () {
     "<div id='slide_down_menu' class='pointer'>",
       "<ul>",
       	"<li><a href='/feed'><div>",
-      	  "<img class='menu_icon' src='img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
+      	  "<img class='menu_icon' src='/img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
       	"</div></a></li>",
       	"<li><a href='/favorites'><div>",
-      	  "<img class='menu_icon' src='img/favorites_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;FAVORITES",
+      	  "<img class='menu_icon' src='/img/favorites_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;FAVORITES",
         "</div></a></li>",
         "<li><a href='/history'><div>",
-      	  "<img class='menu_icon' src='img/history_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;HISTORY",
+      	  "<img class='menu_icon' src='/img/history_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;HISTORY",
         "</div></a></li>",
         "<li><a id='options-btn'><div>",
-          "<img class='menu_icon' src='img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS",
+          "<img class='menu_icon' src='/img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS",
         "</div></a></li>",
         "<li><a id='logout'><div>",
-          "<img class='menu_icon' src='img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGOUT",
+          "<img class='menu_icon' src='/img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGOUT",
         "</div></a></li>",
       "</ul>",
     "</div>",
   ];
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
-  tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='img/add_tag_button.png'><div id='add_tag_autocomplete' class='autocomplete hider'></div>";
+  tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='/img/add_tag_button.png'><div id='add_tag_autocomplete' class='autocomplete hider'></div>";
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
   nav.appendChild(tag_adder);
@@ -211,7 +211,7 @@ var populateNavbar = function () {
 };
 var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
-    "img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
+    "/img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
 };
 var starCallback, setStarCallback = function(cb) {
   starCallback = cb;
