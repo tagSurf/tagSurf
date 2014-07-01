@@ -30,7 +30,7 @@ var drag =
 	makeDraggable: function (node, opts)
 	{
 		opts = opts || {};
-		if (!opts.interval && !isAndroid() && !opts.force)
+		if (!opts.interval && isIos() && !opts.force)
 			return drag.nativeScroll(node, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback;
 		node.xDrag = 0;
