@@ -30,15 +30,16 @@ var drag =
 	makeDraggable: function (node, opts)
 	{
 		opts = opts || {};
-		if (!opts.interval && isIphone() && !opts.force)
+		if (!opts.interval && !isAndroid() && !opts.force)
 			return drag.nativeScroll(node, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback;
 		node.xDrag = 0;
 		node.yDrag = 0;
 		node.classList.add('hardware-acceleration');
 		node.style['-webkit-transform'] = "translate3d(0,0,0)";
-		node.style.overflow = "visible";
-		node.parentNode.style.overflow = "visible";
+		node.style.overflow = "auto";
+		node.parentNode.style.overflow = "auto";
+		node.parentNode.addEventListener('scroll', function (event) {return false;}, false);
 		downCallback = function () 
 		{
 			if (node.animating) return;
@@ -200,7 +201,7 @@ var drag =
 		swipeCallback =  function (direction, distance, dx, dy, pixelsPerSecond)
 		{
 			var xMod = opts.interval ? node.xDrag % opts.interval : -dx;
-			var yMod = opts.interval ? node.yDrag % opts.interval : -dy;
+			var yMod = opts.interval ? node.yDrag % opts.interval : dy;
 			if (node.animating == false)
 			{
 				if (opts.constraint != "horizontal" && node.xDrag <= 0 && 
@@ -230,7 +231,7 @@ var drag =
 					}
 					else if (direction == "down")
 					{
-						node.yDrag += (opts.interval ? -(opts.interval + yMod) : -yMod);
+						node.yDrag -= (opts.interval ? -(opts.interval + yMod) : -yMod);
 					}
 					else
 					{
