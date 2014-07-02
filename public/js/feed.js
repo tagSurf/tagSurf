@@ -634,6 +634,7 @@ onload = function ()
 			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
 			toggleClass.call(slider.children[3], "hidden");
 			toggleClass.call(slider.children[4], "hidden");
+			scrollCallback();
 		}
 	};
 	setAddCallback(function(tag) {
