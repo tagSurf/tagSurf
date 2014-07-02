@@ -303,8 +303,8 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			if (isIos())
 				return true;
 		});
-		gesture.listen("swipe", n, function(direction, distance, dx, dy) {
-			gesture.triggerSwipe(gridwrapper, direction, distance, dx, dy);
+		gesture.listen("swipe", n, function(direction, distance, dx, dy, pixelsPerSecond) {
+			gesture.triggerSwipe(gridwrapper, direction, distance, dx, dy, pixelsPerSecond);
 			if (isIos())
 				return true;
 		});
