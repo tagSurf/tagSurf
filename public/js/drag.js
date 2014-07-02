@@ -18,13 +18,18 @@ var drag =
 				opts.down();
 			return true;
 		});
-		var lastDirection, dragTimeout, delayedDrag = function() {
+		var dirs = {
+			up: "down",
+			down: "up",
+			right: "left",
+			left: "right"
+		}, lastDirection, dragTimeout, delayedDrag = function() {
 			if (dragTimeout) {
 				clearTimeout(dragTimeout);
 				dragTimeout = null;
 			}
 			dragTimeout = setTimeout(function() {
-				opts.drag(lastDirection, 0, 0, 0);
+				opts.drag(dirs[lastDirection], 0, 0, 0);
 			}, 500);
 		};
 		gesture.listen("drag", n, function (direction, distance, dx, dy) {
