@@ -294,25 +294,25 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		if (d.image.animated)
 			spacer.className = "playoverlay";
 		gesture.listen("down", n, function() {
-			gesture.triggerDown(grid);
+			gesture.triggerDown(gridwrapper);
 			if (isIos())
 				return true;
 		});
 		gesture.listen("drag", n, function(direction, distance, dx, dy) {
-			gesture.triggerDrag(grid, direction, distance, dx, dy);
+			gesture.triggerDrag(gridwrapper, direction, distance, dx, dy);
 			if (isIos())
 				return true;
 		});
 		gesture.listen("swipe", n, function(direction, distance, dx, dy) {
-			gesture.triggerSwipe(grid, direction, distance, dx, dy);
+			gesture.triggerSwipe(gridwrapper, direction, distance, dx, dy);
 			if (isIos())
 				return true;
 		});
 		gesture.listen("up", n, function() {
-			gesture.triggerUp(grid);
+			gesture.triggerUp(gridwrapper);
 		});
 		gesture.listen("tap", n, function() {
-			grid.dragging || showImage(d);
+			gridwrapper.dragging || showImage(d);
 		});
 
 		n.header = header;
