@@ -196,6 +196,8 @@ var drag =
 					node.yDrag + "px,0)";
 				if (opts.drag) 
 					opts.drag(direction, distance, dx, dy);
+				if (opts.scroll)
+					opts.scroll();
 			}
 		};
 		swipeCallback =  function (direction, distance, dx, dy, pixelsPerSecond)
