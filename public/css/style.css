@@ -324,10 +324,12 @@ a {
 {
   height: 150px !important;
 }
-.hardware-acceleration
+.translate-z
 {
-  -webkit-backface-visibility: hidden;
-  -webkit-perspective: 1000;
-  backface-visibility: hidden;
-  perspective: 1000;
-}
+   -webkit-backface-visibility: hidden;
+   -webkit-perspective: 1000;
+   backface-visibility: hidden;
+   perspective: 1000;
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  transform: translateZ(0);

@@ -87,7 +87,7 @@ class ClientController < ApplicationController
   def history; end
   def submissions; end
   def tag; end
-  def share; end
+  def device; end
 
   # Beta access flow
   def access_code; end
@@ -95,14 +95,23 @@ class ClientController < ApplicationController
   def terms; end
   def signup; end
 
+  def share
+    @media = Media.find(params[:id])
+  end
+
+
   def resend_link; 
     if current_user and current_user.confirmed? 
       redirect_to root_path
     end
   end
 
-  def welcome; end
-  def device; end
+  def welcome
+    if current_user.welcomed?
+      redirect_to feed_path
+    end
+  end
+
 
   private
 
