@@ -21,7 +21,7 @@ var drag =
 			return !opts.constraint ||
 				opts.constraint == drag._direction2constraint[direction];
 		});
-		n.addEventListener('scroll', function (event) {
+		n.parentNode.addEventListener('scroll', function (event) {
 			if (opts.drag) 
 				opts.drag(event);
 			return true;
