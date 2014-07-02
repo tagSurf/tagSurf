@@ -179,8 +179,13 @@ var drag =
 					if (boundaryReached)
 					{
 						node.animating = true;
-						trans(node, function () { node.animating = false;},
-							"-webkit-transform 300ms ease-out");
+						trans(node, function () {
+							node.animating = false;
+							if (opts.drag)
+								opts.drag(direction, 0, 0, 0);
+							if (opts.scroll)
+								opts.scroll();
+						}, "-webkit-transform 300ms ease-out");
 						node.style['-webkit-transform'] = 
 							"translate3d(" + node.xDrag + "px," + 
 							node.yDrag + "px,0)";
