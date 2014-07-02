@@ -66,21 +66,12 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		});
 		gesture.listen("tap", bigpic, function() {
 			picbox.dragging || modal.zoomModal();
-			//return true?
 		});
 		gesture.listen("down", bigpic, function() {
 			gesture.triggerDown(picbox);
-			if (isIos())
-				return true;
 		});
 		gesture.listen("drag", bigpic, function (direction, distance, dx, dy) {
 			gesture.triggerDrag(picbox, direction, distance, dx, dy);
-			if (direction == "down" || direction == "up")
-			{
-				return true;
-			}
-			if (isIos())
-				return true;
 		});
 		gesture.listen("swipe", bigpic, function (direction) {
 			if (direction != "up" && direction != "down")
@@ -295,21 +286,18 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			spacer.className = "playoverlay";
 		gesture.listen("down", n, function() {
 			gesture.triggerDown(gridwrapper);
-			if (isIos())
-				return true;
+			return true;
 		});
 		gesture.listen("drag", n, function(direction, distance, dx, dy) {
 			gesture.triggerDrag(gridwrapper, direction, distance, dx, dy);
-			if (isIos())
-				return true;
+			return true;
 		});
 		gesture.listen("swipe", n, function(direction, distance, dx, dy, pixelsPerSecond) {
 			gesture.triggerSwipe(gridwrapper, direction, distance, dx, dy, pixelsPerSecond);
-			if (isIos())
-				return true;
 		});
 		gesture.listen("up", n, function() {
 			gesture.triggerUp(gridwrapper);
+			return true;
 		});
 		gesture.listen("tap", n, function() {
 			gridwrapper.dragging || showImage(d);
