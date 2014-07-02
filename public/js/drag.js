@@ -22,8 +22,8 @@ var drag =
 				opts.constraint == drag._direction2constraint[direction];
 		});
 		n.parentNode.addEventListener('scroll', function (event) {
-			if (opts.drag) 
-				opts.drag(event);
+			if (opts.scroll)
+				opts.scroll(event);
 			return true;
 		}, false);
 	},

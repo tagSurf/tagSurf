@@ -43,7 +43,7 @@ var gesture = {
 	},
 	handlers: { drag: {}, swipe: {}, tap: {}, up: {}, down: {}, hold: {} },
 	tuneThresholds: function() {
-		if (!isIphone())
+		if (!isIos())
 			for (var gest in gesture.thresholds)
 				for (var constraint in gesture.thresholds[gest]) {
 					var suffix = constraint.slice(3);

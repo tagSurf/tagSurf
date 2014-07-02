@@ -62,7 +62,7 @@ onload = function ()
 	};
 	drag.makeDraggable(scrollContainer, {
 		constraint: "horizontal",
-		drag: scrollCallback
+		scroll: scrollCallback
 	});
 
 	var data, buffer_minimum = 5, known_keys = {},
