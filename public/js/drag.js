@@ -8,12 +8,20 @@ var drag =
 	},
 	nativeScroll: function (n, opts)
 	{
-		gesture.listen("up", n, returnTrue);
-		gesture.listen("down", n, returnTrue);
+		gesture.listen("up", n, function () {
+			if (opts.up)
+				opts.up();
+			return true;
+		});
+		gesture.listen("down", n, function () {
+			if (opts.down)
+				opts.down();
+			return true;
+		});
 		gesture.listen("drag", n, function (direction, distance, dx, dy) {
 			var atBottom = (n.parentNode.scrollHeight - n.parentNode.scrollTop 
 				=== n.parentNode.clientHeight), atTop = (n.parentNode.scrollTop === 0);
-			if (opts.drag) 
+			if (opts.drag)
 				opts.drag(direction, distance, dx, dy);
 			if((atTop && direction == "down") ||
 				(atBottom && direction == "up"))
@@ -48,6 +56,8 @@ var drag =
 			node.animating = false;
 			node.xDragStart = node.xDrag;
 			node.yDragStart = node.yDrag;
+			if (opts.down)
+				opts.down();
 		};
 		upCallback = function (direction) {
 			var xMod = 0, yMod = 0, boundaryReached = false;
