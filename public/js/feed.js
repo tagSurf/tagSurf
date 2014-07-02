@@ -322,6 +322,8 @@ onload = function ()
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
+		if (!slider.animating && (direction == "up" || direction == "down"))
+			gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
 		if (!slider.animating && (direction == "left" || direction == "right"))
 			swipeSlider(direction, null, 700);
 	};
