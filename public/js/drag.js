@@ -18,9 +18,19 @@ var drag =
 				opts.down();
 			return true;
 		});
+		var lastDirection, dragTimeout, delayedDrag = function() {
+			if (dragTimeout) {
+				clearTimeout(dragTimeout);
+				dragTimeout = null;
+			}
+			dragTimeout = setTimeout(function() {
+				opts.drag(lastDirection, 0, 0, 0);
+			}, 500);
+		};
 		gesture.listen("drag", n, function (direction, distance, dx, dy) {
 			var atBottom = (n.parentNode.scrollHeight - n.parentNode.scrollTop 
 				=== n.parentNode.clientHeight), atTop = (n.parentNode.scrollTop === 0);
+			lastDirection = direction;
 			if (opts.drag)
 				opts.drag(direction, distance, dx, dy);
 			if((atTop && direction == "down") ||
@@ -32,6 +42,8 @@ var drag =
 		n.parentNode.addEventListener('scroll', function (event) {
 			if (opts.scroll)
 				opts.scroll(event);
+			if (opts.drag)
+				delayedDrag();
 			return true;
 		}, false);
 	},
