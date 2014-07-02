@@ -8,12 +8,35 @@ var drag =
 	},
 	nativeScroll: function (n, opts)
 	{
-		gesture.listen("up", n, returnTrue);
-		gesture.listen("down", n, returnTrue);
+		gesture.listen("up", n, function () {
+			if (opts.up)
+				opts.up();
+			return true;
+		});
+		gesture.listen("down", n, function () {
+			if (opts.down)
+				opts.down();
+			return true;
+		});
+		var dirs = {
+			up: "down",
+			down: "up",
+			right: "left",
+			left: "right"
+		}, lastDirection, dragTimeout, delayedDrag = function() {
+			if (dragTimeout) {
+				clearTimeout(dragTimeout);
+				dragTimeout = null;
+			}
+			dragTimeout = setTimeout(function() {
+				opts.drag(dirs[lastDirection], 0, 0, 0);
+			}, 500);
+		};
 		gesture.listen("drag", n, function (direction, distance, dx, dy) {
 			var atBottom = (n.parentNode.scrollHeight - n.parentNode.scrollTop 
 				=== n.parentNode.clientHeight), atTop = (n.parentNode.scrollTop === 0);
-			if (opts.drag) 
+			lastDirection = direction;
+			if (opts.drag)
 				opts.drag(direction, distance, dx, dy);
 			if((atTop && direction == "down") ||
 				(atBottom && direction == "up"))
@@ -21,9 +44,11 @@ var drag =
 			return !opts.constraint ||
 				opts.constraint == drag._direction2constraint[direction];
 		});
-		n.addEventListener('scroll', function (event) {
-			if (opts.drag) 
-				opts.drag(event);
+		n.parentNode.addEventListener('scroll', function (event) {
+			if (opts.scroll)
+				opts.scroll(event);
+			if (opts.drag)
+				delayedDrag();
 			return true;
 		}, false);
 	},
@@ -48,6 +73,8 @@ var drag =
 			node.animating = false;
 			node.xDragStart = node.xDrag;
 			node.yDragStart = node.yDrag;
+			if (opts.down)
+				opts.down();
 		};
 		upCallback = function (direction) {
 			var xMod = 0, yMod = 0, boundaryReached = false;
@@ -157,8 +184,13 @@ var drag =
 					if (boundaryReached)
 					{
 						node.animating = true;
-						trans(node, function () { node.animating = false;},
-							"-webkit-transform 300ms ease-out");
+						trans(node, function () {
+							node.animating = false;
+							if (opts.drag)
+								opts.drag(direction, 0, 0, 0);
+							if (opts.scroll)
+								opts.scroll();
+						}, "-webkit-transform 300ms ease-out");
 						node.style['-webkit-transform'] = 
 							"translate3d(" + node.xDrag + "px," + 
 							node.yDrag + "px,0)";
@@ -196,12 +228,14 @@ var drag =
 					node.yDrag + "px,0)";
 				if (opts.drag) 
 					opts.drag(direction, distance, dx, dy);
+				if (opts.scroll)
+					opts.scroll();
 			}
 		};
 		swipeCallback =  function (direction, distance, dx, dy, pixelsPerSecond)
 		{
 			var xMod = opts.interval ? node.xDrag % opts.interval : -dx;
-			var yMod = opts.interval ? node.yDrag % opts.interval : dy;
+			var yMod = opts.interval ? node.yDrag % opts.interval : pixelsPerSecond;
 			if (node.animating == false)
 			{
 				if (opts.constraint != "horizontal" && node.xDrag <= 0 && 
@@ -227,7 +261,7 @@ var drag =
 				{
 					if (direction == "up")
 					{
-						node.yDrag += yMod;
+						node.yDrag -= yMod;
 					}
 					else if (direction == "down")
 					{

@@ -62,7 +62,7 @@ onload = function ()
 	};
 	drag.makeDraggable(scrollContainer, {
 		constraint: "horizontal",
-		drag: scrollCallback
+		scroll: scrollCallback
 	});
 
 	var data, buffer_minimum = 5, known_keys = {},
@@ -322,6 +322,8 @@ onload = function ()
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
+		if (!slider.animating && (direction == "up" || direction == "down"))
+			gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
 		if (!slider.animating && (direction == "left" || direction == "right"))
 			swipeSlider(direction, null, 700);
 	};
@@ -634,6 +636,7 @@ onload = function ()
 			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
 			toggleClass.call(slider.children[3], "hidden");
 			toggleClass.call(slider.children[4], "hidden");
+			scrollCallback();
 		}
 	};
 	setAddCallback(function(tag) {

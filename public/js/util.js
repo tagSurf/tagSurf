@@ -293,16 +293,13 @@ var mod = function(opts) {
     targets[i].style[property] = value;
 };
 var isIos = function() {
-  return navigator.userAgent.toLowerCase().indexOf("apple") != -1;
-};
-var isIphone = function() {
   return navigator.userAgent.indexOf("iPhone") != -1;
 };
 var isMobile = function() {
   return navigator.userAgent.toLowerCase().indexOf("mobile") != -1;
 };
 var isAndroid = function() {
-  return isMobile() && !isIphone();
+  return isMobile() && !isIos();
 };
 var trans = function(node, cb, transition, transform) {
   var transTimeout,

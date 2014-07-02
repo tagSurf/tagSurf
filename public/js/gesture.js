@@ -43,7 +43,7 @@ var gesture = {
 	},
 	handlers: { drag: {}, swipe: {}, tap: {}, up: {}, down: {}, hold: {} },
 	tuneThresholds: function() {
-		if (!isIphone())
+		if (!isIos())
 			for (var gest in gesture.thresholds)
 				for (var constraint in gesture.thresholds[gest]) {
 					var suffix = constraint.slice(3);
@@ -116,7 +116,7 @@ var gesture = {
 			gesture.triggerSwipe(node, diff.direction,
 				diff.distance, diff.x, diff.y,
 				Math.min(t.swipe.maxDP, Math.max(t.swipe.minDP,
-					diff.distance / timeDiff)));
+					diff.distance / timeDiff)) * (isIos() ? 1 : 0.5));
 		else if ( (timeDiff < t.tap.maxTime)
 			&& (diff.distance < t.tap.maxDistance) ) { // tap
 			node.tapCount = (node.tapCount || 0) + 1;
@@ -127,6 +127,7 @@ var gesture = {
 		}
 		return gesture.triggerUp(node, delayed);
 	},
+	// deprecated
 	delayedStop: function(e, node) {
 		var v = gesture.vars;
 		if (v.stopTimeout) {
@@ -142,9 +143,8 @@ var gesture = {
 			var pos = gesture.getPos(e);
 			var diff = gesture.getDiff(v.lastPos, pos);
 			v.lastPos = pos;
-			var dres = gesture.triggerDrag(node, diff.direction, diff.distance, diff.x, diff.y);
-			dres && isAndroid() && gesture.delayedStop(e, node);
-			return dres;
+			return gesture.triggerDrag(node, diff.direction,
+				diff.distance, diff.x, diff.y) && !isAndroid();
 		}
 	},
 	eWrap: function(node) {

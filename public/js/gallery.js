@@ -9,7 +9,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 	if (gallery == "favorites") favGrid = grid;
 	addCss({
 		".gridwrapper": function() {
-			return "height: " + (window.innerHeight - 50) +
+			return "height: " + (window.innerHeight - (isIos() ? 50 : 100)) +
 				"px; width:" + window.innerWidth + "px";
 		}
 	});
@@ -66,26 +66,21 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		});
 		gesture.listen("tap", bigpic, function() {
 			picbox.dragging || modal.zoomModal();
-			//return true?
 		});
 		gesture.listen("down", bigpic, function() {
 			gesture.triggerDown(picbox);
-			if (isIos())
-				return true;
 		});
 		gesture.listen("drag", bigpic, function (direction, distance, dx, dy) {
 			gesture.triggerDrag(picbox, direction, distance, dx, dy);
-			if (direction == "down" || direction == "up")
-			{
-				return true;
-			}
-			if (isIos())
-				return true;
 		});
-		gesture.listen("swipe", bigpic, function (direction) {
+		gesture.listen("swipe", bigpic, function (direction, distance, dx, dy, pixelsPerSecond) {
 			if (direction != "up" && direction != "down")
 			{
 				modal.callModal();
+			}
+			else
+			{
+				gesture.triggerSwipe(picbox, direction, distance, dx, dy, pixelsPerSecond);
 			}
 		});
 		bigpic.onload = function (event)
@@ -294,25 +289,22 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		if (d.image.animated)
 			spacer.className = "playoverlay";
 		gesture.listen("down", n, function() {
-			gesture.triggerDown(grid);
-			if (isIos())
-				return true;
+			gesture.triggerDown(gridwrapper);
+			return true;
 		});
 		gesture.listen("drag", n, function(direction, distance, dx, dy) {
-			gesture.triggerDrag(grid, direction, distance, dx, dy);
-			if (isIos())
-				return true;
+			gesture.triggerDrag(gridwrapper, direction, distance, dx, dy);
+			return true;
 		});
-		gesture.listen("swipe", n, function(direction, distance, dx, dy) {
-			gesture.triggerSwipe(grid, direction, distance, dx, dy);
-			if (isIos())
-				return true;
+		gesture.listen("swipe", n, function(direction, distance, dx, dy, pixelsPerSecond) {
+			gesture.triggerSwipe(gridwrapper, direction, distance, dx, dy, pixelsPerSecond);
 		});
 		gesture.listen("up", n, function() {
-			gesture.triggerUp(grid);
+			gesture.triggerUp(gridwrapper);
+			return true;
 		});
 		gesture.listen("tap", n, function() {
-			grid.dragging || showImage(d);
+			gridwrapper.dragging || showImage(d);
 		});
 
 		n.header = header;
@@ -354,8 +346,9 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		constraint: "horizontal",
 		drag: function(direction, distance, dx, dy) {
 			var trueScrollTop = gridwrapper.scrollTop ? gridwrapper.scrollTop
-				: (grid.yDrag ? -grid.yDrag : 0);
-			if ((trueScrollTop + gridwrapper.offsetHeight) >= gridwrapper.scrollHeight)
+				: (gridwrapper.yDrag ? -gridwrapper.yDrag : 0);
+			if (((trueScrollTop + gridwrapper.offsetHeight) >= gridwrapper.scrollHeight - 60)
+				&& direction == "down")
 				populateGallery();
 		}
 	});
