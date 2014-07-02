@@ -73,10 +73,14 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		gesture.listen("drag", bigpic, function (direction, distance, dx, dy) {
 			gesture.triggerDrag(picbox, direction, distance, dx, dy);
 		});
-		gesture.listen("swipe", bigpic, function (direction) {
+		gesture.listen("swipe", bigpic, function (direction, distance, dx, dy, pixelsPerSecond) {
 			if (direction != "up" && direction != "down")
 			{
 				modal.callModal();
+			}
+			else
+			{
+				gesture.triggerSwipe(picbox, direction, distance, dx, dy, pixelsPerSecond);
 			}
 		});
 		bigpic.onload = function (event)
