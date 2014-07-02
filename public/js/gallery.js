@@ -354,7 +354,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		constraint: "horizontal",
 		drag: function(direction, distance, dx, dy) {
 			var trueScrollTop = gridwrapper.scrollTop ? gridwrapper.scrollTop
-				: (grid.yDrag ? -grid.yDrag : 0);
+				: (gridwrapper.yDrag ? -gridwrapper.yDrag : 0);
 			if (((trueScrollTop + gridwrapper.offsetHeight) >= gridwrapper.scrollHeight)
 				&& direction == "up")
 				populateGallery();
