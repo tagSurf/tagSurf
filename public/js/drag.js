@@ -235,7 +235,7 @@ var drag =
 		swipeCallback =  function (direction, distance, dx, dy, pixelsPerSecond)
 		{
 			var xMod = opts.interval ? node.xDrag % opts.interval : -dx;
-			var yMod = opts.interval ? node.yDrag % opts.interval : (pixelsPerSecond * 0.3);
+			var yMod = opts.interval ? node.yDrag % opts.interval : pixelsPerSecond;
 			if (node.animating == false)
 			{
 				if (opts.constraint != "horizontal" && node.xDrag <= 0 && 
