@@ -9,7 +9,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 	if (gallery == "favorites") favGrid = grid;
 	addCss({
 		".gridwrapper": function() {
-			return "height: " + (window.innerHeight - 50) +
+			return "height: " + (window.innerHeight - (isIos() ? 50 : 100)) +
 				"px; width:" + window.innerWidth + "px";
 		}
 	});
