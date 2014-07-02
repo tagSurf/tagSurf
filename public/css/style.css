@@ -324,3 +324,19 @@ a {
 {
   height: 150px !important;
 }
+#share-button
+{
+  -webkit-transition: opacity 250ms;
+  transition: opacity 250ms;
+  opacity: 0;
+  z-index: 15;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  pointer-events: none;
+}
+.share-active
+{
+  opacity: 1;
+  pointer-events: initial;
+}
