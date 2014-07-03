@@ -14,6 +14,11 @@ body
   font-weight:200;
 }
 
+body
+{
+	overflow-y: hidden;
+}
+
 html, input[type="submit"] {
 	font-family: 'Raleway', sans-serif;
   font-weight:200;
