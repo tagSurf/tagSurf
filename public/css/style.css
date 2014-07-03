@@ -1,6 +1,7 @@
 * {
 	box-sizing: border-box;
 	-webkit-overflow-scrolling: touch;
+	-webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
 }
 
 html,
@@ -339,4 +340,14 @@ a {
 {
   opacity: 1;
   pointer-events: initial;
+}
+.translate-z
+{
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  backface-visibility: hidden;
+  perspective: 1000;
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  transform: translateZ(0);
 }
