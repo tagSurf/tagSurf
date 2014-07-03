@@ -285,6 +285,16 @@ onload = function ()
 				gesture.unlisten(_slider.parentNode);
 				slideContainer.removeChild(_slider.parentNode);
 				buildCard(0);
+				if (scrollContainer.scrollTop)
+					scrollContainer.scrollTop = 0;
+				if (scrollContainer.yDrag)
+				{
+					scrollContainer.animating = true;
+					trans(scrollContainer, 
+						function(){ scrollContainer.animating = false},
+						"-webkit-transform 200ms",
+						"translate3d(0,0,0) rotate(0deg)");
+				}
 				slideContainer.children[0].style.zIndex = 2;
 				if (slideContainer.children[1])
 					slideContainer.children[1].style.zIndex = 1;
