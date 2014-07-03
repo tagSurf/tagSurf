@@ -22,11 +22,12 @@ var gesture = {
 			androidDelay: 600
 		}
 	},
-	vars: {
+	_vars: {
 		active: false,
 		startTime: null,
 		startPos: null,
 		lastPos: null,
+		tapCount: 0,
 		holdCount: 0,
 		tapTimeout: null,
 		holdInterval: null,
@@ -77,7 +78,7 @@ var gesture = {
 	},
 	onStart: function(e, node) {
 		var t = gesture.thresholds;
-		var v = gesture.vars;
+		var v = node.gvars;
 		v.active = true;
 		v.startTime = Date.now();
 		v.startPos = v.lastPos = gesture.getPos(e);
@@ -99,7 +100,7 @@ var gesture = {
 		return gesture.triggerDown(node);
 	},
 	onStop: function(e, node, delayed) {
-		var v = gesture.vars;
+		var v = node.gvars;
 		if (!delayed && v.holdInterval) {
 			clearInterval(v.holdInterval);
 			v.holdInterval = null;
@@ -129,7 +130,7 @@ var gesture = {
 	},
 	// deprecated
 	delayedStop: function(e, node) {
-		var v = gesture.vars;
+		var v = node.gvars;
 		if (v.stopTimeout) {
 			clearTimeout(v.stopTimeout);
 			v.stopTimeout = null;
@@ -138,7 +139,7 @@ var gesture = {
 			gesture.thresholds.up.androidDelay, e, node, true);
 	},
 	onMove: function(e, node) {
-		var v = gesture.vars;
+		var v = node.gvars;
 		if (v.active) {
 			var pos = gesture.getPos(e);
 			var diff = gesture.getDiff(v.lastPos, pos);
@@ -163,6 +164,7 @@ var gesture = {
 			var e = node.listeners = gesture.eWrap(node);
 			for (var evName in gesture.events)
 				node.addEventListener(gesture.events[evName], e[evName]);
+			node.gvars = JSON.parse(JSON.stringify(gesture._vars));
 		}
 		if (!gesture.handlers[eventName][node.gid])
 			gesture.handlers[eventName][node.gid] = [];
@@ -185,11 +187,12 @@ var gesture = {
 			handlers[i](direction, distance, dx, dy, pixelsPerSecond);
 	},
 	triggerTap: function(node) {
+		var v = node.gvars;
 		var handlers = gesture.handlers.tap[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
 			handlers[i](node.tapCount);
-		node.tapCount = 0;
-		gesture.vars.tapTimeout = null;
+		v.tapCount = 0;
+		v.tapTimeout = null;
 	},
 	triggerDrag: function(node, direction, distance, dx, dy) {
 		var returnVal = false;
