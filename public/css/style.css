@@ -356,3 +356,9 @@ a {
   -moz-transform: translateZ(0);
   transform: translateZ(0);
 }
+.inverted
+{
+        -webkit-transform: scaleX(-1);
+	        transform: scaleX(-1);
+
+}

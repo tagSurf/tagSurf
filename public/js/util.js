@@ -132,8 +132,8 @@ var populateNavbar = function () {
         "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='/img/down_arrow_nav.png'></img>",
       "</label>",
     "</div>",
-  ];
-  var menu_slider_content = [
+  ], 
+  full_slider_content = [
     "<input type='checkbox' name='slider_box' id='slider_box' style='display:none'>",
     "<div id='slide_down_menu' class='pointer'>",
       "<ul>",
@@ -154,7 +154,21 @@ var populateNavbar = function () {
         "</div></a></li>",
       "</ul>",
     "</div>",
-  ];
+  ],
+  reduced_slider_content = [
+    "<input type='checkbox' name='slider_box' id='slider_box' style='display:none'>",
+    "<div id='slide_down_menu' class='pointer'>",
+      "<ul>",
+      	"<li><a href='/feed'><div>",
+      	  "<img class='menu_icon' src='img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
+      	"</div></a></li>",
+        "<li><a id='logout'><div>",
+          "<img class='menu_icon inverted' src='img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGOUT",
+        "</div></a></li>",
+      "</ul>",
+    "</div>",
+  ],
+  menu_slider_content = isUnauthorized() ? reduced_slider_content : full_slider_content; 
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
   tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='/img/add_tag_button.png'><div id='add_tag_autocomplete' class='autocomplete hider'></div>";
@@ -213,11 +227,35 @@ var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
     "/img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
 };
+var buildFeatureBlockerContents = function() {
+	var contents = document.createElement('div'),
+		close = document.createElement('div'),
+		title = document.createElement('p'),
+		message = document.createElement('p'),
+		link = document.createElement('div');
+	close.className = "x_close_button";
+};
 var starCallback, setStarCallback = function(cb) {
-  starCallback = cb;
+  starCallback = function () {
+	if (isUnauthorized())
+	{
+	}
+	else
+	{
+		cb();
+	}
+  };
 };
 var addCallback, setAddCallback = function(cb) {
-  addCallback = cb;
+  addCallback = function () {
+	if (isUnauthorized())
+	{
+	}
+	else
+	{
+		cb();
+	}
+  };
 };
 var currentMedia, setCurrentMedia = function(d) {
   currentMedia = d;
@@ -337,4 +375,7 @@ var trans = function(node, cb, transition, transform) {
     }
   }
   if (transform) node.style['-webkit-transform'] = transform;
+};
+var isUnauthorized = function () {
+	return document.location.href.indexOf('share') != -1;
 };
