@@ -437,6 +437,8 @@ a {
 }
 .signup-button {
 	background-color: #404041 !important;
+	margin-bottom: 10px !important;
+	margin-top: 10px;
 }
 .su-input
 {
