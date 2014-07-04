@@ -167,6 +167,20 @@ html, body
 
 .login-card {
   background: #00aeef;
+  text-align: center;
+}
+
+.login-card img {
+  width: 50px;
+  margin: 15px 0 5px 0;
+}
+
+.login-card a {
+  color: white;
+}
+
+.login-card div {
+  padding: 2px;
 }
 
 .swiping
