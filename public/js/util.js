@@ -280,7 +280,7 @@ var starCallback, setStarCallback = function(cb) {
   starCallback = cb;
 };
 var addCallback, setAddCallback = function(cb) {
-  addCallback =	cb;
+  addCallback = cb;
 };
 var currentMedia, setCurrentMedia = function(d) {
   currentMedia = d;
