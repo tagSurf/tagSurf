@@ -42,17 +42,19 @@ var autocomplete = {
 			autocomplete.tapTag(tagName, listName);
 		};
 	},
-	_update: function() {
+	_update: function(targetList) {
 		if (autocomplete.data) for (var listName in autocomplete.nodes) {
-			var hasTrending = false;
-			autocomplete.data.forEach(function(tag) {
-				if (tag.name) {
-					hasTrending = hasTrending || tag.name == "trending";
-					autocomplete.addTag(tag.name, listName);
-				}
-			});
-			if (!hasTrending)
-				autocomplete.addTag("trending", listName);
+			if (!targetList || listName == targetList) {
+				var hasTrending = false;
+				autocomplete.data.forEach(function(tag) {
+					if (tag.name) {
+						hasTrending = hasTrending || tag.name == "trending";
+						autocomplete.addTag(tag.name, listName);
+					}
+				});
+				if (!hasTrending)
+					autocomplete.addTag("trending", listName);
+			}
 		}
 	},
 	register: function(listName, tinput, opts) {
@@ -60,7 +62,7 @@ var autocomplete = {
 		autocomplete.inputs[listName] = tinput;
 		autocomplete.nodes[listName] = opts.node || document.getElementById(listName);
 		autocomplete.handlers[listName] = opts.tapCb || function() {};
-		autocomplete._update();
+		autocomplete._update(listName);
 		gesture.listen("down", tinput, returnTrue);
 		gesture.listen("up", tinput, function(e) {
 			if (!autocomplete.viewing[listName]) {
