@@ -75,6 +75,10 @@ a {
 	font-weight: 300;
 }
 
+.halfwidth {
+	width: 50%;
+}
+
 .padded {
 	padding: 10px;
 }

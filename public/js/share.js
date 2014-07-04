@@ -5,7 +5,25 @@ var share =
 	content: document.createElement('div'),
 	build: function ()
 	{
-		share.content.innerHTML = "hello there";
+		var heading = document.createElement("div");
+		heading.className = "big bold";
+		heading.innerHTML = "Share This Card";
+
+		var blurb = document.createElement("div");
+		blurb.innerHTML = "Like it? Spread it!";
+
+		var facebook = document.createElement("img");
+		facebook.src = "/img/social_media/facebook.png";
+		facebook.className = "halfwidth";
+		var twitter = document.createElement("img");
+		twitter.src = "/img/social_media/twitter.png";
+		twitter.className = "halfwidth";
+
+		share.content.className = "centered";
+		share.content.appendChild(heading);
+		share.content.appendChild(blurb);
+		share.content.appendChild(facebook);
+		share.content.appendChild(twitter);
 
 		share.button.id = "share-button";
 		share.button.src = "/img/share_icon.png";
