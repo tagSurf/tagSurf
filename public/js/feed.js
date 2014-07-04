@@ -582,7 +582,10 @@ onload = function ()
 	};
 	var buildLoginCard = function(c, zIndex) {
 		var formatter = document.createElement('div'),
-			cardTemplate = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'>LOGIN CARD</div></div>";
+			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='/img/logo_w_border.png'><div class='big bold'>Sign up for a better feed!</div>",
+			form = "<center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center>",
+			bottom = "<a href='/users/sign_in' class='small'>Already have an account? <b>Login here</b>.</a><div class='smaller'>By signing up you agree to our <a class='bold' id='terms-lnk'>Terms of Use</a> and <a class='bold' id='privacy-lnk'>Privacy Policy</a>.</div></div></div>",
+			cardTemplate = top + form + bottom;
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		initCard(formatter);
