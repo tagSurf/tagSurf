@@ -24,6 +24,9 @@ var whichGallery = function() {
       return galleries[i];
   return null;
 };
+var isUnauthorized = function () {
+	return document.location.href.indexOf('share') != -1;
+};
 
 // autocomplete stuff
 var current_tag, tinput, inputContainer, slideContainer,
@@ -266,30 +269,11 @@ var buildFeatureBlockerContents = function() {
 	contents.appendChild(link);
 	return contents;
 };
-var featureBlockContents = buildFeatureBlockerContents();
 var starCallback, setStarCallback = function(cb) {
-  starCallback = function () {
-	if (isUnauthorized())
-	{
-		modal.promptIn(featureBlockContents);
-	}
-	else
-	{
-		cb();
-	}
-  };
+  starCallback = cb;
 };
 var addCallback, setAddCallback = function(cb) {
-  addCallback = function () {
-	if (isUnauthorized())
-	{
-		modal.promptIn(featureBlockContents);
-	}
-	else
-	{
-		cb();
-	}
-  };
+  addCallback =	cb;
 };
 var currentMedia, setCurrentMedia = function(d) {
   currentMedia = d;
@@ -409,7 +393,4 @@ var trans = function(node, cb, transition, transform) {
     }
   }
   if (transform) node.style['-webkit-transform'] = transform;
-};
-var isUnauthorized = function () {
-	return document.location.href.indexOf('share') != -1;
 };
