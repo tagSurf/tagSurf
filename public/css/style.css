@@ -99,6 +99,10 @@ a {
   font-size: 12px;
 }
 
+.smaller {
+	font-size: 55%;
+}
+
 .small {
 	font-size: 80%;
 }
@@ -404,4 +408,68 @@ a {
   background: #00aeef;
   border-radius: 5px;
   cursor: pointer;
+}
+.bigplace::-webkit-input-placeholder {
+	font-size: 100%;
+	line-height: 25px;
+	height: 20px;
+	font-weight: 200;
+}
+#su-submit-btn
+{
+	font-size: 20px;
+	font-family: 'Raleway', 'sans-serif';
+	font-weight:200;
+	color: white;
+	background-color: #1dafec;
+	letter-spacing: 1px;
+	height: 45px;
+	border: none;
+	width: 160px;
+	outline-width: 0;
+	margin-bottom: 20px;
+	border-radius: 40px;
+	-webkit-border-radius: 40px;
+	-moz-box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+	-webkit-appearance: none;
+}
+.signup-button {
+	background-color: #404041 !important;
+}
+.su-input
+{
+	font-family: 'Raleway', 'sans-serif';
+	width: 203px;
+	height: 31px;
+	color: #000;
+	padding-left: 5px;
+	line-height: 25px;
+	border: solid thin transparent;
+	font-size: 20px;
+	font-weight: 200;
+	background: #fff;
+	outline-width: 0;
+	-moz-border-radius: 50px / 50px;
+	-webkit-border-radius: 50px / 50px;
+	border-radius: 50px / 50px;
+	transition: border-color 200ms;
+	-webkit-background-clip: padding-box;
+}
+.su-input-container
+{
+	width: 225px;
+	height: 37px;
+	margin-top: 4px;
+	margin-bottom: 10px;
+	border: solid 1px grey;
+	-moz-border-radius: 50px / 50px;
+	-webkit-border-radius: 50px / 50px;
+	border-radius: 50px / 50px;
+	-webkit-background-clip: padding-box;
+}
+
+.light-bottom-margin{
+  margin-bottom: 4px; 
 }
