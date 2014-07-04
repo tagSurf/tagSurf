@@ -162,8 +162,8 @@ var populateNavbar = function () {
       	"<li><a href='/feed'><div>",
       	  "<img class='menu_icon' src='/img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
       	"</div></a></li>",
-        "<li><a id='logout'><div>",
-          "<img class='menu_icon inverted' src='/img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGOUT",
+        "<li><a id='login'><div>",
+          "<img class='menu_icon inverted' src='/img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGIN",
         "</div></a></li>",
       "</ul>",
     "</div>",
@@ -208,6 +208,9 @@ var populateNavbar = function () {
   });
   add_icon = document.getElementById("add-icon");
   if (!isUnauthorized()) {
+    document.getElementById("logout").onclick = function() {
+      window.location = "/users/sign_out";
+    };
     document.getElementById("options-btn").onclick = function() {
       var n = document.createElement("div");
       n.className = "center-label";
@@ -221,9 +224,12 @@ var populateNavbar = function () {
       modal.modalIn(n);
     };
   }
-  document.getElementById("logout").onclick = function() {
-    window.location = "/users/sign_out";
-  };
+  else
+  {
+    document.getElementById("login").onclick = function() {
+      window.location = "/users/sign_in";
+    };
+  }
 };
 var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
@@ -236,11 +242,36 @@ var buildFeatureBlockerContents = function() {
 		message = document.createElement('p'),
 		link = document.createElement('div');
 	close.className = "x_close_button";
+	close.innerHTML = "X";
+	gesture.listen('tap', close, modal.callPrompt);
+	contents.appendChild(close);
+	title.className = "prompt_title";
+	title.innerHTML = "Oops";
+	contents.appendChild(title);
+	message.className = "prompt_message";
+	message.innerHTML = "You need to login to do that...";
+	contents.appendChild(message);
+	link.className = "prompt_login_button";
+	link.innerHTML = "login";
+	gesture.listen("down", link, function () {
+		link.classList.add('ts-active-button');
+	});
+	gesture.listen("tap", link, function () {
+		window.location = "/users/sign_in";
+		link.classList.remove('ts-active-button');
+	});
+	gesture.listen("up", link, function () {
+		link.classList.remove('ts-active-button');
+	});
+	contents.appendChild(link);
+	return contents;
 };
+var featureBlockContents = buildFeatureBlockerContents();
 var starCallback, setStarCallback = function(cb) {
   starCallback = function () {
 	if (isUnauthorized())
 	{
+		modal.promptIn(featureBlockContents);
 	}
 	else
 	{
@@ -252,6 +283,7 @@ var addCallback, setAddCallback = function(cb) {
   addCallback = function () {
 	if (isUnauthorized())
 	{
+		modal.promptIn(featureBlockContents);
 	}
 	else
 	{
