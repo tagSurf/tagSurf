@@ -1,6 +1,7 @@
 var modal = {
 	back: document.createElement("div"),
 	modal: document.createElement("div"),
+	prompt: document.createElement("div"),
 	topModal: document.createElement("div"),
 	zoom: document.createElement("div"),
 	constants: {
@@ -32,10 +33,12 @@ var modal = {
 		modal.modal.className = "modal disabled";
 		modal.topModal.className = "modal disabled";
 		modal.topModal.style.zIndex = 20;
+		modal.prompt.className = "modal_prompt disabled";
 		modal._buildZoom();
 		document.body.appendChild(modal.back);
 		document.body.appendChild(modal.modal);
 		document.body.appendChild(modal.topModal);
+		document.body.appendChild(modal.prompt);
 		document.body.appendChild(modal.zoom);
 		gesture.listen("tap", modal.back, modal.callBack);
 		gesture.listen("swipe", modal.back, modal.callBack);
@@ -221,6 +224,30 @@ var modal = {
 			modal.topModal.backed = false;
 			modal.backOff();
 		}
+	},
+	promptIn: function(node, cb) {
+		if (modal.prompt.on)
+			return;
+		modal.prompt.on = true;
+		modal.prompt.innerHTML = "";
+		modal.prompt.appendChild(node);
+		modal.prompt.style.display = "block";
+		modal.prompt.cb = cb || modal.promptOut;
+		modal.prompt.className = "modal_prompt promptin disabled";
+		modal.backOn();
+		setTimeout(function() {
+			modal.prompt.className = "modal_prompt promptin opaque";
+		}, 0);
+	},
+	promptOut: function() {
+		modal.prompt.on = false;
+		modal.prompt.className = "modal_prompt promptin disabled";
+		modal.prompt.cb = null;
+		modal.backOff();
+		trans(modal.prompt, function (event){
+			modal.prompt.className = "modal_prompt disabled";
+			modal.prompt.style.display = "none";
+		});
 	},
 	zoomIn: function (card, cb) {
 		modal.zoom.zoomed = true;
