@@ -235,7 +235,7 @@ var drag =
 		swipeCallback =  function (direction, distance, dx, dy, pixelsPerSecond)
 		{
 			var xMod = opts.interval ? node.xDrag % opts.interval : -dx;
-			var yMod = opts.interval ? node.yDrag % opts.interval : pixelsPerSecond;
+			var yMod = opts.interval ? node.yDrag % opts.interval : pixelsPerSecond * .3;
 			if (node.animating == false)
 			{
 				if (opts.constraint != "horizontal" && node.xDrag <= 0 && 
@@ -272,7 +272,6 @@ var drag =
 						return;
 					}
 				}
-				//carousel.orderIndicationCallback(direction);
 				trans(node, function() {
 					node.animating = false;
 					upCallback(direction);//legit?

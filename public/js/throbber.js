@@ -21,6 +21,7 @@ var throbber =
 			if (!throbber.gif.classList.contains(addClass))
 			{
 				throbber.gif.classList.add(addClass);
+				throbber.gif.onload();
 			}
 		}
 		else
