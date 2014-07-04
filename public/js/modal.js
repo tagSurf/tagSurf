@@ -33,8 +33,8 @@ var modal = {
 		modal.modal.className = "modal disabled";
 		modal.topModal.className = "modal disabled";
 		modal.topModal.style.zIndex = 20;
-		modal.prompt.className = "modal_prompt disabled";
 		modal._buildZoom();
+		modal._buildPrompt();
 		document.body.appendChild(modal.back);
 		document.body.appendChild(modal.modal);
 		document.body.appendChild(modal.topModal);
@@ -71,6 +71,12 @@ var modal = {
 		modal.zoom.large = false;
 		modal.zoom.zoomed = false;
 	},
+	_buildPrompt: function () {
+		var prompt_container = document.createElement('div');
+		prompt_container.className = "prompt_container";
+		prompt_container.appendChild(modal.prompt);
+		modal.prompt.className = "modal_prompt disabled";
+	},
 	_passThrough: function() {
 		return true;
 	},
@@ -85,6 +91,9 @@ var modal = {
 	},
 	callTopModal: function(direction) {
 		return modal.topModal.cb && modal.topModal.cb(direction);
+	},
+	callPrompt: function(direction) {
+		return modal.prompt.cb && modal.prompt.cb(direction);
 	},
 	callBack: function() {
 		return modal.back.cb && modal.back.cb();
@@ -231,22 +240,21 @@ var modal = {
 		modal.prompt.on = true;
 		modal.prompt.innerHTML = "";
 		modal.prompt.appendChild(node);
-		modal.prompt.style.display = "block";
 		modal.prompt.cb = cb || modal.promptOut;
-		modal.prompt.className = "modal_prompt promptin disabled";
 		modal.backOn();
+		modal.prompt.className = "modal_prompt disabled";
 		setTimeout(function() {
-			modal.prompt.className = "modal_prompt promptin opaque";
+			modal.prompt.className = "modal_prompt opaque";
 		}, 0);
 	},
 	promptOut: function() {
 		modal.prompt.on = false;
-		modal.prompt.className = "modal_prompt promptin disabled";
+		modal.prompt.className = "modal_prompt";
 		modal.prompt.cb = null;
+		modal.prompt.style.opacity = 0;
 		modal.backOff();
 		trans(modal.prompt, function (event){
 			modal.prompt.className = "modal_prompt disabled";
-			modal.prompt.style.display = "none";
 		});
 	},
 	zoomIn: function (card, cb) {
