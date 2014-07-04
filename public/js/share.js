@@ -4,31 +4,32 @@ var share =
 	boiler: "Check this out: ",
 	button: document.createElement('img'),
 	content: document.createElement('div'),
+	networks: {
+		facebook: "http://www.facebook.com/sharer.php?u=",
+		twitter: "https://twitter.com/home?status="
+	},
+	_icon: function(network) {
+		var img = document.createElement("img");
+		img.src = "/img/social_media/" + network + ".png";
+		img.className = "halfwidth";
+		img.onclick = function() {
+			window.open(share.networks[network] +
+				encodeURI(share.boiler + share.url));
+		};
+		share.content.appendChild(img);
+	},
 	build: function ()
 	{
 		var heading = document.createElement("div");
 		heading.className = "big bold";
 		heading.innerHTML = "Share This Card";
-
 		var blurb = document.createElement("div");
 		blurb.innerHTML = "Like it? Spread it!";
-
-		var facebook = document.createElement("img");
-		facebook.src = "/img/social_media/facebook.png";
-		facebook.className = "halfwidth";
-		var twitter = document.createElement("img");
-		twitter.src = "/img/social_media/twitter.png";
-		twitter.className = "halfwidth";
-		twitter.onclick = function() {
-			window.open("https://twitter.com/home?status="
-				+ encodeURI(share.boiler + share.url));
-		};
-
 		share.content.className = "centered";
 		share.content.appendChild(heading);
 		share.content.appendChild(blurb);
-		share.content.appendChild(facebook);
-		share.content.appendChild(twitter);
+		for (var network in share.networks)
+			share._icon(network);
 
 		share.button.id = "share-button";
 		share.button.src = "/img/share_icon.png";
