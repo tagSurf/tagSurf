@@ -12,7 +12,6 @@ body
 	background-color: #404041;
 	color: white;
 	font-weight:200;
-	overflow: hidden;
 }
 
 html, input[type="submit"] {
