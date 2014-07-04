@@ -1,6 +1,7 @@
 var modal = {
 	back: document.createElement("div"),
 	modal: document.createElement("div"),
+	topModal: document.createElement("div"),
 	zoom: document.createElement("div"),
 	constants: {
 		zoomScale: 1.5
@@ -29,15 +30,23 @@ var modal = {
 		});
 		modal.back.className = "blackout disabled";
 		modal.modal.className = "modal disabled";
+		modal.topModal.className = "modal disabled";
+		modal.topModal.style.zIndex = 20;
 		modal._buildZoom();
 		document.body.appendChild(modal.back);
 		document.body.appendChild(modal.modal);
+		document.body.appendChild(modal.topModal);
 		document.body.appendChild(modal.zoom);
-		gesture.listen("tap", modal.zoom, modal.callZoom);
 		gesture.listen("tap", modal.back, modal.callBack);
 		gesture.listen("swipe", modal.back, modal.callBack);
+
 		gesture.listen("tap", modal.modal, modal.callModal);
 		gesture.listen("swipe", modal.modal, modal.callModal);
+
+		gesture.listen("tap", modal.topModal, modal.callTopModal);
+		gesture.listen("swipe", modal.topModal, modal.callTopModal);
+
+		gesture.listen("tap", modal.zoom, modal.callZoom);
 		gesture.listen("drag", modal.zoom, modal.dragZoom);
 		gesture.listen("down", modal.zoom, modal._passThrough);
 	},
@@ -70,6 +79,9 @@ var modal = {
 	},
 	callModal: function(direction) {
 		return modal.modal.cb && modal.modal.cb(direction);
+	},
+	callTopModal: function(direction) {
+		return modal.topModal.cb && modal.topModal.cb(direction);
 	},
 	callBack: function() {
 		return modal.back.cb && modal.back.cb();
@@ -181,6 +193,34 @@ var modal = {
 			modal.modal.className = "modal disabled";
 			modal.modal.style.display = "none";
 		});
+	},
+	topModalIn: function(node, cb) {
+		modal.topModal.on = true;
+		modal.topModal.innerHTML = "";
+		modal.topModal.appendChild(node);
+		modal.topModal.style.display = "block";
+		modal.topModal.cb = cb || modal.topModalOut;
+		modal.topModal.className = "modal modalout disabled";
+		setTimeout(function() {
+			modal.topModal.className = "modal modalslide";
+		}, 0);
+		if (!modal.back.on) {
+			modal.backOn();
+			modal.topModal.backed = true;
+		}
+	},
+	topModalOut: function() {
+		modal.topModal.on = false;
+		modal.topModal.className = "modal modalout";
+		modal.topModal.cb = null;
+		trans(modal.topModal, function (event){
+			modal.topModal.className = "modal disabled";
+			modal.topModal.style.display = "none";
+		});
+		if (modal.topModal.backed) {
+			modal.topModal.backed = false;
+			modal.backOff();
+		}
 	},
 	zoomIn: function (card, cb) {
 		modal.zoom.zoomed = true;

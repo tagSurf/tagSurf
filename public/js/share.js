@@ -16,7 +16,7 @@ var share =
 			share.button.src = "/img/share_icon.png";
 		});
 		gesture.listen('tap', share.button, function () {
-			modal.modalIn(share.content);
+			modal.topModalIn(share.content);
 		});
 		document.body.appendChild(share.button);
 	},

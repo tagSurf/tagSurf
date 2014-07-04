@@ -203,7 +203,7 @@ var populateNavbar = function () {
     n.appendChild(msg);
     n.appendChild(img);
     slideNavMenu();
-    modal.modalIn(n, modal.modalOut);
+    modal.modalIn(n);
   };
   document.getElementById("logout").onclick = function() {
     window.location = "/users/sign_out";
@@ -221,7 +221,13 @@ var addCallback, setAddCallback = function(cb) {
 };
 var currentMedia, setCurrentMedia = function(d) {
   currentMedia = d;
-  if (!d && addBarSlid) slideAddBar();
+  if (d)
+    share.on(d.tags[0], d.id);
+  else {
+    share.off();
+    if (addBarSlid)
+      slideAddBar();
+  }
 };
 var _addCss = function(css) {
     var n = document.createElement("style");
