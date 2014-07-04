@@ -160,15 +160,15 @@ var populateNavbar = function () {
     "<div id='slide_down_menu' class='pointer'>",
       "<ul>",
       	"<li><a href='/feed'><div>",
-      	  "<img class='menu_icon' src='img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
+      	  "<img class='menu_icon' src='/img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
       	"</div></a></li>",
         "<li><a id='logout'><div>",
-          "<img class='menu_icon inverted' src='img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGOUT",
+          "<img class='menu_icon inverted' src='/img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGOUT",
         "</div></a></li>",
       "</ul>",
     "</div>",
   ],
-  menu_slider_content = isUnauthorized() ? reduced_slider_content : full_slider_content; 
+  menu_slider_content = isUnauthorized() ? reduced_slider_content : full_slider_content;
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
   tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='/img/add_tag_button.png'><div id='add_tag_autocomplete' class='autocomplete hider'></div>";
@@ -207,18 +207,20 @@ var populateNavbar = function () {
     }
   });
   add_icon = document.getElementById("add-icon");
-  document.getElementById("options-btn").onclick = function() {
-    var n = document.createElement("div");
-    n.className = "center-label";
-    var msg = document.createElement("div");
-    msg.innerHTML = "Nothing to see here... yet";
-    var img = document.createElement("img");
-    img.src = "/img/throbber.gif";
-    n.appendChild(msg);
-    n.appendChild(img);
-    slideNavMenu();
-    modal.modalIn(n);
-  };
+  if (!isUnauthorized()) {
+    document.getElementById("options-btn").onclick = function() {
+      var n = document.createElement("div");
+      n.className = "center-label";
+      var msg = document.createElement("div");
+      msg.innerHTML = "Nothing to see here... yet";
+      var img = document.createElement("img");
+      img.src = "/img/throbber.gif";
+      n.appendChild(msg);
+      n.appendChild(img);
+      slideNavMenu();
+      modal.modalIn(n);
+    };
+  }
   document.getElementById("logout").onclick = function() {
     window.location = "/users/sign_out";
   };
