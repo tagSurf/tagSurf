@@ -335,3 +335,25 @@ a {
   -moz-transform: translateZ(0);
   transform: translateZ(0);
 }
+.touch_expander
+{
+  float: right;
+  clear: both;
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  z-index: 1;
+}
+.reminder_close
+{
+  color: #404041;
+  background-color: white;
+  position: relative;
+  width: 21px;
+  height: 21px;
+  font-size: 20px;
+  line-height: 22px;
+  letter-spacing: -0.5px;
+  border-radius: 10px;
+}
+

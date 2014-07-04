@@ -32,7 +32,7 @@ onload = function ()
 		reminderContainer.id = "reminder_container";
 		closeContainer.className = "touch_expander";
 		close.className = "reminder_close";
-		close.innerHTML = 'X';
+		close.innerHTML = "&nbsp;X";
 		closeContainer.appendChild(close);
 		reminderContainer.appendChild(closeContainer);
 		leftImage.id = "reminder_left";
