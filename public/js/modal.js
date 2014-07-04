@@ -166,7 +166,7 @@ var modal = {
 		modal.modal.innerHTML = "";
 		modal.modal.appendChild(node);
 		modal.modal.style.display = "block";
-		modal.modal.cb = cb;
+		modal.modal.cb = cb || modal.modalOut;
 		modal.modal.zcb = zcb;
 		modal.modal.className = "modal modalout disabled";
 		setTimeout(function() {
