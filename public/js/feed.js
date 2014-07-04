@@ -11,7 +11,8 @@ onload = function ()
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
 	reminderTimeout = null;
-
+	var featureBlockContents = buildFeatureBlockerContents();
+	
 	var setReminderTimeout = function ()
 	{
 		var reminderContainer = document.createElement('div'),
@@ -659,6 +660,11 @@ onload = function ()
 		}
 	};
 	setAddCallback(function(tag) {
+		if (isUnauthorized())
+		{
+			modal.promptIn(featureBlockContents);
+			return;
+		}
 		var objwrap = {};
 		objwrap[tag] = {
 			total_votes: 0,
@@ -674,6 +680,11 @@ onload = function ()
 		formatCardContents();
 	});
 	setStarCallback(function() {
+		if (isUnauthorized())
+		{
+			modal.promptIn(featureBlockContents);
+			return;
+		}
 		slider.style['border-color'] = "green";
 		slider.lastChild.previousSibling.firstChild.style.opacity = 0.8;
 		if (modal.zoom.zoomed) {
