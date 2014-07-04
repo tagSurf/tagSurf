@@ -526,15 +526,10 @@ onload = function ()
 			}
 		}
 	};
-	var buildCard = function (zIndex)
-	{
-		if (!dataThrobTest())
-			return;
-		var imageContainer, iconLine, textContainer, picTags, 
-			fullscreenButton, truncatedTitle, card, 
-			targetHeight, imageData, c = data[cardIndex];
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb_up' src='/img/thumbsup.png'><img class='thumb_down' src='/img/thumbsdown.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
-		var formatter = document.createElement('div');
+	var buildContentCard = function(c, zIndex) {
+		var imageContainer, iconLine, textContainer, picTags, fullscreenButton,
+			truncatedTitle, card, formatter = document.createElement('div'),
+			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb_up' src='/img/thumbsup.png'><img class='thumb_down' src='/img/thumbsdown.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		imageContainer = formatter.children[0].children[0].children[0];
@@ -563,22 +558,12 @@ onload = function ()
 			var t = Object.keys(tagobj)[0];
 			t && t != "trending" && tagCard(t, picTags);
 		});
-		card = formatter.firstChild.firstChild;
-		setStartState(card);
-		imageData = image.get(card.card);
-		formatCardContents(card, imageData);
-		initCardGestures.call(card.parentNode);
-		slideContainer.appendChild(card.parentNode);
-		formattingContainer.removeChild(formatter);
-		setSlider();
+		var card = initCard(formatter);
+		card.isContent = true;
+		formatCardContents(card, image.get(card.card));
 		if (slider == card)
 		{
-			imageContainer.firstChild.onload = function ()
-			{
-				throbber.off();
-				scrollContainer.style.opacity = 1;
-				preloadCards();
-			};
+			imageContainer.firstChild.onload = firstCardReady;
 		}
 		imageContainer.firstChild.onerror = function() {
 			slideContainer.removeChild(card.parentNode);
@@ -588,6 +573,42 @@ onload = function ()
 			}
 			buildCard();
 		};
+	};
+	var buildLoginCard = function(c, zIndex) {
+		var formatter = document.createElement('div'),
+			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'>LOGIN CARD</div></div>";
+		formattingContainer.appendChild(formatter);
+		formatter.innerHTML = cardTemplate;
+		initCard(formatter);
+		firstCardReady();
+	};
+	var firstCardReady = function () {
+		throbber.off();
+		scrollContainer.style.opacity = 1;
+		preloadCards();
+	};
+	var initCard = function(formatter) {
+		card = formatter.firstChild.firstChild;
+		setStartState(card);
+		initCardGestures.call(card.parentNode);
+		slideContainer.appendChild(card.parentNode);
+		formattingContainer.removeChild(formatter);
+		setSlider();
+		return card;
+	};
+	var buildCard = function (zIndex)
+	{
+		if (!dataThrobTest())
+			return;
+		var c = data[cardIndex];
+
+		if (c.type == "content")
+			buildContentCard(c, zIndex);
+		else if (c.type == "login")
+			buildLoginCard(c, zIndex);
+		else
+			alert("unknown card type: " + c.type);
+
 		++cardIndex;
 		if (data.length == cardIndex + buffer_minimum)
 			populateSlider(true);
@@ -621,7 +642,7 @@ onload = function ()
 	};
 	var expandCard = function ()
 	{
-		if (slider && slider.compressing)
+		if (slider && slider.isContent && slider.compressing)
 		{
 			slider.compressing = false;
 			slider.expanded = true;
