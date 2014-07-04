@@ -63,6 +63,10 @@ var add_icon, add_state = "blue", add_icons = {
 };
 var addBarSlid = false;
 var slideAddBar = function(noback) {
+  if (isUnauthorized()) {
+    modal.promptIn(featureBlockContents);
+    return;
+  }
   if (autocomplete.viewing.autocomplete) {
     autocomplete.retract("autocomplete");
     closeAutoComplete(null, true);
@@ -238,7 +242,7 @@ var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
     "/img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
 };
-var buildFeatureBlockerContents = function() {
+var featureBlockContents, buildFeatureBlockerContents = function() {
 	var contents = document.createElement('div'),
 		closeContainer = document.createElement('div'),
 		close = document.createElement('div'),

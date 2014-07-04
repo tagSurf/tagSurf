@@ -11,7 +11,7 @@ onload = function ()
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
 	reminderTimeout = null;
-	var featureBlockContents = buildFeatureBlockerContents();
+	featureBlockContents = buildFeatureBlockerContents();
 	
 	var setReminderTimeout = function ()
 	{
@@ -663,11 +663,6 @@ onload = function ()
 		}
 	};
 	setAddCallback(function(tag) {
-		if (isUnauthorized())
-		{
-			modal.promptIn(featureBlockContents);
-			return;
-		}
 		var objwrap = {};
 		objwrap[tag] = {
 			total_votes: 0,
