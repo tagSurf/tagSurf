@@ -192,18 +192,20 @@ onload = function ()
 	};
 	var revertSlider = function ()
 	{
-		var thumbContainer = slider.lastChild.previousSibling;
-		slider.style['border-color'] = "#353535";
-		slider.style['background-color'] = "#353535";
-		slider.lastChild.display = "none";
+		if (slider.isContent) {
+			var thumbContainer = slider.lastChild.previousSibling;
+			slider.style['border-color'] = "#353535";
+			slider.style['background-color'] = "#353535";
+			slider.lastChild.display = "none";
 
-		if (thumbContainer.firstChild.style.opacity > 0)
-		{
-			thumbContainer.firstChild.style.opacity = 0;
-		}
-		if (thumbContainer.lastChild.style.opacity > 0)
-		{
-			thumbContainer.lastChild.style.opacity = 0;
+			if (thumbContainer.firstChild.style.opacity > 0)
+			{
+				thumbContainer.firstChild.style.opacity = 0;
+			}
+			if (thumbContainer.lastChild.style.opacity > 0)
+			{
+				thumbContainer.lastChild.style.opacity = 0;
+			}
 		}
 		if (slider.x == 0)
 		{
@@ -282,9 +284,16 @@ onload = function ()
 				slideContainer.children[0].style.zIndex = 2;
 				if (slideContainer.children[1])
 					slideContainer.children[1].style.zIndex = 1;
-				if (voteAlternative) voteAlternative();
-				else xhr("/api/votes/" + voteDir + "/" + activeCard.id
-					+ "/tag/" + current_tag, "POST");
+				if (_slider.isContent) {
+					activeCard.total_votes += 1;
+					activeCard[voteDir + "_votes"] += 1;
+					activeCard.user_stats.voted = true;
+					activeCard.user_stats.tag_voted = current_tag;
+					activeCard.user_stats.vote = voteDir;
+					if (voteAlternative) voteAlternative();
+					else xhr("/api/votes/" + voteDir + "/" + activeCard.id
+						+ "/tag/" + current_tag, "POST");
+				}
 				preloadCards();
 			},
 			"swiping",
@@ -295,12 +304,6 @@ onload = function ()
 		pushTags();
 		setSlider(slider.parentNode.nextSibling.firstChild);
 		setCurrentMedia(slider.card);
-		// history slider
-		activeCard.total_votes += 1;
-		activeCard[voteDir + "_votes"] += 1;
-		activeCard.user_stats.voted = true;
-		activeCard.user_stats.tag_voted = current_tag;
-		activeCard.user_stats.vote = voteDir;
 		// removed history slider
 //		addHistoryItem(activeCard);
 	};
@@ -349,38 +352,40 @@ onload = function ()
 			{
 				if (slider.verticaling == false)
 				{
-					 slider.sliding = true;
-					 slider.x += dx;
-					if ( slider.x > 0)
-					{
-						slider.style['border-color'] = "green";
-						if (slider.supering == true)
+					slider.sliding = true;
+					slider.x += dx;
+					if (slider.isContent) {
+						if ( slider.x > 0)
 						{
-							slider.style['background-color'] = 'green';
+							slider.style['border-color'] = "green";
+							if (slider.supering == true)
+							{
+								slider.style['background-color'] = 'green';
+							}
+							if (thumbContainer.firstChild.style.opacity == 0)
+							{
+								thumbContainer.firstChild.style.opacity = 0.8;
+							}
+							if (thumbContainer.lastChild.style.opacity == .8)
+							{
+								thumbContainer.lastChild.style.opacity = 0;
+							}
 						}
-						if (thumbContainer.firstChild.style.opacity == 0)
+						else if ( slider.x < 0)
 						{
-							thumbContainer.firstChild.style.opacity = 0.8;
-						}
-						if (thumbContainer.lastChild.style.opacity == .8)
-						{
-							thumbContainer.lastChild.style.opacity = 0;
-						}
-					}
-					else if ( slider.x < 0)
-					{
-						slider.style['border-color'] = "#C90016";
-						if (slider.supering == true)
-						{
-							slider.style['background-color'] = '#C90016';
-						}
-						if (thumbContainer.lastChild.style.opacity == 0)
-						{
-							thumbContainer.lastChild.style.opacity = .8;
-						}
-						if (thumbContainer.firstChild.style.opacity == .8)
-						{
-							thumbContainer.firstChild.style.opacity = 0;
+							slider.style['border-color'] = "#C90016";
+							if (slider.supering == true)
+							{
+								slider.style['background-color'] = '#C90016';
+							}
+							if (thumbContainer.lastChild.style.opacity == 0)
+							{
+								thumbContainer.lastChild.style.opacity = .8;
+							}
+							if (thumbContainer.firstChild.style.opacity == .8)
+							{
+								thumbContainer.firstChild.style.opacity = 0;
+							}
 						}
 					}
 					slider.style['-webkit-transform'] = 
@@ -576,7 +581,7 @@ onload = function ()
 	};
 	var buildLoginCard = function(c, zIndex) {
 		var formatter = document.createElement('div'),
-			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'>LOGIN CARD</div></div>";
+			cardTemplate = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'>LOGIN CARD</div></div>";
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		initCard(formatter);
