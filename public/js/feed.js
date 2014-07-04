@@ -589,6 +589,7 @@ onload = function ()
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		initCard(formatter);
+		initDocLinks();
 		firstCardReady();
 	};
 	var firstCardReady = function () {
