@@ -330,12 +330,14 @@ a {
 {
   height: 150px !important;
 }
-.translate-z
+.hardware-acceleration, .translate-z
 {
    -webkit-backface-visibility: hidden;
    -webkit-perspective: 1000;
    backface-visibility: hidden;
+   -webkit-transform-style: flat;
    perspective: 1000;
   -webkit-transform: translateZ(0);
   -moz-transform: translateZ(0);
   transform: translateZ(0);
+}
