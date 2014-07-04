@@ -344,6 +344,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 
 	drag.makeDraggable(gridwrapper, {
 		constraint: "horizontal",
+		swipe: populateGallery,
 		drag: function(direction, distance, dx, dy) {
 			var trueScrollTop = gridwrapper.scrollTop ? gridwrapper.scrollTop
 				: (gridwrapper.yDrag ? -gridwrapper.yDrag : 0);

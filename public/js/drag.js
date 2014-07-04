@@ -30,7 +30,7 @@ var drag =
 			}
 			dragTimeout = setTimeout(function() {
 				opts.drag(dirs[lastDirection], 0, 0, 0);
-			}, 500);
+			}, 100);
 		};
 		gesture.listen("drag", n, function (direction, distance, dx, dy) {
 			var atBottom = (n.parentNode.scrollHeight - n.parentNode.scrollTop 
@@ -43,6 +43,14 @@ var drag =
 				return false;
 			return !opts.constraint ||
 				opts.constraint == drag._direction2constraint[direction];
+		});
+		gesture.listen("swipe", n, function (direction, distance, dx, dy, pixelsPerSecond) { 
+			if (direction == "up" && (n.parentNode.scrollTop >=
+				(n.parentNode.scrollHeight - (n.parentNode.clientHeight + 800)))
+				&& opts.swipe)
+			{
+				opts.swipe();
+			}
 		});
 		n.parentNode.addEventListener('scroll', function (event) {
 			if (opts.scroll)
