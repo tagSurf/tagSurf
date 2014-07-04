@@ -1,6 +1,7 @@
 var share =
 {
 	url: null,
+	boiler: "Check this out: ",
 	button: document.createElement('img'),
 	content: document.createElement('div'),
 	build: function ()
@@ -18,6 +19,10 @@ var share =
 		var twitter = document.createElement("img");
 		twitter.src = "/img/social_media/twitter.png";
 		twitter.className = "halfwidth";
+		twitter.onclick = function() {
+			window.open("https://twitter.com/home?status="
+				+ encodeURI(share.boiler + share.url));
+		};
 
 		share.content.className = "centered";
 		share.content.appendChild(heading);
@@ -40,7 +45,7 @@ var share =
 	},
 	on: function (tag, id)
 	{
-		share.url = "/share/" + tag + "/" + id;
+		share.url = "http://" + document.location.host + "/share/" + tag + "/" + id;
 		toggleClass.call(share.button, 'share-active', 'on');
 	},
 	off: function ()
