@@ -98,6 +98,14 @@ onload = function ()
 			cardsToLoad = [];
 		}
 	};
+	var shareOffset = 0;
+	var dataPath = function() {
+		if (isUnauthorized()) {
+			return "/api" + document.location.pathname + "/20/"
+				+ (shareOffset++ * 20);
+		}
+		return "/api/media/" + current_tag;
+	};
 	var populateSlider = function (update, failMsgNode, firstCard)
 	{
 		if (!update && !failMsgNode)
@@ -106,7 +114,7 @@ onload = function ()
 			scrollContainer.style.opacity = 0;
 			throbber.on();
 		}
-		xhr("/api/media/" + current_tag, null, function(response_data) {
+		xhr(dataPath(), null, function(response_data) {
 			var rdata = response_data.data;
 			if (update)
 				cardsToLoad = cardsToLoad.concat(popData(rdata));
@@ -285,7 +293,7 @@ onload = function ()
 				slideContainer.children[0].style.zIndex = 2;
 				if (slideContainer.children[1])
 					slideContainer.children[1].style.zIndex = 1;
-				if (_slider.isContent) {
+				if (!isUnauthorized()) {
 					activeCard.total_votes += 1;
 					activeCard[voteDir + "_votes"] += 1;
 					activeCard.user_stats.voted = true;
