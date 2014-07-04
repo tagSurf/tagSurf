@@ -38,7 +38,6 @@
 
 </div>
 
-
 <script src="/js/tos_pp.js"></script>
 <script src="/js/util.js"></script>
 <script src="/js/gesture.js"></script>
@@ -52,31 +51,11 @@ inputs[1].onfocus = function () { toggleClass.apply(inputs[1].parentNode, ["focu
 inputs[1].onblur = function () { toggleClass.apply(inputs[1].parentNode, ["focused"]); };
 inputs[2].onfocus = function () { toggleClass.apply(inputs[2].parentNode, ["focused"]); };
 inputs[2].onblur = function () { toggleClass.apply(inputs[2].parentNode, ["focused"]); };
-</script>
-
-<script>
- addCss({
+addCss({
   ".scroller": function() {
     return "height: " + window.innerHeight + "px;";
   }
- });
- gesture.returnDefault = true;
- var curContent;
- var removeModal = function(direction) {
-  if (!direction || !isNaN(direction) || direction == "right") {
-   modal.backOff();
-   modal.modalOut();
-   document.getElementById("contenthider").appendChild(curContent);
-  }
- };
- document.getElementById("terms-lnk").onclick = function() {
-  modal.halfOn(removeModal);
-  curContent = document.getElementById("terms");
-  modal.modalIn(curContent, removeModal);
- };
- document.getElementById("privacy-lnk").onclick = function() {
-  modal.halfOn(removeModal);
-  curContent = document.getElementById("privacy");
-  modal.modalIn(curContent, removeModal);
- };
+});
+gesture.returnDefault = true;
+initDocLinks();
 </script>
