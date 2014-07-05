@@ -84,17 +84,22 @@ onload = function ()
 	var popData = function(rdata, firstCard) {
 		var i, starters = [], others = [], preloads = [];
 
-		if (firstCard) known_keys[firstCard.id] = true;
-		for (i = 0; i < rdata.length; i++) {
-			if (!known_keys[rdata[i].id]) {
-				var d = rdata[i];
-				((!d.image.animated && starters.length < 3)
-					? starters : others).push(d);
-				known_keys[d.id] = true;
+		if (isUnauthorized())
+			preloads = rdata;
+		else {
+			if (firstCard) known_keys[firstCard.id] = true;
+			for (i = 0; i < rdata.length; i++) {
+				if (!known_keys[rdata[i].id]) {
+					var d = rdata[i];
+					((!d.image.animated && starters.length < 3)
+						? starters : others).push(d);
+					known_keys[d.id] = true;
+				}
 			}
+			for (i = 0; i < starters.length; i++) preloads.push(starters[i]);
+			for (i = 0; i < others.length; i++) preloads.push(others[i]);
 		}
-		for (i = 0; i < starters.length; i++) preloads.push(starters[i]);
-		for (i = 0; i < others.length; i++) preloads.push(others[i]);
+
 		data = data.concat(preloads);
 		if (firstCard) data.unshift(firstCard);
 		return preloads;
