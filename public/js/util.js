@@ -285,7 +285,7 @@ var addCallback, setAddCallback = function(cb) {
 var currentMedia, setCurrentMedia = function(d, shareCb) {
   currentMedia = d;
   if (d)
-    share.on(d.tags[0], d.id, shareCb);
+    share.on(d, shareCb);
   else {
     share.off();
     if (addBarSlid)
