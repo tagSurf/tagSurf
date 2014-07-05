@@ -93,8 +93,9 @@ onload = function ()
 				known_keys[d.id] = true;
 			}
 		}
-		for (i = 0; i < starters.length; i++) data.push(starters[i]);
-		for (i = 0; i < others.length; i++) data.push(others[i]);
+		for (i = 0; i < starters.length; i++) preloads.push(starters[i]);
+		for (i = 0; i < others.length; i++) preloads.push(others[i]);
+		data = data.concat(preloads);
 		if (firstCard) data.unshift(firstCard);
 		return preloads;
 	};
