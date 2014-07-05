@@ -340,10 +340,15 @@ a {
   opacity: 0;
   z-index: 15;
   position: absolute;
-  bottom: 15px;
-  right: 15px;
-  width: 30px;
+  bottom: 5px;
+  right: 5px;
+  width: 50px;
+  padding: 10px;
   pointer-events: none;
+}
+#share-icon
+{
+  width: 30px;
 }
 .share-active
 {
