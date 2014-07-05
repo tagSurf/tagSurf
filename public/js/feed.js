@@ -23,6 +23,8 @@ onload = function ()
 	var setReminderTimeout = function ()
 	{
 		var reminderContainer = document.createElement('div'),
+			closeContainer = document.createElement('div'),
+			close = document.createElement('div'),
 			leftImage = new Image(), rightImage = new Image();
 		var closeReminderCallback = function (direction)
 		{
@@ -36,6 +38,11 @@ onload = function ()
 			}
 		};
 		reminderContainer.id = "reminder_container";
+		closeContainer.className = "touch_expander";
+		close.className = "reminder_close";
+		close.innerHTML = "&nbsp;X";
+		closeContainer.appendChild(close);
+		reminderContainer.appendChild(closeContainer);
 		leftImage.id = "reminder_left";
 		leftImage.src = "/img/reminder_left.png";
 		rightImage.id = "reminder_right";
@@ -49,6 +56,7 @@ onload = function ()
 			}
 		});
 		gesture.listen("down", reminderContainer, returnTrue);
+		gesture.listen('down', closeContainer, closeReminderCallback);
 		gesture.listen("tap", reminderContainer, closeReminderCallback);
 		gesture.listen("swipe", reminderContainer, closeReminderCallback);
 		document.body.appendChild(reminderContainer);

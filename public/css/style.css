@@ -365,6 +365,7 @@ a {
   -moz-transform: translateZ(0);
   transform: translateZ(0);
 }
+<<<<<<< HEAD
 .inverted
 {
         -webkit-transform: scaleX(-1);
@@ -382,7 +383,8 @@ a {
 }
 
 /* unauth prompt content */
-.close_button_container
+.close_button_container,
+.touch_expander
 {
   float: right;
   clear: both;
@@ -515,4 +517,16 @@ a {
 
 .light-bottom-margin{
   margin-bottom: 4px; 
+}
+.reminder_close
+{
+  color: #404041;
+  background-color: white;
+  position: relative;
+  width: 21px;
+  height: 21px;
+  font-size: 20px;
+  line-height: 22px;
+  letter-spacing: -0.5px;
+  border-radius: 10px;
 }
