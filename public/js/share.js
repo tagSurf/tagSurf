@@ -12,7 +12,8 @@ var share =
 				+ "?app_id=676135635790285" + "&link=" + share.url
 				+ "&picture=" + encodeURI(image.get(d, window.innerWidth - 40).url)
 				+ "&name=tagSurf&caption=" + d.tags[0]
-				+ "&description=" + encodeURI(d.caption);
+				+ "&description=" + encodeURI(d.caption)
+				+ "&redirect_uri=" + encodeURI("http://beta.tagsurf.co");
 		},
 		twitter: function() {
 			return "https://twitter.com/home?status=" + share.url;
