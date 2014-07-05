@@ -3,7 +3,7 @@ var share =
 	cb: null,
 	url: null,
 	data: null,
-	button: document.createElement('img'),
+	button: document.createElement('div'),
 	content: document.createElement('div'),
 	networks: {
 		facebook: function() {
@@ -19,7 +19,7 @@ var share =
 		}
 	},
 	_icon: function(network) {
-		var img = document.createElement("img");Share module retains full media objects and uses custom link construction functions for different networks.
+		var img = document.createElement("img");
 		img.src = "/img/social_media/" + network + ".png";
 		img.className = "halfwidth";
 		gesture.listen('down', img, function() {
