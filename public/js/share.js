@@ -12,10 +12,10 @@ var share =
 		var img = document.createElement("img");
 		img.src = "/img/social_media/" + network + ".png";
 		img.className = "halfwidth";
-		img.onclick = function() {
+		gesture.listen('down', img, function() {
 			window.open(share.networks[network] +
 				encodeURI(share.boiler + share.url));
-		};
+		});
 		share.content.appendChild(img);
 	},
 	build: function ()
