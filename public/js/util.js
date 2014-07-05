@@ -249,7 +249,7 @@ var featureBlockContents, buildFeatureBlockerContents = function() {
 		title = document.createElement('p'),
 		message = document.createElement('p'),
 		link = document.createElement('div');
-	closeContainer.className = "close_button_container";
+	closeContainer.className = "close_button_container pointer";
 	close.className = "x_close_button";
 	close.innerHTML = "X";
 	gesture.listen('down', closeContainer, modal.callPrompt);
