@@ -38,7 +38,7 @@ onload = function ()
 			}
 		};
 		reminderContainer.id = "reminder_container";
-		closeContainer.className = "touch_expander";
+		closeContainer.className = "touch_expander pointer";
 		close.className = "reminder_close";
 		close.innerHTML = "&nbsp;X";
 		closeContainer.appendChild(close);
