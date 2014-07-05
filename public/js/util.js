@@ -282,10 +282,10 @@ var starCallback, setStarCallback = function(cb) {
 var addCallback, setAddCallback = function(cb) {
   addCallback = cb;
 };
-var currentMedia, setCurrentMedia = function(d) {
+var currentMedia, setCurrentMedia = function(d, shareCb) {
   currentMedia = d;
   if (d)
-    share.on(d.tags[0], d.id);
+    share.on(d.tags[0], d.id, shareCb);
   else {
     share.off();
     if (addBarSlid)

@@ -12,7 +12,14 @@ onload = function ()
 	slideContainer = document.getElementById('slider');
 	reminderTimeout = null;
 	featureBlockContents = buildFeatureBlockerContents();
-	
+
+	var forgetReminder = function() {
+		if (reminderTimeout) {
+			document.body.removeChild(document.getElementById("reminder_container"));
+			clearTimeout(reminderTimeout);
+			reminderTimeout = null;
+		}
+	};
 	var setReminderTimeout = function ()
 	{
 		var reminderContainer = document.createElement('div'),
@@ -461,7 +468,7 @@ onload = function ()
 	var expandTimeout;
 	var setSlider = function(s) {
 		slider = s || slideContainer.firstChild.firstChild;
-		setCurrentMedia(slider.card);
+		setCurrentMedia(slider.card, forgetReminder);
 		if (expandTimeout) {
 			clearTimeout(expandTimeout);
 			expandTimeout = null;
@@ -637,12 +644,7 @@ onload = function ()
 	};
 	var downCallback = function ()
 	{
-		if (reminderTimeout)
-		{
-			document.body.removeChild(document.getElementById("reminder_container"));
-			clearTimeout(reminderTimeout);
-			reminderTimeout = null;
-		}
+		forgetReminder();
 		if (slider.style["-webkit-transform"] == "")
 		{
 			slider.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";

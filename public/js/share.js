@@ -1,5 +1,6 @@
 var share =
 {
+	cb: null,
 	url: null,
 	boiler: "Check this out: ",
 	button: document.createElement('img'),
@@ -41,11 +42,13 @@ var share =
 		});
 		gesture.listen('tap', share.button, function () {
 			modal.topModalIn(share.content);
+			share.cb && share.cb();
 		});
 		document.body.appendChild(share.button);
 	},
-	on: function (tag, id)
+	on: function (tag, id, cb)
 	{
+		share.cb = cb;
 		share.url = "http://" + document.location.host + "/share/" + tag + "/" + id;
 		toggleClass.call(share.button, 'share-active', 'on');
 	},
