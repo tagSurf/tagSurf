@@ -394,14 +394,7 @@ a {
 }
 .x_close_button
 {
-  color: white;
-  background-color: #404041;
-  position: relative;
   width: 20px;
-  height: 20px;
-  font-size: 20px;
-  line-height: 20px;
-  border-radius: 10px;
 }
 .prompt_title
 {
@@ -520,12 +513,8 @@ a {
 
 .reminder_close
 {
-  color: #404041;
-  background-color: white;
-  position: relative;
-  width: 21px;
-  height: 21px;
-  font-size: 22px;
-  line-height: 22px;
-  letter-spacing: -0.5px;
-  border-radius: 10px;
+  position: absolute;
+  width: 40px;
+  bottom: 15px;
+  right: 15px;
+}

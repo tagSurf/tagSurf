@@ -5,8 +5,8 @@ onload = function ()
 	// defined in util for autocomplete
 	// integration with other sliding elements
 	tinput = document.getElementById("tag-input");
-	current_tag = tinput.value
-		= document.location.hash.slice(1) || "trending";
+	current_tag = tinput.value = document.location.hash.slice(1)
+		|| document.location.pathname.split("/")[2] || "trending";
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
@@ -24,7 +24,7 @@ onload = function ()
 	{
 		var reminderContainer = document.createElement('div'),
 			closeContainer = document.createElement('div'),
-			close = document.createElement('div'),
+			close = document.createElement('img'),
 			leftImage = new Image(), rightImage = new Image();
 		var closeReminderCallback = function (direction)
 		{
@@ -38,9 +38,8 @@ onload = function ()
 			}
 		};
 		reminderContainer.id = "reminder_container";
-		closeContainer.className = "touch_expander pointer";
 		close.className = "reminder_close";
-		close.innerHTML = "&nbsp;X";
+		close.src = "/img/Close.png";
 		closeContainer.appendChild(close);
 		reminderContainer.appendChild(closeContainer);
 		leftImage.id = "reminder_left";
@@ -106,10 +105,10 @@ onload = function ()
 			}
 			for (i = 0; i < starters.length; i++) preloads.push(starters[i]);
 			for (i = 0; i < others.length; i++) preloads.push(others[i]);
+			if (firstCard) data.unshift(firstCard);
 		}
 
 		data = data.concat(preloads);
-		if (firstCard) data.unshift(firstCard);
 		return preloads;
 	};
 	var cardsToLoad = [];
@@ -119,11 +118,18 @@ onload = function ()
 			cardsToLoad = [];
 		}
 	};
-	var shareOffset = 0;
-	var dataPath = function() {
+	var shareSwap, shareOffset = 0;
+	var dataPath = function(firstCard) {
 		if (isUnauthorized()) {
-			return "/api" + document.location.pathname + "/20/"
-				+ (shareOffset++ * 20);
+			var p = "/api";
+			if (firstCard || shareSwap) {
+				shareSwap = false;
+				shareOffset = 0;
+				p += "/share/" + current_tag + "/" +
+					(firstCard ? firstCard.id : 0);
+			} else
+				p += document.location.pathname;
+			return p + "/20/" + (shareOffset++ * 20);
 		}
 		return "/api/media/" + current_tag;
 	};
@@ -135,7 +141,7 @@ onload = function ()
 			scrollContainer.style.opacity = 0;
 			throbber.on();
 		}
-		xhr(dataPath(), null, function(response_data) {
+		xhr(dataPath(firstCard), null, function(response_data) {
 			var rdata = response_data.data;
 			if (update)
 				cardsToLoad = cardsToLoad.concat(popData(rdata));
@@ -157,6 +163,7 @@ onload = function ()
 		tapCb: function(tagName, insertCurrent) {
 			closeAutoComplete(tagName, !!insertCurrent);
 			if (tagName != current_tag) {
+				shareSwap = true;
 				current_tag = tagName;
 				known_keys = {};
 				populateSlider(null, null, insertCurrent ? slider.card : null);
@@ -179,6 +186,10 @@ onload = function ()
 	autocomplete.register("autocomplete", tinput, autocompleteCbs);
 	gesture.listen("tap", document.getElementById("search-input"),
 		autocompleteCbs.enterCb);
+	popTrending = function() { // var'red in util (global)
+		slideNavMenu();
+		autocompleteCbs.tapCb("trending");
+	};
 
 	// slider stuff
 	var cardIndex = 0;
