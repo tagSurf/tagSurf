@@ -365,7 +365,6 @@ a {
   -moz-transform: translateZ(0);
   transform: translateZ(0);
 }
-<<<<<<< HEAD
 .inverted
 {
         -webkit-transform: scaleX(-1);
@@ -395,7 +394,14 @@ a {
 }
 .x_close_button
 {
+  color: white;
+  background-color: #404041;
+  position: relative;
   width: 20px;
+  height: 20px;
+  font-size: 20px;
+  line-height: 20px;
+  border-radius: 10px;
 }
 .prompt_title
 {

@@ -24,7 +24,7 @@ onload = function ()
 	{
 		var reminderContainer = document.createElement('div'),
 			closeContainer = document.createElement('div'),
-			close = document.createElement('div'),
+			close = document.createElement('img'),
 			leftImage = new Image(), rightImage = new Image();
 		var closeReminderCallback = function (direction)
 		{
@@ -38,9 +38,8 @@ onload = function ()
 			}
 		};
 		reminderContainer.id = "reminder_container";
-		closeContainer.className = "touch_expander pointer";
 		close.className = "reminder_close";
-		close.innerHTML = "&nbsp;X";
+		close.src = "/img/Close.png";
 		closeContainer.appendChild(close);
 		reminderContainer.appendChild(closeContainer);
 		leftImage.id = "reminder_left";
