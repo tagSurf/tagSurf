@@ -249,7 +249,7 @@ var featureBlockContents, buildFeatureBlockerContents = function() {
 		title = document.createElement('p'),
 		message = document.createElement('p'),
 		link = document.createElement('div');
-	closeContainer.className = "close_button_container";
+	closeContainer.className = "close_button_container pointer";
 	close.className = "x_close_button";
 	close.innerHTML = "X";
 	gesture.listen('down', closeContainer, modal.callPrompt);
@@ -282,10 +282,10 @@ var starCallback, setStarCallback = function(cb) {
 var addCallback, setAddCallback = function(cb) {
   addCallback = cb;
 };
-var currentMedia, setCurrentMedia = function(d) {
+var currentMedia, setCurrentMedia = function(d, shareCb) {
   currentMedia = d;
   if (d)
-    share.on(d.tags[0], d.id);
+    share.on(d, shareCb);
   else {
     share.off();
     if (addBarSlid)

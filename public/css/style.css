@@ -340,10 +340,15 @@ a {
   opacity: 0;
   z-index: 15;
   position: absolute;
-  bottom: 15px;
-  right: 15px;
-  width: 30px;
+  bottom: 5px;
+  right: 5px;
+  width: 50px;
+  padding: 10px;
   pointer-events: none;
+}
+#share-icon
+{
+  width: 30px;
 }
 .share-active
 {
@@ -377,7 +382,8 @@ a {
 }
 
 /* unauth prompt content */
-.close_button_container
+.close_button_container,
+.touch_expander
 {
   float: right;
   clear: both;
@@ -511,3 +517,15 @@ a {
 .light-bottom-margin{
   margin-bottom: 4px; 
 }
+
+.reminder_close
+{
+  color: #404041;
+  background-color: white;
+  position: relative;
+  width: 21px;
+  height: 21px;
+  font-size: 22px;
+  line-height: 22px;
+  letter-spacing: -0.5px;
+  border-radius: 10px;

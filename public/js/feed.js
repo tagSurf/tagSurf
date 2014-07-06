@@ -12,7 +12,14 @@ onload = function ()
 	slideContainer = document.getElementById('slider');
 	reminderTimeout = null;
 	featureBlockContents = buildFeatureBlockerContents();
-	
+
+	var forgetReminder = function() {
+		if (reminderTimeout) {
+			document.body.removeChild(document.getElementById("reminder_container"));
+			clearTimeout(reminderTimeout);
+			reminderTimeout = null;
+		}
+	};
 	var setReminderTimeout = function ()
 	{
 		var reminderContainer = document.createElement('div'),
@@ -31,7 +38,7 @@ onload = function ()
 			}
 		};
 		reminderContainer.id = "reminder_container";
-		closeContainer.className = "touch_expander";
+		closeContainer.className = "touch_expander pointer";
 		close.className = "reminder_close";
 		close.innerHTML = "&nbsp;X";
 		closeContainer.appendChild(close);
@@ -85,17 +92,23 @@ onload = function ()
 	var popData = function(rdata, firstCard) {
 		var i, starters = [], others = [], preloads = [];
 
-		if (firstCard) known_keys[firstCard.id] = true;
-		for (i = 0; i < rdata.length; i++) {
-			if (!known_keys[rdata[i].id]) {
-				var d = rdata[i];
-				((!d.image.animated && starters.length < 3)
-					? starters : others).push(d);
-				known_keys[d.id] = true;
+		if (isUnauthorized())
+			preloads = rdata;
+		else {
+			if (firstCard) known_keys[firstCard.id] = true;
+			for (i = 0; i < rdata.length; i++) {
+				if (!known_keys[rdata[i].id]) {
+					var d = rdata[i];
+					((!d.image.animated && starters.length < 3)
+						? starters : others).push(d);
+					known_keys[d.id] = true;
+				}
 			}
+			for (i = 0; i < starters.length; i++) preloads.push(starters[i]);
+			for (i = 0; i < others.length; i++) preloads.push(others[i]);
 		}
-		for (i = 0; i < starters.length; i++) data.push(starters[i]);
-		for (i = 0; i < others.length; i++) data.push(others[i]);
+
+		data = data.concat(preloads);
 		if (firstCard) data.unshift(firstCard);
 		return preloads;
 	};
@@ -469,7 +482,7 @@ onload = function ()
 	var expandTimeout;
 	var setSlider = function(s) {
 		slider = s || slideContainer.firstChild.firstChild;
-		setCurrentMedia(slider.card);
+		setCurrentMedia(slider.card, forgetReminder);
 		if (expandTimeout) {
 			clearTimeout(expandTimeout);
 			expandTimeout = null;
@@ -645,12 +658,7 @@ onload = function ()
 	};
 	var downCallback = function ()
 	{
-		if (reminderTimeout)
-		{
-			document.body.removeChild(document.getElementById("reminder_container"));
-			clearTimeout(reminderTimeout);
-			reminderTimeout = null;
-		}
+		forgetReminder();
 		if (slider.style["-webkit-transform"] == "")
 		{
 			slider.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
