@@ -106,10 +106,10 @@ onload = function ()
 			}
 			for (i = 0; i < starters.length; i++) preloads.push(starters[i]);
 			for (i = 0; i < others.length; i++) preloads.push(others[i]);
+			if (firstCard) data.unshift(firstCard);
 		}
 
 		data = data.concat(preloads);
-		if (firstCard) data.unshift(firstCard);
 		return preloads;
 	};
 	var cardsToLoad = [];
@@ -120,10 +120,15 @@ onload = function ()
 		}
 	};
 	var shareOffset = 0;
-	var dataPath = function() {
+	var dataPath = function(firstCard) {
 		if (isUnauthorized()) {
-			return "/api" + document.location.pathname + "/20/"
-				+ (shareOffset++ * 20);
+			var p = "/api";
+			if (firstCard) {
+				shareOffset = 0;
+				p += "/" + current_tag + "/" + firstCard.id;
+			} else
+				p += document.location.pathname;
+			return p + "/20/" + (shareOffset++ * 20);
 		}
 		return "/api/media/" + current_tag;
 	};
@@ -135,7 +140,7 @@ onload = function ()
 			scrollContainer.style.opacity = 0;
 			throbber.on();
 		}
-		xhr(dataPath(), null, function(response_data) {
+		xhr(dataPath(firstCard), null, function(response_data) {
 			var rdata = response_data.data;
 			if (update)
 				cardsToLoad = cardsToLoad.concat(popData(rdata));
