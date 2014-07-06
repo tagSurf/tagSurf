@@ -245,13 +245,13 @@ var setFavIcon = function(filled) {
 var featureBlockContents, buildFeatureBlockerContents = function() {
 	var contents = document.createElement('div'),
 		closeContainer = document.createElement('div'),
-		close = document.createElement('div'),
+		close = document.createElement('img'),
 		title = document.createElement('p'),
 		message = document.createElement('p'),
 		link = document.createElement('div');
 	closeContainer.className = "close_button_container pointer";
 	close.className = "x_close_button";
-	close.innerHTML = "X";
+	close.src = "/img/Close.png";
 	gesture.listen('down', closeContainer, modal.callPrompt);
 	closeContainer.appendChild(close);
 	contents.appendChild(closeContainer);
