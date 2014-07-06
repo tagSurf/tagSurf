@@ -110,6 +110,7 @@ var rmTag = function(tname) {
     tobjs = tobjs.slice(0, tIndex).concat(tobjs.slice(tIndex + 1));
 };
 
+var popTrending; // defined in feed
 var populateNavbar = function () {
   var nav = document.getElementById("nav");
   var navbar = document.createElement("div");
@@ -166,7 +167,7 @@ var populateNavbar = function () {
     "<input type='checkbox' name='slider_box' id='slider_box' style='display:none'>",
     "<div id='slide_down_menu' class='pointer'>",
       "<ul>",
-      	"<li><a href='/feed'><div>",
+      	"<li><a onclick='popTrending();'><div>",
       	  "<img class='menu_icon' src='/img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
       	"</div></a></li>",
         "<li><a id='login'><div>",

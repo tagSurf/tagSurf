@@ -187,6 +187,10 @@ onload = function ()
 	autocomplete.register("autocomplete", tinput, autocompleteCbs);
 	gesture.listen("tap", document.getElementById("search-input"),
 		autocompleteCbs.enterCb);
+	popTrending = function() { // var'red in util (global)
+		slideNavMenu();
+		autocompleteCbs.tapCb("trending");
+	};
 
 	// slider stuff
 	var cardIndex = 0;
