@@ -5,8 +5,8 @@ onload = function ()
 	// defined in util for autocomplete
 	// integration with other sliding elements
 	tinput = document.getElementById("tag-input");
-	current_tag = tinput.value
-		= document.location.hash.slice(1) || "trending";
+	current_tag = tinput.value = document.location.hash.slice(1)
+		|| document.location.pathname.split("/")[2] || "trending";
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
