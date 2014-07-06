@@ -119,13 +119,15 @@ onload = function ()
 			cardsToLoad = [];
 		}
 	};
-	var shareOffset = 0;
+	var shareSwap, shareOffset = 0;
 	var dataPath = function(firstCard) {
 		if (isUnauthorized()) {
 			var p = "/api";
-			if (firstCard) {
+			if (firstCard || shareSwap) {
+				shareSwap = false;
 				shareOffset = 0;
-				p += "/" + current_tag + "/" + firstCard.id;
+				p += "/share/" + current_tag + "/" +
+					(firstCard ? firstCard.id : 0);
 			} else
 				p += document.location.pathname;
 			return p + "/20/" + (shareOffset++ * 20);
@@ -162,6 +164,7 @@ onload = function ()
 		tapCb: function(tagName, insertCurrent) {
 			closeAutoComplete(tagName, !!insertCurrent);
 			if (tagName != current_tag) {
+				shareSwap = true;
 				current_tag = tagName;
 				known_keys = {};
 				populateSlider(null, null, insertCurrent ? slider.card : null);
