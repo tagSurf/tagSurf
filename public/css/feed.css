@@ -377,3 +377,10 @@ html, body
 	margin-right: 5%;
 	top: 20%;
 }
+.reminder_close
+{
+  width: 40px;
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+}
