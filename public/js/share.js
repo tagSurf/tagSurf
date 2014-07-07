@@ -25,6 +25,7 @@ var share =
 		img.className = "halfwidth";
 		gesture.listen('down', img, function() {
 			window.open(share.networks[network]());
+			modal.topModalOut();
 		});
 		share.content.appendChild(img);
 	},
