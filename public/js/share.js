@@ -1,22 +1,28 @@
 var share =
 {
 	cb: null,
-	url: null,
 	data: null,
 	button: document.createElement('div'),
 	content: document.createElement('div'),
+	url: function() {
+		var hostname = document.location.hostname;
+		if (hostname.indexOf("localhost") != -1)
+			hostname = "beta.tagsurf.co";
+		return encodeURI("http://" + hostname + "/share/"
+			+ share.data.tags[0] + "/" + share.data.id);
+	},
 	networks: {
 		facebook: function() {
-			var d = share.data;
+			var d = share.data, u = share.url();
 			return "https://www.facebook.com/dialog/feed"
-				+ "?app_id=676135635790285" + "&link=" + share.url
+				+ "?app_id=676135635790285" + "&link=" + u
 				+ "&picture=" + encodeURI(image.get(d, window.innerWidth - 40).url)
-				+ "&name=tagSurf&caption=" + d.tags[0]
-				+ "&description=" + encodeURI(d.caption)
-				+ "&redirect_uri=" + share.url;
+				+ "&name=%23" + encodeURI(d.tags[0] + " " + d.caption)
+				+ "&caption=" + document.location.hostname
+				+ "&redirect_uri=" + u;
 		},
 		twitter: function() {
-			return "https://twitter.com/home?status=" + share.url;
+			return "https://twitter.com/home?status=" + share.url();
 		}
 	},
 	_icon: function(network) {
@@ -70,8 +76,6 @@ var share =
 	{
 		share.cb = cb;
 		share.data = data;
-		share.url = encodeURI("http://" + document.location.host
-			+ "/share/" + share.data.tags[0] + "/" + share.data.id);
 		toggleClass.call(share.button, 'share-active', 'on');
 	},
 	off: function ()
