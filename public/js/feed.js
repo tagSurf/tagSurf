@@ -1,5 +1,15 @@
 onload = function ()
 {
+			addCss({
+				"#swipe_scroll-container": function() {
+					return "height: " + (window.innerHeight - 50) + "px;width: "
+						+ window.innerWidth + "px"; 
+				},
+				"#scroll-tracker": function() {
+					return "height: " + (window.innerHeight - 50) + "px;width: "
+						+ (3 * window.innerWidth) + "px"; 
+				}
+			});
 	populateNavbar();
 
 	// defined in util for autocomplete
@@ -60,9 +70,51 @@ onload = function ()
 		slider.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
 		slider.lastChild.previousSibling.style.top = (50 + trueScrollTop) + 'px';
 	};
+	var hscrollCallback = function (event)
+	{
+		var hscroller = document.getElementById('swipe_scroll-container'),
+			thumbContainer = slider.lastChild.previousSibling;
+		slider.sliding = true;
+		slider.x = window.innerWidth - hscroller.scrollLeft;
+		if ( slider.x > 0)
+		{
+			slider.style['border-color'] = "green";
+			if (slider.supering == true)
+			{
+				slider.style['background-color'] = 'green';
+			}
+			if (thumbContainer.firstChild.style.opacity == 0)
+			{
+				thumbContainer.firstChild.style.opacity = 0.8;
+			}
+			if (thumbContainer.lastChild.style.opacity == .8)
+			{
+				thumbContainer.lastChild.style.opacity = 0;
+			}
+		}
+		else if ( slider.x < 0)
+		{
+			slider.style['border-color'] = "#C90016";
+			if (slider.supering == true)
+			{
+				slider.style['background-color'] = '#C90016';
+			}
+			if (thumbContainer.lastChild.style.opacity == 0)
+			{
+				thumbContainer.lastChild.style.opacity = .8;
+			}
+			if (thumbContainer.firstChild.style.opacity == .8)
+			{
+				thumbContainer.firstChild.style.opacity = 0;
+			}
+		}
+		slider.style['-webkit-transform'] = 
+			"translate3d(" + (slider.x * translationScale) + "px,0,0) rotate(" + (slider.x * rotationScale) + "deg)";
+	};
 	drag.makeDraggable(scrollContainer, {
 		constraint: "horizontal",
-		scroll: scrollCallback
+		scroll: scrollCallback,
+		hscroll: hscrollCallback
 	});
 
 	var data, buffer_minimum = 5, known_keys = {},
@@ -360,6 +412,7 @@ onload = function ()
 				}
 				return true;
 			}
+			/*
 			else 
 			{
 				if (slider.verticaling == false)
@@ -402,6 +455,7 @@ onload = function ()
 						"translate3d(" + ( slider.x * translationScale) + "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
 				}
 			}
+			*/
 		}
 	};
 	var tapCallback = function (tapCount)

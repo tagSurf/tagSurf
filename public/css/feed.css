@@ -3,7 +3,7 @@ html, body
   background-color: #494949;
   width: 100%;
   height: auto;
-  overflow-x: none;
+  overflow-x: visible;
 }
 #scroll-container
 {
@@ -15,6 +15,16 @@ html, body
   transition: opacity 500ms ease-in-out;
   -moz-transition: opacity 500ms ease-in-out;
   -webkit-transition: opacity 500ms ease-in-out;
+}
+#swipe_scroll-container
+{
+  position: relative;
+  z-index: 20;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+#scroll-tracker
+{
 }
 #input-container
 {
@@ -376,3 +386,8 @@ html, body
 	margin-right: 5%;
 	top: 20%;
 }
+/*
+#a{height: 100%;display:inline-block;width: 200px; background-color:green;}
+#b{height: 100%;display:inline-block;width: 200px; background-color:blue;}
+#c{height: 100%;display:inline-block;width: 200px; background-color:red;}
+*/

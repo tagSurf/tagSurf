@@ -59,11 +59,18 @@ var drag =
 				delayedDrag();
 			return true;
 		}, false);
+		if (opts.hscroll)
+		{
+			var hscroller = document.getElementById('swipe_scroll-container');
+			hscroller.scrollLeft = window.innerWidth;
+			console.log(hscroller.scrollLeft,window.innerWidth);
+			hscroller.addEventListener('scroll', function(){opts.hscroll();return true;}, false);
+		}
 	},
 	makeDraggable: function (node, opts)
 	{
 		opts = opts || {};
-		if (!opts.interval && isIos() && !opts.force)
+		if (!opts.interval && !opts.force)
 			return drag.nativeScroll(node.firstChild, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback;
 		node.xDrag = 0;
