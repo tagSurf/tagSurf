@@ -1,6 +1,6 @@
 class Api::MediaController < Api::BaseController
 
-  before_action :find_authenticated_user
+  before_action :find_authenticated_user, except: :share_feed
 
   def create_vote
 
@@ -64,10 +64,6 @@ class Api::MediaController < Api::BaseController
 
     def media_params
       params.permit(:id, :vote, :tag, :offset, :limit)
-    end
-
-    def find_authenticated_user
-      @user = current_user
     end
 
 end
