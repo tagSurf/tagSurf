@@ -756,3 +756,9 @@ onload = function ()
 	populateSlider();
 	setReminderTimeout();
 };
+
+// handle facebook redirects
+if (document.location.href.indexOf("?") != -1)
+	document.location = "http://" +
+		document.location.host +
+			document.location.pathname;
