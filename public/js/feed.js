@@ -623,7 +623,7 @@ onload = function ()
 	var buildLoginCard = function(c, zIndex) {
 		var formatter = document.createElement('div'),
 			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='/img/logo_w_border.png'><div class='big bold'>Sign up for a better feed!</div>",
-			form = "<form accept-charset='UTF-8' action='/users' class='new_user' id='new_user' method='post'><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center></form>",
+			form = "<center><form accept-charset='UTF-8' action='/users' class='new_user' id='new_user' method='post'><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div></form><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center>",
 			bottom = "<a href='/users/sign_in' class='small'>Already have an account? <b>Login here</b>.</a><div class='smaller'>By signing up you agree to our <a class='bold' id='terms-lnk'>Terms of Use</a> and <a class='bold' id='privacy-lnk'>Privacy Policy</a>.</div></div></div>",
 			cardTemplate = top + form + bottom;
 		formattingContainer.appendChild(formatter);
@@ -631,6 +631,18 @@ onload = function ()
 		initCard(formatter);
 		initDocLinks();
 		firstCardReady();
+
+		// form validation
+		var p = document.getElementById("password");
+		document.getElementById("su-submit-btn").onclick = function() {
+			if (!validEmail(document.getElementById("email").value))
+				return alert("Please use a valid email address");
+			if (p.value.length < 8)
+				return alert("Please try a longer password");
+			if (p.value != document.getElementById("repassword").value)
+				return alert("Please submit matching passwords");
+			document.getElementById("new_user").submit();
+		};
 	};
 	var firstCardReady = function () {
 		throbber.off();

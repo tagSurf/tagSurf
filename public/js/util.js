@@ -402,3 +402,10 @@ var trans = function(node, cb, transition, transform) {
   }
   if (transform) node.style['-webkit-transform'] = transform;
 };
+var validEmail = function(s) {
+  var atChar = s.indexOf('@');
+  var dotChar = s.indexOf('.', atChar);
+  if (atChar == -1 || dotChar == -1 || atChar > dotChar)
+    return false;
+  return true;
+};

@@ -11,12 +11,12 @@ body
 	margin: 0;
 	background-color: #404041;
 	color: white;
-	font-weight:200;
+	font-weight: 200;
 }
 
 html, input[type="submit"] {
 	font-family: 'Raleway', sans-serif;
-	font-weight:200;
+	font-weight: 200;
 }
 
 a, img, input[type="submit"], .pointer {
