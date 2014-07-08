@@ -1,5 +1,7 @@
 class Api::TagsController < Api::BaseController
 
+  before_action :find_authenticated_user, except: :tag_feed
+
   def tag_feed
     tags = Tag.current_feed(false)
     render json: tags
