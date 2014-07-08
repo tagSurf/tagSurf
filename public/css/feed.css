@@ -168,6 +168,7 @@ html, body
 
 .login-card {
   background: #00aeef;
+  border: 2px solid #00aeef;
   text-align: center;
 }
 
