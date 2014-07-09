@@ -371,7 +371,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 					analytics.track('Favorited from Gallery',{
 						card: current_image.id,
 						gallery: current_image.gallery
-					)};
+					});
 				} else {
 					analytics.track('Unfavorited from Gallery',{
 						card: current_image.id,
@@ -385,7 +385,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 				analytics.track('Unfavorited from Gallery',{
 					card: current_image.id,
 					gallery: current_image.gallery
-				)};
+				});
 			}
 		} else if (starCallback)
 			starCallback();
