@@ -28,6 +28,7 @@ onload = function ()
 					reminderTimeout = null;
 				});
 			}
+			analytics.track('Closed Swipe Reminder');
 		};
 		reminderContainer.id = "reminder_container";
 		close.className = "reminder_close";
@@ -653,6 +654,11 @@ onload = function ()
 		slider.card.tags_v2.push(objwrap);
 		tagCard(tag, document.getElementById("pictags" + slider.card.id));
 		formatCardContents();
+		analytics.track('Added Tag from Feed', {
+			card: slider.card.id,
+			surfing: current_tag,
+			tag_added: tag
+		});
 	});
 	setStarCallback(function() {
 		slider.style['border-color'] = "green";
@@ -667,6 +673,10 @@ onload = function ()
 			swipeSlider("right", function () {
 				setFavIcon(false);
 			});
+		});
+		analytics.track('Favorited from Feed', {
+			card: slider.card.id,
+			surfing: current_tag
 		});
 	});
 	setResizeCb(function() {
