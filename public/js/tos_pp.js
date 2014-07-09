@@ -3,6 +3,7 @@ document.body.innerHTML += "<div id=\"contenthider\" class=\"hidden\"> <div id=\
 var initDocLinks = function() {
 	var curContent, removeModal = function(direction) {
 		if (!direction || !isNaN(direction) || direction == "right") {
+			gesture.returnDefault = false;
 			modal.backOff();
 			modal.modalOut();
 			document.getElementById("contenthider").appendChild(curContent);
@@ -11,14 +12,13 @@ var initDocLinks = function() {
 	gesture.listen('down', document.getElementById("line-text-login"), function() {
 		window.location = '/users/sign_in';
 	});
-	gesture.listen('down', document.getElementById("terms-lnk"), function() {
-		modal.halfOn(removeModal);
-		curContent = document.getElementById("terms");
-		modal.modalIn(curContent, removeModal);
-	});
-	gesture.listen('down', document.getElementById("privacy-lnk"), function() {
-		modal.halfOn(removeModal);
-		curContent = document.getElementById("privacy");
-		modal.modalIn(curContent, removeModal);
+	["terms", "privacy"].forEach(function(doc) {
+		gesture.listen('down', document.getElementById(doc + "-lnk"), function() {
+			gesture.returnDefault = true;
+			modal.halfOn(removeModal);
+			curContent = document.getElementById(doc);
+			modal.modalIn(curContent, removeModal);
+			isIos() && setTimeout(window.onresize, 500);
+		});
 	});
 };
