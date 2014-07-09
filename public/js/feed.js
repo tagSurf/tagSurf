@@ -138,6 +138,9 @@ onload = function ()
 				current_tag = tagName;
 				known_keys = {};
 				populateSlider(null, null, insertCurrent ? slider.card : null);
+				analytics.track('Searched for tag' {
+					tag: tagName
+				});
 			}
 		},
 		expandCb: function() {
