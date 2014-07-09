@@ -244,6 +244,11 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		};
 		current_image.tags_v2.push(objwrap);
 		buildTagBlock(objwrap, tag);
+		analytics.track('Added Tag from Gallery', {
+			card: current_image.id,
+			gallery: current_image.gallery,
+			tag_added: tag
+		});
 	});
 	var updateFavorited = function() {
 		var gall, ndata;
@@ -362,10 +367,25 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 					current_image.user_stats.has_favorited
 						? "POST" : "DELETE");
 				updateFavorited();
+				if (current_image.user_stats.has_favorited){
+					analytics.track('Favorited from Gallery',{
+						card: current_image.id,
+						gallery: current_image.gallery
+					});
+				} else {
+					analytics.track('Unfavorited from Gallery',{
+						card: current_image.id,
+						gallery: current_image.gallery
+					});
+				};
 			} else if (current_image.gallery == "favorites") {
 				removeFavImage();
 				updateFavorited();
 				modal.callModal();
+				analytics.track('Unfavorited from Gallery',{
+					card: current_image.id,
+					gallery: current_image.gallery
+				});
 			}
 		} else if (starCallback)
 			starCallback();
