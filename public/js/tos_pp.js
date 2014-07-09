@@ -9,7 +9,8 @@ var initDocLinks = function() {
 			document.getElementById("contenthider").appendChild(curContent);
 		}
 	};
-	gesture.listen('down', document.getElementById("line-text-login"), function() {
+	var lineTextLogin = document.getElementById("line-text-login");
+	if (lineTextLogin) gesture.listen('down', lineTextLogin, function() {
 		window.location = '/users/sign_in';
 	});
 	["terms", "privacy"].forEach(function(doc) {
