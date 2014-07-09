@@ -658,7 +658,8 @@ onload = function ()
 
 		// form validation
 		var p = document.getElementById("password");
-		document.getElementById("new_user").onsubmit = function() {
+		var f = document.getElementById("new_user");
+		f.onsubmit = function() {
 			if (!validEmail(document.getElementById("email").value)) {
 				alert("Please use a valid email address");
 				return false;
@@ -673,6 +674,9 @@ onload = function ()
 			}
 			return true;
 		};
+		gesture.listen("down", document.getElementById("su-submit-btn"), function() {
+			f.onsubmit() && f.submit();
+		});
 	};
 	var firstCardReady = function () {
 		throbber.off();
