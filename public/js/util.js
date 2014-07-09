@@ -403,9 +403,10 @@ var trans = function(node, cb, transition, transform) {
   if (transform) node.style['-webkit-transform'] = transform;
 };
 var validEmail = function(s) {
-  var atChar = s.indexOf('@');
+  var atChar = s.indexOf('@', 1);
   var dotChar = s.indexOf('.', atChar);
-  if (atChar == -1 || dotChar == -1 || atChar > dotChar)
+  if (atChar == -1 || dotChar == -1 ||
+    dotChar == s.length - 1 || atChar + 2 > dotChar)
     return false;
   return true;
 };
