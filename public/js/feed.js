@@ -175,7 +175,9 @@ onload = function ()
 		},
 		".raw_wrapper, .zoom_wrapper, #scroll-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
-		}//,
+		}
+		// Why is this necessary? Setting width=100% in feed.css instead.
+		//,
 		// ".image-container img": function () {
 		// 	return "width: " + parseInt(window.innerWidth - (14 + .05 * window.innerWidth)) + "px;";
 		// }
