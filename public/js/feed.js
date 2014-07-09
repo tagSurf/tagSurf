@@ -718,6 +718,12 @@ onload = function ()
 			card: slider.card.id,
 			surfing: current_tag
 		});
+		analytics.page({
+				title: slider.card.id + " right",
+				url: 'http://beta.tagsurf.co/feed#'+current_tag,
+				path: "/feed#"+current_tag,
+				referrer: 'http://beta.tagsurf.co/'
+		});
 	});
 	setResizeCb(function() {
 		slideContainer.innerHTML = "";
