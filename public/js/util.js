@@ -285,7 +285,7 @@ var addCallback, setAddCallback = function(cb) {
 };
 var currentMedia, setCurrentMedia = function(d, shareCb) {
   currentMedia = d;
-  if (d)
+  if (d && d.type == "content")
     share.on(d, shareCb);
   else {
     share.off();
