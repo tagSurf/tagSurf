@@ -3,19 +3,19 @@ document.body.innerHTML += "<div id=\"contenthider\" class=\"hidden\"> <div id=\
 var initDocLinks = function() {
 	var curContent, removeModal = function(direction) {
 		if (!direction || !isNaN(direction) || direction == "right") {
+			gesture.returnDefault = false;
 			modal.backOff();
 			modal.modalOut();
 			document.getElementById("contenthider").appendChild(curContent);
 		}
 	};
-	document.getElementById("terms-lnk").onclick = function() {
-		modal.halfOn(removeModal);
-		curContent = document.getElementById("terms");
-		modal.modalIn(curContent, removeModal);
-	};
-	document.getElementById("privacy-lnk").onclick = function() {
-		modal.halfOn(removeModal);
-		curContent = document.getElementById("privacy");
-		modal.modalIn(curContent, removeModal);
-	};
+	["terms", "privacy"].forEach(function(doc) {
+		document.getElementById(doc + "-lnk").onclick = function() {
+			gesture.returnDefault = true;
+			modal.halfOn(removeModal);
+			curContent = document.getElementById(doc);
+			modal.modalIn(curContent, removeModal);
+			isIos() && setTimeout(window.onresize, 500);
+		};
+	});
 };
