@@ -5,11 +5,7 @@ class RemoteResource
 
   def self.get_request(service)
     requested_service = "https://imgur-apiv3.p.mashape.com/3/#{service}"
-    encoded_url = URI.encode(requested_service)
-    url = URI.parse(encoded_url)
-    Rails.logger.debug "*******"
-    Rails.logger.debug url
-    Rails.logger.debug "*******"
+    url = URI.parse(URI.encode(requested_service.strip))
     HTTParty.get(
       url,
       :headers => {
