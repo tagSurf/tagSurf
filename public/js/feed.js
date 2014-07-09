@@ -330,7 +330,7 @@ onload = function ()
 			});
 			analytics.page({
 				title: slider.card.id + " left",
-				url: 'http://beta.tagsurf.co/feed',
+				url: 'http://beta.tagsurf.co/feed#'+current_tag,
 				path: "/feed#"+current_tag,
 				referrer: 'http://beta.tagsurf.co/'
 			});
@@ -344,7 +344,7 @@ onload = function ()
 			});
 			analytics.page({
 				title: slider.card.id + " right",
-				url: 'http://beta.tagsurf.co/feed',
+				url: 'http://beta.tagsurf.co/feed#'+current_tag,
 				path: "/feed#"+current_tag,
 				referrer: 'http://beta.tagsurf.co/'
 			});
@@ -363,7 +363,7 @@ onload = function ()
 			});
 			analytics.page({
 				title: slider.card.id + " " + direction,
-				url: 'http://beta.tagsurf.co/feed',
+				url: 'http://beta.tagsurf.co/feed#'+current_tag,
 				path: "/feed#"+current_tag,
 				referrer: 'http://beta.tagsurf.co/'
 			});
