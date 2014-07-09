@@ -7,6 +7,9 @@ class RemoteResource
     requested_service = "https://imgur-apiv3.p.mashape.com/3/#{service}"
     encoded_url = URI.encode(requested_service)
     url = URI.parse(encoded_url)
+    Rails.logger.debug "*******"
+    Rails.logger.debug url
+    Rails.logger.debug "*******"
     HTTParty.get(
       url,
       :headers => {
