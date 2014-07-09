@@ -7,7 +7,7 @@ class RemoteResource
     requested_service = "https://imgur-apiv3.p.mashape.com/3/#{service}"
     url = URI.parse(URI.encode(requested_service.strip))
     HTTParty.get(
-      url,
+      requested_service,
       :headers => {
         "Authorization" => "Client-ID #{ENV['TS_IMGUR']}",
         "X-Mashape-Authorization" => ENV['TS_MASHAPE']
