@@ -29,7 +29,7 @@ var share =
 	_icon: function(network) {
 		var img = document.createElement("img");
 		img.src = "/img/social_media/" + network + ".png";
-		img.className = "halfwidth";
+		img.className = "share_link_icon";
 		gesture.listen('down', img, function() {
 			window.open(share.networks[network]());
 			modal.topModalOut();
@@ -45,12 +45,10 @@ var share =
 	{
 		var heading = document.createElement("div"),
 			blurb = document.createElement("div");
-		heading.className = "big bold";
+		heading.className = "really-big share_heading_margin";
 		heading.innerHTML = "Share This Card";
-		blurb.innerHTML = "Like it? Spread it!";
 		share.content.className = "centered";
 		share.content.appendChild(heading);
-		share.content.appendChild(blurb);
 		for (var network in share.networks)
 			share._icon(network);
 	},
