@@ -318,12 +318,25 @@ onload = function ()
 	window.onkeyup = function(e) {
 		e = e || window.event;
 		var code = e.keyCode || e.which;
-		if (code == 32)
+		if (code == 32){
 			expandCard();
-		else if (code == 37)
+		}
+		else if (code == 37){
 			swipeSlider("left");
-		else if (code == 39)
+			analytics.track("Key Swipe", {
+				card: slider.card.id,
+				direction: "left",	
+				surfing: current_tag
+			});
+		}
+		else if (code == 39){
 			swipeSlider("right");
+			analytics.track("Key Swipe", {
+				card: slider.card.id,
+				direction: "right",	
+				surfing: current_tag
+			});
+		};
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
