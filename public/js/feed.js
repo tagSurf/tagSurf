@@ -329,10 +329,16 @@ onload = function ()
 	{
 		if (slider.animating)
 			return;
-		if (direction == "left" || direction == "right")
+		if (direction == "left" || direction == "right"){
 			swipeSlider(direction, null, 700);
-		else if (slider.expanded)
+			analytics.track("Swipe", {
+				card: slider.card.id,
+				direction: direction,	
+				surfing: current_tag
+			});
+		} else if (slider.expanded){
 			return true;
+		};
 	};
 	var dragCallback = function (direction, distance, dx, dy)
 	{
