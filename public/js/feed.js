@@ -620,15 +620,39 @@ onload = function ()
 			buildCard();
 		};
 	};
+	var focusInput = function (input)
+	{
+		gesture.listen('down', input, function(){
+			input.focus();
+		});
+	};
+	var blurLoginInputs = function ()
+	{
+		var listInputs = document.forms[0].getElementsByClassName('su-input'),
+			listLength = listInputs.length, index = 0;
+		for (;index < listLength; ++index)
+		{
+			listInputs[index].blur();
+		}
+	};
+	var initLoginInputs = function () {
+		var listInputs = document.forms[0].getElementsByClassName('su-input'),
+			listLength = listInputs.length;
+		for (var index = 0;index < listLength; ++index)
+		{
+			focusInput(listInputs[index]);
+		}
+	};
 	var buildLoginCard = function(c, zIndex) {
 		var formatter = document.createElement('div'),
 			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='/img/logo_w_border.png'><div class='big bold'>Sign up for a better feed!</div>",
 			form = "<form accept-charset='UTF-8' action='/users' class='new_user' id='new_user' method='post'><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center></form>",
-			bottom = "<a href='/users/sign_in' class='small'>Already have an account? <b>Login here</b>.</a><div class='smaller'>By signing up you agree to our <a class='bold' id='terms-lnk'>Terms of Use</a> and <a class='bold' id='privacy-lnk'>Privacy Policy</a>.</div></div></div>",
+			bottom = "<div class='wide-text'><a id='line-text-login' class='small big-lnk'>Already have an account? <b>Login here</b>.</a></div><div class='smaller wide-text'>By signing up you agree to our <a class='bold big-lnk' id='terms-lnk'>Terms of Use</a> and <a class='bold big-lnk' id='privacy-lnk'>Privacy Policy</a>.</div></div></div>",
 			cardTemplate = top + form + bottom;
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		initCard(formatter);
+		initLoginInputs();
 		initDocLinks();
 		firstCardReady();
 
@@ -687,6 +711,10 @@ onload = function ()
 	};
 	var downCallback = function ()
 	{
+		if (slider.classList.contains('login-card'))
+		{
+			blurLoginInputs();
+		}
 		forgetReminder();
 		if (slider.style["-webkit-transform"] == "")
 		{

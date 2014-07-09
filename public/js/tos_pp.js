@@ -8,14 +8,17 @@ var initDocLinks = function() {
 			document.getElementById("contenthider").appendChild(curContent);
 		}
 	};
-	document.getElementById("terms-lnk").onclick = function() {
+	gesture.listen('down', document.getElementById("line-text-login"), function() {
+		window.location = '/users/sign_in';
+	});
+	gesture.listen('down', document.getElementById("terms-lnk"), function() {
 		modal.halfOn(removeModal);
 		curContent = document.getElementById("terms");
 		modal.modalIn(curContent, removeModal);
-	};
-	document.getElementById("privacy-lnk").onclick = function() {
+	});
+	gesture.listen('down', document.getElementById("privacy-lnk"), function() {
 		modal.halfOn(removeModal);
 		curContent = document.getElementById("privacy");
 		modal.modalIn(curContent, removeModal);
-	};
+	});
 };

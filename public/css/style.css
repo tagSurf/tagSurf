@@ -518,3 +518,13 @@ a {
   bottom: 15px;
   right: 15px;
 }
+.big-lnk
+{
+	padding: 15px 0;
+}
+
+.wide-text
+{
+	display: inline-block;
+	line-height: 30px;
+}
