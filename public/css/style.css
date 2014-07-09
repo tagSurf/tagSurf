@@ -122,6 +122,9 @@ a {
 .biggest {
 	font-size: 160%;
 }
+.really-big {
+	font-size: 240%;
+}
 
 .bold {
 	font-weight: bold;
@@ -527,4 +530,13 @@ a {
 {
 	display: inline-block;
 	line-height: 30px;
+}
+.share_link_icon
+{
+	width: 33%;
+	margin: 0 20px;
+}
+.share_heading_margin
+{
+	margin: 60px 0;
 }
