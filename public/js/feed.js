@@ -175,10 +175,10 @@ onload = function ()
 		},
 		".raw_wrapper, .zoom_wrapper, #scroll-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
-		},
-		".image-container img": function () {
-			return "width: " + parseInt(window.innerWidth - (14 + .05 * window.innerWidth)) + "px;";
-		}
+		}//,
+		// ".image-container img": function () {
+		// 	return "width: " + parseInt(window.innerWidth - (14 + .05 * window.innerWidth)) + "px;";
+		// }
 	});
 	var formattingContainer = document.getElementById('formatter');
 	var slider;

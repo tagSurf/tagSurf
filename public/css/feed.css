@@ -241,6 +241,7 @@ html, body
 {
   border-radius: 5px;
   height: auto;
+  width: 100%;
   -webkit-overflow-scrolling: none;
 }
 
@@ -384,3 +385,51 @@ html, body
   bottom: 15px;
   right: 15px;
 }
+
+@media only screen and (min-width: 1024px){
+  .card-container
+  {
+  position: relative;
+  overflow: hidden;
+  height: auto;
+  width: 70%;
+  margin: auto;
+  padding: 5px;
+  background: #353535;
+  border: 2px solid #353535;
+  border-radius: 10px;
+  box-shadow: 2px 3px 5px -1px rgba(0,0,0,0.7);
+  }
+  .text-container
+  {
+    font-size: 20px;
+  }
+  .pictags
+  {
+    font-size: 20px;
+  }
+  .tag-callout
+  {
+    font-size: 20px;
+  }
+  .tag-callout img
+  {
+    height: 17px;
+  }
+  .source-icon
+  {
+    height: 28px;
+  }
+  #slide_down_menu li 
+  {
+    font-size: 24px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  .menu_icon
+  {
+    width: 24px;
+  }
+}
+
+
