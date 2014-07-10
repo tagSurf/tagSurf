@@ -81,14 +81,15 @@ class Api::UsersController < Api::BaseController
   end
 
   def stats
+    results = {:user => @user}
     if @user = current_user
-      results = {:user => @user}
       results['total_votes'] = @user.find_voted_items.count
       results['up_votes']    = @user.find_up_voted_items.count
       results['down_votes']  = @user.find_down_voted_items.count
       render json: results
     else
-      render json: "no active user"
+      results[:user] = "not found"
+      render json: results, status: :not_found
     end
   end
 
