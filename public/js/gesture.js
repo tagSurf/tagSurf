@@ -36,7 +36,8 @@ var gesture = {
 	events: isMobile() && {
 		Start: "touchstart",
 		Stop: "touchend",
-		Move: "touchmove"
+		Move: "touchmove",
+		Cancel: "touchcancel"
 	} || {
 		Start: "mousedown",
 		Stop: "mouseup",
@@ -128,16 +129,6 @@ var gesture = {
 		}
 		return gesture.triggerUp(node, delayed);
 	},
-	// deprecated
-	delayedStop: function(e, node) {
-		var v = node.gvars;
-		if (v.stopTimeout) {
-			clearTimeout(v.stopTimeout);
-			v.stopTimeout = null;
-		}
-		v.stopTimeout = setTimeout(gesture.onStop,
-			gesture.thresholds.up.androidDelay, e, node, true);
-	},
 	onMove: function(e, node) {
 		var v = node.gvars;
 		if (v.active) {
@@ -145,7 +136,7 @@ var gesture = {
 			var diff = gesture.getDiff(v.lastPos, pos);
 			v.lastPos = pos;
 			return gesture.triggerDrag(node, diff.direction,
-				diff.distance, diff.x, diff.y) && !isAndroid();
+				diff.distance, diff.x, diff.y);
 		}
 	},
 	eWrap: function(node) {
@@ -156,6 +147,8 @@ var gesture = {
 					|| e.preventDefault() || e.stopPropagation() || false;
 			};
 		});
+		if (gesture.events.Cancel)
+			e.Cancel = e.Stop;
 		return e;
 	},
 	listen: function(eventName, node, cb) {

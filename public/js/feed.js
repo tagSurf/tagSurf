@@ -244,7 +244,6 @@ onload = function ()
 		slider.supering = false;
 		if (slider.animating == false)
 		{
-			gesture.triggerUp(scrollContainer);
 			if (slider.sliding == true)
 			{
 				if (androidSoftUp || Math.abs(slider.x) < slideThreshold)
@@ -264,7 +263,7 @@ onload = function ()
 			{
 				slider.verticaling = false;
 				slider.sliding = false;
-//				return true;
+				return true;
 			}
 		}
 		slider.verticaling = false;
@@ -400,7 +399,6 @@ onload = function ()
 				{
 					slider.verticaling = true;
 				}
-				gesture.triggerDrag(scrollContainer, direction, distance, dx, dy);
 				if ((atTop && direction == "down") ||
 					(atBottom && direction == "up"))
 				{
@@ -661,7 +659,6 @@ onload = function ()
 	};
 	var downCallback = function ()
 	{
-		gesture.triggerDown(scrollContainer);
 		if (reminderTimeout)
 		{
 			document.body.removeChild(document.getElementById("reminder_container"));
