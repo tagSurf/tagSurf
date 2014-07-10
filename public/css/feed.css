@@ -405,3 +405,21 @@ html, body
   bottom: 15px;
   right: 15px;
 }
+.button 
+{
+  text-align: center;
+  white-space: nowrap;
+  font-weight: 200;
+  color: white;
+  background: #1dafec;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+.forward 
+{
+  float: right;
+  margin-right: -30px;
+  padding-right: 40px;
+  width: 180px;
+}
