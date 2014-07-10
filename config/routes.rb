@@ -46,12 +46,12 @@ Tagsurf::Application.routes.draw do
 
     # Media API
     get  'media/:tag'                     => 'media#next'
-    get  'shares/:tag/:id/:limit/:offset' => 'media#share_feed'
+    get  'share/:tag/:id/:limit/:offset'  => 'media#share_feed'
     post 'media/:media_id/tags/:name/'    => 'tags#create'
 
     # Tags API
     get  'tags'                          => 'tags#tag_feed'
-    get  'tags/search'                        => 'tags#search'
+    get  'tags/search'                   => 'tags#search'
     get  'tags/:name'                    => 'tags#show'
 
     # Vote API

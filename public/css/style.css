@@ -341,3 +341,13 @@ a {
   -moz-transform: translateZ(0);
   transform: translateZ(0);
 }
+.touch_expander
+{
+  float: right;
+  clear: both;
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+  z-index: 1;
+}
+

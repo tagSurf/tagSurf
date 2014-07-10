@@ -15,6 +15,8 @@ onload = function ()
 	var setReminderTimeout = function ()
 	{
 		var reminderContainer = document.createElement('div'),
+			closeContainer = document.createElement('div'),
+			close = document.createElement('img'),
 			leftImage = new Image(), rightImage = new Image();
 		var closeReminderCallback = function (direction)
 		{
@@ -26,8 +28,13 @@ onload = function ()
 					reminderTimeout = null;
 				});
 			}
+			analytics.track('Closed Swipe Reminder');
 		};
 		reminderContainer.id = "reminder_container";
+		close.className = "reminder_close";
+		close.src = "/img/Close.png";
+		closeContainer.appendChild(close);
+		reminderContainer.appendChild(closeContainer);
 		leftImage.id = "reminder_left";
 		leftImage.src = "/img/reminder_left.png";
 		rightImage.id = "reminder_right";
@@ -41,6 +48,7 @@ onload = function ()
 			}
 		});
 		gesture.listen("down", reminderContainer, returnTrue);
+		gesture.listen('down', closeContainer, closeReminderCallback);
 		gesture.listen("tap", reminderContainer, closeReminderCallback);
 		gesture.listen("swipe", reminderContainer, closeReminderCallback);
 		document.body.appendChild(reminderContainer);
@@ -135,6 +143,9 @@ onload = function ()
 				current_tag = tagName;
 				known_keys = {};
 				populateSlider(null, null, insertCurrent ? slider.card : null);
+				analytics.track('Searched for tag', {
+					tag: tagName
+				});
 			}
 		},
 		expandCb: function() {
@@ -323,19 +334,56 @@ onload = function ()
 	window.onkeyup = function(e) {
 		e = e || window.event;
 		var code = e.keyCode || e.which;
-		if (code == 32)
+		if (code == 32){
 			expandCard();
-		else if (code == 37)
+		}
+		else if (code == 37){
 			swipeSlider("left");
-		else if (code == 39)
+			analytics.track("Key Swipe", {
+				card: slider.card.id,
+				direction: "left",	
+				surfing: current_tag
+			});
+			analytics.page({
+				title: slider.card.id + " left",
+				url: 'http://beta.tagsurf.co/feed#'+current_tag,
+				path: "/feed#"+current_tag,
+				referrer: 'http://beta.tagsurf.co/'
+			});
+		}
+		else if (code == 39){
 			swipeSlider("right");
+			analytics.track("Key Swipe", {
+				card: slider.card.id,
+				direction: "right",	
+				surfing: current_tag
+			});
+			analytics.page({
+				title: slider.card.id + " right",
+				url: 'http://beta.tagsurf.co/feed#'+current_tag,
+				path: "/feed#"+current_tag,
+				referrer: 'http://beta.tagsurf.co/'
+			});
+		};
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
-		if (!slider.animating && (direction == "up" || direction == "down"))
+		if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
 			gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
-		if (!slider.animating && (direction == "left" || direction == "right"))
+		else if (!slider.animating && (direction == "left" || direction == "right")) {
 			swipeSlider(direction, null, 700);
+			analytics.track("Swipe", {
+				card: slider.card.id,
+				direction: direction,	
+				surfing: current_tag
+			});
+			analytics.page({
+				title: slider.card.id + " " + direction,
+				url: 'http://beta.tagsurf.co/feed#'+current_tag,
+				path: "/feed#"+current_tag,
+				referrer: 'http://beta.tagsurf.co/'
+			});
+		}
 	};
 	var dragCallback = function (direction, distance, dx, dy)
 	{
@@ -663,6 +711,11 @@ onload = function ()
 		slider.card.tags_v2.push(objwrap);
 		tagCard(tag, document.getElementById("pictags" + slider.card.id));
 		formatCardContents();
+		analytics.track('Added Tag from Feed', {
+			card: slider.card.id,
+			surfing: current_tag,
+			tag_added: tag
+		});
 	});
 	setStarCallback(function() {
 		slider.style['border-color'] = "green";
@@ -677,6 +730,16 @@ onload = function ()
 			swipeSlider("right", function () {
 				setFavIcon(false);
 			});
+		});
+		analytics.track('Favorited from Feed', {
+			card: slider.card.id,
+			surfing: current_tag
+		});
+		analytics.page({
+				title: slider.card.id + " right",
+				url: 'http://beta.tagsurf.co/feed#'+current_tag,
+				path: "/feed#"+current_tag,
+				referrer: 'http://beta.tagsurf.co/'
 		});
 	});
 	setResizeCb(function() {

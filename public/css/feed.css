@@ -126,7 +126,7 @@ html, body
   left: 0px;
   right: 0px;
   margin: auto;
-  width: 200px;
+  width: 220px;
   height: 0px;
   border-radius: 8px;
   color: black;
@@ -138,6 +138,7 @@ html, body
 #autocomplete div
 {
   padding: 5px;
+  padding-left: 20px;
 }
 .autocomplete-open
 {
@@ -375,4 +376,11 @@ html, body
 	float: right;
 	margin-right: 5%;
 	top: 20%;
+}
+.reminder_close
+{
+  width: 40px;
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
 }
