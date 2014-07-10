@@ -181,7 +181,7 @@ a.back {
 }
 .modal {
 	top: 10px;
-	bottom: 80px;
+	bottom: 10px;
 	box-shadow: none;
 	background: white;
 }
