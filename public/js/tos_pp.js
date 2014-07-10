@@ -9,6 +9,13 @@ var initDocLinks = function() {
 			document.getElementById("contenthider").appendChild(curContent);
 		}
 	};
+	var removePrivacy = function(direction) {
+		if (!direction || !isNaN(direction) || direction == "right") {
+			gesture.returnDefault = false;
+			modal.backOff();
+			modal.modalOut();
+		}
+	};
 	var lineTextLogin = document.getElementById("line-text-login");
 	if (lineTextLogin) gesture.listen('down', lineTextLogin, function() {
 		window.location = '/users/sign_in';
@@ -19,14 +26,14 @@ var initDocLinks = function() {
 			modal.halfOn(removeModal);
 			curContent = document.getElementById(doc);
 			modal.modalIn(curContent, removeModal);
-			isIos() && setTimeout(window.onresize, 500);
+			isIphone() && setTimeout(window.onresize, 500);
 		});
 	});
 	gesture.listen('down', document.getElementById("embedded-privacy-lnk"), function() {
 			gesture.returnDefault = true;
-			modal.halfOn(removeModal);
+			modal.halfOn(removePrivacy);
 			curContent = document.getElementById('privacy');
-			modal.modalIn(curContent, removeModal);
-			isIos() && setTimeout(window.onresize, 500);
+			modal.modalIn(curContent, removePrivacy);
+			isIphone() && setTimeout(window.onresize, 500);
 		});
 };
