@@ -144,7 +144,9 @@ html, body
 {
   height: 150px !important;
 }
-
+.abcs {
+  list-style-type: lower-alpha;
+}
 .card-wrapper
 {
   -webkit-user-select: none;
