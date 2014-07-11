@@ -12,11 +12,8 @@ body
 	background-color: #404041;
 	color: white;
 	font-weight: 200;
-}
-
-body
-{
-	overflow-y: hidden;
+	overflow: hidden;
+	position: fixed;
 }
 
 html, input[type="submit"] {
