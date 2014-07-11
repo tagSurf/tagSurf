@@ -121,8 +121,8 @@ var gesture = {
 					diff.distance / timeDiff)) * (isIos() ? 1 : 0.5));
 		else if ( (timeDiff < t.tap.maxTime)
 			&& (diff.distance < t.tap.maxDistance) ) { // tap
-			node.tapCount = (node.tapCount || 0) + 1;
-			if (node.tapCount == t.tap.maxCount)
+			v.tapCount += 1;
+			if (v.tapCount == t.tap.maxCount)
 				gesture.triggerTap(node);
 			else
 				v.tapTimeout = setTimeout(gesture.triggerTap, t.tap.waitTime, node);
@@ -183,7 +183,7 @@ var gesture = {
 		var v = node.gvars;
 		var handlers = gesture.handlers.tap[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
-			handlers[i](node.tapCount);
+			handlers[i](v.tapCount);
 		v.tapCount = 0;
 		v.tapTimeout = null;
 	},
