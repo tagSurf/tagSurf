@@ -8,8 +8,12 @@ var share =
 		var hostname = document.location.hostname;
 		if (hostname.indexOf("localhost") != -1)
 			hostname = "beta.tagsurf.co";
-		return encodeURI("http://" + hostname + "/share/"
-			+ current_tag + "/" + share.data.id);
+		//Special share treatment for landing page cards
+		if (share.data.id == 272733 || share.data.id == 272738)
+			return encodeURI("http://tagsurf.co")
+		else 
+			return encodeURI("http://" + hostname + "/share/"
+				+ current_tag + "/" + share.data.id);
 	},
 	networks: {
 		facebook: function() {
