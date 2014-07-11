@@ -517,7 +517,7 @@ onload = function ()
 		{
 			if (slider.compressing == false)
 			{
-				modal.zoomIn(slider.card, modal.zoomOut);
+				modal.zoomIn(slider.card);
 			}
 			else if (slider.expanded == false)
 			{
