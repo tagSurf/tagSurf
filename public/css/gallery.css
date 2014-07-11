@@ -108,6 +108,7 @@ img[src="img/history_icon_gray.png"]
 	overflow-x: hidden;
 	overflow-y: auto;
 	position: relative;
+	margin-top: -11px;
 }
 
 #bigpic {
