@@ -11,22 +11,37 @@ var share =
 		//Special share treatment for landing page cards
 		if (share.data.id == 272733 || share.data.id == 272738)
 			return encodeURI("http://tagsurf.co");
-		else 
+		else if (current_tag)
 			return encodeURI("http://" + hostname + "/share/"
 				+ current_tag + "/" + share.data.id);
+		else
+			return encodeURI("http://" + hostname + "/share/"
+				+ share.data.tags[0] + "/" + share.data.id);
 	},
 	networks: {
 		facebook: function() {
-			var d = share.data, u = share.url();
+			var d = share.data, u = share.url(), share_tag;
+			if(current_tag)
+				share_tag=current_tag;
+			else
+				share_tag=share.data.tags[0];
+			analytics.track('Share to facebook',{
+				card: share.data.id,
+				surfing: current_tag
+			});
 			return "https://www.facebook.com/dialog/feed"
 				+ "?app_id=676135635790285" + "&link=" + u
 				+ "&picture=" + encodeURI(image.get(d, window.innerWidth - 40).url)
 				+ "&name=" + encodeURI(d.caption)
-				+ "&description=%23" + current_tag
+				+ "&description=%23" + share_tag
 				+ "&caption=" + document.location.hostname
 				+ "&redirect_uri=" + u;
 		},
 		twitter: function() {
+			analytics.track('Share to twitter',{
+				card: share.data.id,
+				surfing: current_tag
+			});
 			return "https://twitter.com/home?status=" + share.url();
 		}
 	},
