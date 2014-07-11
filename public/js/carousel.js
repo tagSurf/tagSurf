@@ -42,7 +42,7 @@ var carousel =
 		carousel.view.appendChild(container);
 		carousel.view.appendChild(orderIndication);
 		document.body.appendChild(carousel.view);
-		for (index = 1; index <= 6; ++index)
+		for (index = 1; index <= 7; ++index)
 		{
 			carousel.images.push(
 				'/img/tutorial/tutorial_' + index + '.png');
