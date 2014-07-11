@@ -144,7 +144,9 @@ html, body
 {
   height: 150px !important;
 }
-
+.abcs {
+  list-style-type: lower-alpha;
+}
 .card-wrapper
 {
   -webkit-user-select: none;
@@ -164,6 +166,25 @@ html, body
   border: 2px solid #353535;
   border-radius: 10px;
   box-shadow: 2px 3px 5px -1px rgba(0,0,0,0.7);
+}
+
+.login-card {
+  background: #00aeef;
+  border: 2px solid #00aeef;
+  text-align: center;
+}
+
+.login-card img {
+  width: 50px;
+  margin: 15px 0 5px 0;
+}
+
+.login-card a {
+  color: white;
+}
+
+.login-card div {
+  padding: 2px;
 }
 
 .swiping
@@ -385,6 +406,67 @@ html, body
   bottom: 15px;
   right: 15px;
 }
+.button 
+{
+  text-align: center;
+  white-space: nowrap;
+  font-weight: 200;
+  color: white;
+  background: #1dafec;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  overflow: hidden;
+}
+.forward 
+{
+  float: right;
+  margin-right: -30px;
+  padding-right: 40px;
+  width: 180px;
+}
+.content 
+{
+  position: absolute;
+  top: 40px;
+  bottom: 70px;
+  left: 0px;
+  right: 0px;
+  text-align: justify;
+  overflow-y: scroll;
+}
+.content div {
+  width: 85%;
+  padding: 5px 0px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content ul {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-padding-start: 15px;
+}
+
+.content ol {
+  width: 85%;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-padding-start: 15px;
+}
+.bottom 
+{
+  width: 100%;
+  position: absolute;
+  bottom: 12px;
+  overflow: hidden;
+}
+.tos-title
+{
+  font-size: 120%;
+  padding: 5px 10px 10px 15px;
+}
 
 @media only screen and (min-width: 1024px){
   .card-container
@@ -473,5 +555,4 @@ html, body
     margin-top: 45px;
   }
 }
-
 

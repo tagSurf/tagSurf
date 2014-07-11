@@ -3,6 +3,7 @@ body
 {
 	background-color: white;
 	color: black;
+	overflow: hidden;
 }
 
 .toplogo {
@@ -17,8 +18,8 @@ body
 
 .content {
 	position: absolute;
-	top: 80px;
-	bottom: 80px;
+	top: 40px;
+	bottom: 70px;
 	left: 0px;
 	right: 0px;
 	text-align: justify;
@@ -30,21 +31,21 @@ body
 }
 
 .content div {
-	width: 255px;
+	width: 85%;
 	padding: 5px 0px;
 	margin-left: auto;
 	margin-right: auto;
 }
 
 .content ul {
-	width: 255px;
+	width: 85%;
 	margin-left: auto;
 	margin-right: auto;
 	-webkit-padding-start: 15px;
 }
 
 .content ol {
-	width: 255px;
+	width: 85%;
 	margin-left: auto;
 	margin-right: auto;
 	-webkit-padding-start: 15px;
@@ -118,17 +119,11 @@ body
 	border: solid 12px white;
 }
 
-.bigplace::-webkit-input-placeholder {
-	font-size: 100%;
-	line-height: 25px;
-	height: 20px;
-	font-weight: 200;
-}
-
 .bottom {
 	width: 100%;
 	position: absolute;
-	bottom: 15px;
+	bottom: 12px;
+	overflow: hidden;
 }
 
 .button {
@@ -186,7 +181,7 @@ a.back {
 }
 .modal {
 	top: 10px;
-	bottom: 80px;
+	bottom: 10px;
 	box-shadow: none;
 	background: white;
 }
@@ -274,22 +269,6 @@ a.back {
 	font-family: 'Raleway', 'sans-serif';
 	color: black;
 }
-.su-input-container
-{
-	width: 225px;
-	height: 37px;
-  margin-top: 4px;
-	margin-bottom: 10px;
-	border: solid 1px grey;
-	-moz-border-radius: 50px / 50px;
-	-webkit-border-radius: 50px / 50px;
-	border-radius: 50px / 50px;
-	-webkit-background-clip: padding-box;
-}
-
-.light-bottom-margin{
-  margin-bottom: 4px; 
-}
 
 .su-helper-txt{
   font-size: 12px;
@@ -321,46 +300,6 @@ a.back {
 	color:#272727;
 }
 
-.su-input
-{
-	font-family: 'Raleway', 'sans-serif';
-	width: 203px;
-	height: 31px;
-	color: #000;
-	padding-top: 10px;
-	padding-left: 5px;
-	line-height: 25px;
-	border: solid thin transparent;
-	font-size: 20px;
-	font-weight: 200;
-	background: #fff;
-	outline-width: 0;
-	-moz-border-radius: 50px / 50px;
-	-webkit-border-radius: 50px / 50px;
-	border-radius: 50px / 50px;
-	transition: border-color 200ms;
-	-webkit-background-clip: padding-box;
-}
-#su-submit-btn
-{
-	font-size: 20px;
-	font-family: 'Raleway', 'sans-serif';
-  font-weight:200;
-	color: white;
-	background-color: #1dafec;
-	letter-spacing: 1px;
-	height: 45px;
-	border: none;
-	width: 160px;
-	outline-width: 0;
-	margin-bottom: 20px;
-	border-radius: 40px;
-	-webkit-border-radius: 40px;
-	-moz-box-shadow: none !important;
-	-webkit-box-shadow: none !important;
-	box-shadow: none !important;
-	-webkit-appearance: none;
-}
 .focused {
 	border-color: #48a4df;
 }
@@ -381,4 +320,8 @@ a.back {
   width: 217px;
 }
 
+.tos-title{
+  font-size: 120%;
+  padding: 5px 10px 10px 15px;
+}
 

@@ -11,12 +11,12 @@ body
 	margin: 0;
 	background-color: #404041;
 	color: white;
-  font-weight:200;
+	font-weight: 200;
 }
 
 html, input[type="submit"] {
 	font-family: 'Raleway', sans-serif;
-  font-weight:200;
+	font-weight: 200;
 }
 
 a, img, input[type="submit"], .pointer {
@@ -75,6 +75,10 @@ a {
 	font-weight: 300;
 }
 
+.halfwidth {
+	width: 50%;
+}
+
 .padded {
 	padding: 10px;
 }
@@ -95,6 +99,10 @@ a {
   font-size: 12px;
 }
 
+.smaller {
+	font-size: 55%;
+}
+
 .small {
 	font-size: 80%;
 }
@@ -113,6 +121,9 @@ a {
 
 .biggest {
 	font-size: 160%;
+}
+.really-big {
+	font-size: 240%;
 }
 
 .bold {
@@ -325,16 +336,56 @@ a {
 {
   height: 150px !important;
 }
+#share-button
+{
+  -webkit-transition: opacity 250ms;
+  transition: opacity 250ms;
+  opacity: 0;
+  z-index: 15;
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 50px;
+  padding: 10px;
+  pointer-events: none;
+}
+#share-icon
+{
+  width: 30px;
+}
+.share-active
+{
+  opacity: 1 !important;
+  pointer-events: initial !important;
+}
 .translate-z
 {
-   -webkit-backface-visibility: hidden;
-   -webkit-perspective: 1000;
-   backface-visibility: hidden;
-   perspective: 1000;
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  backface-visibility: hidden;
+  perspective: 1000;
   -webkit-transform: translateZ(0);
   -moz-transform: translateZ(0);
   transform: translateZ(0);
 }
+.inverted
+{
+        -webkit-transform: scaleX(-1);
+	        transform: scaleX(-1);
+
+}
+.ts-active-button
+{
+  color: #404041;
+  background-color: #00719C !important;
+}
+.opaque
+{
+  opacity: 1 !important;
+}
+
+/* unauth prompt content */
+.close_button_container,
 .touch_expander
 {
   float: right;
@@ -343,6 +394,150 @@ a {
   height: 30px;
   padding: 5px;
   z-index: 1;
+}
+.x_close_button
+{
+  width: 20px;
+}
+.prompt_title
+{
+  color: #00aeef;
+  font-size: 20px;
+  clear: both;
+  margin: 0;
+  position: relative;
+}
+.prompt_message
+{
+  display: inline-block;
+  color: black;
+  text-align: center;
+  font-size: 16px;
+}
+.prompt_login_button
+{
+  display: inline-block;
+  text-align: center;
+  background: #00aeef;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+}
+.prompt_container
+{
+	text-align: center;
+}
+.modal_prompt > div
+{
+	display: block;
+	text-align: center;
+}
+.modal_prompt
+{
+  opacity: 0;
+  margin: 0 auto;
+  text-align: center;
+  background-color: white;
+  border: 1px solid #00aeef;
+  z-index: 10;
+  position: relative;
+  width: 250px;
+  padding: 5px;
+  top: 50px;
+  border-radius: 10px;
+  -webkit-transition: opacity 250ms ease-in-out;
+}
+.bigplace::-webkit-input-placeholder {
+	font-size: 100%;
+	line-height: 25px;
+	height: 20px;
+	font-weight: 200;
+}
+#su-submit-btn
+{
+	font-size: 20px;
+	font-family: 'Raleway', 'sans-serif';
+	font-weight:200;
+	color: white;
+	background-color: #1dafec;
+	letter-spacing: 1px;
+	height: 45px;
+	border: none;
+	width: 160px;
+	outline-width: 0;
+	margin-bottom: 20px;
+	border-radius: 40px;
+	-webkit-border-radius: 40px;
+	-moz-box-shadow: none !important;
+	-webkit-box-shadow: none !important;
+	box-shadow: none !important;
+	-webkit-appearance: none;
+}
+.signup-button {
+	background-color: #404041 !important;
+	margin-bottom: 10px !important;
+	margin-top: 10px;
+}
+.su-input
+{
+	font-family: 'Raleway', 'sans-serif';
+	width: 203px;
+	height: 31px;
+	color: #000;
+	padding-left: 10px;
+	line-height: 25px;
+	border: solid thin transparent;
+	font-size: 20px;
+	font-weight: 200;
+	background: #fff;
+	outline-width: 0;
+	-moz-border-radius: 50px / 50px;
+	-webkit-border-radius: 50px / 50px;
+	border-radius: 50px / 50px;
+	transition: border-color 200ms;
+	-webkit-background-clip: padding-box;
+}
+.su-input-container
+{
+	width: 225px;
+	height: 37px;
+	margin-top: 4px;
+	margin-bottom: 10px;
+	border: solid 1px grey;
+	-moz-border-radius: 50px / 50px;
+	-webkit-border-radius: 50px / 50px;
+	border-radius: 50px / 50px;
+	-webkit-background-clip: padding-box;
+}
+
+.light-bottom-margin{
+  margin-bottom: 4px; 
+}
+
+.reminder_close
+{
+  position: absolute;
+  width: 40px;
+  bottom: 15px;
+  right: 15px;
+}
+.big-lnk
+{
+	padding: 15px 0;
+}
+
+.wide-text
+{
+	display: inline-block;
+}
+.share_link_icon
+{
+	width: 33%;
+	margin: 0 20px;
+}
+.share_heading_margin
+{
+	margin: 60px 0;
 }
 
 @media only screen and (min-width: 1024px){

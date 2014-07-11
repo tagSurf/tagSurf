@@ -5,13 +5,21 @@ onload = function ()
 	// defined in util for autocomplete
 	// integration with other sliding elements
 	tinput = document.getElementById("tag-input");
-	current_tag = tinput.value
-		= document.location.hash.slice(1) || "trending";
+	current_tag = tinput.value = document.location.hash.slice(1)
+		|| document.location.pathname.split("/")[2] || "trending";
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
 	reminderTimeout = null;
+	featureBlockContents = buildFeatureBlockerContents();
 
+	var forgetReminder = function() {
+		if (reminderTimeout) {
+			document.body.removeChild(document.getElementById("reminder_container"));
+			clearTimeout(reminderTimeout);
+			reminderTimeout = null;
+		}
+	};
 	var setReminderTimeout = function ()
 	{
 		var reminderContainer = document.createElement('div'),
@@ -84,18 +92,24 @@ onload = function ()
 	var popData = function(rdata, firstCard) {
 		var i, starters = [], others = [], preloads = [];
 
-		if (firstCard) known_keys[firstCard.id] = true;
-		for (i = 0; i < rdata.length; i++) {
-			if (!known_keys[rdata[i].id]) {
-				var d = rdata[i];
-				((!d.image.animated && starters.length < 3)
-					? starters : others).push(d);
-				known_keys[d.id] = true;
+		if (isUnauthorized())
+			preloads = rdata;
+		else {
+			if (firstCard) known_keys[firstCard.id] = true;
+			for (i = 0; i < rdata.length; i++) {
+				if (!known_keys[rdata[i].id]) {
+					var d = rdata[i];
+					((!d.image.animated && starters.length < 3)
+						? starters : others).push(d);
+					known_keys[d.id] = true;
+				}
 			}
+			for (i = 0; i < starters.length; i++) preloads.push(starters[i]);
+			for (i = 0; i < others.length; i++) preloads.push(others[i]);
+			if (firstCard) data.unshift(firstCard);
 		}
-		for (i = 0; i < starters.length; i++) data.push(starters[i]);
-		for (i = 0; i < others.length; i++) data.push(others[i]);
-		if (firstCard) data.unshift(firstCard);
+
+		data = data.concat(preloads);
 		return preloads;
 	};
 	var cardsToLoad = [];
@@ -105,6 +119,21 @@ onload = function ()
 			cardsToLoad = [];
 		}
 	};
+	var shareSwap, shareOffset = 0;
+	var dataPath = function(firstCard) {
+		if (isUnauthorized()) {
+			var p = "/api";
+			if (firstCard || shareSwap) {
+				shareSwap = false;
+				shareOffset = 0;
+				p += "/share/" + current_tag + "/" +
+					(firstCard ? firstCard.id : 0);
+			} else
+				p += document.location.pathname;
+			return p + "/20/" + (shareOffset++ * 20);
+		}
+		return "/api/media/" + current_tag;
+	};
 	var populateSlider = function (update, failMsgNode, firstCard)
 	{
 		if (!update && !failMsgNode)
@@ -113,7 +142,7 @@ onload = function ()
 			scrollContainer.style.opacity = 0;
 			throbber.on();
 		}
-		xhr("/api/media/" + current_tag, null, function(response_data) {
+		xhr(dataPath(firstCard), null, function(response_data) {
 			var rdata = response_data.data;
 			if (update)
 				cardsToLoad = cardsToLoad.concat(popData(rdata));
@@ -135,6 +164,7 @@ onload = function ()
 		tapCb: function(tagName, insertCurrent) {
 			closeAutoComplete(tagName, !!insertCurrent);
 			if (tagName != current_tag) {
+				shareSwap = true;
 				current_tag = tagName;
 				known_keys = {};
 				populateSlider(null, null, insertCurrent ? slider.card : null);
@@ -160,6 +190,10 @@ onload = function ()
 	autocomplete.register("autocomplete", tinput, autocompleteCbs);
 	gesture.listen("tap", document.getElementById("search-input"),
 		autocompleteCbs.enterCb);
+	popTrending = function() { // var'red in util (global)
+		slideNavMenu();
+		autocompleteCbs.tapCb("trending");
+	};
 
 	// slider stuff
 	var cardIndex = 0;
@@ -205,18 +239,20 @@ onload = function ()
 	};
 	var revertSlider = function ()
 	{
-		var thumbContainer = slider.lastChild.previousSibling;
-		slider.style['border-color'] = "#353535";
-		slider.style['background-color'] = "#353535";
-		slider.lastChild.display = "none";
+		if (slider.isContent) {
+			var thumbContainer = slider.lastChild.previousSibling;
+			slider.style['border-color'] = "#353535";
+			slider.style['background-color'] = "#353535";
+			slider.lastChild.display = "none";
 
-		if (thumbContainer.firstChild.style.opacity > 0)
-		{
-			thumbContainer.firstChild.style.opacity = 0;
-		}
-		if (thumbContainer.lastChild.style.opacity > 0)
-		{
-			thumbContainer.lastChild.style.opacity = 0;
+			if (thumbContainer.firstChild.style.opacity > 0)
+			{
+				thumbContainer.firstChild.style.opacity = 0;
+			}
+			if (thumbContainer.lastChild.style.opacity > 0)
+			{
+				thumbContainer.lastChild.style.opacity = 0;
+			}
 		}
 		if (slider.x == 0)
 		{
@@ -295,9 +331,16 @@ onload = function ()
 				slideContainer.children[0].style.zIndex = 2;
 				if (slideContainer.children[1])
 					slideContainer.children[1].style.zIndex = 1;
-				if (voteAlternative) voteAlternative();
-				else xhr("/api/votes/" + voteDir + "/" + activeCard.id
-					+ "/tag/" + current_tag, "POST");
+				if (!isUnauthorized()) {
+					activeCard.total_votes += 1;
+					activeCard[voteDir + "_votes"] += 1;
+					activeCard.user_stats.voted = true;
+					activeCard.user_stats.tag_voted = current_tag;
+					activeCard.user_stats.vote = voteDir;
+					if (voteAlternative) voteAlternative();
+					else xhr("/api/votes/" + voteDir + "/" + activeCard.id
+						+ "/tag/" + current_tag, "POST");
+				}
 				preloadCards();
 			},
 			"swiping",
@@ -308,12 +351,6 @@ onload = function ()
 		pushTags();
 		setSlider(slider.parentNode.nextSibling.firstChild);
 		setCurrentMedia(slider.card);
-		// history slider
-		activeCard.total_votes += 1;
-		activeCard[voteDir + "_votes"] += 1;
-		activeCard.user_stats.voted = true;
-		activeCard.user_stats.tag_voted = current_tag;
-		activeCard.user_stats.vote = voteDir;
 		// removed history slider
 //		addHistoryItem(activeCard);
 	};
@@ -399,38 +436,40 @@ onload = function ()
 			{
 				if (slider.verticaling == false)
 				{
-					 slider.sliding = true;
-					 slider.x += dx;
-					if ( slider.x > 0)
-					{
-						slider.style['border-color'] = "green";
-						if (slider.supering == true)
+					slider.sliding = true;
+					slider.x += dx;
+					if (slider.isContent) {
+						if ( slider.x > 0)
 						{
-							slider.style['background-color'] = 'green';
+							slider.style['border-color'] = "green";
+							if (slider.supering == true)
+							{
+								slider.style['background-color'] = 'green';
+							}
+							if (thumbContainer.firstChild.style.opacity == 0)
+							{
+								thumbContainer.firstChild.style.opacity = 0.8;
+							}
+							if (thumbContainer.lastChild.style.opacity == .8)
+							{
+								thumbContainer.lastChild.style.opacity = 0;
+							}
 						}
-						if (thumbContainer.firstChild.style.opacity == 0)
+						else if ( slider.x < 0)
 						{
-							thumbContainer.firstChild.style.opacity = 0.8;
-						}
-						if (thumbContainer.lastChild.style.opacity == .8)
-						{
-							thumbContainer.lastChild.style.opacity = 0;
-						}
-					}
-					else if ( slider.x < 0)
-					{
-						slider.style['border-color'] = "#C90016";
-						if (slider.supering == true)
-						{
-							slider.style['background-color'] = '#C90016';
-						}
-						if (thumbContainer.lastChild.style.opacity == 0)
-						{
-							thumbContainer.lastChild.style.opacity = .8;
-						}
-						if (thumbContainer.firstChild.style.opacity == .8)
-						{
-							thumbContainer.firstChild.style.opacity = 0;
+							slider.style['border-color'] = "#C90016";
+							if (slider.supering == true)
+							{
+								slider.style['background-color'] = '#C90016';
+							}
+							if (thumbContainer.lastChild.style.opacity == 0)
+							{
+								thumbContainer.lastChild.style.opacity = .8;
+							}
+							if (thumbContainer.firstChild.style.opacity == .8)
+							{
+								thumbContainer.firstChild.style.opacity = 0;
+							}
 						}
 					}
 					slider.style['-webkit-transform'] = 
@@ -497,7 +536,7 @@ onload = function ()
 	var expandTimeout;
 	var setSlider = function(s) {
 		slider = s || slideContainer.firstChild.firstChild;
-		setCurrentMedia(slider.card);
+		setCurrentMedia(slider.card, forgetReminder);
 		if (expandTimeout) {
 			clearTimeout(expandTimeout);
 			expandTimeout = null;
@@ -576,15 +615,10 @@ onload = function ()
 			}
 		}
 	};
-	var buildCard = function (zIndex)
-	{
-		if (!dataThrobTest())
-			return;
-		var imageContainer, iconLine, textContainer, picTags, 
-			fullscreenButton, truncatedTitle, card, 
-			targetHeight, imageData, c = data[cardIndex];
-		var cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb_up' src='/img/thumbsup.png'><img class='thumb_down' src='/img/thumbsdown.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
-		var formatter = document.createElement('div');
+	var buildContentCard = function(c, zIndex) {
+		var imageContainer, iconLine, textContainer, picTags, fullscreenButton,
+			truncatedTitle, card, formatter = document.createElement('div'),
+			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb_up' src='/img/thumbsup.png'><img class='thumb_down' src='/img/thumbsdown.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		imageContainer = formatter.children[0].children[0].children[0];
@@ -613,22 +647,12 @@ onload = function ()
 			var t = Object.keys(tagobj)[0];
 			t && t != "trending" && tagCard(t, picTags);
 		});
-		card = formatter.firstChild.firstChild;
-		setStartState(card);
-		imageData = image.get(card.card);
-		formatCardContents(card, imageData);
-		initCardGestures.call(card.parentNode);
-		slideContainer.appendChild(card.parentNode);
-		formattingContainer.removeChild(formatter);
-		setSlider();
+		var card = initCard(formatter);
+		card.isContent = true;
+		formatCardContents(card, image.get(card.card));
 		if (slider == card)
 		{
-			imageContainer.firstChild.onload = function ()
-			{
-				throbber.off();
-				scrollContainer.style.opacity = 1;
-				preloadCards();
-			};
+			imageContainer.firstChild.onload = firstCardReady;
 		}
 		imageContainer.firstChild.onerror = function() {
 			slideContainer.removeChild(card.parentNode);
@@ -638,6 +662,92 @@ onload = function ()
 			}
 			buildCard();
 		};
+	};
+	var focusInput = function (input)
+	{
+		gesture.listen('down', input, function(){
+			input.focus();
+		});
+	};
+	var blurLoginInputs = function ()
+	{
+		var listInputs = document.forms[0].getElementsByClassName('su-input'),
+			listLength = listInputs.length, index = 0;
+		for (;index < listLength; ++index)
+		{
+			listInputs[index].blur();
+		}
+	};
+	var initLoginInputs = function () {
+		var listInputs = document.forms[0].getElementsByClassName('su-input'),
+			listLength = listInputs.length;
+		for (var index = 0;index < listLength; ++index)
+		{
+			focusInput(listInputs[index]);
+		}
+	};
+	var buildLoginCard = function(c, zIndex) {
+		var formatter = document.createElement('div'),
+			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='/img/logo_w_border.png'><div class='big bold'>Sign up for a better feed!</div>",
+			form = "<form accept-charset='UTF-8' action='/users' class='new_user' id='new_user' method='post'><div style='margin:0;padding:0;display:inline'><input name='utf8' type='hidden' value='✓'><input name='authenticity_token' type='hidden' value='" + document.getElementsByName("csrf-token")[0].content + "'></div><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center></form>",
+			bottom = "<div class='wide-text'><a id='line-text-login' class='small big-lnk'>Already have an account? <b>Login here</b>.</a></div><div class='smaller wide-text'>By signing up you agree to our <a class='bold big-lnk' id='terms-lnk'>Terms of Use</a> and <a class='bold big-lnk' id='privacy-lnk'>Privacy Policy</a>.</div></div></div>",
+			cardTemplate = top + form + bottom;
+		formattingContainer.appendChild(formatter);
+		formatter.innerHTML = cardTemplate;
+		initCard(formatter);
+		initLoginInputs();
+		initDocLinks();
+		firstCardReady();
+
+		// form validation
+		var p = document.getElementById("password");
+		var f = document.getElementById("new_user");
+		f.onsubmit = function() {
+			if (!validEmail(document.getElementById("email").value)) {
+				alert("Please use a valid email address");
+				return false;
+			}
+			if (p.value.length < 8) {
+				alert("Please try a longer password");
+				return false;
+			}
+			if (p.value != document.getElementById("repassword").value) {
+				alert("Please submit matching passwords");
+				return false;
+			}
+			return true;
+		};
+		gesture.listen("down", document.getElementById("su-submit-btn"), function() {
+			f.onsubmit() && f.submit();
+		});
+	};
+	var firstCardReady = function () {
+		throbber.off();
+		scrollContainer.style.opacity = 1;
+		preloadCards();
+	};
+	var initCard = function(formatter) {
+		card = formatter.firstChild.firstChild;
+		setStartState(card);
+		initCardGestures.call(card.parentNode);
+		slideContainer.appendChild(card.parentNode);
+		formattingContainer.removeChild(formatter);
+		setSlider();
+		return card;
+	};
+	var buildCard = function (zIndex)
+	{
+		if (!dataThrobTest())
+			return;
+		var c = data[cardIndex];
+
+		if (c.type == "content")
+			buildContentCard(c, zIndex);
+		else if (c.type == "login")
+			buildLoginCard(c, zIndex);
+		else
+			alert("unknown card type: " + c.type);
+
 		++cardIndex;
 		if (data.length == cardIndex + buffer_minimum)
 			populateSlider(true);
@@ -648,12 +758,11 @@ onload = function ()
 	};
 	var downCallback = function ()
 	{
-		if (reminderTimeout)
+		if (slider.classList.contains('login-card'))
 		{
-			document.body.removeChild(document.getElementById("reminder_container"));
-			clearTimeout(reminderTimeout);
-			reminderTimeout = null;
+			blurLoginInputs();
 		}
+		forgetReminder();
 		if (slider.style["-webkit-transform"] == "")
 		{
 			slider.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
@@ -671,7 +780,7 @@ onload = function ()
 	};
 	var expandCard = function ()
 	{
-		if (slider && slider.compressing)
+		if (slider && slider.isContent && slider.compressing)
 		{
 			slider.compressing = false;
 			slider.expanded = true;
@@ -703,6 +812,11 @@ onload = function ()
 		});
 	});
 	setStarCallback(function() {
+		if (isUnauthorized())
+		{
+			modal.promptIn(featureBlockContents);
+			return;
+		}
 		slider.style['border-color'] = "green";
 		slider.lastChild.previousSibling.firstChild.style.opacity = 0.8;
 		if (modal.zoom.zoomed) {
@@ -738,3 +852,9 @@ onload = function ()
 	populateSlider();
 	setReminderTimeout();
 };
+
+// handle facebook redirects
+if (document.location.href.indexOf("?") != -1)
+	document.location = "http://" +
+		document.location.host +
+			document.location.pathname;
