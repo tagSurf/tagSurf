@@ -275,7 +275,6 @@ a {
 }
 .raw_wrapper
 {
-  
   display: inline;
   top: 0;
   position: absolute;
@@ -341,7 +340,6 @@ a {
 {
   height: 150px !important;
 }
-<<<<<<< HEAD
 .hardware-acceleration, .translate-z
 {
    -webkit-backface-visibility: hidden;
@@ -349,7 +347,7 @@ a {
    backface-visibility: hidden;
    -webkit-transform-style: flat;
    perspective: 1000;
-=======
+}
 #share-button
 {
   -webkit-transition: opacity 250ms;
