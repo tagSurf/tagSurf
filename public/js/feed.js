@@ -123,12 +123,15 @@ onload = function ()
 	var dataPath = function(firstCard) {
 		if (isUnauthorized()) {
 			var p = "/api";
-			if (firstCard || shareSwap) {
+			if (shareSwap) {
 				shareSwap = false;
 				shareOffset = 0;
+			}
+			if (firstCard || current_tag
+				!= document.location.pathname.split("/")[2])
 				p += "/share/" + current_tag + "/" +
 					(firstCard ? firstCard.id : 0);
-			} else
+			else
 				p += document.location.pathname;
 			return p + "/20/" + (shareOffset++ * 20);
 		}
@@ -409,17 +412,19 @@ onload = function ()
 			return;
 		if (direction == "left" || direction == "right"){
 			swipeSlider(direction, null, 700);
-			analytics.track("Swipe", {
-				card: slider.card.id,
-				direction: direction,	
-				surfing: current_tag
-			});
-			analytics.page({
-				title: slider.card.id + " " + direction,
-				url: 'http://beta.tagsurf.co/feed#'+current_tag,
-				path: "/feed#"+current_tag,
-				referrer: 'http://beta.tagsurf.co/'
-			});
+			if (slider.isContent) {
+				analytics.track("Swipe", {
+					card: slider.card.id,
+					direction: direction,	
+					surfing: current_tag
+				});
+				analytics.page({
+					title: slider.card.id + " " + direction,
+					url: 'http://beta.tagsurf.co/feed#'+current_tag,
+					path: "/feed#"+current_tag,
+					referrer: 'http://beta.tagsurf.co/'
+				});
+			}
 		} else if (slider.expanded){
 			return true;
 		};
@@ -877,6 +882,10 @@ if (isUnauthorized())
 				window.location.pathname.replace('/share/','').replace('/','|');
 		}
 	});
+} else {
+	var lastPath = sessionStorage.getItem("lastPath");
+	if (lastPath)
+		location.hash = lastPath;
 }
 
 // handle facebook redirects
