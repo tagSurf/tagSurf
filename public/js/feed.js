@@ -438,7 +438,7 @@ onload = function ()
 				{
 					slider.verticaling = true;
 				}
-				if ((atTop && goingUp) || (atBottom && !goingUp))
+				if (slider.sliding || (atTop && goingUp) || (atBottom && !goingUp))
 				{
 					return false;
 				}
