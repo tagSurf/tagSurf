@@ -60,6 +60,7 @@ Tagsurf::Application.routes.draw do
 
     # Users API
     get  'users/:id/stats'               => 'votes#stats'
+    get  'users'                         => 'users#stats'
 
     # History API
     get  'history/paginated/:limit/:offset'  => 'users#paginated_history'

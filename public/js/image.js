@@ -15,6 +15,8 @@ var image = {
 	load: function(dlist, minWidth) {
 		var load = image._load;
 		dlist.forEach(function(d) {
+			if (d.type != "content")
+				return;
 			if (load.count >= load.max) {
 				load.list.push(d);
 				return;

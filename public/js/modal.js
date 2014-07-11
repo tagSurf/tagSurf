@@ -1,6 +1,8 @@
 var modal = {
 	back: document.createElement("div"),
 	modal: document.createElement("div"),
+	prompt: document.createElement("div"),
+	topModal: document.createElement("div"),
 	zoom: document.createElement("div"),
 	constants: {
 		zoomScale: 1.5
@@ -29,15 +31,25 @@ var modal = {
 		});
 		modal.back.className = "blackout disabled";
 		modal.modal.className = "modal disabled";
+		modal.topModal.className = "modal disabled";
+		modal.topModal.style.zIndex = 20;
 		modal._buildZoom();
+		modal._buildPrompt();
 		document.body.appendChild(modal.back);
 		document.body.appendChild(modal.modal);
+		document.body.appendChild(modal.topModal);
+		document.body.appendChild(modal.prompt);
 		document.body.appendChild(modal.zoom);
-		gesture.listen("tap", modal.zoom, modal.callZoom);
 		gesture.listen("tap", modal.back, modal.callBack);
 		gesture.listen("swipe", modal.back, modal.callBack);
+
 		gesture.listen("tap", modal.modal, modal.callModal);
 		gesture.listen("swipe", modal.modal, modal.callModal);
+
+		gesture.listen("tap", modal.topModal, modal.callTopModal);
+		gesture.listen("swipe", modal.topModal, modal.callTopModal);
+
+		gesture.listen("tap", modal.zoom, modal.callZoom);
 		gesture.listen("drag", modal.zoom, modal.dragZoom);
 		gesture.listen("down", modal.zoom, modal._passThrough);
 	},
@@ -59,6 +71,12 @@ var modal = {
 		modal.zoom.large = false;
 		modal.zoom.zoomed = false;
 	},
+	_buildPrompt: function () {
+		var prompt_container = document.createElement('div');
+		prompt_container.className = "prompt_container";
+		prompt_container.appendChild(modal.prompt);
+		modal.prompt.className = "modal_prompt disabled";
+	},
 	_passThrough: function() {
 		return true;
 	},
@@ -70,6 +88,12 @@ var modal = {
 	},
 	callModal: function(direction) {
 		return modal.modal.cb && modal.modal.cb(direction);
+	},
+	callTopModal: function(direction) {
+		return modal.topModal.cb && modal.topModal.cb(direction);
+	},
+	callPrompt: function(direction) {
+		return modal.prompt.cb && modal.prompt.cb(direction);
 	},
 	callBack: function() {
 		return modal.back.cb && modal.back.cb();
@@ -166,7 +190,7 @@ var modal = {
 		modal.modal.innerHTML = "";
 		modal.modal.appendChild(node);
 		modal.modal.style.display = "block";
-		modal.modal.cb = cb;
+		modal.modal.cb = cb || modal.modalOut;
 		modal.modal.zcb = zcb;
 		modal.modal.className = "modal modalout disabled";
 		setTimeout(function() {
@@ -180,6 +204,57 @@ var modal = {
 		trans(modal.modal, function (event){
 			modal.modal.className = "modal disabled";
 			modal.modal.style.display = "none";
+		});
+	},
+	topModalIn: function(node, cb) {
+		modal.topModal.on = true;
+		modal.topModal.innerHTML = "";
+		modal.topModal.appendChild(node);
+		modal.topModal.style.display = "block";
+		modal.topModal.cb = cb || modal.topModalOut;
+		modal.topModal.className = "modal modalout disabled";
+		setTimeout(function() {
+			modal.topModal.className = "modal modalslide";
+		}, 0);
+		if (!modal.back.on) {
+			modal.backOn();
+			modal.topModal.backed = true;
+		}
+	},
+	topModalOut: function() {
+		modal.topModal.on = false;
+		modal.topModal.className = "modal modalout";
+		modal.topModal.cb = null;
+		trans(modal.topModal, function (event){
+			modal.topModal.className = "modal disabled";
+			modal.topModal.style.display = "none";
+		});
+		if (modal.topModal.backed) {
+			modal.topModal.backed = false;
+			modal.backOff();
+		}
+	},
+	promptIn: function(node, cb) {
+		if (modal.prompt.on)
+			return;
+		modal.prompt.on = true;
+		modal.prompt.innerHTML = "";
+		modal.prompt.appendChild(node);
+		modal.prompt.cb = cb || modal.promptOut;
+		modal.backOn();
+		modal.prompt.className = "modal_prompt disabled";
+		setTimeout(function() {
+			modal.prompt.className = "modal_prompt opaque";
+		}, 0);
+	},
+	promptOut: function() {
+		modal.prompt.on = false;
+		modal.prompt.className = "modal_prompt";
+		modal.prompt.cb = null;
+		modal.prompt.style.opacity = 0;
+		modal.backOff();
+		trans(modal.prompt, function (event){
+			modal.prompt.className = "modal_prompt disabled";
 		});
 	},
 	zoomIn: function (card, cb) {

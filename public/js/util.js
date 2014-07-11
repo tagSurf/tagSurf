@@ -24,6 +24,9 @@ var whichGallery = function() {
       return galleries[i];
   return null;
 };
+var isUnauthorized = function () {
+	return document.location.href.indexOf('share') != -1;
+};
 
 // autocomplete stuff
 var current_tag, tinput, inputContainer, slideContainer,
@@ -60,6 +63,10 @@ var add_icon, add_state = "blue", add_icons = {
 };
 var addBarSlid = false;
 var slideAddBar = function(noback) {
+  if (isUnauthorized()) {
+    modal.promptIn(featureBlockContents);
+    return;
+  }
   if (autocomplete.viewing.autocomplete) {
     autocomplete.retract("autocomplete");
     closeAutoComplete(null, true);
@@ -103,6 +110,7 @@ var rmTag = function(tname) {
     tobjs = tobjs.slice(0, tIndex).concat(tobjs.slice(tIndex + 1));
 };
 
+var popTrending; // defined in feed
 var populateNavbar = function () {
   var nav = document.getElementById("nav");
   var navbar = document.createElement("div");
@@ -132,8 +140,8 @@ var populateNavbar = function () {
         "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='/img/down_arrow_nav.png'></img>",
       "</label>",
     "</div>",
-  ];
-  var menu_slider_content = [
+  ], 
+  full_slider_content = [
     "<input type='checkbox' name='slider_box' id='slider_box' style='display:none'>",
     "<div id='slide_down_menu' class='pointer'>",
       "<ul>",
@@ -154,7 +162,21 @@ var populateNavbar = function () {
         "</div></a></li>",
       "</ul>",
     "</div>",
-  ];
+  ],
+  reduced_slider_content = [
+    "<input type='checkbox' name='slider_box' id='slider_box' style='display:none'>",
+    "<div id='slide_down_menu' class='pointer'>",
+      "<ul>",
+      	"<li><a onclick='popTrending();'><div>",
+      	  "<img class='menu_icon' src='/img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
+      	"</div></a></li>",
+        "<li><a id='login'><div>",
+          "<img class='menu_icon inverted' src='/img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGIN",
+        "</div></a></li>",
+      "</ul>",
+    "</div>",
+  ],
+  menu_slider_content = isUnauthorized() ? reduced_slider_content : full_slider_content;
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
   tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='/img/add_tag_button.png'><div id='add_tag_autocomplete' class='autocomplete hider'></div>";
@@ -193,25 +215,67 @@ var populateNavbar = function () {
     }
   });
   add_icon = document.getElementById("add-icon");
-  document.getElementById("options-btn").onclick = function() {
-    var n = document.createElement("div");
-    n.className = "center-label";
-    var msg = document.createElement("div");
-    msg.innerHTML = "Nothing to see here... yet";
-    var img = document.createElement("img");
-    img.src = "/img/throbber.gif";
-    n.appendChild(msg);
-    n.appendChild(img);
-    slideNavMenu();
-    modal.modalIn(n, modal.modalOut);
-  };
-  document.getElementById("logout").onclick = function() {
-    window.location = "/users/sign_out";
-  };
+  if (!isUnauthorized()) {
+    document.getElementById("logout").onclick = function() {
+      window.location = "/users/sign_out";
+    };
+    document.getElementById("options-btn").onclick = function() {
+      var n = document.createElement("div");
+      n.className = "center-label";
+      var msg = document.createElement("div");
+      msg.innerHTML = "Nothing to see here... yet";
+      var img = document.createElement("img");
+      img.src = "/img/throbber.gif";
+      n.appendChild(msg);
+      n.appendChild(img);
+      slideNavMenu();
+      modal.modalIn(n);
+    };
+  }
+  else
+  {
+    document.getElementById("login").onclick = function() {
+      window.location = "/users/sign_in";
+    };
+  }
 };
 var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
     "/img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
+};
+var featureBlockContents, buildFeatureBlockerContents = function() {
+	var contents = document.createElement('div'),
+		closeContainer = document.createElement('div'),
+		close = document.createElement('img'),
+		title = document.createElement('p'),
+		message = document.createElement('p'),
+		link = document.createElement('div');
+	closeContainer.className = "close_button_container pointer";
+	close.className = "x_close_button";
+	close.src = "/img/Close.png";
+	gesture.listen('down', closeContainer, modal.callPrompt);
+	closeContainer.appendChild(close);
+	contents.appendChild(closeContainer);
+	title.className = "prompt_title";
+	title.innerHTML = "Oops";
+	contents.appendChild(title);
+	message.className = "prompt_message";
+	message.innerHTML = "You need to login to do that...";
+	contents.appendChild(message);
+	link.className = "prompt_login_button";
+	link.innerHTML = "login";
+	gesture.listen("down", link, function () {
+		link.classList.add('ts-active-button');
+	});
+	gesture.listen("tap", link, function () {
+		window.location = "/users/sign_in";
+		link.classList.remove('ts-active-button');
+	});
+	gesture.listen("up", link, function () {
+		link.classList.remove('ts-active-button');
+	});
+	contents.appendChild(link);
+	return contents;
 };
 var starCallback, setStarCallback = function(cb) {
   starCallback = cb;
@@ -219,9 +283,15 @@ var starCallback, setStarCallback = function(cb) {
 var addCallback, setAddCallback = function(cb) {
   addCallback = cb;
 };
-var currentMedia, setCurrentMedia = function(d) {
+var currentMedia, setCurrentMedia = function(d, shareCb) {
   currentMedia = d;
-  if (!d && addBarSlid) slideAddBar();
+  if (d && d.type == "content")
+    share.on(d, shareCb);
+  else {
+    share.off();
+    if (addBarSlid)
+      slideAddBar();
+  }
 };
 var _addCss = function(css) {
     var n = document.createElement("style");
@@ -338,4 +408,12 @@ var trans = function(node, cb, transition, transform) {
     }
   }
   if (transform) node.style['-webkit-transform'] = transform;
+};
+var validEmail = function(s) {
+  var atChar = s.indexOf('@', 1);
+  var dotChar = s.indexOf('.', atChar);
+  if (atChar == -1 || dotChar == -1 ||
+    dotChar == s.length - 1 || atChar + 2 > dotChar)
+    return false;
+  return true;
 };
