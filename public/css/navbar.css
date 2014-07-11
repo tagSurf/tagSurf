@@ -202,3 +202,21 @@
 {
   background-color: #1dafec;
 }
+
+@media only screen and (min-width: 1024px){
+/*  #tag_adder
+  {
+    height: 55px;
+  }*/
+  #tag_adder input
+  {
+    font-size: 140%;
+    width: 35%;
+    height: 33px;
+    padding-bottom: 5px;
+  }
+  #tag_adder img 
+  {
+    height: 33px;
+  }
+}
