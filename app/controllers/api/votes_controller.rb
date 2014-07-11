@@ -31,7 +31,7 @@ class Api::VotesController < Api::BaseController
 
   def stats
     @user = User.find params[:id]
-    if @user
+    if @user && current_user.admin?
       results = {:user => @user}
       results['total_votes'] = @user.find_voted_items.count
       results['up_votes']    = @user.find_up_voted_items.count

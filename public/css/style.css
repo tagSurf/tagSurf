@@ -539,3 +539,13 @@ a {
 {
 	margin: 60px 0;
 }
+
+@media only screen and (min-width: 1024px){
+	#add_tag_autocomplete {
+	  top: 47px;
+	  left: 32%;
+	  padding: 0px 7px;
+	  font-size: 140%;
+	}
+}
+
