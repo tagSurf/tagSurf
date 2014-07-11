@@ -365,22 +365,30 @@ var mod = function(opts) {
   for (var i = 0; i < targets.length; i++)
     targets[i].style[property] = value;
 };
+
+// platform detection
+var __ua = navigator.userAgent, _ua = {
+  isIos: __ua.indexOf("iPhone") != -1,
+  isMobile: __ua.toLowerCase().indexOf("mobile") != -1,
+  isStockAndroid: (__ua.indexOf("Mozilla/5.0") != -1)
+    && (__ua.indexOf("Android ") != -1)
+    && (__ua.indexOf("AppleWebKit") != -1)
+    && (__ua.indexOf("Chrome") == -1)
+};
+_ua.isAndroid = _ua.isMobile && !_ua.isIos;
 var isIos = function() {
-  return navigator.userAgent.indexOf("iPhone") != -1;
+  return _ua.isIos;
 };
 var isMobile = function() {
-  return navigator.userAgent.toLowerCase().indexOf("mobile") != -1;
+  return _ua.isMobile;
 };
 var isAndroid = function() {
-  return isMobile() && !isIos();
+  return _ua.isAndroid;
 };
 var isStockAndroid = function() {
-  var u = navigator.userAgent;
-  return (u.indexOf("Mozilla/5.0") != -1)
-    && (u.indexOf("Android ") != -1)
-    && (u.indexOf("AppleWebKit") != -1)
-    && (u.indexOf("Chrome") == -1);
+  return _ua.isStockAndroid;
 };
+
 var trans = function(node, cb, transition, transform) {
   var transTimeout,
     isClass = transition && transition.split(" ").length == 1;
