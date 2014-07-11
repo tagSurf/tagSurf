@@ -373,7 +373,6 @@ a {
   -webkit-perspective: 1000;
   backface-visibility: hidden;
   perspective: 1000;
->>>>>>> master
   -webkit-transform: translateZ(0);
   -moz-transform: translateZ(0);
   transform: translateZ(0);
