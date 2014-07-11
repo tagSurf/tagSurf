@@ -547,5 +547,14 @@ a {
 	  padding: 0px 7px;
 	  font-size: 140%;
 	}
+	#share-button
+	{
+  	bottom: 10px;
+  	right: 10px;
+  	width: 80px;
+	}
+	#share-icon{
+		width: 50px;
+	}
 }
 
