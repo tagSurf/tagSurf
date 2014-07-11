@@ -25,7 +25,7 @@ var share =
 				share_tag=current_tag;
 			else
 				share_tag=share.data.tags[0];
-			analytics.track('Share to facebook',{
+			analytics.track('Share to facebook', {
 				card: share.data.id,
 				surfing: current_tag
 			});
@@ -38,7 +38,7 @@ var share =
 				+ "&redirect_uri=" + u;
 		},
 		twitter: function() {
-			analytics.track('Share to twitter',{
+			analytics.track('Share to twitter', {
 				card: share.data.id,
 				surfing: current_tag
 			});
