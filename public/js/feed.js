@@ -386,21 +386,20 @@ onload = function ()
 	};
 	var dragCallback = function (direction, distance, dx, dy)
 	{
-		var atBottom = (scrollContainer.scrollHeight - scrollContainer.scrollTop 
-			=== scrollContainer.clientHeight),
-			atTop = (scrollContainer.scrollTop === 0),
-			thumbContainer = slider.lastChild.previousSibling;
 		if (slider.animating == false)
 		{
 			if (slider.expanded == true && 
 				(direction == "up" || direction == "down"))
 			{
+				var atBottom = (scrollContainer.scrollHeight - scrollContainer.scrollTop
+					=== scrollContainer.clientHeight),
+					atTop = (scrollContainer.scrollTop === 0),
+					goingUp = direction == (isStockAndroid() ? "up" : "down");
 				if (slider.sliding == false)
 				{
 					slider.verticaling = true;
 				}
-				if ((atTop && direction == "down") ||
-					(atBottom && direction == "up"))
+				if ((atTop && goingUp) || (atBottom && !goingUp))
 				{
 					return false;
 				}
@@ -410,8 +409,9 @@ onload = function ()
 			{
 				if (slider.verticaling == false)
 				{
-					 slider.sliding = true;
-					 slider.x += dx;
+					var thumbContainer = slider.lastChild.previousSibling;
+					slider.sliding = true;
+					slider.x += dx;
 					if ( slider.x > 0)
 					{
 						slider.style['border-color'] = "green";

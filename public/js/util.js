@@ -301,6 +301,13 @@ var isMobile = function() {
 var isAndroid = function() {
   return isMobile() && !isIos();
 };
+var isStockAndroid = function() {
+  var u = navigator.userAgent;
+  return (u.indexOf("Mozilla/5.0") != -1)
+    && (u.indexOf("Android ") != -1)
+    && (u.indexOf("AppleWebKit") != -1)
+    && (u.indexOf("Chrome") == -1);
+};
 var trans = function(node, cb, transition, transform) {
   var transTimeout,
     isClass = transition && transition.split(" ").length == 1;
