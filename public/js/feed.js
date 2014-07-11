@@ -5,7 +5,7 @@ onload = function ()
 	// defined in util for autocomplete
 	// integration with other sliding elements
 	tinput = document.getElementById("tag-input");
-	current_tag = tinput.value = document.location.hash.slice(1)
+	current_tag = tinput.value = document.location.hash.slice(1).split("|")[0]
 		|| document.location.pathname.split("/")[2] || "trending";
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
@@ -157,6 +157,20 @@ onload = function ()
 				refreshCards(failMsgNode);
 			}
 		});
+	};
+	var firstPopulate = function() {
+		var feed, id, pair, h = document.location.hash.slice(1);
+		if (h.indexOf("|") != -1) {
+			pair = h.split("|");
+			feed = pair[0];
+			id = pair[1];
+		}
+		if (id)
+			xhr("/api/card/" + id, null, function(d) {
+				populateSlider(false, null, d.data);
+			}, populateSlider);
+		else
+			populateSlider();
 	};
 
 	// autocomplete stuff
@@ -849,7 +863,7 @@ onload = function ()
 			expandCard();
 		}
 	});
-	populateSlider();
+	firstPopulate();
 	setReminderTimeout();
 };
 
