@@ -219,4 +219,14 @@
   {
     height: 33px;
   }
+  #slide_down_menu li 
+  {
+    font-size: 24px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+  }
+  .menu_icon
+  {
+    width: 24px;
+  }
 }
