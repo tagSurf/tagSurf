@@ -556,5 +556,12 @@ a {
 	#share-icon{
 		width: 50px;
 	}
+	.share_link_icon
+	{
+		padding: 0 50px;
+	}
+	.zoom_wrapper{
+		top: 40px;
+	}
 }
 
