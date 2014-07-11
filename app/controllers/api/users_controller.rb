@@ -1,5 +1,7 @@
 class Api::UsersController < Api::BaseController
-
+    
+  before_action :find_authenticated_user, except: :stats
+  
   def paginated_history
     @offset = user_params["offset"].to_i
     @limit = user_params["limit"].to_i
@@ -80,13 +82,14 @@ class Api::UsersController < Api::BaseController
 
   def stats
     results = {:user => @user}
-    results['total_votes'] = @user.find_voted_items.count
-    results['up_votes']    = @user.find_up_voted_items.count
-    results['down_votes']  = @user.find_down_voted_items.count
-    if @user
+    if @user = current_user
+      results['total_votes'] = @user.find_voted_items.count
+      results['up_votes']    = @user.find_up_voted_items.count
+      results['down_votes']  = @user.find_down_voted_items.count
       render json: results
     else
-      render json: "no user found"
+      results[:user] = "not found"
+      render json: results, status: :not_found
     end
   end
 
