@@ -430,17 +430,16 @@ onload = function ()
 			if (slider.expanded == true && 
 				(direction == "up" || direction == "down"))
 			{
-				var atBottom = (scrollContainer.scrollHeight - scrollContainer.scrollTop
-					=== scrollContainer.clientHeight),
-					atTop = (scrollContainer.scrollTop === 0),
-					goingUp = direction == (isStockAndroid() ? "up" : "down");
 				if (slider.sliding == false)
-				{
 					slider.verticaling = true;
-				}
-				if (slider.sliding || (atTop && goingUp) || (atBottom && !goingUp))
-				{
+				if (slider.sliding)
 					return false;
+				if (!isStockAndroid()) {
+					var sc = scrollContainer, atTop = (sc.scrollTop === 0),
+						atBottom = (sc.scrollHeight - sc.scrollTop === sc.clientHeight),
+						goingUp = direction == "down";
+					if ((atTop && goingUp) || (atBottom && !goingUp))
+						return false;
 				}
 				return true;
 			}
