@@ -268,6 +268,8 @@ var featureBlockContents, buildFeatureBlockerContents = function() {
 		link.classList.add('ts-active-button');
 	});
 	gesture.listen("tap", link, function () {
+    sessionStorage.setItem("lastPath",
+      current_tag + "|" + currentMedia.id);
 		window.location = "/users/sign_in";
 		link.classList.remove('ts-active-button');
 	});

@@ -5,7 +5,7 @@ onload = function ()
 	// defined in util for autocomplete
 	// integration with other sliding elements
 	tinput = document.getElementById("tag-input");
-	current_tag = tinput.value = document.location.hash.slice(1)
+	current_tag = tinput.value = document.location.hash.slice(1).split("|")[0]
 		|| document.location.pathname.split("/")[2] || "trending";
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
@@ -128,12 +128,15 @@ onload = function ()
 	var dataPath = function(firstCard) {
 		if (isUnauthorized()) {
 			var p = "/api";
-			if (firstCard || shareSwap) {
+			if (shareSwap) {
 				shareSwap = false;
 				shareOffset = 0;
+			}
+			if (firstCard || current_tag
+				!= document.location.pathname.split("/")[2])
 				p += "/share/" + current_tag + "/" +
 					(firstCard ? firstCard.id : 0);
-			} else
+			else
 				p += document.location.pathname;
 			return p + "/20/" + (shareOffset++ * 20);
 		}
@@ -162,6 +165,20 @@ onload = function ()
 				refreshCards(failMsgNode);
 			}
 		});
+	};
+	var firstPopulate = function() {
+		var feed, id, pair, h = document.location.hash.slice(1);
+		if (h.indexOf("|") != -1) {
+			pair = h.split("|");
+			feed = pair[0];
+			id = pair[1];
+		}
+		if (id)
+			xhr("/api/card/" + id, null, function(d) {
+				populateSlider(false, null, d.data);
+			}, populateSlider);
+		else
+			populateSlider();
 	};
 
 	// autocomplete stuff
@@ -412,17 +429,19 @@ onload = function ()
 			gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
 		else if (!slider.animating && (direction == "left" || direction == "right")) {
 			swipeSlider(direction, null, 700);
-			analytics.track("Swipe", {
-				card: slider.card.id,
-				direction: direction,	
-				surfing: current_tag
-			});
-			analytics.page({
-				title: slider.card.id + " " + direction,
-				url: 'http://beta.tagsurf.co/feed#'+current_tag,
-				path: "/feed#"+current_tag,
-				referrer: 'http://beta.tagsurf.co/'
-			});
+			if (slider.isContent) {
+				analytics.track("Swipe", {
+					card: slider.card.id,
+					direction: direction,	
+					surfing: current_tag
+				});
+				analytics.page({
+					title: slider.card.id + " " + direction,
+					url: 'http://beta.tagsurf.co/feed#'+current_tag,
+					path: "/feed#"+current_tag,
+					referrer: 'http://beta.tagsurf.co/'
+				});
+			}
 		}
 	};
 	var dragCallback = function (direction, distance, dx, dy)
@@ -864,9 +883,26 @@ onload = function ()
 			expandCard();
 		}
 	});
-	populateSlider();
+	firstPopulate();
 	setReminderTimeout();
 };
+
+if (isUnauthorized())
+{
+	xhr('/api/users', null, function(result) {
+		if (result.user != "not found")
+		{
+			window.location = "http://" +
+				document.location.host + '/feed#' + 
+				window.location.pathname.replace('/share/','').replace('/','|');
+		}
+	});
+} else {
+	var lastPath = sessionStorage.getItem("lastPath");
+	sessionStorage.removeItem("lastPath");
+	if (lastPath)
+		location.hash = lastPath;
+}
 
 // handle facebook redirects
 if (document.location.href.indexOf("?") != -1)
