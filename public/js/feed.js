@@ -867,6 +867,18 @@ onload = function ()
 	setReminderTimeout();
 };
 
+if (isUnauthorized())
+{
+	xhr('/api/users', null, function(result) {
+		if (result.user != "not found")
+		{
+			window.location = "http://" +
+				document.location.host + '/feed#' + 
+				window.location.pathname.replace('/share/','').replace('/','|');
+		}
+	});
+}
+
 // handle facebook redirects
 if (document.location.href.indexOf("?") != -1)
 	document.location = "http://" +
