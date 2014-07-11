@@ -882,6 +882,10 @@ if (isUnauthorized())
 				window.location.pathname.replace('/share/','').replace('/','|');
 		}
 	});
+} else {
+	var lastPath = sessionStorage.getItem("lastPath");
+	if (lastPath)
+		location.hash = lastPath;
 }
 
 // handle facebook redirects
