@@ -60,6 +60,21 @@ class Api::MediaController < Api::BaseController
     end
   end
 
+  def show
+    unless @user
+      render json: {errors: 'must be logged in to view media.'}, status: :unauthorized
+      return
+    end
+      
+    @media = Media.find(params[:id]) 
+    if @media
+      render json: @media, root: "data"
+    else
+      render json: {errors: 'no media found'}, status: :not_found
+    end
+  end
+
+
   private
 
     def media_params
