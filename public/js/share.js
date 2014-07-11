@@ -9,7 +9,7 @@ var share =
 		if (hostname.indexOf("localhost") != -1)
 			hostname = "beta.tagsurf.co";
 		return encodeURI("http://" + hostname + "/share/"
-			+ share.data.tags[0] + "/" + share.data.id);
+			+ current_tag + "/" + share.data.id);
 	},
 	networks: {
 		facebook: function() {
@@ -18,7 +18,7 @@ var share =
 				+ "?app_id=676135635790285" + "&link=" + u
 				+ "&picture=" + encodeURI(image.get(d, window.innerWidth - 40).url)
 				+ "&name=" + encodeURI(d.caption)
-				+ "&description=%23" + d.tags[0]
+				+ "&description=%23" + current_tag
 				+ "&caption=" + document.location.hostname
 				+ "&redirect_uri=" + u;
 		},
