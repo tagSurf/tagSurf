@@ -379,6 +379,7 @@ onload = function ()
 		}
 		else if (code == 37){
 			swipeSlider("left");
+			forgetReminder();
 			analytics.track("Key Swipe", {
 				card: slider.card.id,
 				direction: "left",	
@@ -393,6 +394,7 @@ onload = function ()
 		}
 		else if (code == 39){
 			swipeSlider("right");
+			forgetReminder();
 			analytics.track("Key Swipe", {
 				card: slider.card.id,
 				direction: "right",	
