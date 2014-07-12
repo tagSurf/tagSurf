@@ -3,11 +3,11 @@
 <head>
   <%= content_for :title %>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-  <!--
+  
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="mobile-web-app-capable" content="yes">
-  -->
+  
   <% if @media %>
     <meta property="og:url" content='<%= request.original_url %>' />
     <meta property="og:title" content='<%= @media.title %>' />
@@ -19,6 +19,27 @@
     <meta property="og:image:height" content="<%= @media.height %>" />
     <meta property="fb:app_id" content="676135635790285" />
   <% end %>
+
+  <script type="text/javascript">
+        (function(document,navigator,standalone) {
+            // prevents links from apps from oppening in mobile safari
+            if ((standalone in navigator) && navigator[standalone]) {
+                var curnode, location=document.location, stop=/^(a|html)$/i;
+                document.addEventListener('click', function(e) {
+                    curnode=e.target;
+                    while (!(stop).test(curnode.nodeName)) {
+                        curnode=curnode.parentNode;
+                    }
+                    // Condidions to do this only on links in tagSurf
+                    // if you want all links, use if('href' in curnode) instead.
+                    if('href' in curnode && ( curnode.href.indexOf('http') || ~curnode.href.indexOf(location.host) ) ) {
+                        e.preventDefault();
+                        location.href = curnode.href;
+                    }
+                },false);
+            }
+        })(document,window.navigator,'standalone');
+    </script>
     
   <link rel="apple-touch-startup-image" href="/img/ts_splash_screen.png" />
   <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Raleway:100,200,300,500" />
