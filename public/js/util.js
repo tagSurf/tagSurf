@@ -370,8 +370,11 @@ var mod = function(opts) {
 
 // platform detection
 var __ua = navigator.userAgent, _ua = {
-  isIos: __ua.indexOf("iPhone") != -1,
+  isIphone: __ua.indexOf("iPhone") != -1,
+  isIpad: __ua.indexOf("iPad") != -1,
+  isIos: (__ua.indexOf("iPhone") != -1) || (__ua.indexOf("iPad") != -1),
   isMobile: __ua.toLowerCase().indexOf("mobile") != -1,
+  isAndroid: __ua.indexOf("Android") != -1,
   isStockAndroid: (__ua.indexOf("Mozilla/5.0") != -1)
     && (__ua.indexOf("Android ") != -1)
     && (__ua.indexOf("AppleWebKit") != -1)
@@ -380,6 +383,15 @@ var __ua = navigator.userAgent, _ua = {
 _ua.isAndroid = _ua.isMobile && !_ua.isIos;
 var isIos = function() {
   return _ua.isIos;
+};
+var isIpad = function(){
+  return _ua.isIpad;
+};
+var isIphone = function(){
+  return _ua.isIphone;
+};
+var isTablet = function(){
+  return _ua.isIpad || (_ua.isAndroid && !_ua.isMobile);
 };
 var isMobile = function() {
   return _ua.isMobile;
