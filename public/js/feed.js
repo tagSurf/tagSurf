@@ -354,7 +354,23 @@ onload = function ()
 		// removed history slider
 //		addHistoryItem(activeCard);
 	};
+	var keyInertia = 0;
+	window.onkeydown = function(e) {
+		keyInertia += 1;
+		e = e || window.event;
+		var code = e.keyCode || e.which;
+		if (code == 38){
+			//boundary checking
+			scrollContainer.scrollTop -= (2 * keyInertia);
+		}
+		else if (code == 40){
+			//boundary checking
+			window.scrollBy(0,10);
+			scrollContainer.scrollTop += (2 * keyInertia);
+		}
+	};
 	window.onkeyup = function(e) {
+		keyInertia = 0;
 		e = e || window.event;
 		var code = e.keyCode || e.which;
 		if (code == 32){
@@ -387,7 +403,7 @@ onload = function ()
 				path: "/feed#"+current_tag,
 				referrer: 'http://beta.tagsurf.co/'
 			});
-		};
+		}
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
