@@ -886,6 +886,7 @@ if (isUnauthorized())
 	});
 } else {
 	var lastPath = sessionStorage.getItem("lastPath");
+	sessionStorage.removeItem("lastPath");
 	if (lastPath)
 		location.hash = lastPath;
 }
