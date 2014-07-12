@@ -1,6 +1,6 @@
 var gesture = {
 	gid: 0,
-	returnDefault: false,
+	preventDefault: true,
 	thresholds: {
 		swipe: {
 			minDistance: 35,
@@ -143,8 +143,8 @@ var gesture = {
 		var e = {};
 		['Start', 'Stop', 'Move'].forEach(function(eName) {
 			e[eName] = function(e) {
-				return gesture['on' + eName](e, node) || gesture.returnDefault
-					|| e.preventDefault() || e.stopPropagation() || false;
+				return gesture['on' + eName](e, node) || (gesture.preventDefault
+					&& e.preventDefault()) || e.stopPropagation() || false;
 			};
 		});
 		if (gesture.events.Cancel)
