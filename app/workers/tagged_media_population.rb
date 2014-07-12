@@ -2,6 +2,8 @@ class TaggedMediaPopulation
   include Sidekiq::Worker
   include Sidetiq::Schedulable
 
+  sidekiq_options :retry =>  3
+
   recurrence { hourly.minute_of_hour(5, 20, 35, 50) }
 
   def perform
