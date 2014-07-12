@@ -227,17 +227,11 @@ onload = function ()
 			return "max-height: " + parseInt(maxCardHeight + 60 - window.innerHeight * .04) + "px";
 		},
 		".card-container": function() {
-			return "min-height: " + (maxCardHeight + 140) + "px";
+			return "min-height: " + (maxCardHeight + 140) + "px; width: " + ((isMobile() || isTablet() || isNarrow()) ? "95" : "70") + "%;";
 		},
 		".raw_wrapper, .zoom_wrapper, #scroll-container, #scroll-container-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
 		},
-		".card-container": function() {
-			if(isMobile() || isTablet())
-				return "width: 95%";
-			else
-				return "width: 70%";
-		}
 		// Why is this necessary? Setting width=100% in feed.css instead.
 		//,
 		// ".image-container img": function () {

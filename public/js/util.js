@@ -401,6 +401,9 @@ var isAndroid = function() {
 var isStockAndroid = function() {
   return _ua.isStockAndroid;
 };
+var isNarrow = function() {
+  return window.innerWidth < 700;
+};
 
 var trans = function(node, cb, transition, transform) {
   var transTimeout,
