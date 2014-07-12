@@ -380,7 +380,6 @@ var __ua = navigator.userAgent, _ua = {
     && (__ua.indexOf("AppleWebKit") != -1)
     && (__ua.indexOf("Chrome") == -1)
 };
-_ua.isAndroid = _ua.isMobile && !_ua.isIos;
 var isIos = function() {
   return _ua.isIos;
 };
