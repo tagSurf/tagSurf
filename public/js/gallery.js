@@ -87,13 +87,14 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		{
 			if (modal.modal.offsetHeight < picbox.scrollHeight)
 			{
+				gesture.preventDefault = false;
 				drag.makeDraggable(picbox, {
 					constraint: "horizontal",
-					force: true,
 					up: function (direction) {
 						if (direction == 'left' ||
 							direction == 'right')
 						{
+							gesture.preventDefault = true;
 							modal.callModal();
 						}
 					},
