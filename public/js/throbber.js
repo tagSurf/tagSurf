@@ -6,6 +6,9 @@ var throbber =
 	{
 		throbber.gif.src = "/img/spin_throbber.gif";
 		throbber.gif.className = "throbber";
+		throbber.gif.onload = function() {
+			throbber.gif.style['left'] = ((window.innerWidth - throbber.gif.offsetWidth) / 2) + "px";
+		};
 		document.body.appendChild(throbber.gif);
 	},
 	on: function (addClass, addNode)
@@ -18,13 +21,13 @@ var throbber =
 			if (!throbber.gif.classList.contains(addClass))
 			{
 				throbber.gif.classList.add(addClass);
+				throbber.gif.onload();
 			}
 		}
 		else
 		{
 			throbber.gif.style['top'] = ((window.innerHeight - throbber.gif.offsetHeight) /2) + "px";
 		}
-		throbber.gif.style['left'] = ((window.innerWidth - throbber.gif.offsetWidth) /2) + "px";
 		throbber.gif.style['opacity'] = "1.0";
 	},
 	off: function ()

@@ -12,6 +12,7 @@ body
 	background-color: #404041;
 	color: white;
 	font-weight: 200;
+	overflow: hidden;
 }
 
 html, input[type="submit"] {
@@ -270,7 +271,6 @@ a {
 }
 .raw_wrapper
 {
-  
   display: inline;
   top: 0;
   position: absolute;
@@ -283,7 +283,7 @@ a {
 .zoom_wrapper
 {
   top: 50px;
-  overflow: auto;
+  overflow: scroll;
   position: absolute;
   width:100%; 
   opacity: 0;
@@ -335,6 +335,14 @@ a {
 .autocomplete-open
 {
   height: 150px !important;
+}
+.hardware-acceleration, .translate-z
+{
+   -webkit-backface-visibility: hidden;
+   -webkit-perspective: 1000;
+   backface-visibility: hidden;
+   -webkit-transform-style: flat;
+   perspective: 1000;
 }
 #share-button
 {

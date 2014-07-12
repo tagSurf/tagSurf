@@ -51,7 +51,7 @@ var modal = {
 
 		gesture.listen("tap", modal.zoom, modal.callZoom);
 		gesture.listen("drag", modal.zoom, modal.dragZoom);
-		gesture.listen("down", modal.zoom, modal._passThrough);
+		gesture.listen("down", modal.zoom, returnTrue);
 	},
 	_buildZoom: function() {
 		var zNode = document.createElement('img'), 
@@ -79,12 +79,6 @@ var modal = {
 		prompt_container.className = "prompt_container";
 		prompt_container.appendChild(modal.prompt);
 		modal.prompt.className = "modal_prompt disabled";
-	},
-	_passThrough: function() {
-		return true;
-	},
-	_passThroughUD: function(direction) {
-		return (direction == "up" || direction == "down");
 	},
 	zoomModal: function () {
 		return modal.modal.zcb && modal.modal.zcb();
@@ -263,7 +257,7 @@ var modal = {
 	zoomIn: function (card, cb) {
 		modal.zoom.zoomed = true;
 		modal.zoom.firstChild.firstChild.src = image.get(card).url;
-		modal.zoom.cb = cb;
+		modal.zoom.cb = cb || modal.zoomOut;
 		modal.zoom.style.display = "block";
 		modal.zoom.style['opacity'] = "1.0";
 	},

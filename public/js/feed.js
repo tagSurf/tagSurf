@@ -70,11 +70,16 @@ onload = function ()
 	
 	var scrollCallback = function (event)
 	{
-		slider.style['transform-origin'] = "center " + scrollContainer.scrollTop + 'px';
-		slider.style['-webkit-transform-origin'] = "center " + scrollContainer.scrollTop + 'px';
-		slider.lastChild.previousSibling.style.top = (50 + scrollContainer.scrollTop) + 'px';
+		var trueScrollTop = scrollContainer.scrollTop ? scrollContainer.scrollTop
+			: (scrollContainer.yDrag ? -scrollContainer.yDrag : 0);
+		slider.style['transform-origin'] = "center " + trueScrollTop + 'px';
+		slider.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
+		slider.lastChild.previousSibling.style.top = (50 + trueScrollTop) + 'px';
 	};
-	scrollContainer.addEventListener('scroll', scrollCallback, false); 
+	drag.makeDraggable(scrollContainer, {
+		constraint: "horizontal",
+		scroll: scrollCallback
+	});
 
 	var data, buffer_minimum = 5, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
@@ -224,7 +229,7 @@ onload = function ()
 		".card-container": function() {
 			return "min-height: " + (maxCardHeight + 140) + "px";
 		},
-		".raw_wrapper, .zoom_wrapper, #scroll-container": function() {
+		".raw_wrapper, .zoom_wrapper, #scroll-container, #scroll-container-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
 		}
 		// Why is this necessary? Setting width=100% in feed.css instead.
@@ -345,6 +350,16 @@ onload = function ()
 				gesture.unlisten(_slider.parentNode);
 				slideContainer.removeChild(_slider.parentNode);
 				buildCard(0);
+				if (scrollContainer.scrollTop)
+					scrollContainer.scrollTop = 0;
+				if (scrollContainer.yDrag)
+				{
+					scrollContainer.animating = true;
+					trans(scrollContainer, 
+						function(){ scrollContainer.animating = false},
+						"-webkit-transform 200ms",
+						"translate3d(0,0,0) rotate(0deg)");
+				}
 				slideContainer.children[0].style.zIndex = 2;
 				if (slideContainer.children[1])
 					slideContainer.children[1].style.zIndex = 1;
@@ -410,9 +425,9 @@ onload = function ()
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
-		if (slider.animating)
-			return;
-		if (direction == "left" || direction == "right"){
+		if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
+			gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
+		else if (!slider.animating && (direction == "left" || direction == "right")) {
 			swipeSlider(direction, null, 700);
 			if (slider.isContent) {
 				analytics.track("Swipe", {
@@ -427,29 +442,25 @@ onload = function ()
 					referrer: 'http://beta.tagsurf.co/'
 				});
 			}
-		} else if (slider.expanded){
-			return true;
-		};
+		}
 	};
 	var dragCallback = function (direction, distance, dx, dy)
 	{
-		var atBottom = (scrollContainer.scrollHeight - scrollContainer.scrollTop 
-			=== scrollContainer.clientHeight),
-		atTop = (scrollContainer.scrollTop === 0), 
-		thumbContainer = slider.lastChild.previousSibling;
 		if (slider.animating == false)
 		{
 			if (slider.expanded == true && 
 				(direction == "up" || direction == "down"))
 			{
 				if (slider.sliding == false)
-				{
 					slider.verticaling = true;
-				}
-				if ((atTop && direction == "down") ||
-					(atBottom && direction == "up"))
-				{
+				if (slider.sliding)
 					return false;
+				if (!isStockAndroid()) {
+					var sc = scrollContainer, atTop = (sc.scrollTop === 0),
+						atBottom = (sc.scrollHeight - sc.scrollTop === sc.clientHeight),
+						goingUp = direction == "down";
+					if ((atTop && goingUp) || (atBottom && !goingUp))
+						return false;
 				}
 				return true;
 			}
@@ -457,6 +468,7 @@ onload = function ()
 			{
 				if (slider.verticaling == false)
 				{
+					var thumbContainer = slider.lastChild.previousSibling;
 					slider.sliding = true;
 					slider.x += dx;
 					if (slider.isContent) {
@@ -505,7 +517,7 @@ onload = function ()
 		{
 			if (slider.compressing == false)
 			{
-				modal.zoomIn(slider.card, modal.zoomOut);
+				modal.zoomIn(slider.card);
 			}
 			else if (slider.expanded == false)
 			{
@@ -810,6 +822,7 @@ onload = function ()
 			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
 			toggleClass.call(slider.children[3], "hidden");
 			toggleClass.call(slider.children[4], "hidden");
+			scrollCallback();
 		}
 	};
 	setAddCallback(function(tag) {
@@ -885,6 +898,11 @@ if (isUnauthorized())
 		}
 	});
 } else {
+	addCss({
+		"body, html": function() {
+			return "position: fixed;";
+		}
+	});
 	var lastPath = sessionStorage.getItem("lastPath");
 	sessionStorage.removeItem("lastPath");
 	if (lastPath)

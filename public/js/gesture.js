@@ -22,11 +22,12 @@ var gesture = {
 			androidDelay: 600
 		}
 	},
-	vars: {
+	_vars: {
 		active: false,
 		startTime: null,
 		startPos: null,
 		lastPos: null,
+		tapCount: 0,
 		holdCount: 0,
 		tapTimeout: null,
 		holdInterval: null,
@@ -35,7 +36,8 @@ var gesture = {
 	events: isMobile() && {
 		Start: "touchstart",
 		Stop: "touchend",
-		Move: "touchmove"
+		Move: "touchmove",
+		Cancel: "touchcancel"
 	} || {
 		Start: "mousedown",
 		Stop: "mouseup",
@@ -43,7 +45,7 @@ var gesture = {
 	},
 	handlers: { drag: {}, swipe: {}, tap: {}, up: {}, down: {}, hold: {} },
 	tuneThresholds: function() {
-		if (!isIphone())
+		if (!isIos())
 			for (var gest in gesture.thresholds)
 				for (var constraint in gesture.thresholds[gest]) {
 					var suffix = constraint.slice(3);
@@ -77,7 +79,7 @@ var gesture = {
 	},
 	onStart: function(e, node) {
 		var t = gesture.thresholds;
-		var v = gesture.vars;
+		var v = node.gvars;
 		v.active = true;
 		v.startTime = Date.now();
 		v.startPos = v.lastPos = gesture.getPos(e);
@@ -99,7 +101,7 @@ var gesture = {
 		return gesture.triggerDown(node);
 	},
 	onStop: function(e, node, delayed) {
-		var v = gesture.vars;
+		var v = node.gvars;
 		if (!delayed && v.holdInterval) {
 			clearInterval(v.holdInterval);
 			v.holdInterval = null;
@@ -116,35 +118,25 @@ var gesture = {
 			gesture.triggerSwipe(node, diff.direction,
 				diff.distance, diff.x, diff.y,
 				Math.min(t.swipe.maxDP, Math.max(t.swipe.minDP,
-					diff.distance / timeDiff)));
+					diff.distance / timeDiff)) * (isIos() ? 1 : 0.5));
 		else if ( (timeDiff < t.tap.maxTime)
 			&& (diff.distance < t.tap.maxDistance) ) { // tap
-			node.tapCount = (node.tapCount || 0) + 1;
-			if (node.tapCount == t.tap.maxCount)
+			v.tapCount += 1;
+			if (v.tapCount == t.tap.maxCount)
 				gesture.triggerTap(node);
 			else
 				v.tapTimeout = setTimeout(gesture.triggerTap, t.tap.waitTime, node);
 		}
 		return gesture.triggerUp(node, delayed);
 	},
-	delayedStop: function(e, node) {
-		var v = gesture.vars;
-		if (v.stopTimeout) {
-			clearTimeout(v.stopTimeout);
-			v.stopTimeout = null;
-		}
-		v.stopTimeout = setTimeout(gesture.onStop,
-			gesture.thresholds.up.androidDelay, e, node, true);
-	},
 	onMove: function(e, node) {
-		var v = gesture.vars;
+		var v = node.gvars;
 		if (v.active) {
 			var pos = gesture.getPos(e);
 			var diff = gesture.getDiff(v.lastPos, pos);
 			v.lastPos = pos;
-			var dres = gesture.triggerDrag(node, diff.direction, diff.distance, diff.x, diff.y);
-			dres && isAndroid() && gesture.delayedStop(e, node);
-			return dres;
+			return gesture.triggerDrag(node, diff.direction,
+				diff.distance, diff.x, diff.y);
 		}
 	},
 	eWrap: function(node) {
@@ -155,6 +147,8 @@ var gesture = {
 					|| e.preventDefault() || e.stopPropagation() || false;
 			};
 		});
+		if (gesture.events.Cancel)
+			e.Cancel = e.Stop;
 		return e;
 	},
 	listen: function(eventName, node, cb) {
@@ -163,6 +157,7 @@ var gesture = {
 			var e = node.listeners = gesture.eWrap(node);
 			for (var evName in gesture.events)
 				node.addEventListener(gesture.events[evName], e[evName]);
+			node.gvars = JSON.parse(JSON.stringify(gesture._vars));
 		}
 		if (!gesture.handlers[eventName][node.gid])
 			gesture.handlers[eventName][node.gid] = [];
@@ -185,11 +180,12 @@ var gesture = {
 			handlers[i](direction, distance, dx, dy, pixelsPerSecond);
 	},
 	triggerTap: function(node) {
+		var v = node.gvars;
 		var handlers = gesture.handlers.tap[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
-			handlers[i](node.tapCount);
-		node.tapCount = 0;
-		gesture.vars.tapTimeout = null;
+			handlers[i](v.tapCount);
+		v.tapCount = 0;
+		v.tapTimeout = null;
 	},
 	triggerDrag: function(node, direction, distance, dx, dy) {
 		var returnVal = false;

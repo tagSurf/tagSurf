@@ -3,7 +3,6 @@ html, body
   background-color: #494949;
   width: 100%;
   height: auto;
-  overflow-x: none;
 }
 #scroll-container
 {
@@ -149,7 +148,12 @@ html, body
 }
 .card-wrapper
 {
+  -webkit-touch-callout: none;
   -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
   position: absolute;
   width: 100%;
 }

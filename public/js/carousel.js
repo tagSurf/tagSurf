@@ -32,15 +32,15 @@ var carousel =
 			carousel.off();
 			document.forms[0].submit();
 		});
+		orderIndication.appendChild(circlesContainer);
+		orderIndication.appendChild(endButton);
+		carousel.view.appendChild(container);
+		carousel.view.appendChild(orderIndication);
 		drag.makeDraggable(container, {
 			constraint: "vertical",
 			interval: carousel.translateDistance, 
 			up: carousel.orderIndicationCallback
 		});
-		orderIndication.appendChild(circlesContainer);
-		orderIndication.appendChild(endButton);
-		carousel.view.appendChild(container);
-		carousel.view.appendChild(orderIndication);
 		document.body.appendChild(carousel.view);
 		for (index = 1; index <= 7; ++index)
 		{

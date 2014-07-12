@@ -26,7 +26,7 @@ var initDocLinks = function() {
 			modal.halfOn(removeModal);
 			curContent = document.getElementById(doc);
 			modal.modalIn(curContent, removeModal);
-			isIphone() && setTimeout(window.onresize, 500);
+			isIos() && setTimeout(window.onresize, 500);
 		});
 	});
 	gesture.listen('down', document.getElementById("embedded-privacy-lnk"), function() {
@@ -34,6 +34,6 @@ var initDocLinks = function() {
 			modal.halfOn(removePrivacy);
 			curContent = document.getElementById('privacy');
 			modal.modalIn(curContent, removePrivacy);
-			isIphone() && setTimeout(window.onresize, 500);
+			isIos() && setTimeout(window.onresize, 500);
 		});
 };
