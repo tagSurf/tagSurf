@@ -231,6 +231,12 @@ onload = function ()
 		},
 		".raw_wrapper, .zoom_wrapper, #scroll-container, #scroll-container-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
+		},
+		".card-container": function() {
+			if(isMobile() || isTablet())
+				return "width: 95%";
+			else
+				return "width: 70%";
 		}
 		// Why is this necessary? Setting width=100% in feed.css instead.
 		//,
