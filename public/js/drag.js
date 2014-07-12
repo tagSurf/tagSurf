@@ -8,28 +8,71 @@ var drag =
 	},
 	nativeScroll: function (n, opts)
 	{
-		gesture.listen("up", n, returnTrue);
-		gesture.listen("down", n, returnTrue);
+		gesture.listen("up", n, function () {
+			if (opts.up)
+				opts.up();
+			return true;
+		});
+		gesture.listen("down", n, function () {
+			if (opts.down)
+				opts.down();
+			return true;
+		});
+		var dirs = {
+			up: "down",
+			down: "up",
+			right: "left",
+			left: "right"
+		}, lastDirection, dragTimeout, delayedDrag = function() {
+			if (dragTimeout) {
+				clearTimeout(dragTimeout);
+				dragTimeout = null;
+			}
+			dragTimeout = setTimeout(function() {
+				opts.drag(dirs[lastDirection], 0, 0, 0);
+			}, 100);
+		};
 		gesture.listen("drag", n, function (direction, distance, dx, dy) {
 			var atBottom = (n.parentNode.scrollHeight - n.parentNode.scrollTop 
 				=== n.parentNode.clientHeight), atTop = (n.parentNode.scrollTop === 0);
-			opts.drag && opts.drag(direction, distance, dx, dy);
+			lastDirection = direction;
+			if (opts.drag)
+				opts.drag(direction, distance, dx, dy);
 			if((atTop && direction == "down") ||
 				(atBottom && direction == "up"))
 				return false;
 			return !opts.constraint ||
 				opts.constraint == drag._direction2constraint[direction];
 		});
+		gesture.listen("swipe", n, function (direction, distance, dx, dy, pixelsPerSecond) { 
+			if (direction == "up" && (n.parentNode.scrollTop >=
+				(n.parentNode.scrollHeight - (n.parentNode.clientHeight + 800)))
+				&& opts.swipe)
+			{
+				opts.swipe();
+			}
+		});
+		n.parentNode.addEventListener('scroll', function (event) {
+			if (opts.scroll)
+				opts.scroll(event);
+			if (opts.drag)
+				delayedDrag();
+			return true;
+		}, false);
 	},
 	makeDraggable: function (node, opts)
 	{
 		opts = opts || {};
-		if (!opts.interval && isIphone() && !opts.force)
-			return drag.nativeScroll(node, opts);
+		if (!opts.interval && !opts.force && !isStockAndroid())
+			return drag.nativeScroll(node.firstChild, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback;
 		node.xDrag = 0;
 		node.yDrag = 0;
+		node.classList.add('hardware-acceleration');
 		node.style['-webkit-transform'] = "translate3d(0,0,0)";
+		node.style.overflow = "visible";
+		node.parentNode.style.overflow = "visible";
+		node.parentNode.addEventListener('scroll', function (event) {return false;}, false);
 		downCallback = function () 
 		{
 			if (node.animating) return;
@@ -38,6 +81,8 @@ var drag =
 			node.animating = false;
 			node.xDragStart = node.xDrag;
 			node.yDragStart = node.yDrag;
+			if (opts.down)
+				opts.down();
 		};
 		upCallback = function (direction) {
 			var xMod = 0, yMod = 0, boundaryReached = false;
@@ -147,8 +192,13 @@ var drag =
 					if (boundaryReached)
 					{
 						node.animating = true;
-						trans(node, function () { node.animating = false;},
-							"-webkit-transform 300ms ease-out");
+						trans(node, function () {
+							node.animating = false;
+							if (opts.drag)
+								opts.drag(direction, 0, 0, 0);
+							if (opts.scroll)
+								opts.scroll();
+						}, "-webkit-transform 300ms ease-out");
 						node.style['-webkit-transform'] = 
 							"translate3d(" + node.xDrag + "px," + 
 							node.yDrag + "px,0)";
@@ -156,7 +206,6 @@ var drag =
 				}
 				if (opts.up)
 				{
-					console.log("endCallback");
 					opts.up(direction);
 				}
 			}
@@ -185,13 +234,16 @@ var drag =
 				node.style['-webkit-transform'] = 
 					"translate3d(" + node.xDrag + "px," + 
 					node.yDrag + "px,0)";
-				opts.drag && opts.drag(direction, distance, dx, dy);
+				if (opts.drag) 
+					opts.drag(direction, distance, dx, dy);
+				if (opts.scroll)
+					opts.scroll();
 			}
 		};
 		swipeCallback =  function (direction, distance, dx, dy, pixelsPerSecond)
 		{
 			var xMod = opts.interval ? node.xDrag % opts.interval : -dx;
-			var yMod = opts.interval ? node.yDrag % opts.interval : -dy;
+			var yMod = opts.interval ? node.yDrag % opts.interval : pixelsPerSecond * .3;
 			if (node.animating == false)
 			{
 				if (opts.constraint != "horizontal" && node.xDrag <= 0 && 
@@ -217,18 +269,17 @@ var drag =
 				{
 					if (direction == "up")
 					{
-						node.yDrag += yMod;
+						node.yDrag -= yMod;
 					}
 					else if (direction == "down")
 					{
-						node.yDrag += (opts.interval ? -(opts.interval + yMod) : -yMod);
+						node.yDrag -= (opts.interval ? -(opts.interval + yMod) : -yMod);
 					}
 					else
 					{
 						return;
 					}
 				}
-				//carousel.orderIndicationCallback(direction);
 				trans(node, function() {
 					node.animating = false;
 					upCallback(direction);//legit?
