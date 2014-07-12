@@ -898,6 +898,11 @@ if (isUnauthorized())
 		}
 	});
 } else {
+	addCss({
+		"body, html": function() {
+			return "position: fixed;";
+		}
+	});
 	var lastPath = sessionStorage.getItem("lastPath");
 	sessionStorage.removeItem("lastPath");
 	if (lastPath)
