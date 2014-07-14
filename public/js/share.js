@@ -31,7 +31,7 @@ var share =
 			});
 			return "https://www.facebook.com/dialog/feed"
 				+ "?app_id=676135635790285" + "&link=" + u
-				+ "&picture=" + encodeURI(image.get(d, 500).url)
+				// + "&picture=" + encodeURI(image.get(d, window.innerWidth - 40).url)
 				+ "&name=" + encodeURI(d.caption)
 				+ "&description=%23" + share_tag
 				// + "&caption=" + document.location.hostname
