@@ -12,8 +12,12 @@ body
 	background-color: #404041;
 	color: white;
 	font-weight: 200;
-	/* This was causing problems clipping popup modal windows
-	overflow: hidden;*/
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+  	-moz-user-select: none;     /* Firefox all */
+	-ms-user-select: none;      /* IE 10+ */
+	
+	/* This was causing problems clipping popup modal windows */
+	/*overflow: hidden;*/
 }
 
 html, input[type="submit"] {
