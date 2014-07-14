@@ -64,13 +64,16 @@ var share =
 	_buildContent: function ()
 	{
 		var heading = document.createElement("div"),
-			blurb = document.createElement("div");
+			blurb = document.createElement("div"),
+			url = document.createElement("div"),
+			clipboard = document.createElement("img");
 		heading.className = "really-big share_heading_margin";
 		heading.innerHTML = "Share This Card";
 		share.content.className = "centered";
 		share.content.appendChild(heading);
 		for (var network in share.networks)
 			share._icon(network);
+		
 	},
 	_buildButton: function ()
 	{
