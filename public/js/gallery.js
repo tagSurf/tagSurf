@@ -355,7 +355,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			var trueScrollTop = gridwrapper.scrollTop ? gridwrapper.scrollTop
 				: (gridwrapper.yDrag ? -gridwrapper.yDrag : 0);
 			if (((trueScrollTop + gridwrapper.offsetHeight) >= gridwrapper.scrollHeight - 60)
-				&& direction == "down")
+				&& (!direction || direction == "down"))
 				populateGallery();
 		}
 	});
