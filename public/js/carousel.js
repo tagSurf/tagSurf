@@ -8,6 +8,7 @@ var carousel =
 	images: [],
 	current_card: 0,
 	total_cards:0,
+	endButton: false,
 	_build: function ()
 	{
 		addCss({
@@ -61,10 +62,10 @@ var carousel =
 		 if (direction == "left" && 
 			carousel.activeCircle.nextSibling)
 		 {
-			if ((carousel.current_card+1)==(carousel.total_cards-1))
-				document.getElementById("next_button").innerHTML = "Got it!";
-			else
-				document.getElementById("next_button").innerHTML = "Next";
+			if ((carousel.current_card+1)==(carousel.total_cards-1)) {
+				carousel.setEndButton();
+				carousel.swipeCallback("left");
+			}
 			carousel.activeCircle.classList.remove('active_circle');
 			carousel.activeCircle.nextSibling.classList.add('active_circle');
 			carousel.activeCircle = carousel.activeCircle.nextSibling;
@@ -73,8 +74,6 @@ var carousel =
 		 if (direction == "right" &&
 			carousel.activeCircle.previousSibling)
 		 {
-			if ((carousel.current_card+1)<(carousel.total_cards-1))
-				document.getElementById("next_button").innerHTML = "Next";
 			carousel.activeCircle.classList.remove('active_circle');
 			carousel.activeCircle.previousSibling.classList.add('active_circle');
 			carousel.activeCircle = carousel.activeCircle.previousSibling;
@@ -133,20 +132,23 @@ var carousel =
 		}
 	},
 	nextButtonCallback: function(){
-		if ((carousel.current_card+1)<(carousel.total_cards-1)) {
-			clearInterval(carousel.inactivityTimeout);
-			carousel.inactivityTimeout = null;
-			carousel.swipeCallback("left");
-		}
+		if (carousel.endButton) {
+			carousel.off();
+			document.forms[0].submit();
+		} 
 		else if ((carousel.current_card+1)==(carousel.total_cards-1)) {
-			clearInterval(carousel.inactivityTimeout);
-			carousel.inactivityTimeout = null;
+			carousel.setEndButton();
 			carousel.swipeCallback("left");
 		}
 		else {
-			carousel.off();
-			document.forms[0].submit();
+			clearInterval(carousel.inactivityTimeout);
+			carousel.inactivityTimeout = null;
+			carousel.swipeCallback("left");
 		};
+	},
+	setEndButton: function(){
+		document.getElementById("next_button").innerHTML = "Got it!";
+		carousel.endButton = true;
 	},
 	// upCallback: function ()
 	// {
