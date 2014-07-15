@@ -54,12 +54,17 @@ var carousel =
 		carousel._populate();
 		//gesture.listen("swipe", carousel.view.firstChild, carousel.swipeCallback);
 		//gesture.listen("up", carousel.view.firstChild, carousel.upCallback);
+		//Stop auto-advance after the first touch event
 		gesture.listen("down", carousel.view.firstChild, carousel.downCallback);
 	},
 	orderIndicationCallback: function (direction) {
 		 if (direction == "left" && 
 			carousel.activeCircle.nextSibling)
 		 {
+			if ((carousel.current_card+1)==(carousel.total_cards-1))
+				document.getElementById("next_button").innerHTML = "Got it!";
+			else
+				document.getElementById("next_button").innerHTML = "Next";
 			carousel.activeCircle.classList.remove('active_circle');
 			carousel.activeCircle.nextSibling.classList.add('active_circle');
 			carousel.activeCircle = carousel.activeCircle.nextSibling;
@@ -68,6 +73,8 @@ var carousel =
 		 if (direction == "right" &&
 			carousel.activeCircle.previousSibling)
 		 {
+			if ((carousel.current_card+1)<(carousel.total_cards-1))
+				document.getElementById("next_button").innerHTML = "Next";
 			carousel.activeCircle.classList.remove('active_circle');
 			carousel.activeCircle.previousSibling.classList.add('active_circle');
 			carousel.activeCircle = carousel.activeCircle.previousSibling;
@@ -135,19 +142,18 @@ var carousel =
 			clearInterval(carousel.inactivityTimeout);
 			carousel.inactivityTimeout = null;
 			carousel.swipeCallback("left");
-			document.getElementById("next_button").innerHTML = "Got it!";
 		}
 		else {
 			carousel.off();
 			document.forms[0].submit();
 		};
 	},
-	upCallback: function ()
-	{
-		carousel.inactivityTimeout = setInterval(function(){
-			carousel.swipeCallback("left");
-		},5000);
-	},
+	// upCallback: function ()
+	// {
+	// 	carousel.inactivityTimeout = setInterval(function(){
+	// 		carousel.swipeCallback("left");
+	// 	},5000);
+	// },
 	downCallback: function ()
 	{
 		clearInterval(carousel.inactivityTimeout);
