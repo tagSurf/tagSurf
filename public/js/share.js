@@ -31,10 +31,10 @@ var share =
 			});
 			return "https://www.facebook.com/dialog/feed"
 				+ "?app_id=676135635790285" + "&link=" + u
-				+ "&picture=" + encodeURI(image.get(d, window.innerWidth - 40).url)
+				// + "&picture=" + encodeURI(image.get(d, window.innerWidth - 40).url)
 				+ "&name=" + encodeURI(d.caption)
 				+ "&description=%23" + share_tag
-				+ "&caption=" + document.location.hostname
+				// + "&caption=" + document.location.hostname
 				+ "&redirect_uri=" + u;
 		},
 		twitter: function() {

@@ -12,7 +12,12 @@ body
 	background-color: #404041;
 	color: white;
 	font-weight: 200;
-	overflow: hidden;
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+  	-moz-user-select: none;     /* Firefox all */
+	-ms-user-select: none;      /* IE 10+ */
+	
+	/* This was causing problems clipping popup modal windows */
+	/*overflow: hidden;*/
 }
 
 html, input[type="submit"] {
@@ -549,6 +554,11 @@ a {
 .share_heading_margin
 {
 	margin: 60px 0;
+}
+.center-label
+{
+  text-align: center;
+  padding-top: 30%;
 }
 
 @media only screen and (min-width: 700px){

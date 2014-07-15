@@ -5,20 +5,19 @@
 	z-index: 1000;
 	visibility: hidden;
 	opacity: 0;
-	overflow-x: scroll;
-	overflow-y: none;
+	overflow: hidden;
 	transition: opacity 500ms ease-in-out;
 	-moz-transition: opacity 500ms ease-in-out;
 	-webkit-transition: opacity 500ms ease-in-out;
 }
 .indicator_circle
 {
-	margin: 0 3px;
+	margin: 0 5px;
 	display: inline-block;
 	border-radius: 50%;
 	background-color: #6a6a6a;
-	width: 7px;
-	height: 7px;
+	width: 15px;
+	height: 15px;
 }
 .active_circle
 {
@@ -52,7 +51,7 @@
 	bottom: 5px;
 	width: 100%;
 }
-.end_tutorial_btn
+.advnc_tutorial_btn
 {
 	display: inline-block;
 	color: white;
