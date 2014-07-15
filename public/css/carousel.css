@@ -5,15 +5,14 @@
 	z-index: 1000;
 	visibility: hidden;
 	opacity: 0;
-	overflow-x: scroll;
-	overflow-y: none;
+	overflow: hidden;
 	transition: opacity 500ms ease-in-out;
 	-moz-transition: opacity 500ms ease-in-out;
 	-webkit-transition: opacity 500ms ease-in-out;
 }
 .indicator_circle
 {
-	margin: 0 3px;
+	margin: 0 5px;
 	display: inline-block;
 	border-radius: 50%;
 	background-color: #6a6a6a;
@@ -29,6 +28,7 @@
 	background-color: #404041;
 	height: 100%;
 	white-space: nowrap;
+	overflow: hidden;
 }
 .carousel_image_container
 {

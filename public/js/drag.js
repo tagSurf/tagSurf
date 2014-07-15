@@ -70,8 +70,11 @@ var drag =
 		node.yDrag = 0;
 		node.classList.add('hardware-acceleration');
 		node.style['-webkit-transform'] = "translate3d(0,0,0)";
-		node.style.overflow = "visible";
-		node.parentNode.style.overflow = "visible";
+		// Don't apply overflow=visible to welcome tutorial carousel container
+		if (node.className.indexOf("carousel") == -1) {
+			node.style.overflow = "visible";
+			node.parentNode.style.overflow = "visible";
+		};
 		node.parentNode.addEventListener('scroll', function (event) {return false;}, false);
 		downCallback = function () 
 		{
