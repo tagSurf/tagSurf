@@ -42,11 +42,15 @@ var carousel =
 			up: carousel.orderIndicationCallback
 		});
 		document.body.appendChild(carousel.view);
-		for (index = 1; index <= 7; ++index)
+		for (index = 1; index <= 6; ++index)
 		{
 			carousel.images.push(
 				'/img/tutorial/tutorial_' + index + '.png');
 		}
+		if(isAndroid())
+			carousel.images.push('/img/tutorial/tutorial_homescreen_android.png');
+		else
+			carousel.images.push('/img/tutorial/tutorial_homescreen_ios.png');
 		carousel._populate();
 		//gesture.listen("swipe", carousel.view.firstChild, carousel.swipeCallback);
 		gesture.listen("up", carousel.view.firstChild, carousel.upCallback);
