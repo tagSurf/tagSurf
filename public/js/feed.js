@@ -921,17 +921,19 @@ onload = function ()
 	setReminderTimeout();
 };
 
-if (isUnauthorized())
-{
-	xhr('/api/users', null, function(result) {
-		if (result.user != "not found")
-		{
+xhr('/api/users', null, function(result) {
+	if (result.user != "not found") {
+		if (isUnauthorized()) {
 			window.location = "http://" +
-				document.location.host + '/feed#' + 
+				document.location.host + '/feed#' +
 				window.location.pathname.replace('/share/','').replace('/','|');
-		}
-	});
-} else {
+		} else
+			analytics.identify(result.user.id);
+	}
+});
+
+if (!isUnauthorized())
+{
 	addCss({
 		"body, html": function() {
 			return "position: fixed;";
