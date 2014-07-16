@@ -17,31 +17,33 @@ onload = function ()
 	reminderTimeout = null;
 	featureBlockContents = buildFeatureBlockerContents();
 
+	var reminderContainer = document.createElement('div');
 	var forgetReminder = function() {
 		if (reminderTimeout) {
-			document.body.removeChild(document.getElementById("reminder_container"));
+			document.body.removeChild(reminderContainer);
 			clearTimeout(reminderTimeout);
 			reminderTimeout = null;
 		}
 	};
+	var closeReminder = function (direction)
+	{
+		forgetReminder();
+		if (reminderContainer.isOn && direction != "up" && direction != "down")
+		{
+			reminderContainer.isOn = false;
+			reminderContainer.style.opacity = 0;			
+			trans(reminderContainer, function() {
+				reminderContainer.parentNode.removeChild(reminderContainer);
+				reminderTimeout = null;
+			});
+			analytics.track('Closed Swipe Reminder');
+		}
+	};
 	var setReminderTimeout = function ()
 	{
-		var reminderContainer = document.createElement('div'),
-			closeContainer = document.createElement('div'),
+		var closeContainer = document.createElement('div'),
 			close = document.createElement('img'),
 			leftImage = new Image(), rightImage = new Image();
-		var closeReminderCallback = function (direction)
-		{
-			if (direction != "up" && direction != "down")
-			{
-				reminderContainer.style.opacity = 0;			
-				trans(reminderContainer, function() {
-					reminderContainer.parentNode.removeChild(reminderContainer);
-					reminderTimeout = null;
-				});
-			}
-			analytics.track('Closed Swipe Reminder');
-		};
 		reminderContainer.id = "reminder_container";
 		close.className = "reminder_close";
 		close.src = "/img/Close.png";
@@ -60,15 +62,15 @@ onload = function ()
 			}
 		});
 		gesture.listen("down", reminderContainer, returnTrue);
-		gesture.listen('down', closeContainer, closeReminderCallback);
-		gesture.listen("tap", reminderContainer, closeReminderCallback);
-		gesture.listen("swipe", reminderContainer, closeReminderCallback);
+		gesture.listen('down', closeContainer, closeReminder);
+		gesture.listen("tap", reminderContainer, closeReminder);
+		gesture.listen("swipe", reminderContainer, closeReminder);
 		document.body.appendChild(reminderContainer);
 		reminderTimeout = setTimeout(function () {
-			var container = document.getElementById("reminder_container");
-			container.style.visibility = "visible";			
-			container.style.zIndex = "100";			
-			container.style.opacity = 1;			
+			reminderContainer.isOn = true;
+			reminderContainer.style.visibility = "visible";
+			reminderContainer.style.zIndex = "100";
+			reminderContainer.style.opacity = 1;
 		}, 20000);
 	};
 	
@@ -409,6 +411,7 @@ onload = function ()
 		}
 	};
 	window.onkeyup = function(e) {
+		closeReminder("right");
 		keyInertia = 0;
 		e = e || window.event;
 		var code = e.keyCode || e.which;
@@ -417,7 +420,6 @@ onload = function ()
 		}
 		else if (code == 37){
 			swipeSlider("left");
-			forgetReminder();
 			analytics.track("Key Swipe", {
 				card: slider.card.id,
 				direction: "left",	
@@ -432,7 +434,6 @@ onload = function ()
 		}
 		else if (code == 39){
 			swipeSlider("right");
-			forgetReminder();
 			analytics.track("Key Swipe", {
 				card: slider.card.id,
 				direction: "right",	
