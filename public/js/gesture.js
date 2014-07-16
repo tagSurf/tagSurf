@@ -20,7 +20,8 @@ var gesture = {
 		},
 		up: {
 			androidDelay: 600
-		}
+		},
+		pinch: {}
 	},
 	_vars: {
 		active: false,
@@ -31,7 +32,9 @@ var gesture = {
 		holdCount: 0,
 		tapTimeout: null,
 		holdInterval: null,
-		stopTimeout: null
+		stopTimeout: null,
+		firstPinch: null,
+		fingers: {}
 	},
 	events: isMobile() && {
 		Start: "touchstart",
@@ -43,7 +46,7 @@ var gesture = {
 		Stop: "mouseup",
 		Move: "mousemove"
 	},
-	handlers: { drag: {}, swipe: {}, tap: {}, up: {}, down: {}, hold: {} },
+	handlers: { drag: {}, swipe: {}, tap: {}, up: {}, down: {}, hold: {}, pinch: {} },
 	tuneThresholds: function() {
 		if (!isIos())
 			for (var gest in gesture.thresholds)
@@ -77,12 +80,18 @@ var gesture = {
 			d.direction = d.y > 0 ? 'down' : 'up';
 		return d;
 	},
+	pinchDiff: function() {
+		var fkeys = Object.keys(v.fingers);
+		return gesture.getDiff(f.fingers[fkeys[0]], f.fingers[fkeys[1]]);
+	},
 	onStart: function(e, node) {
 		var t = gesture.thresholds;
 		var v = node.gvars;
 		v.active = true;
 		v.startTime = Date.now();
-		v.startPos = v.lastPos = gesture.getPos(e);
+		v.startPos = v.lastPos = v.fingers[e.id] = gesture.getPos(e);
+		if (Object.keys(v.fingers).length == 2)
+			v.firstPinch = gesture.pinchDiff();
 		if (v.tapTimeout) {
 			clearTimeout(v.tapTimeout);
 			v.tapTimeout = null;
@@ -111,7 +120,8 @@ var gesture = {
 		var pos = gesture.getPos(e);
 		var diff = gesture.getDiff(v.startPos, pos);
 		var timeDiff = Date.now() - v.startTime;
-		v.active = false;
+		delete v.fingers[e.id];
+		v.active = !!Object.keys(v.fingers).length;
 
 		if ( (timeDiff < t.swipe.maxTime)
 			&& (diff.distance > t.swipe.minDistance) ) // swipe
@@ -135,6 +145,9 @@ var gesture = {
 			var pos = gesture.getPos(e);
 			var diff = gesture.getDiff(v.lastPos, pos);
 			v.lastPos = pos;
+			if (Object.keys(v.fingers).length > 1)
+				gesture.triggerPinch(gesture.pinchDiff().distance /
+					v.firstPinch.distance);
 			return gesture.triggerDrag(node, diff.direction,
 				diff.distance, diff.x, diff.y);
 		}
@@ -173,6 +186,11 @@ var gesture = {
 					delete gesture.handlers[eventName][node.gid];
 			delete node.gid;
 		}
+	},
+	triggerPinch: function(node, normalizedDistance) {
+		var handlers = gesture.handlers.pinch[node.gid];
+		if (handlers) for (var i = 0; i < handlers.length; i++)
+			handlers[i](normalizedDistance);
 	},
 	triggerSwipe: function(node, direction, distance, dx, dy, pixelsPerSecond) {
 		var handlers = gesture.handlers.swipe[node.gid];
