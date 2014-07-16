@@ -367,17 +367,19 @@ onload = function ()
 				slideContainer.children[0].style.zIndex = 2;
 				if (slideContainer.children[1])
 					slideContainer.children[1].style.zIndex = 1;
-				activeCard.total_votes += 1;
-				activeCard[voteDir + "_votes"] += 1;
-				activeCard.user_stats.voted = true;
-				activeCard.user_stats.tag_voted = current_tag;
-				activeCard.user_stats.vote = voteDir;
-				if (isUnauthorized())
-					shareVotes.push(activeCard);
-				else if (voteAlternative)
-					voteAlternative();
-				else
-					castVote(activeCard);
+				if (activeCard.type == "content") {
+					activeCard.total_votes += 1;
+					activeCard[voteDir + "_votes"] += 1;
+					activeCard.user_stats.voted = true;
+					activeCard.user_stats.tag_voted = current_tag;
+					activeCard.user_stats.vote = voteDir;
+					if (isUnauthorized())
+						shareVotes.push(activeCard);
+					else if (voteAlternative)
+						voteAlternative();
+					else
+						castVote(activeCard);
+				}
 				preloadCards();
 			},
 			"swiping",
