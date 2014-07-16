@@ -589,6 +589,7 @@ onload = function ()
 	var expandTimeout;
 	var setSlider = function(s) {
 		slider = s || slideContainer.firstChild.firstChild;
+		toggleClass.call(slider, "hardware-acceleration", "on");
 		setCurrentMedia(slider.card, forgetReminder);
 		if (expandTimeout) {
 			clearTimeout(expandTimeout);
