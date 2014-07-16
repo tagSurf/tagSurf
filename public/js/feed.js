@@ -261,6 +261,7 @@ onload = function ()
 	};
 	var revertSlider = function ()
 	{
+		toggleClass.call(slider, "card-swiping", "off");
 		if (slider.isContent) {
 			var thumbContainer = slider.lastChild.previousSibling;
 			slider.style['border-color'] = "#353535";
@@ -485,8 +486,11 @@ onload = function ()
 				if (slider.verticaling == false)
 				{
 					var thumbContainer = slider.lastChild.previousSibling;
-					slider.sliding = true;
 					slider.x += dx;
+					if (slider.sliding == false) {
+						slider.sliding = true;
+						toggleClass.call(slider, "card-swiping", "on");
+					}
 					if (slider.isContent) {
 						if ( slider.x > 0)
 						{
