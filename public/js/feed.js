@@ -1,3 +1,7 @@
+var castVote = function(card) {
+	xhr("/api/votes/" + card.user_stats.vote + "/" + card.id
+		+ "/tag/" + card.user_stats.tag_voted, "POST");
+};
 onload = function ()
 {
 	populateNavbar();
@@ -363,16 +367,17 @@ onload = function ()
 				slideContainer.children[0].style.zIndex = 2;
 				if (slideContainer.children[1])
 					slideContainer.children[1].style.zIndex = 1;
-				if (!isUnauthorized()) {
-					activeCard.total_votes += 1;
-					activeCard[voteDir + "_votes"] += 1;
-					activeCard.user_stats.voted = true;
-					activeCard.user_stats.tag_voted = current_tag;
-					activeCard.user_stats.vote = voteDir;
-					if (voteAlternative) voteAlternative();
-					else xhr("/api/votes/" + voteDir + "/" + activeCard.id
-						+ "/tag/" + current_tag, "POST");
-				}
+				activeCard.total_votes += 1;
+				activeCard[voteDir + "_votes"] += 1;
+				activeCard.user_stats.voted = true;
+				activeCard.user_stats.tag_voted = current_tag;
+				activeCard.user_stats.vote = voteDir;
+				if (isUnauthorized())
+					shareVotes.push(activeCard);
+				else if (voteAlternative)
+					voteAlternative();
+				else
+					castVote(activeCard);
 				preloadCards();
 			},
 			"swiping",
@@ -920,9 +925,15 @@ if (isUnauthorized())
 		}
 	});
 	var lastPath = sessionStorage.getItem("lastPath");
-	sessionStorage.removeItem("lastPath");
-	if (lastPath)
+	if (lastPath) {
+		sessionStorage.removeItem("lastPath");
 		location.hash = lastPath;
+	}
+	var shareVotes = sessionStorage.getItem("shareVotes");
+	if (shareVotes) {
+		sessionStorage.removeItem("shareVotes");
+		JSON.parse(shareVotes).forEach(castVote);
+	}
 }
 
 // handle facebook redirects

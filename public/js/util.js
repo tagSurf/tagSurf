@@ -243,6 +243,7 @@ var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
     "/img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
 };
+var shareVotes = [];
 var featureBlockContents, buildFeatureBlockerContents = function() {
 	var contents = document.createElement('div'),
 		closeContainer = document.createElement('div'),
@@ -270,6 +271,8 @@ var featureBlockContents, buildFeatureBlockerContents = function() {
 	gesture.listen("tap", link, function () {
     sessionStorage.setItem("lastPath",
       current_tag + "|" + currentMedia.id);
+    sessionStorage.setItem("shareVotes",
+      JSON.stringify(shareVotes));
 		window.location = "/users/sign_in";
 		link.classList.remove('ts-active-button');
 	});
