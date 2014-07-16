@@ -32,7 +32,8 @@ var gesture = {
 		tapTimeout: null,
 		holdInterval: null,
 		stopTimeout: null,
-		stopPropagation: false
+		stopPropagation: false,
+		preventDefault: false
 	},
 	events: isMobile() && {
 		Start: "touchstart",
@@ -144,16 +145,16 @@ var gesture = {
 		var e = {};
 		['Start', 'Stop', 'Move'].forEach(function(eName) {
 			e[eName] = function(e) {
+				node.gvars.preventDefault && e.preventDefault();
 				node.gvars.stopPropagation && e.stopPropagation();
-				return gesture['on' + eName](e, node) || (gesture.preventDefault
-					&& e.preventDefault()) || e.stopPropagation() || false;
+				return gesture['on' + eName](e, node) || e.preventDefault() || e.stopPropagation() || false;
 			};
 		});
 		if (gesture.events.Cancel)
 			e.Cancel = e.Stop;
 		return e;
 	},
-	listen: function(eventName, node, cb, stopPropagation) {
+	listen: function(eventName, node, cb, stopPropagation, preventDefault) {
 		if (!node.gid) {
 			node.gid = ++gesture.gid;
 			var e = node.listeners = gesture.eWrap(node);
@@ -162,6 +163,7 @@ var gesture = {
 			node.gvars = JSON.parse(JSON.stringify(gesture._vars));
 		}
 		node.gvars.stopPropagation = stopPropagation;
+		node.gvars.preventDefault = preventDefault;
 		if (!gesture.handlers[eventName][node.gid])
 			gesture.handlers[eventName][node.gid] = [];
 		gesture.handlers[eventName][node.gid].push(cb);
