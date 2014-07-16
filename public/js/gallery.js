@@ -61,17 +61,11 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 
 		bigpic = document.createElement("img");
 		bigpic.id = "bigpic";
-		gesture.listen("up", bigpic, function() {
-			gesture.triggerUp(picbox);
-		});
+		gesture.listen("up", bigpic, returnTrue);
+		gesture.listen("down", bigpic, returnTrue);
+		gesture.listen("drag", bigpic, returnTrue);
 		gesture.listen("tap", bigpic, function() {
 			picbox.dragging || modal.zoomModal();
-		});
-		gesture.listen("down", bigpic, function() {
-			gesture.triggerDown(picbox);
-		});
-		gesture.listen("drag", bigpic, function (direction, distance, dx, dy) {
-			gesture.triggerDrag(picbox, direction, distance, dx, dy);
 		});
 		gesture.listen("swipe", bigpic, function (direction, distance, dx, dy, pixelsPerSecond) {
 			if (direction != "up" && direction != "down")
@@ -80,21 +74,20 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			}
 			else
 			{
-				gesture.triggerSwipe(picbox, direction, distance, dx, dy, pixelsPerSecond);
+				gesture.triggerSwipe(modal.modal, direction, distance, dx, dy, pixelsPerSecond);
 			}
 		});
 		bigpic.onload = function (event)
 		{
 			if (modal.modal.offsetHeight < picbox.scrollHeight)
 			{
-				gesture.preventDefault = false;
-				drag.makeDraggable(picbox, {
+				modal.modal.style['overflow-y'] = "scroll";
+				drag.makeDraggable(modal.modal, {
 					constraint: "horizontal",
 					up: function (direction) {
 						if (direction == 'left' ||
 							direction == 'right')
 						{
-							gesture.preventDefault = true;
 							modal.callModal();
 						}
 					},
@@ -102,6 +95,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			}
 			else
 			{
+				modal.modal.style['overflow-y'] = "auto";
 				picbox.style['-webkit-transform'] = "translate3d(0,0,0)";
 				gesture.unlisten(picbox);
 			}
