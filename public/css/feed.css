@@ -257,13 +257,19 @@ html, body
 .image-container
 {
   overflow-y: hidden;
-  pointer-events: none;
   -webkit-overflow-scrolling: none;
   margin-bottom: 8px;
 }
 
 .image-container img
 {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  pointer-events: none;
   border-radius: 5px;
   height: auto;
   width: 100%;

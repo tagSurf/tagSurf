@@ -823,14 +823,25 @@ onload = function ()
 		}
 		return true;
 	};
+	var initImageGestures = function ()
+	{
+		var imageContainer = this.getElementsByClassName('image-container')[0];
+		if (!imageContainer)
+			return;
+		gesture.listen("tap", imageContainer, tapCallback)
+		gesture.listen("down", imageContainer, returnTrue)
+		gesture.listen("up", imageContainer, returnTrue)
+		gesture.listen("drag", imageContainer, returnTrue)
+	};
 	var initCardGestures = function ()
 	{
 		gesture.listen("swipe", this, swipeCallback);
 		gesture.listen("up", this, upCallback);
-		gesture.listen("tap", this, tapCallback);
+		//gesture.listen("tap", this, tapCallback);
 		gesture.listen("drag", this, dragCallback);
 		gesture.listen("hold", this, holdCallback);
 		gesture.listen("down", this, downCallback);
+		initImageGestures.call(this);
 	};
 	var expandCard = function ()
 	{
