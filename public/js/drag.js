@@ -12,12 +12,12 @@ var drag =
 			if (opts.up)
 				opts.up();
 			return true;
-		}, true);
+		}, true, false);
 		gesture.listen("down", n, function () {
 			if (opts.down)
 				opts.down();
 			return true;
-		}, true);
+		}, true, false);
 		var dirs = {
 			up: "down",
 			down: "up",
@@ -43,7 +43,7 @@ var drag =
 				return false;
 			return !opts.constraint ||
 				opts.constraint == drag._direction2constraint[direction];
-		}, true);
+		}, true, false);
 		gesture.listen("swipe", n, function (direction, distance, dx, dy, pixelsPerSecond) { 
 			if (direction == "up" && (n.parentNode.scrollTop >=
 				(n.parentNode.scrollHeight - (n.parentNode.clientHeight + 800)))
@@ -51,7 +51,7 @@ var drag =
 			{
 				opts.swipe();
 			}
-		}, true);
+		}, true, false);
 		n.parentNode.addEventListener('scroll', function (event) {
 			if (opts.scroll)
 				opts.scroll(event);
