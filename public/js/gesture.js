@@ -33,8 +33,7 @@ var gesture = {
 		tapTimeout: null,
 		holdInterval: null,
 		stopTimeout: null,
-		firstPinch: null,
-		fingers: {}
+		firstPinch: null
 	},
 	events: isMobile() && {
 		Start: "touchstart",
@@ -59,15 +58,11 @@ var gesture = {
 				}
 	},
 	getPos: function(e) {
-		var p = {};
-		if (e.type.slice(0, 5) == "touch") {
-			p.x = e.changedTouches[0].pageX;
-			p.y = e.changedTouches[0].pageY;
-		} else {
-			p.x = e.x;
-			p.y = e.y;
+		if (e.x == undefined) {
+			e.x = e.pageX || e.changedTouches[0].pageX;
+			e.y = e.pageY || e.changedTouches[0].pageY;
 		}
-		return p;
+		return { x: e.x, y: e.y };
 	},
 	getDiff: function(p1, p2) {
 		var d = {};
@@ -80,18 +75,18 @@ var gesture = {
 			d.direction = d.y > 0 ? 'down' : 'up';
 		return d;
 	},
-	pinchDiff: function() {
-		var fkeys = Object.keys(v.fingers);
-		return gesture.getDiff(f.fingers[fkeys[0]], f.fingers[fkeys[1]]);
+	pinchDiff: function(e) {
+		return gesture.getDiff(gesture.getPos(e.touches[0]),
+			gesture.getPos(e.touches[1]));
 	},
 	onStart: function(e, node) {
 		var t = gesture.thresholds;
 		var v = node.gvars;
 		v.active = true;
 		v.startTime = Date.now();
-		v.startPos = v.lastPos = v.fingers[e.id] = gesture.getPos(e);
-		if (Object.keys(v.fingers).length == 2)
-			v.firstPinch = gesture.pinchDiff();
+		v.startPos = v.lastPos = gesture.getPos(e);
+		if (e.touches.length > 1)
+			v.firstPinch = gesture.pinchDiff(e);
 		if (v.tapTimeout) {
 			clearTimeout(v.tapTimeout);
 			v.tapTimeout = null;
@@ -120,8 +115,7 @@ var gesture = {
 		var pos = gesture.getPos(e);
 		var diff = gesture.getDiff(v.startPos, pos);
 		var timeDiff = Date.now() - v.startTime;
-		delete v.fingers[e.id];
-		v.active = !!Object.keys(v.fingers).length;
+		v.active = !!e.touches.length;
 
 		if ( (timeDiff < t.swipe.maxTime)
 			&& (diff.distance > t.swipe.minDistance) ) // swipe
@@ -145,9 +139,9 @@ var gesture = {
 			var pos = gesture.getPos(e);
 			var diff = gesture.getDiff(v.lastPos, pos);
 			v.lastPos = pos;
-			if (Object.keys(v.fingers).length > 1)
-				gesture.triggerPinch(gesture.pinchDiff().distance /
-					v.firstPinch.distance);
+			if (e.touches.length > 1)
+				gesture.triggerPinch(node,
+					gesture.pinchDiff(e).distance / v.firstPinch.distance);
 			return gesture.triggerDrag(node, diff.direction,
 				diff.distance, diff.x, diff.y);
 		}
