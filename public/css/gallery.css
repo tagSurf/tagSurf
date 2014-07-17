@@ -153,6 +153,31 @@ img[src="img/history_icon_gray.png"]
 }
 
 @media only screen and (min-width: 700px){
+	.header {
+		font-size: 25pt;
+		font-weight: 200;
+	}
+	.greenline {
+		border: 2px solid #00a651;
+	}
+	.redline {
+		border: 2px solid red;
+	}
+	.tag {
+		font-size: 18pt;
+		line-height: 29px;
+		height: 32px;
+	}
+	.box {
+		border-radius: 6px;
+	}
+	.grid > div > .votes {
+		height: 32px;
+	}
+	.grid > div > div > .votecount {
+		font-size: 17pt;
+		line-height: 33px;
+	}
 	#picbox {
 		padding: 0 5px;
 	}
