@@ -95,7 +95,7 @@ var gesture = {
 			clearTimeout(v.tapTimeout);
 			v.tapTimeout = null;
 		}
-		if (gesture.isMulti())
+		if (gesture.isMulti(e))
 			v.firstPinch = gesture.pinchDiff(e);
 		else {
 			v.holdInterval = setInterval(function() {
@@ -148,7 +148,7 @@ var gesture = {
 			var pos = gesture.getPos(e);
 			var diff = gesture.getDiff(v.lastPos, pos);
 			v.lastPos = pos;
-			if (gesture.isMulti())
+			if (gesture.isMulti(e))
 				gesture.triggerPinch(node,
 					gesture.pinchDiff(e).distance / v.firstPinch.distance);
 			return gesture.triggerDrag(node, diff.direction,
