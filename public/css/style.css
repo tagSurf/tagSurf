@@ -570,21 +570,27 @@ a {
 	  padding: 0px 7px;
 	  font-size: 140%;
 	}
-	#share-button
-	{
-  	bottom: 10px;
-  	right: 10px;
+	#share-button {
+	  bottom: 10px;
+	  right: 10px;
   	width: 80px;
 	}
-	#share-icon{
+	#share-icon {
 		width: 50px;
 	}
 	.share_link_icon
 	{
 		padding: 0 50px;
 	}
-	.zoom_wrapper{
+	.zoom_wrapper {
 		top: 40px;
+	} 
+	.modal{
+		margin: auto;
+		width: 75%;
+	}
+	.midsize {
+		font-size: 14pt;
 	}
 }
 

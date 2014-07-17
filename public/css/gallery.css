@@ -148,3 +148,39 @@ img[src="img/history_icon_gray.png"]
 .blue {
 	color: #00aeef;
 }
+
+@media only screen and (min-width: 700px){
+	#picbox {
+		padding: 0 5px;
+	}
+	#topbar {
+		line-height: 23px;
+		margin-bottom: 6px;
+	}
+	#topbar span.blue {
+		font-size: 16pt;
+	}
+	#toptag {
+		font-size: 16pt;
+	}
+	#votemeter {
+		width: 180px;
+	}
+	.votes {
+		border-bottom-left-radius: 6px;
+		border-bottom-right-radius: 6px;
+		height: 17px;
+	}
+	.votecount {
+		font-size: 11pt;
+		line-height: 17px;
+	}
+	#picdesc{
+		font-size: 14pt;
+		margin-top: 10px;
+	}
+	.pictagcell {
+		margin: 10px 7px;
+	}
+}
+
