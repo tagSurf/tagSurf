@@ -147,7 +147,8 @@ var gesture = {
 			e[eName] = function(e) {
 				node.gvars.preventDefault && e.preventDefault();
 				node.gvars.stopPropagation && e.stopPropagation();
-				return gesture['on' + eName](e, node) || e.preventDefault() || e.stopPropagation() || false;
+				return gesture['on' + eName](e, node) || (gesture.preventDefault 
+					&& e.preventDefault()) || e.stopPropagation() || false;
 			};
 		});
 		if (gesture.events.Cancel)
