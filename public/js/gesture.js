@@ -85,25 +85,27 @@ var gesture = {
 		var t = gesture.thresholds;
 		var v = node.gvars;
 		v.active = true;
+		v.holdCount = 0;
 		v.startTime = Date.now();
 		v.startPos = v.lastPos = gesture.getPos(e);
-		if (e.touches.length > 1)
-			v.firstPinch = gesture.pinchDiff(e);
 		if (v.tapTimeout) {
 			clearTimeout(v.tapTimeout);
 			v.tapTimeout = null;
 		}
-		v.holdCount = 0;
-		v.holdInterval = setInterval(function() {
-			if (!v.active || (t.hold.maxDistance && (t.hold.maxDistance <
-				gesture.getDiff(v.startPos, v.lastPos).distance))) {
-				clearInterval(v.holdInterval);
-				v.holdInterval = null;
-				return;
-			}
-			v.holdCount += 1;
-			gesture.triggerHold(node, t.hold.interval * v.holdCount);
-		}, t.hold.interval);
+		if (e.touches.length > 1)
+			v.firstPinch = gesture.pinchDiff(e);
+		else {
+			v.holdInterval = setInterval(function() {
+				if (!v.active || (t.hold.maxDistance && (t.hold.maxDistance <
+					gesture.getDiff(v.startPos, v.lastPos).distance))) {
+					clearInterval(v.holdInterval);
+					v.holdInterval = null;
+					return;
+				}
+				v.holdCount += 1;
+				gesture.triggerHold(node, t.hold.interval * v.holdCount);
+			}, t.hold.interval);
+		}
 		return gesture.triggerDown(node);
 	},
 	onStop: function(e, node, delayed) {
@@ -119,19 +121,21 @@ var gesture = {
 		var timeDiff = Date.now() - v.startTime;
 		v.active = !!e.touches.length;
 
-		if ( (timeDiff < t.swipe.maxTime)
-			&& (diff.distance > t.swipe.minDistance) ) // swipe
-			gesture.triggerSwipe(node, diff.direction,
-				diff.distance, diff.x, diff.y,
-				Math.min(t.swipe.maxDP, Math.max(t.swipe.minDP,
-					diff.distance / timeDiff)) * (isIos() ? 1 : 0.5));
-		else if ( (timeDiff < t.tap.maxTime)
-			&& (diff.distance < t.tap.maxDistance) ) { // tap
-			v.tapCount += 1;
-			if (v.tapCount == t.tap.maxCount)
-				gesture.triggerTap(node);
-			else
-				v.tapTimeout = setTimeout(gesture.triggerTap, t.tap.waitTime, node);
+		if (!v.active) { // last finger raised
+			if ( (timeDiff < t.swipe.maxTime)
+				&& (diff.distance > t.swipe.minDistance) ) // swipe
+				gesture.triggerSwipe(node, diff.direction,
+					diff.distance, diff.x, diff.y,
+					Math.min(t.swipe.maxDP, Math.max(t.swipe.minDP,
+						diff.distance / timeDiff)) * (isIos() ? 1 : 0.5));
+			else if ( (timeDiff < t.tap.maxTime)
+				&& (diff.distance < t.tap.maxDistance) ) { // tap
+				v.tapCount += 1;
+				if (v.tapCount == t.tap.maxCount)
+					gesture.triggerTap(node);
+				else
+					v.tapTimeout = setTimeout(gesture.triggerTap, t.tap.waitTime, node);
+			}
 		}
 		return gesture.triggerUp(node, delayed);
 	},
