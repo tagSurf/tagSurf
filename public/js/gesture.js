@@ -81,6 +81,9 @@ var gesture = {
 		return gesture.getDiff(gesture.getPos(e.touches[0]),
 			gesture.getPos(e.touches[1]));
 	},
+	isMulti: function(e) {
+		return isMobile() && e.touches.length > 1;
+	},
 	onStart: function(e, node) {
 		var t = gesture.thresholds;
 		var v = node.gvars;
@@ -92,7 +95,7 @@ var gesture = {
 			clearTimeout(v.tapTimeout);
 			v.tapTimeout = null;
 		}
-		if (e.touches.length > 1)
+		if (gesture.isMulti())
 			v.firstPinch = gesture.pinchDiff(e);
 		else {
 			v.holdInterval = setInterval(function() {
@@ -119,7 +122,7 @@ var gesture = {
 		var pos = gesture.getPos(e);
 		var diff = gesture.getDiff(v.startPos, pos);
 		var timeDiff = Date.now() - v.startTime;
-		v.active = !!e.touches.length;
+		v.active = !!(e.touches && e.touches.length);
 
 		if (!v.active) { // last finger raised
 			if ( (timeDiff < t.swipe.maxTime)
@@ -145,7 +148,7 @@ var gesture = {
 			var pos = gesture.getPos(e);
 			var diff = gesture.getDiff(v.lastPos, pos);
 			v.lastPos = pos;
-			if (e.touches.length > 1)
+			if (gesture.isMulti())
 				gesture.triggerPinch(node,
 					gesture.pinchDiff(e).distance / v.firstPinch.distance);
 			return gesture.triggerDrag(node, diff.direction,
