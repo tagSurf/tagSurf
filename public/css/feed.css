@@ -156,6 +156,7 @@ html, body
   user-select: none;
   position: absolute;
   width: 100%;
+  padding-bottom: 10px;
 }
 
 .card-container
@@ -554,6 +555,14 @@ html, body
   .noinput
   {
     margin-top: 45px;
+  }
+  .card-container
+  {
+    font-size: 160%;
+  }
+  .center-label 
+  {
+    padding-top: 20%;
   }
 }
 

@@ -61,17 +61,11 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 
 		bigpic = document.createElement("img");
 		bigpic.id = "bigpic";
-		gesture.listen("up", bigpic, function() {
-			gesture.triggerUp(picbox);
-		});
+		gesture.listen("up", bigpic, returnTrue);
+		gesture.listen("down", bigpic, returnTrue);
+		gesture.listen("drag", bigpic, returnTrue);
 		gesture.listen("tap", bigpic, function() {
 			picbox.dragging || modal.zoomModal();
-		});
-		gesture.listen("down", bigpic, function() {
-			gesture.triggerDown(picbox);
-		});
-		gesture.listen("drag", bigpic, function (direction, distance, dx, dy) {
-			gesture.triggerDrag(picbox, direction, distance, dx, dy);
 		});
 		gesture.listen("swipe", bigpic, function (direction, distance, dx, dy, pixelsPerSecond) {
 			if (direction != "up" && direction != "down")
@@ -80,16 +74,16 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			}
 			else
 			{
-				gesture.triggerSwipe(picbox, direction, distance, dx, dy, pixelsPerSecond);
+				gesture.triggerSwipe(modal.modal, direction, distance, dx, dy, pixelsPerSecond);
 			}
 		});
 		bigpic.onload = function (event)
 		{
 			if (modal.modal.offsetHeight < picbox.scrollHeight)
 			{
-				drag.makeDraggable(picbox, {
+				modal.modal.style['overflow-y'] = "scroll";
+				drag.makeDraggable(modal.modal, {
 					constraint: "horizontal",
-					force: true,
 					up: function (direction) {
 						if (direction == 'left' ||
 							direction == 'right')
@@ -101,6 +95,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			}
 			else
 			{
+				modal.modal.style['overflow-y'] = "auto";
 				picbox.style['-webkit-transform'] = "translate3d(0,0,0)";
 				gesture.unlisten(picbox);
 			}
@@ -151,7 +146,11 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		}
 		// voteMeters in galleries go away until we have more users
 		// p.appendChild(voteMeter(objwrap[tagName]));
+		gesture.listen("down", p , function() {
+			p.classList.add("active-pictag");
+		});
 		gesture.listen("up", p, function() {
+			p.classList.remove("active-pictag");
 			if (objwrap[tagName].user_owned) {
 				rmTag(tagName);
 				pictags.removeChild(p);
@@ -354,7 +353,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			var trueScrollTop = gridwrapper.scrollTop ? gridwrapper.scrollTop
 				: (gridwrapper.yDrag ? -gridwrapper.yDrag : 0);
 			if (((trueScrollTop + gridwrapper.offsetHeight) >= gridwrapper.scrollHeight - 60)
-				&& direction == "down")
+				&& (!direction || direction == "down"))
 				populateGallery();
 		}
 	});
