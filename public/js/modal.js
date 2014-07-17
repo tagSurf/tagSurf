@@ -292,7 +292,7 @@ var modal = {
 	pinchZoom: function (normalizedDistance) {
 		var baseWidth = modal.zoom.large ? (modal.constants.zoomScale
 			* modal.zoom.firstChild.firstChild.clientWidth) : window.innerWidth;
-		modal.zoomToWidth(baseWidth * normalizedDistance);
+		modal.zoomToWidth(baseWidth * Math.max(0.3, Math.min(normalizedDistance, 3)));
 	}
 };
 modal.build();
