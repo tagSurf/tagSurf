@@ -96,12 +96,12 @@ var modal = {
 	callBack: function() {
 		return modal.back.cb && modal.back.cb();
 	},
-	zoomToWidth: function(width) {
+	zoomToWidth: function(width, noTrans) {
 		var w = width || window.innerWidth;
 		if (w < window.innerWidth)
 			return modal.zoomOut();
 		var zNode = modal.zoom.firstChild.firstChild;
-		trans(zNode, null, "width 250ms ease-in");
+		!noTrans && trans(zNode, null, "width 250ms ease-in");
 		zNode.style.width = w + "px";
 	},
 	callZoom: function(tapCount) {
@@ -296,7 +296,7 @@ var modal = {
 		if (!modal.zoom.zoomed) return;
 		var baseWidth = modal.zoom.large ? (modal.constants.zoomScale
 			* modal.zoom.firstChild.firstChild.clientWidth) : window.innerWidth;
-		modal.zoomToWidth(baseWidth * Math.min(normalizedDistance, 3));
+		modal.zoomToWidth(baseWidth * Math.min(normalizedDistance, 3), true);
 	}
 };
 modal.build();
