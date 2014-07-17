@@ -97,9 +97,12 @@ var modal = {
 		return modal.back.cb && modal.back.cb();
 	},
 	zoomToWidth: function(width) {
+		var w = width || window.innerWidth;
+		if (w < window.innerWidth)
+			return modal.zoomOut();
 		var zNode = modal.zoom.firstChild.firstChild;
 		trans(zNode, null, "width 250ms ease-in");
-		zNode.style.width = (width || window.innerWidth) + "px";
+		zNode.style.width = w + "px";
 	},
 	callZoom: function(tapCount) {
 		if (tapCount == 1)
@@ -290,9 +293,10 @@ var modal = {
 		return true;
 	},
 	pinchZoom: function (normalizedDistance) {
+		if (!modal.zoom.zoomed) return;
 		var baseWidth = modal.zoom.large ? (modal.constants.zoomScale
 			* modal.zoom.firstChild.firstChild.clientWidth) : window.innerWidth;
-		modal.zoomToWidth(baseWidth * Math.max(0.3, Math.min(normalizedDistance, 3)));
+		modal.zoomToWidth(baseWidth * Math.min(normalizedDistance, 3));
 	}
 };
 modal.build();
