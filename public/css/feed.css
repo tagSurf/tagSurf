@@ -417,67 +417,6 @@ html, body
   bottom: 15px;
   right: 15px;
 }
-.button 
-{
-  text-align: center;
-  white-space: nowrap;
-  font-weight: 200;
-  color: white;
-  background: #1dafec;
-  padding: 10px 20px;
-  border-radius: 30px;
-  cursor: pointer;
-  overflow: hidden;
-}
-.forward 
-{
-  float: right;
-  margin-right: -30px;
-  padding-right: 40px;
-  width: 180px;
-}
-.content 
-{
-  position: absolute;
-  top: 40px;
-  bottom: 70px;
-  left: 0px;
-  right: 0px;
-  text-align: justify;
-  overflow-y: scroll;
-}
-.content div {
-  width: 85%;
-  padding: 5px 0px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.content ul {
-  width: 85%;
-  margin-left: auto;
-  margin-right: auto;
-  -webkit-padding-start: 15px;
-}
-
-.content ol {
-  width: 85%;
-  margin-left: auto;
-  margin-right: auto;
-  -webkit-padding-start: 15px;
-}
-.bottom 
-{
-  width: 100%;
-  position: absolute;
-  bottom: 12px;
-  overflow: hidden;
-}
-.tos-title
-{
-  font-size: 120%;
-  padding: 5px 10px 10px 15px;
-}
 
 @media only screen and (min-width: 700px){
   .text-container
