@@ -237,7 +237,7 @@ var populateNavbar = function () {
       img.src = "/img/throbber.gif";
       var TOS = document.createElement("div");
       TOS.innerHTML = "<a class='blue bold big-lnk' id='terms-lnk'>Terms of Use</a> | <a class='blue bold big-lnk' id='privacy-lnk'>Privacy Policy</a>";
-      TOS.className = "TOS-line";
+      TOS.className = "tos-line";
       var options_cb = function(){
         //this is a hack until we find a better way to determine if share should be turned back on
         if (document.location.href.indexOf('feed') != -1)

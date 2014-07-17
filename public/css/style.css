@@ -562,7 +562,7 @@ a {
   text-align: center;
   padding-top: 30%;
 }
-.TOS-line{
+.tos-line{
 	position: fixed;
 	bottom: 10px;
 	left: 0;
@@ -663,7 +663,7 @@ a {
   .options-msg {
     font-size: 140%;
   }
-  .TOS-line {
+  .tos-line {
 	  font-size: 120%;
   }
 }
