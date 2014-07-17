@@ -552,5 +552,13 @@ html, body
   {
     margin-top: 45px;
   }
+  .card-container
+  {
+    font-size: 160%;
+  }
+  .center-label 
+  {
+    padding-top: 20%;
+  }
 }
 
