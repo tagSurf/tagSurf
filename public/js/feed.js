@@ -831,10 +831,14 @@ onload = function ()
 		var imageContainer = this.getElementsByClassName('image-container')[0];
 		if (!imageContainer)
 			return;
-		gesture.listen("tap", imageContainer, tapCallback)
-		gesture.listen("down", imageContainer, returnTrue)
-		gesture.listen("up", imageContainer, returnTrue)
-		gesture.listen("drag", imageContainer, returnTrue)
+		gesture.listen("tap", imageContainer, tapCallback);
+		gesture.listen("down", imageContainer, returnTrue);
+		gesture.listen("up", imageContainer, returnTrue);
+		gesture.listen("drag", imageContainer, returnTrue);
+		gesture.listen("pinch", imageContainer, function(normalizedDistance) {
+			tapCallback(1);
+			gesture.triggerPinch(modal.zoom, normalizedDistance);
+		});
 	};
 	var initCardGestures = function ()
 	{
