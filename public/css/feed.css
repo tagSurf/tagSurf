@@ -156,6 +156,7 @@ html, body
   user-select: none;
   position: absolute;
   width: 100%;
+  padding-bottom: 10px;
 }
 
 .card-container

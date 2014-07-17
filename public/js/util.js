@@ -110,6 +110,14 @@ var rmTag = function(tname) {
     tobjs = tobjs.slice(0, tIndex).concat(tobjs.slice(tIndex + 1));
 };
 
+var shareVotes = [], saveVotesLogin = function () {
+  sessionStorage.setItem("lastPath",
+    current_tag + "|" + currentMedia.id);
+  sessionStorage.setItem("shareVotes",
+    JSON.stringify(shareVotes));
+  window.location = "/users/sign_in";
+};
+
 var popTrending; // defined in feed
 var populateNavbar = function () {
   var nav = document.getElementById("nav");
@@ -234,9 +242,7 @@ var populateNavbar = function () {
   }
   else
   {
-    document.getElementById("login").onclick = function() {
-      window.location = "/users/sign_in";
-    };
+    document.getElementById("login").onclick = saveVotesLogin;
   }
 };
 var setFavIcon = function(filled) {
@@ -267,12 +273,7 @@ var featureBlockContents, buildFeatureBlockerContents = function() {
 	gesture.listen("down", link, function () {
 		link.classList.add('ts-active-button');
 	});
-	gesture.listen("tap", link, function () {
-    sessionStorage.setItem("lastPath",
-      current_tag + "|" + currentMedia.id);
-		window.location = "/users/sign_in";
-		link.classList.remove('ts-active-button');
-	});
+	gesture.listen("tap", link, saveVotesLogin);
 	gesture.listen("up", link, function () {
 		link.classList.remove('ts-active-button');
 	});
