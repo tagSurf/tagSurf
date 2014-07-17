@@ -239,7 +239,9 @@ var populateNavbar = function () {
       TOS.innerHTML = "<a class='blue bold big-lnk' id='terms-lnk'>Terms of Use</a> | <a class='blue bold big-lnk' id='privacy-lnk'>Privacy Policy</a>";
       TOS.className = "TOS-line";
       var options_cb = function(){
-        share.on();
+        //this is a hack until a better solution to determine if share should be turned back on
+        if (document.location.href.indexOf('feed') != -1)
+          share.on();
         modal.modalOut();
       };
       n.appendChild(msg);
