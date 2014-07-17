@@ -232,12 +232,23 @@ var populateNavbar = function () {
       n.className = "center-label";
       var msg = document.createElement("div");
       msg.innerHTML = "Nothing to see here... yet";
+      msg.className = "options-msg";
       var img = document.createElement("img");
       img.src = "/img/throbber.gif";
+      var TOS = document.createElement("div");
+      TOS.innerHTML = "<a class='blue bold big-lnk' id='terms-lnk'>Terms of Use</a> | <a class='blue bold big-lnk' id='privacy-lnk'>Privacy Policy</a>";
+      TOS.className = "TOS-line";
+      var options_cb = function(){
+        share.on();
+        modal.modalOut();
+      };
       n.appendChild(msg);
       n.appendChild(img);
+      n.appendChild(TOS);
       slideNavMenu();
-      modal.modalIn(n);
+      share.off();
+      modal.modalIn(n, options_cb);
+      initDocLinks();
     };
   }
   else

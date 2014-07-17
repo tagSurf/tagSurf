@@ -562,6 +562,13 @@ a {
   text-align: center;
   padding-top: 30%;
 }
+.TOS-line{
+	position: fixed;
+	bottom: 10px;
+	left: 0;
+	right: 0;
+	font-size: 80%;
+}
 
 @media only screen and (min-width: 700px){
 	#add_tag_autocomplete {
@@ -592,5 +599,11 @@ a {
 	.midsize {
 		font-size: 14pt;
 	}
+  .options-msg {
+    font-size: 140%;
+  }
+  .TOS-line {
+	  font-size: 120%;
+  }
 }
 
