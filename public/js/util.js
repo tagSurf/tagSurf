@@ -178,6 +178,9 @@ var populateNavbar = function () {
       	"<li><a onclick='popTrending();'><div>",
       	  "<img class='menu_icon' src='/img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
       	"</div></a></li>",
+        "<li><a id='options-btn'><div>",
+          "<img class='menu_icon' src='/img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS",
+        "</div></a></li>",
         "<li><a id='login'><div>",
           "<img class='menu_icon inverted' src='/img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGIN",
         "</div></a></li>",
@@ -227,36 +230,36 @@ var populateNavbar = function () {
     document.getElementById("logout").onclick = function() {
       window.location = "/users/sign_out";
     };
-    document.getElementById("options-btn").onclick = function() {
-      var n = document.createElement("div");
-      n.className = "center-label";
-      var msg = document.createElement("div");
-      msg.innerHTML = "Nothing to see here... yet";
-      msg.className = "options-msg";
-      var img = document.createElement("img");
-      img.src = "/img/throbber.gif";
-      var TOS = document.createElement("div");
-      TOS.innerHTML = "<a class='blue bold big-lnk' id='terms-lnk'>Terms of Use</a> | <a class='blue bold big-lnk' id='privacy-lnk'>Privacy Policy</a>";
-      TOS.className = "tos-line";
-      var options_cb = function(){
-        //this is a hack until we find a better way to determine if share should be turned back on
-        if (document.location.href.indexOf('feed') != -1)
-          share.on();
-        modal.modalOut();
-      };
-      n.appendChild(msg);
-      n.appendChild(img);
-      n.appendChild(TOS);
-      slideNavMenu();
-      share.off();
-      modal.modalIn(n, options_cb);
-      initDocLinks();
-    };
   }
   else
   {
     document.getElementById("login").onclick = saveVotesLogin;
   }
+  document.getElementById("options-btn").onclick = function() {
+    var n = document.createElement("div");
+    n.className = "center-label";
+    var msg = document.createElement("div");
+    msg.innerHTML = "Nothing to see here... yet";
+    msg.className = "options-msg";
+    var img = document.createElement("img");
+    img.src = "/img/throbber.gif";
+    var TOS = document.createElement("div");
+    TOS.innerHTML = "<a class='blue bold big-lnk' id='terms-lnk'>Terms of Use</a> | <a class='blue bold big-lnk' id='privacy-lnk'>Privacy Policy</a>";
+    TOS.className = "tos-line";
+    var options_cb = function(){
+      //this is a hack until we find a better way to determine if share should be turned back on
+      if (document.location.href.indexOf('feed') != -1)
+        share.on();
+      modal.modalOut();
+    };
+    n.appendChild(msg);
+    n.appendChild(img);
+    n.appendChild(TOS);
+    slideNavMenu();
+    share.off();
+    modal.modalIn(n, options_cb);
+    initDocLinks();
+  };
 };
 var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
