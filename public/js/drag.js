@@ -12,12 +12,12 @@ var drag =
 			if (opts.up)
 				opts.up();
 			return true;
-		});
+		}, true, false);
 		gesture.listen("down", n, function () {
 			if (opts.down)
 				opts.down();
 			return true;
-		});
+		}, true, false);
 		var dirs = {
 			up: "down",
 			down: "up",
@@ -43,7 +43,7 @@ var drag =
 				return false;
 			return !opts.constraint ||
 				opts.constraint == drag._direction2constraint[direction];
-		});
+		}, true, false);
 		gesture.listen("swipe", n, function (direction, distance, dx, dy, pixelsPerSecond) { 
 			if (direction == "up" && (n.parentNode.scrollTop >=
 				(n.parentNode.scrollHeight - (n.parentNode.clientHeight + 800)))
@@ -51,7 +51,7 @@ var drag =
 			{
 				opts.swipe();
 			}
-		});
+		}, true, false);
 		n.parentNode.addEventListener('scroll', function (event) {
 			if (opts.scroll)
 				opts.scroll(event);
@@ -70,8 +70,11 @@ var drag =
 		node.yDrag = 0;
 		node.classList.add('hardware-acceleration');
 		node.style['-webkit-transform'] = "translate3d(0,0,0)";
-		node.style.overflow = "visible";
-		node.parentNode.style.overflow = "visible";
+		// Don't apply overflow=visible to welcome tutorial carousel container
+		if (node.className.indexOf("carousel") == -1) {
+			node.style.overflow = "visible";
+			node.parentNode.style.overflow = "visible";
+		};
 		node.parentNode.addEventListener('scroll', function (event) {return false;}, false);
 		downCallback = function () 
 		{

@@ -6,6 +6,9 @@ var carousel =
 	inactivityTimeout: null,
 	animating: false,
 	images: [],
+	current_card: 0,
+	total_cards:0,
+	endButton: false,
 	_build: function ()
 	{
 		addCss({
@@ -22,18 +25,16 @@ var carousel =
 		var index, changeOrder, container = document.createElement('div'),
 			orderIndication = document.createElement('div'),
 			circlesContainer = document.createElement('div'),
-			endButton = document.createElement('div');
+			nextButton = document.createElement('div');
 		carousel.view.id = "carousel";
 		container.className = "carousel_container";
 		orderIndication.className = "carousel_order_indicator";
-		endButton.className = "end_tutorial_btn";
-		endButton.innerHTML = "Got it!";
-		gesture.listen("tap", endButton, function() {
-			carousel.off();
-			document.forms[0].submit();
-		});
+		nextButton.id = "next_button";
+		nextButton.className = "advnc_tutorial_btn";
+		nextButton.innerHTML = "Next";
+		gesture.listen("tap", nextButton, carousel.nextButtonCallback);
 		orderIndication.appendChild(circlesContainer);
-		orderIndication.appendChild(endButton);
+		orderIndication.appendChild(nextButton);
 		carousel.view.appendChild(container);
 		carousel.view.appendChild(orderIndication);
 		drag.makeDraggable(container, {
@@ -42,23 +43,33 @@ var carousel =
 			up: carousel.orderIndicationCallback
 		});
 		document.body.appendChild(carousel.view);
-		for (index = 1; index <= 7; ++index)
+		for (index = 1; index <= 6; ++index)
 		{
 			carousel.images.push(
 				'/img/tutorial/tutorial_' + index + '.png');
 		}
+		if(isAndroid())
+			carousel.images.push('/img/tutorial/tutorial_homescreen_android.png');
+		else
+			carousel.images.push('/img/tutorial/tutorial_homescreen_ios.png');
 		carousel._populate();
 		//gesture.listen("swipe", carousel.view.firstChild, carousel.swipeCallback);
-		gesture.listen("up", carousel.view.firstChild, carousel.upCallback);
+		//gesture.listen("up", carousel.view.firstChild, carousel.upCallback);
+		//Stop auto-advance after the first touch event
 		gesture.listen("down", carousel.view.firstChild, carousel.downCallback);
 	},
 	orderIndicationCallback: function (direction) {
 		 if (direction == "left" && 
 			carousel.activeCircle.nextSibling)
 		 {
+			if ((carousel.current_card+1)==(carousel.total_cards-1)) {
+				carousel.setEndButton();
+				carousel.swipeCallback("left");
+			}
 			carousel.activeCircle.classList.remove('active_circle');
 			carousel.activeCircle.nextSibling.classList.add('active_circle');
 			carousel.activeCircle = carousel.activeCircle.nextSibling;
+			carousel.current_card+=1;
 		 }
 		 if (direction == "right" &&
 			carousel.activeCircle.previousSibling)
@@ -66,6 +77,7 @@ var carousel =
 			carousel.activeCircle.classList.remove('active_circle');
 			carousel.activeCircle.previousSibling.classList.add('active_circle');
 			carousel.activeCircle = carousel.activeCircle.previousSibling;
+			carousel.current_card-=1;
 		 }
 	},
 	_populate: function ()
@@ -87,6 +99,7 @@ var carousel =
 			}
 			carousel.view.firstChild.appendChild(container);
 			carousel.view.lastChild.firstChild.appendChild(circle);
+			carousel.total_cards+=1;
 		}
 	},
 	swipeCallback: function (direction, distance, dx, dy, pixelsPerSecond)
@@ -118,12 +131,31 @@ var carousel =
 				"translate3d(" + container.xDrag + "px,0,0)";
 		}
 	},
-	upCallback: function ()
-	{
-		carousel.inactivityTimeout = setInterval(function(){
+	nextButtonCallback: function(){
+		if (carousel.endButton) {
+			carousel.off();
+			document.forms[0].submit();
+		} 
+		else if ((carousel.current_card+1)==(carousel.total_cards-1)) {
+			carousel.setEndButton();
 			carousel.swipeCallback("left");
-		},5000);
+		}
+		else {
+			clearInterval(carousel.inactivityTimeout);
+			carousel.inactivityTimeout = null;
+			carousel.swipeCallback("left");
+		};
 	},
+	setEndButton: function(){
+		document.getElementById("next_button").innerHTML = "Got it!";
+		carousel.endButton = true;
+	},
+	// upCallback: function ()
+	// {
+	// 	carousel.inactivityTimeout = setInterval(function(){
+	// 		carousel.swipeCallback("left");
+	// 	},5000);
+	// },
 	downCallback: function ()
 	{
 		clearInterval(carousel.inactivityTimeout);

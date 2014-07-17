@@ -1,3 +1,7 @@
+var castVote = function(card) {
+	xhr("/api/votes/" + card.user_stats.vote + "/" + card.id
+		+ "/tag/" + card.user_stats.tag_voted, "POST");
+};
 onload = function ()
 {
 	populateNavbar();
@@ -13,31 +17,33 @@ onload = function ()
 	reminderTimeout = null;
 	featureBlockContents = buildFeatureBlockerContents();
 
+	var reminderContainer = document.createElement('div');
 	var forgetReminder = function() {
 		if (reminderTimeout) {
-			document.body.removeChild(document.getElementById("reminder_container"));
+			document.body.removeChild(reminderContainer);
 			clearTimeout(reminderTimeout);
 			reminderTimeout = null;
 		}
 	};
+	var closeReminder = function (direction)
+	{
+		forgetReminder();
+		if (reminderContainer.isOn && direction != "up" && direction != "down")
+		{
+			reminderContainer.isOn = false;
+			reminderContainer.style.opacity = 0;			
+			trans(reminderContainer, function() {
+				reminderContainer.parentNode.removeChild(reminderContainer);
+				reminderTimeout = null;
+			});
+			analytics.track('Closed Swipe Reminder');
+		}
+	};
 	var setReminderTimeout = function ()
 	{
-		var reminderContainer = document.createElement('div'),
-			closeContainer = document.createElement('div'),
+		var closeContainer = document.createElement('div'),
 			close = document.createElement('img'),
 			leftImage = new Image(), rightImage = new Image();
-		var closeReminderCallback = function (direction)
-		{
-			if (direction != "up" && direction != "down")
-			{
-				reminderContainer.style.opacity = 0;			
-				trans(reminderContainer, function() {
-					reminderContainer.parentNode.removeChild(reminderContainer);
-					reminderTimeout = null;
-				});
-			}
-			analytics.track('Closed Swipe Reminder');
-		};
 		reminderContainer.id = "reminder_container";
 		close.className = "reminder_close";
 		close.src = "/img/Close.png";
@@ -56,15 +62,15 @@ onload = function ()
 			}
 		});
 		gesture.listen("down", reminderContainer, returnTrue);
-		gesture.listen('down', closeContainer, closeReminderCallback);
-		gesture.listen("tap", reminderContainer, closeReminderCallback);
-		gesture.listen("swipe", reminderContainer, closeReminderCallback);
+		gesture.listen('down', closeContainer, closeReminder);
+		gesture.listen("tap", reminderContainer, closeReminder);
+		gesture.listen("swipe", reminderContainer, closeReminder);
 		document.body.appendChild(reminderContainer);
 		reminderTimeout = setTimeout(function () {
-			var container = document.getElementById("reminder_container");
-			container.style.visibility = "visible";			
-			container.style.zIndex = "100";			
-			container.style.opacity = 1;			
+			reminderContainer.isOn = true;
+			reminderContainer.style.visibility = "visible";
+			reminderContainer.style.zIndex = "100";
+			reminderContainer.style.opacity = 1;
 		}, 20000);
 	};
 	
@@ -363,15 +369,18 @@ onload = function ()
 				slideContainer.children[0].style.zIndex = 2;
 				if (slideContainer.children[1])
 					slideContainer.children[1].style.zIndex = 1;
-				if (!isUnauthorized()) {
+				if (activeCard.type == "content") {
 					activeCard.total_votes += 1;
 					activeCard[voteDir + "_votes"] += 1;
 					activeCard.user_stats.voted = true;
 					activeCard.user_stats.tag_voted = current_tag;
 					activeCard.user_stats.vote = voteDir;
-					if (voteAlternative) voteAlternative();
-					else xhr("/api/votes/" + voteDir + "/" + activeCard.id
-						+ "/tag/" + current_tag, "POST");
+					if (isUnauthorized())
+						shareVotes.push(activeCard);
+					else if (voteAlternative)
+						voteAlternative();
+					else
+						castVote(activeCard);
 				}
 				preloadCards();
 			},
@@ -402,6 +411,7 @@ onload = function ()
 		}
 	};
 	window.onkeyup = function(e) {
+		closeReminder("right");
 		keyInertia = 0;
 		e = e || window.event;
 		var code = e.keyCode || e.which;
@@ -410,7 +420,6 @@ onload = function ()
 		}
 		else if (code == 37){
 			swipeSlider("left");
-			forgetReminder();
 			analytics.track("Key Swipe", {
 				card: slider.card.id,
 				direction: "left",	
@@ -425,7 +434,6 @@ onload = function ()
 		}
 		else if (code == 39){
 			swipeSlider("right");
-			forgetReminder();
 			analytics.track("Key Swipe", {
 				card: slider.card.id,
 				direction: "right",	
@@ -818,14 +826,25 @@ onload = function ()
 		}
 		return true;
 	};
+	var initImageGestures = function ()
+	{
+		var imageContainer = this.getElementsByClassName('image-container')[0];
+		if (!imageContainer)
+			return;
+		gesture.listen("tap", imageContainer, tapCallback)
+		gesture.listen("down", imageContainer, returnTrue)
+		gesture.listen("up", imageContainer, returnTrue)
+		gesture.listen("drag", imageContainer, returnTrue)
+	};
 	var initCardGestures = function ()
 	{
 		gesture.listen("swipe", this, swipeCallback);
 		gesture.listen("up", this, upCallback);
-		gesture.listen("tap", this, tapCallback);
+		//gesture.listen("tap", this, tapCallback);
 		gesture.listen("drag", this, dragCallback);
 		gesture.listen("hold", this, holdCallback);
 		gesture.listen("down", this, downCallback);
+		initImageGestures.call(this);
 	};
 	var expandCard = function ()
 	{
@@ -903,26 +922,34 @@ onload = function ()
 	setReminderTimeout();
 };
 
-if (isUnauthorized())
-{
-	xhr('/api/users', null, function(result) {
-		if (result.user != "not found")
-		{
+xhr('/api/users', null, function(result) {
+	if (result.user != "not found") {
+		if (isUnauthorized()) {
 			window.location = "http://" +
-				document.location.host + '/feed#' + 
+				document.location.host + '/feed#' +
 				window.location.pathname.replace('/share/','').replace('/','|');
-		}
-	});
-} else {
+		} else
+			analytics.identify(result.user.id);
+	}
+});
+
+if (!isUnauthorized())
+{
 	addCss({
 		"body, html": function() {
 			return "position: fixed;";
 		}
 	});
 	var lastPath = sessionStorage.getItem("lastPath");
-	sessionStorage.removeItem("lastPath");
-	if (lastPath)
+	if (lastPath) {
+		sessionStorage.removeItem("lastPath");
 		location.hash = lastPath;
+	}
+	var shareVotes = sessionStorage.getItem("shareVotes");
+	if (shareVotes) {
+		sessionStorage.removeItem("shareVotes");
+		JSON.parse(shareVotes).forEach(castVote);
+	}
 }
 
 // handle facebook redirects
