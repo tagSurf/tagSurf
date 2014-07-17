@@ -49,10 +49,10 @@ var modal = {
 		gesture.listen("tap", modal.topModal, modal.callTopModal);
 		gesture.listen("swipe", modal.topModal, modal.callTopModal);
 
-		gesture.listen("tap", modal.zoom, modal.callZoom);
-		gesture.listen("drag", modal.zoom, modal.dragZoom);
-		gesture.listen("pinch", modal.zoom, modal.pinchZoom);
-		gesture.listen("down", modal.zoom, returnTrue);
+		gesture.listen("tap", modal.zoom, modal.callZoom, true);
+		gesture.listen("drag", modal.zoom, modal.dragZoom, true);
+		gesture.listen("pinch", modal.zoom, modal.pinchZoom, true);
+		gesture.listen("down", modal.zoom, returnTrue, true);
 	},
 	_buildZoom: function() {
 		var zNode = document.createElement('img'), 
