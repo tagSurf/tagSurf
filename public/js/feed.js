@@ -836,6 +836,7 @@ onload = function ()
 		gesture.listen("up", imageContainer, returnTrue);
 		gesture.listen("drag", imageContainer, returnTrue);
 		gesture.listen("pinch", imageContainer, function(normalizedDistance) {
+			revertSlider();
 			tapCallback(1);
 			gesture.triggerPinch(modal.zoom, normalizedDistance);
 		});
