@@ -146,7 +146,11 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		}
 		// voteMeters in galleries go away until we have more users
 		// p.appendChild(voteMeter(objwrap[tagName]));
+		gesture.listen("down", p , function() {
+			p.classList.add("active-pictag");
+		});
 		gesture.listen("up", p, function() {
+			p.classList.remove("active-pictag");
 			if (objwrap[tagName].user_owned) {
 				rmTag(tagName);
 				pictags.removeChild(p);

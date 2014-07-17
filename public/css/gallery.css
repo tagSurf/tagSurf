@@ -138,7 +138,6 @@ img[src="img/history_icon_gray.png"]
 	float: right;
 	width: 120px;
 }
-
 .greenline {
 	border: 1px solid #00a651;
 }
@@ -147,6 +146,10 @@ img[src="img/history_icon_gray.png"]
 }
 .blue {
 	color: #00aeef;
+}
+.active-pictag {
+  color: #404041;
+  background-color: #00719C !important;
 }
 
 @media only screen and (min-width: 700px){
