@@ -51,6 +51,7 @@ var modal = {
 
 		gesture.listen("tap", modal.zoom, modal.callZoom);
 		gesture.listen("drag", modal.zoom, modal.dragZoom);
+		gesture.listen("pinch", modal.zoom, modal.pinchZoom);
 		gesture.listen("down", modal.zoom, returnTrue);
 	},
 	_buildZoom: function() {
@@ -95,8 +96,12 @@ var modal = {
 	callBack: function() {
 		return modal.back.cb && modal.back.cb();
 	},
-	callZoom: function(tapCount) {
+	zoomToWidth: function(width) {
 		var zNode = modal.zoom.firstChild.firstChild;
+		trans(zNode, null, "width 250ms ease-in");
+		zNode.style.width = (width || window.innerWidth) + "px";
+	},
+	callZoom: function(tapCount) {
 		if (tapCount == 1)
 		{
 			if (modal.zoom.large == false)
@@ -106,8 +111,7 @@ var modal = {
 			else
 			{
 				modal.zoom.large = false;
-				trans(zNode, null, "width 250ms ease-in");
-				zNode.style.width = window.innerWidth + "px";
+				modal.zoomToWidth();
 				return modal.zoom.cb && modal.zoom.cb();
 			}
 		}
@@ -116,14 +120,13 @@ var modal = {
 			if (modal.zoom.large == false)
 			{
 				modal.zoom.large = true;
-				trans(zNode, null, "width 250ms ease-in");
-				zNode.style.width = (modal.constants.zoomScale * zNode.clientWidth) + "px";
+				modal.zoomToWidth(modal.constants.zoomScale *
+					modal.zoom.firstChild.firstChild.clientWidth);
 			}
 			else
 			{
 				modal.zoom.large = false;
-				trans(zNode, null, "width 250ms ease-in");
-				zNode.style.width = window.innerWidth + "px";
+				modal.zoomToWidth();
 			}
 		}
 	},
@@ -285,6 +288,11 @@ var modal = {
 			return;
 		}
 		return true;
+	},
+	pinchZoom: function (normalizedDistance) {
+		var baseWidth = modal.zoom.large ? (modal.constants.zoomScale
+			* modal.zoom.firstChild.firstChild.clientWidth) : window.innerWidth;
+		modal.zoomToWidth(baseWidth * normalizedDistance);
 	}
 };
 modal.build();
