@@ -10,6 +10,7 @@
 <% end %>
 
 <% content_for :javascripts do %>
+  <script src="/js/tos_pp.js"></script>
   <script src="/js/util.js"></script>
   <script src="/js/image.js"></script>
   <script src="/js/gesture.js"></script>
@@ -23,7 +24,7 @@
 <% end %>
 
 <!-- Place body html below -->
-<div id="nav"></div>
+<div id="nav" ontouchmove="return false;"></div>
 <div id="formatter" class="hider"></div>
 <div id="scroll-container-container">
  <div id="scroll-container">
