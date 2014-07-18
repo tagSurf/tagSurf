@@ -70,7 +70,7 @@ var share =
 			clipboard = document.createElement("img"),
 			clipboardButtonCallBack = function() {
 				var url = document.getElementById('share-url'), r;
-				document.contentEditable = true;
+				url.contentEditable = true;
 				r = document.createRange(); 
 				r.selectNodeContents(url);
 				var sel = window.getSelection();
