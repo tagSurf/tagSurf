@@ -555,7 +555,7 @@ a {
 }
 .share_heading_margin
 {
-	margin: 60px 0;
+	margin: 40px 0;
 }
 .center-label
 {
@@ -632,22 +632,24 @@ a {
 }
 #url-container
 {
-	margin-top: 7%;
+	margin-top: 40px;
 }
 #share-url 
 {
-	font-size: 200%;
-	line-height: 60px;
-	padding: 0 20px;
+	font-size: 120%;
+	line-height: 40px;
+	padding: 0 10px;
+	margin-bottom: 2px;
 	background: #2f2f2f;
 	border: 1px solid #00aeef;
 	overflow-x: scroll;
 	width: 60%;
-	margin-left: 5%;
+	vertical-align: bottom;
 }
 #clipboard-icon{
-	width: 50px;
-	margin-left: 20px;
+	width: 40px;
+	margin-left: 15px;
+	vertical-align: bottom;
 }
 
 @media only screen and (min-width: 700px){
@@ -671,13 +673,16 @@ a {
 	}
 	.zoom_wrapper {
 		top: 40px;
-	} 
-	.modal{
+	}  
+	.modal {
 		margin: auto;
 		width: 75%;
 	}
 	.midsize {
 		font-size: 14pt;
+	}
+	.really-big { 
+		font-size: 300%;
 	}
   .options-msg {
     font-size: 140%;
@@ -685,5 +690,23 @@ a {
   .tos-line {
 	  font-size: 120%;
   }
+	#url-container {
+		margin-top: 7%;
+	}
+	#share-url {
+		font-size: 200%;
+		line-height: 55px;
+		padding: 0 20px;
+		width: 61%;
+		margin-left: 6%;
+		margin-bottom: 0;
+	}
+	#clipboard-icon {
+		width: 50px;
+		margin-left: 20px;
+	} 
+	.share_heading_margin {
+		margin: 60px 0;
+	} 
 }
 
