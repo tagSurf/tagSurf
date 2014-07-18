@@ -69,11 +69,15 @@ var share =
 			clipboardButton = document.createElement("div")
 			clipboard = document.createElement("img"),
 			clipboardButtonCallBack = function() {
-				var url = document.getElementById('share-url'), select;
-				url.contentEditable = "true";
-				select = document.createRange(); 
-				select.selectNodeContents(url);
-				select.execCommand('copy');
+				var url = document.getElementById('share-url'), r;
+				document.contentEditable = true;
+				r = document.createRange(); 
+				r.selectNodeContents(url);
+				var sel = window.getSelection();
+				sel.addRange(r);
+				document.designMode = "on";
+				console.log(r.toString());
+				console.log(document.queryCommandEnabled('Copy'));
 			};
 
 		heading.className = "really-big share_heading_margin";
