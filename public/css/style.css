@@ -696,9 +696,9 @@ a {
 		width: 61%;
 		margin-left: 6%;
 		margin-bottom: 0;
-		-webkit-user-select: auto;  
-		-moz-user-select: auto;
-		-ms-user-select: auto;
+		-webkit-user-select: all;  
+		-moz-user-select: all;
+		-ms-user-select: all;
 	}
 	#clipboard-icon {
 		width: 50px;
