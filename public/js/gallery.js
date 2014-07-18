@@ -14,7 +14,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		}
 	});
 	//modal formatting for desktop
-	if (!isMobile() || !isTablet())
+	if (!isMobile() && !isTablet())
 		addCss({
 			".modal": function() {
 				return "width: 75%; margin: auto;";
