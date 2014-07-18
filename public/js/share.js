@@ -66,6 +66,7 @@ var share =
 			blurb = document.createElement("div"),
 			urlContainer = document.createElement("div"),
 			url = document.createElement("div"),
+			clipboardButton = document.createElement("div")
 			clipboard = document.createElement("img");
 		heading.className = "really-big share_heading_margin";
 		heading.innerHTML = "Share This Card";
@@ -74,11 +75,20 @@ var share =
 		url.id = "share-url";
 		url.className = "big blue inline";
 		url.innerHTML = "helloworld";
+		clipboardButton.id = "clipboard-button";
+		clipboardButton.className = "inline";
 		clipboard.id = "clipboard-icon";
 		clipboard.src = "/img/clipboard_icon.png";
 		urlContainer.appendChild(url);
-		urlContainer.appendChild(clipboard);
+		clipboardButton.appendChild(clipboard);
+		urlContainer.appendChild(clipboardButton);
 		share.content.appendChild(heading);
+		gesture.listen('down', clipboardButton, function () {
+			clipboard.src = "/img/clipboard_icon-invert.png";
+		});
+		gesture.listen('up', clipboardButton, function () {
+			clipboard.src = "/img/clipboard_icon.png";
+		});
 		for (var network in share.networks)
 			share._icon(network);
 		share.content.appendChild(urlContainer);

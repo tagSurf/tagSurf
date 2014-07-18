@@ -639,7 +639,7 @@ a {
 	font-size: 120%;
 	line-height: 40px;
 	padding: 0 10px;
-	margin-bottom: 2px;
+	margin: 0 0 15px 10px;
 	background: #2f2f2f;
 	border: 1px solid #00aeef;
 	overflow-x: scroll;
@@ -647,9 +647,11 @@ a {
 	vertical-align: bottom;
 }
 #clipboard-icon{
-	width: 40px;
-	margin-left: 15px;
+	width: 35px;
 	vertical-align: bottom;
+}
+#clipboard-button{
+	padding: 15px;
 }
 
 @media only screen and (min-width: 700px){
@@ -700,10 +702,15 @@ a {
 		-moz-user-select: all;
 		-ms-user-select: all;
 	}
+	#share-url {
+		margin: 0 0 20px 90px;
+	}
 	#clipboard-icon {
-		width: 50px;
-		margin-left: 20px;
+		width: 45px;
 	} 
+	#clipboard-button {
+		padding: 20px;
+	}
 	.share_heading_margin {
 		margin: 60px 0;
 	} 
