@@ -16,6 +16,14 @@ onload = function ()
 	slideContainer = document.getElementById('slider');
 	reminderTimeout = null;
 	featureBlockContents = buildFeatureBlockerContents();
+	
+	//modal formatting for desktop
+	if (!isMobile() || !isTablet())
+	addCss({
+		".modal": function() {
+			return "width: 75%; margin: auto;";
+		}
+	});
 
 	var reminderContainer = document.createElement('div');
 	var forgetReminder = function() {

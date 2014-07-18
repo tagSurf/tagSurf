@@ -13,6 +13,13 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 				"px; width:" + window.innerWidth + "px";
 		}
 	});
+	//modal formatting for desktop
+	if (!isMobile() || !isTablet())
+		addCss({
+			".modal": function() {
+				return "width: 75%; margin: auto;";
+			}
+		});
 	gridwrapper.appendChild(grid);
 	document.body.appendChild(gridwrapper);
 
