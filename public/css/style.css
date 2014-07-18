@@ -630,6 +630,25 @@ a {
   font-size: 120%;
   padding: 5px 10px 10px 15px;
 }
+#url-container
+{
+	margin-top: 7%;
+}
+#share-url 
+{
+	font-size: 200%;
+	line-height: 60px;
+	padding: 0 20px;
+	background: #2f2f2f;
+	border: 1px solid #00aeef;
+	overflow-x: scroll;
+	width: 60%;
+	margin-left: 5%;
+}
+#clipboard-icon{
+	width: 50px;
+	margin-left: 20px;
+}
 
 @media only screen and (min-width: 700px){
 	#add_tag_autocomplete {
