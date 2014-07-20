@@ -11,6 +11,7 @@ class Media < ActiveRecord::Base
   validates_uniqueness_of :remote_id, :image_link_original
 
   default_scope { where(ts_type: 'content') }
+  default_scope { where(reported: false) }
 
   # Imgur specific
   before_create :resize_image_links
