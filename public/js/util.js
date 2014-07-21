@@ -116,7 +116,7 @@ var slideAddBar = function(noback) {
 var newtags = [];
 var pushTags = function() {
   while (newtags.length)
-    xhr("/api/media/" + currentMedia.id + "/tags/" + newtags.shift(), "POST");
+    xhr("/api/media/" + currentMedia.id + "/tags/" + newtags.shift(), "POST", null, null);
 };
 var rmTag = function(tname) {
   // remove from sensible new tags array
@@ -388,14 +388,15 @@ if ((document.location.hostname.indexOf("localhost") != -1)
 
 var xhr = function(path, action, cb, eb, async) {
   var _xhr = new XMLHttpRequest();
+  if(DEBUG) 
+    console.log("XHR Request. Path: " + path + " action: " + action);
   if (typeof async === "undefined")
     async = true;
   _xhr.open(action || "GET", path, async);
   _xhr.onreadystatechange = function() {
     if (_xhr.readyState == 4) {
-      var resp = _xhr.responseText.charAt(0) == "<" ? {
-        "errors": _xhr.responseText
-      } : JSON.parse(_xhr.responseText);
+      var resp = _xhr.responseText.charAt(0) == "<" ? 
+      { "errors": _xhr.responseText } : JSON.parse(_xhr.responseText);
       if (resp.errors || _xhr.status != 200) {
         if (eb) 
           eb(resp);

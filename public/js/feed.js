@@ -1,6 +1,6 @@
 var castVote = function(card) {
 	xhr("/api/votes/" + card.user_stats.vote + "/" + card.id
-		+ "/tag/" + card.user_stats.tag_voted, "POST");
+		+ "/tag/" + card.user_stats.tag_voted, "POST", null, null);
 };
 
 onload = function ()
@@ -910,7 +910,7 @@ onload = function ()
 			swipeSlider("right", function () {
 				setFavIcon(false);
 			});
-		});
+		}, null);
 		analytics.track('Favorited from Feed', {
 			card: slider.card.id,
 			surfing: current_tag
