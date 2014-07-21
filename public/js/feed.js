@@ -6,7 +6,6 @@ var castVote = function(card) {
 onload = function ()
 {
 	populateNavbar();
-
 	if (isAuthorized() && (document.location.href.indexOf('share') != -1)) {
 	window.location = "http://" +
 		document.location.host + '/feed#' +
