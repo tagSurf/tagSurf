@@ -374,6 +374,11 @@ window.onresize = function() {
 };
 var returnTrue = function() { return true; };
 var DEBUG = false;
+// Set DEBUG = true in non-production environments
+if ((document.location.hostname.indexOf("localhost") != -1) 
+  || (document.location.hostname.indexOf("staging.tagsurf.co") != -1))
+  DEBUG = true;
+
 var xhr = function(path, action, cb, eb, async) {
   var _xhr = new XMLHttpRequest();
   if (typeof async === "undefined")
@@ -385,14 +390,19 @@ var xhr = function(path, action, cb, eb, async) {
         "errors": _xhr.responseText
       } : JSON.parse(_xhr.responseText);
       if (resp.errors || _xhr.status != 200) {
-        console.log("XHR error! Path:" + path + " Error: "
-          + resp.errors + " Status: " + _xhr.status);
-        if (eb) eb(resp);
-        if (DEBUG) alert("Request failed. Errors: " + resp.errors);
-      } else
+        if (eb) 
+          eb(resp);
+        if (!(_xhr.status == 404) && DEBUG) {
+          alert("XHR error! Request failed. Path: " + path + " Errors: " + resp.errors 
+            + " Response: " + _xhr.responseText + " Status: " + _xhr.status);
+          console.log("XHR error! Path:" + path + " Error: "
+          + resp.errors + " Response: " + _xhr.responseText + " Status: " + _xhr.status);
+        }
+      } 
+      else
         cb && cb(resp);
     }
-  }
+  };
   _xhr.send();
 };
 var mod = function(opts) {
