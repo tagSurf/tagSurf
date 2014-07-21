@@ -1,9 +1,17 @@
+//These variables are reinitialized on every pageload
 var authorizedSession = null;
 var currentUser = {
   id : null,
   email : null,
   admin : false
 };
+var returnTrue = function() { return true; };
+var DEBUG = false;
+// Set DEBUG = true in non-production environments
+if ((document.location.hostname.indexOf("localhost") != -1) 
+  || (document.location.hostname.indexOf("staging.tagsurf.co") != -1)
+  || (document.location.hostname.indexOf("192.168") != -1))
+  DEBUG = true;
 var hasClass = function (node, className) 
 {
   return node.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(node.className);
@@ -41,18 +49,14 @@ var isAuthorized = function () {
       }
       else
         authorizedSession = false;
-      console.log("user xhr request completed");
     }, function(result) {
       if (result.user == "not found") 
         authorizedSession = false;
     }, false);
-    console.log("first check authorizedSession =", authorizedSession);
     return authorizedSession;
   }
-  else {
-    console.log("recheck authorizedSession =", authorizedSession);
+  else 
   	return authorizedSession;
-  };
 };
 
 // autocomplete stuff
@@ -379,17 +383,11 @@ window.onresize = function() {
   addedCss.forEach(addCss);
   resizeCb && resizeCb();
 };
-var returnTrue = function() { return true; };
-var DEBUG = false;
-// Set DEBUG = true in non-production environments
-if ((document.location.hostname.indexOf("localhost") != -1) 
-  || (document.location.hostname.indexOf("staging.tagsurf.co") != -1))
-  DEBUG = true;
 
 var xhr = function(path, action, cb, eb, async) {
   var _xhr = new XMLHttpRequest();
   if(DEBUG) 
-    console.log("XHR Request. Path: " + path + " action: " + action);
+    console.log("XHR Request. Path: " + path + " action: " + (action || "GET"));
   if (typeof async === "undefined")
     async = true;
   _xhr.open(action || "GET", path, async);
