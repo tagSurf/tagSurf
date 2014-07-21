@@ -1,4 +1,7 @@
 var authorizedSession = null;
+var currentUser = {
+  id : null
+};
 var hasClass = function (node, className) 
 {
   return node.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(node.className);
@@ -27,14 +30,15 @@ var whichGallery = function() {
 };
 var isAuthorized = function () {
   if(authorizedSession == null) {
-    xhr('/api/users', null, function(result) {
+    xhr('/api/users', "GET", function(result) {
       if (result.user != "not found") {
         authorizedSession = true;
-        analytics.identify(result.user.id);
+        currentUser.id = result.user.id;
       }
       else
         authorizedSession = false;
-    });
+      console.log("user xhr request completed");
+    }, null, false);
     console.log("first check authorizedSession =", authorizedSession);
     return authorizedSession;
   }
@@ -370,9 +374,11 @@ window.onresize = function() {
 };
 var returnTrue = function() { return true; };
 var DEBUG = false;
-var xhr = function(path, action, cb, eb) {
+var xhr = function(path, action, cb, eb, async) {
   var _xhr = new XMLHttpRequest();
-  _xhr.open(action || "GET", path, true);
+  if (typeof async === "undefined")
+    async = true;
+  _xhr.open(action || "GET", path, async);
   _xhr.onreadystatechange = function() {
     if (_xhr.readyState == 4) {
       var resp = _xhr.responseText.charAt(0) == "<" ? {

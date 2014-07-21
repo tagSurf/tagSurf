@@ -932,6 +932,7 @@ onload = function ()
 	});
 	firstPopulate();
 	setReminderTimeout();
+	analytics.identify(currentUser.id);
 };
 
 if (isAuthorized())
