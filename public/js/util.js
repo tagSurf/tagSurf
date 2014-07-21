@@ -1,6 +1,8 @@
 var authorizedSession = null;
 var currentUser = {
-  id : null
+  id : null,
+  email : null,
+  admin : false
 };
 var hasClass = function (node, className) 
 {
@@ -34,11 +36,16 @@ var isAuthorized = function () {
       if (result.user != "not found") {
         authorizedSession = true;
         currentUser.id = result.user.id;
+        currentUser.email = result.user.email;
+        currentUser.admin = result.user.admin;
       }
       else
         authorizedSession = false;
       console.log("user xhr request completed");
-    }, null, false);
+    }, function(result) {
+      if (result.user == "not found") 
+        authorizedSession = false;
+    }, false);
     console.log("first check authorizedSession =", authorizedSession);
     return authorizedSession;
   }
@@ -402,7 +409,7 @@ var xhr = function(path, action, cb, eb, async) {
       else
         cb && cb(resp);
     }
-  };
+  }
   _xhr.send();
 };
 var mod = function(opts) {
