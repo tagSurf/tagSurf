@@ -1,3 +1,4 @@
+var authorizedSession = null;
 var hasClass = function (node, className) 
 {
   return node.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(node.className);
@@ -24,8 +25,20 @@ var whichGallery = function() {
       return galleries[i];
   return null;
 };
-var isUnauthorized = function () {
-	return document.location.href.indexOf('share') != -1;
+var isAuthorized = function () {
+  if(authorizedSession == null) {
+    xhr('/api/users', null, function(result) {
+      if (result.user != "not found") {
+        authorizedSession = true;
+        analytics.identify(result.user.id);
+      }
+      else
+        authorizedSession = false;
+    });
+    return authorizedSession;
+  }
+  else
+  	return authorizedSession;
 };
 
 // autocomplete stuff
@@ -63,7 +76,7 @@ var add_icon, add_state = "blue", add_icons = {
 };
 var addBarSlid = false;
 var slideAddBar = function(noback) {
-  if (isUnauthorized()) {
+  if (!isAuthorized()) {
     modal.promptIn(featureBlockContents);
     return;
   }
@@ -187,7 +200,7 @@ var populateNavbar = function () {
       "</ul>",
     "</div>",
   ],
-  menu_slider_content = isUnauthorized() ? reduced_slider_content : full_slider_content;
+  menu_slider_content = isAuthorized() ? full_slider_content : reduced_slider_content;
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
   tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='/img/add_tag_button.png'><div id='add_tag_autocomplete' class='autocomplete hider'></div>";
@@ -226,7 +239,7 @@ var populateNavbar = function () {
     }
   });
   add_icon = document.getElementById("add-icon");
-  if (!isUnauthorized()) {
+  if (isAuthorized()) {
     document.getElementById("logout").onclick = function() {
       window.location = "/users/sign_out";
     };

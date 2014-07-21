@@ -2,10 +2,16 @@ var castVote = function(card) {
 	xhr("/api/votes/" + card.user_stats.vote + "/" + card.id
 		+ "/tag/" + card.user_stats.tag_voted, "POST");
 };
+
 onload = function ()
 {
 	populateNavbar();
 
+	if (isAuthorized() && (document.location.href.indexOf('share') != -1)) {
+	window.location = "http://" +
+		document.location.host + '/feed#' +
+		window.location.pathname.replace('/share/','').replace('/','|');
+	} 
 	// defined in util for autocomplete
 	// integration with other sliding elements
 	tinput = document.getElementById("tag-input");
@@ -110,7 +116,7 @@ onload = function ()
 	var popData = function(rdata, firstCard) {
 		var i, starters = [], others = [], preloads = [];
 
-		if (isUnauthorized())
+		if (!isAuthorized())
 			preloads = rdata;
 		else {
 			if (firstCard) known_keys[firstCard.id] = true;
@@ -139,7 +145,7 @@ onload = function ()
 	};
 	var shareSwap, shareOffset = 0;
 	var dataPath = function(firstCard) {
-		if (isUnauthorized()) {
+		if (!isAuthorized()) {
 			var p = "/api";
 			if (shareSwap) {
 				shareSwap = false;
@@ -382,7 +388,7 @@ onload = function ()
 					activeCard.user_stats.voted = true;
 					activeCard.user_stats.tag_voted = current_tag;
 					activeCard.user_stats.vote = voteDir;
-					if (isUnauthorized())
+					if (!isAuthorized())
 						shareVotes.push(activeCard);
 					else if (voteAlternative)
 						voteAlternative();
@@ -888,7 +894,7 @@ onload = function ()
 		});
 	});
 	setStarCallback(function() {
-		if (isUnauthorized())
+		if (!isAuthorized())
 		{
 			modal.promptIn(featureBlockContents);
 			return;
@@ -929,18 +935,7 @@ onload = function ()
 	setReminderTimeout();
 };
 
-xhr('/api/users', null, function(result) {
-	if (result.user != "not found") {
-		if (isUnauthorized()) {
-			window.location = "http://" +
-				document.location.host + '/feed#' +
-				window.location.pathname.replace('/share/','').replace('/','|');
-		} else
-			analytics.identify(result.user.id);
-	}
-});
-
-if (!isUnauthorized())
+if (isAuthorized())
 {
 	addCss({
 		"body, html": function() {
