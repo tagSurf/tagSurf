@@ -35,10 +35,13 @@ var isAuthorized = function () {
       else
         authorizedSession = false;
     });
+    console.log("first check authorizedSession =", authorizedSession);
     return authorizedSession;
   }
-  else
+  else {
+    console.log("recheck authorizedSession =", authorizedSession);
   	return authorizedSession;
+  };
 };
 
 // autocomplete stuff
