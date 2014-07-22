@@ -95,9 +95,8 @@ class Api::UsersController < Api::BaseController
   end
   
   def update
-    user = User.find(params[:slug])
-    if user.update(user_params)
-      render json: user
+    if @user.update(user_params)
+      render json: @user
     else
       render json: "could not be updated", :status => :unprocessible_entity
     end
@@ -109,6 +108,7 @@ class Api::UsersController < Api::BaseController
       params.permit(
         :user, 
         :safe_mode, 
+        :slug, 
         :limit, 
         :offset, 
         :email, 
