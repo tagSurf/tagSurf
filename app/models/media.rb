@@ -185,7 +185,6 @@ class Media < ActiveRecord::Base
 
     if tagged
       tagged.each do |obj|
-        next if obj["nsfw"].to_s == 'true'
         next if obj['is_album'].to_s == 'true'
         media = Media.create({
           remote_id: obj['id'],
@@ -193,6 +192,7 @@ class Media < ActiveRecord::Base
           remote_created_at: obj['datatime'],
           image_link_original: obj['link'],
           viral: false,
+          nsfw:  obj["nsfw"],
           title: obj['title'],
           description: obj['description'],
           content_type: obj['type'],
@@ -208,7 +208,13 @@ class Media < ActiveRecord::Base
           section: obj['section'],
           delete_hash: obj['deletehash']
         })
-        media.tag_list.add(media.section)
+
+        if obj["nswf"] == 'true'
+          media.tag_list.add(media.section, 'NSFW')
+        else
+          media.tag_list.add(media.section)
+        end
+
         media.save
       end
     else
@@ -220,13 +226,14 @@ class Media < ActiveRecord::Base
     response = RemoteResource.viral_feed
     fresh_list = response.parsed_response["data"]
     fresh_list.each do |obj|
-      if obj['is_album'].to_s == 'false' and obj['nsfw'].to_s == 'false'
+      if obj['is_album'].to_s == 'false'
         media = Media.create({
           remote_id: obj['id'],
           remote_provider: 'imgur',
           remote_created_at: obj['datatime'],
           image_link_original: obj['link'],
           viral: true,
+          nsfw: obj["nsfw"],
           title: obj['title'],
           description: obj['description'],
           content_type: obj['type'],
@@ -243,7 +250,12 @@ class Media < ActiveRecord::Base
           delete_hash: obj['deletehash']
         })
 
-        media.tag_list.add(media.section, 'trending')
+        if obj['nsfw'] == 'true'
+          media.tag_list.add(media.section, 'trending', 'NSFW')
+        else
+          media.tag_list.add(media.section, 'trending')
+        end
+
         media.save
       end
     end
