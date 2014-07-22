@@ -94,15 +94,18 @@ class Media < ActiveRecord::Base
     n = options[:limit].nil? ?  20 : options[:limit].to_i
     id = options[:id].to_i
        
-    return [] if Tag.blacklisted?(tag)
+    if user.try(:safe_mode)
+      return [] if Tag.blacklisted?(tag)
+    end
+
     @media = Media.all
 
     # Media available for non-authed preview
     if user.nil?
       if tag == 'trending'
-        @media  = @media.where(viral: true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
+        @media  = @media.where(viral: true, nsfw: false).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
       else
-        @media = @media.tagged_with(tag, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')  
+        @media = @media.where(nsfw: false).tagged_with(tag, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')  
         if @media.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
@@ -118,7 +121,7 @@ class Media < ActiveRecord::Base
 
       if tag == 'trending'
         staffpick_ids = @media.tagged_with('StaffPicks').pluck(:id)
-        viral_ids = @media.where(viral: true).pluck(:id)
+        viral_ids = @media.where(viral: true, nsfw: false).pluck(:id)
 
         # Remove media which the user has voted on
         staffpick_ids = staffpick_ids - has_voted_ids
@@ -139,10 +142,19 @@ class Media < ActiveRecord::Base
             @media =  @media.where('id in (?)', staffpick_ids).limit(n).order('ts_score DESC NULLS LAST')
           end
         else
-          @media = @media.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
+          if user.safe_mode? 
+            @media = @media.where('id not in (?) and viral and not nsfw', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
+          else
+            @media = @media.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
+          end
         end
       else
-        @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+        if user.safe_mode?
+          @media = Media.where('media.id not in (?) and not nsfw', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+        else
+          @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+        end
+    
         if @media.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
