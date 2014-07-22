@@ -5,6 +5,7 @@ var castVote = function(card) {
 
 onload = function ()
 {
+	splashScreen.build();
 	populateNavbar();
 	if (isAuthorized() && (document.location.href.indexOf('share') != -1)) {
 	window.location = "http://" +

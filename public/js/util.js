@@ -149,6 +149,22 @@ var shareVotes = [], saveVotesLogin = function () {
   window.location = "/users/sign_in";
 };
 
+var splashScreen = {
+  build : function() {
+    var splashBack = document.createElement("div");
+    var splashLogo = document.createElement("img");
+    splashBack.id = "splash-screen";
+    splashBack.style["opacity"] = 1;
+    splashLogo.src = "/img/ts_logo_gray.png";
+    splashLogo.className = "splash-logo";
+    splashBack.appendChild(splashLogo);
+    document.body.appendChild(splashBack);
+  },
+  clear : function() {
+    document.getElementById("splash-screen").style["opacity"] = 0;
+  }
+};
+
 var popTrending; // defined in feed
 var populateNavbar = function () {
   var nav = document.getElementById("nav");
@@ -291,6 +307,7 @@ var populateNavbar = function () {
     modal.modalIn(n, options_cb);
     initDocLinks();
   };
+  splashScreen.clear();
 };
 var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
