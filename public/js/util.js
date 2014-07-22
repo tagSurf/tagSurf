@@ -1,3 +1,17 @@
+//These variables are reinitialized on every pageload
+var authorizedSession = null;
+var currentUser = {
+  id : null,
+  email : null,
+  admin : false
+};
+var returnTrue = function() { return true; };
+var DEBUG = false;
+// Set DEBUG = true in non-production environments
+if ((document.location.hostname.indexOf("localhost") != -1) 
+  || (document.location.hostname.indexOf("staging.tagsurf.co") != -1)
+  || (document.location.hostname.indexOf("192.168") != -1))
+  DEBUG = true;
 var hasClass = function (node, className) 
 {
   return node.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(node.className);
@@ -24,8 +38,25 @@ var whichGallery = function() {
       return galleries[i];
   return null;
 };
-var isUnauthorized = function () {
-	return document.location.href.indexOf('share') != -1;
+var isAuthorized = function () {
+  if(authorizedSession == null) {
+    xhr('/api/users', "GET", function(result) {
+      if (result.user != "not found") {
+        authorizedSession = true;
+        currentUser.id = result.user.id;
+        currentUser.email = result.user.email;
+        currentUser.admin = result.user.admin;
+      }
+      else
+        authorizedSession = false;
+    }, function(result) {
+      if (result.user == "not found") 
+        authorizedSession = false;
+    }, false);
+    return authorizedSession;
+  }
+  else 
+  	return authorizedSession;
 };
 
 // autocomplete stuff
@@ -63,7 +94,7 @@ var add_icon, add_state = "blue", add_icons = {
 };
 var addBarSlid = false;
 var slideAddBar = function(noback) {
-  if (isUnauthorized()) {
+  if (!isAuthorized()) {
     modal.promptIn(featureBlockContents);
     return;
   }
@@ -89,7 +120,7 @@ var slideAddBar = function(noback) {
 var newtags = [];
 var pushTags = function() {
   while (newtags.length)
-    xhr("/api/media/" + currentMedia.id + "/tags/" + newtags.shift(), "POST");
+    xhr("/api/media/" + currentMedia.id + "/tags/" + newtags.shift(), "POST", null, null);
 };
 var rmTag = function(tname) {
   // remove from sensible new tags array
@@ -187,7 +218,7 @@ var populateNavbar = function () {
       "</ul>",
     "</div>",
   ],
-  menu_slider_content = isUnauthorized() ? reduced_slider_content : full_slider_content;
+  menu_slider_content = isAuthorized() ? full_slider_content : reduced_slider_content;
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
   tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='/img/add_tag_button.png'><div id='add_tag_autocomplete' class='autocomplete hider'></div>";
@@ -226,7 +257,7 @@ var populateNavbar = function () {
     }
   });
   add_icon = document.getElementById("add-icon");
-  if (!isUnauthorized()) {
+  if (isAuthorized()) {
     document.getElementById("logout").onclick = function() {
       window.location = "/users/sign_out";
     };
@@ -352,22 +383,29 @@ window.onresize = function() {
   addedCss.forEach(addCss);
   resizeCb && resizeCb();
 };
-var returnTrue = function() { return true; };
-var DEBUG = false;
-var xhr = function(path, action, cb, eb) {
+
+var xhr = function(path, action, cb, eb, async) {
   var _xhr = new XMLHttpRequest();
-  _xhr.open(action || "GET", path, true);
+  if(DEBUG) 
+    console.log("XHR Request. Path: " + path + " action: " + (action || "GET"));
+  if (typeof async === "undefined")
+    async = true;
+  _xhr.open(action || "GET", path, async);
   _xhr.onreadystatechange = function() {
     if (_xhr.readyState == 4) {
-      var resp = _xhr.responseText.charAt(0) == "<" ? {
-        "errors": _xhr.responseText
-      } : JSON.parse(_xhr.responseText);
+      var resp = _xhr.responseText.charAt(0) == "<" ? 
+      { "errors": _xhr.responseText } : JSON.parse(_xhr.responseText);
       if (resp.errors || _xhr.status != 200) {
-        console.log("XHR error! Path:" + path + " Error: "
-          + resp.errors + " Status: " + _xhr.status);
-        if (eb) eb(resp);
-        if (DEBUG) alert("Request failed. Errors: " + resp.errors);
-      } else
+        if (eb) 
+          eb(resp);
+        if (!(_xhr.status == 404) && DEBUG) {
+          alert("XHR error! Request failed. Path: " + path + " Errors: " + resp.errors 
+            + " Response: " + _xhr.responseText + " Status: " + _xhr.status);
+          console.log("XHR error! Path:" + path + " Error: "
+          + resp.errors + " Response: " + _xhr.responseText + " Status: " + _xhr.status);
+        }
+      } 
+      else
         cb && cb(resp);
     }
   }

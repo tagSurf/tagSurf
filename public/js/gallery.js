@@ -263,7 +263,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 	var removeFavImage = function() {
 		var cid = current_image.id;
 		current_image.user_stats.has_favorited = false;
-		xhr("/api/favorites/" + cid, "DELETE");
+		xhr("/api/favorites/" + cid, "DELETE", null, null);
 		if (favGrid) {
 			var n = document.getElementById("favorites" + cid);
 			var c = n.header.cells;
@@ -371,7 +371,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 					!current_image.user_stats.has_favorited;
 				xhr("/api/favorites/" + current_image.id,
 					current_image.user_stats.has_favorited
-						? "POST" : "DELETE");
+						? "POST" : "DELETE", null, null);
 				updateFavorited();
 				if (current_image.user_stats.has_favorited){
 					analytics.track('Favorited from Gallery',{
