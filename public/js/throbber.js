@@ -8,7 +8,7 @@ var throbber =
 		
 		throbber.gif.src = "/img/spin_throbber.gif";
 		throbber.gif.className = "throbber";
-		throbber.back.className = "splash-screen";
+		throbber.back.className = "throbber-back";
 		throbber.back.style['opacity'] = 0;
 		throbber.gif.onload = function() {
 			throbber.gif.style['left'] = ((window.innerWidth - throbber.gif.offsetWidth) / 2) + "px";
