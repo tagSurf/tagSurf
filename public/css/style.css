@@ -193,6 +193,23 @@ a {
 	-webkit-transition: background-color 666ms ease-in-out;
 }
 
+.splash-screen {
+	pointer-events: none;
+	z-index: 3;
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	right: 0px;
+	background-color: white;
+	-webkit-transition: background-color 666ms ease-in-out;
+}
+
+.splash-logo {
+	width: 35%;
+	margin: auto;
+}
+
 .blackfade {
 	pointer-events: auto;
 	background-color: rgba(0, 0, 0, 1);
