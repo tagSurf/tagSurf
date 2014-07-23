@@ -4,9 +4,15 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1><%= @user_id %> reported media: <%= @media.id %></h1>
+    <h1>User:<%= @user_id %> reported Media:<%= @media.id %></h1>
     <p>This media has been hidden from all users until it is marked safe by and admin.</p>
-    <p>To see the reported image follow this link: <%= @media.image_link_original %>.</p>
+    <img width="220" src="<%= @media.image_link_original %>" />
+
+    <p><strong>If you are the admin of this application you can unreport this image.</strong></p> 
+    <p>To unreport click <a href="http://localhost:3000/api/media/<%= @media.id %>/unreport"><h2>Unreport!</h2></a></p>
+
+    <p>To unreport but keep NSFW click <a href="http://localhost:3000/api/media/<%= @media.id %>/unreport?nsfw=true"><h2>Unreport NSFW!</h2></a></p>
+    
   </body>
 </html>
 

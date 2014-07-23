@@ -49,7 +49,7 @@ Tagsurf::Application.routes.draw do
     get  'share/:tag/:id/:limit/:offset'    => 'media#share_feed'
     post 'media/:media_id/tags/:name/'      => 'tags#create'
     post 'media/:media_id/report'           => 'media#report'
-    delete 'media/:media_id/report'         => 'media#remove_report'
+    get  'media/:media_id/unreport'         => 'media#remove_report'
 
     # Tags API
     get  'tags'                          => 'tags#tag_feed'
