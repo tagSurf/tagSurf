@@ -93,10 +93,27 @@ class Api::UsersController < Api::BaseController
       render json: results, status: :not_found
     end
   end
+  
+  def update
+    if @user.update(user_params)
+      render json: @user
+    else
+      render json: "could not be updated", :status => :unprocessible_entity
+    end
+  end
 
   private
 
     def user_params
-      params.permit(:user, :limit, :offset, :email, :confirm_feature_tour) 
+      params.permit(
+        :user, 
+        :safe_mode, 
+        :slug, 
+        :limit, 
+        :offset, 
+        :email, 
+        :confirm_feature_tour
+      ) 
     end
+
 end

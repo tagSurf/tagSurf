@@ -22,7 +22,6 @@ class Tag < ActiveRecord::Base
       GenerateTagFeed.perform_async
       @obj.serialize(tags)
     end
-      
   end
 
   def self.autocomplete(query)
