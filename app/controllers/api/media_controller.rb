@@ -77,7 +77,7 @@ class Api::MediaController < Api::BaseController
   def report
     media = Media.find params[:media_id]
     media.update_column "reported", true
-    SendReportedNotification.perform_async(media.id)
+    SendReportedNotification.perform_async(current_user.id, media.id)
     if media.reported?
       render json: {success: true, media: media}, status: :ok
     else

@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1><%= @user_id %> reported media: <%= @media.id %></h1>
+    <p>This media has been hidden from all users until it is marked safe by and admin.</p>
+    <p>To see the reported image follow this link: <%= @media.image_link_original %>.</p>
+  </body>
+</html>
+
