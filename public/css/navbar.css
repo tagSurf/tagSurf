@@ -203,21 +203,29 @@
   background-color: #1dafec;
 }
 
+#slide_down_menu li:last-child 
+{
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
 @media only screen and (min-width: 700px){
 /*  #tag_adder
   {
-    height: 55px;
+    height: 54px;
   }*/
   #tag_adder input
   {
     font-size: 140%;
     width: 35%;
     height: 33px;
-    padding-bottom: 5px;
+    padding-bottom: 3px;
+    margin: 8px 0;
   }
   #tag_adder img 
   {
     height: 33px;
+    margin: 8px 0 8px -6px;
   }
   #slide_down_menu li 
   {
