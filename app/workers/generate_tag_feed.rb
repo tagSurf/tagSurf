@@ -2,6 +2,8 @@ class GenerateTagFeed
   include Sidekiq::Worker
 
   def perform
+    t = Tag.new
+    t.tag_feed.clear
     tags = Tag.all
     tags.each do |tag|
       votes = Vote.where(vote_tag: tag.name).count

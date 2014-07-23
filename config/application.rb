@@ -51,6 +51,7 @@ module Tagsurf
       "pretty girls", 
       "Celebs", 
       "Gentlemanboners", 
+      "gentlemanboners", 
       "boobs", 
       "Sideboob", 
       "nsfw", 
