@@ -62,7 +62,9 @@ a {
 .delNode {
 	border-left: 1px solid white;
 }
-
+.block {
+	display: block;
+}
 .centered {
 	text-align: center;
 }
