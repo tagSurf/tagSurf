@@ -64,8 +64,20 @@ onload = function ()
 		leftImage.id = "reminder-left";
 		rightImage.id = "reminder-right";
 		if(isDesktop()) {
+			var closeInstructions = new Image();
+			closeInstructions.className = "close-instructions block";
+			closeInstructions.src="/img/clearscreen.png";
+			reminderContainer.appendChild(closeInstructions);
 			rightImage.src = "/img/reminder_right_desktop.png";
-			leftImage.src = "/img/reminder_left_desktop.png"
+			leftImage.src = "/img/reminder_left_desktop.png";
+			addCss({
+				"#reminder-left": function() {
+					return "width: 18%; top: 20%";
+				},
+				"#reminder-right": function() {
+					return "width: 18%";
+				}
+			});
 		}
 		else {
 			leftImage.src = "/img/reminder_left_mobile.png";	

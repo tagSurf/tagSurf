@@ -416,6 +416,13 @@ html, body
   bottom: 15px;
   right: 15px;
 }
+.close-instructions
+{
+  position: absolute;
+  left: 43%;
+  bottom: 45%;
+  width: 15%;
+}
 
 @media only screen and (min-width: 700px){
   .text-container
@@ -492,14 +499,9 @@ html, body
   {
     padding-top: 20%;
   }
-  #reminder-left 
+  .reminder-close
   {
-    width: 18%;
-    top: 20%;
-  }
-  #reminder-right
-  {
-    width: 18%;
+    bottom: 25px;
   }
 }
 
