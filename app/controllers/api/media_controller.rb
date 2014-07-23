@@ -74,6 +74,20 @@ class Api::MediaController < Api::BaseController
     end
   end
 
+  def report
+    media = Media.find params[:media_id]
+    media.update_column "reported", true
+    SendReportedNotification.perform_async(media.id)
+    if media.reported?
+      render json: {success: true, media: media}, status: :ok
+    else
+      render json: {errors: "something went wrong"}, status: :unprocessible_entity
+    end
+  end
+
+  def remove_report
+    raise params[:media_id].inspect
+  end
 
   private
 
