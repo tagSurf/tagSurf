@@ -37,7 +37,7 @@ module Tagsurf
 
     redis_active = Rails.env.development? ? false : true
     CONFIG[:redis_active] = redis_active  
-  
+
     # TODO move to yaml
     CONFIG[:blacklisted_tags] = [ 
       "boobies", 
