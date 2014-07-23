@@ -48,7 +48,7 @@ var share =
 	_icon: function(network) {
 		var img = document.createElement("img");
 		img.src = "/img/social_media/" + network + ".png";
-		img.className = "share_link_icon";
+		img.className = "share-link-icon";
 		gesture.listen('down', img, function() {
 			window.open(share.networks[network]());
 			modal.topModalOut();
@@ -64,7 +64,7 @@ var share =
 	{
 		var heading = document.createElement("div"),
 			blurb = document.createElement("div");
-		heading.className = "really-big share_heading_margin";
+		heading.className = "really-big share-heading-margin";
 		heading.innerHTML = "Share This Card";
 		share.content.className = "centered";
 		share.content.appendChild(heading);

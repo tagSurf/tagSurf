@@ -89,7 +89,8 @@ body
 	box-shadow: none !important;
 	-webkit-appearance: none;
 }
-#beta_code_input
+/*No more beta code field*/
+/*#beta_code_input
 {
 	font-family: 'Raleway', 'sans-serif';
 	font-size: 80%;
@@ -108,7 +109,7 @@ body
 	float: left;
 	top: 2px;
 	left: 2px;
-}
+}*/
 .ac-submit-container
 {
 	height: 68px;

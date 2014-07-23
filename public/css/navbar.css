@@ -16,7 +16,7 @@
   margin: 0px;
   z-index: 100;
 }
-#menu_slider
+#menu-slider
 {
   position: absolute;
   width: 100%;
@@ -24,7 +24,7 @@
   margin: 0px;
   z-index: 90;
 }
-#tag_adder
+#tag-adder
 {
   text-align: center;
   position: absolute;
@@ -36,7 +36,7 @@
   border-bottom-left-radius: 5px;
   z-index: 90;
 }
-#tag_adder input {
+#tag-adder input {
   vertical-align: top;
   font-size: 120%;
   width: 80%;
@@ -49,7 +49,7 @@
   outline-width: 0;
   -webkit-appearance: none;
 }
-#tag_adder img {
+#tag-adder img {
   height: 30px;
   margin: 10px 0px 10px -6px;
 }
@@ -78,13 +78,13 @@
   padding: 12px 10px 13px 10px;
 }
 
-.gallery_icon {
+.gallery-icon {
   width: auto;
   height: 20px;
   padding-right: 10px;
 }
 
-#navbar_label div
+#navbar-label div
 {
   padding-top: 8px;
 }
@@ -101,7 +101,7 @@
   left: 7px;
 }
 
-#slider_label
+#slider-label
 {
 }
 
@@ -111,7 +111,7 @@
   height: 25px;
 }
 
-.menu_icon
+.menu-icon
 {
   width: 22px;
   height: auto;
@@ -129,14 +129,14 @@
 }
 
 #slider-icon,
-#slide_down_menu,
-#tag_adder
+#slide-down-menu,
+#tag-adder
 {
   transition: all 250ms ease-in-out;
   -webkit-transition: all 250ms ease-in-out;
 }
 
-#slide_down_menu
+#slide-down-menu
 {
   width: 100%;
   position: absolute;
@@ -163,12 +163,12 @@
   -webkit-transform: rotate(180deg);
 }
 
-.opened_menu
+.opened-menu
 {
   top: 50px !important;
 }
 
-#slide_down_menu ul
+#slide-down-menu ul
 {
   width: 100%;
   padding: 0px;
@@ -176,11 +176,11 @@
   list-style: none;
   list-style-type: none;
 }
-#slide_down_menu li:first-child
+#slide-down-menu li:first-child
 {
   border-top: 1px solid lightgray;
 }
-#slide_down_menu li
+#slide-down-menu li
 {
   width: 100%;
   padding: 0px;
@@ -191,19 +191,19 @@
   border-bottom: 1px solid lightgray;
   font-size: 20px;
 }
-#slide_down_menu li div
+#slide-down-menu li div
 {
   width: 200px;
   margin: auto;
   position: relative;
   left: 13px;
 }
-#slide_down_menu li.slide_active
+#slide-down-menu li.slide-active
 {
   background-color: #1dafec;
 }
 
-#slide_down_menu li:last-child 
+#slide-down-menu li:last-child 
 {
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
@@ -214,7 +214,7 @@
   {
     height: 54px;
   }*/
-  #tag_adder input
+  #tag-adder input
   {
     font-size: 140%;
     width: 35%;
@@ -222,18 +222,18 @@
     padding-bottom: 3px;
     margin: 8px 0;
   }
-  #tag_adder img 
+  #tag-adder img 
   {
     height: 33px;
     margin: 8px 0 8px -6px;
   }
-  #slide_down_menu li 
+  #slide-down-menu li 
   {
     font-size: 24px;
     padding-top: 15px;
     padding-bottom: 15px;
   }
-  .menu_icon
+  .menu-icon
   {
     width: 24px;
   }

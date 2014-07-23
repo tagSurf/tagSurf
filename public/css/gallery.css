@@ -121,8 +121,8 @@ img[src="img/history_icon_gray.png"]
 {
 	font-size: 11pt;
 }
-
-#history_slider {
+/*No more history slider*/
+/*#history_slider {
 	position: fixed;
 	opacity: 0;
 	overflow-y: auto;
@@ -133,7 +133,7 @@ img[src="img/history_icon_gray.png"]
 	right: 0px;
 	background: #404041;
 	-webkit-transition: -webkit-transform 250ms ease-in-out;
-}
+}*/
 #votemeter {
 	float: right;
 	width: 120px;

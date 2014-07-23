@@ -56,15 +56,21 @@ onload = function ()
 		var closeContainer = document.createElement('div'),
 			close = document.createElement('img'),
 			leftImage = new Image(), rightImage = new Image();
-		reminderContainer.id = "reminder_container";
-		close.className = "reminder_close";
+		reminderContainer.id = "reminder-container";
+		close.className = "reminder-close";
 		close.src = "/img/Close.png";
 		closeContainer.appendChild(close);
 		reminderContainer.appendChild(closeContainer);
-		leftImage.id = "reminder_left";
-		leftImage.src = "/img/reminder_left.png";
-		rightImage.id = "reminder_right";
-		rightImage.src = "/img/reminder_right.png";
+		leftImage.id = "reminder-left";
+		rightImage.id = "reminder-right";
+		if(isDesktop()) {
+			rightImage.src = "/img/reminder_right_desktop.png";
+			leftImage.src = "/img/reminder_left_desktop.png"
+		}
+		else {
+			leftImage.src = "/img/reminder_left_mobile.png";	
+			rightImage.src = "/img/reminder_right_mobile.png";
+		}
 		reminderContainer.appendChild(leftImage);
 		reminderContainer.appendChild(rightImage);
 		gesture.listen("drag", reminderContainer, function (direction) {
@@ -247,7 +253,7 @@ onload = function ()
 		".card-container": function() {
 			return "min-height: " + (maxCardHeight + 140) + "px; width: " + ((isMobile() || isTablet() || isNarrow()) ? "95" : "70") + "%;";
 		},
-		".raw_wrapper, .zoom_wrapper, #scroll-container, #scroll-container-container": function() {
+		".raw-wrapper, .zoom-wrapper, #scroll-container, #scroll-container-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
 		}
 		// Why is this necessary? Setting width=100% in feed.css instead.
@@ -313,7 +319,7 @@ onload = function ()
 	};
 	var upCallback = function (androidSoftUp)
 	{
-		toggleClass.apply(slider,['super_card', 'off']);
+		toggleClass.apply(slider,['super-card', 'off']);
 		slider.supering = false;
 		if (slider.animating == false)
 		{
@@ -565,7 +571,7 @@ onload = function ()
 		if (duration == 3000)
 		{
 			slider.supering = true;
-			toggleClass.apply(slider, ['super_card', 'on']);
+			toggleClass.apply(slider, ['super-card', 'on']);
 		}
 	};
 	var isMine = function(tag) {
@@ -687,7 +693,7 @@ onload = function ()
 	var buildContentCard = function(c, zIndex) {
 		var imageContainer, iconLine, textContainer, picTags, fullscreenButton,
 			truncatedTitle, card, formatter = document.createElement('div'),
-			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb_up' src='/img/thumbsup.png'><img class='thumb_down' src='/img/thumbsdown.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='/img/thumbsup.png'><img class='thumb-down' src='/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div></div></div>";
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		imageContainer = formatter.children[0].children[0].children[0];
@@ -758,7 +764,7 @@ onload = function ()
 	var buildLoginCard = function(c, zIndex) {
 		var formatter = document.createElement('div'),
 			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='/img/logo_w_border.png'><div class='big bold'>Hate repeats? Sign up!</div>",
-			form = "<form accept-charset='UTF-8' action='/users' class='new_user' id='new_user' method='post'><div style='margin:0;padding:0;display:inline'><input name='utf8' type='hidden' value='✓'><input name='authenticity_token' type='hidden' value='" + document.getElementsByName("csrf-token")[0].content + "'></div><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center></form>",
+			form = "<form accept-charset='UTF-8' action='/users' class='new-user' id='new-user' method='post'><div style='margin:0;padding:0;display:inline'><input name='utf8' type='hidden' value='✓'><input name='authenticity_token' type='hidden' value='" + document.getElementsByName("csrf-token")[0].content + "'></div><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center></form>",
 			bottom = "<div class='wide-text'><a id='line-text-login' class='small big-lnk'>Already have an account? <b>Login here</b>.</a></div><div class='smaller block'>By signing up you agree to our <a class='bold big-lnk' id='terms-lnk'>Terms of Use</a> and <a class='bold big-lnk' id='privacy-lnk'>Privacy Policy</a>.</div></div></div>",
 			cardTemplate = top + form + bottom;
 		formattingContainer.appendChild(formatter);
@@ -770,7 +776,7 @@ onload = function ()
 
 		// form validation
 		var p = document.getElementById("password");
-		var f = document.getElementById("new_user");
+		var f = document.getElementById("new-user");
 		f.onsubmit = function() {
 			if (!validEmail(document.getElementById("email").value)) {
 				alert("Please use a valid email address");

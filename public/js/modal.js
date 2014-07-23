@@ -61,8 +61,8 @@ var modal = {
 		zNode.style.top = "10px";
 		zNode.style.width = "100%";
 		modal.zoom.style.display = "none";
-		modal.zoom.className = "zoom_wrapper";
-		gesture_wrapper.className = "raw_wrapper";
+		modal.zoom.className = "zoom-wrapper";
+		gesture_wrapper.className = "raw-wrapper";
 		gesture_wrapper.style.height = (window.innerHeight - 110) + 'px';
 		modal.zoom.style.zIndex = 11;
 		if(screen.width <1024)
@@ -76,9 +76,9 @@ var modal = {
 	},
 	_buildPrompt: function () {
 		var prompt_container = document.createElement('div');
-		prompt_container.className = "prompt_container";
+		prompt_container.className = "prompt-container";
 		prompt_container.appendChild(modal.prompt);
-		modal.prompt.className = "modal_prompt disabled";
+		modal.prompt.className = "modal-prompt disabled";
 	},
 	zoomModal: function () {
 		return modal.modal.zcb && modal.modal.zcb();
@@ -239,19 +239,19 @@ var modal = {
 		modal.prompt.appendChild(node);
 		modal.prompt.cb = cb || modal.promptOut;
 		modal.backOn();
-		modal.prompt.className = "modal_prompt disabled";
+		modal.prompt.className = "modal-prompt disabled";
 		setTimeout(function() {
-			modal.prompt.className = "modal_prompt opaque";
+			modal.prompt.className = "modal-prompt opaque";
 		}, 0);
 	},
 	promptOut: function() {
 		modal.prompt.on = false;
-		modal.prompt.className = "modal_prompt";
+		modal.prompt.className = "modal-prompt";
 		modal.prompt.cb = null;
 		modal.prompt.style.opacity = 0;
 		modal.backOff();
 		trans(modal.prompt, function (event){
-			modal.prompt.className = "modal_prompt disabled";
+			modal.prompt.className = "modal-prompt disabled";
 		});
 	},
 	zoomIn: function (card, cb) {
