@@ -453,6 +453,7 @@ onload = function ()
 			expandCard();
 		}
 		else if (code == 37){
+			dragCallback("left", -3, -3);
 			swipeSlider("left");
 			analytics.track("Key Swipe", {
 				card: slider.card.id,
@@ -467,6 +468,7 @@ onload = function ()
 			});
 		}
 		else if (code == 39){
+			dragCallback("right", 3, 3);
 			swipeSlider("right");
 			analytics.track("Key Swipe", {
 				card: slider.card.id,
