@@ -6,6 +6,7 @@ var castVote = function(card) {
 
 onload = function ()
 {
+	analytics.track('Begin pageload');
 	populateNavbar();
 	if (isAuthorized() && (document.location.href.indexOf('share') != -1)) {
 	window.location = "http://" +
@@ -812,6 +813,7 @@ onload = function ()
 	var firstCardReady = function () {
 		throbber.off();
 		scrollContainer.style.opacity = 1;
+		analytics.track('Finished pageload');
 		preloadCards();
 	};
 	var initCard = function(formatter) {
