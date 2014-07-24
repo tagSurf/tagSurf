@@ -457,33 +457,53 @@ onload = function ()
 		}
 		else if (code == 37){
 			dragCallback("left", -3, -3);
+			if(slider.isConent) {	
+				analytics.track("Key Swipe", {
+					card: slider.card.id,
+					direction: "left",	
+					surfing: current_tag
+				});
+				analytics.page({
+					title: slider.card.id + " left",
+					url: 'http://beta.tagsurf.co/feed#'+current_tag,
+					path: "/feed#"+current_tag,
+					referrer: 'http://beta.tagsurf.co/'
+				});
+			}
+			else if (slider.card.id == 221281)
+				analytics.track("Key Swiped Login Card", {
+					direction: "left",
+					surfing: current_tag
+				});
 			swipeSlider("left");
-			analytics.track("Key Swipe", {
-				card: slider.card.id,
-				direction: "left",	
-				surfing: current_tag
-			});
-			analytics.page({
-				title: slider.card.id + " left",
-				url: 'http://beta.tagsurf.co/feed#'+current_tag,
-				path: "/feed#"+current_tag,
-				referrer: 'http://beta.tagsurf.co/'
-			});
+			// slider id will change to next card 
+			if (slider.card.id == 221281)
+				analytics.track("Seen Login Card");
 		}
 		else if (code == 39){
 			dragCallback("right", 3, 3);
+			if(slider.isConent) {
+				analytics.track("Key Swipe", {
+					card: slider.card.id,
+					direction: "right",	
+					surfing: current_tag
+				});
+				analytics.page({
+					title: slider.card.id + " right",
+					url: 'http://beta.tagsurf.co/feed#'+current_tag,
+					path: "/feed#"+current_tag,
+					referrer: 'http://beta.tagsurf.co/'
+				});
+			}
+			else if (slider.card.id == 221281)
+				analytics.track("Key Swiped Login Card", {
+					direction: "right",
+					surfing: current_tag
+				});
 			swipeSlider("right");
-			analytics.track("Key Swipe", {
-				card: slider.card.id,
-				direction: "right",	
-				surfing: current_tag
-			});
-			analytics.page({
-				title: slider.card.id + " right",
-				url: 'http://beta.tagsurf.co/feed#'+current_tag,
-				path: "/feed#"+current_tag,
-				referrer: 'http://beta.tagsurf.co/'
-			});
+			// slider id will change to next card 
+			if (slider.card.id == 221281)
+				analytics.track("Seen Login Card");
 		}
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
@@ -491,7 +511,6 @@ onload = function ()
 		if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
 			gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
 		else if (!slider.animating && (direction == "left" || direction == "right")) {
-			swipeSlider(direction, null, 700);
 			if (slider.isContent) {
 				analytics.track("Swipe", {
 					card: slider.card.id,
@@ -505,6 +524,15 @@ onload = function ()
 					referrer: 'http://beta.tagsurf.co/'
 				});
 			}
+			else if (slider.card.id == 221281)
+				analytics.track("Swiped Login Card", {
+					direction: direction,
+					surfing: current_tag
+				});
+			swipeSlider(direction, null, 700);
+			// slider id will change to next card 
+			if (slider.card.id == 221281)
+				analytics.track("Seen Login Card");
 		}
 	};
 	var dragCallback = function (direction, distance, dx, dy)
@@ -811,6 +839,7 @@ onload = function ()
 				alert("Please submit matching passwords");
 				return false;
 			}
+			analytics.track('Signed Up in Feed');
 			return true;
 		};
 		gesture.listen("down", document.getElementById("su-submit-btn"), function() {
@@ -840,7 +869,7 @@ onload = function ()
 
 		if (c.type == "content")
 			buildContentCard(c, zIndex);
-		else if (c.type == "login")
+		else if (c.type == "login") 
 			buildLoginCard(c, zIndex);
 		else
 			alert("unknown card type: " + c.type);
