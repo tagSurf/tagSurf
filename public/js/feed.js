@@ -104,7 +104,10 @@ onload = function ()
 			reminderContainer.style.visibility = "visible";
 			reminderContainer.style.zIndex = "100";
 			reminderContainer.style.opacity = 1;
-			analytics.track('Seen Swipe Reminder');
+			if(isDesktop())
+				analytics.track('Seen Desktop Swipe Reminder');
+			else
+				analytics.track('Seen Mobile Swipe Reminder');
 		}, 20000);
 	};
 	
