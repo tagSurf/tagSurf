@@ -6,7 +6,7 @@ var castVote = function(card) {
 
 onload = function ()
 {
-	analytics.track('Begin pageload');
+	analytics.track('Begin Pageload');
 	populateNavbar();
 	if (isAuthorized() && (document.location.href.indexOf('share') != -1)) {
 	window.location = "http://" +
@@ -103,6 +103,7 @@ onload = function ()
 			reminderContainer.style.visibility = "visible";
 			reminderContainer.style.zIndex = "100";
 			reminderContainer.style.opacity = 1;
+			analytics.track('Seen Swipe Reminder');
 		}, 20000);
 	};
 	
@@ -813,7 +814,7 @@ onload = function ()
 	var firstCardReady = function () {
 		throbber.off();
 		scrollContainer.style.opacity = 1;
-		analytics.track('Finished pageload');
+		analytics.track('Finished Pageload');
 		preloadCards();
 	};
 	var initCard = function(formatter) {
