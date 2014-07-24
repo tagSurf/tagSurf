@@ -645,6 +645,7 @@ a {
   padding: 5px 10px 10px 15px;
 }
 
+/*This targets tablets and desktops*/
 @media only screen and (min-width: 700px){
 	#add_tag_autocomplete {
 	  top: 47px;
