@@ -3,6 +3,7 @@ var castVote = function(card) {
 		+ "/tag/" + card.user_stats.tag_voted, "POST", null, null);
 };
 
+
 onload = function ()
 {
 	populateNavbar();
