@@ -69,8 +69,8 @@ onload = function ()
 			closeInstructions.className = "close-instructions block";
 			closeInstructions.src="/img/clearscreen.png";
 			reminderContainer.appendChild(closeInstructions);
-			rightImage.src = "/img/Reminder_right_desktop.png";
-			leftImage.src = "/img/Reminder_left_desktop.png";
+			rightImage.src = "/img/reminder_right_desktop.png";
+			leftImage.src = "/img/reminder_left_desktop.png";
 			addCss({
 				"#reminder-left": function() {
 					return "width: 18%; top: 20%";
