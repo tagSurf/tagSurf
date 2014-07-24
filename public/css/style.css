@@ -656,7 +656,7 @@ a {
 	#share-button {
 	  bottom: 10px;
 	  right: 10px;
-  	width: 80px;
+	  width: 80px;
 	}
 	#share-icon {
 		width: 50px;
@@ -671,11 +671,11 @@ a {
 	.midsize {
 		font-size: 14pt;
 	}
-  .options-msg {
-    font-size: 140%;
-  }
-  .tos-line {
-	  font-size: 120%;
-  }
+	.options-msg {
+		font-size: 140%;
+	}
+	.tos-line {
+		 font-size: 120%;
+	}
 }
 
