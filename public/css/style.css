@@ -183,18 +183,6 @@ a {
 	-webkit-transition: background-color 666ms ease-in-out;
 }
 
-.throbber-back {
-	pointer-events: none;
-	z-index: 3;
-	position: absolute;
-	top: 50px;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	background-color: #404041;
-	-webkit-transition: background-color 666ms ease-in-out;
-}
-
 .blackfade {
 	pointer-events: auto;
 	background-color: rgba(0, 0, 0, 1);
