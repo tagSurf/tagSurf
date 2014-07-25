@@ -234,6 +234,11 @@ var populateNavbar = function () {
     addCallback && addCallback(newtag);
   };
   addCss({
+    "html, body": function() {
+      return "width: " + window.innerWidth + "px; "
+        + "height: " + window.innerHeight + "px; "
+        + "opacity: 1;";
+    },
     "#add-tag-autocomplete": function() {
       return "width: " + (tag_adder.firstChild.clientWidth - 10) + "px";
     }
@@ -281,12 +286,13 @@ var populateNavbar = function () {
       //this is a hack until we find a better way to determine if share should be turned back on
       if (document.location.href.indexOf('feed') != -1)
         share.on();
+      modal.backOff();
       modal.modalOut();
     };
     n.appendChild(msg);
     n.appendChild(img);
     n.appendChild(TOS);
-    slideNavMenu();
+    slideNavMenu(true);
     share.off();
     modal.modalIn(n, options_cb);
     initDocLinks();

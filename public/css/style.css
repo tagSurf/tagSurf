@@ -18,6 +18,9 @@ body
 	
 	/* This was causing problems clipping popup modal windows */
 	/*overflow: hidden;*/
+
+	opacity: 0;
+	-webkit-transition: opacity 666ms ease-in-out;
 }
 
 html, input[type="submit"] {
