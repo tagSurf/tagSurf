@@ -4,6 +4,7 @@ body
 	background-color: white;
 	color: black;
 	overflow: hidden;
+	opacity: 1;
 }
 
 .toplogo {
