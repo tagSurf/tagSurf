@@ -45,9 +45,11 @@ Tagsurf::Application.routes.draw do
     get 'card/:id' => 'media#show'
 
     # Media API
-    get  'media/:tag'                     => 'media#next'
-    get  'share/:tag/:id/:limit/:offset'  => 'media#share_feed'
-    post 'media/:media_id/tags/:name/'    => 'tags#create'
+    get  'media/:tag'                       => 'media#next'
+    get  'share/:tag/:id/:limit/:offset'    => 'media#share_feed'
+    post 'media/:media_id/tags/:name/'      => 'tags#create'
+    post 'media/:media_id/report'           => 'media#report'
+    get  'media/:media_id/unreport'         => 'media#remove_report'
 
     # Tags API
     get  'tags'                          => 'tags#tag_feed'
