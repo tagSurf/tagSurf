@@ -653,7 +653,7 @@ onload = function ()
 				rmTag(tag);
 				picTags.removeChild(p);
 			} else
-				autocomplete.tapTag(tag, "autocomplete", true);
+				autocomplete.tapTag(tag, "autocomplete", false);
 		});
 		picTags.appendChild(p);
 	};
@@ -758,7 +758,7 @@ onload = function ()
 			gesture.listen("up", iconLine.children[1], function() {
 				iconLine.children[1].classList.remove("active-tag-callout");
 				iconLine.children[1].firstChild.src = "/img/trending_icon_blue.png";
-				autocomplete.tapTag(c.tags[0], "autocomplete", true);
+				autocomplete.tapTag(c.tags[0], "autocomplete", false);
 			});
 		} else
 			iconLine.children[1].style.display = "none";
