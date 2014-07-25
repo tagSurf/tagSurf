@@ -457,7 +457,13 @@ onload = function ()
 		}
 		else if (code == 37){
 			dragCallback("left", -3, -3);
-			if(slider.isConent) {	
+			if (slider.card.id == 221281) {	
+				analytics.track("Key Swiped Login Card", {
+					direction: "left",
+					surfing: current_tag
+				});
+			}
+			else {
 				analytics.track("Key Swipe", {
 					card: slider.card.id,
 					direction: "left",	
@@ -470,19 +476,20 @@ onload = function ()
 					referrer: 'http://beta.tagsurf.co/'
 				});
 			}
-			else if (slider.card.id == 221281)
-				analytics.track("Key Swiped Login Card", {
-					direction: "left",
-					surfing: current_tag
-				});
 			swipeSlider("left");
 			// slider id will change to next card 
 			if (slider.card.id == 221281)
 				analytics.track("Seen Login Card");
 		}
-		else if (code == 39){
+		else if (code == 39) {
 			dragCallback("right", 3, 3);
-			if(slider.isConent) {
+			if (slider.card.id == 221281) {
+				analytics.track("Key Swiped Login Card", {
+					direction: "right",
+					surfing: current_tag
+				});
+			}
+			else {
 				analytics.track("Key Swipe", {
 					card: slider.card.id,
 					direction: "right",	
@@ -494,12 +501,8 @@ onload = function ()
 					path: "/feed#"+current_tag,
 					referrer: 'http://beta.tagsurf.co/'
 				});
+
 			}
-			else if (slider.card.id == 221281)
-				analytics.track("Key Swiped Login Card", {
-					direction: "right",
-					surfing: current_tag
-				});
 			swipeSlider("right");
 			// slider id will change to next card 
 			if (slider.card.id == 221281)
@@ -653,7 +656,7 @@ onload = function ()
 				rmTag(tag);
 				picTags.removeChild(p);
 			} else
-				autocomplete.tapTag(tag, "autocomplete", true);
+				autocomplete.tapTag(tag, "autocomplete", false);
 		});
 		picTags.appendChild(p);
 	};
@@ -758,7 +761,7 @@ onload = function ()
 			gesture.listen("up", iconLine.children[1], function() {
 				iconLine.children[1].classList.remove("active-tag-callout");
 				iconLine.children[1].firstChild.src = "/img/trending_icon_blue.png";
-				autocomplete.tapTag(c.tags[0], "autocomplete", true);
+				autocomplete.tapTag(c.tags[0], "autocomplete", false);
 			});
 		} else
 			iconLine.children[1].style.display = "none";
