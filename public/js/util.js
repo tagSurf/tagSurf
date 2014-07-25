@@ -102,8 +102,8 @@ var slideAddBar = function(noback) {
     autocomplete.retract("autocomplete");
     closeAutoComplete(null, true);
   }
-  autocomplete.viewing.add_tag_autocomplete
-    && autocomplete.retract("add_tag_autocomplete");
+  autocomplete.viewing["add-tag-autocomplete"]
+    && autocomplete.retract("add-tag-autocomplete");
   navMenuSlid && slideNavMenu(true);
   addBarSlid = !addBarSlid;
   if (addBarSlid && !currentMedia) return;
@@ -221,7 +221,7 @@ var populateNavbar = function () {
   menu_slider_content = isAuthorized() ? full_slider_content : reduced_slider_content;
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
-  tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='/img/add_tag_button.png'><div id='add_tag_autocomplete' class='autocomplete hider'></div>";
+  tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='/img/add_tag_button.png'><div id='add-tag-autocomplete' class='autocomplete hider'></div>";
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
   nav.appendChild(tag_adder);
@@ -234,14 +234,14 @@ var populateNavbar = function () {
     addCallback && addCallback(newtag);
   };
   addCss({
-    "#add_tag_autocomplete": function() {
+    "#add-tag-autocomplete": function() {
       return "width: " + (tag_adder.firstChild.clientWidth - 10) + "px";
     }
   });
-  autocomplete.register("add_tag_autocomplete", tag_adder.firstChild, {
+  autocomplete.register("add-tag-autocomplete", tag_adder.firstChild, {
     enterCb: function() {
       autocomplete.tapTag(tag_adder.firstChild.value.slice(1),
-        "add_tag_autocomplete");
+        "add-tag-autocomplete");
     },
     tapCb: function(tagName) {
       tag_adder.firstChild.value = "#" + tagName;
