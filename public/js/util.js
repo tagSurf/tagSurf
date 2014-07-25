@@ -282,10 +282,8 @@ var populateNavbar = function () {
     var TOS = document.createElement("div");
     TOS.innerHTML = "<a class='blue bold big-lnk' id='terms-lnk'>Terms of Use</a> | <a class='blue bold big-lnk' id='privacy-lnk'>Privacy Policy</a>";
     TOS.className = "tos-line";
-    var options_cb = function(){
-      //this is a hack until we find a better way to determine if share should be turned back on
-      if (document.location.href.indexOf('feed') != -1)
-        share.on();
+    var options_cb = function() {
+      checkShare();
       modal.backOff();
       modal.modalOut();
     };
@@ -295,7 +293,7 @@ var populateNavbar = function () {
     slideNavMenu(true);
     share.off();
     modal.modalIn(n, options_cb);
-    initDocLinks();
+    initDocLinks(checkShare);
   };
 };
 var setFavIcon = function(filled) {
@@ -339,8 +337,8 @@ var starCallback, setStarCallback = function(cb) {
 var addCallback, setAddCallback = function(cb) {
   addCallback = cb;
 };
-var currentMedia, setCurrentMedia = function(d, shareCb) {
-  currentMedia = d;
+var currentMedia, checkShare = function(shareCb) {
+  var d = currentMedia;
   if (d && d.type == "content")
     share.on(d, shareCb);
   else {
@@ -348,6 +346,9 @@ var currentMedia, setCurrentMedia = function(d, shareCb) {
     if (addBarSlid)
       slideAddBar();
   }
+}, setCurrentMedia = function(d, shareCb) {
+  currentMedia = d;
+  checkShare(shareCb);
 };
 var _addCss = function(css) {
     var n = document.createElement("style");
