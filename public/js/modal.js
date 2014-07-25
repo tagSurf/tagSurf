@@ -183,16 +183,18 @@ var modal = {
 			modal.backOff();
 	},
 	modalIn: function(node, cb, zcb) {
-		modal.modal.on = true;
 		modal.modal.innerHTML = "";
 		modal.modal.appendChild(node);
 		modal.modal.style.display = "block";
 		modal.modal.cb = cb || modal.modalOut;
 		modal.modal.zcb = zcb;
-		modal.modal.className = "modal modalout disabled";
-		setTimeout(function() {
-			modal.modal.className = "modal modalslide";
-		}, 0);
+		if (!modal.modal.on) {
+			modal.modal.on = true;
+			modal.modal.className = "modal modalout disabled";
+			setTimeout(function() {
+				modal.modal.className = "modal modalslide";
+			}, 0);
+		}
 	},
 	modalOut: function() {
 		modal.modal.on = false;
