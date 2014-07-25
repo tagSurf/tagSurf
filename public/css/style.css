@@ -338,11 +338,13 @@ a {
   background: white;
   text-align: left;
   overflow-y: scroll;
+  overflow-x: hidden;
   -webkit-transition: height 300ms ease-out;
 }
 .autocomplete div
 {
   padding: 5px;
+  overflow-x: hidden;
 }
 .autocomplete-open
 {
