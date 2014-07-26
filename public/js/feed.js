@@ -742,10 +742,11 @@ onload = function ()
 			}
 		}
 	};
+	var firstCardLoaded = false;
 	var buildContentCard = function(c, zIndex) {
 		var imageContainer, iconLine, textContainer, picTags, fullscreenButton,
 			truncatedTitle, card, formatter = document.createElement('div'),
-			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='/img/thumbsup.png'><img class='thumb-down' src='/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div></div></div>";
+			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img" + (firstCardLoaded ? (" src='" + image.get(c, window.innerWidth - 40).url + "'") : "") + "></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='/img/thumbsup.png'><img class='thumb-down' src='/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div></div></div>";
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		imageContainer = formatter.children[0].children[0].children[0];
@@ -776,10 +777,22 @@ onload = function ()
 		});
 		var card = initCard(formatter);
 		card.isContent = true;
+		card.setSource = function() {
+			imageContainer.firstChild.src = image.get(c, window.innerWidth - 40).url;
+		};
 		formatCardContents(card, image.get(card.card));
-		if (slider == card)
-		{
-			imageContainer.firstChild.onload = firstCardReady;
+		if (slider == card) {
+			slider.setSource();
+			firstCardLoaded = false;
+			imageContainer.firstChild.onload = function() {
+				firstCardLoaded = true;
+				slider.parentNode.nextSibling.firstChild.setSource();
+				slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
+				throbber.off();
+				scrollContainer.style.opacity = 1;
+				analytics.track('Finished Pageload');
+				preloadCards();
+			};
 		}
 		imageContainer.firstChild.onerror = function() {
 			slideContainer.removeChild(card.parentNode);
@@ -824,7 +837,6 @@ onload = function ()
 		initCard(formatter);
 		initLoginInputs();
 		initDocLinks();
-		firstCardReady();
 
 		// form validation
 		var p = document.getElementById("password");
@@ -848,12 +860,6 @@ onload = function ()
 		gesture.listen("down", document.getElementById("su-submit-btn"), function() {
 			f.onsubmit() && f.submit();
 		});
-	};
-	var firstCardReady = function () {
-		throbber.off();
-		scrollContainer.style.opacity = 1;
-		analytics.track('Finished Pageload');
-		preloadCards();
 	};
 	var initCard = function(formatter) {
 		card = formatter.firstChild.firstChild;
