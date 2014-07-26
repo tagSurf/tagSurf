@@ -26,7 +26,7 @@ onload = function ()
 	featureBlockContents = buildFeatureBlockerContents();
 
 	//modal formatting for desktop
- 	if (!isMobile() && !isTablet())
+ 	if (!isMobile() && !isTablet() && !isNarrow())
 	 	addCss({
 	 		".modal": function() {
 	 			return "width: 75%; margin: auto;";

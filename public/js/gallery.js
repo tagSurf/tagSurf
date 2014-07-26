@@ -13,7 +13,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 				"px; width:" + window.innerWidth + "px";
 		}
 	});
-	if (!isMobile() && !isTablet())
+	if (!isMobile() && !isTablet() && !isNarrow())
 	 	addCss({
 	 		".modal": function() {
 	 			return "width: 75%; margin: auto;";

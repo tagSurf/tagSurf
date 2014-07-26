@@ -13,11 +13,11 @@ body
 	color: white;
 	font-weight: 200;
 	-webkit-user-select: none;  /* Chrome all / Safari all */
-  -moz-user-select: none;     /* Firefox all */
+	-moz-user-select: none;     /* Firefox all */
 	-ms-user-select: none;      /* IE 10+ */
-	
-	/* This was causing problems clipping popup modal windows */
-	/*overflow: hidden;*/
+	overflow: hidden;
+	opacity: 0;
+	-webkit-transition: opacity 666ms ease-in-out;
 }
 
 html, input[type="submit"] {
