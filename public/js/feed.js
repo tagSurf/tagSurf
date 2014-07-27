@@ -1003,11 +1003,6 @@ onload = function ()
 
 if (isAuthorized())
 {
-	addCss({
-		"body, html": function() {
-			return "position: fixed;";
-		}
-	});
 	var lastPath = sessionStorage.getItem("lastPath");
 	if (lastPath) {
 		sessionStorage.removeItem("lastPath");
