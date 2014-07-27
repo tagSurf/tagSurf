@@ -2,6 +2,7 @@ var share =
 {
 	cb: null,
 	data: null,
+	share_out: false,
 	button: document.createElement('div'),
 	content: document.createElement('div'),
 	url: function() {
@@ -96,12 +97,20 @@ var share =
 			shareIcon.src = "/img/share_icon.png";
 		});
 		gesture.listen('tap', share.button, function () {
-			modal.topModalIn(share.content, function() {
-				document.getElementById("share-url").blur();
+			if(share.share_out) {
 				modal.topModalOut();
-			});
-			document.getElementById("share-url").value = share.url();
-			share.cb && share.cb();
+				share.share_out = false;
+			}
+			else {
+				modal.topModalIn(share.content, function() {
+					document.getElementById("share-url").blur();
+					modal.topModalOut();
+					share.share_out = false;
+				});
+				share.share_out = true;
+				document.getElementById("share-url").value = share.url();
+				share.cb && share.cb();
+			}
 		});
 		share.button.appendChild(shareIcon);
 		document.body.appendChild(share.button);
