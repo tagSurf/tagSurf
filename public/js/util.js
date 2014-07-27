@@ -266,6 +266,8 @@ var populateNavbar = function () {
       tag_adder.firstChild.value = "#";
     }
   });
+  drag.nativeScroll(document.getElementById("add-tag-autocomplete"),
+    { constraint: "horizontal" });
   add_icon = document.getElementById("add-icon");
   if (isAuthorized()) {
     document.getElementById("logout").onclick = function() {
