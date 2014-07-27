@@ -1,8 +1,8 @@
 html, body
 {
   background-color: #494949;
-  width: 100%;
   height: auto;
+  position: fixed;
 }
 #scroll-container
 {
@@ -205,7 +205,7 @@ html, body
   padding-top: 30%;
 }
 
-.super_card
+.super-card
 {
 
   animation: white_background_flash 0.5s 2;
@@ -214,13 +214,13 @@ html, body
   -webkit-animation-direction: alternate;
 }
 
-.super_card .super_label
+.super-card .super-label
 {
   display: block;
   animation: fade-in 0.5s;
   -webkit-animation: fade-in 0.5s;
 }
-.super_label
+.super-label
 {
   position: absolute;
   top: 50px;
@@ -356,7 +356,7 @@ html, body
   z-index: 2;
 }
 
-.thumb_up
+.thumb-up
 {
   display: inline;
   opacity: 0;
@@ -365,7 +365,7 @@ html, body
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
 }
-.thumb_down
+.thumb-down
 {
   display: inline;
   opacity: 0;
@@ -377,7 +377,7 @@ html, body
   float: right;
   margin-right: 20px;
 }
-#reminder_container
+#reminder-container
 {
   visibility: hidden;
   z-index: -1;
@@ -391,17 +391,16 @@ html, body
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
 }
-#reminder_left
+#reminder-left
 {
 	position: relative;
 	display: inline;
 	width: 34%;
 	float: left;
 	margin-left: 5%;
-	top: 15px;
 	top: 19%;
 }
-#reminder_right
+#reminder-right
 {
 	position: relative;
 	display: inline;
@@ -410,14 +409,22 @@ html, body
 	margin-right: 5%;
 	top: 20%;
 }
-.reminder_close
+.reminder-close
 {
   width: 40px;
   position: absolute;
-  bottom: 15px;
+  bottom: 20px;
   right: 15px;
 }
+.close-instructions
+{
+  position: absolute;
+  left: 43%;
+  bottom: 45%;
+  width: 15%;
+}
 
+/*This targets tablets and desktops*/
 @media only screen and (min-width: 700px){
   .text-container
   {
@@ -439,13 +446,7 @@ html, body
   {
     height: 28px;
   }
-  #slide_down_menu li 
-  {
-    font-size: 24px;
-    padding-top: 15px;
-    padding-bottom: 15px;
-  }
-  .menu_icon
+  .menu-icon
   {
     width: 24px;
   }
@@ -498,6 +499,10 @@ html, body
   .center-label 
   {
     padding-top: 20%;
+  }
+  .reminder-close
+  {
+    bottom: 25px;
   }
 }
 

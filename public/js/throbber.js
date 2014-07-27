@@ -4,6 +4,7 @@ var throbber =
 	gif: document.createElement('img'),
 	_build: function ()
 	{
+		
 		throbber.gif.src = "/img/spin_throbber.gif";
 		throbber.gif.className = "throbber";
 		throbber.gif.onload = function() {
@@ -27,7 +28,7 @@ var throbber =
 		else
 		{
 			throbber.gif.style['top'] = ((window.innerHeight - throbber.gif.offsetHeight) /2) + "px";
-		}
+		}	
 		throbber.gif.style['opacity'] = "1.0";
 	},
 	off: function ()
