@@ -150,6 +150,15 @@ var shareVotes = [], saveVotesLogin = function () {
 };
 
 var popTrending; // defined in feed
+var fadeInBody = function() {
+  addCss({
+    "html, body": function() {
+      return "width: " + window.innerWidth + "px; "
+        + "height: " + window.innerHeight + "px; "
+        + "opacity: 1;";
+    }
+  });
+};
 var populateNavbar = function () {
   var nav = document.getElementById("nav");
   var navbar = document.createElement("div");
@@ -234,15 +243,11 @@ var populateNavbar = function () {
     addCallback && addCallback(newtag);
   };
   addCss({
-    "html, body": function() {
-      return "width: " + window.innerWidth + "px; "
-        + "height: " + window.innerHeight + "px; "
-        + "opacity: 1;";
-    },
     "#add-tag-autocomplete": function() {
       return "width: " + (tag_adder.firstChild.clientWidth - 10) + "px";
     }
   });
+  fadeInBody();
   autocomplete.register("add-tag-autocomplete", tag_adder.firstChild, {
     enterCb: function() {
       autocomplete.tapTag(tag_adder.firstChild.value.slice(1),
