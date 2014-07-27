@@ -642,6 +642,7 @@ a {
 	margin: 0;
 	background: #2f2f2f;
 	border: 1px solid #00aeef;
+	border-radius: 0;
 	overflow-x: scroll;
 	width: 80%;
 	vertical-align: bottom;
