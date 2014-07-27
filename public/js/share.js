@@ -65,7 +65,7 @@ var share =
 		var heading = document.createElement("div"),
 			blurb = document.createElement("div"),
 			urlContainer = document.createElement("div"),
-			url = document.createElement("div"),
+			url = document.createElement("input"),
 			clipboardButton = document.createElement("div")
 			clipboard = document.createElement("img"),
 			clipboardButtonCallBack = function() {
@@ -85,11 +85,16 @@ var share =
 		share.content.className = "centered";
 		urlContainer.id = "url-container"; 
 		url.id = "share-url";
+		url.type = "text";
 		url.className = "big blue inline";
 		clipboardButton.id = "clipboard-button";
 		clipboardButton.className = "inline";
 		clipboard.id = "clipboard-icon";
 		clipboard.src = "/img/clipboard_icon.png";
+		gesture.listen('down', urlContainer, function () { 
+			url.focus();
+			url.setSelectionRange(0, url.value.length);
+		});
 		urlContainer.appendChild(url);
 		clipboardButton.appendChild(clipboard);
 		urlContainer.appendChild(clipboardButton);
@@ -119,8 +124,11 @@ var share =
 			shareIcon.src = "/img/share_icon.png";
 		});
 		gesture.listen('tap', share.button, function () {
-			modal.topModalIn(share.content);
-			document.getElementById("share-url").innerHTML = share.url();
+			modal.topModalIn(share.content, function() {
+				document.getElementById("share-url").blur();
+				modal.topModalOut();
+			});
+			document.getElementById("share-url").value = share.url();
 			share.cb && share.cb();
 		});
 		share.button.appendChild(shareIcon);
