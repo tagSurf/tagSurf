@@ -77,6 +77,10 @@ var share =
 		gesture.listen('down', urlContainer, function () { 
 			url.focus();
 			url.setSelectionRange(0, url.value.length);
+			analytics.track('Selected Share URL', {
+				card: share.data.id,
+				surfing: current_tag
+			});
 		});
 		urlContainer.appendChild(url);
 		share.content.appendChild(heading);
@@ -97,17 +101,29 @@ var share =
 			shareIcon.src = "/img/share_icon.png";
 		});
 		gesture.listen('tap', share.button, function () {
-			if(share.share_out) {
+			if(share.shareOut) {
 				modal.topModalOut();
-				share.shareOut = false;
+				share.shareOut =false;
+				analytics.track('Closed Share Window', {
+					card: share.data.id,
+					surfing: current_tag
+				});
 			}
 			else {
 				modal.topModalIn(share.content, function() {
 					document.getElementById("share-url").blur();
 					modal.topModalOut();
 					share.shareOut = false;
+					analytics.track('Closed Share Window', {
+						card: share.data.id,
+						surfing: current_tag
+					});
 				});
 				share.shareOut = true;
+				analytics.track('Opened Share Window', {
+					card: share.data.id,
+					surfing: current_tag
+				});
 				document.getElementById("share-url").value = share.url();
 				share.cb && share.cb();
 			}
