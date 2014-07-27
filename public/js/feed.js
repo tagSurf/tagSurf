@@ -59,7 +59,7 @@ onload = function ()
 				reminderContainer.parentNode.removeChild(reminderContainer);
 				reminderTimeout = null;
 			});
-			analytics.track('Closed Swipe Reminder');
+			analytics.track('Close Swipe Reminder');
 		}
 	};
 	var setReminderTimeout = function ()
@@ -241,7 +241,7 @@ onload = function ()
 				current_tag = tagName;
 				known_keys = {};
 				populateSlider(null, null, insertCurrent ? slider.card : null);
-				analytics.track('Searched for tag', {
+				analytics.track('Search for Tag', {
 					tag: tagName
 				});
 			}
@@ -466,7 +466,7 @@ onload = function ()
 		else if (code == 37){
 			dragCallback("left", -3, -3);
 			if (slider.card.id == 221281) {	
-				analytics.track("Key Swiped Login Card", {
+				analytics.track("Key Swipe Login Card", {
 					direction: "left",
 					surfing: current_tag
 				});
@@ -492,7 +492,7 @@ onload = function ()
 		else if (code == 39) {
 			dragCallback("right", 3, 3);
 			if (slider.card.id == 221281) {
-				analytics.track("Key Swiped Login Card", {
+				analytics.track("Key Swipe Login Card", {
 					direction: "right",
 					surfing: current_tag
 				});
@@ -536,7 +536,7 @@ onload = function ()
 				});
 			}
 			else if (slider.card.id == 221281)
-				analytics.track("Swiped Login Card", {
+				analytics.track("Swipe Login Card", {
 					direction: direction,
 					surfing: current_tag
 				});
@@ -862,7 +862,7 @@ onload = function ()
 				alert("Please submit matching passwords");
 				return false;
 			}
-			analytics.track('Signed Up in Feed');
+			analytics.track('Sign Up in Feed');
 			return true;
 		};
 		gesture.listen("down", document.getElementById("su-submit-btn"), function() {
@@ -960,7 +960,7 @@ onload = function ()
 		slider.card.tags_v2.push(objwrap);
 		tagCard(tag, document.getElementById("pictags" + slider.card.id));
 		formatCardContents();
-		analytics.track('Added Tag from Feed', {
+		analytics.track('Add Tag from Feed', {
 			card: slider.card.id,
 			surfing: current_tag,
 			tag_added: tag
@@ -985,7 +985,7 @@ onload = function ()
 				setFavIcon(false);
 			});
 		}, null);
-		analytics.track('Favorited from Feed', {
+		analytics.track('Favorite from Feed', {
 			card: slider.card.id,
 			surfing: current_tag
 		});
