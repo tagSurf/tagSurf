@@ -24,6 +24,14 @@ onload = function ()
 	slideContainer = document.getElementById('slider');
 	reminderTimeout = null;
 	featureBlockContents = buildFeatureBlockerContents();
+	
+	//modal formatting for desktop
+	if (!isMobile() && !isTablet())
+	addCss({
+		".modal": function() {
+			return "width: 75%; margin: auto;";
+		}
+	});
 
 	//modal formatting for desktop
  	if (!isMobile() && !isTablet() && !isNarrow())

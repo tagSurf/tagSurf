@@ -63,13 +63,25 @@ var share =
 	_buildContent: function ()
 	{
 		var heading = document.createElement("div"),
-			blurb = document.createElement("div");
+			blurb = document.createElement("div"),
+			urlContainer = document.createElement("div"),
+			url = document.createElement("input");
 		heading.className = "really-big share-heading-margin";
 		heading.innerHTML = "Share This Card";
 		share.content.className = "centered";
+		urlContainer.id = "url-container"; 
+		url.id = "share-url";
+		url.type = "text";
+		url.className = "big blue inline";
+		gesture.listen('down', urlContainer, function () { 
+			url.focus();
+			url.setSelectionRange(0, url.value.length);
+		});
+		urlContainer.appendChild(url);
 		share.content.appendChild(heading);
 		for (var network in share.networks)
 			share._icon(network);
+		share.content.appendChild(urlContainer);
 	},
 	_buildButton: function ()
 	{
@@ -84,7 +96,11 @@ var share =
 			shareIcon.src = "/img/share_icon.png";
 		});
 		gesture.listen('tap', share.button, function () {
-			modal.topModalIn(share.content);
+			modal.topModalIn(share.content, function() {
+				document.getElementById("share-url").blur();
+				modal.topModalOut();
+			});
+			document.getElementById("share-url").value = share.url();
 			share.cb && share.cb();
 		});
 		share.button.appendChild(shareIcon);
@@ -92,8 +108,10 @@ var share =
 	},
 	on: function (data, cb)
 	{
-		share.cb = cb;
-		share.data = data;
+		if (cb)
+			share.cb = cb;
+		if (data)
+			share.data = data;
 		toggleClass.call(share.button, 'share-active', 'on');
 	},
 	off: function ()
