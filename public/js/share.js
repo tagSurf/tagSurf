@@ -2,7 +2,7 @@ var share =
 {
 	cb: null,
 	data: null,
-	share_out: false,
+	shareOut: false,
 	button: document.createElement('div'),
 	content: document.createElement('div'),
 	url: function() {
@@ -99,15 +99,15 @@ var share =
 		gesture.listen('tap', share.button, function () {
 			if(share.share_out) {
 				modal.topModalOut();
-				share.share_out = false;
+				share.shareOut = false;
 			}
 			else {
 				modal.topModalIn(share.content, function() {
 					document.getElementById("share-url").blur();
 					modal.topModalOut();
-					share.share_out = false;
+					share.shareOut = false;
 				});
-				share.share_out = true;
+				share.shareOut = true;
 				document.getElementById("share-url").value = share.url();
 				share.cb && share.cb();
 			}
