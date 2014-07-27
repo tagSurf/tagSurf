@@ -639,19 +639,12 @@ a {
 	font-size: 120%;
 	line-height: 40px;
 	padding: 0 10px;
-	margin: 0 0 15px 10px;
+	margin: 0;
 	background: #2f2f2f;
 	border: 1px solid #00aeef;
 	overflow-x: scroll;
-	width: 60%;
+	width: 80%;
 	vertical-align: bottom;
-}
-#clipboard-icon{
-	width: 35px;
-	vertical-align: bottom;
-}
-#clipboard-button{
-	padding: 15px;
 }
 
 @media only screen and (min-width: 700px){
@@ -703,13 +696,7 @@ a {
 		-ms-user-select: all;
 	}
 	#share-url {
-		margin: 0 0 20px 90px;
-	}
-	#clipboard-icon {
-		width: 45px;
-	} 
-	#clipboard-button {
-		padding: 20px;
+		margin: 0;
 	}
 	.share_heading_margin {
 		margin: 60px 0;

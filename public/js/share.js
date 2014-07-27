@@ -65,21 +65,7 @@ var share =
 		var heading = document.createElement("div"),
 			blurb = document.createElement("div"),
 			urlContainer = document.createElement("div"),
-			url = document.createElement("input"),
-			clipboardButton = document.createElement("div")
-			clipboard = document.createElement("img"),
-			clipboardButtonCallBack = function() {
-				var url = document.getElementById('share-url'), r;
-				url.contentEditable = true;
-				r = document.createRange(); 
-				r.selectNodeContents(url);
-				var sel = window.getSelection();
-				sel.addRange(r);
-				document.designMode = "on";
-				console.log(r.toString());
-				console.log(document.queryCommandEnabled('Copy'));
-			};
-
+			url = document.createElement("input");
 		heading.className = "really-big share_heading_margin";
 		heading.innerHTML = "Share This Card";
 		share.content.className = "centered";
@@ -87,26 +73,12 @@ var share =
 		url.id = "share-url";
 		url.type = "text";
 		url.className = "big blue inline";
-		clipboardButton.id = "clipboard-button";
-		clipboardButton.className = "inline";
-		clipboard.id = "clipboard-icon";
-		clipboard.src = "/img/clipboard_icon.png";
 		gesture.listen('down', urlContainer, function () { 
 			url.focus();
 			url.setSelectionRange(0, url.value.length);
 		});
 		urlContainer.appendChild(url);
-		clipboardButton.appendChild(clipboard);
-		urlContainer.appendChild(clipboardButton);
 		share.content.appendChild(heading);
-		//Activate clipboard button
-		gesture.listen('down', clipboardButton, function () {
-			clipboard.src = "/img/clipboard_icon-invert.png";
-		});
-		gesture.listen('up', clipboardButton, function () {
-			clipboard.src = "/img/clipboard_icon.png";
-		});
-		gesture.listen('tap', clipboardButton, clipboardButtonCallBack);
 		for (var network in share.networks)
 			share._icon(network);
 		share.content.appendChild(urlContainer);
