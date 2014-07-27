@@ -77,7 +77,7 @@ var share =
 		gesture.listen('down', urlContainer, function () { 
 			url.focus();
 			url.setSelectionRange(0, url.value.length);
-			analytics.track('Selected Share URL', {
+			analytics.track('Select Share URL', {
 				card: share.data.id,
 				surfing: current_tag
 			});
@@ -104,7 +104,7 @@ var share =
 			if(share.shareOut) {
 				modal.topModalOut();
 				share.shareOut =false;
-				analytics.track('Closed Share Window', {
+				analytics.track('Close Share Window', {
 					card: share.data.id,
 					surfing: current_tag
 				});
@@ -114,13 +114,13 @@ var share =
 					document.getElementById("share-url").blur();
 					modal.topModalOut();
 					share.shareOut = false;
-					analytics.track('Closed Share Window', {
+					analytics.track('Close Share Window', {
 						card: share.data.id,
 						surfing: current_tag
 					});
 				});
 				share.shareOut = true;
-				analytics.track('Opened Share Window', {
+				analytics.track('Open Share Window', {
 					card: share.data.id,
 					surfing: current_tag
 				});
