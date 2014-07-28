@@ -159,7 +159,10 @@ onload = function ()
 			gesture.listen("up", trendingBtn, function() {
 				trendingBtn.classList.remove("active-trending-returnbtn");
 				trendingBtn.firstChild.src = "/img/trending_icon_blue.png";
-				window.location = "http://" + document.location.host + '/feed';
+				if(isAuthorized())
+					window.location = "http://" + document.location.host + '/feed';
+				else
+					autocomplete.tapTag("trending", "autocomplete", false);
 			});
 			for(var i = 0; i < numberOfTags; i++) {
 				if (autocomplete.data[i]["name"] == "trending") {
