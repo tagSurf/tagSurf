@@ -144,7 +144,7 @@ onload = function ()
 				tagSuggestions = document.createElement('div'),
 				numberOfTags = 5;
 			trendingBtn.className = 'trending-returnbtn pointer';
-			trendingBtn.innerHTML = "<img src='/img/trending_icon_blue.png'>Retun to <span class='blue'>#trending</span>";	
+			trendingBtn.innerHTML = "<img src='/img/trending_icon_blue.png'>Return to <span class='blue'>#trending</span>";	
 			failMsgNode.innerHTML = "<div class='fail-msg'>No more cards in <br>#" + current_tag + " feed...</div>";
 			orMsg.className = "fail-msg";
 			orMsg.id = "or-msg";

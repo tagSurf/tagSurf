@@ -202,7 +202,7 @@ html, body
 .center-label
 {
   text-align: center;
-  padding-top: 30%;
+  padding-top: 9%;
 }
 
 .super-card
@@ -427,13 +427,14 @@ html, body
   border: 1px solid #00aeef;
   border-radius: 5px;
   padding: 5px;
-  width: 280px;
+  width: 210px;
   margin-top: 7%;
   margin-left: auto;
   margin-right: auto;
+  font-size: 120%;
 }
 .trending-returnbtn img {
-  height: 21px;
+  height: 15px;
   position: relative;
   top: 1px;
   margin-right: 7px;
@@ -452,7 +453,7 @@ html, body
   font-size: 120%;
 }
 .taglist {
-  max-width: 75%;
+  max-width: 85%;
   margin: auto;
 }
 
@@ -528,13 +529,22 @@ html, body
   {
     font-size: 160%;
   }
-  .center-label 
-  {
-    padding-top: 9%;
-  }
   .reminder-close
   {
     bottom: 25px;
+  }
+  .trending-returnbtn {
+    width: 290px;
+    font-size: 100%;
+  }
+  .trending-returnbtn img {
+    height: 21px;
+    position: relative;
+    top: 1px;
+    margin-right: 7px;
+  }
+  .taglist {
+    max-width: 75%;
   }
 }
 
