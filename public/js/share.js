@@ -2,7 +2,7 @@ var share =
 {
 	cb: null,
 	data: null,
-	shareOut: false,
+	shareModalOut: false,
 	button: document.createElement('div'),
 	content: document.createElement('div'),
 	url: function() {
@@ -101,9 +101,9 @@ var share =
 			shareIcon.src = "/img/share_icon.png";
 		});
 		gesture.listen('tap', share.button, function () {
-			if(share.shareOut) {
+			if(share.shareModalOut) {
 				modal.topModalOut();
-				share.shareOut =false;
+				share.shareModalOut =false;
 				analytics.track('Close Share Window', {
 					card: share.data.id,
 					surfing: current_tag
@@ -113,13 +113,13 @@ var share =
 				modal.topModalIn(share.content, function() {
 					document.getElementById("share-url").blur();
 					modal.topModalOut();
-					share.shareOut = false;
+					share.shareModalOut = false;
 					analytics.track('Close Share Window', {
 						card: share.data.id,
 						surfing: current_tag
 					});
 				});
-				share.shareOut = true;
+				share.shareModalOut = true;
 				analytics.track('Open Share Window', {
 					card: share.data.id,
 					surfing: current_tag
