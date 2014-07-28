@@ -2,6 +2,7 @@ var share =
 {
 	cb: null,
 	data: null,
+	shareModalOut: false,
 	button: document.createElement('div'),
 	content: document.createElement('div'),
 	url: function() {
@@ -63,13 +64,29 @@ var share =
 	_buildContent: function ()
 	{
 		var heading = document.createElement("div"),
-			blurb = document.createElement("div");
+			blurb = document.createElement("div"),
+			urlContainer = document.createElement("div"),
+			url = document.createElement("input");
 		heading.className = "really-big share-heading-margin";
 		heading.innerHTML = "Share This Card";
 		share.content.className = "centered";
+		urlContainer.id = "url-container"; 
+		url.id = "share-url";
+		url.type = "text";
+		url.className = "big blue inline";
+		gesture.listen('down', urlContainer, function () { 
+			url.focus();
+			url.setSelectionRange(0, url.value.length);
+			analytics.track('Select Share URL', {
+				card: share.data.id,
+				surfing: current_tag
+			});
+		});
+		urlContainer.appendChild(url);
 		share.content.appendChild(heading);
 		for (var network in share.networks)
 			share._icon(network);
+		share.content.appendChild(urlContainer);
 	},
 	_buildButton: function ()
 	{
@@ -84,16 +101,42 @@ var share =
 			shareIcon.src = "/img/share_icon.png";
 		});
 		gesture.listen('tap', share.button, function () {
-			modal.topModalIn(share.content);
-			share.cb && share.cb();
+			if(share.shareModalOut) {
+				modal.topModalOut();
+				share.shareModalOut =false;
+				analytics.track('Close Share Window', {
+					card: share.data.id,
+					surfing: current_tag
+				});
+			}
+			else {
+				modal.topModalIn(share.content, function() {
+					document.getElementById("share-url").blur();
+					modal.topModalOut();
+					share.shareModalOut = false;
+					analytics.track('Close Share Window', {
+						card: share.data.id,
+						surfing: current_tag
+					});
+				});
+				share.shareModalOut = true;
+				analytics.track('Open Share Window', {
+					card: share.data.id,
+					surfing: current_tag
+				});
+				document.getElementById("share-url").value = share.url();
+				share.cb && share.cb();
+			}
 		});
 		share.button.appendChild(shareIcon);
 		document.body.appendChild(share.button);
 	},
 	on: function (data, cb)
 	{
-		share.cb = cb;
-		share.data = data;
+		if (cb)
+			share.cb = cb;
+		if (data)
+			share.data = data;
 		toggleClass.call(share.button, 'share-active', 'on');
 	},
 	off: function ()

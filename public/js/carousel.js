@@ -134,6 +134,7 @@ var carousel =
 	nextButtonCallback: function(){
 		if (carousel.endButton) {
 			carousel.off();
+			analytics.track('Completed Tutorial');
 			document.forms[0].submit();
 		} 
 		else if ((carousel.current_card+1)==(carousel.total_cards-1)) {

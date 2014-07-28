@@ -24,6 +24,14 @@ onload = function ()
 	slideContainer = document.getElementById('slider');
 	reminderTimeout = null;
 	featureBlockContents = buildFeatureBlockerContents();
+	
+	//modal formatting for desktop
+	if (!isMobile() && !isTablet())
+	addCss({
+		".modal": function() {
+			return "width: 75%; margin: auto;";
+		}
+	});
 
 	//modal formatting for desktop
  	if (!isMobile() && !isTablet() && !isNarrow())
@@ -51,7 +59,7 @@ onload = function ()
 				reminderContainer.parentNode.removeChild(reminderContainer);
 				reminderTimeout = null;
 			});
-			analytics.track('Closed Swipe Reminder');
+			analytics.track('Close Swipe Reminder');
 		}
 	};
 	var setReminderTimeout = function ()
@@ -130,9 +138,52 @@ onload = function ()
 	var refreshCards = function(failMsgNode, zIndex) {
 		cardIndex = 0;
 		if (failMsgNode && data.length == 0) {
-			failMsgNode.innerHTML = "No more cards in <br>#" + current_tag + " feed";
+			var trendingBtn = document.createElement('div'),
+				orMsg = document.createElement('div'),
+				surfATagMsg = document.createElement('div'),
+				tagSuggestions = document.createElement('div'),
+				numberOfTags = 5;
+			trendingBtn.className = 'trending-returnbtn pointer';
+			trendingBtn.innerHTML = "<img src='/img/trending_icon_blue.png'>Return to <span class='blue'>#trending</span>";	
+			failMsgNode.innerHTML = "<div class='fail-msg'>No more cards in <br>#" + current_tag + " feed...</div>";
+			orMsg.className = "fail-msg";
+			orMsg.id = "or-msg";
+			orMsg.innerHTML = "or";
+			tagSuggestions.className = "taglist";
+			surfATagMsg.className = "fail-msg";
+			surfATagMsg.id = "surf-msg";
+			surfATagMsg.innerHTML = "Surf a popular tag";
+			gesture.listen("down", trendingBtn, function() {
+				trendingBtn.classList.add("active-trending-returnbtn");
+				trendingBtn.firstChild.src = "/img/trending_icon_gray.png";
+			});
+			gesture.listen("up", trendingBtn, function() {
+				trendingBtn.classList.remove("active-trending-returnbtn");
+				trendingBtn.firstChild.src = "/img/trending_icon_blue.png";
+				if(isAuthorized())
+					window.location = "http://" + document.location.host + '/feed';
+				else
+					autocomplete.tapTag("trending", "autocomplete", false);
+			});
+			for(var i = 0; i < numberOfTags; i++) {
+				if (autocomplete.data[i]["name"] == "trending") {
+					++numberOfTags;
+					continue;
+				}
+				else {
+					tagCard(autocomplete.data[i]["name"], tagSuggestions);
+				}
+			}
 			failMsgNode.parentNode.removeChild(failMsgNode.nextSibling);
-		} else {
+			failMsgNode.parentNode.appendChild(trendingBtn);
+			failMsgNode.parentNode.appendChild(orMsg);
+			failMsgNode.parentNode.appendChild(surfATagMsg);
+			failMsgNode.parentNode.appendChild(tagSuggestions);
+			analytics.track('Seen End-Of-Feed Card', {
+				surfing: current_tag
+			});
+		} 
+		else {
 			slideContainer.innerHTML = "";
 			buildCard(zIndex);
 		}
@@ -233,7 +284,7 @@ onload = function ()
 				current_tag = tagName;
 				known_keys = {};
 				populateSlider(null, null, insertCurrent ? slider.card : null);
-				analytics.track('Searched for tag', {
+				analytics.track('Search for Tag', {
 					tag: tagName
 				});
 			}
@@ -458,7 +509,7 @@ onload = function ()
 		else if (code == 37){
 			dragCallback("left", -3, -3);
 			if (slider.card.id == 221281) {	
-				analytics.track("Key Swiped Login Card", {
+				analytics.track("Key Swipe Login Card", {
 					direction: "left",
 					surfing: current_tag
 				});
@@ -484,7 +535,7 @@ onload = function ()
 		else if (code == 39) {
 			dragCallback("right", 3, 3);
 			if (slider.card.id == 221281) {
-				analytics.track("Key Swiped Login Card", {
+				analytics.track("Key Swipe Login Card", {
 					direction: "right",
 					surfing: current_tag
 				});
@@ -528,7 +579,7 @@ onload = function ()
 				});
 			}
 			else if (slider.card.id == 221281)
-				analytics.track("Swiped Login Card", {
+				analytics.track("Swipe Login Card", {
 					direction: direction,
 					surfing: current_tag
 				});
@@ -854,7 +905,7 @@ onload = function ()
 				alert("Please submit matching passwords");
 				return false;
 			}
-			analytics.track('Signed Up in Feed');
+			analytics.track('Sign Up in Feed');
 			return true;
 		};
 		gesture.listen("down", document.getElementById("su-submit-btn"), function() {
@@ -952,7 +1003,7 @@ onload = function ()
 		slider.card.tags_v2.push(objwrap);
 		tagCard(tag, document.getElementById("pictags" + slider.card.id));
 		formatCardContents();
-		analytics.track('Added Tag from Feed', {
+		analytics.track('Add Tag from Feed', {
 			card: slider.card.id,
 			surfing: current_tag,
 			tag_added: tag
@@ -977,7 +1028,7 @@ onload = function ()
 				setFavIcon(false);
 			});
 		}, null);
-		analytics.track('Favorited from Feed', {
+		analytics.track('Favorite from Feed', {
 			card: slider.card.id,
 			surfing: current_tag
 		});
