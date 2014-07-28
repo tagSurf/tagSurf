@@ -423,6 +423,32 @@ html, body
   bottom: 45%;
   width: 15%;
 }
+.trending-returnbtn {
+  border: 1px solid #00aeef;
+  border-radius: 5px;
+  padding: 5px;
+  max-width: 30%;
+  margin: 7% 35%;
+}
+.trending-returnbtn img {
+  height: 21px;
+  position: relative;
+  top: 1px;
+  margin-right: 7px;
+}
+.active-trending-returnbtn
+{
+  background-color: #00aeef;
+  color: #404041;
+}
+#or-msg {
+  margin: 6% 0;
+  font-size: 150%;
+}
+#surf-msg {
+  margin-bottom: 6%;
+  font-size: 120%;
+}
 
 /*This targets tablets and desktops*/
 @media only screen and (min-width: 700px){
@@ -498,7 +524,7 @@ html, body
   }
   .center-label 
   {
-    padding-top: 20%;
+    padding-top: 10%;
   }
   .reminder-close
   {
