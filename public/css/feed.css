@@ -427,8 +427,10 @@ html, body
   border: 1px solid #00aeef;
   border-radius: 5px;
   padding: 5px;
-  max-width: 30%;
-  margin: 7% 35%;
+  width: 280px;
+  margin-top: 7%;
+  margin-left: auto;
+  margin-right: auto;
 }
 .trending-returnbtn img {
   height: 21px;
@@ -448,6 +450,10 @@ html, body
 #surf-msg {
   margin-bottom: 6%;
   font-size: 120%;
+}
+.taglist {
+  max-width: 75%;
+  margin: auto;
 }
 
 /*This targets tablets and desktops*/
@@ -524,7 +530,7 @@ html, body
   }
   .center-label 
   {
-    padding-top: 10%;
+    padding-top: 9%;
   }
   .reminder-close
   {

@@ -144,11 +144,12 @@ onload = function ()
 				tagSuggestions = document.createElement('div'),
 				numberOfTags = 5;
 			trendingBtn.className = 'trending-returnbtn pointer';
-			trendingBtn.innerHTML = "<img src='/img/trending_icon_blue.png'>Retun to <span class='blue'>#Trending</span>";	
+			trendingBtn.innerHTML = "<img src='/img/trending_icon_blue.png'>Retun to <span class='blue'>#trending</span>";	
 			failMsgNode.innerHTML = "<div class='fail-msg'>No more cards in <br>#" + current_tag + " feed...</div>";
 			orMsg.className = "fail-msg";
 			orMsg.id = "or-msg";
 			orMsg.innerHTML = "or";
+			tagSuggestions.className = "taglist";
 			surfATagMsg.className = "fail-msg";
 			surfATagMsg.id = "surf-msg";
 			surfATagMsg.innerHTML = "Surf a popular tag";
