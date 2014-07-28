@@ -179,6 +179,9 @@ onload = function ()
 			failMsgNode.parentNode.appendChild(orMsg);
 			failMsgNode.parentNode.appendChild(surfATagMsg);
 			failMsgNode.parentNode.appendChild(tagSuggestions);
+			analytics.track('Seen End-Of-Feed Card', {
+				surfing: current_tag
+			});
 		} 
 		else {
 			slideContainer.innerHTML = "";
