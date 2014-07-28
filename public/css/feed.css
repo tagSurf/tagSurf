@@ -202,7 +202,7 @@ html, body
 .center-label
 {
   text-align: center;
-  padding-top: 30%;
+  padding-top: 9%;
 }
 
 .super-card
@@ -423,6 +423,39 @@ html, body
   bottom: 45%;
   width: 15%;
 }
+.trending-returnbtn {
+  border: 1px solid #00aeef;
+  border-radius: 5px;
+  padding: 5px;
+  width: 210px;
+  margin-top: 7%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 120%;
+}
+.trending-returnbtn img {
+  height: 15px;
+  position: relative;
+  top: 1px;
+  margin-right: 7px;
+}
+.active-trending-returnbtn
+{
+  background-color: #00aeef;
+  color: #404041;
+}
+#or-msg {
+  margin: 6% 0;
+  font-size: 150%;
+}
+#surf-msg {
+  margin-bottom: 6%;
+  font-size: 120%;
+}
+.taglist {
+  max-width: 85%;
+  margin: auto;
+}
 
 /*This targets tablets and desktops*/
 @media only screen and (min-width: 700px){
@@ -496,13 +529,19 @@ html, body
   {
     font-size: 160%;
   }
-  .center-label 
-  {
-    padding-top: 20%;
-  }
   .reminder-close
   {
     bottom: 25px;
+  }
+  .trending-returnbtn {
+    width: 290px;
+    font-size: 100%;
+  }
+  .trending-returnbtn img {
+    height: 21px;
+  }
+  .taglist {
+    max-width: 75%;
   }
 }
 

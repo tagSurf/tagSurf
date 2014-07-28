@@ -138,9 +138,49 @@ onload = function ()
 	var refreshCards = function(failMsgNode, zIndex) {
 		cardIndex = 0;
 		if (failMsgNode && data.length == 0) {
-			failMsgNode.innerHTML = "No more cards in <br>#" + current_tag + " feed";
+			var trendingBtn = document.createElement('div'),
+				orMsg = document.createElement('div'),
+				surfATagMsg = document.createElement('div'),
+				tagSuggestions = document.createElement('div'),
+				numberOfTags = 5;
+			trendingBtn.className = 'trending-returnbtn pointer';
+			trendingBtn.innerHTML = "<img src='/img/trending_icon_blue.png'>Return to <span class='blue'>#trending</span>";	
+			failMsgNode.innerHTML = "<div class='fail-msg'>No more cards in <br>#" + current_tag + " feed...</div>";
+			orMsg.className = "fail-msg";
+			orMsg.id = "or-msg";
+			orMsg.innerHTML = "or";
+			tagSuggestions.className = "taglist";
+			surfATagMsg.className = "fail-msg";
+			surfATagMsg.id = "surf-msg";
+			surfATagMsg.innerHTML = "Surf a popular tag";
+			gesture.listen("down", trendingBtn, function() {
+				trendingBtn.classList.add("active-trending-returnbtn");
+				trendingBtn.firstChild.src = "/img/trending_icon_gray.png";
+			});
+			gesture.listen("up", trendingBtn, function() {
+				trendingBtn.classList.remove("active-trending-returnbtn");
+				trendingBtn.firstChild.src = "/img/trending_icon_blue.png";
+				if(isAuthorized())
+					window.location = "http://" + document.location.host + '/feed';
+				else
+					autocomplete.tapTag("trending", "autocomplete", false);
+			});
+			for(var i = 0; i < numberOfTags; i++) {
+				if (autocomplete.data[i]["name"] == "trending") {
+					++numberOfTags;
+					continue;
+				}
+				else {
+					tagCard(autocomplete.data[i]["name"], tagSuggestions);
+				}
+			}
 			failMsgNode.parentNode.removeChild(failMsgNode.nextSibling);
-		} else {
+			failMsgNode.parentNode.appendChild(trendingBtn);
+			failMsgNode.parentNode.appendChild(orMsg);
+			failMsgNode.parentNode.appendChild(surfATagMsg);
+			failMsgNode.parentNode.appendChild(tagSuggestions);
+		} 
+		else {
 			slideContainer.innerHTML = "";
 			buildCard(zIndex);
 		}
