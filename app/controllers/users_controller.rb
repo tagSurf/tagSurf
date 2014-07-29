@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
 
-  layout 'client'
+  layout 'login'
 
   def update
     current_user.update_columns(completed_feature_tour: update_user_params[:confirm_feature_tour])

@@ -34,49 +34,7 @@ class ClientController < ApplicationController
     else 
       redirect_to user_session_path
     end
-  end
-
-  # !!! Deprecated !!!
-  # Beta access post requests
-  # Multi-setp form throug POST requests
-
-  # Step one
-  def confirm_beta_token
-    code = AccessCode.where(code: beta_code_params[:access_code]).first
-    if code && code.valid_code?
-      redirect_to "/terms?code=#{code.code}&d_accept=true"
-    else
-      flash[:error] = ["Invalid beta code."]
-      redirect_to :root
-    end
-  end
-
-  # Step two
-  def terms_agreement
-    code = AccessCode.where(code: beta_code_params[:access_code]).first.code
-    terms = beta_code_params[:t_accept] 
-    email = beta_code_params[:email]
-
-    unless email.present?
-      flash[:error] = ["Enter an email to continue."] 
-      redirect_to "/terms?code=#{code}&d_accept=true"
-      return
-    end
-
-    if User.where(email: email).exists?
-      flash[:error] = ["Email address already registered."]
-      redirect_to "/terms?code=#{code}&d_accept=true"
-      return
-    end
-    
-    if terms == 'true' and code.present? and email.present?
-      redirect_to "/sign-up?code=#{code}&d_accept=true&t_accept=true&email=#{email}"
-    else
-      redirect_to "/terms?code=#{code}&d_accept=true", error: 'Please enter your email.'
-    end
-  end
-
-  ### End beta access 
+  end 
 
   # Static application
   def trending; end
