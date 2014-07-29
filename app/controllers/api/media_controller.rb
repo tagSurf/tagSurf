@@ -74,6 +74,40 @@ class Api::MediaController < Api::BaseController
     end
   end
 
+  def report
+    media = Media.find params[:media_id]
+    media.update_column "reported", true
+    SendReportedNotification.perform_async(current_user.id, media.id)
+    if media.reported?
+      render json: {success: true, media: media}, status: :ok
+    else
+      render json: {errors: "something went wrong"}, status: :unprocessible_entity
+    end
+  end
+
+  def remove_report
+    if current_user and current_user.admin?
+      media = Media.unscoped.find(params[:media_id])
+      media.update_column "reported", false
+
+      if params[:nsfw]
+        media.update_column "nsfw", true
+      end
+
+      if media.reported == false
+        flash[:notice] = "Media #{params[:media_id]} unreported"
+        redirect_to '/feed'
+      else
+        flash[:error] = "Could not report because of error"
+        redirect_to '/feed'
+      end
+
+    else
+      flash[:error] = "not authorized"
+      redirect_to '/feed'
+    end
+
+  end
 
   private
 

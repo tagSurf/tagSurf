@@ -15,10 +15,10 @@ var carousel =
 			"#carousel": function() {
 				return "height: " + window.innerHeight + "px; width: " + window.innerWidth + "px";
 			},
-			".carousel_container": function() {
+			".carousel-container": function() {
 				return "width: " + (5 * window.innerWidth) + "px";
 			},
-			".carousel_image_container": function() {
+			".carousel-image-container": function() {
 				return "width: " + window.innerWidth + "px";
 			}
 		});
@@ -27,10 +27,10 @@ var carousel =
 			circlesContainer = document.createElement('div'),
 			nextButton = document.createElement('div');
 		carousel.view.id = "carousel";
-		container.className = "carousel_container";
-		orderIndication.className = "carousel_order_indicator";
-		nextButton.id = "next_button";
-		nextButton.className = "advnc_tutorial_btn";
+		container.className = "carousel-container";
+		orderIndication.className = "carousel-order-indicator";
+		nextButton.id = "next-button";
+		nextButton.className = "advnc-tutorial-btn";
 		nextButton.innerHTML = "Next";
 		gesture.listen("tap", nextButton, carousel.nextButtonCallback);
 		orderIndication.appendChild(circlesContainer);
@@ -66,16 +66,16 @@ var carousel =
 				carousel.setEndButton();
 				carousel.swipeCallback("left");
 			}
-			carousel.activeCircle.classList.remove('active_circle');
-			carousel.activeCircle.nextSibling.classList.add('active_circle');
+			carousel.activeCircle.classList.remove('active-circle');
+			carousel.activeCircle.nextSibling.classList.add('active-circle');
 			carousel.activeCircle = carousel.activeCircle.nextSibling;
 			carousel.current_card+=1;
 		 }
 		 if (direction == "right" &&
 			carousel.activeCircle.previousSibling)
 		 {
-			carousel.activeCircle.classList.remove('active_circle');
-			carousel.activeCircle.previousSibling.classList.add('active_circle');
+			carousel.activeCircle.classList.remove('active-circle');
+			carousel.activeCircle.previousSibling.classList.add('active-circle');
 			carousel.activeCircle = carousel.activeCircle.previousSibling;
 			carousel.current_card-=1;
 		 }
@@ -86,15 +86,15 @@ var carousel =
 		for (index in carousel.images)
 		{
 			container = document.createElement('div');
-			container.className = "carousel_image_container";
+			container.className = "carousel-image-container";
 			image = new Image();
 			image.src = carousel.images[index];
 			container.appendChild(image);
 			circle = document.createElement('div');
-			circle.className = "indicator_circle";
+			circle.className = "indicator-circle";
 			if (index == 0)
 			{
-				circle.className +=  " active_circle";
+				circle.className +=  " active-circle";
 				carousel.activeCircle = circle;
 			}
 			carousel.view.firstChild.appendChild(container);
@@ -134,6 +134,7 @@ var carousel =
 	nextButtonCallback: function(){
 		if (carousel.endButton) {
 			carousel.off();
+			analytics.track('Completed Tutorial');
 			document.forms[0].submit();
 		} 
 		else if ((carousel.current_card+1)==(carousel.total_cards-1)) {
@@ -147,7 +148,7 @@ var carousel =
 		};
 	},
 	setEndButton: function(){
-		document.getElementById("next_button").innerHTML = "Got it!";
+		document.getElementById("next-button").innerHTML = "Got it!";
 		carousel.endButton = true;
 	},
 	// upCallback: function ()

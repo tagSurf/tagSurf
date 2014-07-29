@@ -53,6 +53,11 @@ class Api::TagsController < Api::BaseController
       # Set tagging on media
       @media = Media.find tag_params[:media_id]
       @media.tag_list.add @tag
+
+      if @tag == "NSFW"
+        @media.nsfw = true
+      end
+
       @media.save! 
 
       if tag_params[:vote].present?

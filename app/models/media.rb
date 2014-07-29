@@ -11,6 +11,7 @@ class Media < ActiveRecord::Base
   validates_uniqueness_of :remote_id, :image_link_original
 
   default_scope { where(ts_type: 'content') }
+  default_scope { where(reported: false) }
 
   # Imgur specific
   before_create :resize_image_links
@@ -93,15 +94,18 @@ class Media < ActiveRecord::Base
     n = options[:limit].nil? ?  20 : options[:limit].to_i
     id = options[:id].to_i
        
-    return [] if Tag.blacklisted?(tag)
+    if user.try(:safe_mode)
+      return [] if Tag.blacklisted?(tag)
+    end
+
     @media = Media.all
 
     # Media available for non-authed preview
     if user.nil?
       if tag == 'trending'
-        @media  = @media.where(viral: true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
+        @media  = @media.where(viral: true, nsfw: false).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
       else
-        @media = @media.tagged_with(tag, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')  
+        @media = @media.where(nsfw: false).tagged_with(tag, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')  
         if @media.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
@@ -117,7 +121,7 @@ class Media < ActiveRecord::Base
 
       if tag == 'trending'
         staffpick_ids = @media.tagged_with('StaffPicks').pluck(:id)
-        viral_ids = @media.where(viral: true).pluck(:id)
+        viral_ids = @media.where(viral: true, nsfw: false).pluck(:id)
 
         # Remove media which the user has voted on
         staffpick_ids = staffpick_ids - has_voted_ids
@@ -138,10 +142,19 @@ class Media < ActiveRecord::Base
             @media =  @media.where('id in (?)', staffpick_ids).limit(n).order('ts_score DESC NULLS LAST')
           end
         else
-          @media = @media.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
+          if user.safe_mode? 
+            @media = @media.where('id not in (?) and viral and not nsfw', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
+          else
+            @media = @media.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
+          end
         end
       else
-        @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+        if user.safe_mode?
+          @media = Media.where('media.id not in (?) and not nsfw', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+        else
+          @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+        end
+    
         if @media.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
@@ -184,7 +197,6 @@ class Media < ActiveRecord::Base
 
     if tagged
       tagged.each do |obj|
-        next if obj["nsfw"].to_s == 'true'
         next if obj['is_album'].to_s == 'true'
         media = Media.create({
           remote_id: obj['id'],
@@ -192,6 +204,7 @@ class Media < ActiveRecord::Base
           remote_created_at: obj['datatime'],
           image_link_original: obj['link'],
           viral: false,
+          nsfw:  obj["nsfw"],
           title: obj['title'],
           description: obj['description'],
           content_type: obj['type'],
@@ -207,7 +220,13 @@ class Media < ActiveRecord::Base
           section: obj['section'],
           delete_hash: obj['deletehash']
         })
-        media.tag_list.add(media.section)
+
+        if obj["nswf"] == 'true'
+          media.tag_list.add(media.section, 'NSFW')
+        else
+          media.tag_list.add(media.section)
+        end
+
         media.save
       end
     else
@@ -219,13 +238,14 @@ class Media < ActiveRecord::Base
     response = RemoteResource.viral_feed
     fresh_list = response.parsed_response["data"]
     fresh_list.each do |obj|
-      if obj['is_album'].to_s == 'false' and obj['nsfw'].to_s == 'false'
+      if obj['is_album'].to_s == 'false'
         media = Media.create({
           remote_id: obj['id'],
           remote_provider: 'imgur',
           remote_created_at: obj['datatime'],
           image_link_original: obj['link'],
           viral: true,
+          nsfw: obj["nsfw"],
           title: obj['title'],
           description: obj['description'],
           content_type: obj['type'],
@@ -242,7 +262,12 @@ class Media < ActiveRecord::Base
           delete_hash: obj['deletehash']
         })
 
-        media.tag_list.add(media.section, 'trending')
+        if obj['nsfw'] == 'true'
+          media.tag_list.add(media.section, 'trending', 'NSFW')
+        else
+          media.tag_list.add(media.section, 'trending')
+        end
+
         media.save
       end
     end
