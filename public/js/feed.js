@@ -1,17 +1,15 @@
+var appCache = window.applicationCache;
+if(!(appCache.status == 3))
+	appCache.update();
+appCache.onupdateready = function (e) {
+	appCache.swapCache();
+	window.location.reload();
+}
+
 var castVote = function(card) {
 	xhr("/api/votes/" + card.user_stats.vote + "/" + card.id
 		+ "/tag/" + card.user_stats.tag_voted, "POST", null, null);
 };
-
-var appCache = window.applicationCache;
-
-appCache.update();
-
-appCache.onupdateready = function (e) {
-	appCache.swapCache();
-	console.log('appCache updated');
-    window.location.reload();
-}
 
 onload = function ()
 {

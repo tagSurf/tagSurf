@@ -1,6 +1,6 @@
 class SessionsController < Devise::SessionsController
   
-  layout 'client'
+  layout 'login'
 
   def create
     self.resource = warden.authenticate!(auth_options)
