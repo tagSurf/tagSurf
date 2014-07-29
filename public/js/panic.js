@@ -15,6 +15,7 @@ var panic = {
 		panicMessage.innerHTML = "Is this card too much for you?";
 		panicButton.innerHTML = "Get this card away from me!";
 		gesture.listen("tap", panicButton, function() {
+			xhr("/api/media/" + panic.data.id + "/reported", "POST");
 			panic.cb && panic.cb();
 			panic.close();
 		});
