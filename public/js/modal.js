@@ -5,7 +5,8 @@ var modal = {
 	topModal: document.createElement("div"),
 	zoom: document.createElement("div"),
 	constants: {
-		zoomScale: 1.5
+		zoomScale: 1.5,
+		zoomMax: 3
 	},
 	trans: {
 		animating: false,
@@ -294,9 +295,13 @@ var modal = {
 	},
 	pinchZoom: function (normalizedDistance) {
 		if (!modal.zoom.zoomed) return;
-		var baseWidth = modal.zoom.large ? (modal.constants.zoomScale
-			* modal.zoom.firstChild.firstChild.clientWidth) : window.innerWidth;
-		modal.zoomToWidth(baseWidth * Math.min(normalizedDistance, 3), true);
+		var zNode = modal.zoom.firstChild.firstChild;
+		if (normalizedDistance) {
+			modal.zoom.current = modal.zoom.current || zNode.clientWidth;
+			modal.zoomToWidth(modal.zoom.current * Math.min(normalizedDistance,
+				modal.constants.zoomMax), true);
+		} else
+			modal.zoom.current = zNode.clientWidth;
 	}
 };
 modal.build();

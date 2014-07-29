@@ -138,6 +138,9 @@ var gesture = {
 		var timeDiff = Date.now() - v.startTime;
 		v.active = !!(e.touches && e.touches.length);
 
+		if (e.touches.length == 1) // multitouch ended
+			gesture.triggerPinch(node);
+
 		if (!v.active) { // last finger raised
 			if ( (timeDiff < t.swipe.maxTime)
 				&& (diff.distance > t.swipe.minDistance) ) // swipe
