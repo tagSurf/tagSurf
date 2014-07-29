@@ -358,6 +358,28 @@ a {
    -webkit-transform-style: flat;
    perspective: 1000;
 }
+#panic-button
+{
+  -webkit-transition: opacity 250ms;
+  transition: opacity 250ms;
+  opacity: 0;
+  z-index: 15;
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  width: 50px;
+  padding: 10px;
+  pointer-events: none;
+}
+#panic-icon
+{
+  width: 30px;
+}
+.panic-active
+{
+  opacity: 1 !important;
+  pointer-events: initial !important;
+}
 #share-button
 {
   -webkit-transition: opacity 250ms;
