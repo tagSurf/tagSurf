@@ -202,12 +202,14 @@ var gesture = {
 			var e = node.listeners = gesture.eWrap(node);
 			for (var evName in gesture.events)
 				node.addEventListener(gesture.events[evName], e[evName]);
+			node.gvars = JSON.parse(JSON.stringify(gesture._vars));
+		}
+		if (eventName == "pinch") {
 			var _e = gesture.gWrap(node);
 			for (var evName in gesture.gevents)
 				node.addEventListener(gesture.gevents[evName], _e[evName], false);
 			for (var k in _e)
-				e[k] = _e[k];
-			node.gvars = JSON.parse(JSON.stringify(gesture._vars));
+				node.listeners[k] = _e[k];
 		}
 		node.gvars.stopPropagation = stopPropagation;
 		node.gvars.preventDefault = preventDefault;
