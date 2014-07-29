@@ -127,7 +127,7 @@ html, body
   border-radius: 8px;
   color: black;
 }
-#autocomplete div
+#autocomplete div div
 {
   padding-left: 20px;
 }

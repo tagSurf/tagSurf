@@ -330,7 +330,7 @@ a {
   overflow-y: scroll;
   -webkit-transition: height 300ms ease-out;
 }
-.autocomplete div
+.autocomplete div div
 {
   padding: 5px;
 }
