@@ -383,14 +383,11 @@ var setResizeCb = function(cb) {
   resizeCb = cb;
 };
 setMaxCardHeight();
-var lastHeight = window.innerHeight,
-  lastWidth = window.innerWidth;
+var lastWidth = window.innerWidth;
 window.onresize = function() {
-  if (lastWidth == window.innerWidth
-    && lastHeight == window.innerHeight)
+  if (lastWidth == window.innerWidth)
     return;
   lastWidth = window.innerWidth;
-  lastHeight = window.innerHeight;
   setMaxCardHeight();
   addedCss.forEach(addCss);
   resizeCb && resizeCb();
