@@ -37,6 +37,11 @@ var gesture = {
 		stopPropagation: false,
 		preventDefault: false
 	},
+	gevents: {
+		GestureStart: "gesturestart",
+		GestureChange: "gesturechange",
+		GestureEnd: "gestureend"
+	},
 	events: isMobile() && {
 		Start: "touchstart",
 		Stop: "touchend",
@@ -78,11 +83,20 @@ var gesture = {
 		return d;
 	},
 	pinchDiff: function(e) {
-		return gesture.getDiff(gesture.getPos(e.touches[0]),
-			gesture.getPos(e.touches[1]));
+		return isIos() ? e.scale : 
+			gesture.getDiff(gesture.getPos(e.touches[0]), 
+				gesture.getPos(e.touches[1]));
 	},
 	isMulti: function(e) {
 		return isMobile() && e.touches.length > 1;
+	},
+	onGestureStart: function(e, node) {
+	},
+	onGestureChange: function(e, node) {
+		var _diff = e.scale, pinchDifference = _diff;
+		gesture.triggerPinch(node, pinchDifference);
+	},
+	onGestureEnd: function(e, node) {
 	},
 	onStart: function(e, node) {
 		var t = gesture.thresholds;
@@ -155,6 +169,15 @@ var gesture = {
 				diff.distance, diff.x, diff.y);
 		}
 	},
+	gWrap: function(node) {
+		var e = {};
+		['GestureStart', 'GestureChange', 'GestureEnd'].forEach(function(eName) {
+			e[eName] = function(_e) {
+				return gesture['on' + eName](_e, node) || false;
+			};
+		});
+		return e;
+	},
 	eWrap: function(node) {
 		var e = {};
 		['Start', 'Stop', 'Move'].forEach(function(eName) {
@@ -175,6 +198,11 @@ var gesture = {
 			var e = node.listeners = gesture.eWrap(node);
 			for (var evName in gesture.events)
 				node.addEventListener(gesture.events[evName], e[evName]);
+			var _e = gesture.gWrap(node);
+			for (var evName in gesture.gevents)
+				node.addEventListener(gesture.gevents[evName], _e[evName], false);
+			for (var k in _e)
+				e[k] = _e[k];
 			node.gvars = JSON.parse(JSON.stringify(gesture._vars));
 		}
 		node.gvars.stopPropagation = stopPropagation;
