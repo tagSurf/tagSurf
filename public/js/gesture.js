@@ -158,11 +158,11 @@ var gesture = {
 	eWrap: function(node) {
 		var e = {};
 		['Start', 'Stop', 'Move'].forEach(function(eName) {
-			e[eName] = function(e) {
-				node.gvars.preventDefault && e.preventDefault();
-				node.gvars.stopPropagation && e.stopPropagation();
-				return gesture['on' + eName](e, node) || (gesture.preventDefault 
-					&& e.preventDefault()) || e.stopPropagation() || false;
+			e[eName] = function(_e) {
+				node.gvars.preventDefault && _e.preventDefault();
+				node.gvars.stopPropagation && _e.stopPropagation();
+				return gesture['on' + eName](_e, node) || (gesture.preventDefault 
+					&& _e.preventDefault()) || _e.stopPropagation() || false;
 			};
 		});
 		if (gesture.events.Cancel)
