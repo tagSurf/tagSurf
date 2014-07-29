@@ -242,12 +242,12 @@ var populateNavbar = function () {
     slideAddBar();
     addCallback && addCallback(newtag);
   };
+  fadeInBody();
   addCss({
     "#add-tag-autocomplete": function() {
-      return "width: " + (tag_adder.firstChild.clientWidth - 10) + "px";
+      return "width: " + tag_adder.firstChild.clientWidth + "px";
     }
   });
-  fadeInBody();
   autocomplete.register("add-tag-autocomplete", tag_adder.firstChild, {
     enterCb: function() {
       autocomplete.tapTag(tag_adder.firstChild.value.slice(1),
