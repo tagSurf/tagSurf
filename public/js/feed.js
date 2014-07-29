@@ -706,7 +706,9 @@ onload = function ()
 	var expandTimeout;
 	var setSlider = function(s) {
 		slider = s || slideContainer.firstChild.firstChild;
-		setCurrentMedia(slider.card, forgetReminder);
+		setCurrentMedia(slider.card, forgetReminder, function() {
+			swipeSlider("left");
+		});
 		if (expandTimeout) {
 			clearTimeout(expandTimeout);
 			expandTimeout = null;

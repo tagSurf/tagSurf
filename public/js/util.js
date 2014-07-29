@@ -342,18 +342,20 @@ var starCallback, setStarCallback = function(cb) {
 var addCallback, setAddCallback = function(cb) {
   addCallback = cb;
 };
-var currentMedia, checkShare = function(shareCb) {
+var currentMedia, checkShare = function(shareCb, panicCb) {
   var d = currentMedia;
-  if (d && d.type == "content")
+  if (d && d.type == "content") {
     share.on(d, shareCb);
-  else {
+    panicCb && panic.on(d, panicCb);
+  } else {
     share.off();
+    panic.off();
     if (addBarSlid)
       slideAddBar();
   }
-}, setCurrentMedia = function(d, shareCb) {
+}, setCurrentMedia = function(d, shareCb, panicCb) {
   currentMedia = d;
-  checkShare(shareCb);
+  checkShare(shareCb, panicCb);
 };
 var _addCss = function(css) {
     var n = document.createElement("style");
