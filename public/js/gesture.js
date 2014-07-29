@@ -108,9 +108,10 @@ var gesture = {
 			clearTimeout(v.tapTimeout);
 			v.tapTimeout = null;
 		}
-		if (gesture.isMulti(e))
-			v.firstPinch = gesture.pinchDiff(e);
-		else {
+		if (gesture.isMulti(e)) {
+			if (isAndroid())
+				v.firstPinch = gesture.pinchDiff(e);
+		} else {
 			v.holdInterval = setInterval(function() {
 				if (!v.active || (t.hold.maxDistance && (t.hold.maxDistance <
 					gesture.getDiff(v.startPos, v.lastPos).distance))) {
@@ -164,7 +165,7 @@ var gesture = {
 			var pos = gesture.getPos(e);
 			var diff = gesture.getDiff(v.lastPos, pos);
 			v.lastPos = pos;
-			if (gesture.isMulti(e))
+			if (gesture.isMulti(e) && isAndroid())
 				gesture.triggerPinch(node,
 					gesture.pinchDiff(e).distance / v.firstPinch.distance);
 			return gesture.triggerDrag(node, diff.direction,
