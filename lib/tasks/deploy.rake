@@ -137,7 +137,7 @@ namespace :deploy do
 
     # puts "Updating appCache"
     # system "grep '# v' ./public/tagsurf.appcache"
-    # system "sed 's/v1/v2' ./public/tagsurf.appcache > ./public/tagsurf.appcache1"
+    # system "sed 's/v1/v2/' ./public/tagsurf.appcache > ./public/tagsurf.appcache1"
     # system "rm ./public/tagsurf.appcache"
     # system "mv ./public/tagsurf.appcache1 ./public/tagsurf.appcache"
     # system "git commit --no-verify -a -m 'Increment appCache versioning'"
