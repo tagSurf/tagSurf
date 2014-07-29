@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# v1 - 2014-07-28
+# v9 - 2014-07-28
 
 /img/add_icon_blue.png
 /img/add_icon_fill.png
@@ -47,13 +47,38 @@ CACHE MANIFEST
 /img/ts_logo_gray.png
 /img/ts_logo_horiz_gray.png
 /img/ts_logo_stacked_gray.png
-/img/ts_logo_stacked_gray2x.png
+/img/ts_logo_stacked_gray2x.jpg
 /img/ts_splash_screen.png
 /img/clearscreen.png
 /img/reminder_left_desktop.png
 /img/reminder_right_desktop.png
 /img/reminder_left_mobile.png
-/img/remdinder_right_mobile.png
+/img/reminder_right_mobile.png
+/css/beta.css
+/css/carousel.css
+/css/feed.css
+/css/gallery.css
+/css/login.css
+/css/navbar.css
+/css/notifications.css
+/css/style.css
+/js/autocomplete.js
+/js/carousel.js
+/js/drag.js
+/js/feed.js
+/js/gallery.js
+/js/gesture.js
+/js/global.js
+/js/image.js
+/js/modal.js
+/js/share.js
+/js/throbber.js
+/js/tos_pp.js
+/js/util.js
+/js/welcome.js
+http://fonts.googleapis.com/css?family=Raleway:100,200,300,500
+
 
 NETWORK:
-/api
+/api/*
+*

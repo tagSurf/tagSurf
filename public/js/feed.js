@@ -3,6 +3,15 @@ var castVote = function(card) {
 		+ "/tag/" + card.user_stats.tag_voted, "POST", null, null);
 };
 
+var appCache = window.applicationCache;
+
+appCache.update();
+
+appCache.onupdateready = function (e) {
+	appCache.swapCache();
+	console.log('appCache updated');
+    window.location.reload();
+}
 
 onload = function ()
 {
