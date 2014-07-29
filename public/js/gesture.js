@@ -93,8 +93,7 @@ var gesture = {
 	onGestureStart: function(e, node) {
 	},
 	onGestureChange: function(e, node) {
-		var _diff = e.scale, pinchDifference = _diff;
-		gesture.triggerPinch(node, pinchDifference);
+		gesture.triggerPinch(node, Math.pow(e.scale, (1/6)));
 	},
 	onGestureEnd: function(e, node) {
 	},
@@ -176,6 +175,8 @@ var gesture = {
 		var e = {};
 		['GestureStart', 'GestureChange', 'GestureEnd'].forEach(function(eName) {
 			e[eName] = function(_e) {
+				_e.preventDefault();
+				_e.stopPropagation();
 				return gesture['on' + eName](_e, node) || false;
 			};
 		});
