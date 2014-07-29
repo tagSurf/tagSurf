@@ -9,15 +9,18 @@ var panic = {
 		panic._buildButton();
 	},
 	_buildContent: function () {
-		var panicBlurb = document.createElement("div"),
+		var panicMessage = document.createElement("div"),
 			panicButton = document.createElement("button");
-		panicBlurb.innerHTML = "Is this card too much for you?";
+		panicMessage.className = "really-big share-heading-margin";
+		panicMessage.innerHTML = "Is this card too much for you?";
 		panicButton.innerHTML = "Get this card away from me!";
 		gesture.listen("tap", panicButton, function() {
 			panic.cb && panic.cb();
+			panic.close();
 		});
-		panic.content.appendChild(panicBlurb);
+		panic.content.appendChild(panicMessage);
 		panic.content.appendChild(panicButton);
+		panic.content.className = "centered";
 	},
 	_buildButton: function () {
 		var panicIcon = document.createElement("img");
@@ -25,19 +28,19 @@ var panic = {
 		panicIcon.id = "panic-icon";
 		panic.button.id = "panic-button";
 		gesture.listen("tap", panic.button, function () {
-			if (panic.panicModalOut) {
-				modal.topModalOut();
-				panic.panicModalOut = false;
-			} else {
-				modal.topModalIn(panic.content, function() {
-					modal.topModalOut();
-					panic.panicModalOut = false;
-				});
+			if (panic.panicModalOut)
+				panic.close();
+			else {
+				modal.topModalIn(panic.content, panic.close);
 				panic.panicModalOut = true;
 			}
 		});
 		panic.button.appendChild(panicIcon);
 		document.body.appendChild(panic.button);
+	},
+	close: function() {
+		modal.topModalOut();
+		panic.panicModalOut = false;
 	},
 	on: function (data, cb) {
 		panic.cb = cb;
