@@ -315,7 +315,6 @@ a {
 #add-tag-autocomplete {
   top: 43px;
   left: 20px;
-  padding: 0px 7px;
   border-radius: 4px;
   border: 1px solid #00aeef;
   color: #00aeef;
@@ -332,7 +331,7 @@ a {
 }
 .autocomplete div div
 {
-  padding: 5px;
+  padding: 5px 15px;
 }
 .autocomplete div div:hover
 {
