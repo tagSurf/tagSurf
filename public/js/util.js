@@ -45,6 +45,7 @@ var isAuthorized = function () {
         authorizedSession = true;
         currentUser.id = result.user.id;
         currentUser.email = result.user.email;
+        currentUser.slug = result.user.slug;
         currentUser.admin = result.user.admin;
         currentUser.safeSurf = result.user.safe_mode;
       }
@@ -180,6 +181,8 @@ var buildOptionsTable = function () {
 		if (isAuthorized())
 		{
 			safeSurfCheckbox.firstChild.checked = !safeSurfCheckbox.firstChild.checked;
+      xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
+        JSON.stringify({ safe_mode: safeSurfCheckbox.firstChild.checked }));
 		}
 		else
 		{
@@ -429,13 +432,15 @@ window.onresize = function() {
   resizeCb && resizeCb();
 };
 
-var xhr = function(path, action, cb, eb, async) {
+var xhr = function(path, action, cb, eb, async, payload) {
   var _xhr = new XMLHttpRequest();
   if(DEBUG) 
     console.log("XHR Request. Path: " + path + " action: " + (action || "GET"));
   if (typeof async === "undefined")
     async = true;
   _xhr.open(action || "GET", path, async);
+  if (action == "PATCH")
+    _xhr.setRequestHeader("Content-type", "application/json");
   _xhr.onreadystatechange = function() {
     if (_xhr.readyState == 4) {
       var resp = _xhr.responseText.charAt(0) == "<" ? 
@@ -454,7 +459,7 @@ var xhr = function(path, action, cb, eb, async) {
         cb && cb(resp);
     }
   }
-  _xhr.send();
+  _xhr.send(payload);
 };
 var mod = function(opts) {
   var targets = opts.targets ? opts.targets
