@@ -250,7 +250,7 @@ a.back {
 }
 
 .su-logo-desktop {
-  background-image: url('tagsurf-assets.s3.amazonaws.com/img/ts_logo_stacked_gray.png');
+  background-image: url('/img/ts_logo_stacked_gray.png');
   display:block;
   margin-top: 20px;
   width:210px;

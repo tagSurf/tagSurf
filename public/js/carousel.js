@@ -46,12 +46,12 @@ var carousel =
 		for (index = 1; index <= 6; ++index)
 		{
 			carousel.images.push(
-				'tagsurf-assets.s3.amazonaws.com/img/tutorial/tutorial_' + index + '.png');
+				'/img/tutorial/tutorial_' + index + '.png');
 		}
 		if(isAndroid())
-			carousel.images.push('tagsurf-assets.s3.amazonaws.com/img/tutorial/tutorial_homescreen_android.png');
+			carousel.images.push('/img/tutorial/tutorial_homescreen_android.png');
 		else
-			carousel.images.push('tagsurf-assets.s3.amazonaws.com/img/tutorial/tutorial_homescreen_ios.png');
+			carousel.images.push('/img/tutorial/tutorial_homescreen_ios.png');
 		carousel._populate();
 		//gesture.listen("swipe", carousel.view.firstChild, carousel.swipeCallback);
 		//gesture.listen("up", carousel.view.firstChild, carousel.upCallback);

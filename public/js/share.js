@@ -48,7 +48,7 @@ var share =
 	},
 	_icon: function(network) {
 		var img = document.createElement("img");
-		img.src = "tagsurf-assets.s3.amazonaws.com/img/social_media/" + network + ".png";
+		img.src = "/img/social_media/" + network + ".png";
 		img.className = "share-link-icon";
 		gesture.listen('down', img, function() {
 			window.open(share.networks[network]());
@@ -91,14 +91,14 @@ var share =
 	_buildButton: function ()
 	{
 		var shareIcon = document.createElement('img');
-		shareIcon.src = "tagsurf-assets.s3.amazonaws.com/img/share_icon.png";
+		shareIcon.src = "/img/share_icon.png";
 		shareIcon.id = "share-icon";
 		share.button.id = "share-button";
 		gesture.listen('down', share.button, function () {
-			shareIcon.src = "tagsurf-assets.s3.amazonaws.com/img/share_icon-invert.png";
+			shareIcon.src = "/img/share_icon-invert.png";
 		});
 		gesture.listen('up', share.button, function () {
-			shareIcon.src = "tagsurf-assets.s3.amazonaws.com/img/share_icon.png";
+			shareIcon.src = "/img/share_icon.png";
 		});
 		gesture.listen('tap', share.button, function () {
 			if(share.shareModalOut) {

@@ -9,7 +9,7 @@
 }
 
 .playoverlay {
-	background-image: url('tagsurf-assets.s3.amazonaws.com/img/play.png');
+	background-image: url('/img/play.png');
 	background-size: contain;
 	background-position: center;
 }
