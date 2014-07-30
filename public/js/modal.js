@@ -67,10 +67,7 @@ var modal = {
 		gesture_wrapper.className = "raw-wrapper";
 		gesture_wrapper.style.height = (window.innerHeight - 110) + 'px';
 		modal.zoom.style.zIndex = 11;
-		if(screen.width <1024)
-			modal.zoom.style.height = (window.innerHeight - 50) + 'px';
-		else
-			modal.zoom.style.height = (window.innerHeight - 40) + 'px';
+		modal.zoom.style.height = (window.innerHeight - 40) + 'px';
 		gesture_wrapper.appendChild(zNode);
 		modal.zoom.appendChild(gesture_wrapper);
 		modal.zoom.large = false;
