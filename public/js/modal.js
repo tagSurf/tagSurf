@@ -240,7 +240,6 @@ var modal = {
 		modal.prompt.innerHTML = "";
 		modal.prompt.appendChild(node);
 		modal.prompt.cb = cb || modal.promptOut;
-		modal.backOn();
 		modal.prompt.className = "modal-prompt disabled";
 		setTimeout(function() {
 			modal.prompt.className = "modal-prompt opaque";
@@ -255,7 +254,6 @@ var modal = {
 		modal.prompt.className = "modal-prompt";
 		modal.prompt.cb = null;
 		modal.prompt.style.opacity = 0;
-		modal.backOff();
 		trans(modal.prompt, function (event){
 			modal.prompt.className = "modal-prompt disabled";
 		});
