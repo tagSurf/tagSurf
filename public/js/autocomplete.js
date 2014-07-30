@@ -37,7 +37,7 @@ var autocomplete = {
 		var tlower = tagName.toLowerCase();
 		for (var i = 1; i <= tlower.length; i++)
 			n.className += " " + tlower.slice(0, i);
-		autocomplete.nodes[listName].appendChild(n);
+		autocomplete.nodes[listName].firstChild.appendChild(n);
 		n.onclick = function() {
 			autocomplete.tapTag(tagName, listName);
 		};
@@ -60,8 +60,13 @@ var autocomplete = {
 	register: function(listName, tinput, opts) {
 		opts = opts || {};
 		autocomplete.inputs[listName] = tinput;
-		autocomplete.nodes[listName] = opts.node || document.getElementById(listName);
 		autocomplete.handlers[listName] = opts.tapCb || function() {};
+
+		var n = autocomplete.nodes[listName] = opts.node
+			|| document.getElementById(listName);
+		n.appendChild(document.createElement("div"));
+		drag.makeDraggable(n, { constraint: "horizontal" });
+
 		autocomplete._update(listName);
 		gesture.listen("down", tinput, returnTrue);
 		gesture.listen("up", tinput, function(e) {

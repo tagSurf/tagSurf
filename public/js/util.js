@@ -272,12 +272,12 @@ var populateNavbar = function () {
     slideAddBar();
     addCallback && addCallback(newtag);
   };
+  fadeInBody();
   addCss({
     "#add-tag-autocomplete": function() {
-      return "width: " + (tag_adder.firstChild.clientWidth - 10) + "px";
+      return "width: " + tag_adder.firstChild.clientWidth + "px";
     }
   });
-  fadeInBody();
   autocomplete.register("add-tag-autocomplete", tag_adder.firstChild, {
     enterCb: function() {
       autocomplete.tapTag(tag_adder.firstChild.value.slice(1),
@@ -417,14 +417,11 @@ var setResizeCb = function(cb) {
   resizeCb = cb;
 };
 setMaxCardHeight();
-var lastHeight = window.innerHeight,
-  lastWidth = window.innerWidth;
+var lastWidth = window.innerWidth;
 window.onresize = function() {
-  if (lastWidth == window.innerWidth
-    && lastHeight == window.innerHeight)
+  if (lastWidth == window.innerWidth)
     return;
   lastWidth = window.innerWidth;
-  lastHeight = window.innerHeight;
   setMaxCardHeight();
   addedCss.forEach(addCss);
   resizeCb && resizeCb();
