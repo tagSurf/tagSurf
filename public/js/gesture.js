@@ -36,7 +36,8 @@ var gesture = {
 		firstPinch: null,
 		stopPropagation: false,
 		preventDefault: false,
-		iosPinch: false
+		iosPinch: false,   // is ready to pinch
+		iosPinching: false // is currently pinching
 	},
 	gevents: {
 		GestureStart: "gesturestart",
@@ -98,6 +99,7 @@ var gesture = {
 	},
 	onGestureEnd: function(e, node) {
 		gesture.triggerPinch(node);
+		node.gvars.iosPinching = false;
 	},
 	onStart: function(e, node) {
 		var t = gesture.thresholds;
@@ -113,6 +115,8 @@ var gesture = {
 		if (gesture.isMulti(e)) {
 			if (isAndroid())
 				v.firstPinch = gesture.pinchDiff(e);
+			else
+				v.iosPinching = true;
 		} else {
 			v.holdInterval = setInterval(function() {
 				if (!v.active || (t.hold.maxDistance && (t.hold.maxDistance <
@@ -143,7 +147,7 @@ var gesture = {
 		if (e.touches && e.touches.length == 1) // multitouch ended
 			gesture.triggerPinch(node);
 
-		if (!v.active) { // last finger raised
+		if (!v.active && !v.iosPinching) { // last finger raised
 			if ( (timeDiff < t.swipe.maxTime)
 				&& (diff.distance > t.swipe.minDistance) ) // swipe
 				gesture.triggerSwipe(node, diff.direction,
