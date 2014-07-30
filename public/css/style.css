@@ -224,7 +224,7 @@ a {
 
 .tslogo {
   display: block;
-  background-image: url('/img/ts_logo_stacked_gray.png');
+  background-image: url('tagsurf-assets.s3.amazonaws.com/img/ts_logo_stacked_gray.png');
   background-size: cover;
   width:210px;
   height:241px;

@@ -5,7 +5,7 @@ var throbber =
 	_build: function ()
 	{
 		
-		throbber.gif.src = "/img/spin_throbber.gif";
+		throbber.gif.src = "tagsurf-assets.s3.amazonaws.com/img/spin_throbber.gif";
 		throbber.gif.className = "throbber";
 		throbber.gif.onload = function() {
 			throbber.gif.style['left'] = ((window.innerWidth - throbber.gif.offsetWidth) / 2) + "px";
