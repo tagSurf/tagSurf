@@ -171,7 +171,9 @@ var buildOptionsTable = function () {
 	safeSurfCheckbox.innerHTML = 
 		'<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
 		((currentUser && currentUser.safeSurf) ? " checked" : "") +
-		'> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label>';
+		'> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> <div class="onoffswitch-cover" style="display:' +
+
+		(isAuthorized() ? 'none' : 'block') + ';"></div>';
 	safeSurfText.innerHTML = "Safe Surf";
 	safeSurfText.className = "option-key-text";
 	gesture.listen('down', safeSurfCheckbox, function () {
