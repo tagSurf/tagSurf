@@ -675,9 +675,21 @@ a {
 .onoffswitch-checkbox {
 	display: none;
 }
-.onoffswitch-label {
+.onoffswitch-label,
+.onoffswitch-cover {
 	display: block; overflow: hidden; cursor: pointer;
 	border: 2px solid #666666; border-radius: 30px;
+}
+.onoffswitch-cover {
+	display: none;
+	position: absolute;
+	z-index: 2;
+	background-color: rgba(0,0,0,.7);
+	border: 2px solid rgba(0,0,0,.7);
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
 }
 .onoffswitch-inner {
 	display: block; width: 200%; margin-left: -100%;
