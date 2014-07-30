@@ -46,6 +46,7 @@ var isAuthorized = function () {
         currentUser.id = result.user.id;
         currentUser.email = result.user.email;
         currentUser.admin = result.user.admin;
+        currentUser.safeSurf = result.user.safe_mode;
       }
       else
         authorizedSession = false;
@@ -158,6 +159,35 @@ var fadeInBody = function() {
         + "opacity: 1;";
     }
   });
+};
+var buildOptionsTable = function () {
+	var optionsTable = document.createElement('table'),
+		safeSurfRow = optionsTable.insertRow(0),
+		safeSurfTextCell = safeSurfRow.insertCell(0),
+		safeSurfCheckboxCell = safeSurfRow.insertCell(1),
+		safeSurfText = document.createElement('div'),
+		safeSurfCheckbox = document.createElement('div');
+	optionsTable.style.display = "inline-block";
+	safeSurfCheckbox.innerHTML = 
+		'<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
+		((currentUser && currentUser.safeSurf) ? " checked" : "") +
+		'> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label>';
+	safeSurfText.innerHTML = "Safe Surf";
+	safeSurfText.className = "option-key-text";
+	gesture.listen('down', safeSurfCheckbox, function () {
+		if (isAuthorized())
+		{
+			safeSurfCheckbox.firstChild.checked = !safeSurfCheckbox.firstChild.checked;
+		}
+		else
+		{
+			modal.promptIn(featureBlockContents);
+		}
+	});
+	safeSurfCheckbox.className = 'onoffswitch-container';
+	safeSurfTextCell.appendChild(safeSurfText);
+	safeSurfCheckboxCell.appendChild(safeSurfCheckbox);
+	return optionsTable;
 };
 var populateNavbar = function () {
   var nav = document.getElementById("nav");
@@ -279,11 +309,14 @@ var populateNavbar = function () {
   document.getElementById("options-btn").onclick = function() {
     var n = document.createElement("div");
     n.className = "center-label";
-    var msg = document.createElement("div");
-    msg.innerHTML = "Nothing to see here... yet";
-    msg.className = "options-msg";
+    var title = document.createElement("div");
+    title.innerHTML = "Options";
+    title.className = "options-title";
+    var optionsTable = buildOptionsTable();
+    /*
     var img = document.createElement("img");
     img.src = "/img/throbber.gif";
+    */
     var TOS = document.createElement("div");
     TOS.innerHTML = "<a class='blue bold big-lnk' id='terms-lnk'>Terms of Use</a> | <a class='blue bold big-lnk' id='privacy-lnk'>Privacy Policy</a>";
     TOS.className = "tos-line";
@@ -292,8 +325,9 @@ var populateNavbar = function () {
       modal.backOff();
       modal.modalOut();
     };
-    n.appendChild(msg);
-    n.appendChild(img);
+    n.appendChild(title);
+    n.appendChild(optionsTable);
+    //n.appendChild(img);
     n.appendChild(TOS);
     slideNavMenu(true);
     share.off();
