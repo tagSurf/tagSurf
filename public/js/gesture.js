@@ -97,6 +97,7 @@ var gesture = {
 		gesture.triggerPinch(node, Math.pow(e.scale, (1/3)));
 	},
 	onGestureEnd: function(e, node) {
+		gesture.triggerPinch(node);
 	},
 	onStart: function(e, node) {
 		var t = gesture.thresholds;
