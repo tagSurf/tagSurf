@@ -191,6 +191,14 @@
   border-bottom: 1px solid lightgray;
   font-size: 20px;
 }
+#slide-down-menu li:hover
+{
+  background-color: #00aeef;
+}
+#slide-down-menu li:hover a
+{
+  color: white;
+}
 #slide-down-menu li div
 {
   width: 200px;
