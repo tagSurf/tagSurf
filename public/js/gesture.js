@@ -205,7 +205,7 @@ var gesture = {
 				node.addEventListener(gesture.events[evName], e[evName]);
 			node.gvars = JSON.parse(JSON.stringify(gesture._vars));
 		}
-		if (eventName == "pinch") {
+		if (eventName == "pinch" && isIos()) {
 			var _e = gesture.gWrap(node);
 			for (var evName in gesture.gevents)
 				node.addEventListener(gesture.gevents[evName], _e[evName], false);
