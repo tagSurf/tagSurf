@@ -334,6 +334,11 @@ a {
 {
   padding: 5px;
 }
+.autocomplete div div:hover
+{
+  color: white;
+  background-color: #00aeef;
+}
 .autocomplete-open
 {
   height: 150px !important;
