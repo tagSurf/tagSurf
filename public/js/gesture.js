@@ -35,7 +35,8 @@ var gesture = {
 		stopTimeout: null,
 		firstPinch: null,
 		stopPropagation: false,
-		preventDefault: false
+		preventDefault: false,
+		iosPinch: false
 	},
 	gevents: {
 		GestureStart: "gesturestart",
@@ -208,9 +209,10 @@ var gesture = {
 		if (eventName == "pinch" && isIos()) {
 			var _e = gesture.gWrap(node);
 			for (var evName in gesture.gevents)
-				node.addEventListener(gesture.gevents[evName], _e[evName], false);
+				node.addEventListener(gesture.gevents[evName], _e[evName]);
 			for (var k in _e)
 				node.listeners[k] = _e[k];
+			node.gvars.iosPinch = true;
 		}
 		node.gvars.stopPropagation = stopPropagation;
 		node.gvars.preventDefault = preventDefault;
@@ -223,6 +225,10 @@ var gesture = {
 			var e = node.listeners;
 			for (var evName in gesture.events)
 				node.removeEventListener(gesture.events[evName], e[evName]);
+			if (node.gvars.iosPinch) {
+				for (var evName in gesture.gevents)
+					node.removeEventListener(gesture.gevents[evName], _e[evName]);
+			}
 			for (var eventName in gesture.handlers)
 				if (node.gid in gesture.handlers[eventName])
 					delete gesture.handlers[eventName][node.gid];
