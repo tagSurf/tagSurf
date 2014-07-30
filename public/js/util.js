@@ -265,7 +265,7 @@ var populateNavbar = function () {
     },
     ".autocomplete-open": function() {
       return "height: "
-        + (isDesktop() ? (window.innerHeight - 100) : 150)
+        + (isDesktop() ? (window.innerHeight - 200) : 150)
         + "px !important";
     }
   });
