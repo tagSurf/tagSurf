@@ -206,6 +206,22 @@
   position: relative;
   left: 13px;
 }
+#slide-down-menu li div img:first-child
+{
+  display: inline;
+}
+#slide-down-menu li:hover div img:first-child
+{
+  display: none;
+}
+#slide-down-menu li div img:nth-child(2)
+{
+  display: none;
+}
+#slide-down-menu li:hover div img:nth-child(2)
+{
+  display: inline;
+}
 #slide-down-menu li.slide-active
 {
   background-color: #1dafec;
