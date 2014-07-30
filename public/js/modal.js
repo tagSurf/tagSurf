@@ -72,6 +72,7 @@ var modal = {
 		modal.zoom.appendChild(gesture_wrapper);
 		modal.zoom.large = false;
 		modal.zoom.zoomed = false;
+		modal.zoom.max = modal.constants.zoomMax * window.innerWidth;
 	},
 	_buildPrompt: function () {
 		var prompt_container = document.createElement('div');
@@ -297,8 +298,8 @@ var modal = {
 		var zNode = modal.zoom.firstChild.firstChild;
 		if (normalizedDistance) {
 			modal.zoom.current = modal.zoom.current || zNode.clientWidth;
-			modal.zoomToWidth(modal.zoom.current * Math.min(normalizedDistance,
-				modal.constants.zoomMax), true);
+			modal.zoomToWidth(Math.min(modal.zoom.current * normalizedDistance,
+				modal.zoom.max), true);
 		} else
 			modal.zoom.current = zNode.clientWidth;
 	}
