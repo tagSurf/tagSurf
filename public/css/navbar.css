@@ -191,11 +191,13 @@
   border-bottom: 1px solid lightgray;
   font-size: 20px;
 }
-#slide-down-menu li:hover
+#slide-down-menu li:hover,
+#slide-down-menu li:active
 {
   background-color: #00aeef;
 }
-#slide-down-menu li:hover a
+#slide-down-menu li:hover a,
+#slide-down-menu li:active a
 {
   color: white;
 }
@@ -210,7 +212,8 @@
 {
   display: inline;
 }
-#slide-down-menu li:hover div img:first-child
+#slide-down-menu li:hover div img:first-child,
+#slide-down-menu li:active div img:first-child
 {
   display: none;
 }
@@ -218,7 +221,8 @@
 {
   display: none;
 }
-#slide-down-menu li:hover div img:nth-child(2)
+#slide-down-menu li:hover div img:nth-child(2),
+#slide-down-menu li:active div img:nth-child(2)
 {
   display: inline;
 }
