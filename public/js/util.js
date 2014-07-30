@@ -168,11 +168,11 @@ var buildOptionsTable = function () {
 		safeSurfCheckboxCell = safeSurfRow.insertCell(1),
 		safeSurfText = document.createElement('div'),
 		safeSurfCheckbox = document.createElement('div');
-	optionsTable.style.display = "inline-block";
-	safeSurfCheckbox.innerHTML = 
+  	optionsTable.style.display = "inline-block";
+  	safeSurfCheckbox.innerHTML = 
 		'<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
-		((currentUser && currentUser.safeSurf) ? " checked" : "") +
-		'> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> <div class="onoffswitch-cover" style="display:' +
+      ((currentUser && currentUser.safeSurf || !isAuthorized()) ? " checked" : "") +
+    '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> <div class="onoffswitch-cover" style="display:' +
 
 		(isAuthorized() ? 'none' : 'block') + ';"></div>';
 	safeSurfText.innerHTML = "Safe Surf";
