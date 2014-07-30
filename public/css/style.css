@@ -341,7 +341,6 @@ a {
 }
 .autocomplete-open
 {
-  height: 150px !important;
   overflow-x: hidden;
 }
 .hardware-acceleration, .translate-z

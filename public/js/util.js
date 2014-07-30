@@ -262,6 +262,11 @@ var populateNavbar = function () {
   addCss({
     "#add-tag-autocomplete": function() {
       return "width: " + tag_adder.firstChild.clientWidth + "px";
+    },
+    ".autocomplete-open": function() {
+      return "height: "
+        + (isDesktop() ? (window.innerHeight - 100) : 150)
+        + "px !important";
     }
   });
   autocomplete.register("add-tag-autocomplete", tag_adder.firstChild, {
