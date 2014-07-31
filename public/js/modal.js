@@ -72,7 +72,8 @@ var modal = {
 		modal.zoom.appendChild(gesture_wrapper);
 		modal.zoom.large = false;
 		modal.zoom.zoomed = false;
-		modal.zoom.max = modal.constants.zoomMax * window.innerWidth;
+		modal.zoom.maxWidth = modal.constants.zoomMax * window.innerWidth;
+		modal.zoom.z2width = modal.constants.zoomScale * window.innerWidth;
 	},
 	_buildPrompt: function () {
 		var prompt_container = document.createElement('div');
@@ -95,42 +96,27 @@ var modal = {
 	callBack: function() {
 		return modal.back.cb && modal.back.cb();
 	},
-	zoomToWidth: function(width, noTrans) {
-		var w = width || window.innerWidth;
-		if (w < window.innerWidth)
-			return modal.zoomOut();
-		var zNode = modal.zoom.firstChild.firstChild;
-		!noTrans && trans(zNode, null, "width 250ms ease-in");
-		zNode.style.width = w + "px";
+	zoomToWidth: function(width, fromPinch) {
+		var w = width || window.innerWidth,
+			zNode = modal.zoom.firstChild.firstChild;
+		if (w < window.innerWidth) {
+			modal.zoom.current = window.innerWidth;
+			modal.zoomOut();
+		} else if (w != zNode.clientWidth) {
+			if (!fromPinch) {
+				modal.zoom.current = w;
+				trans(zNode, null, "width 250ms ease-in");
+			}
+			zNode.style.width = w + "px";
+			modal.zoom.large = (w >= modal.zoom.z2width);
+		}
 	},
 	callZoom: function(tapCount) {
-		if (tapCount == 1)
-		{
-			if (modal.zoom.large == false)
-			{
-				return modal.zoom.cb && modal.zoom.cb();
-			}
-			else
-			{
-				modal.zoom.large = false;
-				modal.zoomToWidth();
-				return modal.zoom.cb && modal.zoom.cb();
-			}
-		}
-		else if (tapCount == 2)
-		{
-			if (modal.zoom.large == false)
-			{
-				modal.zoom.large = true;
-				modal.zoomToWidth(modal.constants.zoomScale *
-					modal.zoom.firstChild.firstChild.clientWidth);
-			}
-			else
-			{
-				modal.zoom.large = false;
-				modal.zoomToWidth();
-			}
-		}
+		if (tapCount == 1) {
+			modal.zoomToWidth();
+			return modal.zoom.cb && modal.zoom.cb();
+		} else if (tapCount == 2)
+			modal.zoomToWidth(!modal.zoom.large && modal.zoom.z2width);
 	},
 	_backOn: function(degree, cb, injectionNode, opacity) {
 		if (modal.trans.animating) {
@@ -299,7 +285,7 @@ var modal = {
 		if (normalizedDistance) {
 			modal.zoom.current = modal.zoom.current || zNode.clientWidth;
 			modal.zoomToWidth(Math.min(modal.zoom.current * normalizedDistance,
-				modal.zoom.max), true);
+				modal.zoom.maxWidth), true);
 		} else
 			modal.zoom.current = zNode.clientWidth;
 	}
