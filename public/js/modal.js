@@ -59,21 +59,24 @@ var modal = {
 		var zNode = document.createElement('img'), 
 			gesture_wrapper = document.createElement('div');
 		zNode.className = 'basic-zoom';
-		zNode.style.left = "0px";
-		zNode.style.top = "10px";
-		zNode.style.width = "100%";
-		modal.zoom.style.display = "none";
 		modal.zoom.className = "zoom-wrapper";
 		gesture_wrapper.className = "raw-wrapper";
-		gesture_wrapper.style.height = (window.innerHeight - 110) + 'px';
-		modal.zoom.style.zIndex = 11;
-		modal.zoom.style.height = (window.innerHeight - 40) + 'px';
 		gesture_wrapper.appendChild(zNode);
 		modal.zoom.appendChild(gesture_wrapper);
 		modal.zoom.large = false;
 		modal.zoom.zoomed = false;
-		modal.zoom.maxWidth = modal.constants.zoomMax * window.innerWidth;
-		modal.zoom.z2width = modal.constants.zoomScale * window.innerWidth;
+		addCss({
+			".raw-wrapper": function() {
+				return "height: " + (window.innerHeight - 110) + 'px';
+			},
+			".zoom-wrapper": function() {
+				modal.zoom.maxWidth = modal.constants.zoomMax
+					* window.innerWidth;
+				modal.zoom.z2width = modal.constants.zoomScale
+					* window.innerWidth;
+				return "height: " + (window.innerHeight - 40) + 'px';
+			}
+		});
 	},
 	_buildPrompt: function () {
 		var prompt_container = document.createElement('div');
