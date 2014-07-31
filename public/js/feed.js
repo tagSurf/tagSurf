@@ -61,7 +61,7 @@ onload = function ()
 			leftImage = new Image(), rightImage = new Image();
 		reminderContainer.id = "reminder-container";
 		close.className = "reminder-close";
-		close.src = "/img/Close.png";
+		close.src = "http://assets.tagsurf.co/img/Close.png";
 		closeContainer.appendChild(close);
 		reminderContainer.appendChild(closeContainer);
 		leftImage.id = "reminder-left";
@@ -69,10 +69,10 @@ onload = function ()
 		if(isDesktop()) {
 			var closeInstructions = new Image();
 			closeInstructions.className = "close-instructions block";
-			closeInstructions.src="/img/clearscreen.png";
+			closeInstructions.src="http://assets.tagsurf.co/img/clearscreen.png";
 			reminderContainer.appendChild(closeInstructions);
-			rightImage.src = "/img/reminder_right_desktop.png";
-			leftImage.src = "/img/reminder_left_desktop.png";
+			rightImage.src = "http://assets.tagsurf.co/img/reminder_right_desktop.png";
+			leftImage.src = "http://assets.tagsurf.co/img/reminder_left_desktop.png";
 			addCss({
 				"#reminder-left": function() {
 					return "width: 18%; top: 20%";
@@ -83,8 +83,8 @@ onload = function ()
 			});
 		}
 		else {
-			leftImage.src = "/img/reminder_left_mobile.png";	
-			rightImage.src = "/img/reminder_right_mobile.png";
+			leftImage.src = "http://assets.tagsurf.co/img/reminder_left_mobile.png";	
+			rightImage.src = "http://assets.tagsurf.co/img/reminder_right_mobile.png";
 		}
 		reminderContainer.appendChild(leftImage);
 		reminderContainer.appendChild(rightImage);
@@ -136,7 +136,7 @@ onload = function ()
 				tagSuggestions = document.createElement('div'),
 				numberOfTags = 5;
 			trendingBtn.className = 'trending-returnbtn pointer';
-			trendingBtn.innerHTML = "<img src='/img/trending_icon_blue.png'>Return to <span class='blue'>#trending</span>";	
+			trendingBtn.innerHTML = "<img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>Return to <span class='blue'>#trending</span>";	
 			failMsgNode.innerHTML = "<div class='fail-msg'>No more cards in <br>#" + current_tag + " feed...</div>";
 			orMsg.className = "fail-msg";
 			orMsg.id = "or-msg";
@@ -147,11 +147,11 @@ onload = function ()
 			surfATagMsg.innerHTML = "Surf a popular tag";
 			gesture.listen("down", trendingBtn, function() {
 				trendingBtn.classList.add("active-trending-returnbtn");
-				trendingBtn.firstChild.src = "/img/trending_icon_gray.png";
+				trendingBtn.firstChild.src = "http://assets.tagsurf.co/img/trending_icon_gray.png";
 			});
 			gesture.listen("up", trendingBtn, function() {
 				trendingBtn.classList.remove("active-trending-returnbtn");
-				trendingBtn.firstChild.src = "/img/trending_icon_blue.png";
+				trendingBtn.firstChild.src = "http://assets.tagsurf.co/img/trending_icon_blue.png";
 				if(isAuthorized())
 					window.location = "http://" + document.location.host + '/feed';
 				else
@@ -381,6 +381,7 @@ onload = function ()
 	};
 	var upCallback = function (androidSoftUp)
 	{
+		if (modal.zoom.zoomed) return;
 		toggleClass.apply(slider,['super-card', 'off']);
 		slider.supering = false;
 		if (slider.animating == false)
@@ -554,6 +555,7 @@ onload = function ()
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
+		if (modal.zoom.zoomed) return;
 		if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
 			gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
 		else if (!slider.animating && (direction == "left" || direction == "right")) {
@@ -583,6 +585,7 @@ onload = function ()
 	};
 	var dragCallback = function (direction, distance, dx, dy)
 	{
+		if (modal.zoom.zoomed) return;
 		if (slider.animating == false)
 		{
 			if (slider.expanded == true && 
@@ -650,6 +653,7 @@ onload = function ()
 	};
 	var tapCallback = function (tapCount)
 	{
+		if (modal.zoom.zoomed) return;
 		if (tapCount == 1)
 		{
 			if (slider.compressing == false)
@@ -733,7 +737,7 @@ onload = function ()
 			msg = document.createElement("div");
 			msg.innerHTML = "Searching for more cards in <br>#" + current_tag + " feed...";
 			img = document.createElement("img");
-			img.src = "/img/throbber.gif";
+			img.src = "http://assets.tagsurf.co/img/throbber.gif";
 			c_container.appendChild(msg);
 			c_container.appendChild(img);
 			c_wrapper.appendChild(c_container);
@@ -789,7 +793,7 @@ onload = function ()
 	var buildContentCard = function(c, zIndex) {
 		var imageContainer, iconLine, textContainer, picTags, fullscreenButton,
 			truncatedTitle, card, formatter = document.createElement('div'),
-			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img" + (firstCardLoaded ? (" src='" + image.get(c, window.innerWidth - 40).url + "'") : "") + "></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='/img/thumbsup.png'><img class='thumb-down' src='/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div></div></div>";
+			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img" + (firstCardLoaded ? (" src='" + image.get(c, window.innerWidth - 40).url + "'") : "") + "></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div></div></div>";
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		imageContainer = formatter.children[0].children[0].children[0];
@@ -800,11 +804,11 @@ onload = function ()
 		if (current_tag == "trending") {
 			gesture.listen("down", iconLine.children[1], function() {
 				iconLine.children[1].classList.add("active-tag-callout");
-				iconLine.children[1].firstChild.src = "/img/trending_icon_gray.png";
+				iconLine.children[1].firstChild.src = "http://assets.tagsurf.co/img/trending_icon_gray.png";
 			});
 			gesture.listen("up", iconLine.children[1], function() {
 				iconLine.children[1].classList.remove("active-tag-callout");
-				iconLine.children[1].firstChild.src = "/img/trending_icon_blue.png";
+				iconLine.children[1].firstChild.src = "http://http://assets.tagsurf.co/img/trending_icon_blue.png";
 				autocomplete.tapTag(c.tags[0], "autocomplete", false);
 			});
 		} else
@@ -871,7 +875,7 @@ onload = function ()
 	};
 	var buildLoginCard = function(c, zIndex) {
 		var formatter = document.createElement('div'),
-			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='/img/logo_w_border.png'><div class='big bold'>Hate repeats? Sign up!</div>",
+			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='http://http://assets.tagsurf.co/img/logo_w_border.png'><div class='big bold'>Hate repeats? Sign up!</div>",
 			form = "<form accept-charset='UTF-8' action='/users' class='new-user' id='new-user' method='post'><div style='margin:0;padding:0;display:inline'><input name='utf8' type='hidden' value='✓'><input name='authenticity_token' type='hidden' value='" + document.getElementsByName("csrf-token")[0].content + "'></div><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center></form>",
 			bottom = "<div class='wide-text'><a id='line-text-login' class='small big-lnk'>Already have an account? <b>Login here</b>.</a></div><div class='smaller block'>By signing up you agree to our <a class='bold big-lnk' id='terms-lnk'>Terms of Use</a> and <a class='bold big-lnk' id='privacy-lnk'>Privacy Policy</a>.</div></div></div>",
 			cardTemplate = top + form + bottom;
@@ -936,6 +940,7 @@ onload = function ()
 	};
 	var downCallback = function ()
 	{
+		if (modal.zoom.zoomed) return;
 		if (slider.classList.contains('login-card'))
 		{
 			blurLoginInputs();
@@ -952,10 +957,23 @@ onload = function ()
 		var imageContainer = this.getElementsByClassName('image-container')[0];
 		if (!imageContainer)
 			return;
-		gesture.listen("tap", imageContainer, tapCallback)
-		gesture.listen("down", imageContainer, returnTrue)
-		gesture.listen("up", imageContainer, returnTrue)
-		gesture.listen("drag", imageContainer, returnTrue)
+		gesture.listen("tap", imageContainer, tapCallback);
+		gesture.listen("down", imageContainer, returnTrue);
+		gesture.listen("up", imageContainer, returnTrue);
+		gesture.listen("drag", imageContainer, returnTrue);
+		gesture.listen("pinch", imageContainer, function(normalizedDistance) {
+			if (normalizedDistance) {
+				upCallback(true);
+				if (normalizedDistance > 1) {
+					if (!modal.zoom.zoomed) {
+						tapCallback(1);
+						modal.zoom.current = window.innerWidth;
+					}
+					modal.pinchZoom(normalizedDistance);
+				}
+			} else
+				modal.pinchZoom();
+		});
 	};
 	var initCardGestures = function ()
 	{
@@ -1009,11 +1027,8 @@ onload = function ()
 		}
 		slider.style['border-color'] = "green";
 		slider.lastChild.previousSibling.firstChild.style.opacity = 0.8;
-		if (modal.zoom.zoomed) {
-			if (modal.zoom.large)
-				modal.callZoom(2);
+		if (modal.zoom.zoomed)
 			modal.callZoom(1);
-		}
 		setFavIcon(true);
 		xhr("/api/favorites/" + slider.card.id, "POST", function() {
 			swipeSlider("right", function () {
@@ -1058,6 +1073,7 @@ if (isAuthorized())
 	}
 }
 
+document.location.hash = document.location.hash.replace("%7C", "|");
 // handle facebook redirects
 if (document.location.href.indexOf("?") != -1)
 	document.location = "http://" +

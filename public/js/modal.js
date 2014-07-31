@@ -5,7 +5,8 @@ var modal = {
 	topModal: document.createElement("div"),
 	zoom: document.createElement("div"),
 	constants: {
-		zoomScale: 1.5
+		zoomScale: 1.5,
+		zoomMax: 3
 	},
 	trans: {
 		animating: false,
@@ -49,30 +50,33 @@ var modal = {
 		gesture.listen("tap", modal.topModal, modal.callTopModal);
 		gesture.listen("swipe", modal.topModal, modal.callTopModal);
 
-		gesture.listen("tap", modal.zoom, modal.callZoom);
-		gesture.listen("drag", modal.zoom, modal.dragZoom);
-		gesture.listen("down", modal.zoom, returnTrue);
+		gesture.listen("tap", modal.zoom, modal.callZoom, true);
+		gesture.listen("drag", modal.zoom, modal.dragZoom, true);
+		gesture.listen("pinch", modal.zoom, modal.pinchZoom, true);
+		gesture.listen("down", modal.zoom, returnTrue, true);
 	},
 	_buildZoom: function() {
 		var zNode = document.createElement('img'), 
 			gesture_wrapper = document.createElement('div');
 		zNode.className = 'basic-zoom';
-		zNode.style.left = "0px";
-		zNode.style.top = "10px";
-		zNode.style.width = "100%";
-		modal.zoom.style.display = "none";
 		modal.zoom.className = "zoom-wrapper";
 		gesture_wrapper.className = "raw-wrapper";
-		gesture_wrapper.style.height = (window.innerHeight - 110) + 'px';
-		modal.zoom.style.zIndex = 11;
-		if(screen.width <1024)
-			modal.zoom.style.height = (window.innerHeight - 50) + 'px';
-		else
-			modal.zoom.style.height = (window.innerHeight - 40) + 'px';
 		gesture_wrapper.appendChild(zNode);
 		modal.zoom.appendChild(gesture_wrapper);
 		modal.zoom.large = false;
 		modal.zoom.zoomed = false;
+		addCss({
+			".raw-wrapper": function() {
+				return "height: " + (window.innerHeight - 110) + 'px';
+			},
+			".zoom-wrapper": function() {
+				modal.zoom.maxWidth = modal.constants.zoomMax
+					* window.innerWidth;
+				modal.zoom.z2width = modal.constants.zoomScale
+					* window.innerWidth;
+				return "height: " + (window.innerHeight - 40) + 'px';
+			}
+		});
 	},
 	_buildPrompt: function () {
 		var prompt_container = document.createElement('div');
@@ -95,37 +99,27 @@ var modal = {
 	callBack: function() {
 		return modal.back.cb && modal.back.cb();
 	},
+	zoomToWidth: function(width, fromPinch) {
+		var w = width || window.innerWidth,
+			zNode = modal.zoom.firstChild.firstChild;
+		if (w < window.innerWidth) {
+			modal.zoom.current = window.innerWidth;
+			modal.zoomOut();
+		} else if (w != zNode.clientWidth) {
+			if (!fromPinch) {
+				modal.zoom.current = w;
+				trans(zNode, null, "width 250ms ease-in");
+			}
+			zNode.style.width = w + "px";
+			modal.zoom.large = (w >= modal.zoom.z2width);
+		}
+	},
 	callZoom: function(tapCount) {
-		var zNode = modal.zoom.firstChild.firstChild;
-		if (tapCount == 1)
-		{
-			if (modal.zoom.large == false)
-			{
-				return modal.zoom.cb && modal.zoom.cb();
-			}
-			else
-			{
-				modal.zoom.large = false;
-				trans(zNode, null, "width 250ms ease-in");
-				zNode.style.width = window.innerWidth + "px";
-				return modal.zoom.cb && modal.zoom.cb();
-			}
-		}
-		else if (tapCount == 2)
-		{
-			if (modal.zoom.large == false)
-			{
-				modal.zoom.large = true;
-				trans(zNode, null, "width 250ms ease-in");
-				zNode.style.width = (modal.constants.zoomScale * zNode.clientWidth) + "px";
-			}
-			else
-			{
-				modal.zoom.large = false;
-				trans(zNode, null, "width 250ms ease-in");
-				zNode.style.width = window.innerWidth + "px";
-			}
-		}
+		if (tapCount == 1) {
+			modal.zoomToWidth();
+			return modal.zoom.cb && modal.zoom.cb();
+		} else if (tapCount == 2)
+			modal.zoomToWidth(!modal.zoom.large && modal.zoom.z2width);
 	},
 	_backOn: function(degree, cb, injectionNode, opacity) {
 		if (modal.trans.animating) {
@@ -293,6 +287,16 @@ var modal = {
 			return;
 		}
 		return true;
+	},
+	pinchZoom: function (normalizedDistance) {
+		if (!modal.zoom.zoomed) return;
+		var zNode = modal.zoom.firstChild.firstChild;
+		if (normalizedDistance) {
+			modal.zoom.current = modal.zoom.current || zNode.clientWidth;
+			modal.zoomToWidth(Math.min(modal.zoom.current * normalizedDistance,
+				modal.zoom.maxWidth), true);
+		} else
+			modal.zoom.current = zNode.clientWidth;
 	}
 };
 modal.build();
