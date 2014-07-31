@@ -30,7 +30,22 @@ onload = function ()
 	 	addCss({
 	 		".modal": function() {
 	 			return "width: 75%; margin: auto;";
-	 		}
+	 		},
+			"#slide-down-menu li:hover": function() {
+				return "background-color: #00aeef;";
+			},
+			"#slide-down-menu li:hover a": function() {
+				return "color: white;";
+			},
+			"#slide-down-menu li:hover div img:nth-child(2)": function() {
+				return "display: inline;";
+			},
+			"#slide-down-menu li:hover div img:first-child": function() {
+				return "display: none;";
+			},
+			".autocomplete div div:hover": function() {
+				return "color: white; background-color: #00aeef;";
+			}
 	 	});
 	var reminderContainer = document.createElement('div');
 	var forgetReminder = function() {
