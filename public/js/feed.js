@@ -976,19 +976,8 @@ onload = function ()
 		gesture.listen("down", imageContainer, returnTrue);
 		gesture.listen("up", imageContainer, returnTrue);
 		gesture.listen("drag", imageContainer, returnTrue);
-		gesture.listen("pinch", imageContainer, function(normalizedDistance) {
-			if (normalizedDistance) {
-				upCallback(true);
-				if (normalizedDistance > 1) {
-					if (!modal.zoom.zoomed) {
-						tapCallback(1);
-						modal.zoom.current = window.innerWidth;
-					}
-					modal.pinchZoom(normalizedDistance);
-				}
-			} else
-				modal.pinchZoom();
-		});
+		modal.setPinchLauncher(imageContainer,
+			function() { upCallback(true); });
 	};
 	var initCardGestures = function ()
 	{
