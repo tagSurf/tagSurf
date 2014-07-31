@@ -89,8 +89,8 @@ var slideNavMenu = function(noback) {
     navMenuSlid ? modal.halfOn(slideNavMenu) : modal.backOff();
 };
 var add_icon, add_state = "blue", add_icons = {
-  fill: '/img/add_icon_fill.png',
-  blue: '/img/add_icon_blue.png'
+  fill: 'http://assets.tagsurf.co/img/add_icon_fill.png',
+  blue: 'http://assets.tagsurf.co/img/add_icon_blue.png'
 };
 var addBarSlid = false;
 var slideAddBar = function(noback) {
@@ -172,20 +172,20 @@ var populateNavbar = function () {
   var tag = gallery ? document.location.hash.slice(1) : null;
   var navbar_content = [
     "<div id='favorites-btn'>",
-      "<a onclick='starCallback();'><img id='favorites-icon' src='/img/favorites_icon_blue.png'></a>",
+      "<a onclick='starCallback();'><img id='favorites-icon' src='http://assets.tagsurf.co/img/favorites_icon_blue.png'></a>",
     "</div>",
     "<div id='add-btn'>",
-      "<a onclick='slideAddBar();'><img id='add-icon' src='/img/add_icon_blue.png'></a>",
+      "<a onclick='slideAddBar();'><img id='add-icon' src='http://assets.tagsurf.co/img/add_icon_blue.png'></a>",
     "</div>",
     "<div class='navbar-center'>",
       "<label id='slider-label' for='slider-box' ontouchmove='return false;' onclick='slideNavMenu();'>",
         "<span id='main-logo'>",
           gallery ? (gallery == "tag"
             ? ("<span class='pointer'>#" + tag + "</span>")
-            : ("<img class='gallery-icon' src='/img/" + gallery + "_icon_gray.png'><span id='gallery-name' class='pointer'>" + gallery.toUpperCase() + "</span>"))
-          : "<img id='tagsurf-logo' src='/img/logo_big.png'></img>",
+            : ("<img class='gallery-icon' src='http://assets.tagsurf.co/img/" + gallery + "_icon_gray.png'><span id='gallery-name' class='pointer'>" + gallery.toUpperCase() + "</span>"))
+          : "<img id='tagsurf-logo' src='http://assets.tagsurf.co/img/logo_big.png'></img>",
         "</span><span id='history-logo'>HISTORY</span>",
-        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='/img/down_arrow_nav.png'></img>",
+        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='http://assets.tagsurf.co/img/down_arrow_nav.png'></img>",
       "</label>",
     "</div>",
   ], 
@@ -194,28 +194,28 @@ var populateNavbar = function () {
     "<div id='slide-down-menu' class='pointer'>",
       "<ul>",
       	"<li><a href='/feed'><div>",
-      	  "<img class='menu-icon' src='/img/trending_icon_gray.png'></img>",
-          "<img class='menu-icon' src='/img/trending_icon_white.png'></img>",
+      	  "<img class='menu-icon' src='http://assets.tagsurf.co/img/trending_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/trending_icon_white.png'></img>",
           "&nbsp;&nbsp;&nbsp;TRENDING",
       	"</div></a></li>",
       	"<li><a href='/favorites'><div>",
-      	  "<img class='menu-icon' src='/img/favorites_icon_gray.png'></img>",
-          "<img class='menu-icon' src='/img/favorites_icon_white.png'></img>",
+      	  "<img class='menu-icon' src='http://assets.tagsurf.co/img/favorites_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/favorites_icon_white.png'></img>",
           "&nbsp;&nbsp;&nbsp;FAVORITES",
         "</div></a></li>",
         "<li><a href='/history'><div>",
-      	  "<img class='menu-icon' src='/img/history_icon_gray.png'></img>",
-          "<img class='menu-icon' src='/img/history_icon_white.png'></img>",
+      	  "<img class='menu-icon' src='http://assets.tagsurf.co/img/history_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/history_icon_white.png'></img>",
           "&nbsp;&nbsp;&nbsp;HISTORY",
         "</div></a></li>",
         "<li><a id='options-btn'><div>",
-          "<img class='menu-icon' src='/img/options_icon_gray.png'></img>",
-          "<img class='menu-icon' src='/img/options_icon_white.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/options_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/options_icon_white.png'></img>",
           "&nbsp;&nbsp;&nbsp;OPTIONS",
         "</div></a></li>",
         "<li><a id='logout'><div>",
-          "<img class='menu-icon' src='/img/logout_icon_gray.png'></img>",
-          "<img class='menu-icon inverted' src='/img/logout_icon_white.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/logout_icon_gray.png'></img>",
+          "<img class='menu-icon inverted' src='http://assets.tagsurf.co/img/logout_icon_white.png'></img>",
           "&nbsp;&nbsp;&nbsp;LOGOUT",
         "</div></a></li>",
       "</ul>",
@@ -226,18 +226,18 @@ var populateNavbar = function () {
     "<div id='slide-down-menu' class='pointer'>",
       "<ul>",
       	"<li><a onclick='popTrending();'><div>",
-          "<img class='menu-icon' src='/img/trending_icon_gray.png'></img>",
-          "<img class='menu-icon' src='/img/trending_icon_white.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/trending_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/trending_icon_white.png'></img>",
           "&nbsp;&nbsp;&nbsp;TRENDING",
       	"</div></a></li>",
         "<li><a id='options-btn'><div>",
-          "<img class='menu-icon' src='/img/options_icon_gray.png'></img>",
-          "<img class='menu-icon' src='/img/options_icon_white.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/options_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/options_icon_white.png'></img>",
           "&nbsp;&nbsp;&nbsp;OPTIONS",
         "</div></a></li>",
         "<li><a id='login'><div>",
-          "<img class='menu-icon inverted' src='/img/logout_icon_gray.png'></img>",
-          "<img class='menu-icon' src='/img/logout_icon_white.png'></img>",
+          "<img class='menu-icon inverted' src='http://assets.tagsurf.co/img/logout_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/logout_icon_white.png'></img>",
           "&nbsp;&nbsp;&nbsp;LOGOUT",
         "</div></a></li>",
       "</ul>",
@@ -246,7 +246,7 @@ var populateNavbar = function () {
   menu_slider_content = isAuthorized() ? full_slider_content : reduced_slider_content;
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
-  tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='/img/add_tag_button.png'><div id='add-tag-autocomplete' class='autocomplete hider'></div>";
+  tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='http://assets.tagsurf.co/img/add_tag_button.png'><div id='add-tag-autocomplete' class='autocomplete hider'></div>";
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
   nav.appendChild(tag_adder);
@@ -304,7 +304,7 @@ var populateNavbar = function () {
     msg.innerHTML = "Nothing to see here... yet";
     msg.className = "options-msg";
     var img = document.createElement("img");
-    img.src = "/img/throbber.gif";
+    img.src = "http://assets.tagsurf.co/img/throbber.gif";
     var TOS = document.createElement("div");
     TOS.innerHTML = "<a class='blue bold big-lnk' id='terms-lnk'>Terms of Use</a> | <a class='blue bold big-lnk' id='privacy-lnk'>Privacy Policy</a>";
     TOS.className = "tos-line";
@@ -324,7 +324,7 @@ var populateNavbar = function () {
 };
 var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
-    "/img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
+    "http://assets.tagsurf.co/img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
 };
 var featureBlockContents, buildFeatureBlockerContents = function() {
 	var contents = document.createElement('div'),
@@ -335,7 +335,7 @@ var featureBlockContents, buildFeatureBlockerContents = function() {
 		link = document.createElement('div');
 	closeContainer.className = "close-button-container pointer";
 	close.className = "x-close-button";
-	close.src = "/img/Close.png";
+	close.src = "http://assets.tagsurf.co/img/Close.png";
 	gesture.listen('down', closeContainer, modal.callPrompt);
 	closeContainer.appendChild(close);
 	contents.appendChild(closeContainer);
