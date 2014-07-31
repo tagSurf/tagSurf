@@ -381,6 +381,7 @@ onload = function ()
 	};
 	var upCallback = function (androidSoftUp)
 	{
+		if (modal.zoom.zoomed) return;
 		toggleClass.apply(slider,['super-card', 'off']);
 		slider.supering = false;
 		if (slider.animating == false)
@@ -554,6 +555,7 @@ onload = function ()
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
+		if (modal.zoom.zoomed) return;
 		if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
 			gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
 		else if (!slider.animating && (direction == "left" || direction == "right")) {
@@ -583,6 +585,7 @@ onload = function ()
 	};
 	var dragCallback = function (direction, distance, dx, dy)
 	{
+		if (modal.zoom.zoomed) return;
 		if (slider.animating == false)
 		{
 			if (slider.expanded == true && 
@@ -650,6 +653,7 @@ onload = function ()
 	};
 	var tapCallback = function (tapCount)
 	{
+		if (modal.zoom.zoomed) return;
 		if (tapCount == 1)
 		{
 			if (slider.compressing == false)
@@ -936,6 +940,7 @@ onload = function ()
 	};
 	var downCallback = function ()
 	{
+		if (modal.zoom.zoomed) return;
 		if (slider.classList.contains('login-card'))
 		{
 			blurLoginInputs();
@@ -952,10 +957,23 @@ onload = function ()
 		var imageContainer = this.getElementsByClassName('image-container')[0];
 		if (!imageContainer)
 			return;
-		gesture.listen("tap", imageContainer, tapCallback)
-		gesture.listen("down", imageContainer, returnTrue)
-		gesture.listen("up", imageContainer, returnTrue)
-		gesture.listen("drag", imageContainer, returnTrue)
+		gesture.listen("tap", imageContainer, tapCallback);
+		gesture.listen("down", imageContainer, returnTrue);
+		gesture.listen("up", imageContainer, returnTrue);
+		gesture.listen("drag", imageContainer, returnTrue);
+		gesture.listen("pinch", imageContainer, function(normalizedDistance) {
+			if (normalizedDistance) {
+				upCallback(true);
+				if (normalizedDistance > 1) {
+					if (!modal.zoom.zoomed) {
+						tapCallback(1);
+						modal.zoom.current = window.innerWidth;
+					}
+					modal.pinchZoom(normalizedDistance);
+				}
+			} else
+				modal.pinchZoom();
+		});
 	};
 	var initCardGestures = function ()
 	{
@@ -1009,11 +1027,8 @@ onload = function ()
 		}
 		slider.style['border-color'] = "green";
 		slider.lastChild.previousSibling.firstChild.style.opacity = 0.8;
-		if (modal.zoom.zoomed) {
-			if (modal.zoom.large)
-				modal.callZoom(2);
+		if (modal.zoom.zoomed)
 			modal.callZoom(1);
-		}
 		setFavIcon(true);
 		xhr("/api/favorites/" + slider.card.id, "POST", function() {
 			swipeSlider("right", function () {
