@@ -173,7 +173,6 @@ var buildOptionsTable = function () {
 		'<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
       ((currentUser && currentUser.safeSurf || !isAuthorized()) ? " checked" : "") +
     '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> <div class="onoffswitch-cover" style="display:' +
-
 		(isAuthorized() ? 'none' : 'block') + ';"></div>';
 	safeSurfText.innerHTML = "Safe Surf";
 	safeSurfText.className = "option-key-text";
@@ -183,6 +182,7 @@ var buildOptionsTable = function () {
 			safeSurfCheckbox.firstChild.checked = !safeSurfCheckbox.firstChild.checked;
       xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
         JSON.stringify({ safe_mode: safeSurfCheckbox.firstChild.checked }));
+      currentUser.safeSurf = safeSurfCheckbox.firstChild.checked;
 		}
 		else
 		{
