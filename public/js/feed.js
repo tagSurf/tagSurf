@@ -12,12 +12,12 @@ onload = function ()
 		analytics.track('Redirected to Authed Feed');
 		window.location = "http://" +
 			document.location.host + '/feed#' +
-			window.location.pathname.replace('/share/','').replace('/','#');
+			window.location.pathname.replace('/share/','').replace('/','~');
 	} 
 	// defined in util for autocomplete
 	// integration with other sliding elements
 	tinput = document.getElementById("tag-input");
-	current_tag = tinput.value = document.location.hash.slice(1).split("#")[0]
+	current_tag = tinput.value = document.location.hash.slice(1).split("~")[0]
 		|| document.location.pathname.split("/")[2] || "trending";
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
@@ -269,8 +269,8 @@ onload = function ()
 	};
 	var firstPopulate = function() {
 		var feed, id, pair, h = document.location.hash.slice(1);
-		if (h.split("#").length == 2) {
-			pair = h.split("#");
+		if (h.indexOf('~') != -1) {
+			pair = h.split("~");
 			feed = pair[0];
 			id = pair[1];
 		}
@@ -1077,6 +1077,7 @@ if (isAuthorized())
 	}
 }
 
+document.location.hash = document.location.hash.replace('|','~');
 // handle facebook redirects
 if (document.location.href.indexOf("?") != -1)
 	document.location = "http://" +
