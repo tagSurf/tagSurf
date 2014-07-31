@@ -13,11 +13,11 @@ body
 	color: white;
 	font-weight: 200;
 	-webkit-user-select: none;  /* Chrome all / Safari all */
-  -moz-user-select: none;     /* Firefox all */
+	-moz-user-select: none;     /* Firefox all */
 	-ms-user-select: none;      /* IE 10+ */
-	
-	/* This was causing problems clipping popup modal windows */
-	/*overflow: hidden;*/
+	overflow: hidden;
+	opacity: 0;
+	-webkit-transition: opacity 666ms ease-in-out;
 }
 
 html, input[type="submit"] {
@@ -62,7 +62,9 @@ a {
 .delNode {
 	border-left: 1px solid white;
 }
-
+.block {
+	display: block;
+}
 .centered {
 	text-align: center;
 }
@@ -181,18 +183,6 @@ a {
 	-webkit-transition: background-color 666ms ease-in-out;
 }
 
-.throbber-back {
-	pointer-events: none;
-	z-index: 3;
-	position: absolute;
-	top: 50px;
-	bottom: 0px;
-	left: 0px;
-	right: 0px;
-	background-color: #404041;
-	-webkit-transition: background-color 666ms ease-in-out;
-}
-
 .blackfade {
 	pointer-events: auto;
 	background-color: rgba(0, 0, 0, 1);
@@ -234,7 +224,7 @@ a {
 
 .tslogo {
   display: block;
-  background-image: url('/img/ts_logo_stacked_gray.png');
+  background-image: url('http://assets.tagsurf.co/img/ts_logo_stacked_gray.png');
   background-size: cover;
   width:210px;
   height:241px;
@@ -291,18 +281,18 @@ a {
 	bottom: 5px;
 	height: 30px;
 }
-.raw_wrapper
+.raw-wrapper
 {
   display: inline;
   top: 0;
   position: absolute;
   width:100%; 
 }
-.raw_wrapper img
+.raw-wrapper img
 {
   pointer-events: none;
 }
-.zoom_wrapper
+.zoom-wrapper
 {
   top: 50px;
   overflow: scroll;
@@ -322,16 +312,7 @@ a {
   pointer-events: none;
 }
 
-#autocomplete
-{
-  top: 90px;
-  left: 0px;
-  right: 0px;
-  width: 200px;
-  border-radius: 8px;
-  color: black;
-}
-#add_tag_autocomplete {
+#add-tag-autocomplete {
   top: 43px;
   left: 20px;
   padding: 0px 7px;
@@ -343,20 +324,20 @@ a {
 .autocomplete {
   z-index: 4;
   position: absolute;
-  margin: auto;
   height: 0px;
   background: white;
   text-align: left;
   overflow-y: scroll;
   -webkit-transition: height 300ms ease-out;
 }
-.autocomplete div
+.autocomplete div div
 {
   padding: 5px;
 }
 .autocomplete-open
 {
   height: 150px !important;
+  overflow-x: hidden;
 }
 .hardware-acceleration, .translate-z
 {
@@ -415,8 +396,8 @@ a {
 }
 
 /* unauth prompt content */
-.close_button_container,
-.touch_expander
+.close-button-container,
+.touch-expander
 {
   float: right;
   clear: both;
@@ -425,11 +406,11 @@ a {
   padding: 5px;
   z-index: 1;
 }
-.x_close_button
+.x-close-button
 {
   width: 20px;
 }
-.prompt_title
+.prompt-title
 {
   color: #00aeef;
   font-size: 20px;
@@ -437,14 +418,14 @@ a {
   margin: 0;
   position: relative;
 }
-.prompt_message
+.prompt-message
 {
   display: inline-block;
   color: black;
   text-align: center;
   font-size: 16px;
 }
-.prompt_login_button
+.prompt-login-button
 {
   display: inline-block;
   text-align: center;
@@ -453,16 +434,16 @@ a {
   padding: 5px;
   cursor: pointer;
 }
-.prompt_container
+.prompt-container
 {
 	text-align: center;
 }
-.modal_prompt > div
+.modal-prompt > div
 {
 	display: block;
 	text-align: center;
 }
-.modal_prompt
+.modal-prompt
 {
   opacity: 0;
   margin: 0 auto;
@@ -544,7 +525,7 @@ a {
   margin-bottom: 4px; 
 }
 
-.reminder_close
+.reminder-close
 {
   position: absolute;
   width: 40px;
@@ -560,14 +541,14 @@ a {
 {
 	display: inline-block;
 }
-.share_link_icon
+.share-link-icon
 {
 	width: 33%;
 	margin: 0 20px;
 }
-.share_heading_margin
+.share-heading-margin
 {
-	margin: 60px 0;
+	margin: 40px 0;
 }
 .center-label
 {
@@ -642,9 +623,27 @@ a {
   font-size: 120%;
   padding: 5px 10px 10px 15px;
 }
+#url-container
+{
+	margin-top: 40px;
+}
+#share-url 
+{
+	font-size: 120%;
+	line-height: 40px;
+	padding: 0 10px;
+	margin: 0;
+	background: #2f2f2f;
+	border: 1px solid #00aeef;
+	border-radius: 0;
+	overflow-x: scroll;
+	width: 80%;
+	vertical-align: bottom;
+}
 
+/*This targets tablets and desktops*/
 @media only screen and (min-width: 700px){
-	#add_tag_autocomplete {
+	#add-tag-autocomplete {
 	  top: 47px;
 	  left: 32%;
 	  padding: 0px 7px;
@@ -653,26 +652,45 @@ a {
 	#share-button {
 	  bottom: 10px;
 	  right: 10px;
-  	width: 80px;
+	  width: 80px;
 	}
 	#share-icon {
 		width: 50px;
 	}
-	.share_link_icon
+	.share-link-icon
 	{
 		padding: 0 50px;
 	}
-	.zoom_wrapper {
+	.zoom-wrapper {
 		top: 40px;
 	} 
 	.midsize {
 		font-size: 14pt;
 	}
-  .options-msg {
-    font-size: 140%;
-  }
-  .tos-line {
-	  font-size: 120%;
-  }
+	.options-msg {
+		font-size: 140%;
+	}
+	.tos-line {
+		 font-size: 120%;
+	}
+	#url-container {
+		margin-top: 7%;
+	}
+	#share-url {
+		font-size: 200%;
+		line-height: 55px;
+		padding: 0 20px;
+		width: 61%;
+		margin: 0;
+		-webkit-user-select: all;  
+		-moz-user-select: all;
+		-ms-user-select: all;
+	}
+	#share-url {
+ 		margin: 0;
+ 	}
+ 	.share_heading_margin {
+ 		margin: 60px 0;
+ 	} 
 }
 

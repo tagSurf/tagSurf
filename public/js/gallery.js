@@ -13,7 +13,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 				"px; width:" + window.innerWidth + "px";
 		}
 	});
-	if (!isMobile() && !isTablet())
+	if (!isMobile() && !isTablet() && !isNarrow())
 	 	addCss({
 	 		".modal": function() {
 	 			return "width: 75%; margin: auto;";
@@ -244,7 +244,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		};
 		current_image.tags_v2.push(objwrap);
 		buildTagBlock(objwrap, tag);
-		analytics.track('Added Tag from Gallery', {
+		analytics.track('Add Tag from Gallery', {
 			card: current_image.id,
 			gallery: current_image.gallery,
 			tag_added: tag
@@ -374,12 +374,12 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 						? "POST" : "DELETE", null, null);
 				updateFavorited();
 				if (current_image.user_stats.has_favorited){
-					analytics.track('Favorited from Gallery',{
+					analytics.track('Favorite from Gallery',{
 						card: current_image.id,
 						gallery: current_image.gallery
 					});
 				} else {
-					analytics.track('Unfavorited from Gallery',{
+					analytics.track('Unfavorite from Gallery',{
 						card: current_image.id,
 						gallery: current_image.gallery
 					});
@@ -388,7 +388,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 				removeFavImage();
 				updateFavorited();
 				modal.callModal();
-				analytics.track('Unfavorited from Gallery',{
+				analytics.track('Unfavorite from Gallery',{
 					card: current_image.id,
 					gallery: current_image.gallery
 				});

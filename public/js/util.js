@@ -81,16 +81,16 @@ var slideNavMenu = function(noback) {
     && closeAutoComplete(null, true);
   addBarSlid && slideAddBar(true);
   navMenuSlid = !navMenuSlid;
-  toggleClass.apply(document.getElementById("slider_label"),
+  toggleClass.apply(document.getElementById("slider-label"),
     ["slid", navMenuSlid ? "on" : "off"]);
-  toggleClass.apply(document.getElementById("slide_down_menu"),
-    ["opened_menu", navMenuSlid ? "on" : "off"]);
+  toggleClass.apply(document.getElementById("slide-down-menu"),
+    ["opened-menu", navMenuSlid ? "on" : "off"]);
   if (noback != true && !modal.zoom.zoomed && !modal.modal.on)
     navMenuSlid ? modal.halfOn(slideNavMenu) : modal.backOff();
 };
 var add_icon, add_state = "blue", add_icons = {
-  fill: '/img/add_icon_fill.png',
-  blue: '/img/add_icon_blue.png'
+  fill: 'http://assets.tagsurf.co/img/add_icon_fill.png',
+  blue: 'http://assets.tagsurf.co/img/add_icon_blue.png'
 };
 var addBarSlid = false;
 var slideAddBar = function(noback) {
@@ -102,16 +102,16 @@ var slideAddBar = function(noback) {
     autocomplete.retract("autocomplete");
     closeAutoComplete(null, true);
   }
-  autocomplete.viewing.add_tag_autocomplete
-    && autocomplete.retract("add_tag_autocomplete");
+  autocomplete.viewing["add-tag-autocomplete"]
+    && autocomplete.retract("add-tag-autocomplete");
   navMenuSlid && slideNavMenu(true);
   addBarSlid = !addBarSlid;
   if (addBarSlid && !currentMedia) return;
   add_state = addBarSlid ? "fill" : "blue";
   add_icon.src = add_icons[add_state];
-  toggleClass.apply(document.getElementById("tag_adder"),
-    ["opened_menu", addBarSlid ? "on" : "off"]);
-  document.getElementById("tag_adder").firstChild.value = "#newtag";
+  toggleClass.apply(document.getElementById("tag-adder"),
+    ["opened-menu", addBarSlid ? "on" : "off"]);
+  document.getElementById("tag-adder").firstChild.value = "#newtag";
   if (noback != true && !modal.zoom.zoomed && !modal.modal.on)
     addBarSlid ? modal.halfOn(slideAddBar) : modal.backOff();
 };
@@ -150,70 +150,79 @@ var shareVotes = [], saveVotesLogin = function () {
 };
 
 var popTrending; // defined in feed
+var fadeInBody = function() {
+  addCss({
+    "html, body": function() {
+      return "width: " + window.innerWidth + "px; "
+        + "height: " + window.innerHeight + "px; "
+        + "opacity: 1;";
+    }
+  });
+};
 var populateNavbar = function () {
   var nav = document.getElementById("nav");
   var navbar = document.createElement("div");
   navbar.id = "navbar";
   var menu_slider = document.createElement("div");
-  menu_slider.id = "menu_slider";
+  menu_slider.id = "menu-slider";
   var tag_adder = document.createElement("div");
-  tag_adder.id = "tag_adder";
+  tag_adder.id = "tag-adder";
 
   var gallery = whichGallery();
   var tag = gallery ? document.location.hash.slice(1) : null;
   var navbar_content = [
     "<div id='favorites-btn'>",
-      "<a onclick='starCallback();'><img id='favorites-icon' src='/img/favorites_icon_blue.png'></a>",
+      "<a onclick='starCallback();'><img id='favorites-icon' src='http://assets.tagsurf.co/img/favorites_icon_blue.png'></a>",
     "</div>",
     "<div id='add-btn'>",
-      "<a onclick='slideAddBar();'><img id='add-icon' src='/img/add_icon_blue.png'></a>",
+      "<a onclick='slideAddBar();'><img id='add-icon' src='http://assets.tagsurf.co/img/add_icon_blue.png'></a>",
     "</div>",
     "<div class='navbar-center'>",
-      "<label id='slider_label' for='slider_box' ontouchmove='return false;' onclick='slideNavMenu();'>",
+      "<label id='slider-label' for='slider-box' ontouchmove='return false;' onclick='slideNavMenu();'>",
         "<span id='main-logo'>",
           gallery ? (gallery == "tag"
             ? ("<span class='pointer'>#" + tag + "</span>")
-            : ("<img class='gallery_icon' src='/img/" + gallery + "_icon_gray.png'><span id='gallery_name' class='pointer'>" + gallery.toUpperCase() + "</span>"))
-          : "<img id='tagsurf-logo' src='/img/logo_big.png'></img>",
+            : ("<img class='gallery-icon' src='http://assets.tagsurf.co/img/" + gallery + "_icon_gray.png'><span id='gallery-name' class='pointer'>" + gallery.toUpperCase() + "</span>"))
+          : "<img id='tagsurf-logo' src='http://assets.tagsurf.co/img/logo_big.png'></img>",
         "</span><span id='history-logo'>HISTORY</span>",
-        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='/img/down_arrow_nav.png'></img>",
+        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='http://assets.tagsurf.co/img/down_arrow_nav.png'></img>",
       "</label>",
     "</div>",
   ], 
   full_slider_content = [
-    "<input type='checkbox' name='slider_box' id='slider_box' style='display:none'>",
-    "<div id='slide_down_menu' class='pointer'>",
+    "<input type='checkbox' name='slider-box' id='slider-box' style='display:none'>",
+    "<div id='slide-down-menu' class='pointer'>",
       "<ul>",
       	"<li><a href='/feed'><div>",
-      	  "<img class='menu_icon' src='/img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
+      	  "<img class='menu-icon' src='http://assets.tagsurf.co/img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
       	"</div></a></li>",
       	"<li><a href='/favorites'><div>",
-      	  "<img class='menu_icon' src='/img/favorites_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;FAVORITES",
+      	  "<img class='menu-icon' src='http://assets.tagsurf.co/img/favorites_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;FAVORITES",
         "</div></a></li>",
         "<li><a href='/history'><div>",
-      	  "<img class='menu_icon' src='/img/history_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;HISTORY",
+      	  "<img class='menu-icon' src='http://assets.tagsurf.co/img/history_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;HISTORY",
         "</div></a></li>",
         "<li><a id='options-btn'><div>",
-          "<img class='menu_icon' src='/img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS",
         "</div></a></li>",
         "<li><a id='logout'><div>",
-          "<img class='menu_icon' src='/img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGOUT",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGOUT",
         "</div></a></li>",
       "</ul>",
     "</div>",
   ],
   reduced_slider_content = [
-    "<input type='checkbox' name='slider_box' id='slider_box' style='display:none'>",
-    "<div id='slide_down_menu' class='pointer'>",
+    "<input type='checkbox' name='slider-box' id='slider-box' style='display:none'>",
+    "<div id='slide-down-menu' class='pointer'>",
       "<ul>",
       	"<li><a onclick='popTrending();'><div>",
-      	  "<img class='menu_icon' src='/img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
+      	  "<img class='menu-icon' src='http://assets.tagsurf.co/img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
       	"</div></a></li>",
         "<li><a id='options-btn'><div>",
-          "<img class='menu_icon' src='/img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS",
         "</div></a></li>",
         "<li><a id='login'><div>",
-          "<img class='menu_icon inverted' src='/img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGIN",
+          "<img class='menu-icon inverted' src='http://assets.tagsurf.co/img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGIN",
         "</div></a></li>",
       "</ul>",
     "</div>",
@@ -221,7 +230,7 @@ var populateNavbar = function () {
   menu_slider_content = isAuthorized() ? full_slider_content : reduced_slider_content;
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
-  tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='/img/add_tag_button.png'><div id='add_tag_autocomplete' class='autocomplete hider'></div>";
+  tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='http://assets.tagsurf.co/img/add_tag_button.png'><div id='add-tag-autocomplete' class='autocomplete hider'></div>";
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
   nav.appendChild(tag_adder);
@@ -233,15 +242,16 @@ var populateNavbar = function () {
     slideAddBar();
     addCallback && addCallback(newtag);
   };
+  fadeInBody();
   addCss({
-    "#add_tag_autocomplete": function() {
-      return "width: " + (tag_adder.firstChild.clientWidth - 10) + "px";
+    "#add-tag-autocomplete": function() {
+      return "width: " + tag_adder.firstChild.clientWidth + "px";
     }
   });
-  autocomplete.register("add_tag_autocomplete", tag_adder.firstChild, {
+  autocomplete.register("add-tag-autocomplete", tag_adder.firstChild, {
     enterCb: function() {
       autocomplete.tapTag(tag_adder.firstChild.value.slice(1),
-        "add_tag_autocomplete");
+        "add-tag-autocomplete");
     },
     tapCb: function(tagName) {
       tag_adder.firstChild.value = "#" + tagName;
@@ -273,28 +283,27 @@ var populateNavbar = function () {
     msg.innerHTML = "Nothing to see here... yet";
     msg.className = "options-msg";
     var img = document.createElement("img");
-    img.src = "/img/throbber.gif";
+    img.src = "http://assets.tagsurf.co/img/throbber.gif";
     var TOS = document.createElement("div");
     TOS.innerHTML = "<a class='blue bold big-lnk' id='terms-lnk'>Terms of Use</a> | <a class='blue bold big-lnk' id='privacy-lnk'>Privacy Policy</a>";
     TOS.className = "tos-line";
-    var options_cb = function(){
-      //this is a hack until we find a better way to determine if share should be turned back on
-      if (document.location.href.indexOf('feed') != -1)
-        share.on();
+    var options_cb = function() {
+      checkShare();
+      modal.backOff();
       modal.modalOut();
     };
     n.appendChild(msg);
     n.appendChild(img);
     n.appendChild(TOS);
-    slideNavMenu();
+    slideNavMenu(true);
     share.off();
     modal.modalIn(n, options_cb);
-    initDocLinks();
+    initDocLinks(checkShare);
   };
 };
 var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
-    "/img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
+    "http://assets.tagsurf.co/img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
 };
 var featureBlockContents, buildFeatureBlockerContents = function() {
 	var contents = document.createElement('div'),
@@ -303,19 +312,19 @@ var featureBlockContents, buildFeatureBlockerContents = function() {
 		title = document.createElement('p'),
 		message = document.createElement('p'),
 		link = document.createElement('div');
-	closeContainer.className = "close_button_container pointer";
-	close.className = "x_close_button";
-	close.src = "/img/Close.png";
+	closeContainer.className = "close-button-container pointer";
+	close.className = "x-close-button";
+	close.src = "http://assets.tagsurf.co/img/Close.png";
 	gesture.listen('down', closeContainer, modal.callPrompt);
 	closeContainer.appendChild(close);
 	contents.appendChild(closeContainer);
-	title.className = "prompt_title";
+	title.className = "prompt-title";
 	title.innerHTML = "Oops";
 	contents.appendChild(title);
-	message.className = "prompt_message";
+	message.className = "prompt-message";
 	message.innerHTML = "You need to login to do that...";
 	contents.appendChild(message);
-	link.className = "prompt_login_button";
+	link.className = "prompt-login-button";
 	link.innerHTML = "login";
 	gesture.listen("down", link, function () {
 		link.classList.add('ts-active-button');
@@ -333,8 +342,8 @@ var starCallback, setStarCallback = function(cb) {
 var addCallback, setAddCallback = function(cb) {
   addCallback = cb;
 };
-var currentMedia, setCurrentMedia = function(d, shareCb) {
-  currentMedia = d;
+var currentMedia, checkShare = function(shareCb) {
+  var d = currentMedia;
   if (d && d.type == "content")
     share.on(d, shareCb);
   else {
@@ -342,6 +351,9 @@ var currentMedia, setCurrentMedia = function(d, shareCb) {
     if (addBarSlid)
       slideAddBar();
   }
+}, setCurrentMedia = function(d, shareCb) {
+  currentMedia = d;
+  checkShare(shareCb);
 };
 var _addCss = function(css) {
     var n = document.createElement("style");
@@ -371,14 +383,11 @@ var setResizeCb = function(cb) {
   resizeCb = cb;
 };
 setMaxCardHeight();
-var lastHeight = window.innerHeight,
-  lastWidth = window.innerWidth;
+var lastWidth = window.innerWidth;
 window.onresize = function() {
-  if (lastWidth == window.innerWidth
-    && lastHeight == window.innerHeight)
+  if (lastWidth == window.innerWidth)
     return;
   lastWidth = window.innerWidth;
-  lastHeight = window.innerHeight;
   setMaxCardHeight();
   addedCss.forEach(addCss);
   resizeCb && resizeCb();
@@ -444,6 +453,9 @@ var isIpad = function(){
 var isIphone = function(){
   return _ua.isIphone;
 };
+var isDesktop = function(){
+  return !_ua.isMobile && !_ua.isAndroid && !_ua.isIos;
+}
 var isTablet = function(){
   return _ua.isIpad || (_ua.isAndroid && !_ua.isMobile);
 };

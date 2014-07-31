@@ -3,13 +3,16 @@ var castVote = function(card) {
 		+ "/tag/" + card.user_stats.tag_voted, "POST", null, null);
 };
 
+
 onload = function ()
 {
+	analytics.track('Begin Pageload');
 	populateNavbar();
 	if (isAuthorized() && (document.location.href.indexOf('share') != -1)) {
-	window.location = "http://" +
-		document.location.host + '/feed#' +
-		window.location.pathname.replace('/share/','').replace('/','|');
+		analytics.track('Redirected to Authed Feed');
+		window.location = "http://" +
+			document.location.host + '/feed#' +
+			window.location.pathname.replace('/share/','').replace('/','|');
 	} 
 	// defined in util for autocomplete
 	// integration with other sliding elements
@@ -23,7 +26,7 @@ onload = function ()
 	featureBlockContents = buildFeatureBlockerContents();
 
 	//modal formatting for desktop
- 	if (!isMobile() && !isTablet())
+ 	if (!isMobile() && !isTablet() && !isNarrow())
 	 	addCss({
 	 		".modal": function() {
 	 			return "width: 75%; margin: auto;";
@@ -48,7 +51,7 @@ onload = function ()
 				reminderContainer.parentNode.removeChild(reminderContainer);
 				reminderTimeout = null;
 			});
-			analytics.track('Closed Swipe Reminder');
+			analytics.track('Close Swipe Reminder');
 		}
 	};
 	var setReminderTimeout = function ()
@@ -56,15 +59,33 @@ onload = function ()
 		var closeContainer = document.createElement('div'),
 			close = document.createElement('img'),
 			leftImage = new Image(), rightImage = new Image();
-		reminderContainer.id = "reminder_container";
-		close.className = "reminder_close";
-		close.src = "/img/Close.png";
+		reminderContainer.id = "reminder-container";
+		close.className = "reminder-close";
+		close.src = "http://assets.tagsurf.co/img/Close.png";
 		closeContainer.appendChild(close);
 		reminderContainer.appendChild(closeContainer);
-		leftImage.id = "reminder_left";
-		leftImage.src = "/img/reminder_left.png";
-		rightImage.id = "reminder_right";
-		rightImage.src = "/img/reminder_right.png";
+		leftImage.id = "reminder-left";
+		rightImage.id = "reminder-right";
+		if(isDesktop()) {
+			var closeInstructions = new Image();
+			closeInstructions.className = "close-instructions block";
+			closeInstructions.src="http://assets.tagsurf.co/img/clearscreen.png";
+			reminderContainer.appendChild(closeInstructions);
+			rightImage.src = "http://assets.tagsurf.co/img/reminder_right_desktop.png";
+			leftImage.src = "http://assets.tagsurf.co/img/reminder_left_desktop.png";
+			addCss({
+				"#reminder-left": function() {
+					return "width: 18%; top: 20%";
+				},
+				"#reminder-right": function() {
+					return "width: 18%";
+				}
+			});
+		}
+		else {
+			leftImage.src = "http://assets.tagsurf.co/img/reminder_left_mobile.png";	
+			rightImage.src = "http://assets.tagsurf.co/img/reminder_right_mobile.png";
+		}
 		reminderContainer.appendChild(leftImage);
 		reminderContainer.appendChild(rightImage);
 		gesture.listen("drag", reminderContainer, function (direction) {
@@ -83,6 +104,10 @@ onload = function ()
 			reminderContainer.style.visibility = "visible";
 			reminderContainer.style.zIndex = "100";
 			reminderContainer.style.opacity = 1;
+			if(isDesktop())
+				analytics.track('Seen Desktop Swipe Reminder');
+			else
+				analytics.track('Seen Mobile Swipe Reminder');
 		}, 20000);
 	};
 	
@@ -105,9 +130,52 @@ onload = function ()
 	var refreshCards = function(failMsgNode, zIndex) {
 		cardIndex = 0;
 		if (failMsgNode && data.length == 0) {
-			failMsgNode.innerHTML = "No more cards in <br>#" + current_tag + " feed";
+			var trendingBtn = document.createElement('div'),
+				orMsg = document.createElement('div'),
+				surfATagMsg = document.createElement('div'),
+				tagSuggestions = document.createElement('div'),
+				numberOfTags = 5;
+			trendingBtn.className = 'trending-returnbtn pointer';
+			trendingBtn.innerHTML = "<img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>Return to <span class='blue'>#trending</span>";	
+			failMsgNode.innerHTML = "<div class='fail-msg'>No more cards in <br>#" + current_tag + " feed...</div>";
+			orMsg.className = "fail-msg";
+			orMsg.id = "or-msg";
+			orMsg.innerHTML = "or";
+			tagSuggestions.className = "taglist";
+			surfATagMsg.className = "fail-msg";
+			surfATagMsg.id = "surf-msg";
+			surfATagMsg.innerHTML = "Surf a popular tag";
+			gesture.listen("down", trendingBtn, function() {
+				trendingBtn.classList.add("active-trending-returnbtn");
+				trendingBtn.firstChild.src = "http://assets.tagsurf.co/img/trending_icon_gray.png";
+			});
+			gesture.listen("up", trendingBtn, function() {
+				trendingBtn.classList.remove("active-trending-returnbtn");
+				trendingBtn.firstChild.src = "http://assets.tagsurf.co/img/trending_icon_blue.png";
+				if(isAuthorized())
+					window.location = "http://" + document.location.host + '/feed';
+				else
+					autocomplete.tapTag("trending", "autocomplete", false);
+			});
+			for(var i = 0; i < numberOfTags; i++) {
+				if (autocomplete.data[i]["name"] == "trending") {
+					++numberOfTags;
+					continue;
+				}
+				else {
+					tagCard(autocomplete.data[i]["name"], tagSuggestions);
+				}
+			}
 			failMsgNode.parentNode.removeChild(failMsgNode.nextSibling);
-		} else {
+			failMsgNode.parentNode.appendChild(trendingBtn);
+			failMsgNode.parentNode.appendChild(orMsg);
+			failMsgNode.parentNode.appendChild(surfATagMsg);
+			failMsgNode.parentNode.appendChild(tagSuggestions);
+			analytics.track('Seen End-Of-Feed Card', {
+				surfing: current_tag
+			});
+		} 
+		else {
 			slideContainer.innerHTML = "";
 			buildCard(zIndex);
 		}
@@ -208,7 +276,7 @@ onload = function ()
 				current_tag = tagName;
 				known_keys = {};
 				populateSlider(null, null, insertCurrent ? slider.card : null);
-				analytics.track('Searched for tag', {
+				analytics.track('Search for Tag', {
 					tag: tagName
 				});
 			}
@@ -247,7 +315,7 @@ onload = function ()
 		".card-container": function() {
 			return "min-height: " + (maxCardHeight + 140) + "px; width: " + ((isMobile() || isTablet() || isNarrow()) ? "95" : "70") + "%;";
 		},
-		".raw_wrapper, .zoom_wrapper, #scroll-container, #scroll-container-container": function() {
+		".raw-wrapper, .zoom-wrapper, #scroll-container, #scroll-container-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
 		}
 		// Why is this necessary? Setting width=100% in feed.css instead.
@@ -313,7 +381,7 @@ onload = function ()
 	};
 	var upCallback = function (androidSoftUp)
 	{
-		toggleClass.apply(slider,['super_card', 'off']);
+		toggleClass.apply(slider,['super-card', 'off']);
 		slider.supering = false;
 		if (slider.animating == false)
 		{
@@ -431,32 +499,57 @@ onload = function ()
 			expandCard();
 		}
 		else if (code == 37){
+			dragCallback("left", -3, -3);
+			if (slider.card.id == 221281) {	
+				analytics.track("Key Swipe Login Card", {
+					direction: "left",
+					surfing: current_tag
+				});
+			}
+			else {
+				analytics.track("Key Swipe", {
+					card: slider.card.id,
+					direction: "left",	
+					surfing: current_tag
+				});
+				analytics.page({
+					title: slider.card.id + " left",
+					url: 'http://beta.tagsurf.co/feed#'+current_tag,
+					path: "/feed#"+current_tag,
+					referrer: 'http://beta.tagsurf.co/'
+				});
+			}
 			swipeSlider("left");
-			analytics.track("Key Swipe", {
-				card: slider.card.id,
-				direction: "left",	
-				surfing: current_tag
-			});
-			analytics.page({
-				title: slider.card.id + " left",
-				url: 'http://beta.tagsurf.co/feed#'+current_tag,
-				path: "/feed#"+current_tag,
-				referrer: 'http://beta.tagsurf.co/'
-			});
+			// slider id will change to next card 
+			if (slider.card.id == 221281)
+				analytics.track("Seen Login Card");
 		}
-		else if (code == 39){
+		else if (code == 39) {
+			dragCallback("right", 3, 3);
+			if (slider.card.id == 221281) {
+				analytics.track("Key Swipe Login Card", {
+					direction: "right",
+					surfing: current_tag
+				});
+			}
+			else {
+				analytics.track("Key Swipe", {
+					card: slider.card.id,
+					direction: "right",	
+					surfing: current_tag
+				});
+				analytics.page({
+					title: slider.card.id + " right",
+					url: 'http://beta.tagsurf.co/feed#'+current_tag,
+					path: "/feed#"+current_tag,
+					referrer: 'http://beta.tagsurf.co/'
+				});
+
+			}
 			swipeSlider("right");
-			analytics.track("Key Swipe", {
-				card: slider.card.id,
-				direction: "right",	
-				surfing: current_tag
-			});
-			analytics.page({
-				title: slider.card.id + " right",
-				url: 'http://beta.tagsurf.co/feed#'+current_tag,
-				path: "/feed#"+current_tag,
-				referrer: 'http://beta.tagsurf.co/'
-			});
+			// slider id will change to next card 
+			if (slider.card.id == 221281)
+				analytics.track("Seen Login Card");
 		}
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
@@ -464,7 +557,6 @@ onload = function ()
 		if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
 			gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
 		else if (!slider.animating && (direction == "left" || direction == "right")) {
-			swipeSlider(direction, null, 700);
 			if (slider.isContent) {
 				analytics.track("Swipe", {
 					card: slider.card.id,
@@ -478,6 +570,15 @@ onload = function ()
 					referrer: 'http://beta.tagsurf.co/'
 				});
 			}
+			else if (slider.card.id == 221281)
+				analytics.track("Swipe Login Card", {
+					direction: direction,
+					surfing: current_tag
+				});
+			swipeSlider(direction, null, 700);
+			// slider id will change to next card 
+			if (slider.card.id == 221281)
+				analytics.track("Seen Login Card");
 		}
 	};
 	var dragCallback = function (direction, distance, dx, dy)
@@ -565,7 +666,7 @@ onload = function ()
 		if (duration == 3000)
 		{
 			slider.supering = true;
-			toggleClass.apply(slider, ['super_card', 'on']);
+			toggleClass.apply(slider, ['super-card', 'on']);
 		}
 	};
 	var isMine = function(tag) {
@@ -598,7 +699,7 @@ onload = function ()
 				rmTag(tag);
 				picTags.removeChild(p);
 			} else
-				autocomplete.tapTag(tag, "autocomplete", true);
+				autocomplete.tapTag(tag, "autocomplete", false);
 		});
 		picTags.appendChild(p);
 	};
@@ -632,7 +733,7 @@ onload = function ()
 			msg = document.createElement("div");
 			msg.innerHTML = "Searching for more cards in <br>#" + current_tag + " feed...";
 			img = document.createElement("img");
-			img.src = "/img/throbber.gif";
+			img.src = "http://assets.tagsurf.co/img/throbber.gif";
 			c_container.appendChild(msg);
 			c_container.appendChild(img);
 			c_wrapper.appendChild(c_container);
@@ -684,10 +785,11 @@ onload = function ()
 			}
 		}
 	};
+	var firstCardLoaded = false;
 	var buildContentCard = function(c, zIndex) {
 		var imageContainer, iconLine, textContainer, picTags, fullscreenButton,
 			truncatedTitle, card, formatter = document.createElement('div'),
-			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb_up' src='/img/thumbsup.png'><img class='thumb_down' src='/img/thumbsdown.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img" + (firstCardLoaded ? (" src='" + image.get(c, window.innerWidth - 40).url + "'") : "") + "></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div></div></div>";
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		imageContainer = formatter.children[0].children[0].children[0];
@@ -698,12 +800,12 @@ onload = function ()
 		if (current_tag == "trending") {
 			gesture.listen("down", iconLine.children[1], function() {
 				iconLine.children[1].classList.add("active-tag-callout");
-				iconLine.children[1].firstChild.src = "/img/trending_icon_gray.png";
+				iconLine.children[1].firstChild.src = "http://assets.tagsurf.co/img/trending_icon_gray.png";
 			});
 			gesture.listen("up", iconLine.children[1], function() {
 				iconLine.children[1].classList.remove("active-tag-callout");
-				iconLine.children[1].firstChild.src = "/img/trending_icon_blue.png";
-				autocomplete.tapTag(c.tags[0], "autocomplete", true);
+				iconLine.children[1].firstChild.src = "http://http://assets.tagsurf.co/img/trending_icon_blue.png";
+				autocomplete.tapTag(c.tags[0], "autocomplete", false);
 			});
 		} else
 			iconLine.children[1].style.display = "none";
@@ -718,10 +820,22 @@ onload = function ()
 		});
 		var card = initCard(formatter);
 		card.isContent = true;
+		card.setSource = function() {
+			imageContainer.firstChild.src = image.get(c, window.innerWidth - 40).url;
+		};
 		formatCardContents(card, image.get(card.card));
-		if (slider == card)
-		{
-			imageContainer.firstChild.onload = firstCardReady;
+		if (slider == card) {
+			slider.setSource();
+			firstCardLoaded = false;
+			imageContainer.firstChild.onload = function() {
+				firstCardLoaded = true;
+				slider.parentNode.nextSibling.firstChild.setSource();
+				slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
+				throbber.off();
+				scrollContainer.style.opacity = 1;
+				analytics.track('Finished Pageload');
+				preloadCards();
+			};
 		}
 		imageContainer.firstChild.onerror = function() {
 			slideContainer.removeChild(card.parentNode);
@@ -757,20 +871,19 @@ onload = function ()
 	};
 	var buildLoginCard = function(c, zIndex) {
 		var formatter = document.createElement('div'),
-			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='/img/logo_w_border.png'><div class='big bold'>Sign up for a better feed!</div>",
-			form = "<form accept-charset='UTF-8' action='/users' class='new_user' id='new_user' method='post'><div style='margin:0;padding:0;display:inline'><input name='utf8' type='hidden' value='✓'><input name='authenticity_token' type='hidden' value='" + document.getElementsByName("csrf-token")[0].content + "'></div><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center></form>",
-			bottom = "<div class='wide-text'><a id='line-text-login' class='small big-lnk'>Already have an account? <b>Login here</b>.</a></div><div class='smaller wide-text'>By signing up you agree to our <a class='bold big-lnk' id='terms-lnk'>Terms of Use</a> and <a class='bold big-lnk' id='privacy-lnk'>Privacy Policy</a>.</div></div></div>",
+			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='http://http://assets.tagsurf.co/img/logo_w_border.png'><div class='big bold'>Hate repeats? Sign up!</div>",
+			form = "<form accept-charset='UTF-8' action='/users' class='new-user' id='new-user' method='post'><div style='margin:0;padding:0;display:inline'><input name='utf8' type='hidden' value='✓'><input name='authenticity_token' type='hidden' value='" + document.getElementsByName("csrf-token")[0].content + "'></div><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center></form>",
+			bottom = "<div class='wide-text'><a id='line-text-login' class='small big-lnk'>Already have an account? <b>Login here</b>.</a></div><div class='smaller block'>By signing up you agree to our <a class='bold big-lnk' id='terms-lnk'>Terms of Use</a> and <a class='bold big-lnk' id='privacy-lnk'>Privacy Policy</a>.</div></div></div>",
 			cardTemplate = top + form + bottom;
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		initCard(formatter);
 		initLoginInputs();
 		initDocLinks();
-		firstCardReady();
 
 		// form validation
 		var p = document.getElementById("password");
-		var f = document.getElementById("new_user");
+		var f = document.getElementById("new-user");
 		f.onsubmit = function() {
 			if (!validEmail(document.getElementById("email").value)) {
 				alert("Please use a valid email address");
@@ -784,16 +897,12 @@ onload = function ()
 				alert("Please submit matching passwords");
 				return false;
 			}
+			analytics.track('Sign Up in Feed');
 			return true;
 		};
 		gesture.listen("down", document.getElementById("su-submit-btn"), function() {
 			f.onsubmit() && f.submit();
 		});
-	};
-	var firstCardReady = function () {
-		throbber.off();
-		scrollContainer.style.opacity = 1;
-		preloadCards();
 	};
 	var initCard = function(formatter) {
 		card = formatter.firstChild.firstChild;
@@ -812,7 +921,7 @@ onload = function ()
 
 		if (c.type == "content")
 			buildContentCard(c, zIndex);
-		else if (c.type == "login")
+		else if (c.type == "login") 
 			buildLoginCard(c, zIndex);
 		else
 			alert("unknown card type: " + c.type);
@@ -886,7 +995,7 @@ onload = function ()
 		slider.card.tags_v2.push(objwrap);
 		tagCard(tag, document.getElementById("pictags" + slider.card.id));
 		formatCardContents();
-		analytics.track('Added Tag from Feed', {
+		analytics.track('Add Tag from Feed', {
 			card: slider.card.id,
 			surfing: current_tag,
 			tag_added: tag
@@ -911,7 +1020,7 @@ onload = function ()
 				setFavIcon(false);
 			});
 		}, null);
-		analytics.track('Favorited from Feed', {
+		analytics.track('Favorite from Feed', {
 			card: slider.card.id,
 			surfing: current_tag
 		});
@@ -937,11 +1046,6 @@ onload = function ()
 
 if (isAuthorized())
 {
-	addCss({
-		"body, html": function() {
-			return "position: fixed;";
-		}
-	});
 	var lastPath = sessionStorage.getItem("lastPath");
 	if (lastPath) {
 		sessionStorage.removeItem("lastPath");
@@ -954,6 +1058,7 @@ if (isAuthorized())
 	}
 }
 
+document.location.hash = document.location.hash.replace("%7C", "|");
 // handle facebook redirects
 if (document.location.href.indexOf("?") != -1)
 	document.location = "http://" +
