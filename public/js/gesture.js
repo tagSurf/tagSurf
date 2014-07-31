@@ -171,11 +171,12 @@ var gesture = {
 			var pos = gesture.getPos(e);
 			var diff = gesture.getDiff(v.lastPos, pos);
 			v.lastPos = pos;
-			if (gesture.isMulti(e) && isAndroid())
+			if (!gesture.isMulti(e))
+				return gesture.triggerDrag(node, diff.direction,
+					diff.distance, diff.x, diff.y);
+			if (isAndroid())
 				gesture.triggerPinch(node,
 					gesture.pinchDiff(e).distance / v.firstPinch.distance);
-			return gesture.triggerDrag(node, diff.direction,
-				diff.distance, diff.x, diff.y);
 		}
 	},
 	gWrap: function(node) {

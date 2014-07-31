@@ -957,8 +957,8 @@ onload = function ()
 		gesture.listen("up", imageContainer, returnTrue);
 		gesture.listen("drag", imageContainer, returnTrue);
 		gesture.listen("pinch", imageContainer, function(normalizedDistance) {
+			upCallback(true);
 			if (normalizedDistance > 1) {
-				upCallback(true);
 				tapCallback(1);
 				gesture.triggerPinch(modal.zoom, normalizedDistance);
 			}
