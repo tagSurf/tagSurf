@@ -45,7 +45,9 @@ var isAuthorized = function () {
         authorizedSession = true;
         currentUser.id = result.user.id;
         currentUser.email = result.user.email;
+        currentUser.slug = result.user.slug;
         currentUser.admin = result.user.admin;
+        currentUser.safeSurf = result.user.safe_mode;
       }
       else
         authorizedSession = false;
@@ -158,6 +160,39 @@ var fadeInBody = function() {
         + "opacity: 1;";
     }
   });
+};
+var buildOptionsTable = function () {
+	var optionsTable = document.createElement('table'),
+		safeSurfRow = optionsTable.insertRow(0),
+		safeSurfTextCell = safeSurfRow.insertCell(0),
+		safeSurfCheckboxCell = safeSurfRow.insertCell(1),
+		safeSurfText = document.createElement('div'),
+		safeSurfCheckbox = document.createElement('div');
+  	optionsTable.style.display = "inline-block";
+  	safeSurfCheckbox.innerHTML = 
+		'<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
+      ((currentUser && currentUser.safeSurf || !isAuthorized()) ? " checked" : "") +
+    '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> <div class="onoffswitch-cover" style="display:' +
+		(isAuthorized() ? 'none' : 'block') + ';"></div>';
+	safeSurfText.innerHTML = "Safe Surf";
+	safeSurfText.className = "option-key-text";
+	gesture.listen('down', safeSurfCheckbox, function () {
+		if (isAuthorized())
+		{
+			safeSurfCheckbox.firstChild.checked = !safeSurfCheckbox.firstChild.checked;
+      xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
+        JSON.stringify({ safe_mode: safeSurfCheckbox.firstChild.checked }));
+      currentUser.safeSurf = safeSurfCheckbox.firstChild.checked;
+		}
+		else
+		{
+			modal.promptIn(featureBlockContents);
+		}
+	});
+	safeSurfCheckbox.className = 'onoffswitch-container';
+	safeSurfTextCell.appendChild(safeSurfText);
+	safeSurfCheckboxCell.appendChild(safeSurfCheckbox);
+	return optionsTable;
 };
 var populateNavbar = function () {
   var nav = document.getElementById("nav");
@@ -300,11 +335,14 @@ var populateNavbar = function () {
   document.getElementById("options-btn").onclick = function() {
     var n = document.createElement("div");
     n.className = "center-label";
-    var msg = document.createElement("div");
-    msg.innerHTML = "Nothing to see here... yet";
-    msg.className = "options-msg";
+    var title = document.createElement("div");
+    title.innerHTML = "Options";
+    title.className = "options-title";
+    var optionsTable = buildOptionsTable();
+    /*
     var img = document.createElement("img");
     img.src = "http://assets.tagsurf.co/img/throbber.gif";
+    */
     var TOS = document.createElement("div");
     TOS.innerHTML = "<a class='blue bold big-lnk' id='terms-lnk'>Terms of Use</a> | <a class='blue bold big-lnk' id='privacy-lnk'>Privacy Policy</a>";
     TOS.className = "tos-line";
@@ -313,8 +351,9 @@ var populateNavbar = function () {
       modal.backOff();
       modal.modalOut();
     };
-    n.appendChild(msg);
-    n.appendChild(img);
+    n.appendChild(title);
+    n.appendChild(optionsTable);
+    //n.appendChild(img);
     n.appendChild(TOS);
     slideNavMenu(true);
     share.off();
@@ -414,13 +453,15 @@ window.onresize = function() {
   resizeCb && resizeCb();
 };
 
-var xhr = function(path, action, cb, eb, async) {
+var xhr = function(path, action, cb, eb, async, payload) {
   var _xhr = new XMLHttpRequest();
   if(DEBUG) 
     console.log("XHR Request. Path: " + path + " action: " + (action || "GET"));
   if (typeof async === "undefined")
     async = true;
   _xhr.open(action || "GET", path, async);
+  if (action == "PATCH")
+    _xhr.setRequestHeader("Content-type", "application/json");
   _xhr.onreadystatechange = function() {
     if (_xhr.readyState == 4) {
       var resp = _xhr.responseText.charAt(0) == "<" ? 
@@ -439,7 +480,7 @@ var xhr = function(path, action, cb, eb, async) {
         cb && cb(resp);
     }
   }
-  _xhr.send();
+  _xhr.send(payload);
 };
 var mod = function(opts) {
   var targets = opts.targets ? opts.targets

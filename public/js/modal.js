@@ -234,21 +234,27 @@ var modal = {
 		modal.prompt.innerHTML = "";
 		modal.prompt.appendChild(node);
 		modal.prompt.cb = cb || modal.promptOut;
-		modal.backOn();
 		modal.prompt.className = "modal-prompt disabled";
 		setTimeout(function() {
 			modal.prompt.className = "modal-prompt opaque";
 		}, 0);
+		if (!modal.back.on) {
+			modal.backOn();
+			modal.prompt.backed = true;
+		}
 	},
 	promptOut: function() {
 		modal.prompt.on = false;
 		modal.prompt.className = "modal-prompt";
 		modal.prompt.cb = null;
 		modal.prompt.style.opacity = 0;
-		modal.backOff();
 		trans(modal.prompt, function (event){
 			modal.prompt.className = "modal-prompt disabled";
 		});
+		if (modal.prompt.backed) {
+			modal.prompt.backed = false;
+			modal.backOff();
+		}
 	},
 	zoomIn: function (card, cb) {
 		modal.zoom.zoomed = true;
