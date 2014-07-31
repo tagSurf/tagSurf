@@ -652,7 +652,7 @@ a {
 {
 	font-size: 200%;
 	position: relative;
-	top: -85px;
+	top: -25px;
 }
 .option-key-text
 {
@@ -762,6 +762,7 @@ a {
 	}
 	.options-title {
 		font-size: 220%;
+		top: -85px;
 	}
 	.tos-line {
 		 font-size: 120%;
