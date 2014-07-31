@@ -238,7 +238,7 @@ var populateNavbar = function () {
         "<li><a id='login'><div>",
           "<img class='menu-icon inverted' src='http://assets.tagsurf.co/img/logout_icon_gray.png'></img>",
           "<img class='menu-icon' src='http://assets.tagsurf.co/img/logout_icon_white.png'></img>",
-          "&nbsp;&nbsp;&nbsp;LOGOUT",
+          "&nbsp;&nbsp;&nbsp;LOGIN",
         "</div></a></li>",
       "</ul>",
     "</div>",
