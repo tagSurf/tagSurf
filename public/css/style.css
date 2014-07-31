@@ -647,7 +647,10 @@ a {
 	width: 80%;
 	vertical-align: bottom;
 }
-
+.options-table 
+{
+	width: 237px;
+}
 .options-title
 {
 	font-size: 200%;
@@ -658,6 +661,10 @@ a {
 {
 	font-size: 180%;
 	margin-right: 15px;
+}
+.options-key-desc 
+{
+	padding-top: 10px;
 }
 
 /* As seen on proto.io */
@@ -756,6 +763,9 @@ a {
 	} 
 	.midsize {
 		font-size: 14pt;
+	}
+	.options-table {
+		width: 25%;
 	}
 	.options-msg {
 		font-size: 140%;

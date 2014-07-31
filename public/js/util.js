@@ -163,12 +163,15 @@ var fadeInBody = function() {
 };
 var buildOptionsTable = function () {
 	var optionsTable = document.createElement('table'),
-		safeSurfRow = optionsTable.insertRow(0),
-		safeSurfTextCell = safeSurfRow.insertCell(0),
-		safeSurfCheckboxCell = safeSurfRow.insertCell(1),
-		safeSurfText = document.createElement('div'),
-		safeSurfCheckbox = document.createElement('div');
-  	optionsTable.style.display = "inline-block";
+  		safeSurfRow = optionsTable.insertRow(0),
+      safeSurfHelperRow = optionsTable.insertRow(1),
+  		safeSurfTextCell = safeSurfRow.insertCell(0),
+  		safeSurfCheckboxCell = safeSurfRow.insertCell(1),
+      safeSurfDescCell = safeSurfHelperRow.insertCell(0),
+      safeSurfDesc = document.createElement('div'),
+  		safeSurfText = document.createElement('div'),
+  		safeSurfCheckbox = document.createElement('div');
+  	optionsTable.className = "inline options-table";
   	safeSurfCheckbox.innerHTML = 
 		'<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
       ((currentUser && currentUser.safeSurf || !isAuthorized()) ? " checked" : "") +
@@ -176,6 +179,9 @@ var buildOptionsTable = function () {
 		(isAuthorized() ? 'none' : 'block') + ';"></div>';
 	safeSurfText.innerHTML = "Safe Surf";
 	safeSurfText.className = "option-key-text";
+  safeSurfDescCell.colSpan = 2;
+  safeSurfDesc.innerHTML = "Safe Surf filters NSFW content out of your feed. <br><i>(NSFW = Not Safe For Work)</i>";
+  safeSurfDesc.className = "options-key-desc";
 	gesture.listen('down', safeSurfCheckbox, function () {
 		if (isAuthorized())
 		{
@@ -192,6 +198,7 @@ var buildOptionsTable = function () {
 	safeSurfCheckbox.className = 'onoffswitch-container';
 	safeSurfTextCell.appendChild(safeSurfText);
 	safeSurfCheckboxCell.appendChild(safeSurfCheckbox);
+  safeSurfDescCell.appendChild(safeSurfDesc);
 	return optionsTable;
 };
 var populateNavbar = function () {
