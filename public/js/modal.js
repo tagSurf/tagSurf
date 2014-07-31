@@ -291,6 +291,21 @@ var modal = {
 				modal.zoom.maxWidth), true);
 		} else
 			modal.zoom.current = zNode.clientWidth;
+	},
+	setPinchLauncher: function (node, onZoomCb) {
+		gesture.listen("pinch", node, function(normalizedDistance) {
+			if (normalizedDistance) {
+				onZoomCb && onZoomCb();
+				if (normalizedDistance > 1) {
+					if (!modal.zoom.zoomed) {
+						modal.zoomIn(currentMedia);
+						modal.zoom.current = window.innerWidth;
+					}
+					modal.pinchZoom(normalizedDistance);
+				}
+			} else
+				modal.pinchZoom();
+		});
 	}
 };
 modal.build();
