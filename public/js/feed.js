@@ -653,6 +653,7 @@ onload = function ()
 	};
 	var tapCallback = function (tapCount)
 	{
+		if (modal.zoom.zoomed) return;
 		if (tapCount == 1)
 		{
 			if (slider.compressing == false)
@@ -961,11 +962,17 @@ onload = function ()
 		gesture.listen("up", imageContainer, returnTrue);
 		gesture.listen("drag", imageContainer, returnTrue);
 		gesture.listen("pinch", imageContainer, function(normalizedDistance) {
-			upCallback(true);
-			if (normalizedDistance > 1) {
-				tapCallback(1);
-				gesture.triggerPinch(modal.zoom, normalizedDistance);
-			}
+			if (normalizedDistance) {
+				upCallback(true);
+				if (normalizedDistance > 1) {
+					if (!modal.zoom.zoomed) {
+						tapCallback(1);
+						modal.zoom.current = window.innerWidth;
+					}
+					modal.pinchZoom(normalizedDistance);
+				}
+			} else
+				modal.pinchZoom();
 		});
 	};
 	var initCardGestures = function ()
