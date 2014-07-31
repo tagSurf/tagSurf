@@ -381,6 +381,7 @@ onload = function ()
 	};
 	var upCallback = function (androidSoftUp)
 	{
+		if (modal.zoom.zoomed) return;
 		toggleClass.apply(slider,['super-card', 'off']);
 		slider.supering = false;
 		if (slider.animating == false)
@@ -554,6 +555,7 @@ onload = function ()
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
+		if (modal.zoom.zoomed) return;
 		if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
 			gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
 		else if (!slider.animating && (direction == "left" || direction == "right")) {
@@ -583,6 +585,7 @@ onload = function ()
 	};
 	var dragCallback = function (direction, distance, dx, dy)
 	{
+		if (modal.zoom.zoomed) return;
 		if (slider.animating == false)
 		{
 			if (slider.expanded == true && 
@@ -936,6 +939,7 @@ onload = function ()
 	};
 	var downCallback = function ()
 	{
+		if (modal.zoom.zoomed) return;
 		if (slider.classList.contains('login-card'))
 		{
 			blurLoginInputs();
