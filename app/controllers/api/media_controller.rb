@@ -51,6 +51,11 @@ class Api::MediaController < Api::BaseController
       render json: {errors: 'must be logged in to view feed.'}, status: :unauthorized
       return
     end
+
+    if @user.safe_mode? && Tag.blacklisted?(media_params[:tag].downcase)
+      render json: {errors: "This tag is not available in Safe Surf mode"}, status: :unauthorized
+      return
+    end
       
     @media = Media.next(@user, media_params[:tag])
     if @media.present?

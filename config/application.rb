@@ -37,7 +37,41 @@ module Tagsurf
 
     redis_active = Rails.env.development? ? false : true
     CONFIG[:redis_active] = redis_active  
-    CONFIG[:blacklisted_tags] = ["boobies", "wouldtotallyfuck", "porn"]
+
+    # TODO move to yaml
+    CONFIG[:blacklisted_tags] = [ 
+      "boobies", 
+      "hot", 
+      "sexy", 
+      "sex", 
+      "ass", 
+      "naked", 
+      "Naked", 
+      "women", 
+      "pretty girls", 
+      "Celebs", 
+      "Gentlemanboners", 
+      "gentlemanboners", 
+      "boobs", 
+      "Sideboob", 
+      "nsfw", 
+      "nsfw_gif", 
+      "realgirls", 
+      "real girls", 
+      "random sexiness", 
+      "gonewild", 
+      "bdsm", 
+      "slut", 
+      "watchitfortheplot", 
+      "yesplease", 
+      "topheavy", 
+      "slutsandwich", 
+      "pretty", 
+      "hugetitties", 
+      "babygotback", 
+      "babe", 
+      "porn"
+    ]
 
   end
 end
