@@ -6,6 +6,7 @@ class EnqueueGenerateTagFeed
 
   def perform
     GenerateTagFeed.perform_async('safe')
+    GenerateTagFeed.perform_async('nsfw')
   end
 
 end

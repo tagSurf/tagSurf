@@ -43,7 +43,7 @@ class MediaSerializer < BaseSerializer
   def tags_v2
     return [] if type == 'login'
     # Fix this fiasco once client is set
-    current_tags = (media.tag_list + media.tagged_as + [media.section]).uniq
+    current_tags = (media.tag_list + media.tagged_as).uniq
     tagged_medias = []
     current_tags.each do |tag|
       tagged_medias.push("#{tag}" => media.media_tag_info(tag))
