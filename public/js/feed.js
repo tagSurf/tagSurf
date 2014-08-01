@@ -846,10 +846,11 @@ onload = function ()
 		formatCardContents(card, image.get(card.card));
 		console.log("Reached if test for card ", card.id, " slider = ", slider, " card = ", card);
 		if (slider == card) {
+			console.log("Slider = card in test ", card);
 			slider.setSource();
 			firstCardLoaded = false;
 			imageContainer.firstChild.onload = function() {
-				console.log("Slider = card in test ", card);
+				console.log("Finished load of first card");
 				firstCardLoaded = true;
 				slider.parentNode.nextSibling.firstChild.setSource();
 				slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
