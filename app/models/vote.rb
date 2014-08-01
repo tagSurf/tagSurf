@@ -24,7 +24,7 @@ class Vote < ActiveRecord::Base
     media
   end
 
-  # Places the requested card in the center of a collection of 21 cards
+  # Places the requested card in the center of a collection of 5 cards
   # [previous 10 cards voted] + [requested card] + [next 10 votes]
   def self.bracketed_collection(vote)
     collection = []
@@ -51,7 +51,12 @@ class Vote < ActiveRecord::Base
 
   def update_tag_feed
     tag = Tag.where(name: self.vote_tag).first
-    tag.tag_feed[tag.name] = Vote.where(vote_tag: tag.name).count
+    if tag.blacklisted?
+      tag.nsfw_tag_feed[tag.name] = Vote.where(vote_tag: tag.name).count
+    else
+      tag.nsfw_tag_feed[tag.name] = Vote.where(vote_tag: tag.name).count
+      tag.safe_tag_feed[tag.name] = Vote.where(vote_tag: tag.name).count
+    end
   end
    
 end
