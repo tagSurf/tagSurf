@@ -259,7 +259,11 @@ onload = function ()
 				cardsToLoad = cardsToLoad.concat(popData(rdata, firstCard).slice(3));
 				refreshCards(failMsgNode, 2);
 			}
-		}, function() {
+		}, function(response, status) {
+			if (status == 401){
+				console.log("Status = " + status);
+				messageBox();
+			}
 			if (!update) {
 				data = [];
 				refreshCards(failMsgNode);
