@@ -186,7 +186,7 @@ var messageBox = function (title, message, action_type, cb) {
   else
     messageElement.innerHTML = "Something went wrong";
   contents.appendChild(messageElement);
-  link.className = "msgbox-button";
+  link.className = "msgbox-btn";
   if(typeof action_type === "undefined") {
     link.innerHTML = "ok";
     if(cb)
