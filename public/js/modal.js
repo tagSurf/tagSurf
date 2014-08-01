@@ -227,28 +227,35 @@ var modal = {
 			modal.backOff();
 		}
 	},
-	promptIn: function(node, cb) {
+	promptIn: function(node, cb, back) {
 		if (modal.prompt.on)
 			return;
+		back = (typeof back === "undefined") ? true : back;
 		modal.prompt.on = true;
 		modal.prompt.innerHTML = "";
 		modal.prompt.appendChild(node);
 		modal.prompt.cb = cb || modal.promptOut;
-		modal.backOn();
 		modal.prompt.className = "modal-prompt disabled";
 		setTimeout(function() {
 			modal.prompt.className = "modal-prompt opaque";
 		}, 0);
+		if (!modal.back.on && back) {
+			modal.backOn();
+			modal.prompt.backed = true;
+		}
 	},
 	promptOut: function() {
 		modal.prompt.on = false;
 		modal.prompt.className = "modal-prompt";
 		modal.prompt.cb = null;
 		modal.prompt.style.opacity = 0;
-		modal.backOff();
 		trans(modal.prompt, function (event){
 			modal.prompt.className = "modal-prompt disabled";
 		});
+		if (modal.prompt.backed) {
+			modal.prompt.backed = false;
+			modal.backOff();
+		}
 	},
 	zoomIn: function (card, cb) {
 		modal.zoom.zoomed = true;
@@ -291,6 +298,21 @@ var modal = {
 				modal.zoom.maxWidth), true);
 		} else
 			modal.zoom.current = zNode.clientWidth;
+	},
+	setPinchLauncher: function (node, onZoomCb) {
+		gesture.listen("pinch", node, function(normalizedDistance) {
+			if (normalizedDistance) {
+				onZoomCb && onZoomCb();
+				if (normalizedDistance > 1) {
+					if (!modal.zoom.zoomed) {
+						modal.zoomIn(currentMedia);
+						modal.zoom.current = window.innerWidth;
+					}
+					modal.pinchZoom(normalizedDistance);
+				}
+			} else
+				modal.pinchZoom();
+		});
 	}
 };
 modal.build();

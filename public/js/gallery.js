@@ -83,6 +83,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 				gesture.triggerSwipe(modal.modal, direction, distance, dx, dy, pixelsPerSecond);
 			}
 		});
+		modal.setPinchLauncher(bigpic);
 		bigpic.onload = function (event)
 		{
 			if (modal.modal.offsetHeight < picbox.scrollHeight)

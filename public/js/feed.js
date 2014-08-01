@@ -12,25 +12,39 @@ onload = function ()
 		analytics.track('Redirected to Authed Feed');
 		window.location = "http://" +
 			document.location.host + '/feed#' +
-			window.location.pathname.replace('/share/','').replace('/','|');
+			window.location.pathname.replace('/share/','').replace('/','~');
 	} 
 	// defined in util for autocomplete
 	// integration with other sliding elements
 	tinput = document.getElementById("tag-input");
-	current_tag = tinput.value = document.location.hash.slice(1).split("|")[0]
+	current_tag = tinput.value = document.location.hash.slice(1).split("~")[0]
 		|| document.location.pathname.split("/")[2] || "trending";
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
 	reminderTimeout = null;
-	featureBlockContents = buildFeatureBlockerContents();
 
 	//modal formatting for desktop
  	if (!isMobile() && !isTablet() && !isNarrow())
 	 	addCss({
 	 		".modal": function() {
 	 			return "width: 75%; margin: auto;";
-	 		}
+	 		},
+			"#slide-down-menu li:hover": function() {
+				return "background-color: #00aeef;";
+			},
+			"#slide-down-menu li:hover a": function() {
+				return "color: white;";
+			},
+			"#slide-down-menu li:hover div img:nth-child(2)": function() {
+				return "display: inline;";
+			},
+			"#slide-down-menu li:hover div img:first-child": function() {
+				return "display: none;";
+			},
+			".autocomplete div div:hover": function() {
+				return "color: white; background-color: #00aeef;";
+			}
 	 	});
 	var reminderContainer = document.createElement('div');
 	var forgetReminder = function() {
@@ -245,7 +259,10 @@ onload = function ()
 				cardsToLoad = cardsToLoad.concat(popData(rdata, firstCard).slice(3));
 				refreshCards(failMsgNode, 2);
 			}
-		}, function() {
+		}, function(response, status) {
+			if (status == 401){
+				messageBox("Oops", response.errors + " <br><br><i>Control Safe Surf from Options</i>");
+			}
 			if (!update) {
 				data = [];
 				refreshCards(failMsgNode);
@@ -254,8 +271,8 @@ onload = function ()
 	};
 	var firstPopulate = function() {
 		var feed, id, pair, h = document.location.hash.slice(1);
-		if (h.indexOf("|") != -1) {
-			pair = h.split("|");
+		if (h.indexOf('~') != -1) {
+			pair = h.split("~");
 			feed = pair[0];
 			id = pair[1];
 		}
@@ -828,12 +845,16 @@ onload = function ()
 		card.isContent = true;
 		card.setSource = function() {
 			imageContainer.firstChild.src = image.get(c, window.innerWidth - 40).url;
+			console.log("Source Set to: ", imageContainer.firstChild.src, " for card ", card.id, " with data ", card);
 		};
 		formatCardContents(card, image.get(card.card));
+		console.log("Reached if test for slider = ", slider, " card = ", card);
 		if (slider == card) {
+			console.log("Slider = card in test ", card);
 			slider.setSource();
 			firstCardLoaded = false;
 			imageContainer.firstChild.onload = function() {
+				console.log("Finished load of first card");
 				firstCardLoaded = true;
 				slider.parentNode.nextSibling.firstChild.setSource();
 				slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
@@ -845,9 +866,12 @@ onload = function ()
 		}
 		imageContainer.firstChild.onerror = function() {
 			slideContainer.removeChild(card.parentNode);
+			// setSlider();
+			console.log("Error event ", card);
 			if (slider == card) {
 				throbber.off();
-				scrollContainer.style.opacity = 1;
+  				scrollContainer.style.opacity = 1;
+ 				console.log("Slider == card in error");
 			}
 			buildCard();
 		};
@@ -877,7 +901,7 @@ onload = function ()
 	};
 	var buildLoginCard = function(c, zIndex) {
 		var formatter = document.createElement('div'),
-			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='http://http://assets.tagsurf.co/img/logo_w_border.png'><div class='big bold'>Hate repeats? Sign up!</div>",
+			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='http://assets.tagsurf.co/img/logo_w_border.png'><div class='big bold'>Hate repeats? Sign up!</div>",
 			form = "<form accept-charset='UTF-8' action='/users' class='new-user' id='new-user' method='post'><div style='margin:0;padding:0;display:inline'><input name='utf8' type='hidden' value='✓'><input name='authenticity_token' type='hidden' value='" + document.getElementsByName("csrf-token")[0].content + "'></div><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center></form>",
 			bottom = "<div class='wide-text'><a id='line-text-login' class='small big-lnk'>Already have an account? <b>Login here</b>.</a></div><div class='smaller block'>By signing up you agree to our <a class='bold big-lnk' id='terms-lnk'>Terms of Use</a> and <a class='bold big-lnk' id='privacy-lnk'>Privacy Policy</a>.</div></div></div>",
 			cardTemplate = top + form + bottom;
@@ -963,19 +987,8 @@ onload = function ()
 		gesture.listen("down", imageContainer, returnTrue);
 		gesture.listen("up", imageContainer, returnTrue);
 		gesture.listen("drag", imageContainer, returnTrue);
-		gesture.listen("pinch", imageContainer, function(normalizedDistance) {
-			if (normalizedDistance) {
-				upCallback(true);
-				if (normalizedDistance > 1) {
-					if (!modal.zoom.zoomed) {
-						tapCallback(1);
-						modal.zoom.current = window.innerWidth;
-					}
-					modal.pinchZoom(normalizedDistance);
-				}
-			} else
-				modal.pinchZoom();
-		});
+		modal.setPinchLauncher(imageContainer,
+			function() { upCallback(true); });
 	};
 	var initCardGestures = function ()
 	{
@@ -1024,7 +1037,7 @@ onload = function ()
 	setStarCallback(function() {
 		if (!isAuthorized())
 		{
-			modal.promptIn(featureBlockContents);
+			messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
 			return;
 		}
 		slider.style['border-color'] = "green";
@@ -1075,7 +1088,7 @@ if (isAuthorized())
 	}
 }
 
-document.location.hash = document.location.hash.replace("%7C", "|");
+document.location.hash = document.location.hash.replace('|','~');
 // handle facebook redirects
 if (document.location.href.indexOf("?") != -1)
 	document.location = "http://" +
