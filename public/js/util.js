@@ -8,10 +8,10 @@ var currentUser = {
 var returnTrue = function() { return true; };
 var DEBUG = false;
 // Set DEBUG = true in non-production environments
-// if ((document.location.hostname.indexOf("localhost") != -1) 
-//   || (document.location.hostname.indexOf("staging.tagsurf.co") != -1)
-//   || (document.location.hostname.indexOf("192.168") != -1))
-//   DEBUG = true;
+if ((document.location.hostname.indexOf("localhost") != -1) 
+  || (document.location.hostname.indexOf("staging.tagsurf.co") != -1)
+  || (document.location.hostname.indexOf("192.168") != -1))
+  DEBUG = true;
 var hasClass = function (node, className) 
 {
   return node.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(node.className);

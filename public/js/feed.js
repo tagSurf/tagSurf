@@ -261,8 +261,7 @@ onload = function ()
 			}
 		}, function(response, status) {
 			if (status == 401){
-				console.log("Status = " + status);
-				messageBox();
+				messageBox("Oops", response.errors + " <br><br><i>Control Safe Surf from Options</i>");
 			}
 			if (!update) {
 				data = [];
