@@ -841,10 +841,10 @@ onload = function ()
 		card.isContent = true;
 		card.setSource = function() {
 			imageContainer.firstChild.src = image.get(c, window.innerWidth - 40).url;
-			console.log("Source Set to: ", imageContainer.firstChild.src);
+			console.log("Source Set to: ", imageContainer.firstChild.src, " for card ", card.id, " with data ", card);
 		};
 		formatCardContents(card, image.get(card.card));
-		console.log("Reached if test for card ", slider.card.id );
+		console.log("Reached if test for card ", card.id, " slider = ", slider, " card = ", card);
 		if (slider == card) {
 			slider.setSource();
 			firstCardLoaded = false;
@@ -865,7 +865,7 @@ onload = function ()
 			if (slider == card) {
 				throbber.off();
 				scrollContainer.style.opacity = 1;
-				console.log("Slider == card in error ", card);
+				console.log("Slider == card in error. Slider = ", slider, " card = ", card);
 			}
 			buildCard();
 		};
