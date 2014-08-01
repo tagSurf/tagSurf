@@ -862,21 +862,14 @@ onload = function ()
 		}
 		imageContainer.firstChild.onerror = function() {
 			slideContainer.removeChild(card.parentNode);
+			setSlider();
 			console.log("Error event ", card);
 			if (slider == card) {
-				slider.setSource();
-				firstCardLoaded = false;
-				imageContainer.firstChild.onload = function() {
-					console.log("Finished load of first card");
-					firstCardLoaded = true;
-					slider.parentNode.firstChild.setSource();
-					slider.parentNode.nextSibling.firstChild.setSource();
-					throbber.off();
-					scrollContainer.style.opacity = 1;
-					analytics.track('Finished Pageload');
-					preloadCards();
-				};
+				throbber.off();
+  				scrollContainer.style.opacity = 1;
+ 				console.log("Slider == card in error");
 			}
+			buildCard();
 		};
 	};
 	var focusInput = function (input)
