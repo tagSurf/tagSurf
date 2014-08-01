@@ -23,7 +23,6 @@ onload = function ()
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
 	reminderTimeout = null;
-	featureBlockContents = buildFeatureBlockerContents();
 
 	//modal formatting for desktop
  	if (!isMobile() && !isTablet() && !isNarrow())
@@ -1033,7 +1032,7 @@ onload = function ()
 	setStarCallback(function() {
 		if (!isAuthorized())
 		{
-			modal.promptIn(featureBlockContents);
+			userAlert("Oops", "You need to login to do that...", "login", saveVotesLogin);
 			return;
 		}
 		slider.style['border-color'] = "green";
