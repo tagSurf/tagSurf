@@ -841,12 +841,15 @@ onload = function ()
 		card.isContent = true;
 		card.setSource = function() {
 			imageContainer.firstChild.src = image.get(c, window.innerWidth - 40).url;
+			console.log("Source Set");
 		};
 		formatCardContents(card, image.get(card.card));
+		console.log("Reached if test");
 		if (slider == card) {
 			slider.setSource();
 			firstCardLoaded = false;
 			imageContainer.firstChild.onload = function() {
+				console.log("Slider = card in test");
 				firstCardLoaded = true;
 				slider.parentNode.nextSibling.firstChild.setSource();
 				slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
@@ -858,9 +861,11 @@ onload = function ()
 		}
 		imageContainer.firstChild.onerror = function() {
 			slideContainer.removeChild(card.parentNode);
+			console.log("Error event");
 			if (slider == card) {
 				throbber.off();
 				scrollContainer.style.opacity = 1;
+				console.log("Slider == card in error");
 			}
 			buildCard();
 		};
