@@ -98,7 +98,7 @@ var add_icon, add_state = "blue", add_icons = {
 var addBarSlid = false;
 var slideAddBar = function(noback) {
   if (!isAuthorized()) {
-    messageBox("Oops", "You need to login to do that...", "login", saveVotesLogin);
+    messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
     return;
   }
   if (autocomplete.viewing.autocomplete) {
@@ -154,14 +154,14 @@ var fadeInBody = function() {
     }
   });
 };
-var shareVotes = [], saveVotesLogin = function () {
+var shareVotes = [], stashVotesAndLogin = function () {
   sessionStorage.setItem("lastPath",
     current_tag + "~" + currentMedia.id);
   sessionStorage.setItem("shareVotes",
     JSON.stringify(shareVotes));
   window.location = "/users/sign_in";
 };
-var messageBox = function (title, message, action, cb) {
+var messageBox = function (title, message, action_type, cb) {
   var contents = document.createElement('div'),
       closeContainer = document.createElement('div'),
       close = document.createElement('img'),
@@ -175,24 +175,35 @@ var messageBox = function (title, message, action, cb) {
   closeContainer.appendChild(close);
   contents.appendChild(closeContainer);
   titleElement.className = "prompt-title";
-  if (title)
+  if(title)
     titleElement.innerHTML = title;
   else
     titleElement.innerHTML = "Oops";
   contents.appendChild(titleElement);
   messageElement.className = "prompt-message";
-  if (message)
+  if(message)
     messageElement.innerHTML = message;
   else
     messageElement.innerHTML = "Something went wrong";
   contents.appendChild(messageElement);
-  link.className = "prompt-login-button";
-  switch (action) {
-    case "login":
-      link.innerHTML = "login";
-      break;
-    default:
-      link.innerHTML = "ok";
+  link.className = "msgbox-button";
+  if(typeof action_type === "undefined") {
+    link.innerHTML = "ok";
+    if(cb)
+      gesture.listen("tap", link, cb);
+    else
+      gesture.listen("tap", link, modal.callPrompt);
+  }
+  else {
+    link.innerHTML = action_type;
+    if(action_type = "login" && !cb)
+      gesture.listen("tap", link, function () {
+        window.location = "/users/sign_in"
+      });
+    else if(cb)
+      gesture.listen("tap", link, cb);
+    else
+      gesture.listen("tap", link, modal.callPrompt);
   }
   gesture.listen("down", link, function () {
     link.classList.add('ts-active-button');
@@ -200,10 +211,6 @@ var messageBox = function (title, message, action, cb) {
   gesture.listen("up", link, function () {
     link.classList.remove('ts-active-button');
   });
-  if (cb)
-    gesture.listen("tap", link, cb);
-  else
-    gesture.listen("tap", link, modal.callPrompt);
   contents.appendChild(link);
   modal.promptIn(contents);
 };
@@ -238,7 +245,7 @@ var buildOptionsTable = function () {
 		}
 		else
 		{
-			messageBox("Oops", "You need to login to do that...", "login", saveVotesLogin);
+			messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
 		}
 	});
 	safeSurfCheckbox.className = 'onoffswitch-container';
@@ -383,7 +390,7 @@ var populateNavbar = function () {
   }
   else
   {
-    document.getElementById("login").onclick = saveVotesLogin;
+    document.getElementById("login").onclick = stashVotesAndLogin;
   }
   document.getElementById("options-btn").onclick = function() {
     var n = document.createElement("div");

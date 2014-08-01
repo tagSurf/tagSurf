@@ -1032,7 +1032,7 @@ onload = function ()
 	setStarCallback(function() {
 		if (!isAuthorized())
 		{
-			messageBox("Oops", "You need to login to do that...", "login", saveVotesLogin);
+			messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
 			return;
 		}
 		slider.style['border-color'] = "green";
