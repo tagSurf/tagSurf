@@ -98,7 +98,7 @@ var add_icon, add_state = "blue", add_icons = {
 var addBarSlid = false;
 var slideAddBar = function(noback) {
   if (!isAuthorized()) {
-    userAlert("Oops", "You need to login to do that...", "login", saveVotesLogin);
+    messageBox("Oops", "You need to login to do that...", "login", saveVotesLogin);
     return;
   }
   if (autocomplete.viewing.autocomplete) {
@@ -161,7 +161,7 @@ var shareVotes = [], saveVotesLogin = function () {
     JSON.stringify(shareVotes));
   window.location = "/users/sign_in";
 };
-var userAlert = function (title, message, action, cb) {
+var messageBox = function (title, message, action, cb) {
   var contents = document.createElement('div'),
       closeContainer = document.createElement('div'),
       close = document.createElement('img'),
@@ -238,7 +238,7 @@ var buildOptionsTable = function () {
 		}
 		else
 		{
-			userAlert("Oops", "You need to login to do that...", "login", saveVotesLogin);
+			messageBox("Oops", "You need to login to do that...", "login", saveVotesLogin);
 		}
 	});
 	safeSurfCheckbox.className = 'onoffswitch-container';
@@ -417,7 +417,7 @@ var populateNavbar = function () {
 var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
     "http://assets.tagsurf.co/img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
-
+};
 var starCallback, setStarCallback = function(cb) {
   starCallback = cb;
 };
