@@ -212,7 +212,7 @@ var messageBox = function (title, message, action_type, cb) {
     link.classList.remove('ts-active-button');
   });
   contents.appendChild(link);
-  modal.promptIn(contents);
+  modal.promptIn(contents, null, false);
 };
 var buildOptionsTable = function () {
 	var optionsTable = document.createElement('table'),
@@ -497,7 +497,7 @@ var xhr = function(path, action, cb, eb, async, payload) {
       { "errors": _xhr.responseText } : JSON.parse(_xhr.responseText);
       if (resp.errors || _xhr.status != 200) {
         if (eb) 
-          eb(resp);
+          eb(resp, _xhr.status);
         if (!(_xhr.status == 404) && DEBUG) {
           alert("XHR error! Request failed. Path: " + path + " Errors: " + resp.errors 
             + " Response: " + _xhr.responseText + " Status: " + _xhr.status);

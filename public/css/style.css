@@ -434,12 +434,15 @@ a {
 }
 .msgbox-btn
 {
-  display: inline-block;
+  display: block;
   text-align: center;
   background: #00aeef;
   border-radius: 5px;
   padding: 5px;
   margin-bottom: 10px;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 35%;
   cursor: pointer;
 }
 .prompt-container

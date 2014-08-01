@@ -227,9 +227,10 @@ var modal = {
 			modal.backOff();
 		}
 	},
-	promptIn: function(node, cb) {
+	promptIn: function(node, cb, back) {
 		if (modal.prompt.on)
 			return;
+		back = (typeof back === "undefined") ? true : back;
 		modal.prompt.on = true;
 		modal.prompt.innerHTML = "";
 		modal.prompt.appendChild(node);
@@ -238,7 +239,7 @@ var modal = {
 		setTimeout(function() {
 			modal.prompt.className = "modal-prompt opaque";
 		}, 0);
-		if (!modal.back.on) {
+		if (!modal.back.on && back) {
 			modal.backOn();
 			modal.prompt.backed = true;
 		}

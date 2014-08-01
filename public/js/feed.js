@@ -259,7 +259,10 @@ onload = function ()
 				cardsToLoad = cardsToLoad.concat(popData(rdata, firstCard).slice(3));
 				refreshCards(failMsgNode, 2);
 			}
-		}, function() {
+		}, function(response, status) {
+			if (status == 401){
+				messageBox("Oops", response.errors + " <br><br><i>Control Safe Surf from Options</i>");
+			}
 			if (!update) {
 				data = [];
 				refreshCards(failMsgNode);
