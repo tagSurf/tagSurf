@@ -864,11 +864,19 @@ onload = function ()
 			slideContainer.removeChild(card.parentNode);
 			console.log("Error event ", card);
 			if (slider == card) {
-				throbber.off();
-				scrollContainer.style.opacity = 1;
-				console.log("Slider == card in error. Slider = ", slider, " card = ", card);
+				slider.setSource();
+				firstCardLoaded = false;
+				imageContainer.firstChild.onload = function() {
+					console.log("Finished load of first card");
+					firstCardLoaded = true;
+					slider.parentNode.nextSibling.firstChild.setSource();
+					slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
+					throbber.off();
+					scrollContainer.style.opacity = 1;
+					analytics.track('Finished Pageload');
+					preloadCards();
+				};
 			}
-			buildCard();
 		};
 	};
 	var focusInput = function (input)
