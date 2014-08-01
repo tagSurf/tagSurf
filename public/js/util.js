@@ -94,10 +94,11 @@ var add_icon, add_state = "blue", add_icons = {
   fill: 'http://assets.tagsurf.co/img/add_icon_fill.png',
   blue: 'http://assets.tagsurf.co/img/add_icon_blue.png'
 };
+
 var addBarSlid = false;
 var slideAddBar = function(noback) {
   if (!isAuthorized()) {
-    modal.promptIn(featureBlockContents);
+    messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
     return;
   }
   if (autocomplete.viewing.autocomplete) {
@@ -143,14 +144,6 @@ var rmTag = function(tname) {
     tobjs = tobjs.slice(0, tIndex).concat(tobjs.slice(tIndex + 1));
 };
 
-var shareVotes = [], saveVotesLogin = function () {
-  sessionStorage.setItem("lastPath",
-    current_tag + "~" + currentMedia.id);
-  sessionStorage.setItem("shareVotes",
-    JSON.stringify(shareVotes));
-  window.location = "/users/sign_in";
-};
-
 var popTrending; // defined in feed
 var fadeInBody = function() {
   addCss({
@@ -160,6 +153,66 @@ var fadeInBody = function() {
         + "opacity: 1;";
     }
   });
+};
+var shareVotes = [], stashVotesAndLogin = function () {
+  sessionStorage.setItem("lastPath",
+    current_tag + "~" + currentMedia.id);
+  sessionStorage.setItem("shareVotes",
+    JSON.stringify(shareVotes));
+  window.location = "/users/sign_in";
+};
+var messageBox = function (title, message, action_type, cb) {
+  var contents = document.createElement('div'),
+      closeContainer = document.createElement('div'),
+      close = document.createElement('img'),
+      titleElement = document.createElement('p'),
+      messageElement = document.createElement('p'),
+      link = document.createElement('div');
+  closeContainer.className = "close-button-container pointer";
+  close.className = "x-close-button";
+  close.src = "http://assets.tagsurf.co/img/Close.png";
+  gesture.listen('down', closeContainer, modal.callPrompt);
+  closeContainer.appendChild(close);
+  contents.appendChild(closeContainer);
+  titleElement.className = "prompt-title";
+  if(title)
+    titleElement.innerHTML = title;
+  else
+    titleElement.innerHTML = "Oops";
+  contents.appendChild(titleElement);
+  messageElement.className = "prompt-message";
+  if(message)
+    messageElement.innerHTML = message;
+  else
+    messageElement.innerHTML = "Something went wrong";
+  contents.appendChild(messageElement);
+  link.className = "msgbox-btn";
+  if(typeof action_type === "undefined") {
+    link.innerHTML = "ok";
+    if(cb)
+      gesture.listen("tap", link, cb);
+    else
+      gesture.listen("tap", link, modal.callPrompt);
+  }
+  else {
+    link.innerHTML = action_type;
+    if(action_type = "login" && !cb)
+      gesture.listen("tap", link, function () {
+        window.location = "/users/sign_in"
+      });
+    else if(cb)
+      gesture.listen("tap", link, cb);
+    else
+      gesture.listen("tap", link, modal.callPrompt);
+  }
+  gesture.listen("down", link, function () {
+    link.classList.add('ts-active-button');
+  });
+  gesture.listen("up", link, function () {
+    link.classList.remove('ts-active-button');
+  });
+  contents.appendChild(link);
+  modal.promptIn(contents);
 };
 var buildOptionsTable = function () {
 	var optionsTable = document.createElement('table'),
@@ -192,7 +245,7 @@ var buildOptionsTable = function () {
 		}
 		else
 		{
-			modal.promptIn(featureBlockContents);
+			messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
 		}
 	});
 	safeSurfCheckbox.className = 'onoffswitch-container';
@@ -337,7 +390,7 @@ var populateNavbar = function () {
   }
   else
   {
-    document.getElementById("login").onclick = saveVotesLogin;
+    document.getElementById("login").onclick = stashVotesAndLogin;
   }
   document.getElementById("options-btn").onclick = function() {
     var n = document.createElement("div");
@@ -371,37 +424,6 @@ var populateNavbar = function () {
 var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
     "http://assets.tagsurf.co/img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
-};
-var featureBlockContents, buildFeatureBlockerContents = function() {
-	var contents = document.createElement('div'),
-		closeContainer = document.createElement('div'),
-		close = document.createElement('img'),
-		title = document.createElement('p'),
-		message = document.createElement('p'),
-		link = document.createElement('div');
-	closeContainer.className = "close-button-container pointer";
-	close.className = "x-close-button";
-	close.src = "http://assets.tagsurf.co/img/Close.png";
-	gesture.listen('down', closeContainer, modal.callPrompt);
-	closeContainer.appendChild(close);
-	contents.appendChild(closeContainer);
-	title.className = "prompt-title";
-	title.innerHTML = "Oops";
-	contents.appendChild(title);
-	message.className = "prompt-message";
-	message.innerHTML = "You need to login to do that...";
-	contents.appendChild(message);
-	link.className = "prompt-login-button";
-	link.innerHTML = "login";
-	gesture.listen("down", link, function () {
-		link.classList.add('ts-active-button');
-	});
-	gesture.listen("tap", link, saveVotesLogin);
-	gesture.listen("up", link, function () {
-		link.classList.remove('ts-active-button');
-	});
-	contents.appendChild(link);
-	return contents;
 };
 var starCallback, setStarCallback = function(cb) {
   starCallback = cb;
