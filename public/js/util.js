@@ -145,7 +145,7 @@ var rmTag = function(tname) {
 
 var shareVotes = [], saveVotesLogin = function () {
   sessionStorage.setItem("lastPath",
-    current_tag + "|" + currentMedia.id);
+    current_tag + "~" + currentMedia.id);
   sessionStorage.setItem("shareVotes",
     JSON.stringify(shareVotes));
   window.location = "/users/sign_in";
