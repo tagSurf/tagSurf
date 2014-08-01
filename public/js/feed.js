@@ -12,12 +12,12 @@ onload = function ()
 		analytics.track('Redirected to Authed Feed');
 		window.location = "http://" +
 			document.location.host + '/feed#' +
-			window.location.pathname.replace('/share/','').replace('/','|');
+			window.location.pathname.replace('/share/','').replace('/','~');
 	} 
 	// defined in util for autocomplete
 	// integration with other sliding elements
 	tinput = document.getElementById("tag-input");
-	current_tag = tinput.value = document.location.hash.slice(1).split("|")[0]
+	current_tag = tinput.value = document.location.hash.slice(1).split("~")[0]
 		|| document.location.pathname.split("/")[2] || "trending";
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
@@ -30,7 +30,22 @@ onload = function ()
 	 	addCss({
 	 		".modal": function() {
 	 			return "width: 75%; margin: auto;";
-	 		}
+	 		},
+			"#slide-down-menu li:hover": function() {
+				return "background-color: #00aeef;";
+			},
+			"#slide-down-menu li:hover a": function() {
+				return "color: white;";
+			},
+			"#slide-down-menu li:hover div img:nth-child(2)": function() {
+				return "display: inline;";
+			},
+			"#slide-down-menu li:hover div img:first-child": function() {
+				return "display: none;";
+			},
+			".autocomplete div div:hover": function() {
+				return "color: white; background-color: #00aeef;";
+			}
 	 	});
 	var reminderContainer = document.createElement('div');
 	var forgetReminder = function() {
@@ -254,8 +269,8 @@ onload = function ()
 	};
 	var firstPopulate = function() {
 		var feed, id, pair, h = document.location.hash.slice(1);
-		if (h.indexOf("|") != -1) {
-			pair = h.split("|");
+		if (h.indexOf('~') != -1) {
+			pair = h.split("~");
 			feed = pair[0];
 			id = pair[1];
 		}
@@ -381,6 +396,7 @@ onload = function ()
 	};
 	var upCallback = function (androidSoftUp)
 	{
+		if (modal.zoom.zoomed) return;
 		toggleClass.apply(slider,['super-card', 'off']);
 		slider.supering = false;
 		if (slider.animating == false)
@@ -554,6 +570,7 @@ onload = function ()
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
+		if (modal.zoom.zoomed) return;
 		if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
 			gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
 		else if (!slider.animating && (direction == "left" || direction == "right")) {
@@ -583,6 +600,7 @@ onload = function ()
 	};
 	var dragCallback = function (direction, distance, dx, dy)
 	{
+		if (modal.zoom.zoomed) return;
 		if (slider.animating == false)
 		{
 			if (slider.expanded == true && 
@@ -650,6 +668,7 @@ onload = function ()
 	};
 	var tapCallback = function (tapCount)
 	{
+		if (modal.zoom.zoomed) return;
 		if (tapCount == 1)
 		{
 			if (slider.compressing == false)
@@ -822,12 +841,15 @@ onload = function ()
 		card.isContent = true;
 		card.setSource = function() {
 			imageContainer.firstChild.src = image.get(c, window.innerWidth - 40).url;
+			console.log("Source Set");
 		};
 		formatCardContents(card, image.get(card.card));
+		console.log("Reached if test");
 		if (slider == card) {
 			slider.setSource();
 			firstCardLoaded = false;
 			imageContainer.firstChild.onload = function() {
+				console.log("Slider = card in test");
 				firstCardLoaded = true;
 				slider.parentNode.nextSibling.firstChild.setSource();
 				slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
@@ -839,9 +861,11 @@ onload = function ()
 		}
 		imageContainer.firstChild.onerror = function() {
 			slideContainer.removeChild(card.parentNode);
+			console.log("Error event");
 			if (slider == card) {
 				throbber.off();
 				scrollContainer.style.opacity = 1;
+				console.log("Slider == card in error");
 			}
 			buildCard();
 		};
@@ -871,7 +895,7 @@ onload = function ()
 	};
 	var buildLoginCard = function(c, zIndex) {
 		var formatter = document.createElement('div'),
-			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='http://http://assets.tagsurf.co/img/logo_w_border.png'><div class='big bold'>Hate repeats? Sign up!</div>",
+			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='http://assets.tagsurf.co/img/logo_w_border.png'><div class='big bold'>Hate repeats? Sign up!</div>",
 			form = "<form accept-charset='UTF-8' action='/users' class='new-user' id='new-user' method='post'><div style='margin:0;padding:0;display:inline'><input name='utf8' type='hidden' value='✓'><input name='authenticity_token' type='hidden' value='" + document.getElementsByName("csrf-token")[0].content + "'></div><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center></form>",
 			bottom = "<div class='wide-text'><a id='line-text-login' class='small big-lnk'>Already have an account? <b>Login here</b>.</a></div><div class='smaller block'>By signing up you agree to our <a class='bold big-lnk' id='terms-lnk'>Terms of Use</a> and <a class='bold big-lnk' id='privacy-lnk'>Privacy Policy</a>.</div></div></div>",
 			cardTemplate = top + form + bottom;
@@ -936,6 +960,7 @@ onload = function ()
 	};
 	var downCallback = function ()
 	{
+		if (modal.zoom.zoomed) return;
 		if (slider.classList.contains('login-card'))
 		{
 			blurLoginInputs();
@@ -952,10 +977,12 @@ onload = function ()
 		var imageContainer = this.getElementsByClassName('image-container')[0];
 		if (!imageContainer)
 			return;
-		gesture.listen("tap", imageContainer, tapCallback)
-		gesture.listen("down", imageContainer, returnTrue)
-		gesture.listen("up", imageContainer, returnTrue)
-		gesture.listen("drag", imageContainer, returnTrue)
+		gesture.listen("tap", imageContainer, tapCallback);
+		gesture.listen("down", imageContainer, returnTrue);
+		gesture.listen("up", imageContainer, returnTrue);
+		gesture.listen("drag", imageContainer, returnTrue);
+		modal.setPinchLauncher(imageContainer,
+			function() { upCallback(true); });
 	};
 	var initCardGestures = function ()
 	{
@@ -1009,11 +1036,8 @@ onload = function ()
 		}
 		slider.style['border-color'] = "green";
 		slider.lastChild.previousSibling.firstChild.style.opacity = 0.8;
-		if (modal.zoom.zoomed) {
-			if (modal.zoom.large)
-				modal.callZoom(2);
+		if (modal.zoom.zoomed)
 			modal.callZoom(1);
-		}
 		setFavIcon(true);
 		xhr("/api/favorites/" + slider.card.id, "POST", function() {
 			swipeSlider("right", function () {
@@ -1058,7 +1082,7 @@ if (isAuthorized())
 	}
 }
 
-document.location.hash = document.location.hash.replace("%7C", "|");
+document.location.hash = document.location.hash.replace('|','~');
 // handle facebook redirects
 if (document.location.href.indexOf("?") != -1)
 	document.location = "http://" +

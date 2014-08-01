@@ -45,7 +45,9 @@ var isAuthorized = function () {
         authorizedSession = true;
         currentUser.id = result.user.id;
         currentUser.email = result.user.email;
+        currentUser.slug = result.user.slug;
         currentUser.admin = result.user.admin;
+        currentUser.safeSurf = result.user.safe_mode;
       }
       else
         authorizedSession = false;
@@ -159,6 +161,46 @@ var fadeInBody = function() {
     }
   });
 };
+var buildOptionsTable = function () {
+	var optionsTable = document.createElement('table'),
+  		safeSurfRow = optionsTable.insertRow(0),
+      safeSurfHelperRow = optionsTable.insertRow(1),
+  		safeSurfTextCell = safeSurfRow.insertCell(0),
+  		safeSurfCheckboxCell = safeSurfRow.insertCell(1),
+      safeSurfDescCell = safeSurfHelperRow.insertCell(0),
+      safeSurfDesc = document.createElement('div'),
+  		safeSurfText = document.createElement('div'),
+  		safeSurfCheckbox = document.createElement('div');
+  	optionsTable.className = "inline options-table";
+  	safeSurfCheckbox.innerHTML = 
+		'<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
+      ((currentUser && currentUser.safeSurf || !isAuthorized()) ? " checked" : "") +
+    '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> <div class="onoffswitch-cover" style="display:' +
+		(isAuthorized() ? 'none' : 'block') + ';"></div>';
+	safeSurfText.innerHTML = "Safe Surf";
+	safeSurfText.className = "option-key-text";
+  safeSurfDescCell.colSpan = 2;
+  safeSurfDesc.innerHTML = "Safe Surf filters NSFW content out of your feed. <br><i>(NSFW = Not Safe For Work)</i>";
+  safeSurfDesc.className = "options-key-desc";
+	gesture.listen('down', safeSurfCheckbox, function () {
+		if (isAuthorized())
+		{
+			safeSurfCheckbox.firstChild.checked = !safeSurfCheckbox.firstChild.checked;
+      xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
+        JSON.stringify({ safe_mode: safeSurfCheckbox.firstChild.checked }));
+      currentUser.safeSurf = safeSurfCheckbox.firstChild.checked;
+		}
+		else
+		{
+			modal.promptIn(featureBlockContents);
+		}
+	});
+	safeSurfCheckbox.className = 'onoffswitch-container';
+	safeSurfTextCell.appendChild(safeSurfText);
+	safeSurfCheckboxCell.appendChild(safeSurfCheckbox);
+  safeSurfDescCell.appendChild(safeSurfDesc);
+	return optionsTable;
+};
 var populateNavbar = function () {
   var nav = document.getElementById("nav");
   var navbar = document.createElement("div");
@@ -194,19 +236,29 @@ var populateNavbar = function () {
     "<div id='slide-down-menu' class='pointer'>",
       "<ul>",
       	"<li><a href='/feed'><div>",
-      	  "<img class='menu-icon' src='http://assets.tagsurf.co/img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
+      	  "<img class='menu-icon' src='http://assets.tagsurf.co/img/trending_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/trending_icon_white.png'></img>",
+          "&nbsp;&nbsp;&nbsp;TRENDING",
       	"</div></a></li>",
       	"<li><a href='/favorites'><div>",
-      	  "<img class='menu-icon' src='http://assets.tagsurf.co/img/favorites_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;FAVORITES",
+      	  "<img class='menu-icon' src='http://assets.tagsurf.co/img/favorites_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/favorites_icon_white.png'></img>",
+          "&nbsp;&nbsp;&nbsp;FAVORITES",
         "</div></a></li>",
         "<li><a href='/history'><div>",
-      	  "<img class='menu-icon' src='http://assets.tagsurf.co/img/history_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;HISTORY",
+      	  "<img class='menu-icon' src='http://assets.tagsurf.co/img/history_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/history_icon_white.png'></img>",
+          "&nbsp;&nbsp;&nbsp;HISTORY",
         "</div></a></li>",
         "<li><a id='options-btn'><div>",
-          "<img class='menu-icon' src='http://assets.tagsurf.co/img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/options_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/options_icon_white.png'></img>",
+          "&nbsp;&nbsp;&nbsp;OPTIONS",
         "</div></a></li>",
         "<li><a id='logout'><div>",
-          "<img class='menu-icon' src='http://assets.tagsurf.co/img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGOUT",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/logout_icon_gray.png'></img>",
+          "<img class='menu-icon inverted' src='http://assets.tagsurf.co/img/logout_icon_white.png'></img>",
+          "&nbsp;&nbsp;&nbsp;LOGOUT",
         "</div></a></li>",
       "</ul>",
     "</div>",
@@ -216,13 +268,19 @@ var populateNavbar = function () {
     "<div id='slide-down-menu' class='pointer'>",
       "<ul>",
       	"<li><a onclick='popTrending();'><div>",
-      	  "<img class='menu-icon' src='http://assets.tagsurf.co/img/trending_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;TRENDING",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/trending_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/trending_icon_white.png'></img>",
+          "&nbsp;&nbsp;&nbsp;TRENDING",
       	"</div></a></li>",
         "<li><a id='options-btn'><div>",
-          "<img class='menu-icon' src='http://assets.tagsurf.co/img/options_icon.png'></img>&nbsp;&nbsp;&nbsp;OPTIONS",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/options_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/options_icon_white.png'></img>",
+          "&nbsp;&nbsp;&nbsp;OPTIONS",
         "</div></a></li>",
         "<li><a id='login'><div>",
-          "<img class='menu-icon inverted' src='http://assets.tagsurf.co/img/logout_icon_gray.png'></img>&nbsp;&nbsp;&nbsp;LOGIN",
+          "<img class='menu-icon inverted' src='http://assets.tagsurf.co/img/logout_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/logout_icon_white.png'></img>",
+          "&nbsp;&nbsp;&nbsp;LOGIN",
         "</div></a></li>",
       "</ul>",
     "</div>",
@@ -246,6 +304,11 @@ var populateNavbar = function () {
   addCss({
     "#add-tag-autocomplete": function() {
       return "width: " + tag_adder.firstChild.clientWidth + "px";
+    },
+    ".autocomplete-open": function() {
+      return "height: "
+        + (isDesktop() ? (window.innerHeight - 200) : 150)
+        + "px !important";
     }
   });
   autocomplete.register("add-tag-autocomplete", tag_adder.firstChild, {
@@ -279,11 +342,14 @@ var populateNavbar = function () {
   document.getElementById("options-btn").onclick = function() {
     var n = document.createElement("div");
     n.className = "center-label";
-    var msg = document.createElement("div");
-    msg.innerHTML = "Nothing to see here... yet";
-    msg.className = "options-msg";
+    var title = document.createElement("div");
+    title.innerHTML = "Options";
+    title.className = "options-title";
+    var optionsTable = buildOptionsTable();
+    /*
     var img = document.createElement("img");
     img.src = "http://assets.tagsurf.co/img/throbber.gif";
+    */
     var TOS = document.createElement("div");
     TOS.innerHTML = "<a class='blue bold big-lnk' id='terms-lnk'>Terms of Use</a> | <a class='blue bold big-lnk' id='privacy-lnk'>Privacy Policy</a>";
     TOS.className = "tos-line";
@@ -292,8 +358,9 @@ var populateNavbar = function () {
       modal.backOff();
       modal.modalOut();
     };
-    n.appendChild(msg);
-    n.appendChild(img);
+    n.appendChild(title);
+    n.appendChild(optionsTable);
+    //n.appendChild(img);
     n.appendChild(TOS);
     slideNavMenu(true);
     share.off();
@@ -393,13 +460,15 @@ window.onresize = function() {
   resizeCb && resizeCb();
 };
 
-var xhr = function(path, action, cb, eb, async) {
+var xhr = function(path, action, cb, eb, async, payload) {
   var _xhr = new XMLHttpRequest();
   if(DEBUG) 
     console.log("XHR Request. Path: " + path + " action: " + (action || "GET"));
   if (typeof async === "undefined")
     async = true;
   _xhr.open(action || "GET", path, async);
+  if (action == "PATCH")
+    _xhr.setRequestHeader("Content-type", "application/json");
   _xhr.onreadystatechange = function() {
     if (_xhr.readyState == 4) {
       var resp = _xhr.responseText.charAt(0) == "<" ? 
@@ -418,7 +487,7 @@ var xhr = function(path, action, cb, eb, async) {
         cb && cb(resp);
     }
   }
-  _xhr.send();
+  _xhr.send(payload);
 };
 var mod = function(opts) {
   var targets = opts.targets ? opts.targets
