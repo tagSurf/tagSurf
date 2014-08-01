@@ -165,8 +165,8 @@ var userAlert = function (title, message, action, cb) {
   var contents = document.createElement('div'),
       closeContainer = document.createElement('div'),
       close = document.createElement('img'),
-      title = document.createElement('p'),
-      message = document.createElement('p'),
+      titleElement = document.createElement('p'),
+      messageElement = document.createElement('p'),
       link = document.createElement('div');
   closeContainer.className = "close-button-container pointer";
   close.className = "x-close-button";
@@ -174,18 +174,18 @@ var userAlert = function (title, message, action, cb) {
   gesture.listen('down', closeContainer, modal.callPrompt);
   closeContainer.appendChild(close);
   contents.appendChild(closeContainer);
-  title.className = "prompt-title";
+  titleElement.className = "prompt-title";
   if (title)
-    title.innerHTML = title;
+    titleElement.innerHTML = title;
   else
-    title.innerHTML = "Oops";
-  contents.appendChild(title);
-  message.className = "prompt-message";
+    titleElement.innerHTML = "Oops";
+  contents.appendChild(titleElement);
+  messageElement.className = "prompt-message";
   if (message)
-    message.innerHTML = message;
+    messageElement.innerHTML = message;
   else
-    message.innerHTML = "Something went wrong";
-  contents.appendChild(message);
+    messageElement.innerHTML = "Something went wrong";
+  contents.appendChild(messageElement);
   link.className = "prompt-login-button";
   switch (action) {
     case "login":
