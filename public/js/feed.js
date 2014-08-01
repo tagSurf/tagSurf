@@ -844,7 +844,7 @@ onload = function ()
 			console.log("Source Set to: ", imageContainer.firstChild.src, " for card ", card.id, " with data ", card);
 		};
 		formatCardContents(card, image.get(card.card));
-		console.log("Reached if test for card ", card.id, " slider = ", slider, " card = ", card);
+		console.log("Reached if test for slider = ", slider, " card = ", card);
 		if (slider == card) {
 			console.log("Slider = card in test ", card);
 			slider.setSource();
@@ -862,7 +862,7 @@ onload = function ()
 		}
 		imageContainer.firstChild.onerror = function() {
 			slideContainer.removeChild(card.parentNode);
-			setSlider();
+			// setSlider();
 			console.log("Error event ", card);
 			if (slider == card) {
 				throbber.off();
