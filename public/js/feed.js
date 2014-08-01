@@ -869,8 +869,8 @@ onload = function ()
 				imageContainer.firstChild.onload = function() {
 					console.log("Finished load of first card");
 					firstCardLoaded = true;
+					slider.parentNode.firstChild.setSource();
 					slider.parentNode.nextSibling.firstChild.setSource();
-					slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
 					throbber.off();
 					scrollContainer.style.opacity = 1;
 					analytics.track('Finished Pageload');
