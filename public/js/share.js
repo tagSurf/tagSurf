@@ -110,15 +110,9 @@ var share =
 				});
 			}
 			else {
-				modal.topModalIn(share.content, function() {
-					document.getElementById("share-url").blur();
-					modal.topModalOut();
-					share.shareModalOut = false;
-					analytics.track('Close Share Window', {
-						card: share.data.id,
-						surfing: current_tag
-					});
-				});
+				if(panic.panicModalOut)
+					panic.close();
+				modal.topModalIn(share.content, share.close);
 				share.shareModalOut = true;
 				analytics.track('Open Share Window', {
 					card: share.data.id,
@@ -130,6 +124,15 @@ var share =
 		});
 		share.button.appendChild(shareIcon);
 		document.body.appendChild(share.button);
+	},
+	close: function() {
+		document.getElementById("share-url").blur();
+		modal.topModalOut();
+		share.shareModalOut = false;
+		analytics.track('Close Share Window', {
+			card: share.data.id,
+			surfing: current_tag
+		});
 	},
 	on: function (data, cb)
 	{
