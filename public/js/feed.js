@@ -495,26 +495,39 @@ onload = function ()
 	};
 	var keyInertia = 0, 
 		scrollDirection,
-		keyIsDown = {},
+		keyIsDown = {38:{},40:{}},
 		scrollScrollContainer = function (time) {
-			if (keyIsDown[40])
+			var inertialDecrement = 1, scrollTopIncrement;
+			if (keyIsDown[40].isDown)
 			{
-				if (keyInertia < 100)
+				if (keyInertia < 50)
 					keyInertia += 5;
 				scrollContainer.scrollTop += (2 * keyInertia);
 				requestAnimFrame(scrollScrollContainer);
 			}
-			else if (keyIsDown[38])
+			else if (keyIsDown[38].isDown)
 			{
-				if (keyInertia < 100)
+				if (keyInertia < 50)
 					keyInertia += 5;
 				scrollContainer.scrollTop -= (2 * keyInertia);
 				requestAnimFrame(scrollScrollContainer);
 			}
 			else if (keyInertia > 10)
 			{
-				keyInertia -= 1;
-				scrollContainer.scrollTop += ((scrollDirection == "down") ? (2 * keyInertia) : ((scrollDirection == "up") ? -(2 * keyInertia) : scrollContainer.scrollTop));
+				if (scrollDirection == "down")
+				{
+					if (keyIsDown[40].totalTime > 150)
+						inertialDecrement = 3;
+					scrollTopIncrement = 2 * keyInertia;
+				}
+				if (scrollDirection == "up")
+				{
+					if (keyIsDown[38].totalTime > 150)
+						inertialDecrement = 3;
+					scrollTopIncrement = -2 * keyInertia;
+				}
+				keyInertia -= inertialDecrement;
+				scrollContainer.scrollTop += scrollTopIncrement;
 				requestAnimFrame(scrollScrollContainer);
 			}
 			else if (keyInertia <= 10)
@@ -527,21 +540,24 @@ onload = function ()
 		keyInertia += 1;
 		e = e || window.event;
 		var code = e.keyCode || e.which;
-		keyIsDown[code] = true;
+		if (keyIsDown.hasOwnProperty(code))
+			keyIsDown[code].isDown = true;
 		if (code == 38){
 			scrollDirection = "up";
-			if (!keyIsDown[38])
+			if (!keyIsDown[38].isDown)
 			{
 				return;
 			}
+			keyIsDown[38].startTime = Date.now();
 			requestAnimFrame(scrollScrollContainer);
 		}
 		else if (code == 40){
 			scrollDirection = "down";
-			if (!keyIsDown[40])
+			if (!keyIsDown[40].isDown)
 			{
 				return;
 			}
+			keyIsDown[40].startTime = Date.now();
 			requestAnimFrame(scrollScrollContainer);
 		}
 	};
@@ -549,7 +565,8 @@ onload = function ()
 		closeReminder("right");
 		e = e || window.event;
 		var code = e.keyCode || e.which;
-		keyIsDown[code] = false;
+		if (keyIsDown.hasOwnProperty(code))
+			keyIsDown[code].isDown = false;
 		if (code == 32){
 			expandCard();
 		}
@@ -580,7 +597,9 @@ onload = function ()
 				analytics.track("Seen Login Card");
 		}
 		else if (code == 38) {
-			keyIsDown[40] = false;
+			keyIsDown[38].isDown = false;
+			keyIsDown[38].endTime = Date.now();
+			keyIsDown[38].totalTime = keyIsDown[38].endTime - keyIsDown[38].startTime;
 		}
 		else if (code == 39) {
 			dragCallback("right", 3, 3);
@@ -610,7 +629,9 @@ onload = function ()
 				analytics.track("Seen Login Card");
 		}
 		else if (code == 40) {
-			keyIsDown[40] = false;
+			keyIsDown[40].isDown = false;
+			keyIsDown[40].endTime = Date.now();
+			keyIsDown[40].totalTime = keyIsDown[40].endTime - keyIsDown[40].startTime;
 		}
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
