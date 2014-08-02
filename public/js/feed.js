@@ -113,6 +113,8 @@ onload = function ()
 		gesture.listen("tap", reminderContainer, closeReminder);
 		gesture.listen("swipe", reminderContainer, closeReminder);
 		document.body.appendChild(reminderContainer);
+		if(DEBUG)
+			return;
 		reminderTimeout = setTimeout(function () {
 			reminderContainer.isOn = true;
 			reminderContainer.style.visibility = "visible";
