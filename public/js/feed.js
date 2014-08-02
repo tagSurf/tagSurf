@@ -733,7 +733,7 @@ onload = function ()
 				card: panic.data.id,
 				surfing: current_tag
 			});
-			messageBox("Thanks for the Report", "A moderator will review that card before anyone sees it again.", "Ok", null, true);
+			messageBox("Thanks for the Report", "An admin will review that card before anyone sees it again.", "Ok", null, true);
 		});
 		if (expandTimeout) {
 			clearTimeout(expandTimeout);
