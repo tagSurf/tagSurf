@@ -354,6 +354,33 @@ a {
    -webkit-transform-style: flat;
    perspective: 1000;
 }
+#panic-button
+{
+  -webkit-transition: opacity 250ms;
+  transition: opacity 250ms;
+  opacity: 0;
+  z-index: 15;
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  width: 50px;
+  padding: 10px;
+  pointer-events: none;
+}
+#panic-icon
+{
+  width: 30px;
+}
+.panic-active
+{
+  opacity: 1 !important;
+  pointer-events: initial !important;
+}
+#get-away-button
+{
+	max-width: 75% !important;
+	font-size: 160%;
+}
 #share-button
 {
   -webkit-transition: opacity 250ms;
@@ -761,6 +788,19 @@ a {
 	.share-link-icon
 	{
 		padding: 0 50px;
+	}
+	#panic-button {
+	  bottom: 10px;
+	  left: 15px;
+	  width: 80px;
+	}
+	#panic-icon {
+		width: 50px;
+	}
+	#get-away-button {
+		max-width: 50% !important;
+		font-size: 280%;
+		margin-top: 22%;
 	}
 	.zoom-wrapper {
 		top: 40px;
