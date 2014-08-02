@@ -729,6 +729,11 @@ onload = function ()
 		slider = s || slideContainer.firstChild.firstChild;
 		setCurrentMedia(slider.card, forgetReminder, function() {
 			swipeSlider("left");
+			analytics.track('Report Inappropriate Content', {
+				card: panic.data.id,
+				surfing: current_tag
+			});
+			messageBox("Thanks for the Report", "A moderator will review that card before anyone sees it again.", "Ok", null, true);
 		});
 		if (expandTimeout) {
 			clearTimeout(expandTimeout);

@@ -161,13 +161,14 @@ var shareVotes = [], stashVotesAndLogin = function () {
     JSON.stringify(shareVotes));
   window.location = "/users/sign_in";
 };
-var messageBox = function (title, message, action_type, cb) {
+var messageBox = function (title, message, action_type, cb, backed) {
   var contents = document.createElement('div'),
       closeContainer = document.createElement('div'),
       close = document.createElement('img'),
       titleElement = document.createElement('p'),
       messageElement = document.createElement('p'),
       link = document.createElement('div');
+  backed = (typeof backed === "undefined") ? false : backed;
   closeContainer.className = "close-button-container pointer";
   close.className = "x-close-button";
   close.src = "http://assets.tagsurf.co/img/Close.png";
@@ -196,8 +197,9 @@ var messageBox = function (title, message, action_type, cb) {
   }
   else {
     link.innerHTML = action_type;
-    if(action_type = "login" && !cb)
+    if(action_type == "login" && !cb)
       gesture.listen("tap", link, function () {
+        console.log("login");
         window.location = "/users/sign_in"
       });
     else if(cb)
@@ -212,7 +214,7 @@ var messageBox = function (title, message, action_type, cb) {
     link.classList.remove('ts-active-button');
   });
   contents.appendChild(link);
-  modal.promptIn(contents, null, false);
+  modal.promptIn(contents, null, backed);
 };
 var buildOptionsTable = function () {
 	var optionsTable = document.createElement('table'),
@@ -417,6 +419,7 @@ var populateNavbar = function () {
     n.appendChild(TOS);
     slideNavMenu(true);
     share.off();
+    panic.off();
     modal.modalIn(n, options_cb);
     initDocLinks(checkShare);
   };
@@ -435,7 +438,7 @@ var currentMedia, checkShare = function(shareCb, panicCb) {
   var d = currentMedia;
   if (d && d.type == "content") {
     share.on(d, shareCb);
-    panicCb && panic.on(d, panicCb);
+    panic.on(d, panicCb);
   } else {
     share.off();
     panic.off();
