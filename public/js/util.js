@@ -438,7 +438,10 @@ var currentMedia, checkShare = function(shareCb, panicCb) {
   var d = currentMedia;
   if (d && d.type == "content") {
     share.on(d, shareCb);
-    panic.on(d, panicCb);
+    if(whichGallery()) //no panic modal in galleries
+      return;
+    else
+      panic.on(d, panicCb);
   } else {
     share.off();
     panic.off();
