@@ -493,26 +493,63 @@ onload = function ()
 		// removed history slider
 //		addHistoryItem(activeCard);
 	};
-	var keyInertia = 0;
+	var keyInertia = 0, 
+		scrollDirection,
+		keyIsDown = {},
+		scrollScrollContainer = function (time) {
+			if (keyIsDown[40])
+			{
+				if (keyInertia < 100)
+					keyInertia += 5;
+				scrollContainer.scrollTop += (2 * keyInertia);
+				requestAnimFrame(scrollScrollContainer);
+			}
+			else if (keyIsDown[38])
+			{
+				if (keyInertia < 100)
+					keyInertia += 5;
+				scrollContainer.scrollTop -= (2 * keyInertia);
+				requestAnimFrame(scrollScrollContainer);
+			}
+			else if (keyInertia > 10)
+			{
+				keyInertia -= 1;
+				scrollContainer.scrollTop += ((scrollDirection == "down") ? (2 * keyInertia) : ((scrollDirection == "up") ? -(2 * keyInertia) : scrollContainer.scrollTop));
+				requestAnimFrame(scrollScrollContainer);
+			}
+			else if (keyInertia <= 10)
+			{
+				keyInertia = 0;
+				scrollDirection = "";
+			}
+		};
 	window.onkeydown = function(e) {
 		keyInertia += 1;
 		e = e || window.event;
 		var code = e.keyCode || e.which;
+		keyIsDown[code] = true;
 		if (code == 38){
-			//boundary checking
-			scrollContainer.scrollTop -= (2 * keyInertia);
+			scrollDirection = "up";
+			if (!keyIsDown[38])
+			{
+				return;
+			}
+			requestAnimFrame(scrollScrollContainer);
 		}
 		else if (code == 40){
-			//boundary checking
-			window.scrollBy(0,10);
-			scrollContainer.scrollTop += (2 * keyInertia);
+			scrollDirection = "down";
+			if (!keyIsDown[40])
+			{
+				return;
+			}
+			requestAnimFrame(scrollScrollContainer);
 		}
 	};
 	window.onkeyup = function(e) {
 		closeReminder("right");
-		keyInertia = 0;
 		e = e || window.event;
 		var code = e.keyCode || e.which;
+		keyIsDown[code] = false;
 		if (code == 32){
 			expandCard();
 		}
@@ -542,6 +579,9 @@ onload = function ()
 			if (slider.card.id == 221281)
 				analytics.track("Seen Login Card");
 		}
+		else if (code == 38) {
+			keyIsDown[40] = false;
+		}
 		else if (code == 39) {
 			dragCallback("right", 3, 3);
 			if (slider.card.id == 221281) {
@@ -568,6 +608,9 @@ onload = function ()
 			// slider id will change to next card 
 			if (slider.card.id == 221281)
 				analytics.track("Seen Login Card");
+		}
+		else if (code == 40) {
+			keyIsDown[40] = false;
 		}
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
@@ -843,16 +886,16 @@ onload = function ()
 		card.isContent = true;
 		card.setSource = function() {
 			imageContainer.firstChild.src = image.get(c, window.innerWidth - 40).url;
-			console.log("Source Set to: ", imageContainer.firstChild.src, " for card ", card.id, " with data ", card);
+			//console.log("Source Set to: ", imageContainer.firstChild.src, " for card ", card.id, " with data ", card);
 		};
 		formatCardContents(card, image.get(card.card));
-		console.log("Reached if test for slider = ", slider, " card = ", card);
+		//console.log("Reached if test for slider = ", slider, " card = ", card);
 		if (slider == card) {
-			console.log("Slider = card in test ", card);
+			//console.log("Slider = card in test ", card);
 			slider.setSource();
 			firstCardLoaded = false;
 			imageContainer.firstChild.onload = function() {
-				console.log("Finished load of first card");
+				//console.log("Finished load of first card");
 				firstCardLoaded = true;
 				slider.parentNode.nextSibling.firstChild.setSource();
 				slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
@@ -865,11 +908,11 @@ onload = function ()
 		imageContainer.firstChild.onerror = function() {
 			slideContainer.removeChild(card.parentNode);
 			// setSlider();
-			console.log("Error event ", card);
+			//console.log("Error event ", card);
 			if (slider == card) {
 				throbber.off();
   				scrollContainer.style.opacity = 1;
- 				console.log("Slider == card in error");
+				//console.log("Slider == card in error");
 			}
 			buildCard();
 		};
