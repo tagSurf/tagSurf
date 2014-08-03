@@ -820,7 +820,7 @@ onload = function ()
 	var buildContentCard = function(c, zIndex) {
 		var imageContainer, iconLine, textContainer, picTags, fullscreenButton,
 			truncatedTitle, card, formatter = document.createElement('div'),
-			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img" + (firstCardLoaded ? (" src='" + image.get(c, window.innerWidth - 40).url + "'") : "") + "></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div id='vote-btn-container'><div class='vote-btn' id='vote-btn-left'><img class='vote-thumb' id='vote-thumb-left'></div><div class='vote-btn' id='vote-btn-right'><img class='vote-thumb' id='vote-thumb-right'></div></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div></div></div>";
+			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img" + (firstCardLoaded ? (" src='" + image.get(c, window.innerWidth - 40).url + "'") : "") + "></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='vote-btn-container'><div class='vote-btn' id='vote-btn-left'><img class='vote-thumb' id='vote-thumb-left'></div><div class='vote-btn' id='vote-btn-right'><img class='vote-thumb' id='vote-thumb-right'></div></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div></div></div>";
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		imageContainer = formatter.children[0].children[0].children[0];
@@ -829,18 +829,24 @@ onload = function ()
 		picTags = formatter.children[0].children[0].children[3];
 		votebtnContainer = formatter.children[0].children[0].children[4];
 		fullscreenButton = formatter.children[0].children[0].children[5];
-		downvoteBtn = votebtnContainer.children[0];
-		upvoteBtn = votebtnContainer.children[1];
+		downvoteBtn = document.getElementById("vote-btn-left");
+		upvoteBtn = document.getElementById("vote-btn-right");
 		downvoteImg = downvoteBtn.children[0];
 		upvoteImg = upvoteBtn.children[0];
 		downvoteImg.src = "/img/thumbsdown_white.png";
 		upvoteImg.src = "/img/thumbsup_white.png";
+		
+		console.log("upvoteBtn = " + upvoteBtn.toString());
+		console.log("downvotebtn = " + downvoteBtn.toString());
+		console.log("iconline =" + iconLine.children[1]);
 
 		gesture.listen("down", downvoteBtn, function() {
 			downvoteBtn.classList.add("active-left-button");
+			downvoteBtn.firstChild.src = "/img/thumbsdown_white-invert.png";
 		});
 		gesture.listen("up", downvoteBtn, function() {
 			downvoteBtn.classList.remove("active-left-button");
+			downvoteBtn.firstChild.src = "/img/thumbsdown_white.png";
 		});
 		gesture.listen("tap", downvoteBtn, function() {
 			dragCallback("left", -3, -3);
@@ -849,9 +855,11 @@ onload = function ()
 
 		gesture.listen("down", upvoteBtn, function() {
 			upvoteBtn.classList.add("active-right-button");
+			upvoteBtn.firstChild.src = "/img/thumbsup_white-invert.png";
 		});
 		gesture.listen("up", upvoteBtn, function() {
 			upvoteBtn.classList.remove("active-right-button");
+			upvoteBtn.firstChild.src = "/img/thumbsup_white.png";
 		});
 		gesture.listen("tap", upvoteBtn, function() {
 			dragCallback("right", 3, 3);

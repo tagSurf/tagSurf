@@ -367,7 +367,7 @@ html, body
 }
 /*============ Vote btn stuff ============*/
 
-#vote-btn-container {
+.vote-btn-container {
   display: inline-block;
   clear: both;
   bottom: 0;
@@ -407,15 +407,15 @@ html, body
   padding-top: 7%;
   padding-bottom: 3%;
 }
-#vote-btn-right :hover {
-  background-color: #0dca00 !important;
+#vote-btn-right:hover {
+  background-color: #0d6a00;
 } 
-#vote-btn-left :hover {
-  background-color: #7f0015 !important;
+#vote-btn-left:hover {
+  background-color: #7f0015;
 } 
 .active-right-button
 {
-  background-color: #0dca00 !important;
+  background-color: #0d6a00 !important;
 }
 .active-left-button 
 {
