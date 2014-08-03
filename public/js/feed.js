@@ -833,8 +833,31 @@ onload = function ()
 		upvoteBtn = votebtnContainer.children[1];
 		downvoteImg = downvoteBtn.children[0];
 		upvoteImg = upvoteBtn.children[0];
-		downvoteImg.src = "/img/thumbsdown.png";
-		upvoteImg.src = "/img/thumbsup.png";
+		downvoteImg.src = "/img/thumbsdown_white.png";
+		upvoteImg.src = "/img/thumbsup_white.png";
+
+		gesture.listen("down", downvoteBtn, function() {
+			downvoteBtn.classList.add("active-left-button");
+		});
+		gesture.listen("up", downvoteBtn, function() {
+			downvoteBtn.classList.remove("active-left-button");
+		});
+		gesture.listen("tap", downvoteBtn, function() {
+			dragCallback("left", -3, -3);
+			swipeSlider("left");
+		});
+
+		gesture.listen("down", upvoteBtn, function() {
+			upvoteBtn.classList.add("active-right-button");
+		});
+		gesture.listen("up", upvoteBtn, function() {
+			upvoteBtn.classList.remove("active-right-button");
+		});
+		gesture.listen("tap", upvoteBtn, function() {
+			dragCallback("right", 3, 3);
+			swipeSlider("right");
+		});
+
 		if (current_tag == "trending") {
 			gesture.listen("down", iconLine.children[1], function() {
 				iconLine.children[1].classList.add("active-tag-callout");
