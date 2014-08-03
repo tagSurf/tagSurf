@@ -365,6 +365,42 @@ html, body
   float: right;
   margin-right: 20px;
 }
+/*============ Vote btn stuff ============*/
+
+#vote-btn-container {
+  display: inline-block;
+  clear: both;
+  bottom: 0;
+}
+.vote-btn 
+{
+  display: inline-block;
+  width: 49%;
+}
+#vote-btn-right
+{
+  background-color: green;
+  border-bottom-right-radius: 10px;
+}
+#vote-btn-left
+{
+  background-color: red;
+  border-bottom-left-radius: 10px;
+}
+.vote-thumb
+{
+  width: 14%;
+}
+#vote-thumb-right
+{
+  right: 20px;
+}
+#vote-thumb-left 
+{
+  left: 20px;
+}
+
+/*============ Remdinder Container stuff =========*/
 #reminder-container
 {
   visibility: hidden;

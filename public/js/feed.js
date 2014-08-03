@@ -781,7 +781,7 @@ onload = function ()
 	var formatCardContents = function (node, imageData)
 	{
 		var card = node || slider, imageContainer = card.firstChild,
-			fullscreenButton = card.children[4], truncatedTitle,
+			fullscreenButton = card.children[5], voteButtons = card.children[4], truncatedTitle,
 			picTags = card.children[3], textContainer = card.children[2],
 			iconLine = card.children[1], targetHeight = imageData ? 
 			imageData.height * (window.innerWidth - 40) / imageData.width :
@@ -791,7 +791,7 @@ onload = function ()
 			imageContainer.firstChild.classList.add('translate-z');
 		}
 		if (node && (targetHeight + textContainer.scrollHeight 
-			+ picTags.scrollHeight + iconLine.scrollHeight 
+			+ picTags.scrollHeight + voteButtons.scrollHeight + iconLine.scrollHeight 
 			< (maxCardHeight + 80)))
 		{
 			imageContainer.classList.remove("expand-animation");
@@ -806,6 +806,7 @@ onload = function ()
 				truncatedTitle = "<p>" + truncatedTitle + "</p>";
 				textContainer.innerHTML = truncatedTitle;
 				picTags.className += ' hidden';
+				voteButtons.className += ' hidden';
 				card.compressing = true;
 			}
 			else
@@ -819,14 +820,21 @@ onload = function ()
 	var buildContentCard = function(c, zIndex) {
 		var imageContainer, iconLine, textContainer, picTags, fullscreenButton,
 			truncatedTitle, card, formatter = document.createElement('div'),
-			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img" + (firstCardLoaded ? (" src='" + image.get(c, window.innerWidth - 40).url + "'") : "") + "></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div></div></div>";
+			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img" + (firstCardLoaded ? (" src='" + image.get(c, window.innerWidth - 40).url + "'") : "") + "></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div id='vote-btn-container'><div class='vote-btn' id='vote-btn-left'><img class='vote-thumb' id='vote-thumb-left'></div><div class='vote-btn' id='vote-btn-right'><img class='vote-thumb' id='vote-thumb-right'></div></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div></div></div>";
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		imageContainer = formatter.children[0].children[0].children[0];
 		iconLine = formatter.children[0].children[0].children[1];
 		textContainer = formatter.children[0].children[0].children[2];
 		picTags = formatter.children[0].children[0].children[3];
-		fullscreenButton = formatter.children[0].children[0].children[4];
+		votebtnContainer = formatter.children[0].children[0].children[4];
+		fullscreenButton = formatter.children[0].children[0].children[5];
+		downvoteBtn = votebtnContainer.children[0];
+		upvoteBtn = votebtnContainer.children[1];
+		downvoteImg = downvoteBtn.children[0];
+		upvoteImg = upvoteBtn.children[0];
+		downvoteImg.src = "/img/thumbsdown.png";
+		upvoteImg.src = "/img/thumbsup.png";
 		if (current_tag == "trending") {
 			gesture.listen("down", iconLine.children[1], function() {
 				iconLine.children[1].classList.add("active-tag-callout");
@@ -1018,6 +1026,7 @@ onload = function ()
 			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
 			toggleClass.call(slider.children[3], "hidden");
 			toggleClass.call(slider.children[4], "hidden");
+			toggleClass.call(slider.children[5], "hidden");
 			scrollCallback();
 		}
 	};
