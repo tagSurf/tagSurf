@@ -386,31 +386,27 @@ a {
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
   z-index: 15;
-  /*width: 200px;*/
-  width: 80px;
+  width: 70px;
   padding: 10px;
 }
 #vote-button-left
 {
   position: absolute;
   bottom: 5px;
-  /*left: 100px;*/
-  left: 40px;
+  left: 50px;
 }
 #vote-button-right
 {
   position: absolute;
   bottom: 5px;
-  right: 60px;
+  right: 50px;
 }
 #downvote-icon {
-	width: 80px;
-	/*width:80%;*/
+	width: 100%;
 	margin: auto;
 }
 #upvote-icon {
-	width: 80px;
-	/*width: 80%;*/
+	width: 100%;
 	margin: auto;
 }
 
