@@ -858,8 +858,10 @@ onload = function ()
 			firstCardLoaded = false;
 			imageContainer.firstChild.onload = function() {
 				firstCardLoaded = true;
-				slider.parentNode.nextSibling.firstChild.setSource();
-				slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
+				if(slider.parentNode.nextSibling.firstChild)
+					slider.parentNode.nextSibling.firstChild.setSource();
+				if(slider.parentNode.nextSibling.nextSibling.firstChild)
+					slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
 				throbber.off();
 				scrollContainer.style.opacity = 1;
 				analytics.track('Finished Pageload');
