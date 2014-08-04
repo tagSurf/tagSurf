@@ -872,16 +872,11 @@ onload = function ()
 			};
 		}
 		imageContainer.firstChild.onerror = function() {
-			slider.parentNode.nextSibling.firstChild.setSource();
-			slider.parentNode.nextSibling.style.zIndex = 2;
-			slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
-			slider.parentNode.nextSibling.nextSibling.style.zIndex = 1;
+			slideContainer.removeChild(slider.parentNode.nextSibling);
+			slideContainer.removeChild(slider.parentNode.nextSibling.nextSibling);
 			slideContainer.removeChild(card.parentNode);
-			setSlider();
-			card = slider;
-			throbber.off();
-			scrollContainer.style.opacity = 1;
-			refreshCards(null, 0, cardIndex);
+			cardIndex -= 2;
+			refreshCards(null, 2, cardIndex);
 		};
 	};
 	var focusInput = function (input)
