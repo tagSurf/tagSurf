@@ -490,8 +490,7 @@ onload = function ()
 		slider.animating = true;
 
 		pushTags();
-		setSlider(slider.parentNode.nextSibling.firstChild);
-		setCurrentMedia(slider.card);
+		setSlider();
 		// removed history slider
 //		addHistoryItem(activeCard);
 	};
