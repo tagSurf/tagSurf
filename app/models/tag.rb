@@ -13,21 +13,7 @@ class Tag < ActiveRecord::Base
   def self.current_feed(user, scores=true)
     @obj = Tag.new
 
-    if user.try(:safe_mode)
-
-      if @obj.safe_tag_feed.members.any?
-        if scores
-          @obj.serialize(@obj.safe_tag_feed.members(withscores: true).reverse, true)
-        else
-          @obj.serialize(@obj.safe_tag_feed.members.reverse)
-        end
-      else
-        tags = Tag.where(blacklisted: false).pluck(:name, :blacklisted)
-        GenerateTagFeed.perform_async('safe')
-        @obj.serialize(tags)
-      end
-
-    else
+    if user and user.safe_mode == false
 
       if @obj.nsfw_tag_feed.members.any?
         if scores
@@ -38,6 +24,21 @@ class Tag < ActiveRecord::Base
       else
         tags = Tag.pluck(:name, :blacklisted)
         GenerateTagFeed.perform_async('nswf')
+        @obj.serialize(tags)
+      end
+
+
+    else
+
+      if @obj.safe_tag_feed.members.any?
+        if scores
+          @obj.serialize(@obj.safe_tag_feed.members(withscores: true).reverse, true)
+        else
+          @obj.serialize(@obj.safe_tag_feed.members.reverse)
+        end
+      else
+        tags = Tag.where(blacklisted: false).pluck(:name, :blacklisted)
+        GenerateTagFeed.perform_async('safe')
         @obj.serialize(tags)
       end
 
