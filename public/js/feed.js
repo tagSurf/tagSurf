@@ -873,7 +873,7 @@ onload = function ()
 		}
 		imageContainer.firstChild.onerror = function() {
 			slideContainer.removeChild(slider.parentNode.nextSibling);
-			slideContainer.removeChild(slider.parentNode.nextSibling.nextSibling);
+			slideContainer.removeChild(slider.parentNode.nextSibling);
 			slideContainer.removeChild(card.parentNode);
 			cardIndex -= 2;
 			refreshCards(null, 2, cardIndex);
