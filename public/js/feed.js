@@ -880,7 +880,7 @@ onload = function ()
   				scrollContainer.style.opacity = 1;
  				console.log("Slider == card in error... slider = ", slider, " card = ", card);
 			}
-			buildCard();
+			buildCard(2);
 		};
 	};
 	var focusInput = function (input)
