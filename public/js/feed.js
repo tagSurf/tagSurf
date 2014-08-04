@@ -873,7 +873,7 @@ onload = function ()
 		}
 		imageContainer.firstChild.onerror = function() {
 			slideContainer.removeChild(card.parentNode);
-			// setSlider();
+			setSlider();
 			console.log("Error event ", card);
 			if (slider == card) {
 				throbber.off();
