@@ -883,7 +883,7 @@ onload = function ()
   				preloadCards();
  				console.log("Slider == card in error... slider = ", slider, " card = ", card);
 			}
-			// refreshCards(null, 2, cardIndex);
+			refreshCards(null, 2, cardIndex);
 		};
 	};
 	var focusInput = function (input)
