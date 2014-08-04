@@ -877,10 +877,10 @@ onload = function ()
 			slideContainer.removeChild(card.parentNode);
 			setSlider();
 			card = slider;
-			console.log("Error event ", card);
 			if (slider == card) {
 				throbber.off();
   				scrollContainer.style.opacity = 1;
+  				preloadCards();
  				console.log("Slider == card in error... slider = ", slider, " card = ", card);
 			}
 			// refreshCards(null, 2, cardIndex);
