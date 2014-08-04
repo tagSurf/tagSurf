@@ -873,17 +873,15 @@ onload = function ()
 		}
 		imageContainer.firstChild.onerror = function() {
 			slider.parentNode.nextSibling.firstChild.setSource();
+			slider.parentNode.nextSibling.style.zIndex(2);
 			slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
+			slider.parentNode.nextSibling.nextSibling.style.zIndex(1);
 			slideContainer.removeChild(card.parentNode);
 			setSlider();
 			card = slider;
-			if (slider == card) {
-				throbber.off();
-  				scrollContainer.style.opacity = 1;
-  				preloadCards();
- 				console.log("Slider == card in error... slider = ", slider, " card = ", card);
-			}
-			refreshCards(null, 2, cardIndex);
+			throbber.off();
+			scrollContainer.style.opacity = 1;
+			refreshCards(null, 0, cardIndex);
 		};
 	};
 	var focusInput = function (input)
