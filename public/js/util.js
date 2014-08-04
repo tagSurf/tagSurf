@@ -235,7 +235,7 @@ var buildOptionsTable = function () {
 	safeSurfText.innerHTML = "Safe Surf";
 	safeSurfText.className = "option-key-text";
   safeSurfDescCell.colSpan = 2;
-  safeSurfDesc.innerHTML = "Safe Surf filters NSFW content out of your feed and galleries. <br><i>(NSFW = Not Safe For Work)</i>";
+  safeSurfDesc.innerHTML = "Safe Surf filters NSFW content out of your feed. <br><i>(NSFW = Not Safe For Work)</i>";
   safeSurfDesc.className = "options-key-desc";
 	gesture.listen('down', safeSurfCheckbox, function () {
 		if (isAuthorized())
