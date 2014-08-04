@@ -8,8 +8,12 @@ class Vote < ActiveRecord::Base
   after_commit :relate_tag,        on: :create
   after_commit :update_tag_feed,   if: :persisted?
 
-  def self.paginated_history(user_id, limit, offset) 
-    Media.joins(:votes).where("votes.voter_id = #{user_id}").order('votes.id desc').limit(limit).offset(offset)
+  def self.paginated_history(user_id, limit, offset, safe) 
+    if safe
+      Media.joins(:votes).where("votes.voter_id = #{user_id} and media.nsfw = false").order('votes.id desc').limit(limit).offset(offset)
+    else
+      Media.joins(:votes).where("votes.voter_id = #{user_id}").order('votes.id desc').limit(limit).offset(offset)
+    end
   end
 
   def prev_cards(n=2)

@@ -9,8 +9,12 @@ class Favorite < ActiveRecord::Base
 
   after_commit :create_vote, on: :create
 
-  def self.paginated_history(user_id, limit, offset)
-    Media.joins(:favorites).where("favorites.user_id = #{user_id}").order('favorites.id desc').limit(limit).offset(offset)
+  def self.paginated_history(user_id, limit, offset, safe)
+    if safe
+      Media.joins(:favorites).where("favorites.user_id = #{user_id} and media.nsfw = false").order('favorites.id desc').limit(limit).offset(offset)
+    else
+      Media.joins(:favorites).where("favorites.user_id = #{user_id}").order('favorites.id desc').limit(limit).offset(offset)
+    end
   end
 
   def prev_cards(n=2)

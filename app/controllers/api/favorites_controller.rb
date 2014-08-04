@@ -29,7 +29,7 @@ class Api::FavoritesController < Api::BaseController
       @limit = 50
     end
 
-    @media = Favorite.paginated_history(current_user.id, @limit, @offset)
+    @media = Favorite.paginated_history(current_user.id, @limit, @offset, current_user.safe_mode)
     if @media
       render json: @media, root: 'data'
     else
