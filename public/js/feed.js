@@ -852,16 +852,12 @@ onload = function ()
 		card.isContent = true;
 		card.setSource = function() {
 			imageContainer.firstChild.src = image.get(c, window.innerWidth - 40).url;
-			console.log("Source Set to: ", imageContainer.firstChild.src, " for card ", card.id, " with data ", card);
 		};
 		formatCardContents(card, image.get(card.card));
-		console.log("Reached if test for slider = ", slider, " card = ", card);
 		if (slider == card) {
-			console.log("Slider = card in test ", card);
 			slider.setSource();
 			firstCardLoaded = false;
 			imageContainer.firstChild.onload = function() {
-				console.log("Finished load of first card");
 				firstCardLoaded = true;
 				slider.parentNode.nextSibling.firstChild.setSource();
 				slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
@@ -872,6 +868,7 @@ onload = function ()
 			};
 		}
 		imageContainer.firstChild.onerror = function() {
+			analytics.track('Card Load Error', {card: slider.card.id});
 			slideContainer.removeChild(slider.parentNode.nextSibling);
 			slideContainer.removeChild(slider.parentNode.nextSibling);
 			slideContainer.removeChild(card.parentNode);
