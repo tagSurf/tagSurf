@@ -490,8 +490,7 @@ onload = function ()
 		slider.animating = true;
 
 		pushTags();
-		setSlider(slider.parentNode.nextSibling.firstChild);
-		setCurrentMedia(slider.card);
+		setSlider();
 		// removed history slider
 //		addHistoryItem(activeCard);
 	};
@@ -1009,6 +1008,8 @@ onload = function ()
 			if (slider.children[0].className.indexOf("expanded") == -1)
 				slider.children[0].className += " expanded";
 			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
+			if(voteButtonsEnabled && isMobile())
+				slider.children[3].style.paddingBottom="60px";
 			toggleClass.call(slider.children[3], "hidden");
 			toggleClass.call(slider.children[4], "hidden");
 			scrollCallback();
@@ -1070,7 +1071,8 @@ onload = function ()
 		}
 	});
 	firstPopulate();
-	buildVoteButtons(dragCallback, swipeSlider);
+	if(voteButtonsEnabled)
+		buildVoteButtons(dragCallback, swipeSlider);
 	setReminderTimeout();
 	analytics.identify(currentUser.id);
 };

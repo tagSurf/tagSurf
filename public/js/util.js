@@ -426,59 +426,58 @@ var populateNavbar = function () {
     initDocLinks(checkShare);
   };
 };
-var buildVoteButtons = function (dragCallback, swipeSlider) {
-  var upvoteBtn = document.createElement('div'),
-      downvoteBtn = document.createElement('div'),
-      downvoteIcon = document.createElement('img'),
-      upvoteIcon = document.createElement('img');
-  downvoteIcon.src = "/img/downvote_btn.png";
-  upvoteIcon.src = "/img/upvote_btn.png";
-  downvoteIcon.id = "downvote-icon";
-  upvoteIcon.id = "upvote-icon";
-  downvoteBtn.className = "vote-button";
-  downvoteBtn.id = "vote-button-left";
-  upvoteBtn.className = "vote-button";
-  upvoteBtn.id = "vote-button-right";
-  downvoteBtn.appendChild(downvoteIcon);
-  upvoteBtn.appendChild(upvoteIcon);
-  gesture.listen('down', downvoteBtn, function () {
-    downvoteBtn.firstChild.src = "/img/downvote_btn-invert.png";
-  });
-  gesture.listen('up', downvoteBtn, function () {
-    downvoteBtn.firstChild.src = "/img/downvote_btn.png";
-  });
-  gesture.listen('tap', downvoteBtn, function () {
-    if (modal.zoom.zoomed)
-      modal.callZoom(1);
-    dragCallback("left", -3, -3);
-    swipeSlider("left");
-  });
+var voteButtonsEnabled = true, 
+    buildVoteButtons = function (dragCallback, swipeSlider) {
+      var upvoteBtn = document.createElement('div'),
+          downvoteBtn = document.createElement('div'),
+          downvoteIcon = document.createElement('img'),
+          upvoteIcon = document.createElement('img');
+      downvoteIcon.src = "/img/downvote_btn.png";
+      upvoteIcon.src = "/img/upvote_btn.png";
+      downvoteIcon.id = "downvote-icon";
+      upvoteIcon.id = "upvote-icon";
+      downvoteBtn.className = "vote-button";
+      downvoteBtn.id = "vote-button-left";
+      upvoteBtn.className = "vote-button";
+      upvoteBtn.id = "vote-button-right";
+      downvoteBtn.appendChild(downvoteIcon);
+      upvoteBtn.appendChild(upvoteIcon);
+      gesture.listen('down', downvoteBtn, function () {
+        downvoteBtn.firstChild.src = "/img/downvote_btn-invert.png";
+      });
+      gesture.listen('up', downvoteBtn, function () {
+        downvoteBtn.firstChild.src = "/img/downvote_btn.png";
+      });
+      gesture.listen('tap', downvoteBtn, function () {
+        if (modal.zoom.zoomed)
+          modal.callZoom(1);
+        dragCallback("left", -3, -3);
+        swipeSlider("left");
+      });
 
-  gesture.listen('down', upvoteBtn, function () {
-    upvoteBtn.firstChild.src = "/img/upvote_btn-invert.png";
-  });
-  gesture.listen('up', upvoteBtn, function () {
-    upvoteBtn.firstChild.src = "/img/upvote_btn.png";
-  });
-  gesture.listen('tap', upvoteBtn, function () {
-    if (modal.zoom.zoomed)
-      modal.callZoom(1);
-    dragCallback("right", 3, 3);
-    swipeSlider("right");
-  });
-  document.body.appendChild(downvoteBtn);
-  document.body.appendChild(upvoteBtn);
-};
-
-var voteButtonsOn = function() {
-  toggleClass.apply(document.getElementById('vote-button-right'), ["hidden", "off"]);
-  toggleClass.apply(document.getElementById('vote-button-left'), ["hidden", "off"]);
-} 
-
-var voteButtonsOff = function() {
-  toggleClass.apply(document.getElementById('vote-button-right'), ["hidden", "on"]);
-  toggleClass.apply(document.getElementById('vote-button-left'), ["hidden", "on"]);
-} 
+      gesture.listen('down', upvoteBtn, function () {
+        upvoteBtn.firstChild.src = "/img/upvote_btn-invert.png";
+      });
+      gesture.listen('up', upvoteBtn, function () {
+        upvoteBtn.firstChild.src = "/img/upvote_btn.png";
+      });
+      gesture.listen('tap', upvoteBtn, function () {
+        if (modal.zoom.zoomed)
+          modal.callZoom(1);
+        dragCallback("right", 3, 3);
+        swipeSlider("right");
+      });
+      document.body.appendChild(downvoteBtn);
+      document.body.appendChild(upvoteBtn);
+    },
+    voteButtonsOn = function() {
+      toggleClass.apply(document.getElementById('vote-button-right'), ["hidden", "off"]);
+      toggleClass.apply(document.getElementById('vote-button-left'), ["hidden", "off"]);
+    }, 
+    voteButtonsOff = function() {
+      toggleClass.apply(document.getElementById('vote-button-right'), ["hidden", "on"]);
+      toggleClass.apply(document.getElementById('vote-button-left'), ["hidden", "on"]);
+    }; 
 
 var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =

@@ -386,7 +386,7 @@ a {
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
   z-index: 15;
-  width: 70px;
+  width: 80px;
   padding: 10px;
 }
 #vote-button-left
@@ -871,7 +871,7 @@ a {
  	} 
  	.vote-button
 	{
-	  width: 144px;
+	  width: 120px;
 	}
 	#vote-button-left
 	{
@@ -879,14 +879,6 @@ a {
 	}
 	#vote-button-right
 	{
-	  right: 115px;
-	}
-	#downvote-icon 
-	{
-		width: 144px;
-	}
-	#upvote-icon 
-	{
-		width: 144px;
+	  right: 100px;
 	}
 }
