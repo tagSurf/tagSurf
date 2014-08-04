@@ -873,9 +873,9 @@ onload = function ()
 		}
 		imageContainer.firstChild.onerror = function() {
 			slider.parentNode.nextSibling.firstChild.setSource();
-			slider.parentNode.nextSibling.style.zIndex(2);
+			slider.parentNode.nextSibling.style.zIndex = 2;
 			slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
-			slider.parentNode.nextSibling.nextSibling.style.zIndex(1);
+			slider.parentNode.nextSibling.nextSibling.style.zIndex = 1;
 			slideContainer.removeChild(card.parentNode);
 			setSlider();
 			card = slider;
