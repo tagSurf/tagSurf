@@ -880,6 +880,7 @@ onload = function ()
   				scrollContainer.style.opacity = 1;
  				console.log("Slider == card in error... slider = ", slider, " card = ", card);
 			}
+			cardIndex -= 2;
 			buildCard(2);
 		};
 	};
