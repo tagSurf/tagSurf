@@ -729,7 +729,7 @@ onload = function ()
 	var expandTimeout;
 	var setSlider = function(s) {
 		slider = s || slideContainer.firstChild.firstChild;
-		setCurrentMedia(slider.card, forgetReminder, function() {
+		setCurrentMedia(slider.card, forgetReminder, function() { //panic btn callback
 			swipeSlider("left");
 			analytics.track('Report Inappropriate Content', {
 				card: panic.data.id,
@@ -878,7 +878,7 @@ onload = function ()
 			if (slider == card) {
 				throbber.off();
   				scrollContainer.style.opacity = 1;
- 				console.log("Slider == card in error... slider = " + slider + " card = " + card);
+ 				console.log("Slider == card in error... slider = ", slider, " card = ", card);
 			}
 			buildCard();
 		};
