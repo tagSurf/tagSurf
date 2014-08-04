@@ -881,7 +881,7 @@ onload = function ()
  				console.log("Slider == card in error... slider = ", slider, " card = ", card);
 			}
 			cardIndex -= 2;
-			buildCard(2);
+			buildCard(1);
 		};
 	};
 	var focusInput = function (input)
