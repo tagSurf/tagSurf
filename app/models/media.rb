@@ -95,7 +95,11 @@ class Media < ActiveRecord::Base
     n = options[:limit].nil? ?  20 : options[:limit].to_i
     id = options[:id].to_i
        
-    if user.try(:safe_mode)
+    if user.try(:safe_mode) 
+      return [] if Tag.blacklisted?(tag)
+    end
+
+    unless user
       return [] if Tag.blacklisted?(tag)
     end
 
