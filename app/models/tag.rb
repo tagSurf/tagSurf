@@ -23,7 +23,7 @@ class Tag < ActiveRecord::Base
         end
       else
         tags = Tag.pluck(:name, :blacklisted)
-        GenerateTagFeed.perform_async('nswf')
+        GenerateTagFeed.perform_async('nsfw')
         @obj.serialize(tags)
       end
 
