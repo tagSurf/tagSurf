@@ -143,8 +143,8 @@ onload = function ()
 	var data, buffer_minimum = 5, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
 		staticTrending = document.getElementById("static-trending");
-	var refreshCards = function(failMsgNode, zIndex) {
-		cardIndex = 0;
+	var refreshCards = function(failMsgNode, zIndex, startIndex) {
+		cardIndex = (typeof startIndex === "undefined") ? 0 : startIndex;
 		if (failMsgNode && data.length == 0) {
 			var trendingBtn = document.createElement('div'),
 				orMsg = document.createElement('div'),
@@ -729,7 +729,7 @@ onload = function ()
 	var expandTimeout;
 	var setSlider = function(s) {
 		slider = s || slideContainer.firstChild.firstChild;
-		setCurrentMedia(slider.card, forgetReminder, function() {
+		setCurrentMedia(slider.card, forgetReminder, function() { //panic btn callback
 			swipeSlider("left");
 			analytics.track('Report Inappropriate Content', {
 				card: panic.data.id,
@@ -852,16 +852,12 @@ onload = function ()
 		card.isContent = true;
 		card.setSource = function() {
 			imageContainer.firstChild.src = image.get(c, window.innerWidth - 40).url;
-			console.log("Source Set to: ", imageContainer.firstChild.src, " for card ", card.id, " with data ", card);
 		};
 		formatCardContents(card, image.get(card.card));
-		console.log("Reached if test for slider = ", slider, " card = ", card);
 		if (slider == card) {
-			console.log("Slider = card in test ", card);
 			slider.setSource();
 			firstCardLoaded = false;
 			imageContainer.firstChild.onload = function() {
-				console.log("Finished load of first card");
 				firstCardLoaded = true;
 				slider.parentNode.nextSibling.firstChild.setSource();
 				slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
@@ -872,15 +868,12 @@ onload = function ()
 			};
 		}
 		imageContainer.firstChild.onerror = function() {
+			analytics.track('Card Load Error', {card: slider.card.id});
+			slideContainer.removeChild(slider.parentNode.nextSibling);
+			slideContainer.removeChild(slider.parentNode.nextSibling);
 			slideContainer.removeChild(card.parentNode);
-			// setSlider();
-			console.log("Error event ", card);
-			if (slider == card) {
-				throbber.off();
-  				scrollContainer.style.opacity = 1;
- 				console.log("Slider == card in error");
-			}
-			buildCard();
+			cardIndex -= 2;
+			refreshCards(null, 2, cardIndex);
 		};
 	};
 	var focusInput = function (input)
