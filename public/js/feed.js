@@ -143,8 +143,8 @@ onload = function ()
 	var data, buffer_minimum = 5, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
 		staticTrending = document.getElementById("static-trending");
-	var refreshCards = function(failMsgNode, zIndex) {
-		cardIndex = 0;
+	var refreshCards = function(failMsgNode, zIndex, startIndex) {
+		cardIndex = (typeof startIndex === "undefined") ? 0 : startIndex;
 		if (failMsgNode && data.length == 0) {
 			var trendingBtn = document.createElement('div'),
 				orMsg = document.createElement('div'),
@@ -872,8 +872,11 @@ onload = function ()
 			};
 		}
 		imageContainer.firstChild.onerror = function() {
+			slider.parentNode.nextSibling.firstChild.setSource();
+			slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
 			slideContainer.removeChild(card.parentNode);
 			setSlider();
+			card = slider;
 			console.log("Error event ", card);
 			if (slider == card) {
 				throbber.off();
@@ -881,7 +884,8 @@ onload = function ()
  				console.log("Slider == card in error... slider = ", slider, " card = ", card);
 			}
 			cardIndex -= 2;
-			buildCard(1);
+			// refreshCards(null, 2, cardIndex);
+			buildCard();
 		};
 	};
 	var focusInput = function (input)
