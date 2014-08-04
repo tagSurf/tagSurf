@@ -412,6 +412,7 @@ var populateNavbar = function () {
       checkShare();
       modal.backOff();
       modal.modalOut();
+      voteButtonsOn();
     };
     n.appendChild(title);
     n.appendChild(optionsTable);
@@ -420,11 +421,12 @@ var populateNavbar = function () {
     slideNavMenu(true);
     share.off();
     panic.off();
+    voteButtonsOff();
     modal.modalIn(n, options_cb);
     initDocLinks(checkShare);
   };
 };
-var buildVoteButtons = function () {
+var buildVoteButtons = function (dragCallback, swipeSlider) {
   var upvoteBtn = document.createElement('div'),
       downvoteBtn = document.createElement('div'),
       downvoteIcon = document.createElement('img'),
@@ -446,6 +448,8 @@ var buildVoteButtons = function () {
     downvoteBtn.firstChild.src = "/img/downvote_btn.png";
   });
   gesture.listen('tap', downvoteBtn, function () {
+    if (modal.zoom.zoomed)
+      modal.callZoom(1);
     dragCallback("left", -3, -3);
     swipeSlider("left");
   });
@@ -457,6 +461,8 @@ var buildVoteButtons = function () {
     upvoteBtn.firstChild.src = "/img/upvote_btn.png";
   });
   gesture.listen('tap', upvoteBtn, function () {
+    if (modal.zoom.zoomed)
+      modal.callZoom(1);
     dragCallback("right", 3, 3);
     swipeSlider("right");
   });
@@ -492,9 +498,13 @@ var currentMedia, checkShare = function(shareCb, panicCb) {
       return;
     else
       panic.on(d, panicCb);
+      voteButtonsOn();
+  } else if (d && d.type == "login") {
+      voteButtonsOn();
   } else {
     share.off();
     panic.off();
+    voteButtonsOff();
     if (addBarSlid)
       slideAddBar();
   }

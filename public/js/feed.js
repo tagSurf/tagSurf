@@ -1077,7 +1077,7 @@ onload = function ()
 		}
 	});
 	firstPopulate();
-	buildVoteButtons();
+	buildVoteButtons(dragCallback, swipeSlider);
 	setReminderTimeout();
 	analytics.identify(currentUser.id);
 };
