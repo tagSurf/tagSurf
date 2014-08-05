@@ -521,6 +521,7 @@ onload = function ()
 		}
 		else if (code == 37){
 			dragCallback("left", -3, -3);
+			flashVoteButton("left");
 			if (slider.card.id == 221281) {	
 				analytics.track("Key Swipe Login Card", {
 					direction: "left",
@@ -547,6 +548,7 @@ onload = function ()
 		}
 		else if (code == 39) {
 			dragCallback("right", 3, 3);
+			flashVoteButton("right");
 			if (slider.card.id == 221281) {
 				analytics.track("Key Swipe Login Card", {
 					direction: "right",

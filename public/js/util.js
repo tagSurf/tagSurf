@@ -524,7 +524,21 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
     voteButtonsOff = function() {
       toggleClass.apply(document.getElementById('vote-button-right'), ["hidden", "on"]);
       toggleClass.apply(document.getElementById('vote-button-left'), ["hidden", "on"]);
-    }; 
+    },
+    flashVoteButton = function(direction) {
+      if (direction == "right") {
+        document.getElementById("upvote-icon").src = "http://assets.tagsurf.co/img/upvote_btn-invert.png";
+        setTimeout(function () {
+          document.getElementById("upvote-icon").src = "http://assets.tagsurf.co/img/upvote_btn.png";
+        }, 300);
+      }
+      else if (direction == "left") {
+        document.getElementById("downvote-icon").src = "http://assets.tagsurf.co/img/downvote_btn-invert.png";
+        setTimeout(function () {
+          document.getElementById("downvote-icon").src = "http://assets.tagsurf.co/img/downvote_btn.png";
+        }, 300);
+      }
+    };
 
 var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
