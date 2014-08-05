@@ -228,6 +228,14 @@ a {
 	bottom: 10px;
 	left: 10px;
 }
+#gallery-close-button {
+    -webkit-transition: opacity 250ms;
+    transition: opacity 250ms;
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	z-index: 15;
+}
 
 .modalslide {
 	-webkit-transform: translate3d(0, 0, 0) !important;

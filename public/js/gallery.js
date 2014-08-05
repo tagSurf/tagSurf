@@ -54,6 +54,10 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			pictags = document.getElementById("pictags");
 			return;
 		}
+		var closebtn = document.createElement('img');
+		closebtn.src = "http://assets.tagsurf.co/img/Close.png";
+		closebtn.className = "modal-close-button hidden";
+		closebtn.id = "gallery-close-button";
 
 		picbox = document.createElement("div");
 		picbox.id = "picbox";
@@ -71,7 +75,12 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		gesture.listen("down", bigpic, returnTrue);
 		gesture.listen("drag", bigpic, returnTrue);
 		gesture.listen("tap", bigpic, function() {
-			picbox.dragging || modal.zoomModal();
+			if(picbox.dragging)
+				return true; 
+			else {
+				modal.zoomModal();
+				toggleClass.call(closebtn, "hidden");
+			}
 		});
 		gesture.listen("swipe", bigpic, function (direction, distance, dx, dy, pixelsPerSecond) {
 			if (direction != "up" && direction != "down")
@@ -117,6 +126,11 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		pictags = document.createElement("div");
 		pictags.id = pictags.className = "pictags";
 		picbox.appendChild(pictags);
+
+		gesture.listen("tap", closebtn, function() { 
+			modal.callModal();
+		});
+		document.body.appendChild(closebtn);
 	};
 	var getHeader = function(headerName, gall, g) {
 		headerName = headerName || "Just Now";
@@ -171,16 +185,22 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 	var showImage = function(d) {
 		current_image = d;
 		setCurrentMedia(current_image);
+		closebtn = document.getElementById('gallery-close-button');
+		toggleClass.call(closebtn, "hidden");
 		modal.modalIn(picbox, function(direction) {
 			if (!direction || !isNaN(direction) || direction == "right") {
 				pushTags();
 				current_image = null;
 				setFavIcon(false);
 				setCurrentMedia();
+				closebtn.classList.add('hidden');
 				modal.backOff();
 				modal.modalOut();
 			}
-		}, function() { modal.zoomIn(d, modal.zoomOut); });
+		}, function() { modal.zoomIn(d, function() {
+				modal.zoomOut();
+			}); 
+		});
 		votize(modal.modal, d);
 		modal.backOn();
 
