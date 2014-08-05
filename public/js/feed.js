@@ -1016,7 +1016,7 @@ onload = function ()
 			if (slider.children[0].className.indexOf("expanded") == -1)
 				slider.children[0].className += " expanded";
 			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
-			if(voteButtonsEnabled && isMobile())
+			if(currentUser.vote_btns && (isMobile() || isTablet()))
 				slider.children[3].style.paddingBottom="60px";
 			toggleClass.call(slider.children[3], "hidden");
 			toggleClass.call(slider.children[4], "hidden");
@@ -1079,7 +1079,7 @@ onload = function ()
 		}
 	});
 	firstPopulate();
-	if(voteButtonsEnabled)
+	if(currentUser.vote_btns)
 		buildVoteButtons(dragCallback, swipeSlider);
 	setReminderTimeout();
 	analytics.identify(currentUser.id);

@@ -717,19 +717,22 @@ a {
 	position: relative;
 	top: -25px;
 }
-.option-key-text
+.options-key-text
 {
 	font-size: 180%;
 	margin-right: 15px;
 }
 .options-key-desc 
 {
-	padding-top: 10px;
+	padding-top: 5px;
 }
 
 /* As seen on proto.io */
 .onoffswitch-container {
 	position: relative;
+}
+.onoffswitch-container, .options-key-text {
+	margin-top: 20px;
 }
 .onoffswitch {
 	position: relative; width: 90px;
@@ -838,7 +841,11 @@ a {
 		font-size: 14pt;
 	}
 	.options-table {
-		width: 25%;
+		width: 30%;
+	}
+	.options-key-text {
+		text-align: right;
+		margin-right: 30px;
 	}
 	.options-msg {
 		font-size: 140%;
@@ -849,6 +856,9 @@ a {
 	}
 	.tos-line {
 		 font-size: 120%;
+	}
+	.onoffswitch-container {
+		width: 90px;
 	}
 	#url-container {
 		margin-top: 7%;

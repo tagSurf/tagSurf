@@ -3,6 +3,8 @@ var authorizedSession = null;
 var currentUser = {
   id : null,
   email : null,
+  slug : null,
+  vote_btns : true,
   admin : false
 };
 var returnTrue = function() { return true; };
@@ -48,6 +50,7 @@ var isAuthorized = function () {
         currentUser.slug = result.user.slug;
         currentUser.admin = result.user.admin;
         currentUser.safeSurf = result.user.safe_mode;
+        // currentUser.vote_btns = result.user.vote_btns;
       }
       else
         authorizedSession = false;
@@ -220,24 +223,38 @@ var buildOptionsTable = function () {
 	var optionsTable = document.createElement('table'),
   		safeSurfRow = optionsTable.insertRow(0),
       safeSurfHelperRow = optionsTable.insertRow(1),
+      voteButtonsRow = optionsTable.insertRow(2),
+      voteButtonsHelperRow = optionsTable.insertRow(3),
+      voteButtonsTextCell = voteButtonsRow.insertCell(0),
+      voteButtonsCheckboxCell = voteButtonsRow.insertCell(1),
+      voteButtonsDescCell = voteButtonsHelperRow.insertCell(0),
   		safeSurfTextCell = safeSurfRow.insertCell(0),
   		safeSurfCheckboxCell = safeSurfRow.insertCell(1),
       safeSurfDescCell = safeSurfHelperRow.insertCell(0),
       safeSurfDesc = document.createElement('div'),
   		safeSurfText = document.createElement('div'),
-  		safeSurfCheckbox = document.createElement('div');
-  	optionsTable.className = "inline options-table";
-  	safeSurfCheckbox.innerHTML = 
-		'<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
-      ((currentUser && currentUser.safeSurf || !isAuthorized()) ? " checked" : "") +
-    '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> <div class="onoffswitch-cover" style="display:' +
-		(isAuthorized() ? 'none' : 'block') + ';"></div>';
+  		safeSurfCheckbox = document.createElement('div'),
+      voteButtonsDesc = document.createElement('div'),
+      voteButtonsText = document.createElement('div'),
+      voteButtonsCheckbox = document.createElement('div');
+	optionsTable.className = "inline options-table";
+	safeSurfCheckbox.innerHTML = 
+	'<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
+    ((currentUser && currentUser.safeSurf || !isAuthorized()) ? " checked" : "") +
+  '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> <div class="onoffswitch-cover" style="display:' +
+	(isAuthorized() ? 'none' : 'block') + ';"></div>';
 	safeSurfText.innerHTML = "Safe Surf";
-	safeSurfText.className = "option-key-text";
-  safeSurfDescCell.colSpan = 2;
+	safeSurfText.className = voteButtonsText.className= "options-key-text";
+  safeSurfDescCell.colSpan = voteButtonsDescCell.colSpan = 2;
   safeSurfDesc.innerHTML = "Safe Surf filters NSFW content out of your feed. <br><i>(NSFW = Not Safe For Work)</i>";
-  safeSurfDesc.className = "options-key-desc";
-	gesture.listen('down', safeSurfCheckbox, function () {
+  safeSurfDesc.className = voteButtonsDesc.className = "options-key-desc";
+  voteButtonsCheckbox.innerHTML = 
+  '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
+    (currentUser.vote_btns ? " checked" : "") +
+  '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label>';
+  voteButtonsText.innerHTML = "Vote Buttons";
+  voteButtonsDesc.innerHTML = "Turn off voting buttons and just swipe";
+  gesture.listen('down', safeSurfCheckbox, function () {
 		if (isAuthorized())
 		{
 			safeSurfCheckbox.firstChild.checked = !safeSurfCheckbox.firstChild.checked;
@@ -250,10 +267,19 @@ var buildOptionsTable = function () {
 			messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
 		}
 	});
-	safeSurfCheckbox.className = 'onoffswitch-container';
+  gesture.listen('down', voteButtonsCheckbox, function () {
+    voteButtonsCheckbox.firstChild.checked = !voteButtonsCheckbox.firstChild.checked;
+    // xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
+    //   JSON.stringify({ vote_btns: voteButtonsCheckbox.firstChild.checked }));
+    currentUser.vote_btns = voteButtonsCheckbox.firstChild.checked;
+  });
+	safeSurfCheckbox.className = voteButtonsCheckbox.className = 'onoffswitch-container';
 	safeSurfTextCell.appendChild(safeSurfText);
 	safeSurfCheckboxCell.appendChild(safeSurfCheckbox);
   safeSurfDescCell.appendChild(safeSurfDesc);
+  voteButtonsTextCell.appendChild(voteButtonsText);
+  voteButtonsCheckboxCell.appendChild(voteButtonsCheckbox);
+  voteButtonsDescCell.appendChild(voteButtonsDesc);
 	return optionsTable;
 };
 var populateNavbar = function () {
@@ -412,7 +438,6 @@ var populateNavbar = function () {
       checkShare();
       modal.backOff();
       modal.modalOut();
-      voteButtonsOn();
     };
     n.appendChild(title);
     n.appendChild(optionsTable);
@@ -426,8 +451,7 @@ var populateNavbar = function () {
     initDocLinks(checkShare);
   };
 };
-var voteButtonsEnabled = true, 
-    buildVoteButtons = function (dragCallback, swipeSlider) {
+var buildVoteButtons = function (dragCallback, swipeSlider) {
       var upvoteBtn = document.createElement('div'),
           downvoteBtn = document.createElement('div'),
           downvoteIcon = document.createElement('img'),
@@ -497,9 +521,11 @@ var currentMedia, checkShare = function(shareCb, panicCb) {
       return;
     else
       panic.on(d, panicCb);
-      voteButtonsOn();
+      if(currentUser.vote_btns)
+        voteButtonsOn();
   } else if (d && d.type == "login") {
-      voteButtonsOn();
+      if(currentUser.vote_btns)
+        voteButtonsOn();
   } else {
     share.off();
     panic.off();
