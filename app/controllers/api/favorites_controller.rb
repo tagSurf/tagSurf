@@ -23,13 +23,14 @@ class Api::FavoritesController < Api::BaseController
   def paginated_history
     @offset = fav_params["offset"].to_i
     @limit = fav_params["limit"].to_i
+    @user = current_user
 
     # limit responses to 50 cards
     if @limit > 50
       @limit = 50
     end
 
-    @media = Favorite.paginated_history(current_user.id, @limit, @offset)
+    @media = Favorite.paginated_history(@user.id, @limit, @offset, @user.safe_mode)
     if @media
       render json: @media, root: 'data'
     else
