@@ -837,7 +837,7 @@ onload = function ()
 			});
 			gesture.listen("up", iconLine.children[1], function() {
 				iconLine.children[1].classList.remove("active-tag-callout");
-				iconLine.children[1].firstChild.src = "http://http://assets.tagsurf.co/img/trending_icon_blue.png";
+				iconLine.children[1].firstChild.src = "http://assets.tagsurf.co/img/trending_icon_blue.png";
 			});
 			gesture.listen("tap", iconLine.children[1], function() {
 				autocomplete.tapTag(c.tags[0], "autocomplete", false);
