@@ -158,6 +158,8 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		});
 		gesture.listen("up", p, function() {
 			p.classList.remove("active-pictag");
+		});
+		gesture.listen("tap", p, function() {
 			if (objwrap[tagName].user_owned) {
 				rmTag(tagName);
 				pictags.removeChild(p);
