@@ -796,7 +796,7 @@ onload = function ()
 		}
 		if (node && (targetHeight + textContainer.scrollHeight 
 			+ picTags.scrollHeight + iconLine.scrollHeight 
-			< (maxCardHeight + 80)))
+			< (maxCardHeight + (currentUser.vote_btns ? 20 : 80))))
 		{
 			imageContainer.classList.remove("expand-animation");
 			fullscreenButton.className += ' hidden';
