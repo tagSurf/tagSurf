@@ -8,7 +8,8 @@ class Tag < ActiveRecord::Base
 
   validates_presence_of :name
 
-  scope :safe_mode, ->(boolean) { where("blacklisted < ?", boolean) }
+  # not implemented yet for all tags
+  scope :safe_mode, ->(boolean) { where("blacklisted = ?", boolean) }
 
   def self.current_feed(user, scores=true)
     @obj = Tag.new

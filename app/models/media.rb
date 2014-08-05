@@ -13,6 +13,8 @@ class Media < ActiveRecord::Base
   default_scope { where(ts_type: 'content') }
   default_scope { where(reported: false) }
 
+  scope :safe_mode, ->(boolean) { where("nsfw = ?", boolean) }
+
   # Imgur specific
   before_create :resize_image_links
   def resize_image_links
