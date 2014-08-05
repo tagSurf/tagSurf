@@ -398,6 +398,10 @@ var populateNavbar = function () {
     var n = document.createElement("div");
     n.className = "center-label";
     var title = document.createElement("div");
+    var closebtn = document.createElement("img");
+    closebtn.src = "http://assets.tagsurf.co/img/Close.png";
+    closebtn.className = "modal-close-button";
+    closebtn.id = "options-close-button";
     title.innerHTML = "Options";
     title.className = "options-title";
     var optionsTable = buildOptionsTable();
@@ -415,6 +419,7 @@ var populateNavbar = function () {
     };
     n.appendChild(title);
     n.appendChild(optionsTable);
+    n.appendChild(closebtn);
     //n.appendChild(img);
     n.appendChild(TOS);
     slideNavMenu(true);
