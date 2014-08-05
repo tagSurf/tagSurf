@@ -51,7 +51,7 @@ var isAuthorized = function () {
         currentUser.admin = result.user.admin;
         currentUser.safeSurf = result.user.safe_mode;
         if(!isDesktop())
-          currentUser.vote_btns = flase;
+          currentUser.vote_btns = false;
       }
       else
         authorizedSession = false;
