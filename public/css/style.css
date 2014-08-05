@@ -215,8 +215,18 @@ a {
 }
 #options-close-button {
 	position: absolute;
-	top: 15px;
-	right: 15px;
+	top: 10px;
+	right: 10px;
+}
+#share-close-button {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+#panic-close-button { 
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
 }
 
 .modalslide {
@@ -230,7 +240,7 @@ a {
 	-webkit-transition: none !important;
 	pointer-events: none;
 }
-/*===== Login Page Stuff =====*/
+/*========= Login Page Stuff =========*/
 .tslogo {
   display: block;
   background-image: url('http://assets.tagsurf.co/img/ts_logo_stacked_gray.png');
@@ -275,7 +285,7 @@ a {
 	transition: border-color 200ms;
 	-webkit-background-clip: padding-box;
 }
-/*==== Throbber Stuff ====*/
+/*======== Throbber Stuff =========*/
 .throbber
 {
 	height: 50px;
@@ -291,7 +301,7 @@ a {
 	bottom: 5px;
 	height: 30px;
 }
-/*==== Zoom Modal Stuff ====*/
+/*======== Zoom Modal Stuff =======*/
 .raw-wrapper
 {
   display: inline;
