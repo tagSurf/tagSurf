@@ -168,6 +168,8 @@ onload = function ()
 			gesture.listen("up", trendingBtn, function() {
 				trendingBtn.classList.remove("active-trending-returnbtn");
 				trendingBtn.firstChild.src = "http://assets.tagsurf.co/img/trending_icon_blue.png";
+			});
+			gesture.listen("tap", trendingBtn, function() {
 				if(isAuthorized())
 					window.location = "http://" + document.location.host + '/feed';
 				else
@@ -717,6 +719,8 @@ onload = function ()
 		});
 		gesture.listen("up", p, function() {
 			p.classList.remove("active-pictag");
+		});
+		gesture.listen("tap", p, function() {
 			if (ismine) {
 				rmTag(tag);
 				picTags.removeChild(p);
@@ -833,7 +837,9 @@ onload = function ()
 			});
 			gesture.listen("up", iconLine.children[1], function() {
 				iconLine.children[1].classList.remove("active-tag-callout");
-				iconLine.children[1].firstChild.src = "http://http://assets.tagsurf.co/img/trending_icon_blue.png";
+				iconLine.children[1].firstChild.src = "http://assets.tagsurf.co/img/trending_icon_blue.png";
+			});
+			gesture.listen("tap", iconLine.children[1], function() {
 				autocomplete.tapTag(c.tags[0], "autocomplete", false);
 			});
 		} else
@@ -858,8 +864,10 @@ onload = function ()
 			firstCardLoaded = false;
 			imageContainer.firstChild.onload = function() {
 				firstCardLoaded = true;
-				slider.parentNode.nextSibling.firstChild.setSource();
-				slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
+				if(slider.parentNode.nextSibling.firstChild)
+					slider.parentNode.nextSibling.firstChild.setSource();
+				if(slider.parentNode.nextSibling.nextSibling.firstChild)
+					slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
 				throbber.off();
 				scrollContainer.style.opacity = 1;
 				analytics.track('Finished Pageload');

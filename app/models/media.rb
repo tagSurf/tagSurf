@@ -226,7 +226,7 @@ class Media < ActiveRecord::Base
           delete_hash: obj['deletehash']
         })
 
-        if obj["nswf"] == 'true'
+        if obj["nsfw"] == 'true'
           media.tag_list.add(media.section, 'NSFW')
         else
           media.tag_list.add(media.section)
