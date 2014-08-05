@@ -521,6 +521,7 @@ onload = function ()
 		}
 		else if (code == 37){
 			dragCallback("left", -3, -3);
+			flashVoteButton("left");
 			if (slider.card.id == 221281) {	
 				analytics.track("Key Swipe Login Card", {
 					direction: "left",
@@ -547,6 +548,7 @@ onload = function ()
 		}
 		else if (code == 39) {
 			dragCallback("right", 3, 3);
+			flashVoteButton("right");
 			if (slider.card.id == 221281) {
 				analytics.track("Key Swipe Login Card", {
 					direction: "right",
@@ -796,7 +798,7 @@ onload = function ()
 		}
 		if (node && (targetHeight + textContainer.scrollHeight 
 			+ picTags.scrollHeight + iconLine.scrollHeight 
-			< (maxCardHeight + 80)))
+			< (maxCardHeight + (currentUser.vote_btns ? 20 : 80))))
 		{
 			imageContainer.classList.remove("expand-animation");
 			fullscreenButton.className += ' hidden';
@@ -1017,6 +1019,8 @@ onload = function ()
 			if (slider.children[0].className.indexOf("expanded") == -1)
 				slider.children[0].className += " expanded";
 			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
+			if(currentUser.vote_btns && (isMobile() || isTablet()))
+				slider.children[3].style.paddingBottom="60px";
 			toggleClass.call(slider.children[3], "hidden");
 			toggleClass.call(slider.children[4], "hidden");
 			scrollCallback();
@@ -1078,6 +1082,10 @@ onload = function ()
 		}
 	});
 	firstPopulate();
+	buildVoteButtons(dragCallback, swipeSlider);
+	if(currentUser.vote_btns){
+		voteButtonsOn();
+	}
 	setReminderTimeout();
 	analytics.identify(currentUser.id);
 };

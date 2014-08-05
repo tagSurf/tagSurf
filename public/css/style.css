@@ -413,6 +413,35 @@ a {
 	max-width: 75% !important;
 	font-size: 160%;
 }
+.vote-button
+{
+  -webkit-transition: opacity 250ms;
+  transition: opacity 250ms;
+  z-index: 15;
+  width: 80px;
+  padding: 10px;
+}
+#vote-button-left
+{
+  position: absolute;
+  bottom: 5px;
+  left: 50px;
+}
+#vote-button-right
+{
+  position: absolute;
+  bottom: 5px;
+  right: 50px;
+}
+#downvote-icon {
+	width: 100%;
+	margin: auto;
+}
+#upvote-icon {
+	width: 100%;
+	margin: auto;
+}
+
 /*============== Share Button Stuff ============*/
 #share-button
 {
@@ -716,7 +745,7 @@ a {
 /*===== Options Menu Stuff ======*/
 .options-table 
 {
-	width: 237px;
+	width: 260px;
 }
 .options-title
 {
@@ -724,19 +753,23 @@ a {
 	position: relative;
 	top: -25px;
 }
-.option-key-text
+.options-key-text
 {
 	font-size: 180%;
 	margin-right: 15px;
 }
 .options-key-desc 
 {
-	padding-top: 10px;
+	padding-top: 5px;
 }
 
 /*======= As seen on proto.io ========*/
 .onoffswitch-container {
 	position: relative;
+	width: 90px;
+}
+.onoffswitch-container, .options-key-text {
+	margin-top: 20px;
 }
 .onoffswitch {
 	position: relative; width: 90px;
@@ -813,6 +846,9 @@ a {
 	  left: 32%;
 	  font-size: 140%;
 	}
+	.center-label {
+		padding-top: 13%;
+	}
 	/*===== Share Button =====*/
 	#share-button {
 	  bottom: 10px;
@@ -848,7 +884,12 @@ a {
 	}
 	/*===== Options Menu =====*/
 	.options-table {
-		width: 25%;
+		width: 30%;
+	}
+	.options-key-text {
+		text-align: right;
+		margin-right: 30px;
+		font-size: 180% !important;
 	}
 	.options-msg {
 		font-size: 140%;
@@ -880,7 +921,19 @@ a {
  	.share_heading_margin {
  		margin: 60px 0;
  	} 
- 	.modal-close-button {
+ 	.vote-button
+	{
+	  width: 120px;
+	}
+	#vote-button-left
+	{
+	  left: 100px;
+	}
+	#vote-button-right
+	{
+	  right: 100px;
+	}
+    .modal-close-button {
 		width: 50px;
 	}
 	#options-close-button {

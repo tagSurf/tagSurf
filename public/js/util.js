@@ -3,6 +3,8 @@ var authorizedSession = null;
 var currentUser = {
   id : null,
   email : null,
+  slug : null,
+  vote_btns : true,
   admin : false
 };
 var returnTrue = function() { return true; };
@@ -48,9 +50,14 @@ var isAuthorized = function () {
         currentUser.slug = result.user.slug;
         currentUser.admin = result.user.admin;
         currentUser.safeSurf = result.user.safe_mode;
+        if(!isDesktop())
+          currentUser.vote_btns = false;
       }
       else
         authorizedSession = false;
+      // var vote_btns = sessionStorage.getItem("vote_btns");
+      // if(typeof vote_btns !== 'undefined')
+      //   currentUser.vote_btns = vote_btns;  
     }, function(result) {
       if (result.user == "not found") 
         authorizedSession = false;
@@ -220,40 +227,76 @@ var buildOptionsTable = function () {
 	var optionsTable = document.createElement('table'),
   		safeSurfRow = optionsTable.insertRow(0),
       safeSurfHelperRow = optionsTable.insertRow(1),
+      voteButtonsRow = optionsTable.insertRow(2),
+      voteButtonsHelperRow = optionsTable.insertRow(3),
+      voteButtonsTextCell = voteButtonsRow.insertCell(0),
+      voteButtonsCheckboxCell = voteButtonsRow.insertCell(1),
+      voteButtonsDescCell = voteButtonsHelperRow.insertCell(0),
   		safeSurfTextCell = safeSurfRow.insertCell(0),
   		safeSurfCheckboxCell = safeSurfRow.insertCell(1),
       safeSurfDescCell = safeSurfHelperRow.insertCell(0),
       safeSurfDesc = document.createElement('div'),
   		safeSurfText = document.createElement('div'),
-  		safeSurfCheckbox = document.createElement('div');
-  	optionsTable.className = "inline options-table";
-  	safeSurfCheckbox.innerHTML = 
-		'<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
-      ((currentUser && currentUser.safeSurf || !isAuthorized()) ? " checked" : "") +
-    '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> <div class="onoffswitch-cover" style="display:' +
-		(isAuthorized() ? 'none' : 'block') + ';"></div>';
+  		safeSurfCheckbox = document.createElement('div'),
+      voteButtonsDesc = document.createElement('div'),
+      voteButtonsText = document.createElement('div'),
+      voteButtonsCheckbox = document.createElement('div');
+	optionsTable.className = "inline options-table";
+	safeSurfCheckbox.innerHTML = 
+	'<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
+    ((currentUser && currentUser.safeSurf || !isAuthorized()) ? " checked" : "") +
+  '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> <div class="onoffswitch-cover" style="display:' +
+	(isAuthorized() ? 'none' : 'block') + ';"></div>';
 	safeSurfText.innerHTML = "Safe Surf";
-	safeSurfText.className = "option-key-text";
-  safeSurfDescCell.colSpan = 2;
-  safeSurfDesc.innerHTML = "Safe Surf filters NSFW content out of your feed and galleries.<br><i>(NSFW = Not Safe For Work)</i>";
-  safeSurfDesc.className = "options-key-desc";
-	gesture.listen('down', safeSurfCheckbox, function () {
+	safeSurfText.className = voteButtonsText.className= "options-key-text";
+  safeSurfDescCell.colSpan = voteButtonsDescCell.colSpan = 2;
+  safeSurfDesc.innerHTML = "Safe Surf filters NSFW content<br>out of your feed and galleries.<br><i>(NSFW = Not Safe For Work)</i>";
+  safeSurfDesc.className = voteButtonsDesc.className = "options-key-desc";
+  voteButtonsCheckbox.innerHTML = 
+  '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
+    (currentUser.vote_btns ? " checked" : "") +
+  '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label>';
+  voteButtonsText.innerHTML = "Vote Buttons";
+  voteButtonsText.style.fontSize="150%";
+  voteButtonsDesc.innerHTML = "Turn off voting buttons and just swipe";
+  gesture.listen('down', safeSurfCheckbox, function () {
 		if (isAuthorized())
 		{
 			safeSurfCheckbox.firstChild.checked = !safeSurfCheckbox.firstChild.checked;
       xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
         JSON.stringify({ safe_mode: safeSurfCheckbox.firstChild.checked }));
       currentUser.safeSurf = safeSurfCheckbox.firstChild.checked;
+      analytics.track('Toggle Safe Surf', {
+        safeSurf: currentUser.safeSurf
+      });
 		}
 		else
 		{
 			messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
+      analytics.track('Unauthorized Toggle Safe Surf');
 		}
 	});
-	safeSurfCheckbox.className = 'onoffswitch-container';
+  gesture.listen('down', voteButtonsCheckbox, function () {
+    voteButtonsCheckbox.firstChild.checked = !voteButtonsCheckbox.firstChild.checked;
+    // xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
+    //   JSON.stringify({ vote_btns: voteButtonsCheckbox.firstChild.checked }));
+    currentUser.vote_btns = voteButtonsCheckbox.firstChild.checked;
+    var session = sessionStorage.getItem('vote_btns')
+    // if(typeof session !== 'undefined')
+    //   sessionStorage.vote_btns = voteButtonsCheckbox.firstChild.checked;
+    // else
+    //   sessionStorage.setItem("vote_btns", voteButtonsCheckbox.firstChild.checked);
+    analytics.track('Toggle Vote Buttons', {
+        voteButtons: currentUser.vote_btns
+    });
+  });
+	safeSurfCheckbox.className = voteButtonsCheckbox.className = 'onoffswitch-container';
 	safeSurfTextCell.appendChild(safeSurfText);
 	safeSurfCheckboxCell.appendChild(safeSurfCheckbox);
   safeSurfDescCell.appendChild(safeSurfDesc);
+  voteButtonsTextCell.appendChild(voteButtonsText);
+  voteButtonsCheckboxCell.appendChild(voteButtonsCheckbox);
+  voteButtonsDescCell.appendChild(voteButtonsDesc);
 	return optionsTable;
 };
 var populateNavbar = function () {
@@ -425,10 +468,79 @@ var populateNavbar = function () {
     slideNavMenu(true);
     share.off();
     panic.off();
+    voteButtonsOff();
     modal.modalIn(n, options_cb);
     initDocLinks(checkShare);
   };
 };
+var buildVoteButtons = function (dragCallback, swipeSlider) {
+      var upvoteBtn = document.createElement('div'),
+          downvoteBtn = document.createElement('div'),
+          downvoteIcon = document.createElement('img'),
+          upvoteIcon = document.createElement('img');
+      downvoteIcon.src = "http://assets.tagsurf.co/img/downvote_btn.png";
+      upvoteIcon.src = "http://assets.tagsurf.co/img/upvote_btn.png";
+      downvoteIcon.id = "downvote-icon";
+      upvoteIcon.id = "upvote-icon";
+      downvoteBtn.className = "vote-button hidden";
+      downvoteBtn.id = "vote-button-left";
+      upvoteBtn.className = "vote-button hidden";
+      upvoteBtn.id = "vote-button-right";
+      downvoteBtn.appendChild(downvoteIcon);
+      upvoteBtn.appendChild(upvoteIcon);
+      gesture.listen('down', downvoteBtn, function () {
+        downvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/downvote_btn-invert.png";
+      });
+      gesture.listen('up', downvoteBtn, function () {
+        downvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/downvote_btn.png";
+      });
+      gesture.listen('tap', downvoteBtn, function () {
+        if (modal.zoom.zoomed)
+          modal.callZoom(1);
+        dragCallback("left", -3, -3);
+        swipeSlider("left");
+        analytics.track("Tap Downvote Button");
+      });
+
+      gesture.listen('down', upvoteBtn, function () {
+        upvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/upvote_btn-invert.png";
+      });
+      gesture.listen('up', upvoteBtn, function () {
+        upvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/upvote_btn.png";
+      });
+      gesture.listen('tap', upvoteBtn, function () {
+        if (modal.zoom.zoomed)
+          modal.callZoom(1);
+        dragCallback("right", 3, 3);
+        swipeSlider("right");
+        analytics.track("Tap Upvote Button");
+      });
+      document.body.appendChild(downvoteBtn);
+      document.body.appendChild(upvoteBtn);
+    },
+    voteButtonsOn = function() {
+      toggleClass.apply(document.getElementById('vote-button-right'), ["hidden", "off"]);
+      toggleClass.apply(document.getElementById('vote-button-left'), ["hidden", "off"]);
+    }, 
+    voteButtonsOff = function() {
+      toggleClass.apply(document.getElementById('vote-button-right'), ["hidden", "on"]);
+      toggleClass.apply(document.getElementById('vote-button-left'), ["hidden", "on"]);
+    },
+    flashVoteButton = function(direction) {
+      if (direction == "right") {
+        document.getElementById("upvote-icon").src = "http://assets.tagsurf.co/img/upvote_btn-invert.png";
+        setTimeout(function () {
+          document.getElementById("upvote-icon").src = "http://assets.tagsurf.co/img/upvote_btn.png";
+        }, 300);
+      }
+      else if (direction == "left") {
+        document.getElementById("downvote-icon").src = "http://assets.tagsurf.co/img/downvote_btn-invert.png";
+        setTimeout(function () {
+          document.getElementById("downvote-icon").src = "http://assets.tagsurf.co/img/downvote_btn.png";
+        }, 300);
+      }
+    };
+
 var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
     "http://assets.tagsurf.co/img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
@@ -447,9 +559,15 @@ var currentMedia, checkShare = function(shareCb, panicCb) {
       return;
     else
       panic.on(d, panicCb);
+      if(currentUser.vote_btns)
+        voteButtonsOn();
+  } else if (d && d.type == "login") {
+      if(currentUser.vote_btns)
+        voteButtonsOn();
   } else {
     share.off();
     panic.off();
+    voteButtonsOff();
     if (addBarSlid)
       slideAddBar();
   }
