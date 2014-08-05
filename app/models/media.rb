@@ -13,6 +13,8 @@ class Media < ActiveRecord::Base
   default_scope { where(ts_type: 'content') }
   default_scope { where(reported: false) }
 
+  scope :safe_mode, ->(boolean) { where("nsfw = ?", boolean) }
+
   # Imgur specific
   before_create :resize_image_links
   def resize_image_links
@@ -226,7 +228,7 @@ class Media < ActiveRecord::Base
           delete_hash: obj['deletehash']
         })
 
-        if obj["nswf"] == 'true'
+        if obj["nsfw"] == 'true'
           media.tag_list.add(media.section, 'NSFW')
         else
           media.tag_list.add(media.section)
