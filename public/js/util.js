@@ -567,7 +567,8 @@ var currentMedia, checkShare = function(shareCb, panicCb) {
   } else {
     share.off();
     panic.off();
-    voteButtonsOff();
+    if(currentUser.vote_btns)
+      voteButtonsOff();
     if (addBarSlid)
       slideAddBar();
   }
