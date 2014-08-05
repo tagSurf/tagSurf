@@ -209,6 +209,15 @@ a {
 	-webkit-transition: -webkit-transform 250ms ease-in-out;
 	-webkit-overflow-scrolling: auto;
 }
+/*======== Modal Close Button Stuff =========*/
+.modal-close-button {
+	width: 40px;
+}
+#options-close-button {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+}
 
 .modalslide {
 	-webkit-transform: translate3d(0, 0, 0) !important;
@@ -599,7 +608,7 @@ a {
 .center-label
 {
   text-align: center;
-  padding-top: 30%;
+  padding-top: 15%;
 }
 .tos-line{
 	position: fixed;
