@@ -86,7 +86,6 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			if (direction != "up" && direction != "down")
 			{
 				modal.callModal();
-				toggleClass.call(closebtn, "hidden");
 			}
 			else
 			{
@@ -106,7 +105,6 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 							direction == 'right')
 						{
 							modal.callModal();
-							toggleClass.call(closebtn, "hidden");
 						}
 					},
 				});
@@ -131,7 +129,6 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 
 		gesture.listen("tap", closebtn, function() { 
 			modal.callModal();
-			toggleClass.call(closebtn, "hidden");
 		});
 		document.body.appendChild(closebtn);
 	};
@@ -196,13 +193,12 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 				current_image = null;
 				setFavIcon(false);
 				setCurrentMedia();
-				toggleClass.call(closebtn, "hidden");
+				closebtn.classList.add('hidden');
 				modal.backOff();
 				modal.modalOut();
 			}
 		}, function() { modal.zoomIn(d, function() {
 				modal.zoomOut();
-				// toggleClass.call(document.getElementById('gallery-close-button'), "hidden");
 			}); 
 		});
 		votize(modal.modal, d);
