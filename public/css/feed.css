@@ -187,12 +187,6 @@ html, body
   transition: transform 250ms ease-in;
 }
 
-.center-label
-{
-  text-align: center;
-  padding-top: 9%;
-}
-
 .super-card
 {
 

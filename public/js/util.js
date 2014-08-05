@@ -235,7 +235,7 @@ var buildOptionsTable = function () {
 	safeSurfText.innerHTML = "Safe Surf";
 	safeSurfText.className = "option-key-text";
   safeSurfDescCell.colSpan = 2;
-  safeSurfDesc.innerHTML = "Safe Surf filters NSFW content out of your feed and galleries. <br><i>(NSFWgo  = Not Safe For Work)</i>";
+  safeSurfDesc.innerHTML = "Safe Surf filters NSFW content out of your feed and galleries.<br><i>(NSFW = Not Safe For Work)</i>";
   safeSurfDesc.className = "options-key-desc";
 	gesture.listen('down', safeSurfCheckbox, function () {
 		if (isAuthorized())
@@ -398,6 +398,10 @@ var populateNavbar = function () {
     var n = document.createElement("div");
     n.className = "center-label";
     var title = document.createElement("div");
+    var closebtn = document.createElement("img");
+    closebtn.src = "http://assets.tagsurf.co/img/Close.png";
+    closebtn.className = "modal-close-button";
+    closebtn.id = "options-close-button";
     title.innerHTML = "Options";
     title.className = "options-title";
     var optionsTable = buildOptionsTable();
@@ -415,6 +419,7 @@ var populateNavbar = function () {
     };
     n.appendChild(title);
     n.appendChild(optionsTable);
+    n.appendChild(closebtn);
     //n.appendChild(img);
     n.appendChild(TOS);
     slideNavMenu(true);
