@@ -66,9 +66,13 @@ var share =
 		var heading = document.createElement("div"),
 			blurb = document.createElement("div"),
 			urlContainer = document.createElement("div"),
-			url = document.createElement("input");
+			url = document.createElement("input"),
+			closebtn = document.createElement("img");
 		heading.className = "really-big share-heading-margin";
 		heading.innerHTML = "Share This Card";
+		closebtn.src = "http://assets.tagsurf.co/img/Close.png";
+		closebtn.className = "modal-close-button";
+		closebtn.id = "share-close-button";
 		share.content.className = "centered";
 		urlContainer.id = "url-container"; 
 		url.id = "share-url";
@@ -87,6 +91,7 @@ var share =
 		for (var network in share.networks)
 			share._icon(network);
 		share.content.appendChild(urlContainer);
+		share.content.appendChild(closebtn);
 	},
 	_buildButton: function ()
 	{

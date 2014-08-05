@@ -763,6 +763,7 @@ onload = function ()
 			c_wrapper.className = "card-wrapper";
 			c_container = document.createElement("div");
 			c_container.className = "card-container center-label";
+			c_container.id = "End-Of-Feed";
 			msg = document.createElement("div");
 			msg.innerHTML = "Searching for more cards in <br>#" + current_tag + " feed...";
 			img = document.createElement("img");
@@ -1079,8 +1080,10 @@ onload = function ()
 		}
 	});
 	firstPopulate();
-	if(currentUser.vote_btns)
-		buildVoteButtons(dragCallback, swipeSlider);
+	buildVoteButtons(dragCallback, swipeSlider);
+	if(currentUser.vote_btns){
+		voteButtonsOn();
+	}
 	setReminderTimeout();
 	analytics.identify(currentUser.id);
 };

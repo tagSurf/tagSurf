@@ -10,12 +10,16 @@ var panic = {
 	},
 	_buildContent: function () {
 		var panicMessage = document.createElement("div"),
-			getAwayButton = document.createElement("div");
+			getAwayButton = document.createElement("div"),
+			closebtn = document.createElement('img');
 		panicMessage.className = "really-big share-heading-margin";
 		panicMessage.innerHTML = "Is this card too much for you?";
 		getAwayButton.innerHTML = "Get this card away from me!";
 		getAwayButton.className = "msgbox-btn";
 		getAwayButton.id = "get-away-button";
+		closebtn.src = "http://assets.tagsurf.co/img/Close.png";
+		closebtn.className = "modal-close-button";
+		closebtn.id = "panic-close-button";
 		gesture.listen("tap", getAwayButton, function() {
 			xhr("/api/media/" + panic.data.id + "/report", "POST");
 			panic.cb && panic.cb();
@@ -29,6 +33,7 @@ var panic = {
 	    });
 		panic.content.appendChild(panicMessage);
 		panic.content.appendChild(getAwayButton);
+		panic.content.appendChild(closebtn);
 		panic.content.className = "centered";
 	},
 	_buildButton: function () {

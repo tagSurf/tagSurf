@@ -54,6 +54,9 @@ var isAuthorized = function () {
       }
       else
         authorizedSession = false;
+      // var vote_btns = sessionStorage.getItem("vote_btns");
+      // if(typeof vote_btns !== 'undefined')
+      //   currentUser.vote_btns = vote_btns;  
     }, function(result) {
       if (result.user == "not found") 
         authorizedSession = false;
@@ -246,13 +249,14 @@ var buildOptionsTable = function () {
 	safeSurfText.innerHTML = "Safe Surf";
 	safeSurfText.className = voteButtonsText.className= "options-key-text";
   safeSurfDescCell.colSpan = voteButtonsDescCell.colSpan = 2;
-  safeSurfDesc.innerHTML = "Safe Surf filters NSFW content out of your feed. <br><i>(NSFW = Not Safe For Work)</i>";
+  safeSurfDesc.innerHTML = "Safe Surf filters NSFW content<br>out of your feed and galleries.<br><i>(NSFW = Not Safe For Work)</i>";
   safeSurfDesc.className = voteButtonsDesc.className = "options-key-desc";
   voteButtonsCheckbox.innerHTML = 
   '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
     (currentUser.vote_btns ? " checked" : "") +
   '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label>';
   voteButtonsText.innerHTML = "Vote Buttons";
+  voteButtonsText.style.fontSize="150%";
   voteButtonsDesc.innerHTML = "Turn off voting buttons and just swipe";
   gesture.listen('down', safeSurfCheckbox, function () {
 		if (isAuthorized())
@@ -261,10 +265,14 @@ var buildOptionsTable = function () {
       xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
         JSON.stringify({ safe_mode: safeSurfCheckbox.firstChild.checked }));
       currentUser.safeSurf = safeSurfCheckbox.firstChild.checked;
+      analytics.track('Toggle Safe Surf', {
+        safeSurf: currentUser.safeSurf
+      });
 		}
 		else
 		{
 			messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
+      analytics.track('Unauthorized Toggle Safe Surf');
 		}
 	});
   gesture.listen('down', voteButtonsCheckbox, function () {
@@ -272,6 +280,14 @@ var buildOptionsTable = function () {
     // xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
     //   JSON.stringify({ vote_btns: voteButtonsCheckbox.firstChild.checked }));
     currentUser.vote_btns = voteButtonsCheckbox.firstChild.checked;
+    var session = sessionStorage.getItem('vote_btns')
+    // if(typeof session !== 'undefined')
+    //   sessionStorage.vote_btns = voteButtonsCheckbox.firstChild.checked;
+    // else
+    //   sessionStorage.setItem("vote_btns", voteButtonsCheckbox.firstChild.checked);
+    analytics.track('Toggle Vote Buttons', {
+        voteButtons: currentUser.vote_btns
+    });
   });
 	safeSurfCheckbox.className = voteButtonsCheckbox.className = 'onoffswitch-container';
 	safeSurfTextCell.appendChild(safeSurfText);
@@ -424,6 +440,10 @@ var populateNavbar = function () {
     var n = document.createElement("div");
     n.className = "center-label";
     var title = document.createElement("div");
+    var closebtn = document.createElement("img");
+    closebtn.src = "http://assets.tagsurf.co/img/Close.png";
+    closebtn.className = "modal-close-button";
+    closebtn.id = "options-close-button";
     title.innerHTML = "Options";
     title.className = "options-title";
     var optionsTable = buildOptionsTable();
@@ -441,6 +461,7 @@ var populateNavbar = function () {
     };
     n.appendChild(title);
     n.appendChild(optionsTable);
+    n.appendChild(closebtn);
     //n.appendChild(img);
     n.appendChild(TOS);
     slideNavMenu(true);
@@ -460,9 +481,9 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
       upvoteIcon.src = "/img/upvote_btn.png";
       downvoteIcon.id = "downvote-icon";
       upvoteIcon.id = "upvote-icon";
-      downvoteBtn.className = "vote-button";
+      downvoteBtn.className = "vote-button hidden";
       downvoteBtn.id = "vote-button-left";
-      upvoteBtn.className = "vote-button";
+      upvoteBtn.className = "vote-button hidden";
       upvoteBtn.id = "vote-button-right";
       downvoteBtn.appendChild(downvoteIcon);
       upvoteBtn.appendChild(upvoteIcon);
