@@ -11,7 +11,7 @@ class Favorite < ActiveRecord::Base
 
   def self.paginated_history(user_id, limit, offset, safe)
     if safe
-      Media.joins(:favorites).where("favorites.user_id = #{user_id} and media.nsfw = false").order('favorites.id desc').limit(limit).offset(offset)
+      Media.joins(:favorites).where("favorites.user_id = #{user_id}").nsfw(false).order('favorites.id desc').limit(limit).offset(offset)
     else
       Media.joins(:favorites).where("favorites.user_id = #{user_id}").order('favorites.id desc').limit(limit).offset(offset)
     end

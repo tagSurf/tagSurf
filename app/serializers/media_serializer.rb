@@ -44,17 +44,12 @@ class MediaSerializer < BaseSerializer
     return [] if type == 'login'
     # Fix this fiasco once client is set
     current_tags = (media.tag_list + media.tagged_as).uniq
+    if current_user.try(:safe_mode)
+      current_tags.delete_if { |tag| Tag.blacklisted?(tag.to_s) }
+    end
     tagged_medias = []
-    if current_user.nil? || current_user.try(:safe_mode)
-      current_tags.each do |tag|
-        unless Tag.blacklisted?(tag.to_s)
-           tagged_medias.push("#{tag}" => media.media_tag_info(tag))
-         end   
-      end
-    else
-      current_tags.each do |tag|
-        tagged_medias.push("#{tag}" => media.media_tag_info(tag))   
-      end
+    current_tags.each do |tag|
+      tagged_medias.push("#{tag}" => media.media_tag_info(tag))   
     end
     tagged_medias
   end

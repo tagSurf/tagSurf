@@ -10,7 +10,7 @@ class Vote < ActiveRecord::Base
 
   def self.paginated_history(user_id, limit, offset, safe) 
     if safe
-      Media.joins(:votes).where("votes.voter_id = #{user_id} and media.nsfw = false").order('votes.id desc').limit(limit).offset(offset)
+      Media.joins(:votes).where("votes.voter_id = #{user_id}").nsfw(false).order('votes.id desc').limit(limit).offset(offset)
     else
       Media.joins(:votes).where("votes.voter_id = #{user_id}").order('votes.id desc').limit(limit).offset(offset)
     end
