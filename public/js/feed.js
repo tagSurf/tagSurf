@@ -496,26 +496,80 @@ onload = function ()
 		// removed history slider
 //		addHistoryItem(activeCard);
 	};
-	var keyInertia = 0;
+	var keyInertia = 0, 
+		scrollDirection,
+		keyIsDown = {38:{},40:{}},
+		scrollScrollContainer = function (time) {
+			var inertialDecrement = 4, scrollTopIncrement;
+			if (keyIsDown[40].isDown)
+			{
+				if (keyInertia < 50)
+					keyInertia += 5;
+				scrollContainer.scrollTop += (2 * keyInertia);
+				requestAnimFrame(scrollScrollContainer);
+			}
+			else if (keyIsDown[38].isDown)
+			{
+				if (keyInertia < 50)
+					keyInertia += 5;
+				scrollContainer.scrollTop -= (2 * keyInertia);
+				requestAnimFrame(scrollScrollContainer);
+			}
+			else if (keyInertia > 10)
+			{
+				if (scrollDirection == "down")
+				{
+					if (keyIsDown[40].totalTime > 100)
+						inertialDecrement = 6;
+					scrollTopIncrement = 2 * keyInertia;
+				}
+				if (scrollDirection == "up")
+				{
+					if (keyIsDown[38].totalTime > 100)
+						inertialDecrement = 6;
+					scrollTopIncrement = -2 * keyInertia;
+				}
+				keyInertia -= inertialDecrement;
+				scrollContainer.scrollTop += scrollTopIncrement;
+				requestAnimFrame(scrollScrollContainer);
+			}
+			else if (keyInertia <= 10)
+			{
+				keyInertia = 0;
+				scrollDirection = "";
+			}
+		};
 	window.onkeydown = function(e) {
 		keyInertia += 1;
 		e = e || window.event;
 		var code = e.keyCode || e.which;
+		if (keyIsDown.hasOwnProperty(code))
+			keyIsDown[code].isDown = true;
 		if (code == 38){
-			//boundary checking
-			scrollContainer.scrollTop -= (2 * keyInertia);
+			scrollDirection = "up";
+			if (!keyIsDown[38].isDown)
+			{
+				return;
+			}
+			keyIsDown[38].startTime = Date.now();
+			requestAnimFrame(scrollScrollContainer);
 		}
 		else if (code == 40){
-			//boundary checking
-			window.scrollBy(0,10);
-			scrollContainer.scrollTop += (2 * keyInertia);
+			scrollDirection = "down";
+			if (!keyIsDown[40].isDown)
+			{
+				return;
+			}
+			keyIsDown[40].startTime = Date.now();
+			requestAnimFrame(scrollScrollContainer);
 		}
 	};
 	window.onkeyup = function(e) {
 		closeReminder("right");
-		keyInertia = 0;
 		e = e || window.event;
 		var code = e.keyCode || e.which;
+		if (keyIsDown.hasOwnProperty(code))
+			keyIsDown[code].isDown = false;
 		if (code == 32){
 			expandCard();
 		}
@@ -546,6 +600,11 @@ onload = function ()
 			if (slider.card.id == 221281)
 				analytics.track("Seen Login Card");
 		}
+		else if (code == 38) {
+			keyIsDown[38].isDown = false;
+			keyIsDown[38].endTime = Date.now();
+			keyIsDown[38].totalTime = keyIsDown[38].endTime - keyIsDown[38].startTime;
+		}
 		else if (code == 39) {
 			dragCallback("right", 3, 3);
 			flashVoteButton("right");
@@ -573,6 +632,11 @@ onload = function ()
 			// slider id will change to next card 
 			if (slider.card.id == 221281)
 				analytics.track("Seen Login Card");
+		}
+		else if (code == 40) {
+			keyIsDown[40].isDown = false;
+			keyIsDown[40].endTime = Date.now();
+			keyIsDown[40].totalTime = keyIsDown[40].endTime - keyIsDown[40].startTime;
 		}
 	};
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
