@@ -468,8 +468,7 @@ var populateNavbar = function () {
     slideNavMenu(true);
     share.off();
     panic.off();
-    if(currentUser.vote_btns)
-      voteButtonsOff();
+    voteButtonsOff();
     modal.modalIn(n, options_cb);
     initDocLinks(checkShare);
   };
@@ -520,12 +519,16 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
       document.body.appendChild(upvoteBtn);
     },
     voteButtonsOn = function() {
-      toggleClass.apply(document.getElementById('vote-button-right'), ["hidden", "off"]);
-      toggleClass.apply(document.getElementById('vote-button-left'), ["hidden", "off"]);
+      if(document.getElementById('vote-button-right')) {
+        toggleClass.apply(document.getElementById('vote-button-right'), ["hidden", "off"]);
+        toggleClass.apply(document.getElementById('vote-button-left'), ["hidden", "off"]);
+      }
     }, 
     voteButtonsOff = function() {
-      toggleClass.apply(document.getElementById('vote-button-right'), ["hidden", "on"]);
-      toggleClass.apply(document.getElementById('vote-button-left'), ["hidden", "on"]);
+      if (document.getElementById('vote-button-right')) {
+        toggleClass.apply(document.getElementById('vote-button-right'), ["hidden", "on"]);
+        toggleClass.apply(document.getElementById('vote-button-left'), ["hidden", "on"]);
+      }
     },
     flashVoteButton = function(direction) {
       if (direction == "right") {
@@ -568,10 +571,9 @@ var currentMedia, checkShare = function(shareCb, panicCb) {
   } else {
     share.off();
     panic.off();
+    voteButtonsOff();
     if (addBarSlid)
       slideAddBar();
-    if(currentUser.vote_btns) //vote buttons don't exist in galleries
-      voteButtonsOff();
   }
 }, setCurrentMedia = function(d, shareCb, panicCb) {
   currentMedia = d;
