@@ -497,7 +497,7 @@ onload = function ()
 		scrollDirection,
 		keyIsDown = {38:{},40:{}},
 		scrollScrollContainer = function (time) {
-			var inertialDecrement = 1, scrollTopIncrement;
+			var inertialDecrement = 4, scrollTopIncrement;
 			if (keyIsDown[40].isDown)
 			{
 				if (keyInertia < 50)
@@ -516,14 +516,16 @@ onload = function ()
 			{
 				if (scrollDirection == "down")
 				{
-					if (keyIsDown[40].totalTime > 150)
-						inertialDecrement = 3;
+					console.log("down", keyIsDown[40].totalTime);
+					if (keyIsDown[40].totalTime > 100)
+						inertialDecrement = 6;
 					scrollTopIncrement = 2 * keyInertia;
 				}
 				if (scrollDirection == "up")
 				{
-					if (keyIsDown[38].totalTime > 150)
-						inertialDecrement = 3;
+					console.log("up", keyIsDown[40].totalTime);
+					if (keyIsDown[38].totalTime > 100)
+						inertialDecrement = 6;
 					scrollTopIncrement = -2 * keyInertia;
 				}
 				keyInertia -= inertialDecrement;
