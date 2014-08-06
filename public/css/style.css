@@ -148,7 +148,7 @@ a {
 .light-gray {
 	color: #989898;
 }
-
+/*===== Pic Tags Stuff =====*/
 .pictags {
 	text-align: center;
 }
@@ -170,7 +170,7 @@ a {
 	margin: 5px;
 	cursor: pointer;
 }
-
+/*===== Modal Backing Stuff =====*/
 .blackout {
 	pointer-events: none;
 	z-index: 3;
@@ -209,6 +209,33 @@ a {
 	-webkit-transition: -webkit-transform 250ms ease-in-out;
 	-webkit-overflow-scrolling: auto;
 }
+/*======== Modal Close Button Stuff =========*/
+.modal-close-button {
+	width: 40px;
+}
+#options-close-button {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+#share-close-button {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+#panic-close-button { 
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+}
+#gallery-close-button {
+    -webkit-transition: opacity 250ms;
+    transition: opacity 250ms;
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	z-index: 15;
+}
 
 .modalslide {
 	-webkit-transform: translate3d(0, 0, 0) !important;
@@ -221,7 +248,7 @@ a {
 	-webkit-transition: none !important;
 	pointer-events: none;
 }
-
+/*========= Login Page Stuff =========*/
 .tslogo {
   display: block;
   background-image: url('http://assets.tagsurf.co/img/ts_logo_stacked_gray.png');
@@ -266,6 +293,7 @@ a {
 	transition: border-color 200ms;
 	-webkit-background-clip: padding-box;
 }
+/*======== Throbber Stuff =========*/
 .throbber
 {
 	height: 50px;
@@ -281,6 +309,7 @@ a {
 	bottom: 5px;
 	height: 30px;
 }
+/*======== Zoom Modal Stuff =======*/
 .raw-wrapper
 {
   display: inline;
@@ -316,6 +345,7 @@ a {
   pointer-events: none;
 }
 
+/*======== Autocomplete Stuff =========*/
 #add-tag-autocomplete {
   top: 43px;
   left: 20px;
@@ -354,6 +384,65 @@ a {
    -webkit-transform-style: flat;
    perspective: 1000;
 }
+
+/*============ Panic Button Stuff ===========*/
+#panic-button
+{
+  -webkit-transition: opacity 250ms;
+  transition: opacity 250ms;
+  opacity: 0;
+  z-index: 15;
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  width: 50px;
+  padding: 10px;
+  pointer-events: none;
+}
+#panic-icon
+{
+  width: 30px;
+}
+.panic-active
+{
+  opacity: 1 !important;
+  pointer-events: initial !important;
+}
+#get-away-button
+{
+	max-width: 75% !important;
+	font-size: 160%;
+}
+.vote-button
+{
+  -webkit-transition: opacity 250ms;
+  transition: opacity 250ms;
+  z-index: 15;
+  width: 80px;
+  padding: 10px;
+}
+#vote-button-left
+{
+  position: absolute;
+  bottom: 5px;
+  left: 50px;
+}
+#vote-button-right
+{
+  position: absolute;
+  bottom: 5px;
+  right: 50px;
+}
+#downvote-icon {
+	width: 100%;
+	margin: auto;
+}
+#upvote-icon {
+	width: 100%;
+	margin: auto;
+}
+
+/*============== Share Button Stuff ============*/
 #share-button
 {
   -webkit-transition: opacity 250ms;
@@ -402,7 +491,7 @@ a {
   opacity: 1 !important;
 }
 
-/* unauth prompt content */
+/*========= Message Box Stuff ============*/
 .close-button-container,
 .touch-expander
 {
@@ -469,6 +558,8 @@ a {
   border-radius: 10px;
   -webkit-transition: opacity 250ms ease-in-out;
 }
+
+/*========== User Auth Form Stuff =============*/
 .bigplace::-webkit-input-placeholder {
 	font-size: 100%;
 	line-height: 25px;
@@ -535,7 +626,7 @@ a {
 .light-bottom-margin{
   margin-bottom: 4px; 
 }
-
+/*===== Close Button for Swipe Reminder =====*/
 .reminder-close
 {
   position: absolute;
@@ -564,7 +655,7 @@ a {
 .center-label
 {
   text-align: center;
-  padding-top: 30%;
+  padding-top: 15%;
 }
 .tos-line{
 	position: fixed;
@@ -651,9 +742,10 @@ a {
 	width: 80%;
 	vertical-align: bottom;
 }
+/*===== Options Menu Stuff ======*/
 .options-table 
 {
-	width: 237px;
+	width: 260px;
 }
 .options-title
 {
@@ -661,19 +753,23 @@ a {
 	position: relative;
 	top: -25px;
 }
-.option-key-text
+.options-key-text
 {
 	font-size: 180%;
 	margin-right: 15px;
 }
 .options-key-desc 
 {
-	padding-top: 10px;
+	padding-top: 5px;
 }
 
-/* As seen on proto.io */
+/*======= As seen on proto.io ========*/
 .onoffswitch-container {
 	position: relative;
+	width: 90px;
+}
+.onoffswitch-container, .options-key-text {
+	margin-top: 20px;
 }
 .onoffswitch {
 	position: relative; width: 90px;
@@ -743,13 +839,17 @@ a {
 	    right: 0px; 
 }
 
-/*This targets tablets and desktops*/
+/*===== This targets tablets and desktops ========*/
 @media only screen and (min-width: 700px){
 	#add-tag-autocomplete {
 	  top: 47px;
 	  left: 32%;
 	  font-size: 140%;
 	}
+	.center-label {
+		padding-top: 13%;
+	}
+	/*===== Share Button =====*/
 	#share-button {
 	  bottom: 10px;
 	  right: 10px;
@@ -762,14 +862,34 @@ a {
 	{
 		padding: 0 50px;
 	}
+	/*===== Panic Button =====*/
+	#panic-button {
+	  bottom: 10px;
+	  left: 15px;
+	  width: 80px;
+	}
+	#panic-icon {
+		width: 50px;
+	}
+	#get-away-button {
+		max-width: 50% !important;
+		font-size: 280%;
+		margin-top: 22%;
+	}
 	.zoom-wrapper {
 		top: 40px;
 	} 
 	.midsize {
 		font-size: 14pt;
 	}
+	/*===== Options Menu =====*/
 	.options-table {
-		width: 25%;
+		width: 30%;
+	}
+	.options-key-text {
+		text-align: right;
+		margin-right: 30px;
+		font-size: 180% !important;
 	}
 	.options-msg {
 		font-size: 140%;
@@ -781,6 +901,7 @@ a {
 	.tos-line {
 		 font-size: 120%;
 	}
+	/*===== Share Menu ======*/
 	#url-container {
 		margin-top: 7%;
 	}
@@ -800,4 +921,31 @@ a {
  	.share_heading_margin {
  		margin: 60px 0;
  	} 
+ 	.vote-button
+	{
+	  width: 120px;
+	}
+	#vote-button-left
+	{
+	  left: 100px;
+	}
+	#vote-button-right
+	{
+	  right: 100px;
+	}
+    .modal-close-button {
+		width: 50px;
+	}
+	#options-close-button {
+		top: 15px;
+		right: 15px;
+	}
+	#share-close-button {
+		bottom: 15px;
+		right: 15px;
+	}
+	#panic-close-button { 
+		bottom: 15px;
+		left: 15px;
+	}
 }

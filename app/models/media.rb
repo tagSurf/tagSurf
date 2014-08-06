@@ -13,6 +13,8 @@ class Media < ActiveRecord::Base
   default_scope { where(ts_type: 'content') }
   default_scope { where(reported: false) }
 
+  scope :nsfw, ->(boolean) { where("nsfw = ?", boolean) }
+
   # Imgur specific
   before_create :resize_image_links
   def resize_image_links
@@ -95,7 +97,11 @@ class Media < ActiveRecord::Base
     n = options[:limit].nil? ?  20 : options[:limit].to_i
     id = options[:id].to_i
        
-    if user.try(:safe_mode)
+    if user.try(:safe_mode) 
+      return [] if Tag.blacklisted?(tag)
+    end
+
+    unless user
       return [] if Tag.blacklisted?(tag)
     end
 
@@ -222,7 +228,7 @@ class Media < ActiveRecord::Base
           delete_hash: obj['deletehash']
         })
 
-        if obj["nswf"] == 'true'
+        if obj["nsfw"] == 'true'
           media.tag_list.add(media.section, 'NSFW')
         else
           media.tag_list.add(media.section)

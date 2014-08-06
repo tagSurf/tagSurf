@@ -66,9 +66,13 @@ var share =
 		var heading = document.createElement("div"),
 			blurb = document.createElement("div"),
 			urlContainer = document.createElement("div"),
-			url = document.createElement("input");
+			url = document.createElement("input"),
+			closebtn = document.createElement("img");
 		heading.className = "really-big share-heading-margin";
 		heading.innerHTML = "Share This Card";
+		closebtn.src = "http://assets.tagsurf.co/img/Close.png";
+		closebtn.className = "modal-close-button";
+		closebtn.id = "share-close-button";
 		share.content.className = "centered";
 		urlContainer.id = "url-container"; 
 		url.id = "share-url";
@@ -87,6 +91,7 @@ var share =
 		for (var network in share.networks)
 			share._icon(network);
 		share.content.appendChild(urlContainer);
+		share.content.appendChild(closebtn);
 	},
 	_buildButton: function ()
 	{
@@ -110,15 +115,9 @@ var share =
 				});
 			}
 			else {
-				modal.topModalIn(share.content, function() {
-					document.getElementById("share-url").blur();
-					modal.topModalOut();
-					share.shareModalOut = false;
-					analytics.track('Close Share Window', {
-						card: share.data.id,
-						surfing: current_tag
-					});
-				});
+				if(panic.panicModalOut)
+					panic.close();
+				modal.topModalIn(share.content, share.close);
 				share.shareModalOut = true;
 				analytics.track('Open Share Window', {
 					card: share.data.id,
@@ -130,6 +129,15 @@ var share =
 		});
 		share.button.appendChild(shareIcon);
 		document.body.appendChild(share.button);
+	},
+	close: function() {
+		document.getElementById("share-url").blur();
+		modal.topModalOut();
+		share.shareModalOut = false;
+		analytics.track('Close Share Window', {
+			card: share.data.id,
+			surfing: current_tag
+		});
 	},
 	on: function (data, cb)
 	{

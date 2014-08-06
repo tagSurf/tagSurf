@@ -5,7 +5,7 @@ class Api::UsersController < Api::BaseController
   def paginated_history
     @offset = user_params["offset"].to_i
     @limit = user_params["limit"].to_i
-    @voted = Vote.paginated_history(current_user.id, @limit, @offset) 
+    @voted = Vote.paginated_history(@user.id, @limit, @offset, @user.safe_mode) 
     if @voted
       render json: @voted, root: 'data'
     else

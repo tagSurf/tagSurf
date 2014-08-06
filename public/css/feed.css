@@ -134,6 +134,7 @@ html, body
 .abcs {
   list-style-type: lower-alpha;
 }
+/*======= Card Formatting Stuff ========*/
 .card-wrapper
 {
   -webkit-touch-callout: none;
@@ -146,7 +147,6 @@ html, body
   width: 100%;
   padding-bottom: 10px;
 }
-
 .card-container
 {
   position: relative;
@@ -160,7 +160,7 @@ html, body
   border-radius: 10px;
   box-shadow: 2px 3px 5px -1px rgba(0,0,0,0.7);
 }
-
+/*========== Login Card Stuff ===========*/
 .login-card {
   background: #00aeef;
   border: 2px solid #00aeef;
@@ -179,20 +179,14 @@ html, body
 .login-card div {
   padding: 2px;
 }
-
+/*======== Swiping Animation Stuff ========*/
 .swiping
 {
   -webkit-transition: -webkit-transform 250ms ease-in;
   -moz-transition: -moz-transform 250ms ease-in;
   transition: transform 250ms ease-in;
 }
-
-.center-label
-{
-  text-align: center;
-  padding-top: 9%;
-}
-
+/*======== Super Vote Stuff =========*/
 .super-card
 {
 
@@ -242,7 +236,7 @@ html, body
   from	{background: #353535;}
   to	{background: white;}
 }
-
+/*======= Card Image Stuff =======*/
 .image-container
 {
   overflow-y: hidden;
@@ -264,7 +258,7 @@ html, body
   width: 100%;
   -webkit-overflow-scrolling: none;
 }
-
+/*======= More Card Formatting Stuff ========*/
 .text-container
 {
   margin: 2.5%;
@@ -334,7 +328,7 @@ html, body
   color: #404041;
   background-color: #00719C !important;
 }
-
+/*======= Card Vote Indicator Stuff ======*/
 #thumb-vote-container
 {
   pointer-events: none;
@@ -365,6 +359,7 @@ html, body
   float: right;
   margin-right: 20px;
 }
+/*======= Swipe Reminder Stuff =======*/
 #reminder-container
 {
   visibility: hidden;
@@ -404,6 +399,7 @@ html, body
   bottom: 20px;
   right: 15px;
 }
+/*======= (Desktop Only) =======*/
 .close-instructions
 {
   position: absolute;
@@ -432,6 +428,7 @@ html, body
   background-color: #00aeef;
   color: #404041;
 }
+/*====== End of Feed Card Stuff =====*/
 #or-msg {
   margin: 6% 0;
   font-size: 150%;
@@ -444,8 +441,11 @@ html, body
   max-width: 85%;
   margin: auto;
 }
+#End-Of-Feed {
+  padding-top: 9% !important;
+}
 
-/*This targets tablets and desktops*/
+/*====== This targets tablets and desktops ======*/
 @media only screen and (min-width: 700px){
   .text-container
   {
@@ -471,6 +471,11 @@ html, body
   {
     width: 24px;
   }
+  .card-container
+  {
+    font-size: 160%;
+  }
+  /*===== Tag Search Bar ====*/
   #input-container
   {
     width: 356px;
@@ -513,14 +518,11 @@ html, body
   {
     margin-top: 45px;
   }
-  .card-container
-  {
-    font-size: 160%;
-  }
   .reminder-close
   {
     bottom: 25px;
   }
+  /*==== End of Feed Card ====*/
   .trending-returnbtn {
     width: 290px;
     font-size: 100%;
