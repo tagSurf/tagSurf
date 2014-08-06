@@ -113,6 +113,8 @@ onload = function ()
 		gesture.listen("tap", reminderContainer, closeReminder);
 		gesture.listen("swipe", reminderContainer, closeReminder);
 		document.body.appendChild(reminderContainer);
+		if(DEBUG)
+			return;
 		reminderTimeout = setTimeout(function () {
 			reminderContainer.isOn = true;
 			reminderContainer.style.visibility = "visible";
@@ -141,8 +143,8 @@ onload = function ()
 	var data, buffer_minimum = 5, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
 		staticTrending = document.getElementById("static-trending");
-	var refreshCards = function(failMsgNode, zIndex) {
-		cardIndex = 0;
+	var refreshCards = function(failMsgNode, zIndex, startIndex) {
+		cardIndex = (typeof startIndex === "undefined") ? 0 : startIndex;
 		if (failMsgNode && data.length == 0) {
 			var trendingBtn = document.createElement('div'),
 				orMsg = document.createElement('div'),
@@ -166,6 +168,8 @@ onload = function ()
 			gesture.listen("up", trendingBtn, function() {
 				trendingBtn.classList.remove("active-trending-returnbtn");
 				trendingBtn.firstChild.src = "http://assets.tagsurf.co/img/trending_icon_blue.png";
+			});
+			gesture.listen("tap", trendingBtn, function() {
 				if(isAuthorized())
 					window.location = "http://" + document.location.host + '/feed';
 				else
@@ -488,8 +492,7 @@ onload = function ()
 		slider.animating = true;
 
 		pushTags();
-		setSlider(slider.parentNode.nextSibling.firstChild);
-		setCurrentMedia(slider.card);
+		setSlider();
 		// removed history slider
 //		addHistoryItem(activeCard);
 	};
@@ -574,6 +577,7 @@ onload = function ()
 		}
 		else if (code == 37){
 			dragCallback("left", -3, -3);
+			flashVoteButton("left");
 			if (slider.card.id == 221281) {	
 				analytics.track("Key Swipe Login Card", {
 					direction: "left",
@@ -605,6 +609,7 @@ onload = function ()
 		}
 		else if (code == 39) {
 			dragCallback("right", 3, 3);
+			flashVoteButton("right");
 			if (slider.card.id == 221281) {
 				analytics.track("Key Swipe Login Card", {
 					direction: "right",
@@ -782,6 +787,8 @@ onload = function ()
 		});
 		gesture.listen("up", p, function() {
 			p.classList.remove("active-pictag");
+		});
+		gesture.listen("tap", p, function() {
 			if (ismine) {
 				rmTag(tag);
 				picTags.removeChild(p);
@@ -793,7 +800,14 @@ onload = function ()
 	var expandTimeout;
 	var setSlider = function(s) {
 		slider = s || slideContainer.firstChild.firstChild;
-		setCurrentMedia(slider.card, forgetReminder);
+		setCurrentMedia(slider.card, forgetReminder, function() { //panic btn callback
+			swipeSlider("left");
+			analytics.track('Report Inappropriate Content', {
+				card: panic.data.id,
+				surfing: current_tag
+			});
+			messageBox("Thanks for the Report", "An admin will review that card before anyone sees it again.", "Ok", null, true);
+		});
 		if (expandTimeout) {
 			clearTimeout(expandTimeout);
 			expandTimeout = null;
@@ -817,6 +831,7 @@ onload = function ()
 			c_wrapper.className = "card-wrapper";
 			c_container = document.createElement("div");
 			c_container.className = "card-container center-label";
+			c_container.id = "End-Of-Feed";
 			msg = document.createElement("div");
 			msg.innerHTML = "Searching for more cards in <br>#" + current_tag + " feed...";
 			img = document.createElement("img");
@@ -849,7 +864,7 @@ onload = function ()
 		}
 		if (node && (targetHeight + textContainer.scrollHeight 
 			+ picTags.scrollHeight + iconLine.scrollHeight 
-			< (maxCardHeight + 80)))
+			< (maxCardHeight + (currentUser.vote_btns ? 20 : 80))))
 		{
 			imageContainer.classList.remove("expand-animation");
 			fullscreenButton.className += ' hidden';
@@ -891,7 +906,9 @@ onload = function ()
 			});
 			gesture.listen("up", iconLine.children[1], function() {
 				iconLine.children[1].classList.remove("active-tag-callout");
-				iconLine.children[1].firstChild.src = "http://http://assets.tagsurf.co/img/trending_icon_blue.png";
+				iconLine.children[1].firstChild.src = "http://assets.tagsurf.co/img/trending_icon_blue.png";
+			});
+			gesture.listen("tap", iconLine.children[1], function() {
 				autocomplete.tapTag(c.tags[0], "autocomplete", false);
 			});
 		} else
@@ -909,19 +926,17 @@ onload = function ()
 		card.isContent = true;
 		card.setSource = function() {
 			imageContainer.firstChild.src = image.get(c, window.innerWidth - 40).url;
-			//console.log("Source Set to: ", imageContainer.firstChild.src, " for card ", card.id, " with data ", card);
 		};
 		formatCardContents(card, image.get(card.card));
-		//console.log("Reached if test for slider = ", slider, " card = ", card);
 		if (slider == card) {
-			//console.log("Slider = card in test ", card);
 			slider.setSource();
 			firstCardLoaded = false;
 			imageContainer.firstChild.onload = function() {
-				//console.log("Finished load of first card");
 				firstCardLoaded = true;
-				slider.parentNode.nextSibling.firstChild.setSource();
-				slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
+				if(slider.parentNode.nextSibling.firstChild)
+					slider.parentNode.nextSibling.firstChild.setSource();
+				if(slider.parentNode.nextSibling.nextSibling.firstChild)
+					slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
 				throbber.off();
 				scrollContainer.style.opacity = 1;
 				analytics.track('Finished Pageload');
@@ -929,15 +944,12 @@ onload = function ()
 			};
 		}
 		imageContainer.firstChild.onerror = function() {
+			analytics.track('Card Load Error', {card: slider.card.id});
+			slideContainer.removeChild(slider.parentNode.nextSibling);
+			slideContainer.removeChild(slider.parentNode.nextSibling);
 			slideContainer.removeChild(card.parentNode);
-			// setSlider();
-			//console.log("Error event ", card);
-			if (slider == card) {
-				throbber.off();
-  				scrollContainer.style.opacity = 1;
-				//console.log("Slider == card in error");
-			}
-			buildCard();
+			cardIndex -= 2;
+			refreshCards(null, 2, cardIndex);
 		};
 	};
 	var focusInput = function (input)
@@ -1073,6 +1085,8 @@ onload = function ()
 			if (slider.children[0].className.indexOf("expanded") == -1)
 				slider.children[0].className += " expanded";
 			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
+			if(currentUser.vote_btns && (isMobile() || isTablet()))
+				slider.children[3].style.paddingBottom="60px";
 			toggleClass.call(slider.children[3], "hidden");
 			toggleClass.call(slider.children[4], "hidden");
 			scrollCallback();
@@ -1134,6 +1148,10 @@ onload = function ()
 		}
 	});
 	firstPopulate();
+	buildVoteButtons(dragCallback, swipeSlider);
+	if(currentUser.vote_btns){
+		voteButtonsOn();
+	}
 	setReminderTimeout();
 	analytics.identify(currentUser.id);
 };
