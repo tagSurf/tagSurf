@@ -498,17 +498,16 @@ onload = function ()
 	};
 	var keyInertia = 0, 
 		scrollDirection,
-		keyIsDown = {38:{},40:{}},
 		scrollScrollContainer = function (time) {
 			var inertialDecrement = 4, scrollTopIncrement;
-			if (keyIsDown[40].isDown)
+			if (stroke.isDown(40))
 			{
 				if (keyInertia < 50)
 					keyInertia += 5;
-				scrollContainer.scrollTop += (2 * keyInertia);
+				scrollContainer.scrollTop += (1 * keyInertia);
 				requestAnimFrame(scrollScrollContainer);
 			}
-			else if (keyIsDown[38].isDown)
+			else if (stroke.isDown(38))
 			{
 				if (keyInertia < 50)
 					keyInertia += 5;
@@ -519,13 +518,13 @@ onload = function ()
 			{
 				if (scrollDirection == "down")
 				{
-					if (keyIsDown[40].totalTime > 100)
+					if (stroke.keys['40'].duration > 100)
 						inertialDecrement = 6;
 					scrollTopIncrement = 2 * keyInertia;
 				}
 				if (scrollDirection == "up")
 				{
-					if (keyIsDown[38].totalTime > 100)
+					if (stroke.keys['38'].duration > 100)
 						inertialDecrement = 6;
 					scrollTopIncrement = -2 * keyInertia;
 				}
@@ -539,41 +538,17 @@ onload = function ()
 				scrollDirection = "";
 			}
 		};
-	window.onkeydown = function(e) {
-		keyInertia += 1;
-		e = e || window.event;
-		var code = e.keyCode || e.which;
-		if (keyIsDown.hasOwnProperty(code))
-			keyIsDown[code].isDown = true;
-		if (code == 38){
-			scrollDirection = "up";
-			if (!keyIsDown[38].isDown)
-			{
-				return;
-			}
-			keyIsDown[38].startTime = Date.now();
+	['38','40'].forEach(function(index) {
+		var strokeCallback = function(keyObject) {
+			scrollDirection = index == '38' ? "up" : "down";
 			requestAnimFrame(scrollScrollContainer);
-		}
-		else if (code == 40){
-			scrollDirection = "down";
-			if (!keyIsDown[40].isDown)
-			{
-				return;
-			}
-			keyIsDown[40].startTime = Date.now();
-			requestAnimFrame(scrollScrollContainer);
-		}
-	};
-	window.onkeyup = function(e) {
-		closeReminder("right");
-		e = e || window.event;
-		var code = e.keyCode || e.which;
-		if (keyIsDown.hasOwnProperty(code))
-			keyIsDown[code].isDown = false;
-		if (code == 32){
-			expandCard();
-		}
-		else if (code == 37){
+		};
+		['up','down'].forEach(function(direction) {
+			stroke.listen(direction, index, strokeCallback);
+		});
+	});
+	stroke.listen("up", "32", function(){expandCard();});
+	stroke.listen("up", "37", function(){
 			dragCallback("left", -3, -3);
 			flashVoteButton("left");
 			if (slider.card.id == 221281) {	
@@ -585,7 +560,7 @@ onload = function ()
 			else {
 				analytics.track("Key Swipe", {
 					card: slider.card.id,
-					direction: "left",	
+					direction: "left",
 					surfing: current_tag
 				});
 				analytics.page({
@@ -599,46 +574,38 @@ onload = function ()
 			// slider id will change to next card 
 			if (slider.card.id == 221281)
 				analytics.track("Seen Login Card");
+	});
+	stroke.listen("up", "39", function(){
+		dragCallback("right", 3, 3);
+		flashVoteButton("right");
+		if (slider.card.id == 221281) {
+			analytics.track("Key Swipe Login Card", {
+				direction: "right",
+				surfing: current_tag
+			});
 		}
-		else if (code == 38) {
-			keyIsDown[38].isDown = false;
-			keyIsDown[38].endTime = Date.now();
-			keyIsDown[38].totalTime = keyIsDown[38].endTime - keyIsDown[38].startTime;
-		}
-		else if (code == 39) {
-			dragCallback("right", 3, 3);
-			flashVoteButton("right");
-			if (slider.card.id == 221281) {
-				analytics.track("Key Swipe Login Card", {
-					direction: "right",
-					surfing: current_tag
-				});
-			}
-			else {
-				analytics.track("Key Swipe", {
-					card: slider.card.id,
-					direction: "right",	
-					surfing: current_tag
-				});
-				analytics.page({
-					title: slider.card.id + " right",
-					url: 'http://beta.tagsurf.co/feed#'+current_tag,
-					path: "/feed#"+current_tag,
-					referrer: 'http://beta.tagsurf.co/'
-				});
+		else {
+			analytics.track("Key Swipe", {
+				card: slider.card.id,
+				direction: "right",	
+				surfing: current_tag
+			});
+			analytics.page({
+				title: slider.card.id + " right",
+				url: 'http://beta.tagsurf.co/feed#'+current_tag,
+				path: "/feed#"+current_tag,
+				referrer: 'http://beta.tagsurf.co/'
+			});
 
-			}
-			swipeSlider("right");
-			// slider id will change to next card 
-			if (slider.card.id == 221281)
-				analytics.track("Seen Login Card");
 		}
-		else if (code == 40) {
-			keyIsDown[40].isDown = false;
-			keyIsDown[40].endTime = Date.now();
-			keyIsDown[40].totalTime = keyIsDown[40].endTime - keyIsDown[40].startTime;
-		}
-	};
+		swipeSlider("right");
+		// slider id will change to next card 
+		if (slider.card.id == 221281)
+			analytics.track("Seen Login Card");
+	});
+	stroke.listen("up", null, function(e) {
+		closeReminder("right");
+	});
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
 		if (modal.zoom.zoomed) return;
