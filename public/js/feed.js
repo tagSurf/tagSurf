@@ -519,14 +519,12 @@ onload = function ()
 			{
 				if (scrollDirection == "down")
 				{
-					console.log("down", keyIsDown[40].totalTime);
 					if (keyIsDown[40].totalTime > 100)
 						inertialDecrement = 6;
 					scrollTopIncrement = 2 * keyInertia;
 				}
 				if (scrollDirection == "up")
 				{
-					console.log("up", keyIsDown[40].totalTime);
 					if (keyIsDown[38].totalTime > 100)
 						inertialDecrement = 6;
 					scrollTopIncrement = -2 * keyInertia;
