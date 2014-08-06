@@ -468,7 +468,8 @@ var populateNavbar = function () {
     slideNavMenu(true);
     share.off();
     panic.off();
-    voteButtonsOff();
+    if(currentUser.vote_btns)
+      voteButtonsOff();
     modal.modalIn(n, options_cb);
     initDocLinks(checkShare);
   };
@@ -567,10 +568,10 @@ var currentMedia, checkShare = function(shareCb, panicCb) {
   } else {
     share.off();
     panic.off();
-    if(currentUser.vote_btns)
-      voteButtonsOff();
     if (addBarSlid)
       slideAddBar();
+    if(currentUser.vote_btns) //vote buttons don't exist in galleries
+      voteButtonsOff();
   }
 }, setCurrentMedia = function(d, shareCb, panicCb) {
   currentMedia = d;
