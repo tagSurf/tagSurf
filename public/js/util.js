@@ -206,7 +206,6 @@ var messageBox = function (title, message, action_type, cb, backed) {
     link.innerHTML = action_type;
     if(action_type == "login" && !cb)
       gesture.listen("tap", link, function () {
-        console.log("login");
         window.location = "/users/sign_in"
       });
     else if(cb)
