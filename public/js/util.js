@@ -1,14 +1,14 @@
 //These variables are reinitialized on every pageload
-var authorizedSession = null;
-var currentUser = {
-  id : null,
-  email : null,
-  slug : null,
-  vote_btns : true,
-  admin : false
-};
-var returnTrue = function() { return true; };
-var DEBUG = false;
+var authorizedSession = null,
+    currentUser = {
+      id : null,
+      email : null,
+      slug : null,
+      vote_btns : true,
+      admin : false
+    }
+    returnTrue = function() { return true; },
+    DEBUG = false;
 // Set DEBUG = true in non-production environments
 if ((document.location.hostname.indexOf("localhost") != -1) 
   || (document.location.hostname.indexOf("staging.tagsurf.co") != -1)

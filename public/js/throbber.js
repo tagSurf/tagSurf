@@ -4,7 +4,6 @@ var throbber =
 	gif: document.createElement('img'),
 	_build: function ()
 	{
-		
 		throbber.gif.src = "http://assets.tagsurf.co/img/spin_throbber.gif";
 		throbber.gif.className = "throbber";
 		throbber.gif.onload = function() {

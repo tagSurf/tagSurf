@@ -22,7 +22,6 @@ onload = function ()
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
-	reminderTimeout = null;
 
 	//modal formatting for desktop
  	if (!isMobile() && !isTablet() && !isNarrow())
@@ -524,7 +523,7 @@ onload = function ()
 			analytics.track("Seen Login Card");
 	});
 	stroke.listen("up", null, function(e) {
-		reminder.closeReminder("right");
+		reminder.close("right");
 	});
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
@@ -685,7 +684,7 @@ onload = function ()
 	var expandTimeout;
 	var setSlider = function(s) {
 		slider = s || slideContainer.firstChild.firstChild;
-		setCurrentMedia(slider.card, reminder.forgetReminder, function() { //panic btn callback
+		setCurrentMedia(slider.card, reminder.forget, function() { //panic btn callback
 			swipeSlider("left");
 			analytics.track('Report Inappropriate Content', {
 				card: panic.data.id,
@@ -932,7 +931,7 @@ onload = function ()
 		{
 			blurLoginInputs();
 		}
-		reminder.forgetReminder();
+		reminder.forget();
 		if (slider.style["-webkit-transform"] == "")
 		{
 			slider.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
@@ -1037,7 +1036,7 @@ onload = function ()
 	if(currentUser.vote_btns){
 		voteButtonsOn();
 	}
-	reminder.setReminderTimeout();
+	reminder.startTimeout();
 	analytics.identify(currentUser.id);
 };
 

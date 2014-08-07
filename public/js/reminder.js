@@ -1,44 +1,56 @@
 var reminder = {
-	reminderContainer : document.createElement('div'),
-	reminderTimeout : null,
-	forgetReminder : function() {
-		if (reminder.reminderTimeout) {
-			document.body.removeChild(reminder.reminderContainer);
-			clearTimeout(reminder.reminderTimeout);
-			reminder.reminderTimeout = null;
+	container: document.createElement('div'),
+	timeout: null,
+	forget: function() {
+		if (reminder.timeout) {
+			document.body.removeChild(reminder.container);
+			clearTimeout(reminder.timeout);
+			reminder.timeout = null;
 		}
 	},
-	closeReminder : function(direction) {
-		var remindContainer = reminder.reminderContainer;
-		reminder.forgetReminder();
-		if (remindContainer.isOn && direction != "up" && direction != "down")
+	close: function(direction) {
+		reminder.forget();
+		if (reminder.container.isOn && direction != "up" && direction != "down")
 		{
-			remindContainer.isOn = false;
-			remindContainer.style.opacity = 0;			
-			trans(remindContainer, function() {
-				remindContainer.parentNode.removeChild(remindContainer);
-				reminder.reminderTimeout = null;
+			reminder.container.isOn = false;
+			reminder.container.style.opacity = 0;			
+			trans(reminder.container, function() {
+				reminder.container.parentNode.removeChild(reminder.container);
+				reminder.timeout = null;
 			});
 			analytics.track('Close Swipe Reminder');
 		}
 	},
-	setReminderTimeout : function () {
+	startTimeout: function () {
+		if(DEBUG || isAuthorized())
+			return;
+		reminder.timeout = setTimeout(function () {
+			reminder.container.isOn = true;
+			reminder.container.style.visibility = "visible";
+			reminder.container.style.zIndex = "100";
+			reminder.container.style.opacity = 1;
+			if(isDesktop())
+				analytics.track('Seen Desktop Swipe Reminder');
+			else
+				analytics.track('Seen Mobile Swipe Reminder');
+		}, 14000);
+	},
+	_build: function () {
 		var closeContainer = document.createElement('div'),
-			close = document.createElement('img'),
-			remindContainer = reminder.reminderContainer;
+			close = document.createElement('img');
 			leftImage = new Image(), rightImage = new Image();
-		remindContainer.id = "reminder-container";
+		reminder.container.id = "reminder-container";
 		close.className = "reminder-close";
 		close.src = "http://assets.tagsurf.co/img/Close.png";
 		closeContainer.appendChild(close);
-		remindContainer.appendChild(closeContainer);
+		reminder.container.appendChild(closeContainer);
 		leftImage.id = "reminder-left";
 		rightImage.id = "reminder-right";
 		if(isDesktop()) {
 			var closeInstructions = new Image();
 			closeInstructions.className = "close-instructions block";
 			closeInstructions.src="http://assets.tagsurf.co/img/clearscreen.png";
-			remindContainer.appendChild(closeInstructions);
+			reminder.container.appendChild(closeInstructions);
 			rightImage.src = "http://assets.tagsurf.co/img/reminder_right_desktop.png";
 			leftImage.src = "http://assets.tagsurf.co/img/reminder_left_desktop.png";
 			addCss({
@@ -54,30 +66,19 @@ var reminder = {
 			leftImage.src = "http://assets.tagsurf.co/img/reminder_left_mobile.png";	
 			rightImage.src = "http://assets.tagsurf.co/img/reminder_right_mobile.png";
 		}
-		remindContainer.appendChild(leftImage);
-		remindContainer.appendChild(rightImage);
-		gesture.listen("drag", remindContainer, function (direction) {
+		reminder.container.appendChild(leftImage);
+		reminder.container.appendChild(rightImage);
+		gesture.listen("drag", reminder.container, function (direction) {
 			if (direction != "left" && direction != "right")
 			{
 				return true;
 			}
 		});
-		gesture.listen("down", remindContainer, returnTrue);
-		gesture.listen('down', closeContainer, reminder.closeReminder);
-		gesture.listen("tap", remindContainer, reminder.closeReminder);
-		gesture.listen("swipe", remindContainer, reminder.closeReminder);
-		document.body.appendChild(remindContainer);
-		if(DEBUG || isAuthorized())
-			return;
-		reminder.reminderTimeout = setTimeout(function () {
-			remindContainer.isOn = true;
-			remindContainer.style.visibility = "visible";
-			remindContainer.style.zIndex = "100";
-			remindContainer.style.opacity = 1;
-			if(isDesktop())
-				analytics.track('Seen Desktop Swipe Reminder');
-			else
-				analytics.track('Seen Mobile Swipe Reminder');
-		}, 14000);
+		gesture.listen("down", reminder.container, returnTrue);
+		gesture.listen('down', closeContainer, reminder.close);
+		gesture.listen("tap", reminder.container, reminder.close);
+		gesture.listen("swipe", reminder.container, reminder.close);
+		document.body.appendChild(reminder.container);
 	}
 };
+reminder._build();
