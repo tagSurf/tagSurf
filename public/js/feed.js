@@ -409,7 +409,7 @@ onload = function ()
 			"translate3d(" + translateQuantity + "px," + verticalQuantity
 				+ "px,0) rotate(" + rotateQuantity + "deg)");
 		slider.animating = true;
-
+		reminder.forget();
 		pushTags();
 		setSlider();
 		// removed history slider
@@ -686,6 +686,7 @@ onload = function ()
 		slider = s || slideContainer.firstChild.firstChild;
 		setCurrentMedia(slider.card, reminder.forget, function() { //panic btn callback
 			swipeSlider("left");
+			reminder.forget();
 			analytics.track('Report Inappropriate Content', {
 				card: panic.data.id,
 				surfing: current_tag
@@ -1036,7 +1037,7 @@ onload = function ()
 	if(currentUser.vote_btns){
 		voteButtonsOn();
 	}
-	reminder.startTimeout();
+	reminder.create(null, null, "Swipe", 14000);
 	analytics.identify(currentUser.id);
 };
 
