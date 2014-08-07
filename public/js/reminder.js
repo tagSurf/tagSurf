@@ -29,6 +29,8 @@ var reminder = {
 				console.log("Error: reminder close direction == 'up' || 'down'");
 	},
 	startTimeout: function(time) {
+		if(reminder.timeout || !document.getElementById('reminder-container'))
+			return;
 		reminder.timeout = setTimeout(function () {
 			reminder.isOn = true;
 			reminder.container.style.visibility = "visible";

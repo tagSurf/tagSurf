@@ -1037,7 +1037,8 @@ onload = function ()
 	if(currentUser.vote_btns){
 		voteButtonsOn();
 	}
-	reminder.create(null, null, "Swipe", 14000);
+	if(!isAuthorized() && !DEBUG)
+		reminder.create(null, null, "Swipe", 14000);
 	analytics.identify(currentUser.id);
 };
 
