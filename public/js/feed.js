@@ -124,7 +124,7 @@ onload = function ()
 				analytics.track('Seen Desktop Swipe Reminder');
 			else
 				analytics.track('Seen Mobile Swipe Reminder');
-		}, 20000);
+		}, 14000);
 	};
 	
 	var scrollCallback = function (event)
