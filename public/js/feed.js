@@ -46,86 +46,6 @@ onload = function ()
 				return "color: white; background-color: #00aeef;";
 			}
 	 	});
-	var reminderContainer = document.createElement('div');
-	var forgetReminder = function() {
-		if (reminderTimeout) {
-			document.body.removeChild(reminderContainer);
-			clearTimeout(reminderTimeout);
-			reminderTimeout = null;
-		}
-	};
-	var closeReminder = function (direction)
-	{
-		forgetReminder();
-		if (reminderContainer.isOn && direction != "up" && direction != "down")
-		{
-			reminderContainer.isOn = false;
-			reminderContainer.style.opacity = 0;			
-			trans(reminderContainer, function() {
-				reminderContainer.parentNode.removeChild(reminderContainer);
-				reminderTimeout = null;
-			});
-			analytics.track('Close Swipe Reminder');
-		}
-	};
-	var setReminderTimeout = function ()
-	{
-		var closeContainer = document.createElement('div'),
-			close = document.createElement('img'),
-			leftImage = new Image(), rightImage = new Image();
-		reminderContainer.id = "reminder-container";
-		close.className = "reminder-close";
-		close.src = "http://assets.tagsurf.co/img/Close.png";
-		closeContainer.appendChild(close);
-		reminderContainer.appendChild(closeContainer);
-		leftImage.id = "reminder-left";
-		rightImage.id = "reminder-right";
-		if(isDesktop()) {
-			var closeInstructions = new Image();
-			closeInstructions.className = "close-instructions block";
-			closeInstructions.src="http://assets.tagsurf.co/img/clearscreen.png";
-			reminderContainer.appendChild(closeInstructions);
-			rightImage.src = "http://assets.tagsurf.co/img/reminder_right_desktop.png";
-			leftImage.src = "http://assets.tagsurf.co/img/reminder_left_desktop.png";
-			addCss({
-				"#reminder-left": function() {
-					return "width: 18%; top: 20%";
-				},
-				"#reminder-right": function() {
-					return "width: 18%";
-				}
-			});
-		}
-		else {
-			leftImage.src = "http://assets.tagsurf.co/img/reminder_left_mobile.png";	
-			rightImage.src = "http://assets.tagsurf.co/img/reminder_right_mobile.png";
-		}
-		reminderContainer.appendChild(leftImage);
-		reminderContainer.appendChild(rightImage);
-		gesture.listen("drag", reminderContainer, function (direction) {
-			if (direction != "left" && direction != "right")
-			{
-				return true;
-			}
-		});
-		gesture.listen("down", reminderContainer, returnTrue);
-		gesture.listen('down', closeContainer, closeReminder);
-		gesture.listen("tap", reminderContainer, closeReminder);
-		gesture.listen("swipe", reminderContainer, closeReminder);
-		document.body.appendChild(reminderContainer);
-		if(DEBUG || isAuthorized())
-			return;
-		reminderTimeout = setTimeout(function () {
-			reminderContainer.isOn = true;
-			reminderContainer.style.visibility = "visible";
-			reminderContainer.style.zIndex = "100";
-			reminderContainer.style.opacity = 1;
-			if(isDesktop())
-				analytics.track('Seen Desktop Swipe Reminder');
-			else
-				analytics.track('Seen Mobile Swipe Reminder');
-		}, 14000);
-	};
 	
 	var scrollCallback = function (event)
 	{
@@ -604,7 +524,7 @@ onload = function ()
 			analytics.track("Seen Login Card");
 	});
 	stroke.listen("up", null, function(e) {
-		closeReminder("right");
+		reminder.closeReminder("right");
 	});
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
@@ -765,7 +685,7 @@ onload = function ()
 	var expandTimeout;
 	var setSlider = function(s) {
 		slider = s || slideContainer.firstChild.firstChild;
-		setCurrentMedia(slider.card, forgetReminder, function() { //panic btn callback
+		setCurrentMedia(slider.card, reminder.forgetReminder, function() { //panic btn callback
 			swipeSlider("left");
 			analytics.track('Report Inappropriate Content', {
 				card: panic.data.id,
@@ -1012,7 +932,7 @@ onload = function ()
 		{
 			blurLoginInputs();
 		}
-		forgetReminder();
+		reminder.forgetReminder();
 		if (slider.style["-webkit-transform"] == "")
 		{
 			slider.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
@@ -1117,7 +1037,7 @@ onload = function ()
 	if(currentUser.vote_btns){
 		voteButtonsOn();
 	}
-	setReminderTimeout();
+	reminder.setReminderTimeout();
 	analytics.identify(currentUser.id);
 };
 
