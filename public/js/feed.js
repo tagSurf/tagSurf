@@ -8,6 +8,7 @@ onload = function ()
 {
 	analytics.track('Begin Pageload');
 	populateNavbar();
+	c.prototype = card;
 	if (isAuthorized() && (document.location.href.indexOf('share') != -1)) {
 		analytics.track('Redirected to Authed Feed');
 		window.location = "http://" +
@@ -258,13 +259,7 @@ onload = function ()
 		".raw-wrapper, .zoom-wrapper, #scroll-container, #scroll-container-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
 		}
-		// Why is this necessary? Setting width=100% in feed.css instead.
-		//,
-		// ".image-container img": function () {
-		// 	return "width: " + parseInt(window.innerWidth - (14 + .05 * window.innerWidth)) + "px;";
-		// }
 	});
-	// var formattingContainer = document.getElementById('formatter');
 	var slider;
 	var setStartState = function (node)
 	{
@@ -643,43 +638,6 @@ onload = function ()
 			toggleClass.apply(slider, ['super-card', 'on']);
 		}
 	};
-	// var isMine = function(tag) {
-	// 	if (!slider.card) return;
-	// 	var tobjs = slider.card.tags_v2;
-	// 	for (var i = 0; i < tobjs.length; i++)
-	// 		if (Object.keys(tobjs[i])[0] == tag)
-	// 			return tobjs[i][tag].user_owned;
-	// };
-	// var tagCard = function(tag, picTags) {
-	// 	var ismine = slider && isMine(tag);
-	// 	var p = document.createElement("div");
-	// 	p.className = "pictagcell";
-	// 	var tNode = document.createElement("div");
-	// 	tNode.className = "smallpadded tcell";
-	// 	tNode.innerHTML = "#" + tag;
-	// 	p.appendChild(tNode);
-	// 	if (ismine) {
-	// 		var delNode = document.createElement("div");
-	// 		delNode.className = "smallpadded delNode tcell";
-	// 		delNode.innerHTML = "x";
-	// 		p.appendChild(delNode);
-	// 	}
-	// 	gesture.listen("down", p, function() {
-	// 		p.classList.add("active-pictag");
-	// 	});
-	// 	gesture.listen("up", p, function() {
-	// 		p.classList.remove("active-pictag");
-	// 	});
-	// 	gesture.listen("tap", p, function() {
-	// 		if (ismine) {
-	// 			rmTag(tag);
-	// 			picTags.removeChild(p);
-	// 		} else
-	// 			autocomplete.tapTag(tag, "autocomplete", false);
-	// 	});
-	// 	picTags.appendChild(p);
-	// };
-	// var expandTimeout;
 	var setSlider = function(s) {
 		slider = s || slideContainer.firstChild.firstChild;
 		setCurrentMedia(slider.card, reminder.forget, function() { //panic btn callback
@@ -732,114 +690,31 @@ onload = function ()
 		}
 		return true;
 	};
-	// var formatCardContents = function (node, imageData)
-	// {
-	// 	var card = node || slider, imageContainer = card.firstChild,
-	// 		fullscreenButton = card.children[4], truncatedTitle,
-	// 		picTags = card.children[3], textContainer = card.children[2],
-	// 		iconLine = card.children[1], targetHeight = imageData ? 
-	// 		imageData.height * (window.innerWidth - 40) / imageData.width :
-	// 		card.firstChild.scrollHeight;
-	// 	if (node && node.card.image.animated && !imageContainer.firstChild.classList.contains('translate-z'))
-	// 	{
-	// 		imageContainer.firstChild.classList.add('translate-z');
-	// 	}
-	// 	if (node && (targetHeight + textContainer.scrollHeight 
-	// 		+ picTags.scrollHeight + iconLine.scrollHeight 
-	// 		< (maxCardHeight + (currentUser.vote_btns ? 20 : 80))))
-	// 	{
-	// 		imageContainer.classList.remove("expand-animation");
-	// 		fullscreenButton.className += ' hidden';
-	// 		card.compressing = false;
-	// 	}
-	// 	else
-	// 	{
-	// 		if (node)
-	// 		{
-	// 			truncatedTitle = card.card.caption.trunc(25);
-	// 			truncatedTitle = "<p>" + truncatedTitle + "</p>";
-	// 			textContainer.innerHTML = truncatedTitle;
-	// 			picTags.className += ' hidden';
-	// 			card.compressing = true;
-	// 		}
-	// 		else
-	// 		{
-	// 			card.compressing = false;
-	// 			card.expanded = true;
-	// 		}
-	// 	}
-	// };
 	var firstCardLoaded = false;
-	// var buildContentCard = function(c, zIndex) {
-	// 	var imageContainer, iconLine, textContainer, picTags, fullscreenButton,
-	// 		truncatedTitle, card, formatter = document.createElement('div'),
-	// 		cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img" + (firstCardLoaded ? (" src='" + image.get(c, window.innerWidth - 40).url + "'") : "") + "></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div></div></div>";
-	// 	formattingContainer.appendChild(formatter);
-	// 	formatter.innerHTML = cardTemplate;
-	// 	imageContainer = formatter.children[0].children[0].children[0];
-	// 	iconLine = formatter.children[0].children[0].children[1];
-	// 	textContainer = formatter.children[0].children[0].children[2];
-	// 	picTags = formatter.children[0].children[0].children[3];
-	// 	fullscreenButton = formatter.children[0].children[0].children[4];
-	// 	if (current_tag == "trending") {
-	// 		gesture.listen("down", iconLine.children[1], function() {
-	// 			iconLine.children[1].classList.add("active-tag-callout");
-	// 			iconLine.children[1].firstChild.src = "http://assets.tagsurf.co/img/trending_icon_gray.png";
-	// 		});
-	// 		gesture.listen("up", iconLine.children[1], function() {
-	// 			iconLine.children[1].classList.remove("active-tag-callout");
-	// 			iconLine.children[1].firstChild.src = "http://assets.tagsurf.co/img/trending_icon_blue.png";
-	// 		});
-	// 		gesture.listen("tap", iconLine.children[1], function() {
-	// 			autocomplete.tapTag(c.tags[0], "autocomplete", false);
-	// 		});
-	// 	} else
-	// 		iconLine.children[1].style.display = "none";
-	// 	c.tags_v2.sort(function(a, b) {
-	// 		var aName = Object.keys(a)[0];
-	// 		var bName = Object.keys(b)[0];
-	// 		return a[aName].score < b[bName].score;
-	// 	});
-	// 	c.tags_v2.forEach(function(tagobj) {
-	// 		var t = Object.keys(tagobj)[0];
-	// 		t && t != "trending" && tagCard(t, picTags);
-	// 	});
-	// 	var card = initCard(formatter);
-	// 	card.isContent = true;
-	// 	card.setSource = function() {
-	// 		imageContainer.firstChild.src = image.get(c, window.innerWidth - 40).url;
-	// 	};
-	// 	formatCardContents(card, image.get(card.card));
-	// 	if (slider == card) {
-	// 		slider.setSource();
-	// 		firstCardLoaded = false;
-	// 		imageContainer.firstChild.onload = function() {
-	// 			firstCardLoaded = true;
-	// 			if(slider.parentNode.nextSibling.firstChild)
-	// 				slider.parentNode.nextSibling.firstChild.setSource();
-	// 			if(slider.parentNode.nextSibling.nextSibling.firstChild)
-	// 				slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
-	// 			throbber.off();
-	// 			scrollContainer.style.opacity = 1;
-	// 			analytics.track('Finished Pageload');
-	// 			preloadCards();
-	// 		};
-	// 	}
-	// 	imageContainer.firstChild.onerror = function() {
-	// 		analytics.track('Card Load Error', {card: slider.card.id});
-	// 		slideContainer.removeChild(slider.parentNode.nextSibling);
-	// 		slideContainer.removeChild(slider.parentNode.nextSibling);
-	// 		slideContainer.removeChild(card.parentNode);
-	// 		cardIndex -= 2;
-	// 		refreshCards(null, 2, cardIndex);
-	// 	};
-	// };
-	var focusInput = function (input)
-	{
-		gesture.listen('down', input, function(){
-			input.focus();
-		});
-	};
+
+				if (slider == card) {
+					slider.setSource();
+					firstCardLoaded = false;
+					imageContainer.firstChild.onload = function() {
+						firstCardLoaded = true;
+						if(slider.parentNode.nextSibling.firstChild)
+							slider.parentNode.nextSibling.firstChild.setSource();
+						if(slider.parentNode.nextSibling.nextSibling.firstChild)
+							slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
+						throbber.off();
+						scrollContainer.style.opacity = 1;
+						analytics.track('Finished Pageload');
+						preloadCards();
+					};
+				}
+				imageContainer.firstChild.onerror = function() {
+					analytics.track('Card Load Error', {card: slider.card.id});
+					slideContainer.removeChild(slider.parentNode.nextSibling);
+					slideContainer.removeChild(slider.parentNode.nextSibling);
+					slideContainer.removeChild(card.parentNode);
+					cardIndex -= 2;
+					refreshCards(null, 2, cardIndex);
+				};
 	var blurLoginInputs = function ()
 	{
 		var listInputs = document.forms[0].getElementsByClassName('su-input'),
@@ -849,58 +724,7 @@ onload = function ()
 			listInputs[index].blur();
 		}
 	};
-	// var initLoginInputs = function () {
-	// 	var listInputs = document.forms[0].getElementsByClassName('su-input'),
-	// 		listLength = listInputs.length;
-	// 	for (var index = 0;index < listLength; ++index)
-	// 	{
-	// 		focusInput(listInputs[index]);
-	// 	}
-	// };
-	// var buildLoginCard = function(c, zIndex) {
-	// 	var formatter = document.createElement('div'),
-	// 		top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='http://assets.tagsurf.co/img/logo_w_border.png'><div class='big bold'>Hate repeats? Sign up!</div>",
-	// 		form = "<form accept-charset='UTF-8' action='/users' class='new-user' id='new-user' method='post'><div style='margin:0;padding:0;display:inline'><input name='utf8' type='hidden' value='✓'><input name='authenticity_token' type='hidden' value='" + document.getElementsByName("csrf-token")[0].content + "'></div><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center></form>",
-	// 		bottom = "<div class='wide-text'><a id='line-text-login' class='small big-lnk'>Already have an account? <b>Login here</b>.</a></div><div class='smaller block'>By signing up you agree to our <a class='bold big-lnk' id='terms-lnk'>Terms of Use</a> and <a class='bold big-lnk' id='privacy-lnk'>Privacy Policy</a>.</div></div></div>",
-	// 		cardTemplate = top + form + bottom;
-	// 	formattingContainer.appendChild(formatter);
-	// 	formatter.innerHTML = cardTemplate;
-	// 	initCard(formatter);
-	// 	initLoginInputs();
-	// 	initDocLinks();
 
-	// 	// form validation
-	// 	var p = document.getElementById("password");
-	// 	var f = document.getElementById("new-user");
-	// 	f.onsubmit = function() {
-	// 		if (!validEmail(document.getElementById("email").value)) {
-	// 			alert("Please use a valid email address");
-	// 			return false;
-	// 		}
-	// 		if (p.value.length < 8) {
-	// 			alert("Please try a longer password");
-	// 			return false;
-	// 		}
-	// 		if (p.value != document.getElementById("repassword").value) {
-	// 			alert("Please submit matching passwords");
-	// 			return false;
-	// 		}
-	// 		analytics.track('Sign Up in Feed');
-	// 		return true;
-	// 	};
-	// 	gesture.listen("down", document.getElementById("su-submit-btn"), function() {
-	// 		f.onsubmit() && f.submit();
-	// 	});
-	// };
-	// var initCard = function(formatter) {
-	// 	card = formatter.firstChild.firstChild;
-	// 	setStartState(card);
-	// 	initCardGestures.call(card.parentNode);
-	// 	slideContainer.appendChild(card.parentNode);
-	// 	formattingContainer.removeChild(formatter);
-	// 	setSlider();
-	// 	return card;
-	// };
 	var buildCard = function (zIndex)
 	{
 		if (!dataThrobTest())
@@ -912,7 +736,7 @@ onload = function ()
 		// else if (c.type == "login") 
 		// 	buildLoginCard(c, zIndex);
 		// else
-		// 	alert("unknown card type: " + c.type);
+		// 	alert("unknown card type: " + c.type);	
 
 		++cardIndex;
 		if (data.length == cardIndex + buffer_minimum)
@@ -936,44 +760,6 @@ onload = function ()
 		}
 		return true;
 	};
-	// var initImageGestures = function ()
-	// {
-	// 	var imageContainer = this.getElementsByClassName('image-container')[0];
-	// 	if (!imageContainer)
-	// 		return;
-	// 	gesture.listen("tap", imageContainer, tapCallback);
-	// 	gesture.listen("down", imageContainer, returnTrue);
-	// 	gesture.listen("up", imageContainer, returnTrue);
-	// 	gesture.listen("drag", imageContainer, returnTrue);
-	// 	modal.setPinchLauncher(imageContainer,
-	// 		function() { upCallback(true); });
-	// };
-	// var initCardGestures = function ()
-	// {
-	// 	gesture.listen("swipe", this, swipeCallback);
-	// 	gesture.listen("up", this, upCallback);
-	// 	//gesture.listen("tap", this, tapCallback);
-	// 	gesture.listen("drag", this, dragCallback);
-	// 	gesture.listen("hold", this, holdCallback);
-	// 	gesture.listen("down", this, downCallback);
-	// 	initImageGestures.call(this);
-	// };
-	// var expandCard = function ()
-	// {
-	// 	if (slider && slider.isContent && slider.compressing)
-	// 	{
-	// 		slider.compressing = false;
-	// 		slider.expanded = true;
-	// 		if (slider.children[0].className.indexOf("expanded") == -1)
-	// 			slider.children[0].className += " expanded";
-	// 		slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
-	// 		if(currentUser.vote_btns && (isMobile() || isTablet()))
-	// 			slider.children[3].style.paddingBottom="60px";
-	// 		toggleClass.call(slider.children[3], "hidden");
-	// 		toggleClass.call(slider.children[4], "hidden");
-	// 		scrollCallback();
-	// 	}
-	// };
 	setAddCallback(function(tag) {
 		var objwrap = {};
 		objwrap[tag] = {
@@ -985,9 +771,8 @@ onload = function ()
 			trend: "up",
 			user_owned: true
 		};
-		slider.card.tags_v2.push(objwrap);
-		tagCard(tag, document.getElementById("pictags" + slider.card.id));
-		formatCardContents();
+		current_card.tags.push(objwrap);
+		current_card.tagCard(tag);
 		analytics.track('Add Tag from Feed', {
 			card: slider.card.id,
 			surfing: current_tag,

@@ -429,10 +429,6 @@ var populateNavbar = function () {
     title.innerHTML = "Options";
     title.className = "options-title";
     var optionsTable = buildOptionsTable();
-    /*
-    var img = document.createElement("img");
-    img.src = "http://assets.tagsurf.co/img/throbber.gif";
-    */
     var TOS = document.createElement("div");
     TOS.innerHTML = "<a class='blue bold big-lnk' id='terms-lnk'>Terms of Use</a> | <a class='blue bold big-lnk' id='privacy-lnk'>Privacy Policy</a>";
     TOS.className = "tos-line";
@@ -444,7 +440,6 @@ var populateNavbar = function () {
     n.appendChild(title);
     n.appendChild(optionsTable);
     n.appendChild(closebtn);
-    //n.appendChild(img);
     n.appendChild(TOS);
     slideNavMenu(true);
     share.off();
