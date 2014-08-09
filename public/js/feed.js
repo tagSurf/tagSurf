@@ -1,6 +1,6 @@
 var castVote = function(card) {
-	xhr("/api/votes/" + card.user_stats.vote + "/" + card.id
-		+ "/tag/" + card.user_stats.tag_voted, "POST", null, null);
+	xhr("/api/votes/" + card.data.user_stats.vote + "/" + card.id
+		+ "/tag/" + card.data.user_stats.tag_voted, "POST", null, null);
 };
 
 
@@ -8,7 +8,7 @@ onload = function ()
 {
 	analytics.track('Begin Pageload');
 	populateNavbar();
-	c.prototype = card;
+
 	if (isAuthorized() && (document.location.href.indexOf('share') != -1)) {
 		analytics.track('Redirected to Authed Feed');
 		window.location = "http://" +
@@ -47,12 +47,12 @@ onload = function ()
 			}
 	 	});
 	
-	var scrollCallback = function (event)
+	var scrollCallback = function(event)
 	{
 		var trueScrollTop = scrollContainer.scrollTop ? scrollContainer.scrollTop
 			: (scrollContainer.yDrag ? -scrollContainer.yDrag : 0);
-		slider.style['transform-origin'] = "center " + trueScrollTop + 'px';
-		slider.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
+		slider.contents.style['transform-origin'] = "center " + trueScrollTop + 'px';
+		slider.contents.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
 		slider.lastChild.previousSibling.style.top = (50 + trueScrollTop) + 'px';
 	};
 	drag.makeDraggable(scrollContainer, {
@@ -60,153 +60,9 @@ onload = function ()
 		scroll: scrollCallback
 	});
 
-	var data, buffer_minimum = 5, known_keys = {},
+	var data, buffer_minimum = 5, stack_depth = 3, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
 		staticTrending = document.getElementById("static-trending");
-	var refreshCards = function(failMsgNode, zIndex, startIndex) {
-		cardIndex = (typeof startIndex === "undefined") ? 0 : startIndex;
-		if (failMsgNode && data.length == 0) {
-			var trendingBtn = document.createElement('div'),
-				orMsg = document.createElement('div'),
-				surfATagMsg = document.createElement('div'),
-				tagSuggestions = document.createElement('div'),
-				numberOfTags = 5;
-			trendingBtn.className = 'trending-returnbtn pointer';
-			trendingBtn.innerHTML = "<img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>Return to <span class='blue'>#trending</span>";	
-			failMsgNode.innerHTML = "<div class='fail-msg'>No more cards in <br>#" + current_tag + " feed...</div>";
-			orMsg.className = "fail-msg";
-			orMsg.id = "or-msg";
-			orMsg.innerHTML = "or";
-			tagSuggestions.className = "taglist";
-			surfATagMsg.className = "fail-msg";
-			surfATagMsg.id = "surf-msg";
-			surfATagMsg.innerHTML = "Surf a popular tag";
-			gesture.listen("down", trendingBtn, function() {
-				trendingBtn.classList.add("active-trending-returnbtn");
-				trendingBtn.firstChild.src = "http://assets.tagsurf.co/img/trending_icon_gray.png";
-			});
-			gesture.listen("up", trendingBtn, function() {
-				trendingBtn.classList.remove("active-trending-returnbtn");
-				trendingBtn.firstChild.src = "http://assets.tagsurf.co/img/trending_icon_blue.png";
-			});
-			gesture.listen("tap", trendingBtn, function() {
-				if(isAuthorized())
-					window.location = "http://" + document.location.host + '/feed';
-				else
-					autocomplete.tapTag("trending", "autocomplete", false);
-			});
-			for(var i = 0; i < numberOfTags; i++) {
-				if (autocomplete.data[i]["name"] == "trending") {
-					++numberOfTags;
-					continue;
-				}
-				else {
-					tagCard(autocomplete.data[i]["name"], tagSuggestions);
-				}
-			}
-			failMsgNode.parentNode.removeChild(failMsgNode.nextSibling);
-			failMsgNode.parentNode.appendChild(trendingBtn);
-			failMsgNode.parentNode.appendChild(orMsg);
-			failMsgNode.parentNode.appendChild(surfATagMsg);
-			failMsgNode.parentNode.appendChild(tagSuggestions);
-			analytics.track('Seen End-Of-Feed Card', {
-				surfing: current_tag
-			});
-		} 
-		else {
-			slideContainer.innerHTML = "";
-			buildCard(zIndex);
-		}
-	};
-	var popData = function(rdata, firstCard) {
-		var i, starters = [], others = [], preloads = [];
-
-		if (!isAuthorized())
-			preloads = rdata;
-		else {
-			if (firstCard) known_keys[firstCard.id] = true;
-			for (i = 0; i < rdata.length; i++) {
-				if (!known_keys[rdata[i].id]) {
-					var d = rdata[i];
-					((!d.image.animated && starters.length < 3)
-						? starters : others).push(d);
-					known_keys[d.id] = true;
-				}
-			}
-			for (i = 0; i < starters.length; i++) preloads.push(starters[i]);
-			for (i = 0; i < others.length; i++) preloads.push(others[i]);
-			if (firstCard) data.unshift(firstCard);
-		}
-
-		data = data.concat(preloads);
-		return preloads;
-	};
-	var cardsToLoad = [];
-	var preloadCards = function() {
-		if (cardsToLoad.length) {
-			image.load(cardsToLoad, window.innerWidth - 40);
-			cardsToLoad = [];
-		}
-	};
-	var shareSwap, shareOffset = 0;
-	var dataPath = function(firstCard) {
-		if (!isAuthorized()) {
-			var p = "/api";
-			if (shareSwap) {
-				shareSwap = false;
-				shareOffset = 0;
-			}
-			if (firstCard || current_tag
-				!= document.location.pathname.split("/")[2])
-				p += "/share/" + current_tag + "/" +
-					(firstCard ? firstCard.id : 0);
-			else
-				p += document.location.pathname;
-			return p + "/20/" + (shareOffset++ * 20);
-		}
-		return "/api/media/" + current_tag;
-	};
-	var populateSlider = function (update, failMsgNode, firstCard)
-	{
-		if (!update && !failMsgNode)
-		{
-			slideContainer.innerHTML = "";
-			scrollContainer.style.opacity = 0;
-			throbber.on();
-		}
-		xhr(dataPath(firstCard), null, function(response_data) {
-			var rdata = response_data.data;
-			if (update)
-				cardsToLoad = cardsToLoad.concat(popData(rdata));
-			else {
-				data = [];
-				cardsToLoad = cardsToLoad.concat(popData(rdata, firstCard).slice(3));
-				refreshCards(failMsgNode, 2);
-			}
-		}, function(response, status) {
-			if (status == 401){
-				messageBox("Oops", response.errors + " <br><br><i>Control Safe Surf from Options</i>");
-			}
-			if (!update) {
-				data = [];
-				refreshCards(failMsgNode);
-			}
-		});
-	};
-	var firstPopulate = function() {
-		var feed, id, pair, h = document.location.hash.slice(1);
-		if (h.indexOf('~') != -1) {
-			pair = h.split("~");
-			feed = pair[0];
-			id = pair[1];
-		}
-		if (id)
-			xhr("/api/card/" + id, null, function(d) {
-				populateSlider(false, null, d.data);
-			}, populateSlider);
-		else
-			populateSlider();
-	};
 
 	// autocomplete stuff
 	var autocompleteCbs = {
@@ -216,7 +72,7 @@ onload = function ()
 				shareSwap = true;
 				current_tag = tagName;
 				known_keys = {};
-				populateSlider(null, null, insertCurrent ? slider.card : null);
+				deck.build(null, insertCurrent ? slider : null);
 				analytics.track('Search for Tag', {
 					tag: tagName
 				});
@@ -245,7 +101,6 @@ onload = function ()
 	};
 
 	// slider stuff
-	var cardIndex = 0;
 	var rotationScale = 0.075;
 	var translationScale = 1.35;
 	var slideThreshold = 60;
@@ -283,7 +138,7 @@ onload = function ()
 	var revertSlider = function ()
 	{
 		if (slider.isContent) {
-			var thumbContainer = slider.lastChild.previousSibling;
+			var thumbContainer = slider.contents.lastChild.previousSibling;
 			slider.style['border-color'] = "#353535";
 			slider.style['background-color'] = "#353535";
 			slider.lastChild.display = "none";
@@ -349,7 +204,7 @@ onload = function ()
 	var swipeSlider = function (direction, voteAlternative, pixelsPerSecond)
 	{
 		var _slider = slider;
-		var activeCard = slider.card;
+		var activeCard = slider;
 		var translateQuantity = 600, rotateQuantity = 60,
 			verticalQuantity = 0;
 		var isUp = direction == "right";
@@ -369,9 +224,8 @@ onload = function ()
 		trans(_slider,
 			function () {
 				_slider.animating = false;
-				gesture.unlisten(_slider.parentNode);
-				slideContainer.removeChild(_slider.parentNode);
-				buildCard(0);
+				_slider.remove(deck.shift());
+				if()
 				if (scrollContainer.scrollTop)
 					scrollContainer.scrollTop = 0;
 				if (scrollContainer.yDrag)
@@ -459,11 +313,11 @@ onload = function ()
 			stroke.listen(direction, index, strokeCallback);
 		});
 	});
-	stroke.listen("up", "32", function(){expandCard();});
+	stroke.listen("up", "32", function(){slider.expand(scrollCallback);});
 	stroke.listen("up", "37", function(){
 			dragCallback("left", -3, -3);
 			flashVoteButton("left");
-			if (slider.card.id == 221281) {	
+			if (slider.id == 221281) {	
 				analytics.track("Key Swipe Login Card", {
 					direction: "left",
 					surfing: current_tag
@@ -471,12 +325,12 @@ onload = function ()
 			}
 			else {
 				analytics.track("Key Swipe", {
-					card: slider.card.id,
+					card: slider.id,
 					direction: "left",
 					surfing: current_tag
 				});
 				analytics.page({
-					title: slider.card.id + " left",
+					title: slider.id + " left",
 					url: 'http://beta.tagsurf.co/feed#'+current_tag,
 					path: "/feed#"+current_tag,
 					referrer: 'http://beta.tagsurf.co/'
@@ -484,13 +338,13 @@ onload = function ()
 			}
 			swipeSlider("left");
 			// slider id will change to next card 
-			if (slider.card.id == 221281)
+			if (slider.id == 221281)
 				analytics.track("Seen Login Card");
 	});
 	stroke.listen("up", "39", function(){
 		dragCallback("right", 3, 3);
 		flashVoteButton("right");
-		if (slider.card.id == 221281) {
+		if (slider.id == 221281) {
 			analytics.track("Key Swipe Login Card", {
 				direction: "right",
 				surfing: current_tag
@@ -498,12 +352,12 @@ onload = function ()
 		}
 		else {
 			analytics.track("Key Swipe", {
-				card: slider.card.id,
+				card: slider.id,
 				direction: "right",	
 				surfing: current_tag
 			});
 			analytics.page({
-				title: slider.card.id + " right",
+				title: slider.id + " right",
 				url: 'http://beta.tagsurf.co/feed#'+current_tag,
 				path: "/feed#"+current_tag,
 				referrer: 'http://beta.tagsurf.co/'
@@ -512,7 +366,7 @@ onload = function ()
 		}
 		swipeSlider("right");
 		// slider id will change to next card 
-		if (slider.card.id == 221281)
+		if (slider.id == 221281)
 			analytics.track("Seen Login Card");
 	});
 	stroke.listen("up", null, function(e) {
@@ -526,25 +380,25 @@ onload = function ()
 		else if (!slider.animating && (direction == "left" || direction == "right")) {
 			if (slider.isContent) {
 				analytics.track("Swipe", {
-					card: slider.card.id,
+					card: slider.id,
 					direction: direction,	
 					surfing: current_tag
 				});
 				analytics.page({
-					title: slider.card.id + " " + direction,
+					title: slider.id + " " + direction,
 					url: 'http://beta.tagsurf.co/feed#'+current_tag,
 					path: "/feed#"+current_tag,
 					referrer: 'http://beta.tagsurf.co/'
 				});
 			}
-			else if (slider.card.id == 221281)
+			else if (slider.id == 221281)
 				analytics.track("Swipe Login Card", {
 					direction: direction,
 					surfing: current_tag
 				});
 			swipeSlider(direction, null, 700);
 			// slider id will change to next card 
-			if (slider.card.id == 221281)
+			if (slider.id == 221281)
 				analytics.track("Seen Login Card");
 		}
 	};
@@ -623,11 +477,11 @@ onload = function ()
 		{
 			if (slider.compressing == false)
 			{
-				modal.zoomIn(slider.card);
+				modal.zoomIn(slider.contents);
 			}
 			else if (slider.expanded == false)
 			{
-				expandCard();
+				slider.expand(scrollCallback);
 			}
 		}
 	};
@@ -638,28 +492,28 @@ onload = function ()
 			toggleClass.apply(slider, ['super-card', 'on']);
 		}
 	};
-	var setSlider = function(s) {
-		slider = s || slideContainer.firstChild.firstChild;
-		setCurrentMedia(slider.card, reminder.forget, function() { //panic btn callback
+	var setSlider = function() {
+		slider = current_card = deck[cardIndex];
+		setCurrentMedia(slider, reminder.forget, function() { //panic btn callback
 			swipeSlider("left");
 			reminder.forget();
 			analytics.track('Report Inappropriate Content', {
-				card: panic.data.id,
+				card: panic.id,
 				surfing: current_tag
 			});
 			messageBox("Thanks for the Report", "An admin will review that card before anyone sees it again.", "Ok", null, true);
 		});
-		if (top_card.expandTimeout) {
-			top_card.clearExpandTimeout();
+		if (current_card.expandTimeout) {
+			current_card.clearExpandTimeout();
 		}
-		top_card.setExpandTimeout();
+		current_card.setExpandTimeout();
 	};
 	var dataThrobTest = function ()
 	{
 		var c_wrapper, c_container, msg, img;
 		if (slideContainer.firstChild && slideContainer.firstChild.throbbing) {
 			setSlider();
-			return populateSlider(false, slider.firstChild);
+			return deck.build();
 		}
 		if (slideContainer.lastChild && slideContainer.lastChild.throbbing) {
 			setSlider();
@@ -685,13 +539,14 @@ onload = function ()
 			throbber.off();
 			scrollContainer.style.opacity = 1;
 			if (slideContainer.childNodes.length == 1)
-				populateSlider(false, slider.firstChild);
+				deck.build();
 			return;
 		}
 		return true;
 	};
 	var firstCardLoaded = false;
 
+				// TODO: change this stuff
 				if (slider == card) {
 					slider.setSource();
 					firstCardLoaded = false;
@@ -708,7 +563,7 @@ onload = function ()
 					};
 				}
 				imageContainer.firstChild.onerror = function() {
-					analytics.track('Card Load Error', {card: slider.card.id});
+					analytics.track('Card Load Error', {card: slider.id});
 					slideContainer.removeChild(slider.parentNode.nextSibling);
 					slideContainer.removeChild(slider.parentNode.nextSibling);
 					slideContainer.removeChild(card.parentNode);
@@ -740,23 +595,23 @@ onload = function ()
 
 		++cardIndex;
 		if (data.length == cardIndex + buffer_minimum)
-			populateSlider(true);
+			deck.build(true);
 		if (zIndex)
 			buildCard(zIndex - 1);
 		else if (getOrientation() == "landscape" && window.innerHeight < 700)
-			expandCard();
+			slider.expand(scrollCallback);
 	};
 	var downCallback = function ()
 	{
 		if (modal.zoom.zoomed) return;
-		if (slider.classList.contains('login-card'))
+		if (slider.contents.classList.contains('login-card'))
 		{
 			blurLoginInputs();
 		}
 		reminder.forget();
-		if (slider.style["-webkit-transform"] == "")
+		if (slider.contents.style["-webkit-transform"] == "")
 		{
-			slider.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
+			slider.contents.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
 		}
 		return true;
 	};
@@ -774,7 +629,7 @@ onload = function ()
 		current_card.tags.push(objwrap);
 		current_card.tagCard(tag);
 		analytics.track('Add Tag from Feed', {
-			card: slider.card.id,
+			card: slider.id,
 			surfing: current_tag,
 			tag_added: tag
 		});
@@ -790,17 +645,17 @@ onload = function ()
 		if (modal.zoom.zoomed)
 			modal.callZoom(1);
 		setFavIcon(true);
-		xhr("/api/favorites/" + slider.card.id, "POST", function() {
+		xhr("/api/favorites/" + slider.id, "POST", function() {
 			swipeSlider("right", function () {
 				setFavIcon(false);
 			});
 		}, null);
 		analytics.track('Favorite from Feed', {
-			card: slider.card.id,
+			card: slider.id,
 			surfing: current_tag
 		});
 		analytics.page({
-				title: slider.card.id + " right",
+				title: slider.id + " right",
 				url: 'http://beta.tagsurf.co/feed#'+current_tag,
 				path: "/feed#"+current_tag,
 				referrer: 'http://beta.tagsurf.co/'
@@ -813,18 +668,45 @@ onload = function ()
 		cardIndex = Math.max(0, cardIndex - 3);
 		if (data) {
 			buildCard(2);
-			expandCard();
+			slider.expand(scrollCallback);
 		}
 	});
+	
+	var firstPopulate = function() {
+		var feed, id, pair, h = document.location.hash.slice(1);
+		if (h.indexOf('~') != -1) {
+			pair = h.split("~");
+			feed = pair[0];
+			id = pair[1];
+		}
+
+		xhr("/api/card/" + id, null, function(d) {
+			var firstCard = newCard(d);
+			firstCard.build(deck.constants.stack_depth - 1, throbber.off);
+			deck.build(false, firstCard);
+		});
+
+//		firstCard.init(xhr("/api/card/" + id, null, function(d){ return d; }), (stack_depth - 1), throbber.off);
+
+
+	}
 	firstPopulate();
+
+	
 	buildVoteButtons(dragCallback, swipeSlider);
+	
 	if(currentUser.vote_btns){
 		voteButtonsOn();
 	}
+	
 	if(!isAuthorized() && !DEBUG)
 		reminder.create(null, null, "Swipe", 14000);
+	
 	analytics.identify(currentUser.id);
 };
+
+//This is the first line executed in feed
+throbber.on();
 
 if (isAuthorized())
 {

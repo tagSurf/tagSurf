@@ -1,12 +1,13 @@
 //These variables are reinitialized on every pageload
 var authorizedSession = null,
+    cardIndex = 0,
     currentUser = {
       id : null,
       email : null,
       slug : null,
       vote_btns : true,
       admin : false
-    }
+    },
     returnTrue = function() { return true; },
     DEBUG = false;
 // Set DEBUG = true in non-production environments
@@ -82,6 +83,9 @@ var current_tag, tinput, inputContainer, slideContainer,
     });
     tinput.active = false;
     location.hash = tinput.value = tagName || current_tag;
+  }, clearStack = function() {
+    slideContainer.innerHTML = "";
+    scrollContainer.style.opacity = 0;
   };
 
 var navMenuSlid = false;
