@@ -1,39 +1,18 @@
 var _card = {
-	id: null,
-	data: null,
-	tags: {},
-	cb: null,
-	eb: null,
-	zIndex: null,
-	trending: false,
-	animated: null,
-	type: null,
-	isContent: null,
-	compressing: null,
-	expanded: null,
-	expandTimeout: null,
-	built: false,
-	throbbing: false,
-	sliding: false,
-	supering: false,
-	verticaling: false,
-	animating: false,
-	wrapper: document.createElement('div'),
-	contents: document.createElement('div'),
-	init: function(data) {
+	_init: function(data) {
 		if (data) {
-			card.data = data;
-			card.id = data.id;
-			card.animated = data.image.animated;
-			card.type = data.type;
+			this.data = data;
+			this.id = data.id;
+			this.animated = data.image.animated;
+			this.type = data.type;
 			data.tags_v2.forEach(function(tag) { 
 				if(tag == "trending") {
 					return;
 				}
 				else if(tag != "")
-					card.tags.push(tag); 
+					this.tags.push(tag); 
 				if(DEBUG)
-					console.log("card.tags = ", card.tags);
+					console.log(this.id + " tags = ", this.tags);
 			});
 		}
 		else {
@@ -43,23 +22,22 @@ var _card = {
 		}
 	},
 	build: function(zIndex, cb, eb) {
-		card.zIndex = (typeof zIndex === 'undefined') ? (deck.constants.stack_depth - 1) : zIndex;
-		card.setThrobber();
+		this.zIndex = (typeof zIndex === 'undefined') ? (deck.constants.stack_depth - 1) : zIndex;
+		this.setThrobber();
 		if(cb)
-			card.cb = cb;
+			this.cb = cb;
 		if(eb)
-			card.eb = eb;
-		if (card.type == "content")
-			card._buildContentCard();
-		else if (card.type == "login") 
-			card._buildLoginCard();
+			this.eb = eb;
+		if (this.type == "content")
+			this._buildContentCard();
+		else if (this.type == "login") 
+			this._buildLoginCard();
 		else if (DEBUG)
-			alert("unknown card type: " + card.data.type);
-		card.setSource();
+			alert("unknown card type: " + this.data.type);
 	},
 	_buildContentCard: function() {
 		var	imageContainer, iconLine, textContainer, picTags, fullscreenButton, truncatedTitle, 
-			container = card.contents,
+			container = this.contents,
 			cardTemplate = "<div class='image-container expand-animation'><img src= ></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (c.source || ((card.data.tags[0] == null || card.data.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + card.data.tags[0] + "</span></div><div class='text-container'><p>" + card.data.caption + "</p></div><div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
 		container.className = 'card-container';
 		container.id = "";
@@ -70,7 +48,7 @@ var _card = {
 		textContainer = container.children[2];
 		picTags = container.children[3];
 		fullscreenButton = container.children[4];
-		if (card.trending && (current_tag == "trending")) {
+		if (this.trending && (current_tag == "trending")) {
 			gesture.listen("down", iconLine.children[1], function() {
 				iconLine.children[1].classList.add("active-tag-callout");
 				iconLine.children[1].firstChild.src = "http://assets.tagsurf.co/img/trending_icon_gray.png";
@@ -84,36 +62,36 @@ var _card = {
 			});
 		} else
 			iconLine.children[1].style.display = "none";
-		card.tags.sort(function(a, b) {
+		this.tags.sort(function(a, b) {
 			var aName = Object.keys(a)[0];
 			var bName = Object.keys(b)[0];
 			return a[aName].score < b[bName].score;
 		});
-		card.tags.forEach(function(tagobj) {
+		this.tags.forEach(function(tagobj) {
 			var t = Object.keys(tagobj)[0];
-			t && tagCard(t, picTags);
+			t && this.tagCard(t, picTags);
 		});
-		setStartState(card.contents);
-		card._initCardGestures();
-		card.isContent = true;
-		card.setSource(); 
-		card._formatContents(image.get(card.data));
-		card.built = true;
+		setStartState(this.contents);
+		this._initCardGestures();
+		this.isContent = true;
+		this.setSource(); 
+		this._formatContents(image.get(card.data));
+		this.built = true;
 	},
 	_buildLoginCard: function() {
-		var container = card.contents,
+		var container = this.contents,
 			top = "<img src='http://assets.tagsurf.co/img/logo_w_border.png'><div class='big bold'>Hate repeats? Sign up!</div>",
 			form = "<form accept-charset='UTF-8' action='/users' class='new-user' id='new-user' method='post'><div style='margin:0;padding:0;display:inline'><input name='utf8' type='hidden' value='✓'><input name='authenticity_token' type='hidden' value='" + document.getElementsByName("csrf-token")[0].content + "'></div><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center></form>",
 			bottom = "<div class='wide-text'><a id='line-text-login' class='small big-lnk'>Already have an account? <b>Login here</b>.</a></div><div class='smaller block'>By signing up you agree to our <a class='bold big-lnk' id='terms-lnk'>Terms of Use</a> and <a class='bold big-lnk' id='privacy-lnk'>Privacy Policy</a>.</div>",
 			cardTemplate = top + form + bottom;
-		card.wrapper.className = 'card-wrapper';
-		card.wrapper.style.zIndex = card.zIndex
+		this.wrapper.className = 'card-wrapper';
+		this.wrapper.style.zIndex = card.zIndex
 		container.className = 'card-container login-card';
 		container.id = "";
 		container.innerHTML = cardTemplate;
-		setStartState(card.contents);
-		card._initCardGestures();
-		card._initLoginInputs();
+		setStartState(this.contents);
+		this._initCardGestures();
+		this._initLoginInputs();
 		initDocLinks();
 
 		// form validation
@@ -138,28 +116,28 @@ var _card = {
 		gesture.listen("down", document.getElementById("su-submit-btn"), function() {
 			f.onsubmit() && f.submit();
 		});
-		card.built = true;
+		this.built = true;
 	},
 	setThrobber: function (zIndex) {
-		card._forgetGestures();
-		card.wrapper.className = 'card-wrapper';
+		this._forgetGestures();
+		this.wrapper.className = 'card-wrapper';
 		if(zIndex)
-			card.zIndex = card.wrapper.style.zIndex = zIndex;
-		card.contents.className = "card-container center-label";
-		card.contents.id = "End-Of-Feed";
-		card.contents.innerHTML = "<div>Searching for more cards in <br>#" + current_tag + " feed...</div><img src='http://assets.tagsurf.co/img/throbber.gif'>";
-		card.throbbing = true;
-		card.wrapper.appendChild(card.contents);
+			this.zIndex = this.wrapper.style.zIndex = zIndex;
+		this.contents.className = "card-container center-label";
+		this.contents.id = "End-Of-Feed";
+		this.contents.innerHTML = "<div>Searching for more cards in <br>#" + current_tag + " feed...</div><img src='http://assets.tagsurf.co/img/throbber.gif'>";
+		this.throbbing = true;
+		this.wrapper.appendChild(this.contents);
 		// TODO: probably don't add to slider yet
-		document.getElementById('slider').appendChild(card.wrapper);
+		document.getElementById('slider').appendChild(this.wrapper);
 	},
 	setFailMsg: function () {
-		card.throbbing = false;
+		this.throbbing = false;
 		var trendingBtn = document.createElement('div'),
 			orMsg = document.createElement('div'),
 			surfATagMsg = document.createElement('div'),
 			tagSuggestions = document.createElement('div'),
-			container = card.contents;
+			container = this.contents;
 			numberOfTags = 5;
 		trendingBtn.className = 'trending-returnbtn pointer';
 		trendingBtn.innerHTML = "<img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>Return to <span class='blue'>#trending</span>";	
@@ -196,7 +174,7 @@ var _card = {
 				continue;
 			}
 			else {
-				card.tagCard(autocomplete.data[i]["name"]);
+				this.tagCard(autocomplete.data[i]["name"]);
 			}
 		}
 		analytics.track('Seen End-Of-Feed Card', {
@@ -204,61 +182,65 @@ var _card = {
 		});
 	},
 	setSource: function() {
-		card.contents.children[0].firstChild.src = image.get(card.data, window.innerWidth - 40).url;
-		card.contents.children[0].firstChild.onload = function() {
-			card.throbbing = false;
-			card.cb && card.cb();
+		var self = this;
+		this.contents.children[0].firstChild.src = image.get(self.data, window.innerWidth - 40).url;
+		this.contents.children[0].firstChild.onload = function() {
+			self.throbbing = false;
+			self.cb && self.cb();
 		};
-		card.contents.children[0].firstChild.onerror = function() {
-			card.setThrobber();
-			card.eb && card.eb();
+		this.contents.children[0].firstChild.onerror = function() {
+			self.setThrobber();
+			self.eb && self.eb();
 		};
 	},
-	expand: function (expandcb) {
-		if (card.isContent && card.compressing)
+	expand: function (expandCb) {
+		if (this.isContent && this.compressing)
 		{
-			card.compressing = false;
-			card.expanded = true;
-			if (card.contents.children[0].className.indexOf("expanded") == -1)
-				card.contents.children[0].className += " expanded";
-			card.contents.children[2].innerHTML = "<p>" + card.data.caption + "</p>";
+			this.compressing = false;
+			this.expanded = true;
+			if (this.contents.children[0].className.indexOf("expanded") == -1)
+				this.contents.children[0].className += " expanded";
+			this.contents.children[2].innerHTML = "<p>" + this.data.caption + "</p>";
 			if(currentUser.vote_btns && (isMobile() || isTablet()))
-				card.contents.children[3].style.paddingBottom="60px";
-			toggleClass.call(card.contents.children[3], "hidden");
-			toggleClass.call(card.contents.children[4], "hidden");
-			// scrollCallback(); MUST PASS FROM FEED
-			expandcb && expandcb();
+				this.contents.children[3].style.paddingBottom="60px";
+			toggleClass.call(this.contents.children[3], "hidden");
+			toggleClass.call(this.contents.children[4], "hidden");
+			// scrollCallback(); MUST PASS FROM FEED AS CALLBACK
+			expandCb && expandCb();
 		}
 	},
 	promote: function (zIndex) {
 		if(zIndex) {
-			card.zIndex = zIndex;
-			card.wrapper.style.zIndex = zIndex;
+			this.zIndex = zIndex;
+			this.wrapper.style.zIndex = zIndex;
 		}
 		else {
-			++card.zIndex;
-			card.wrapper.style.zIndex = card.zIndex;
+			++this.zIndex;
+			this.wrapper.style.zIndex = this.zIndex;
 		}
 	},
 	setExpandTimeout: function (time) {
-		if(!card.expandTimeout)
-			card.expandTimeout = setTimeout(card.expand, (time) ? time : 1500);
+		var self = this;
+		if(!this.expandTimeout)
+			this.expandTimeout = setTimeout(self.expand, (time) ? time : 1500);
 	},
 	clearExpandTimeout: function () {
-		if (card.expandTimeout) {
-			clearTimeout(card.expandTimeout);
-			card.expandTimeout = null;
+		if (this.expandTimeout) {
+			clearTimeout(this.expandTimeout);
+			this.expandTimeout = null;
 		}
 	},
 	tagCard: function(tag) {
-		var ismine = card._isMine(tag);
-		var p = document.createElement("div");
+		var self = this,
+			isMine = this._isMine(tag),
+			p = document.createElement("div");
 		p.className = "pictagcell";
+		p.id = this.id + tag;
 		var tNode = document.createElement("div");
 		tNode.className = "smallpadded tcell";
 		tNode.innerHTML = "#" + tag;
 		p.appendChild(tNode);
-		if (ismine) {
+		if (isMine) {
 			var delNode = document.createElement("div");
 			delNode.className = "smallpadded delNode tcell";
 			delNode.innerHTML = "x";
@@ -271,9 +253,9 @@ var _card = {
 			p.classList.remove("active-pictag");
 		});
 		gesture.listen("tap", p, function() {
-			if (ismine) {
-				card.rmTag(tag);
-				card.contents.children[3].removeChild(p);
+			if (isMine) {
+				self.rmTag(tag);
+				// self.contents.children[3].removeChild(p);
 			} else
 				autocomplete.tapTag(tag, "autocomplete", false);
 		});
@@ -281,31 +263,33 @@ var _card = {
 		if(card.built)
 			card._formatContents();
 	},
-	rmTag: function(tname) {
-	  var tIndex = -1;
-	  var tobjs = card.tags;
+	rmTag: function(tag) {
+	  var tobjs = this.tags;
 	  for (var i = 0; i < tobjs.length; i++) {
-	    if (Object.keys(tobjs[i])[0] == tname) {
-	      tIndex = i;
-	      break;
-	    }
+		if (Object.keys(tobjs[i])[0] == tag){
+			tobjs.splice(i,1);
+			this.contents.children[3].removeChild(document.getElementById(this.id + tag));
+			break;
+		}
 	  }
-	  if (tIndex != -1)
-	    tobjs = tobjs.slice(0, tIndex).concat(tobjs.slice(tIndex + 1));
 	},
 	_isMine: function(tag) {
-		for (var i = 0; i < card.tags.length; i++)
-			if (Object.keys(card.tags[i])[0] == tag)
-				return card.tags[i][tag].user_owned;
+		for (var i = 0; i < this.tags.length; i++)
+			if (Object.keys(this.tags[i])[0] == tag)
+				return this.tags[i][tag].user_owned;
+		return true;
 	},
 	_formatContents: function (imageData) {
-		var imageContainer = card.contents.firstChild,
-			fullscreenButton = card.contents.children[4], truncatedTitle,
-			picTags = card.contents.children[3], textContainer = card.contents.children[2],
-			iconLine = card.children[1], targetHeight = imageData ? 
-			imageData.height * (window.innerWidth - 40) / imageData.width :
-			card.firstChild.scrollHeight;
-		if (card.animated && !imageContainer.firstChild.classList.contains('translate-z'))
+		var imageContainer = this.contents.firstChild,
+			fullscreenButton = this.contents.children[4], 
+			truncatedTitle,
+			picTags = this.contents.children[3], 
+			textContainer = this.contents.children[2],
+			iconLine = this.children[1], 
+			targetHeight = imageData ? 
+				imageData.height * (window.innerWidth - 40) / imageData.width :
+				this.firstChild.scrollHeight;
+		if (this.animated && !imageContainer.firstChild.classList.contains('translate-z'))
 		{
 			imageContainer.firstChild.classList.add('translate-z');
 		}
@@ -315,20 +299,20 @@ var _card = {
 		{
 			imageContainer.classList.remove("expand-animation");
 			fullscreenButton.className += ' hidden';
-			card.compressing = false;
+			this.compressing = false;
 		}
 		else
 		{
 
-			truncatedTitle = card.data.caption.trunc(25);
+			truncatedTitle = this.data.caption.trunc(25);
 			truncatedTitle = "<p>" + truncatedTitle + "</p>";
 			textContainer.innerHTML = truncatedTitle;
 			picTags.className += ' hidden';
-			card.compressing = true;
+			this.compressing = true;
 		}
 	},
 	_initImageGestures: function () {
-		var imageContainer = card.getElementsByClassName('image-container')[0];
+		var imageContainer = this.getElementsByClassName('image-container')[0];
 		if (!imageContainer)
 			return;
 		gesture.listen("tap", imageContainer, tapCallback);
@@ -339,20 +323,20 @@ var _card = {
 			function() { upCallback(true); });
 	},
 	_initCardGestures: function () {
-		gesture.listen("swipe", card.wrapper, swipeCallback);
-		gesture.listen("up", card.wrapper, upCallback);
-		//gesture.listen("tap", card.wrapper, tapCallback);
-		gesture.listen("drag", card.wrapper, dragCallback);
-		gesture.listen("hold", card.wrapper, holdCallback);
-		gesture.listen("down", card.wrapper, downCallback);
-		initImageGestures.call(this);
+		gesture.listen("swipe", this.wrapper, swipeCallback);
+		gesture.listen("up", this.wrapper, upCallback);
+		//gesture.listen("tap", this.wrapper, tapCallback);
+		gesture.listen("drag", this.wrapper, dragCallback);
+		gesture.listen("hold", this.wrapper, holdCallback);
+		gesture.listen("down", shit.wrapper, downCallback);
+		this._initImageGestures();
 	},
 	_initLoginInputs: function () {
 		var listInputs = document.forms[0].getElementsByClassName('su-input'),
 			listLength = listInputs.length;
 		for (var index = 0;index < listLength; ++index)
 		{
-			card._focusInput(listInputs[index]);
+			this._focusInput(listInputs[index]);
 		}
 	},
 	_focusInput: function (input) {
@@ -365,23 +349,47 @@ var _card = {
 		if (imageContainer) {
 			gesture.unlisten(imageContainer);
 		}
-		gesture.unlisten(card.wrapper);
+		gesture.unlisten(this.wrapper);
 	},
-	remove: function (vote, tag, rb) {
-		document.getElementById('slider').removeChild(card.wrapper)
-		if(vote && tag) {
-			card.data.user_stats.vote = vote;
-			card.data.user_stats.tag = tag;
+	vote: function (voteFlag, tag, rb) {
+		if((typeof voteFlag !== "undefined") && tag) {
+			this.data.user_stats.vote = voteFlag;
+			this.data.user_stats.tag = tag;
+			this.remove();
 			castVote(this);
 		}
 		else if(DEBUG)
 			console.log("Error: insufficient vote data provided");
 		rb && rb();
+	},
+	remove: function () {
+		document.getElementById('slider').removeChild(this.wrapper);
 	}
 };
 
 var newCard = function (data) {
 	var card = Object.create(_card);
-	card.init(data);
+	card.id = null;
+	card.data = null;
+	card.tags = {};
+	card.cb = null;
+	card.eb = null;
+	card.zIndex = null;
+	card.trending = false;
+	card.animated = null;
+	card.type = null;
+	card.isContent = null;
+	card.compressing = null;
+	card.expanded = null;
+	card.expandTimeout = null;
+	card.built = false;
+	card.throbbing = false;
+	card.sliding = false;
+	card.supering = false;
+	card.verticaling = false;
+	card.animating = false;
+	card.wrapper = document.createElement('div');
+	card.contents = document.createElement('div');
+	card._init(data);
 	return card;
 };
