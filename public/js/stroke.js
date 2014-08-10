@@ -20,10 +20,12 @@ var stroke = {
 		window.onkeyup = function (e) {
 			e = e || window.event;
 			var code = e.keyCode || e.which,
-				kobj = stroke.keys[code],
+				now = Date.now(),
+				kobj = stroke.keys[code]
+					= stroke.keys[code] || { down: now },
 				ac = stroke.cbs.up.always,
 				cb = stroke.cbs.up[code];
-			kobj.up = Date.now();
+			kobj.up = now;
 			kobj.duration += kobj.up - kobj.down;
 			ac && ac(kobj);
 			cb && cb(kobj);

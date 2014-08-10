@@ -224,8 +224,9 @@ onload = function ()
 		trans(_slider,
 			function () {
 				_slider.animating = false;
-				_slider.remove(deck.shift());
-				if()
+				gesture.unlisten(_slider.parentNode);
+				slideContainer.removeChild(_slider.parentNode);
+				buildCard(0);
 				if (scrollContainer.scrollTop)
 					scrollContainer.scrollTop = 0;
 				if (scrollContainer.yDrag)
@@ -258,7 +259,7 @@ onload = function ()
 			"translate3d(" + translateQuantity + "px," + verticalQuantity
 				+ "px,0) rotate(" + rotateQuantity + "deg)");
 		slider.animating = true;
-		reminder.forget();
+		forgetReminders();
 		pushTags();
 		setSlider();
 	};
@@ -369,9 +370,7 @@ onload = function ()
 		if (slider.id == 221281)
 			analytics.track("Seen Login Card");
 	});
-	stroke.listen("up", null, function(e) {
-		reminder.close("right");
-	});
+	stroke.listen("up", null, closeReminders);
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
 		if (modal.zoom.zoomed) return;
@@ -496,7 +495,7 @@ onload = function ()
 		slider = current_card = deck[cardIndex];
 		setCurrentMedia(slider, reminder.forget, function() { //panic btn callback
 			swipeSlider("left");
-			reminder.forget();
+			forgetReminders();
 			analytics.track('Report Inappropriate Content', {
 				card: panic.id,
 				surfing: current_tag
@@ -607,8 +606,8 @@ onload = function ()
 		if (slider.contents.classList.contains('login-card'))
 		{
 			blurLoginInputs();
-		}
-		reminder.forget();
+		}	
+		forgetReminders();
 		if (slider.contents.style["-webkit-transform"] == "")
 		{
 			slider.contents.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
@@ -626,8 +625,8 @@ onload = function ()
 			trend: "up",
 			user_owned: true
 		};
-		current_card.tags.push(objwrap);
-		current_card.tagCard(tag);
+		topCard.tags.push(objwrap);
+		topCard.tagCard(tag);
 		analytics.track('Add Tag from Feed', {
 			card: slider.id,
 			surfing: current_tag,
@@ -691,18 +690,16 @@ onload = function ()
 
 	}
 	firstPopulate();
-
-	
 	buildVoteButtons(dragCallback, swipeSlider);
 	
 	if(currentUser.vote_btns){
 		voteButtonsOn();
 	}
-	
 	if(!isAuthorized() && !DEBUG)
 		reminder.create(null, null, "Swipe", 14000);
-	
 	analytics.identify(currentUser.id);
+	if(!isAuthorized() && !DEBUG)
+		newReminder(null, null, "Swipe", 13000);
 };
 
 //This is the first line executed in feed
