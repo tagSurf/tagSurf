@@ -359,8 +359,8 @@ html, body
   float: right;
   margin-right: 20px;
 }
-/*======= Swipe Reminder Stuff =======*/
-#reminder-container
+/*======= Reminder Stuff =======*/
+.reminder-container
 {
   visibility: hidden;
   z-index: -1;
