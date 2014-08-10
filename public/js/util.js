@@ -6,7 +6,8 @@ var authorizedSession = null,
       slug : null,
       vote_btns : true,
       admin : false
-    }
+    },
+    reminders = [],
     returnTrue = function() { return true; },
     DEBUG = false;
 // Set DEBUG = true in non-production environments
