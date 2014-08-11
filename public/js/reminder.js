@@ -1,3 +1,5 @@
+var reminders = [];
+
 var _reminder = {
 	forget: function() {
 		if(!this.timeout) 
