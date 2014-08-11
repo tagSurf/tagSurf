@@ -1,6 +1,5 @@
-var startFirstOrientation = function () {
-	var swipeReminder, swipeReminderContents;
-	swipeReminder = newReminder(welcomeMessage.call(), null, "Welcome", 3000);
+var startOrientation = function () {
+	newReminder(swipeReminder.call(), null, "Swipe", 13000);
 };
 
 var welcomeMessage = function() {

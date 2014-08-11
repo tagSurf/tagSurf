@@ -357,15 +357,16 @@ html, body {
   position: absolute;
   bottom: 20px;
   right: 15px;
-}
-
-/*======= (Desktop Only) =======*/
+}  
+/*== (Desktop Only) ==*/
 .close-instructions {
   position: absolute;
   left: 43%;
-  bottom: 40%;
+  bottom: 44%;
   width: 15%;
 }
+
+/*====== End of Feed Card Stuff =====*/
 .trending-returnbtn {
   border: 1px solid #00aeef;
   border-radius: 5px;
@@ -386,8 +387,6 @@ html, body {
   background-color: #00aeef;
   color: #404041;
 }
-
-/*====== End of Feed Card Stuff =====*/
 #or-msg {
   margin: 6% 0;
   font-size: 150%;
