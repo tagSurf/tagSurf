@@ -40,6 +40,7 @@ var whichGallery = function() {
       return galleries[i];
   return null;
 };
+
 var isAuthorized = function () {
   if(authorizedSession == null) {
     xhr('/api/users', "GET", function(result) {
@@ -126,6 +127,7 @@ var shareVotes = [], stashVotesAndLogin = function () {
     JSON.stringify(shareVotes));
   window.location = "/users/sign_in";
 };
+
 var messageBox = function (title, message, action_type, cb, backed) {
   var contents = document.createElement('div'),
       closeContainer = document.createElement('div'),

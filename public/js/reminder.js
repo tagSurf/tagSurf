@@ -71,33 +71,8 @@ var _reminder = {
 			container.appendChild(this.node);
 		// TODO Refactor this code into vars for each node type 
 		// and simplfy this block by just switching the node
-		else if(this.type == "Swipe"){
-			var leftImage = new Image(), rightImage = new Image();
-			leftImage.id = "reminder-left";
-			rightImage.id = "reminder-right";
-			if(isDesktop()) {
-				var closeInstructions = new Image();
-				closeInstructions.className = "close-instructions block";
-				closeInstructions.src="http://assets.tagsurf.co/img/clearscreen.png";
-				container.appendChild(closeInstructions);
-				rightImage.src = "http://assets.tagsurf.co/img/reminder_right_desktop.png";
-				leftImage.src = "http://assets.tagsurf.co/img/reminder_left_desktop.png";
-				addCss({
-					"#reminder-left": function() {
-						return "width: 18%; top: 20%";
-					},
-					"#reminder-right": function() {
-						return "width: 18%";
-					}
-				});
-			}
-			else {
-				leftImage.src = "http://assets.tagsurf.co/img/reminder_left_mobile.png";	
-				rightImage.src = "http://assets.tagsurf.co/img/reminder_right_mobile.png";
-			}
-			container.appendChild(leftImage);
-			container.appendChild(rightImage);
-		}
+		else if (DEBUG)
+			console.log("Error: no contents for reminder container");
 		gesture.listen("drag", self.container, function (direction) {
 			if (direction != "left" && direction != "right")
 			{

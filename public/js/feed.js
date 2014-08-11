@@ -1038,8 +1038,8 @@ onload = function ()
 		voteButtonsOn();
 	}
 	analytics.identify(currentUser.id);
-	if(!isAuthorized() && !DEBUG)
-		newReminder(null, null, "Swipe", 13000);
+	if(!isAuthorized())
+		startFirstOrientation();
 };
 
 if (isAuthorized())
