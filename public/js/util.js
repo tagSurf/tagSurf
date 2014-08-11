@@ -9,6 +9,7 @@ var authorizedSession = null,
       admin : false
     },
     reminders = [],
+    cardDecks = [],
     returnTrue = function() { return true; },
     DEBUG = false;
 // Set DEBUG = true in non-production environments

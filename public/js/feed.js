@@ -675,28 +675,24 @@ onload = function ()
 		var feed, id, pair, h = document.location.hash.slice(1);
 		if (h.indexOf('~') != -1) {
 			pair = h.split("~");
-			feed = pair[0];
+			current_tag = feed = pair[0];
 			id = pair[1];
+			xhr("/api/card/" + id, null, function(d) {
+				var firstCard = newCard(d);
+				firstCard.build(deck.constants.stack_depth - 1, throbber.off);
+				cardDecks[cardDecks.length] = newDeck(current_tag, firstCard);
+			});
 		}
-
-		xhr("/api/card/" + id, null, function(d) {
-			var firstCard = newCard(d);
-			firstCard.build(deck.constants.stack_depth - 1, throbber.off);
-			deck.build(false, firstCard);
-		});
-
-//		firstCard.init(xhr("/api/card/" + id, null, function(d){ return d; }), (stack_depth - 1), throbber.off);
-
-
+		else if(cardDecks.length < 1)
+			cardDecks[cardDecks.length] = newDeck(current_tag); 
 	}
+
 	firstPopulate();
 	buildVoteButtons(dragCallback, swipeSlider);
 	
 	if(currentUser.vote_btns){
 		voteButtonsOn();
 	}
-	if(!isAuthorized() && !DEBUG)
-		reminder.create(null, null, "Swipe", 14000);
 	analytics.identify(currentUser.id);
 	if(!isAuthorized() && !DEBUG)
 		newReminder(null, null, "Swipe", 13000);

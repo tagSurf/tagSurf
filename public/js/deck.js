@@ -1,23 +1,16 @@
-var deck = {
+var _deck = {
 	constants: {
 		buffer_minimum: 5,
 		stack_depth: 3
 	},
-	cardIndex: 0,
-	topCard: null,
-	shareSwap: false,
-	shareOffset: 0,
-	known_keys: {},
-	cards: [],
-	cardsToLoad: [],
 	refreshCards: function(zIndex, startIndex) {
-		deck.cardIndex = (typeof startIndex === "undefined") ? 0 : startIndex;
-		if (deck.cards.length == 1 && deck.topCard.throbbing)
-			deck.topCard.setFailMsg();
+		this.cardIndex = (typeof startIndex === "undefined") ? 0 : startIndex;
+		if (this.cards.length == 1 && this.topCard.throbbing)
+			this.topCard.setFailMsg();
 		else {
 			slideContainer.innerHTML = "";
-			for (var i = 0; i < deck.constants.stack_depth; i++)
-				(i < deck.cards.length) && deck.cards[i].build(zIndex--);
+			for (var i = 0; i < this.constants.stack_depth; i++)
+				(i < this.cards.length) && this.cards[i].build(zIndex--);
 		}
 	},
 	popData: function(rdata, firstCard) {
@@ -26,35 +19,35 @@ var deck = {
 		if (!isAuthorized())
 			preloads = rdata;
 		else {
-			if (firstCard) deck.known_keys[firstCard.id] = true;
+			if (firstCard) this.known_keys[firstCard.id] = true;
 			for (i = 0; i < rdata.length; i++) {
-				if (!deck.known_keys[rdata[i].id]) {
+				if (!this.known_keys[rdata[i].id]) {
 					var d = rdata[i];
 					((!d.animated && starters.length < 3)
 						? starters : others).push(d);
-					deck.known_keys[d.id] = true;
+					this.known_keys[d.id] = true;
 				}
 			}
 			for (i = 0; i < starters.length; i++) preloads.push(starters[i]);
 			for (i = 0; i < others.length; i++) preloads.push(others[i]);
-			if (firstCard) deck.cards.unshift(firstCard);
+			if (firstCard) this.cards.unshift(firstCard);
 		}
 
-		deck.cards = deck.cards.concat(preloads);
+		this.cards = this.cards.concat(preloads);
 		return preloads;
 	},
 	preloadCards: function() {
-		if (deck.cardsToLoad.length) {
-			image.load(deck.cardsToLoad, window.innerWidth - 40);
-			deck.cardsToLoad = [];
+		if (this.cardsToLoad.length) {
+			image.load(this.cardsToLoad, window.innerWidth - 40);
+			this.cardsToLoad = [];
 		}
 	},
 	dataPath: function(firstCard) {
 		if (!isAuthorized()) {
 			var p = "/api";
-			if (deck.shareSwap) {
-				deck.shareSwap = false;
-				deck.shareOffset = 0;
+			if (this.shareSwap) {
+				this.shareSwap = false;
+				this.shareOffset = 0;
 			}
 			if (firstCard || current_tag
 				!= document.location.pathname.split("/")[2])
@@ -62,38 +55,52 @@ var deck = {
 					(firstCard ? firstCard.id : 0);
 			else
 				p += document.location.pathname;
-			return p + "/20/" + (deck.shareOffset++ * 20);
+			return p + "/20/" + (this.shareOffset++ * 20);
 		}
 		return "/api/media/" + current_tag;
 	},
 	build: function (update, firstCard) {
+		var self = this;
 		if (!update) {
 			throbber.on();
 			clearStack();
 		}
-
-		xhr(deck.dataPath(firstCard), null, function(response_data) {
+		xhr(this.dataPath(firstCard), null, function(response_data) {
 			var rdata = response_data.data.map(newCard);
 			if (update)
-				deck.cardsToLoad = deck.cardsToLoad.concat(deck.popData(rdata));
+				self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata));
 			else {
-				deck.cards = [];
-				deck.cardsToLoad = deck.cardsToLoad.concat(deck.popData(rdata, firstCard).slice(deck.constant.stack_depth));
-				deck.refreshCards(deck.constants.stack_depth - 1);
+				self.cards = [];
+				self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata, firstCard).slice(self.constant.stack_depth));
+				self.refreshCards(self.constants.stack_depth - 1);
 			}
 		}, function(response, status) {
 			if (status == 401){
 				messageBox("Oops", response.errors + " <br><br><i>Control Safe Surf from Options</i>");
 			}
 			if (!update) {
-				deck.cards = [];
-				deck.refreshCards();
+				self.cards = [];
+				self.refreshCards();
 			}
 		});
 	},
 	skipTutorial: function() {
-		deck.cards = deck.cards.filter(function(card) {
+		this.cards = this.cards.filter(function(card) {
 			return card.type != "tutorial";
 		});
 	}
+};
+
+var newDeck = function(tag, firstCard){
+	deck = Object.create(_deck);
+	deck.tag = tag;
+	deck.cardIndex = 0;
+	deck.topCard = null;
+	deck.shareSwap = false;
+	deck.shareOffset = 0;
+	deck.known_keys = {};
+	deck.cards = [];
+	deck.cardsToLoad = [];
+	deck.build(false, firstCard);
+	return deck;
 };
