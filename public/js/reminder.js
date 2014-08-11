@@ -39,7 +39,7 @@ var _reminder = {
 	show: function() {
 		this.isOn = true;
 		this.container.style.visibility = "visible";
-		this.container.style.zIndex = "100";
+		this.container.style.zIndex = this.zIndex;
 		this.container.style.opacity = 1;
 		if(isDesktop())
 			analytics.track('Seen Desktop ' + this.type + ' Reminder');
@@ -120,6 +120,11 @@ var newReminder = function(node, cb, type, delay) {
 	reminder.type = type;
 	reminder.delay = delay;
 	reminder.node = node;
+	reminder.zIndex = 100;
+	reminders.forEach(function (existingReminder) {
+		if(existingReminder.zIndex >= reminder.zIndex)
+			reminder.zIndex = existingReminder.zIndex + 1;
+	});
 	reminder._build();
 	return reminder;
 };

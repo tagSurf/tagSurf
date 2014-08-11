@@ -1,9 +1,7 @@
-var modal = {
-	back: document.createElement("div"),
-	modal: document.createElement("div"),
-	prompt: document.createElement("div"),
-	topModal: document.createElement("div"),
-	zoom: document.createElement("div"),
+var modals = [],
+	firstModal = true;
+
+var _modal = {
 	constants: {
 		zoomScale: 1.5,
 		zoomMax: 3
@@ -23,13 +21,16 @@ var modal = {
 			}
 		}
 	},
-	build: function() {
-		addCss({
-			".modalout": function() {
-				return "-webkit-transform: " + "translate3d("
-					+ window.innerWidth + "px, 0, 0);";
-			}
-		});
+	_build: function() {
+		if(firstModal) {
+			addCss({
+				".modalout": function() {
+					return "-webkit-transform: " + "translate3d("
+						+ window.innerWidth + "px, 0, 0);";
+				}
+			});
+			firstModal = false;
+		}
 		modal.back.className = "blackout disabled";
 		modal.modal.className = "modal disabled";
 		modal.topModal.className = "modal disabled";
@@ -317,4 +318,20 @@ var modal = {
 		});
 	}
 };
-modal.build();
+
+var newModal = function(node, type, backed, cb){
+	var modal = modals[modals.length] = Object.create(_modal);
+	if(DEBUG && (typeof node === "undefined"))
+		console.log("Error: modal created with undefined contents");
+	modal.contents = (typeof node === "undefined") ? document.createElement("div") : node;
+	modal.backed = (typeof backed === "undefined") ? false : backed;
+	modal.type = type;
+	modal.cb = cb;
+	modal.back = document.createElement("div");
+	modal.zoom = document.createElement("div");
+	modal.isBuilt = false;
+	modal.isOn = false;
+	modal.zIndex = (type === "top") ? 50 : 20;
+	modal._build();
+	return modal;
+};
