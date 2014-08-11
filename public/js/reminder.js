@@ -37,9 +37,12 @@ var _reminder = {
 				console.log("Error: reminder close direction == 'up' || 'down'");
 	},
 	show: function() {
+		for (var i = 0; i < reminders.length; ++i)
+			if(reminders[i].isOn && (reminders[i].zIndex >= this.zIndex))
+				this.zIndex = reminders[i].zIndex + 1;
 		this.isOn = true;
+		this.container.style.zIndex = this.zIndex;
 		this.container.style.visibility = "visible";
-		this.container.style.zIndex = "100";
 		this.container.style.opacity = 1;
 		if(isDesktop())
 			analytics.track('Seen Desktop ' + this.type + ' Reminder');
@@ -120,6 +123,7 @@ var newReminder = function(node, cb, type, delay) {
 	reminder.type = type;
 	reminder.delay = delay;
 	reminder.node = node;
+	reminder.zIndex = 100;
 	reminder._build();
 	return reminder;
 };
