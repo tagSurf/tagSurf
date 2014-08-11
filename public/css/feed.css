@@ -1,11 +1,9 @@
-html, body
-{
+html, body {
   background-color: #494949;
   height: auto;
   position: fixed;
 }
-#scroll-container
-{
+#scroll-container {
   top: 50px;
   overflow: auto;
   position: absolute;
@@ -15,8 +13,7 @@ html, body
   -moz-transition: opacity 500ms ease-in-out;
   -webkit-transition: opacity 500ms ease-in-out;
 }
-#input-container
-{
+#input-container {
   text-align: center;
   width: 275px;
   height: 29px;
@@ -24,8 +21,7 @@ html, body
   margin: 6px auto;
   overflow: hidden;
 }
-#static-icon
-{
+#static-icon {
   display: inline;
   position: relative;
   left: 4px;
@@ -43,21 +39,18 @@ html, body
   border-bottom-left-radius: 50px;
   border-top-left-radius: 50px;
 }
-#static-hash
-{
+#static-hash {
   top: -3px;
   left: 1px;
   position: relative;
   font-size: 18px;
   font-family: Raleway, sans-serif;
 }
-#static-trending
-{
+#static-trending {
   width: 16px;
   margin-left: -5px;
 }
-#tag-input
-{
+#tag-input {
   -webkit-appearance: none;
   z-index: 2;
   color: white;
@@ -95,8 +88,7 @@ html, body
   border-bottom-right-radius: 50px;
   border-bottom-left-radius: 0px;
 }
-#search-input
-{
+#search-input {
   position: relative;
   float: right;
   z-index: 1;
@@ -110,15 +102,13 @@ html, body
   border-top-right-radius: 50px;
   border-bottom-right-radius: 50px;
 }
-#search-input img
-{
+#search-input img {
   float: right;
   height: 20px;
   margin-top: 4px;
   margin-right: 11px;
 }
-#autocomplete
-{
+#autocomplete {
   top: 90px;
   left: 0px;
   right: 0px;
@@ -127,16 +117,15 @@ html, body
   border-radius: 8px;
   color: black;
 }
-#autocomplete div div
-{
+#autocomplete div div {
   padding-left: 20px;
 }
 .abcs {
   list-style-type: lower-alpha;
 }
+
 /*======= Card Formatting Stuff ========*/
-.card-wrapper
-{
+.card-wrapper {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -147,8 +136,7 @@ html, body
   width: 100%;
   padding-bottom: 10px;
 }
-.card-container
-{
+.card-container {
   position: relative;
   overflow: hidden;
   height: auto;
@@ -160,50 +148,45 @@ html, body
   border-radius: 10px;
   box-shadow: 2px 3px 5px -1px rgba(0,0,0,0.7);
 }
+
 /*========== Login Card Stuff ===========*/
 .login-card {
   background: #00aeef;
   border: 2px solid #00aeef;
   text-align: center;
 }
-
 .login-card img {
   width: 50px;
   margin: 15px 0 5px 0;
 }
-
 .login-card a {
   color: white;
 }
-
 .login-card div {
   padding: 2px;
 }
+
 /*======== Swiping Animation Stuff ========*/
-.swiping
-{
+.swiping {
   -webkit-transition: -webkit-transform 250ms ease-in;
   -moz-transition: -moz-transform 250ms ease-in;
   transition: transform 250ms ease-in;
 }
+
 /*======== Super Vote Stuff =========*/
-.super-card
-{
+.super-card {
 
   animation: white_background_flash 0.5s 2;
   -webkit-animation: white_background_flash 0.5s 2;
   animation-direction: alternate;
   -webkit-animation-direction: alternate;
 }
-
-.super-card .super-label
-{
+.super-card .super-label {
   display: block;
   animation: fade-in 0.5s;
   -webkit-animation: fade-in 0.5s;
 }
-.super-label
-{
+.super-label {
   position: absolute;
   top: 50px;
   width: 100%;
@@ -215,37 +198,30 @@ html, body
   background: rgba(255,255,255,.8);
   color: black;
 }
+@-webkit-keyframes fade-in {
+  from	{opacity: 0}
+  to	{opacity: 1.0;}
+}
+@keyframes white_background_flash {
+  from	{opacity: 0}
+  to	{opacity: 1.0;}
+}
+@-webkit-keyframes white_background_flash {
+  from	{background: #353535;}
+  to	{background: white;}
+}
+@keyframes white_background_flash {
+  from	{background: #353535;}
+  to	{background: white;}
+}
 
-@-webkit-keyframes fade-in
-{
-  from	{opacity: 0}
-  to	{opacity: 1.0;}
-}
-@keyframes white_background_flash
-{
-  from	{opacity: 0}
-  to	{opacity: 1.0;}
-}
-@-webkit-keyframes white_background_flash
-{
-  from	{background: #353535;}
-  to	{background: white;}
-}
-@keyframes white_background_flash
-{
-  from	{background: #353535;}
-  to	{background: white;}
-}
 /*======= Card Image Stuff =======*/
-.image-container
-{
+.image-container {
   overflow-y: hidden;
   -webkit-overflow-scrolling: none;
   margin-bottom: 8px;
 }
-
-.image-container img
-{
+.image-container img {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -khtml-user-select: none;
@@ -258,44 +234,34 @@ html, body
   width: 100%;
   -webkit-overflow-scrolling: none;
 }
+
 /*======= More Card Formatting Stuff ========*/
-.text-container
-{
+.text-container {
   margin: 2.5%;
   padding: 0 10%;
   text-align: center;
   font-size: 14px;
 }
-
-#slider
-{
+#slider {
   overflow: hidden;
 }
-
-.noinput
-{
+.noinput {
   margin-top: 41px;
 }
-
-.expand-animation
-{
+.expand-animation {
   transition: all 1s ease-in-out;
   -webkit-transition: all 1s ease-in-out;
 }
-
-.hider
-{
+.hider {
   visibility: hidden;
 }
-.expand-button
-{
+.expand-button {
   position: absolute;
   width: 100%;
   bottom: 10px;
   text-align: center;
 }
-.expanded
-{
+.expanded {
   max-height: 9999px !important;
 }
 .icon-line {
@@ -318,28 +284,24 @@ html, body
   position: relative;
   top: 3px;
 }
-.active-tag-callout
-{
+.active-tag-callout {
   background-color: #00aeef;
   color: #404041;
 }
-.active-pictag
-{
+.active-pictag {
   color: #404041;
   background-color: #00719C !important;
 }
+
 /*======= Card Vote Indicator Stuff ======*/
-#thumb-vote-container
-{
+#thumb-vote-container {
   pointer-events: none;
   position: absolute;
   top: 50px;
   width: 100%;
   z-index: 2;
 }
-
-.thumb-up
-{
+.thumb-up {
   display: inline;
   opacity: 0;
   width: 40%;
@@ -347,8 +309,7 @@ html, body
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
 }
-.thumb-down
-{
+.thumb-down {
   display: inline;
   opacity: 0;
   width: 40%;
@@ -359,9 +320,9 @@ html, body
   float: right;
   margin-right: 20px;
 }
+
 /*======= Reminder Stuff =======*/
-.reminder-container
-{
+.reminder-container {
   visibility: hidden;
   z-index: -1;
   position: absolute;
@@ -370,43 +331,42 @@ html, body
   width: 100%;
   height: 100%;
   background-color: rgba(0,0,0, .8);
+  font-weight: 800;
   opactiy: 0;
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
 }
-#reminder-left
-{
+#reminder-left {
 	position: relative;
 	display: inline;
 	width: 34%;
 	float: left;
 	margin-left: 5%;
-	top: 19%;
+	margin-top: 33%;
 }
-#reminder-right
-{
+#reminder-right {
 	position: relative;
 	display: inline;
 	width: 25%;
 	float: right;
 	margin-right: 5%;
-	top: 20%;
+  margin-top: 33%;
 }
-.reminder-close
-{
+.reminder-close {
   width: 40px;
   position: absolute;
   bottom: 20px;
   right: 15px;
-}
-/*======= (Desktop Only) =======*/
-.close-instructions
-{
+}  
+/*== (Desktop Only) ==*/
+.close-instructions {
   position: absolute;
   left: 43%;
-  bottom: 45%;
+  bottom: 44%;
   width: 15%;
 }
+
+/*====== End of Feed Card Stuff =====*/
 .trending-returnbtn {
   border: 1px solid #00aeef;
   border-radius: 5px;
@@ -423,12 +383,10 @@ html, body
   top: 1px;
   margin-right: 7px;
 }
-.active-trending-returnbtn
-{
+.active-trending-returnbtn {
   background-color: #00aeef;
   color: #404041;
 }
-/*====== End of Feed Card Stuff =====*/
 #or-msg {
   margin: 6% 0;
   font-size: 150%;
@@ -447,81 +405,67 @@ html, body
 
 /*====== This targets tablets and desktops ======*/
 @media only screen and (min-width: 700px){
-  .text-container
-  {
+  .text-container {
     font-size: 20px;
   }
-  .pictags
-  {
+  .pictags {
     font-size: 20px;
   }
-  .tag-callout
-  {
+  .tag-callout {
     font-size: 20px;
   }
-  .tag-callout img
-  {
+  .tag-callout img {
     height: 17px;
   }
-  .source-icon
-  {
+  .source-icon {
     height: 28px;
   }
-  .menu-icon
-  {
+  .menu-icon {
     width: 24px;
   }
-  .card-container
-  {
+  .card-container {
     font-size: 160%;
   }
+  
   /*===== Tag Search Bar ====*/
-  #input-container
-  {
+  #input-container {
     width: 356px;
     height: 33px;
   }  
-  #static-icon
-  {
+  #static-icon {
     height: 33px;
   }
-  #static-hash
-  {
+  #static-hash {
     top: -2px;
     font-size: 20px; 
   }
-  #tag-input
-  {
+  #tag-input {
     width: 257px;
     height: 38px;
     font-size: 140%;
     padding-bottom: 10px;
   }
-  #search-input
-  {
+  #search-input {
     width: 50px;
     height: 33px;
   }
-  #search-input img 
-  {
+  #search-input img {
     height: 23px;
     margin-top: 5px;
     margin-right: 12px;
   }
-  #autocomplete
-  {
+  #autocomplete {
     top: 95px;
     font-size: 140%;
     width: 300px;
   }
-  .noinput
-  {
+  .noinput {
     margin-top: 45px;
   }
-  .reminder-close
-  {
+  .reminder-close {
     bottom: 25px;
   }
+  
   /*==== End of Feed Card ====*/
   .trending-returnbtn {
     width: 290px;
@@ -533,5 +477,12 @@ html, body
   .taglist {
     max-width: 75%;
   }
+  
+  /*==== Reminder Screen =====*/
+  #reminder-left {
+    margin-top: 11%;
+  }
+  #reminder-right {
+    margin-top: 11%;
+  }
 }
-

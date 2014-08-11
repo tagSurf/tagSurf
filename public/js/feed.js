@@ -1031,15 +1031,18 @@ onload = function ()
 			expandCard();
 		}
 	});
+	
 	firstPopulate();
 
 	buildVoteButtons(dragCallback, swipeSlider);
 	if(currentUser.vote_btns){
 		voteButtonsOn();
 	}
+	
 	analytics.identify(currentUser.id);
+	
 	if(!isAuthorized() && !DEBUG)
-		newReminder(null, null, "Swipe", 13000);
+		startOrientation();
 };
 
 if (isAuthorized())

@@ -14,31 +14,30 @@
   <script src="/js/nav.js"></script>
   <script src="/js/util.js"></script>
   <script src="/js/image.js"></script>
-  <script src="/js/stroke.js"></script>
   <script src="/js/gesture.js"></script>
+  <script src="/js/stroke.js"></script>
   <script src="/js/drag.js"></script>
   <script src="/js/modal.js"></script>
   <script src="/js/throbber.js"></script>
   <script src="/js/autocomplete.js"></script>
   <script src="/js/share.js"></script>
+  <script src="/js/tutorial.js"></script>
   <script src="/js/reminder.js"></script>
   <script src="/js/panic.js"></script>
   <script src="/js/feed.js"></script>
 <% end %>
 
 <!-- Place body html below -->
-<div id="nav"></div>
+<div id="nav" ontouchmove="return false;"></div>
 <div id="formatter" class="hider"></div>
-<!-- <div id="scroll-container-container"> -->
 <div id="scroll-container">
- <div id="input-container">
-   <div id="static-icon">
-     <b id="static-hash">#</b>
-   </div>
-   <input id="tag-input" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off">
-   <div id="search-input"><img src="/img/search_white.png"></div>
- </div>
- <div id="slider"></div>
+  <div id="input-container">
+    <div id="static-icon">
+      <b id="static-hash">#</b>
+    </div>
+    <input id="tag-input" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off">
+    <div id="search-input"><img src="http://assets.tagsurf.co/img/search_white.png"></div>
+  </div>
+  <div id="slider"></div>
 </div>
-<!-- </div> -->
 <div id="autocomplete" class="autocomplete hider"></div>
