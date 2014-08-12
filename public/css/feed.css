@@ -332,6 +332,7 @@ html, body {
   height: 100%;
   background-color: rgba(0,0,0, .8);
   font-weight: 800;
+  letter-spacing: 2px;
   opactiy: 0;
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
@@ -357,7 +358,21 @@ html, body {
   position: absolute;
   bottom: 20px;
   right: 15px;
-}  
+}
+#reminder-vote-button-right {
+  position: absolute;
+  bottom: 5px;
+  right: 50px; 
+  width: 80px;
+  padding: 10px; 
+}
+#reminder-vote-button-left {
+  position: absolute;
+  bottom: 5px;
+  left: 50px; 
+  width: 80px;
+  padding: 10px; 
+}
 /*== (Desktop Only) ==*/
 .close-instructions {
   position: absolute;
@@ -484,5 +499,13 @@ html, body {
   }
   #reminder-right {
     margin-top: 11%;
+  }
+  #reminder-vote-button-right {
+    right: 90px;
+    width: 120px;
+  }
+  #reminder-vote-button-left {
+    left: 90px;
+    width: 120px;
   }
 }

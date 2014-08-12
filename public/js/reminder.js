@@ -23,7 +23,7 @@ var _reminder = {
 			var container = document.getElementById(self.type + '-reminder-container');
 			self.isOn = false;
 			self.container.style.opacity = 0;
-			document.body.removeChild(self.container);
+			setTimeout(function () { document.body.removeChild(self.container);}, 100);
 			self.timeout = null;
 			for(var i = 0; i < reminders.length; ++i){
 				if (reminders[i] == self)
@@ -53,7 +53,11 @@ var _reminder = {
 		var self = this;
 		if(this.timeout || !document.getElementById(this.type + '-reminder-container'))
 			return;
-		this.timeout = setTimeout(function () { self.show(); }, (time) ? time : 14000);
+		this.timeout = setTimeout(function () { 
+			if(self.duration) 
+				setTimeout(function() { self.close(); }, self.duration);
+			self.show();  
+		}, (time) ? time : 14000);
 	},
 	_build: function () {
 		var self = this,
@@ -89,7 +93,7 @@ var _reminder = {
 	}
 };
 
-var newReminder = function(node, cb, type, delay) {
+var newReminder = function(node, cb, type, delay, duration) {
 	var reminder = reminders[reminders.length] = Object.create(_reminder);
 	reminder.container = document.createElement('div');
 	reminder.timeout = null;
@@ -98,6 +102,7 @@ var newReminder = function(node, cb, type, delay) {
 	reminder.type = type;
 	reminder.delay = delay;
 	reminder.node = node;
+	reminder.duration = duration;
 	reminder.zIndex = 100;
 	reminder._build();
 	return reminder;

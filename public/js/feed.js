@@ -1041,7 +1041,7 @@ onload = function ()
 	
 	analytics.identify(currentUser.id);
 	
-	if(!isAuthorized() && !DEBUG)
+	if(!isAuthorized())
 		startOrientation();
 };
 

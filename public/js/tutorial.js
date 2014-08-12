@@ -1,14 +1,33 @@
 var startOrientation = function () {
-	newReminder(swipeReminder.call(), null, "Swipe", 13000);
+	// newReminder(swipeReminder.call(), null, "Swipe", 13000);
+	newReminder(welcomeMessage.call(), function() {
+		newReminder(downvoteMessage.call(), null, "downvote", 3000, 3000);
+	}, "Test", 3000, 3000);
 };
 
 var welcomeMessage = function() {
-	var node = document.createElement('div');
-	node.innerHTML = "<p>Hi I'm tagSurf<br><br><br> Follow me to the best stuff on the Internet</p>";
+	var node = document.createElement('div'),
+		upvotebtn = new Image();
+	upvotebtn.src = "http://assets.tagsurf.co/img/upvote_btn.png";
+	upvotebtn.id = "reminder-vote-button-right";
+	node.innerHTML = "<p>Upvote it and we'll<br/>show it to more people<br/>who surf this tag</p>";
 	node.className = "centered really-big";
+	node.appendChild(upvotebtn);
 	node.style.marginTop = "20%";
 	return node;
-}
+};
+
+var downvoteMessage = function() {
+	var node = document.createElement('div'),
+		downvotebtn = new Image();
+	downvotebtn.src = "http://assets.tagsurf.co/img/downvote_btn.png";
+	downvotebtn.id = "reminder-vote-button-left";
+	node.innerHTML = "<p>Downvote it and we'll...<br/><br/>well you get the point</p>";
+	node.className = "centered really-big";
+	node.appendChild(downvotebtn);
+	node.style.marginTop = "20%";
+	return node;
+};
 
 var swipeReminder = function () {
 	var leftImage = new Image(), rightImage = new Image(),
