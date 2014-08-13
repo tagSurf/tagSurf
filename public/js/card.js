@@ -136,7 +136,9 @@ var _card = {
 	show: function (cbs) {
 		this.cbs = cbs;
 		this.build();
-		document.getElementById('slider').appendChild(this.wrapper);
+		slideContainer.appendChild(this.wrapper);
+		if (slideContainer.childNodes.length == 1)
+			this.currentize();
 	},
 	currentize: function() {
 		setCurrentMedia(this, forgetReminders);
