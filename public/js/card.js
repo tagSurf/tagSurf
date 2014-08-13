@@ -350,15 +350,21 @@ var _card = {
 		}
 		gesture.unlisten(this.wrapper);
 	},
-	vote: function (voteFlag, tag) {
-		if((typeof voteFlag !== "undefined") && tag) {
+	vote: function (voteFlag, tag, voteAlternative) {
+		if (this.data.type == "content") {
+			this.data.total_votes += 1;
+			this.data[voteDir + "_votes"] += 1;
+			this.data.user_stats.voted = true;
+			this.data.user_stats.tag_voted = tag;
 			this.data.user_stats.vote = voteFlag;
-			this.data.user_stats.tag = tag;
-			this.remove();
-			castVote(this);
+			if (!isAuthorized())
+				shareVotes.push(this.data);
+			else if (voteAlternative)
+				voteAlternative();
+			else
+				castVote(this);
 		}
-		else if(DEBUG)
-			console.log("Error: insufficient vote data provided");
+		this.remove();
 	},
 	remove: function () {
 		document.getElementById('slider').removeChild(this.wrapper);

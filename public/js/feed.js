@@ -224,7 +224,7 @@ onload = function ()
 			function () {
 				swipedCard.animating = false;
 				gesture.unlisten(swipedCard.parentNode);
-				slideContainer.removeChild(swipedCard.parentNode);
+//				slideContainer.removeChild(swipedCard.parentNode);
 
 //				buildCard(0);
 // something else here -- deck.promote() or something?
@@ -242,19 +242,7 @@ onload = function ()
 				slideContainer.children[0].style.zIndex = 2;
 				if (slideContainer.children[1])
 					slideContainer.children[1].style.zIndex = 1;
-				if (swipedCard.type == "content") {
-					swipedCard.total_votes += 1;
-					swipedCard[voteDir + "_votes"] += 1;
-					swipedCard.user_stats.voted = true;
-					swipedCard.user_stats.tag_voted = current_tag;
-					swipedCard.user_stats.vote = voteDir;
-					if (!isAuthorized())
-						shareVotes.push(swipedCard);
-					else if (voteAlternative)
-						voteAlternative();
-					else
-						castVote(swipedCard);
-				}
+				swipedCard.vote(voteDir, current_tag, voteAlternative);
 				preloadCards();
 			},
 			"swiping",
@@ -723,6 +711,7 @@ if (isAuthorized())
 	var shareVotes = sessionStorage.getItem("shareVotes");
 	if (shareVotes) {
 		sessionStorage.removeItem("shareVotes");
+		// TODO: batch these
 		JSON.parse(shareVotes).forEach(castVote);
 	}
 }
