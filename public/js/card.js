@@ -24,10 +24,9 @@ var _card = {
 			return;
 		}
 	},
-	build: function(zIndex, cbs) {
+	build: function(zIndex) {
 		this.zIndex = (typeof zIndex === 'undefined') ? (deck_proto.constants.stack_depth - 1) : zIndex;
 		this.wavesOn();
-		this.cbs = cbs;
 		if (this.type == "content")
 			this._buildContentCard();
 		else if (this.type == "login") 
@@ -133,7 +132,8 @@ var _card = {
 		this.surfsUp = true;
 		this.wrapper.appendChild(this.contents);
 	},
-	show: function () {
+	show: function (cbs) {
+		this.cbs = cbs;
 		this.build();
 		document.getElementById('slider').appendChild(this.wrapper);
 	},
