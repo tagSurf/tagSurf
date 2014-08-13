@@ -1,18 +1,20 @@
 var _card = {
 	_init: function(data) {
 		if (data) {
+			var self = this;
 			this.data = data;
 			this.id = data.id;
 			this.animated = data.image.animated;
 			this.type = data.type;
+			this.source = data.source;
 			data.tags_v2.forEach(function(tag) { 
 				if(tag == "trending") {
 					return;
 				}
 				else if(tag != "")
-					this.tags.push(tag); 
+					self.tags.push(tag); 
 				if(DEBUG)
-					console.log(this.id + " tags = ", this.tags);
+					console.log(self.id + " tags = ", self.tags);
 			});
 		}
 		else {
@@ -38,7 +40,8 @@ var _card = {
 	_buildContentCard: function() {
 		var	imageContainer, iconLine, textContainer, picTags, fullscreenButton, truncatedTitle, 
 			container = this.contents,
-			cardTemplate = "<div class='image-container expand-animation'><img src= ></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (c.source || ((card.data.tags[0] == null || card.data.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + card.data.tags[0] + "</span></div><div class='text-container'><p>" + card.data.caption + "</p></div><div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
+			card = this,
+			cardTemplate = "<div class='image-container expand-animation'><img src= ></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (card.source || ((card.data.tags[0] == null || card.data.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + card.data.tags[0] + "</span></div><div class='text-container'><p>" + card.data.caption + "</p></div><div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
 		container.className = 'card-container';
 		container.id = "";
 		container.innerHTML = cardTemplate;
@@ -69,7 +72,7 @@ var _card = {
 		});
 		this.tags.forEach(function(tagobj) {
 			var t = Object.keys(tagobj)[0];
-			t && this.tagCard(t, picTags);
+			t && card.tagCard(t, picTags);
 		});
 		setStartState(this.contents);
 		this._initCardGestures();
@@ -259,9 +262,9 @@ var _card = {
 			} else
 				autocomplete.tapTag(tag, "autocomplete", false);
 		});
-		card.contents.children[3].appendChild(p);
-		if(card.built)
-			card._formatContents();
+		self.contents.children[3].appendChild(p);
+		if(self.built)
+			self._formatContents();
 	},
 	rmTag: function(tag) {
 	  var tobjs = this.tags;
@@ -345,7 +348,7 @@ var _card = {
 		});
 	},
 	_forgetGestures: function() {
-		var imageContainer = card.getElementsByClassName('image-container')[0];
+		var imageContainer = this.wrapper.getElementsByClassName('image-container')[0];
 		if (imageContainer) {
 			gesture.unlisten(imageContainer);
 		}
@@ -371,7 +374,7 @@ var newCard = function (data) {
 	var card = Object.create(_card);
 	card.id = null;
 	card.data = null;
-	card.tags = {};
+	card.tags = [];
 	card.cb = null;
 	card.eb = null;
 	card.zIndex = null;
@@ -379,6 +382,7 @@ var newCard = function (data) {
 	card.animated = null;
 	card.type = null;
 	card.isContent = null;
+	card.source = null;
 	card.compressing = null;
 	card.expanded = null;
 	card.expandTimeout = null;
