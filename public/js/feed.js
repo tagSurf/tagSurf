@@ -249,7 +249,7 @@ onload = function ()
 				if (slideContainer.children[1])
 					slideContainer.children[1].style.zIndex = 1;
 				swipedCard.vote(voteDir, current_tag, voteAlternative);
-				preloadCards();
+				current_deck.preloadCards();
 			},
 			"swiping",
 			"translate3d(" + translateQuantity + "px," + verticalQuantity
@@ -678,7 +678,10 @@ onload = function ()
 	var firstPopulate = function() {
 		var feed, id, pair, h = document.location.hash.slice(1),
 			cbs = {
-				build: throbber.off,
+				build: function() {
+					throbber.off();
+					scrollContainer.style.opacity = 1;
+				},
 				start: setStartState,
 				swipe: swipeCallback,
 				drag: dragCallback,
