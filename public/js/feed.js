@@ -546,11 +546,11 @@ onload = function ()
 			return;
 		}
 		return true;
-	};*/
+	};
 	var firstCardLoaded = false;
 
 	// TODO: change this stuff
-	/*if (slider == card) {
+	if (slider == card) {
 		slider.setSource();
 		firstCardLoaded = false;
 		imageContainer.firstChild.onload = function() {
