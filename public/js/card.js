@@ -393,6 +393,7 @@ var newCard = function (data) {
 	card.supering = false;
 	card.verticaling = false;
 	card.animating = false;
+	card.x = card.y = 0;
 	card.wrapper = document.createElement('div');
 	card.contents = document.createElement('div');
 	card._init(data);
