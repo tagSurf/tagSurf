@@ -23,13 +23,10 @@ var _card = {
 			return;
 		}
 	},
-	build: function(zIndex, cb, eb) {
+	build: function(zIndex, cbs) {
 		this.zIndex = (typeof zIndex === 'undefined') ? (deck.constants.stack_depth - 1) : zIndex;
 		this.setThrobber();
-		if(cb)
-			this.cb = cb;
-		if(eb)
-			this.eb = eb;
+		this.cbs = cbs;
 		if (this.type == "content")
 			this._buildContentCard();
 		else if (this.type == "login") 
@@ -74,7 +71,7 @@ var _card = {
 			var t = Object.keys(tagobj)[0];
 			t && card.tagCard(t, picTags);
 		});
-		setStartState(this.contents);
+		this.cbs.start(this.contents);
 		this._initCardGestures();
 		this.isContent = true;
 		this.setSource(); 
@@ -92,7 +89,7 @@ var _card = {
 		container.className = 'card-container login-card';
 		container.id = "";
 		container.innerHTML = cardTemplate;
-		setStartState(this.contents);
+		this.cbs.start(this.contents);
 		this._initCardGestures();
 		this._initLoginInputs();
 		initDocLinks();
@@ -189,11 +186,11 @@ var _card = {
 		this.contents.children[0].firstChild.src = image.get(self.data, window.innerWidth - 40).url;
 		this.contents.children[0].firstChild.onload = function() {
 			self.throbbing = false;
-			self.cb && self.cb();
+			self.cbs.build && self.cbs.build();
 		};
 		this.contents.children[0].firstChild.onerror = function() {
 			self.setThrobber();
-			self.eb && self.eb();
+			self.cbs.error && self.cbs.error();
 		};
 	},
 	expand: function (expandCb) {
@@ -318,7 +315,7 @@ var _card = {
 		var imageContainer = this.getElementsByClassName('image-container')[0];
 		if (!imageContainer)
 			return;
-		gesture.listen("tap", imageContainer, tapCallback);
+		gesture.listen("tap", imageContainer, this.cbs.tap);
 		gesture.listen("down", imageContainer, returnTrue);
 		gesture.listen("up", imageContainer, returnTrue);
 		gesture.listen("drag", imageContainer, returnTrue);
@@ -326,12 +323,11 @@ var _card = {
 			function() { upCallback(true); });
 	},
 	_initCardGestures: function () {
-		gesture.listen("swipe", this.wrapper, swipeCallback);
-		gesture.listen("up", this.wrapper, upCallback);
-		//gesture.listen("tap", this.wrapper, tapCallback);
-		gesture.listen("drag", this.wrapper, dragCallback);
-		gesture.listen("hold", this.wrapper, holdCallback);
-		gesture.listen("down", shit.wrapper, downCallback);
+		gesture.listen("swipe", this.wrapper, this.cbs.swipe);
+		gesture.listen("up", this.wrapper, this.cbs.up);
+		gesture.listen("drag", this.wrapper, this.cbs.drag);
+		gesture.listen("hold", this.wrapper, this.cbs.hold);
+		gesture.listen("down", shit.wrapper, this.cbs.down);
 		this._initImageGestures();
 	},
 	_initLoginInputs: function () {
@@ -354,7 +350,7 @@ var _card = {
 		}
 		gesture.unlisten(this.wrapper);
 	},
-	vote: function (voteFlag, tag, rb) {
+	vote: function (voteFlag, tag) {
 		if((typeof voteFlag !== "undefined") && tag) {
 			this.data.user_stats.vote = voteFlag;
 			this.data.user_stats.tag = tag;
@@ -363,7 +359,6 @@ var _card = {
 		}
 		else if(DEBUG)
 			console.log("Error: insufficient vote data provided");
-		rb && rb();
 	},
 	remove: function () {
 		document.getElementById('slider').removeChild(this.wrapper);
