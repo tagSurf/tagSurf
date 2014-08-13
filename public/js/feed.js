@@ -662,7 +662,17 @@ onload = function ()
 	});
 	
 	var firstPopulate = function() {
-		var feed, id, pair, h = document.location.hash.slice(1);
+		var feed, id, pair, h = document.location.hash.slice(1),
+			cbs = {
+				build: throbber.off,
+				start: setStartState,
+				swipe: swipeCallback,
+				drag: dragCallback,
+				hold: holdCallback,
+				tap: tapCallback,
+				up: upCallback,
+				down: downCallback
+			};
 		if (h.indexOf('~') != -1) {
 			pair = h.split("~");
 			current_tag = feed = pair[0];
@@ -679,10 +689,10 @@ onload = function ()
 					up: upCallback,
 					down: downCallback
 				});
-				newDeck(current_tag, firstCard);
+				newDeck(current_tag, firstCard, cbs);
 			});
 		} else
-			newDeck(current_tag); 
+			newDeck(current_tag, null, cbs);
 	};
 
 	firstPopulate();

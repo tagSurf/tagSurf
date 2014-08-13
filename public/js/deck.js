@@ -10,7 +10,7 @@ var _deck = {
 		else {
 			slideContainer.innerHTML = "";
 			for (var i = 0; i < this.constants.stack_depth; i++)
-				(i < this.cards.length) && this.cards[i].build(zIndex--);
+				(i < this.cards.length) && this.cards[i].build(zIndex--, this.cbs);
 		}
 	},
 	popData: function(rdata, firstCard) {
@@ -95,13 +95,14 @@ var _deck = {
 };
 
 var cardDecks = {};
-var newDeck = function(tag, firstCard){
+var newDeck = function(tag, firstCard, cbs){
 	var deck = cardDecks[tag];
 	if (deck) {
 		deck.purge();
 		return deck;
 	}
 	deck = cardDecks[tag] = Object.create(_deck);
+	deck.cbs = cbs;
 	deck.tag = tag;
 	deck.cardIndex = 0;
 	deck.topCard = null;
