@@ -64,8 +64,7 @@ onload = function ()
 		scroll: scrollCallback
 	});
 
-	var data, buffer_minimum = 5, stack_depth = 3, known_keys = {},
-		staticHash = document.getElementById("static-hash"),
+	var staticHash = document.getElementById("static-hash"),
 		staticTrending = document.getElementById("static-trending");
 
 	// autocomplete stuff
@@ -76,7 +75,6 @@ onload = function ()
 				shareSwap = true;
 				current_tag = tagName;
 				current_deck = getDeck(current_tag);
-				known_keys = {};
 				current_deck.build(null, insertCurrent ? topCard() : null);
 				analytics.track('Search for Tag', {
 					tag: tagName
@@ -249,7 +247,7 @@ onload = function ()
 				if (slideContainer.children[1])
 					slideContainer.children[1].style.zIndex = 1;
 				swipedCard.vote(voteDir, current_tag, voteAlternative);
-				current_deck.preloadCards();
+				current_deck.refresh();
 			},
 			"swiping",
 			"translate3d(" + translateQuantity + "px," + verticalQuantity
@@ -509,7 +507,7 @@ onload = function ()
 		}
 		slider.setExpandTimeout();
 	};
-	var dataThrobTest = function ()
+/*	var dataThrobTest = function ()
 	{
 		var c_wrapper, c_container, msg, img;
 		if (slideContainer.firstChild && slideContainer.firstChild.throbbing) {
@@ -544,7 +542,7 @@ onload = function ()
 			return;
 		}
 		return true;
-	};
+	};*/
 	var firstCardLoaded = false;
 
 	// TODO: change this stuff
@@ -581,7 +579,7 @@ onload = function ()
 		}
 	};
 
-	var buildCard = function (zIndex)
+/*	var buildCard = function (zIndex)
 	{
 		if (!dataThrobTest())
 			return;
@@ -601,7 +599,7 @@ onload = function ()
 			buildCard(zIndex - 1);
 		else if (getOrientation() == "landscape" && window.innerHeight < 700)
 			topCard().expand(scrollCallback);
-	};
+	};*/
 	var downCallback = function ()
 	{
 		if (modal.zoom.zoomed) return;
@@ -668,11 +666,8 @@ onload = function ()
 	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	setResizeCb(function() {
 		slideContainer.innerHTML = "";
-		cardIndex = Math.max(0, cardIndex - 3);
-		if (data) {
-			buildCard(2);
-			topCard().expand(scrollCallback);
-		}
+		current_deck.deal();
+		topCard().expand(scrollCallback);
 	});
 	
 	var firstPopulate = function() {
