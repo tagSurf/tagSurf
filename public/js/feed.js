@@ -140,9 +140,9 @@ onload = function ()
 		var slider = topCard();
 		if (slider.isContent) {
 			var thumbContainer = slider.contents.lastChild.previousSibling;
-			slider.wrapper.style['border-color'] = "#353535";
-			slider.wrapper.style['background-color'] = "#353535";
-			slider.wrapper.lastChild.display = "none";
+			slider.contents.style['border-color'] = "#353535";
+			slider.contents.style['background-color'] = "#353535";
+			slider.contents.lastChild.display = "none";
 
 			if (thumbContainer.firstChild.style.opacity > 0)
 			{
@@ -153,13 +153,7 @@ onload = function ()
 				thumbContainer.lastChild.style.opacity = 0;
 			}
 		}
-		if (slider.x == 0)
-		{
-			revertStateReset(slider);
-		}
-		else
-		{
-			revertStateReset(slider);
+		if (slider.x != 0) {
 			trans(slider.wrapper,
 				function (event) {
 					slider.animating = false;
@@ -169,6 +163,7 @@ onload = function ()
 			);
 			slider.animating = true;
 		}
+		revertStateReset(slider);
 	};
 	var upCallback = function (androidSoftUp)
 	{
@@ -431,10 +426,10 @@ onload = function ()
 					if (slider.isContent) {
 						if ( slider.x > 0)
 						{
-							slider.wrapper.style['border-color'] = "green";
+							slider.contents.style['border-color'] = "green";
 							if (slider.supering == true)
 							{
-								slider.wrapper.style['background-color'] = 'green';
+								slider.contents.style['background-color'] = 'green';
 							}
 							if (thumbContainer.firstChild.style.opacity == 0)
 							{
@@ -447,10 +442,10 @@ onload = function ()
 						}
 						else if ( slider.x < 0)
 						{
-							slider.wrapper.style['border-color'] = "#C90016";
+							slider.contents.style['border-color'] = "#C90016";
 							if (slider.supering == true)
 							{
-								slider.wrapper.style['background-color'] = '#C90016';
+								slider.contents.style['background-color'] = '#C90016';
 							}
 							if (thumbContainer.lastChild.style.opacity == 0)
 							{
