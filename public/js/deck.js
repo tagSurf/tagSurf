@@ -99,6 +99,16 @@ var deck_proto = {
 	},
 	remove: function(c) {
 		this.cards.splice(this.cards.indexOf(c), 1);
+		if (this.cards.length < this.constants.buffer_minimum)
+			this.build(true);
+	},
+	refresh: function() {
+		this.preloadCards();
+		this.deal();
+	},
+	deal: function() {
+		while(cardbox.childNodes.length < this.constants.stack_depth)
+			this.cards[cardbox.childNodes.length].show();
 	}
 };
 
