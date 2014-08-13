@@ -222,11 +222,6 @@ onload = function ()
 			function () {
 				swipedCard.animating = false;
 				gesture.unlisten(swipedCard.wrapper.parentNode);
-//				slideContainer.removeChild(swipedCard.parentNode);
-
-//				buildCard(0);
-// something else here -- deck.promote() or something?
-
 				if (scrollContainer.scrollTop)
 					scrollContainer.scrollTop = 0;
 				if (scrollContainer.yDrag)
@@ -248,8 +243,6 @@ onload = function ()
 				+ "px,0) rotate(" + rotateQuantity + "deg)");
 		slider.animating = true;
 		forgetReminders();
-		pushTags();
-		setSlider();
 	};
 	var keyInertia = 0, 
 		scrollDirection,
@@ -666,8 +659,6 @@ onload = function ()
 				referrer: 'http://beta.tagsurf.co/'
 		});
 	});
-	// LOOK AT THIS BEFORE BRANCH IS FINAL
-	//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	setResizeCb(function() {
 		slideContainer.innerHTML = "";
 		current_deck.deal();

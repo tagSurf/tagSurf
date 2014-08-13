@@ -135,12 +135,16 @@ var _card = {
 	},
 	show: function (cbs) {
 		this.cbs = cbs;
+		if(this.surfsUp) {
+			slideContainer.appendChild(this.wrapper);
+			return;
+		}
 		this.build();
 		slideContainer.appendChild(this.wrapper);
 		if (slideContainer.childNodes.length == 1)
-			this.currentize();
+			this.setTop();
 	},
-	currentize: function() {
+	setTop: function() {
 		setCurrentMedia(this, forgetReminders);
 		if (this.expandTimeout) {
 			this.clearExpandTimeout();
@@ -271,7 +275,6 @@ var _card = {
 		gesture.listen("tap", p, function() {
 			if (isMine) {
 				self.rmTag(tag);
-				// self.contents.children[3].removeChild(p);
 			} else
 				autocomplete.tapTag(tag, "autocomplete", false);
 		});
@@ -319,7 +322,6 @@ var _card = {
 		}
 		else
 		{
-
 			truncatedTitle = this.data.caption.trunc(25);
 			truncatedTitle = "<p>" + truncatedTitle + "</p>";
 			textContainer.innerHTML = truncatedTitle;
@@ -380,12 +382,18 @@ var _card = {
 			else
 				castVote(this);
 		}
+		this.pushTags();
 		this.remove();
 	},
 	remove: function () {
 		this._forgetGestures();
 		slideContainer.removeChild(this.wrapper);
-		removeCard(this);
+		removeFromDecks(this);
+	},
+	pushTags: function () {
+	for (i = 0; i < card.tags.length ; ++i)
+		if(this._isMine(Object.keys(this.tags[i])[0]))
+		    xhr("/api/media/" + currentMedia.id + "/tags/" + Object.keys(this.tags[i])[0], "POST", null, null);
 	}
 };
 

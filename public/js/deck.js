@@ -105,7 +105,7 @@ var deck_proto = {
 		this.preloadCards();
 		this.deal();
 		var topCard = this.topCard();
-		topCard && topCard.currentize();
+		topCard && topCard.setTop();
 	},
 	deal: function() {
 		var cardbox = document.getElementById("slider");
@@ -135,7 +135,7 @@ var getDeck = function(tag, firstCard, cbs){
 	deck.build(false, firstCard);
 	return deck;
 };
-var removeCard = function(c) {
+var removeFromDecks = function(c) {
 	for (var tag in cardDecks)
 		cardDecks[tag].remove(c);
 };

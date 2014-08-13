@@ -130,6 +130,7 @@ var slideAddBar = function(noback) {
     addBarSlid ? modal.halfOn(slideAddBar) : modal.backOff();
 };
 
+// TODO: Kill this in gallery and use card.pushTags() instead 
 // tagging stuff
 var newtags = [];
 var pushTags = function() {
