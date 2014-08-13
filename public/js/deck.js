@@ -71,7 +71,7 @@ var _deck = {
 				self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata));
 			else {
 				self.cards = [];
-				self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata, firstCard).slice(self.constant.stack_depth));
+				self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata, firstCard).slice(self.constants.stack_depth));
 				self.refreshCards(self.constants.stack_depth - 1);
 			}
 		}, function(response, status) {
