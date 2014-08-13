@@ -368,6 +368,7 @@ var _card = {
 	},
 	remove: function () {
 		document.getElementById('slider').removeChild(this.wrapper);
+		removeCard(this);
 	}
 };
 

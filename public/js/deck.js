@@ -3,10 +3,14 @@ var _deck = {
 		buffer_minimum: 5,
 		stack_depth: 3
 	},
-	refreshCards: function(zIndex, startIndex) {
-		this.cardIndex = (typeof startIndex === "undefined") ? 0 : startIndex;
-		if (this.cards.length == 1 && this.topCard.throbbing)
-			this.topCard.setFailMsg();
+	known_keys: {},
+	topCard: function() {
+		return this.cards[0];
+	},
+	refreshCards: function(zIndex) {
+		var topCard = this.cards[0];
+		if (this.cards.length == 1 && topCard && topCard.throbbing)
+			topCard.setFailMsg();
 		else {
 			slideContainer.innerHTML = "";
 			for (var i = 0; i < this.constants.stack_depth; i++)
@@ -91,6 +95,10 @@ var _deck = {
 	},
 	purge: function() {
 		// get rid of old cards, etc
+		//   - use known_keys
+	},
+	remove: function(c) {
+		this.cards.splice(this.cards.indexOf(c), 1);
 	}
 };
 
@@ -104,13 +112,14 @@ var newDeck = function(tag, firstCard, cbs){
 	deck = cardDecks[tag] = Object.create(_deck);
 	deck.cbs = cbs;
 	deck.tag = tag;
-	deck.cardIndex = 0;
-	deck.topCard = null;
 	deck.shareSwap = false;
 	deck.shareOffset = 0;
-	deck.known_keys = {};
 	deck.cards = [];
 	deck.cardsToLoad = [];
 	deck.build(false, firstCard);
 	return deck;
+};
+var removeCard = function(c) {
+	for (var tag in cardDecks)
+		cardDecks[tag].remove(c);
 };
