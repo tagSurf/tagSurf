@@ -25,7 +25,7 @@ var _card = {
 		}
 	},
 	build: function(zIndex, cbs) {
-		this.zIndex = (typeof zIndex === 'undefined') ? (deck.constants.stack_depth - 1) : zIndex;
+		this.zIndex = (typeof zIndex === 'undefined') ? (deck_proto.constants.stack_depth - 1) : zIndex;
 		this.wavesOn();
 		this.cbs = cbs;
 		if (this.type == "content")
@@ -294,7 +294,7 @@ var _card = {
 			iconLine = this.contents.children[1], 
 			targetHeight = imageData ? 
 				imageData.height * (window.innerWidth - 40) / imageData.width :
-				this.firstChild.scrollHeight;
+				this.contents.firstChild.scrollHeight;
 		if (this.animated && !imageContainer.firstChild.classList.contains('translate-z'))
 		{
 			imageContainer.firstChild.classList.add('translate-z');
@@ -374,7 +374,7 @@ var _card = {
 	},
 	remove: function () {
 		this._forgetGestures();
-		document.getElementById('slider').removeChild(this.wrapper);
+		this.wrapper.parentNode.removeChild(this.wrapper);
 		removeCard(this);
 	}
 };
