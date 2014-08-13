@@ -25,8 +25,9 @@ var _card = {
 		}
 	},
 	build: function() {
-		this.zIndex = deck_proto.constants.stack_depth
-			- slideContainer.childNodes.length;
+		this.zIndex = this.wrapper.style.zIndex 
+			= deck_proto.constants.stack_depth
+				- slideContainer.childNodes.length;
 		this.wavesOn();
 		if (this.type == "content")
 			this._buildContentCard();
@@ -87,7 +88,6 @@ var _card = {
 			bottom = "<div class='wide-text'><a id='line-text-login' class='small big-lnk'>Already have an account? <b>Login here</b>.</a></div><div class='smaller block'>By signing up you agree to our <a class='bold big-lnk' id='terms-lnk'>Terms of Use</a> and <a class='bold big-lnk' id='privacy-lnk'>Privacy Policy</a>.</div>",
 			cardTemplate = top + form + bottom;
 		this.wrapper.className = 'card-wrapper';
-		this.wrapper.style.zIndex = this.zIndex;
 		container.className = 'card-container login-card';
 		// TODO: do this later with classes
 		//container.id = "";
