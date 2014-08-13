@@ -356,7 +356,7 @@ var _card = {
 	vote: function (voteFlag, tag, voteAlternative) {
 		if (this.data.type == "content") {
 			this.data.total_votes += 1;
-			this.data[voteDir + "_votes"] += 1;
+			this.data[voteFlag + "_votes"] += 1;
 			this.data.user_stats.voted = true;
 			this.data.user_stats.tag_voted = tag;
 			this.data.user_stats.vote = voteFlag;
