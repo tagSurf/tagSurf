@@ -107,6 +107,8 @@ var deck_proto = {
 	},
 	deal: function() {
 		var cardbox = document.getElementById("slider");
+		for (var i = 0; i < cardbox.childNodes.length; i++)
+			this.cards[i].promote();
 		while(cardbox.childNodes.length < this.constants.stack_depth) {
 			var c = this.cards[cardbox.childNodes.length];
 			c && c.show(this.cbs);
