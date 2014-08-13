@@ -25,7 +25,7 @@ var _card = {
 	},
 	build: function(zIndex, cbs) {
 		this.zIndex = (typeof zIndex === 'undefined') ? (deck.constants.stack_depth - 1) : zIndex;
-		this.setThrobber();
+		this.wavesOn();
 		this.cbs = cbs;
 		if (this.type == "content")
 			this._buildContentCard();
@@ -40,7 +40,8 @@ var _card = {
 			card = this,
 			cardTemplate = "<div class='image-container expand-animation'><img src= ></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (card.source || ((card.data.tags[0] == null || card.data.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + card.data.tags[0] + "</span></div><div class='text-container'><p>" + card.data.caption + "</p></div><div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
 		container.className = 'card-container';
-		container.id = "";
+// TODO: do this later with classes
+//		container.id = "";
 		container.innerHTML = cardTemplate;
 		imageContainer = container.children[0];
 		imageContainer.firstChild.src = "http://assets.tagsurf.co/img/throbber.gif";
@@ -87,7 +88,8 @@ var _card = {
 		this.wrapper.className = 'card-wrapper';
 		this.wrapper.style.zIndex = card.zIndex
 		container.className = 'card-container login-card';
-		container.id = "";
+		// TODO: do this later with classes
+		//container.id = "";
 		container.innerHTML = cardTemplate;
 		this.cbs.start(this.contents);
 		this._initCardGestures();
@@ -118,21 +120,22 @@ var _card = {
 		});
 		this.built = true;
 	},
-	setThrobber: function (zIndex) {
+	wavesOn: function (zIndex) {
 		this._forgetGestures();
 		this.wrapper.className = 'card-wrapper';
 		if(zIndex)
 			this.zIndex = this.wrapper.style.zIndex = zIndex;
 		this.contents.className = "card-container center-label";
-		this.contents.id = "End-Of-Feed";
+		// TODO: do this later with classes
+		//this.contents.id = "End-Of-Feed";
 		this.contents.innerHTML = "<div>Searching for more cards in <br>#" + current_tag + " feed...</div><img src='http://assets.tagsurf.co/img/throbber.gif'>";
-		this.throbbing = true;
+		this.surfsUp = true;
 		this.wrapper.appendChild(this.contents);
 		// TODO: probably don't add to slider yet
 		document.getElementById('slider').appendChild(this.wrapper);
 	},
 	setFailMsg: function () {
-		this.throbbing = false;
+		this.surfsUp = false;
 		var trendingBtn = document.createElement('div'),
 			orMsg = document.createElement('div'),
 			surfATagMsg = document.createElement('div'),
@@ -189,7 +192,7 @@ var _card = {
 			self.cbs.build && self.cbs.build();
 		};
 		this.contents.children[0].firstChild.onerror = function() {
-			self.setThrobber();
+			self.wavesOn();
 			self.cbs.error && self.cbs.error();
 		};
 	},
@@ -367,6 +370,7 @@ var _card = {
 		this.remove();
 	},
 	remove: function () {
+		this._forgetGestures();
 		document.getElementById('slider').removeChild(this.wrapper);
 		removeCard(this);
 	}
@@ -388,7 +392,7 @@ var newCard = function (data) {
 	card.expanded = null;
 	card.expandTimeout = null;
 	card.built = false;
-	card.throbbing = false;
+	card.surfsUp = false;
 	card.sliding = false;
 	card.supering = false;
 	card.verticaling = false;

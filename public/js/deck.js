@@ -9,7 +9,7 @@ var deck_proto = {
 	},
 	refreshCards: function(zIndex) {
 		var topCard = this.cards[0];
-		if (this.cards.length == 1 && topCard && topCard.throbbing)
+		if (this.cards.length == 1 && topCard && topCard.surfsUp)
 			topCard.setFailMsg();
 		else {
 			slideContainer.innerHTML = "";
