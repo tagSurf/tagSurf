@@ -104,6 +104,8 @@ var deck_proto = {
 	refresh: function() {
 		this.preloadCards();
 		this.deal();
+		var topCard = this.topCard();
+		topCard && topCard.currentize();
 	},
 	deal: function() {
 		var cardbox = document.getElementById("slider");
