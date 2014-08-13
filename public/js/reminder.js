@@ -1,4 +1,4 @@
-var _reminder = {
+var reminders = [], _reminder = {
 	forget: function() {
 		if(!this.timeout) 
 			return;
