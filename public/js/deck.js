@@ -1,4 +1,4 @@
-var _deck = {
+var deck_proto = {
 	constants: {
 		buffer_minimum: 5,
 		stack_depth: 3
@@ -103,13 +103,13 @@ var _deck = {
 };
 
 var cardDecks = {};
-var newDeck = function(tag, firstCard, cbs){
+var getDeck = function(tag, firstCard, cbs){
 	var deck = cardDecks[tag];
 	if (deck) {
 		deck.purge();
 		return deck;
 	}
-	deck = cardDecks[tag] = Object.create(_deck);
+	deck = cardDecks[tag] = Object.create(deck_proto);
 	deck.cbs = cbs;
 	deck.tag = tag;
 	deck.shareSwap = false;
