@@ -4,6 +4,7 @@ var _card = {
 			var self = this;
 			this.data = data;
 			this.id = data.id;
+			this.image = data.image;
 			this.animated = data.image.animated;
 			this.type = data.type;
 			this.source = data.source;
@@ -13,8 +14,8 @@ var _card = {
 				}
 				else if(tag != "")
 					self.tags.push(tag); 
-				if(DEBUG)
-					console.log(self.id + " tags = ", self.tags);
+				// if(DEBUG)
+					// console.log(self.id + " tags = ", self.tags);
 			});
 		}
 		else {
@@ -380,6 +381,7 @@ var newCard = function (data) {
 	var card = Object.create(_card);
 	card.id = null;
 	card.data = null;
+	card.image = null;
 	card.cbs = null;
 	card.tags = [];
 	card.zIndex = null;
