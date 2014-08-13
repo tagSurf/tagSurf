@@ -47,13 +47,16 @@ onload = function ()
 			}
 	 	});
 	
+	var topCard = function() {
+		return cardDecks[current_tag].topCard();
+	};
 	var scrollCallback = function(event)
 	{
 		var trueScrollTop = scrollContainer.scrollTop ? scrollContainer.scrollTop
 			: (scrollContainer.yDrag ? -scrollContainer.yDrag : 0);
-		slider.contents.style['transform-origin'] = "center " + trueScrollTop + 'px';
-		slider.contents.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
-		slider.lastChild.previousSibling.style.top = (50 + trueScrollTop) + 'px';
+		topCard().contents.style['transform-origin'] = "center " + trueScrollTop + 'px';
+		topCard().contents.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
+		topCard().lastChild.previousSibling.style.top = (50 + trueScrollTop) + 'px';
 	};
 	drag.makeDraggable(scrollContainer, {
 		constraint: "horizontal",
@@ -71,8 +74,9 @@ onload = function ()
 			if (tagName != current_tag) {
 				shareSwap = true;
 				current_tag = tagName;
+				current_deck = getDeck(current_tag);
 				known_keys = {};
-				deck.build(null, insertCurrent ? slider : null);
+				current_deck.build(null, insertCurrent ? topCard() : null);
 				analytics.track('Search for Tag', {
 					tag: tagName
 				});
@@ -115,7 +119,6 @@ onload = function ()
 			return "height: " + (window.innerHeight - 50) + "px";
 		}
 	});
-	var slider;
 	var setStartState = function (node)
 	{
 		node.x = 0;
@@ -136,10 +139,11 @@ onload = function ()
 	};
 	var revertSlider = function ()
 	{
+		var slider = topCard();
 		if (slider.isContent) {
 			var thumbContainer = slider.contents.lastChild.previousSibling;
-			slider.style['border-color'] = "#353535";
-			slider.style['background-color'] = "#353535";
+			slider.wrapper.style['border-color'] = "#353535";
+			slider.wrapper.style['background-color'] = "#353535";
 			slider.lastChild.display = "none";
 
 			if (thumbContainer.firstChild.style.opacity > 0)
@@ -171,6 +175,7 @@ onload = function ()
 	var upCallback = function (androidSoftUp)
 	{
 		if (modal.zoom.zoomed) return;
+		var slider = topCard();
 		toggleClass.apply(slider,['super-card', 'off']);
 		slider.supering = false;
 		if (slider.animating == false)
@@ -202,6 +207,7 @@ onload = function ()
 	};
 	var swipeSlider = function (direction, voteAlternative, pixelsPerSecond)
 	{
+		var slider = topCard();
 		var swipedCard = slider;
 		var translateQuantity = 600, rotateQuantity = 60,
 			verticalQuantity = 0;
@@ -303,35 +309,39 @@ onload = function ()
 			stroke.listen(direction, index, strokeCallback);
 		});
 	});
-	stroke.listen("up", "32", function(){slider.expand(scrollCallback);});
-	stroke.listen("up", "37", function(){
-			dragCallback("left", -3, -3);
-			flashVoteButton("left");
-			if (slider.id == 221281) {	
-				analytics.track("Key Swipe Login Card", {
-					direction: "left",
-					surfing: current_tag
-				});
-			}
-			else {
-				analytics.track("Key Swipe", {
-					card: slider.id,
-					direction: "left",
-					surfing: current_tag
-				});
-				analytics.page({
-					title: slider.id + " left",
-					url: 'http://beta.tagsurf.co/feed#'+current_tag,
-					path: "/feed#"+current_tag,
-					referrer: 'http://beta.tagsurf.co/'
-				});
-			}
-			swipeSlider("left");
-			// slider id will change to next card 
-			if (slider.id == 221281)
-				analytics.track("Seen Login Card");
+	stroke.listen("up", "32", function() {
+		topCard().expand(scrollCallback);
 	});
-	stroke.listen("up", "39", function(){
+	stroke.listen("up", "37", function() {
+		var slider = topCard();
+		dragCallback("left", -3, -3);
+		flashVoteButton("left");
+		if (slider.id == 221281) {	
+			analytics.track("Key Swipe Login Card", {
+				direction: "left",
+				surfing: current_tag
+			});
+		}
+		else {
+			analytics.track("Key Swipe", {
+				card: slider.id,
+				direction: "left",
+				surfing: current_tag
+			});
+			analytics.page({
+				title: slider.id + " left",
+				url: 'http://beta.tagsurf.co/feed#'+current_tag,
+				path: "/feed#"+current_tag,
+				referrer: 'http://beta.tagsurf.co/'
+			});
+		}
+		swipeSlider("left");
+		// slider id will change to next card 
+		if (slider.id == 221281)
+			analytics.track("Seen Login Card");
+	});
+	stroke.listen("up", "39", function() {
+		var slider = topCard();
 		dragCallback("right", 3, 3);
 		flashVoteButton("right");
 		if (slider.id == 221281) {
@@ -363,6 +373,7 @@ onload = function ()
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
 		if (modal.zoom.zoomed) return;
+		var slider = topCard();
 		if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
 			gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
 		else if (!slider.animating && (direction == "left" || direction == "right")) {
@@ -393,6 +404,7 @@ onload = function ()
 	var dragCallback = function (direction, distance, dx, dy)
 	{
 		if (modal.zoom.zoomed) return;
+		var slider = topCard();
 		if (slider.animating == false)
 		{
 			if (slider.expanded == true && 
@@ -415,16 +427,16 @@ onload = function ()
 			{
 				if (slider.verticaling == false)
 				{
-					var thumbContainer = slider.lastChild.previousSibling;
+					var thumbContainer = slider.wrapper.lastChild.previousSibling;
 					slider.sliding = true;
 					slider.x += dx;
 					if (slider.isContent) {
 						if ( slider.x > 0)
 						{
-							slider.style['border-color'] = "green";
+							slider.wrapper.style['border-color'] = "green";
 							if (slider.supering == true)
 							{
-								slider.style['background-color'] = 'green';
+								slider.wrapper.style['background-color'] = 'green';
 							}
 							if (thumbContainer.firstChild.style.opacity == 0)
 							{
@@ -437,10 +449,10 @@ onload = function ()
 						}
 						else if ( slider.x < 0)
 						{
-							slider.style['border-color'] = "#C90016";
+							slider.wrapper.style['border-color'] = "#C90016";
 							if (slider.supering == true)
 							{
-								slider.style['background-color'] = '#C90016';
+								slider.wrapper.style['background-color'] = '#C90016';
 							}
 							if (thumbContainer.lastChild.style.opacity == 0)
 							{
@@ -452,7 +464,7 @@ onload = function ()
 							}
 						}
 					}
-					slider.style['-webkit-transform'] = 
+					slider.wrapper.style['-webkit-transform'] = 
 						"translate3d(" + ( slider.x * translationScale) + "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
 				}
 			}
@@ -501,7 +513,7 @@ onload = function ()
 		var c_wrapper, c_container, msg, img;
 		if (slideContainer.firstChild && slideContainer.firstChild.throbbing) {
 			setSlider();
-			return deck.build();
+			return current_deck.build();
 		}
 		if (slideContainer.lastChild && slideContainer.lastChild.throbbing) {
 			setSlider();
@@ -527,7 +539,7 @@ onload = function ()
 			throbber.off();
 			scrollContainer.style.opacity = 1;
 			if (slideContainer.childNodes.length == 1)
-				deck.build();
+				current_deck.build();
 			return;
 		}
 		return true;
@@ -583,15 +595,16 @@ onload = function ()
 
 		++cardIndex;
 		if (data.length == cardIndex + buffer_minimum)
-			deck.build(true);
+			current_deck.build(true);
 		if (zIndex)
 			buildCard(zIndex - 1);
 		else if (getOrientation() == "landscape" && window.innerHeight < 700)
-			slider.expand(scrollCallback);
+			topCard().expand(scrollCallback);
 	};
 	var downCallback = function ()
 	{
 		if (modal.zoom.zoomed) return;
+		var slider = topCard();
 		if (slider.contents.classList.contains('login-card'))
 		{
 			blurLoginInputs();
@@ -617,7 +630,7 @@ onload = function ()
 		topCard.tags.push(objwrap);
 		topCard.tagCard(tag);
 		analytics.track('Add Tag from Feed', {
-			card: slider.id,
+			card: topCard().id,
 			surfing: current_tag,
 			tag_added: tag
 		});
@@ -628,7 +641,8 @@ onload = function ()
 			messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
 			return;
 		}
-		slider.style['border-color'] = "green";
+		var slider = topCard();
+		slider.wrapper.style['border-color'] = "green";
 		slider.lastChild.previousSibling.firstChild.style.opacity = 0.8;
 		if (modal.zoom.zoomed)
 			modal.callZoom(1);
@@ -656,7 +670,7 @@ onload = function ()
 		cardIndex = Math.max(0, cardIndex - 3);
 		if (data) {
 			buildCard(2);
-			slider.expand(scrollCallback);
+			topCard().expand(scrollCallback);
 		}
 	});
 	
@@ -678,20 +692,11 @@ onload = function ()
 			id = pair[1];
 			xhr("/api/card/" + id, null, function(d) {
 				var firstCard = newCard(d);
-				firstCard.build(deck.constants.stack_depth - 1, {
-					build: throbber.off,
-					start: setStartState,
-					swipe: swipeCallback,
-					drag: dragCallback,
-					hold: holdCallback,
-					tap: tapCallback,
-					up: upCallback,
-					down: downCallback
-				});
-				newDeck(current_tag, firstCard, cbs);
+				firstCard.build(deck_proto.constants.stack_depth - 1, cbs);
+				current_deck = getDeck(current_tag, firstCard, cbs);
 			});
 		} else
-			newDeck(current_tag, null, cbs);
+			current_deck = getDeck(current_tag, null, cbs);
 	};
 
 	firstPopulate();
