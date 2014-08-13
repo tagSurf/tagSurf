@@ -107,8 +107,10 @@ var deck_proto = {
 		this.deal();
 	},
 	deal: function() {
-		while(cardbox.childNodes.length < this.constants.stack_depth)
-			this.cards[cardbox.childNodes.length].show();
+		while(cardbox.childNodes.length < this.constants.stack_depth) {
+			var c = this.cards[cardbox.childNodes.length];
+			c && c.show();
+		}
 	}
 };
 
