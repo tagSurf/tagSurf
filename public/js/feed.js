@@ -125,7 +125,6 @@ onload = function ()
 		node.animating = false;
 		node.compressing = true;
 		node.expanded = false;
-		node.card = data[cardIndex];
 	};
 	var revertStateReset = function (node)
 	{

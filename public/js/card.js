@@ -285,7 +285,7 @@ var _card = {
 			truncatedTitle,
 			picTags = this.contents.children[3], 
 			textContainer = this.contents.children[2],
-			iconLine = this.children[1], 
+			iconLine = this.contents.children[1], 
 			targetHeight = imageData ? 
 				imageData.height * (window.innerWidth - 40) / imageData.width :
 				this.firstChild.scrollHeight;
@@ -312,7 +312,7 @@ var _card = {
 		}
 	},
 	_initImageGestures: function () {
-		var imageContainer = this.getElementsByClassName('image-container')[0];
+		var imageContainer = this.wrapper.getElementsByClassName('image-container')[0];
 		if (!imageContainer)
 			return;
 		gesture.listen("tap", imageContainer, this.cbs.tap);
@@ -327,7 +327,7 @@ var _card = {
 		gesture.listen("up", this.wrapper, this.cbs.up);
 		gesture.listen("drag", this.wrapper, this.cbs.drag);
 		gesture.listen("hold", this.wrapper, this.cbs.hold);
-		gesture.listen("down", shit.wrapper, this.cbs.down);
+		gesture.listen("down", this.wrapper, this.cbs.down);
 		this._initImageGestures();
 	},
 	_initLoginInputs: function () {
