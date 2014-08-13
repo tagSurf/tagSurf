@@ -545,30 +545,30 @@ onload = function ()
 	};
 	var firstCardLoaded = false;
 
-				// TODO: change this stuff
-				if (slider == card) {
-					slider.setSource();
-					firstCardLoaded = false;
-					imageContainer.firstChild.onload = function() {
-						firstCardLoaded = true;
-						if(slider.parentNode.nextSibling.firstChild)
-							slider.parentNode.nextSibling.firstChild.setSource();
-						if(slider.parentNode.nextSibling.nextSibling.firstChild)
-							slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
-						throbber.off();
-						scrollContainer.style.opacity = 1;
-						analytics.track('Finished Pageload');
-						preloadCards();
-					};
-				}
-				imageContainer.firstChild.onerror = function() {
-					analytics.track('Card Load Error', {card: slider.id});
-					slideContainer.removeChild(slider.parentNode.nextSibling);
-					slideContainer.removeChild(slider.parentNode.nextSibling);
-					slideContainer.removeChild(card.parentNode);
-					cardIndex -= 2;
-					refreshCards(null, 2, cardIndex);
-				};
+	// TODO: change this stuff
+	/*if (slider == card) {
+		slider.setSource();
+		firstCardLoaded = false;
+		imageContainer.firstChild.onload = function() {
+			firstCardLoaded = true;
+			if(slider.parentNode.nextSibling.firstChild)
+				slider.parentNode.nextSibling.firstChild.setSource();
+			if(slider.parentNode.nextSibling.nextSibling.firstChild)
+				slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
+			throbber.off();
+			scrollContainer.style.opacity = 1;
+			analytics.track('Finished Pageload');
+			preloadCards();
+		};
+	}
+	imageContainer.firstChild.onerror = function() {
+		analytics.track('Card Load Error', {card: slider.id});
+		slideContainer.removeChild(slider.parentNode.nextSibling);
+		slideContainer.removeChild(slider.parentNode.nextSibling);
+		slideContainer.removeChild(card.parentNode);
+		cardIndex -= 2;
+		refreshCards(null, 2, cardIndex);
+	};*/
 	var blurLoginInputs = function ()
 	{
 		var listInputs = document.forms[0].getElementsByClassName('su-input'),
