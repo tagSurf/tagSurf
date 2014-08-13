@@ -138,6 +138,13 @@ var _card = {
 		this.build();
 		document.getElementById('slider').appendChild(this.wrapper);
 	},
+	currentize: function() {
+		setCurrentMedia(this, forgetReminders);
+		if (this.expandTimeout) {
+			this.clearExpandTimeout();
+		}
+		this.setExpandTimeout();
+	},
 	setFailMsg: function () {
 		this.surfsUp = false;
 		var trendingBtn = document.createElement('div'),
