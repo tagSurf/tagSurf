@@ -679,13 +679,11 @@ onload = function ()
 					up: upCallback,
 					down: downCallback
 				});
-
-				cardDecks[cardDecks.length] = newDeck(current_tag, firstCard);
+				newDeck(current_tag, firstCard);
 			});
-		}
-		else if(cardDecks.length < 1)
-			cardDecks[cardDecks.length] = newDeck(current_tag); 
-	}
+		} else
+			newDeck(current_tag); 
+	};
 
 	firstPopulate();
 	buildVoteButtons(dragCallback, swipeSlider);

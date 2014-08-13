@@ -88,11 +88,20 @@ var _deck = {
 		this.cards = this.cards.filter(function(card) {
 			return card.type != "tutorial";
 		});
+	},
+	purge: function() {
+		// get rid of old cards, etc
 	}
 };
 
+var cardDecks = {};
 var newDeck = function(tag, firstCard){
-	deck = Object.create(_deck);
+	var deck = cardDecks[tag];
+	if (deck) {
+		deck.purge();
+		return deck;
+	}
+	deck = cardDecks[tag] = Object.create(_deck);
 	deck.tag = tag;
 	deck.cardIndex = 0;
 	deck.topCard = null;
