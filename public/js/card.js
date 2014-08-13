@@ -132,7 +132,9 @@ var _card = {
 		this.contents.innerHTML = "<div>Searching for more cards in <br>#" + current_tag + " feed...</div><img src='http://assets.tagsurf.co/img/throbber.gif'>";
 		this.surfsUp = true;
 		this.wrapper.appendChild(this.contents);
-		// TODO: probably don't add to slider yet
+	},
+	show: function () {
+		this.build();
 		document.getElementById('slider').appendChild(this.wrapper);
 	},
 	setFailMsg: function () {
