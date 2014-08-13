@@ -13,10 +13,8 @@ var deck_proto = {
 			topCard.setFailMsg();
 		else {
 			slideContainer.innerHTML = "";
-			for (var i = 0; i < this.constants.stack_depth; i++)
-				(i < this.cards.length) && this.cards[i].build(zIndex--);
+			this.deal();
 		}
-		this.deal();
 	},
 	popData: function(rdata, firstCard) {
 		var i, starters = [], others = [], preloads = [];
