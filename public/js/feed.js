@@ -53,10 +53,11 @@ onload = function ()
 	var scrollCallback = function(event)
 	{
 		var trueScrollTop = scrollContainer.scrollTop ? scrollContainer.scrollTop
-			: (scrollContainer.yDrag ? -scrollContainer.yDrag : 0);
-		topCard().contents.style['transform-origin'] = "center " + trueScrollTop + 'px';
-		topCard().contents.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
-		topCard().lastChild.previousSibling.style.top = (50 + trueScrollTop) + 'px';
+			: (scrollContainer.yDrag ? -scrollContainer.yDrag : 0),
+			slider = topCard();
+		slider.contents.style['transform-origin'] = "center " + trueScrollTop + 'px';
+		slider.contents.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
+		slider.contents.lastChild.previousSibling.style.top = (50 + trueScrollTop) + 'px';
 	};
 	drag.makeDraggable(scrollContainer, {
 		constraint: "horizontal",
@@ -225,10 +226,10 @@ onload = function ()
 			rotateQuantity = -rotateQuantity;
 			verticalQuantity = -verticalQuantity;
 		}
-		trans(swipedCard,
+		trans(swipedCard.wrapper,
 			function () {
 				swipedCard.animating = false;
-				gesture.unlisten(swipedCard.parentNode);
+				gesture.unlisten(swipedCard.wrapper.parentNode);
 //				slideContainer.removeChild(swipedCard.parentNode);
 
 //				buildCard(0);
@@ -427,7 +428,7 @@ onload = function ()
 			{
 				if (slider.verticaling == false)
 				{
-					var thumbContainer = slider.wrapper.lastChild.previousSibling;
+					var thumbContainer = slider.contents.lastChild.previousSibling;
 					slider.sliding = true;
 					slider.x += dx;
 					if (slider.isContent) {
@@ -493,8 +494,8 @@ onload = function ()
 		}
 	};
 	var setSlider = function() {
-		slider = current_card = deck[cardIndex];
-		setCurrentMedia(slider, reminder.forget, function() { //panic btn callback
+		var slider = topCard();
+		setCurrentMedia(slider, forgetReminders, function() { //panic btn callback
 			swipeSlider("left");
 			forgetReminders();
 			analytics.track('Report Inappropriate Content', {
@@ -503,10 +504,10 @@ onload = function ()
 			});
 			messageBox("Thanks for the Report", "An admin will review that card before anyone sees it again.", "Ok", null, true);
 		});
-		if (current_card.expandTimeout) {
-			current_card.clearExpandTimeout();
+		if (slider.expandTimeout) {
+			slider.clearExpandTimeout();
 		}
-		current_card.setExpandTimeout();
+		slider.setExpandTimeout();
 	};
 	var dataThrobTest = function ()
 	{
