@@ -535,7 +535,7 @@ var starCallback, setStarCallback = function(cb) {
 var addCallback, setAddCallback = function(cb) {
   addCallback = cb;
 };
-var currentMedia, checkShare = function(shareCb, panicCb) {
+var currentMedia, panicCb, checkShare = function(shareCb) {
   var d = currentMedia;
   if (d && d.type == "content") {
     share.on(d, shareCb);
@@ -555,9 +555,9 @@ var currentMedia, checkShare = function(shareCb, panicCb) {
     if (addBarSlid)
       slideAddBar();
   }
-}, setCurrentMedia = function(d, shareCb, panicCb) {
+}, setCurrentMedia = function(d, shareCb) {
   currentMedia = d;
-  checkShare(shareCb, panicCb);
+  checkShare(shareCb);
 };
 var _addCss = function(css) {
     var n = document.createElement("style");

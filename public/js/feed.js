@@ -485,7 +485,17 @@ onload = function ()
 			toggleClass.apply(slider, ['super-card', 'on']);
 		}
 	};
-	var setSlider = function() {
+	// varred in util...
+	panicCb = function() { //panic btn callback
+		swipeSlider("left");
+		forgetReminders();
+		analytics.track('Report Inappropriate Content', {
+			card: panic.id,
+			surfing: current_tag
+		});
+		messageBox("Thanks for the Report", "An admin will review that card before anyone sees it again.", "Ok", null, true);
+	};
+/*	var setSlider = function() {
 		var slider = topCard();
 		setCurrentMedia(slider, forgetReminders, function() { //panic btn callback
 			swipeSlider("left");
@@ -501,7 +511,7 @@ onload = function ()
 		}
 		slider.setExpandTimeout();
 	};
-/*	var dataThrobTest = function ()
+	var dataThrobTest = function ()
 	{
 		var c_wrapper, c_container, msg, img;
 		if (slideContainer.firstChild && slideContainer.firstChild.throbbing) {
