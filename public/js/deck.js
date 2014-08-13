@@ -14,8 +14,9 @@ var deck_proto = {
 		else {
 			slideContainer.innerHTML = "";
 			for (var i = 0; i < this.constants.stack_depth; i++)
-				(i < this.cards.length) && this.cards[i].build(zIndex--, this.cbs);
+				(i < this.cards.length) && this.cards[i].build(zIndex--);
 		}
+		this.deal();
 	},
 	popData: function(rdata, firstCard) {
 		var i, starters = [], others = [], preloads = [];
@@ -107,9 +108,10 @@ var deck_proto = {
 		this.deal();
 	},
 	deal: function() {
+		var cardbox = document.getElementById("slider");
 		while(cardbox.childNodes.length < this.constants.stack_depth) {
 			var c = this.cards[cardbox.childNodes.length];
-			c && c.show();
+			c && c.show(this.cbs);
 		}
 	}
 };
