@@ -3,7 +3,6 @@ var castVote = function(card) {
 		+ "/tag/" + card.data.user_stats.tag_voted, "POST", null, null);
 };
 
-
 onload = function ()
 {
 	analytics.track('Begin Pageload');
@@ -143,7 +142,7 @@ onload = function ()
 			var thumbContainer = slider.contents.lastChild.previousSibling;
 			slider.wrapper.style['border-color'] = "#353535";
 			slider.wrapper.style['background-color'] = "#353535";
-			slider.lastChild.display = "none";
+			slider.wrapper.lastChild.display = "none";
 
 			if (thumbContainer.firstChild.style.opacity > 0)
 			{
@@ -161,7 +160,7 @@ onload = function ()
 		else
 		{
 			revertStateReset(slider);
-			trans(slider,
+			trans(slider.wrapper,
 				function (event) {
 					slider.animating = false;
 				},
@@ -691,7 +690,7 @@ onload = function ()
 			id = pair[1];
 			xhr("/api/card/" + id, null, function(d) {
 				var firstCard = newCard(d);
-				firstCard.build(deck_proto.constants.stack_depth - 1, cbs);
+				firstCard.show(cbs);
 				current_deck = getDeck(current_tag, firstCard, cbs);
 			});
 		} else
