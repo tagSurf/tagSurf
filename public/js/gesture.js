@@ -9,7 +9,7 @@ var gesture = {
 			maxDP: 1000
 		},
 		drag: {
-			minDP: 600,
+			minDP: 0,
 			maxDP: 1000
 		},
 		tap: {
