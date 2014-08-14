@@ -662,7 +662,7 @@ onload = function ()
 	setResizeCb(function() {
 		slideContainer.innerHTML = "";
 		current_deck.deal();
-		topCard().expand(scrollCallback);
+		topCard().expand();
 	});
 	
 	var firstPopulate = function() {
@@ -683,8 +683,14 @@ onload = function ()
 			};
 		if (h.indexOf('~') != -1) {
 			pair = h.split("~");
-			current_tag = feed = pair[0];
 			id = pair[1];
+			xhr("/api/card/" + id, null, function(d) {
+				var firstCard = newCard(d);
+				firstCard.show(cbs);
+				current_deck = getDeck(current_tag, firstCard, cbs);
+			});
+		} else if (document.location.href.indexOf('share') != -1) {
+			id = document.location.pathname.split("/")[3];
 			xhr("/api/card/" + id, null, function(d) {
 				var firstCard = newCard(d);
 				firstCard.show(cbs);
