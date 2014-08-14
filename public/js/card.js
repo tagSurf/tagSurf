@@ -143,6 +143,8 @@ var _card = {
 		slideContainer.appendChild(this.wrapper);
 		if (slideContainer.childNodes.length == 1)
 			this.setTop();
+		if (getOrientation() == "landscape" && window.innerHeight < 700)
+			this.expand();
 	},
 	setTop: function() {
 		setCurrentMedia(this, forgetReminders);
@@ -213,7 +215,7 @@ var _card = {
 			self.cbs.error && self.cbs.error();
 		};
 	},
-	expand: function (expandCb) {
+	expand: function () {
 		if (this.isContent && this.compressing)
 		{
 			this.compressing = false;
@@ -225,8 +227,7 @@ var _card = {
 				this.contents.children[3].style.paddingBottom="60px";
 			toggleClass.call(this.contents.children[3], "hidden");
 			toggleClass.call(this.contents.children[4], "hidden");
-			// scrollCallback(); MUST PASS FROM FEED AS CALLBACK
-			expandCb && expandCb();
+			this.cbs.expand && this.cbs.expand();
 		}
 	},
 	promote: function (zIndex) {

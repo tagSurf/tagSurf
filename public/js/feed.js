@@ -674,6 +674,7 @@ onload = function ()
 				},
 				start: setStartState,
 				swipe: swipeCallback,
+				expand: scrollCallback,
 				drag: dragCallback,
 				hold: holdCallback,
 				tap: tapCallback,
