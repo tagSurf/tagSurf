@@ -1,21 +1,18 @@
 html,
-body
-{
+body {
 	background-color: white;
 	color: black;
 	overflow: hidden;
+	opacity: 1;
 }
-
 .toplogo {
 	width: 255px;
 	display: block;
 	margin: 10px auto;
 }
-
 .scroller {
 	overflow-y: scroll;
 }
-
 .content {
 	position: absolute;
 	top: 40px;
@@ -25,56 +22,43 @@ body
 	text-align: justify;
 	overflow-y: scroll;
 }
-
 .content-adjust{
   bottom: 116px;
 }
-
 .content div {
 	width: 85%;
 	padding: 5px 0px;
 	margin-left: auto;
 	margin-right: auto;
 }
-
 .content ul {
 	width: 85%;
 	margin-left: auto;
 	margin-right: auto;
 	-webkit-padding-start: 15px;
 }
-
 .content ol {
 	width: 85%;
 	margin-left: auto;
 	margin-right: auto;
 	-webkit-padding-start: 15px;
 }
-
 .abcs {
 	list-style-type: lower-alpha;
 }
-
-.
-
 .midpad {
 	padding: 10px 50px;
 	text-align: center;
 }
-
-.tslogo
-{
+.tslogo {
 	margin-top: 10%;
 }
-
-.ac-text-container
-{
+.ac-text-container {
 	font-size: 122%;
 	color: #2f2f2f;
 	width: 90%;
 }
-#ac-submit-btn
-{
+#ac-submit-btn {
 	position: relative;
 	top: 6px;
 	letter-spacing: 2px;
@@ -89,28 +73,7 @@ body
 	box-shadow: none !important;
 	-webkit-appearance: none;
 }
-#beta_code_input
-{
-	font-family: 'Raleway', 'sans-serif';
-	font-size: 80%;
-	position: relative;
-	height: 40px;
-	width: 50%;
-	outline-width: 0;
-	left: 20%;
-	padding-left: 9%;
-	line-height: 20px;
-	border: solid 1px lightgray;
-	background-color: white;
-	border-radius: 40px;
-	-webkit-border-radius: 40px;
-	-webkit-appearance: none;
-	float: left;
-	top: 2px;
-	left: 2px;
-}
-.ac-submit-container
-{
+.ac-submit-container {
 	height: 68px;
 	background-color: #1dafec;
 	border-radius: 40px;
@@ -118,14 +81,12 @@ body
 	width: 85%;
 	border: solid 12px white;
 }
-
 .bottom {
 	width: 100%;
 	position: absolute;
 	bottom: 12px;
 	overflow: hidden;
 }
-
 .button {
 	text-align: center;
 	white-space: nowrap;
@@ -136,7 +97,6 @@ body
 	border-radius: 30px;
 	cursor: pointer;
 }
-
 input[type='submit'].button {
   font-size: 100%;
   font-weight:200 !important;
@@ -150,29 +110,24 @@ input[type='submit'].button {
   cursor: pointer;
   border: none;
 }
-
 .forward {
 	float: right;
 	margin-right: -30px;
 	padding-right: 40px;
 	width: 180px;
 }
-
 .back {
 	margin-left: -30px;
 	padding-left: 40px;
 	width: 180px;
-  margin-top:3px;
+	margin-top:3px;
 }
-
-
 a.forward {
 	float: right;
 	margin-right: -30px;
 	padding-right: 40px;
 	width: 180px;
 }
-
 a.back {
   float:left;
 	margin-left: -30px;
@@ -185,43 +140,35 @@ a.back {
 	box-shadow: none;
 	background: white;
 }
-
 .blackout {
 	top: 0px;
 }
-
-.horizontallogo
-{
+.horizontallogo {
 	margin-top: 15px;
 	position: relative;
 	width: 90%;
 }
-.welcome-text-container
-{
+.welcome-text-container {
 	width: 255px;
 	font-family: 'Raleway', 'sans-serif';
 }
-.welcome-top-title
-{
+.welcome-top-title {
 	margin-top: 15px;
 	font-size: 22px;
 }
-.welcome-description-text
-{
+.welcome-description-text {
 	text-align: left;
 	margin: 10px auto;
 	font-size: 13px;
 }
-.welcome-title-text
-{
+.welcome-title-text {
 	text-align: left;
 	margin: 10px auto;
 	font-size: 20px;
 	color: #1dafec;
 	clear: both;
 }
-#welcome-submit-btn
-{
+#welcome-submit-btn {
 	font-size: 16px;
 	font-family: 'Raleway', 'sans-serif';
 	color: white;
@@ -240,15 +187,12 @@ a.back {
 	box-shadow: none !important;
 	-webkit-appearance: none;
 }
-
-.sulogo
-{
+.sulogo {
 	margin-top: 20px;
 	width: 58%;
 }
-
 .su-logo-desktop {
-  background-image: url('/img/ts_logo_stacked_gray.png');
+  background-image: url('http://assets.tagsurf.co/img/ts_logo_stacked_gray.png');
   display:block;
   margin-top: 20px;
   width:210px;
@@ -257,71 +201,56 @@ a.back {
   margin-right:auto; 
   margin-left:auto; 
 }
-
-.su-user-email
-{
+.su-user-email {
 	margin-top: 12px;
 	margin-bottom: 13px;
 	font-size: 21px;
 }
-.su-container
-{
+.su-container {
 	font-family: 'Raleway', 'sans-serif';
 	color: black;
 }
-
-.su-helper-txt{
+.su-helper-txt {
   font-size: 12px;
   color: #1dafec; 
   margin-bottom: 4px;
 }
-
-.su-helper-link{
+.su-helper-link {
   font-size: 12px;
   color: #1dafec; 
   margin-bottom: 4px;
 }
-
-.disclaimer{
+.disclaimer {
   display:block;
   width: 220px;
   margin:0 auto;
   padding-bottom: 15px;
   text-align:center;
 }
-
-.disclaimer > a{
+.disclaimer > a {
   font-weight:500;
   color:#272727;
 }
-
-.disclaimer-link{
+.disclaimer-link {
 	font-weight:500;
 	color:#272727;
 }
-
 .focused {
 	border-color: #48a4df;
 }
-
-.top-margin{
+.top-margin {
   margin-top:10px; 
 }
-
-.input-margin{
+.input-margin {
   margin: 10px auto 5px;
 }
-
-#get-email-input{
+#get-email-input {
   margin: 0px; 
 }
-
-.input-width{
+.input-width {
   width: 217px;
 }
-
-.tos-title{
+.tos-title {
   font-size: 120%;
   padding: 5px 10px 10px 15px;
 }
-

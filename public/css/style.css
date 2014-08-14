@@ -3,41 +3,34 @@
 	-webkit-overflow-scrolling: touch;
 	-webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
 }
-
 html,
-body
-{
+body {
 	padding: 0;
 	margin: 0;
 	background-color: #404041;
 	color: white;
 	font-weight: 200;
 	-webkit-user-select: none;  /* Chrome all / Safari all */
-  	-moz-user-select: none;     /* Firefox all */
+	-moz-user-select: none;     /* Firefox all */
 	-ms-user-select: none;      /* IE 10+ */
-	
-	/* This was causing problems clipping popup modal windows */
-	/*overflow: hidden;*/
+	overflow: hidden;
+	opacity: 0;
+	-webkit-transition: opacity 666ms ease-in-out;
 }
-
 html, input[type="submit"] {
 	font-family: 'Raleway', sans-serif;
 	font-weight: 200;
 }
-
 a, img, input[type="submit"], .pointer {
 	cursor: pointer;
 }
-
 a {
 	color: black;
 	text-decoration: none;
 }
-
 ::-webkit-scrollbar { 
     display: none; 
 }
-
 .nowrap {
 	white-space: nowrap;
 }
@@ -50,107 +43,87 @@ a {
 .alert-success, .hidden {
 	display: none !important;
 }
-.hider
-{
+.hider {
 	visibility: hidden;
 }
-
 .tcell {
 	display: table-cell;
 }
-
 .delNode {
 	border-left: 1px solid white;
 }
-
+.block {
+	display: block;
+}
 .centered {
 	text-align: center;
 }
-
-.float-left{
+.float-left {
   float:left;
 }
-
-.float-right{
+.float-right {
   float:right;
 }
-
 .smallpadded {
 	padding: 3px 5px;
 }
-
 .midsize {
 	font-size: 11pt;
 	font-weight: 300;
 }
-
 .halfwidth {
 	width: 50%;
 }
-
 .padded {
 	padding: 10px;
 }
-
 .bigpadded {
 	padding: 25px;
 }
-
 .nopad {
 	padding: 0px !important;
 }
-
 .round {
 	border-radius: 5px;
 }
-
-.twelve{
+.twelve {
   font-size: 12px;
 }
-
 .smaller {
 	font-size: 55%;
 }
-
 .small {
 	font-size: 80%;
 }
-
-.normal{
+.normal {
   font-size: 100%;
 }
-
 .big {
 	font-size: 120%;
 }
-
 .bigger {
 	font-size: 140%;
 }
-
 .biggest {
 	font-size: 160%;
 }
 .really-big {
 	font-size: 240%;
 }
-
 .bold {
 	font-weight: bold;
 }
-
 .blue {
 	color: #00aeef;
 }
-
 .light-gray {
 	color: #989898;
 }
 
+/*===== Pic Tags Stuff =====*/
 .pictags {
 	text-align: center;
 }
-
 .pictags span {
 	display: inline-block;
 	background: #00aeef;
@@ -160,7 +133,6 @@ a {
 	cursor: pointer;
 	font-size: 80%;
 }
-
 .pictagcell {
 	display: inline-block;
 	background: #00aeef;
@@ -169,6 +141,7 @@ a {
 	cursor: pointer;
 }
 
+/*===== Modal Backing Stuff =====*/
 .blackout {
 	pointer-events: none;
 	z-index: 3;
@@ -180,17 +153,14 @@ a {
 	background-color: rgba(0, 0, 0, 0);
 	-webkit-transition: background-color 666ms ease-in-out;
 }
-
 .blackfade {
 	pointer-events: auto;
 	background-color: rgba(0, 0, 0, 1);
 }
-
 .halffade {
 	pointer-events: auto;
 	background-color: rgba(0, 0, 0, 0.7);
 }
-
 .modal {
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -208,11 +178,37 @@ a {
 	-webkit-overflow-scrolling: auto;
 }
 
+/*======== Modal Close Button Stuff =========*/
+.modal-close-button {
+	width: 40px;
+}
+#options-close-button {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
+#share-close-button {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+#panic-close-button { 
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+}
+#gallery-close-button {
+    -webkit-transition: opacity 250ms;
+    transition: opacity 250ms;
+	position: absolute;
+	bottom: 20px;
+	left: 20px;
+	z-index: 15;
+}
 .modalslide {
 	-webkit-transform: translate3d(0, 0, 0) !important;
 	-webkit-overflow-scrolling: touch;
 }
-
 .disabled {
 	z-index: -5 !important;
 	opacity: 0;
@@ -220,17 +216,16 @@ a {
 	pointer-events: none;
 }
 
+/*========= Login Page Stuff =========*/
 .tslogo {
   display: block;
-  background-image: url('/img/ts_logo_stacked_gray.png');
+  background-image: url('http://assets.tagsurf.co/img/ts_logo_stacked_gray.png');
   background-size: cover;
   width:210px;
   height:241px;
   margin:20px auto;
 }
-
-.input-border-container
-{
+.input-border-container {
 	width: 218px;
 	height: 37px;
 	border: solid 1px black;
@@ -240,12 +235,9 @@ a {
 	border-radius: 50px / 50px;
 	-webkit-background-clip: padding-box;
 }
-
-.input-checkbox{
+.input-checkbox {
   margin:10px 0 0 0;
 }
-
-
 .ts-input {
 	width: 215px;
 	height: 34px;
@@ -264,8 +256,9 @@ a {
 	transition: border-color 200ms;
 	-webkit-background-clip: padding-box;
 }
-.throbber
-{
+
+/*======== Throbber Stuff =========*/
+.throbber {
 	height: 50px;
 	pointer-events: none;
 	opacity: 0;
@@ -274,27 +267,27 @@ a {
 	-webkit-transition: opacity 500ms;
 	transition: opacity 500ms;
 }
-.throbber-bottom
-{
+.throbber-bottom {
 	bottom: 5px;
 	height: 30px;
 }
-.raw_wrapper
-{
+
+/*======== Zoom Modal Stuff =======*/
+.raw-wrapper {
   display: inline;
   top: 0;
   position: absolute;
   width:100%; 
 }
-.raw_wrapper img
-{
+.raw-wrapper img {
   pointer-events: none;
 }
-.zoom_wrapper
-{
+.zoom-wrapper {
   top: 50px;
   overflow: scroll;
   position: absolute;
+  display: none;
+  z-index: 11;
   width:100%; 
   opacity: 0;
   padding-top:20px;
@@ -305,57 +298,103 @@ a {
 }
 .basic-zoom {
   z-index: 11;
+  top: 10px;
+  left: 0px;
+  width: 100%;
   position: absolute;
-  top: 100px;
   pointer-events: none;
 }
 
-#autocomplete
-{
-  top: 90px;
-  left: 0px;
-  right: 0px;
-  width: 200px;
-  border-radius: 8px;
-  color: black;
-}
-#add_tag_autocomplete {
+/*======== Autocomplete Stuff =========*/
+#add-tag-autocomplete {
   top: 43px;
   left: 20px;
-  padding: 0px 7px;
   border-radius: 4px;
   border: 1px solid #00aeef;
   color: #00aeef;
-  font-weight: bold;
+  font-weight: 500;
 }
 .autocomplete {
   z-index: 4;
   position: absolute;
-  margin: auto;
   height: 0px;
   background: white;
   text-align: left;
   overflow-y: scroll;
   -webkit-transition: height 300ms ease-out;
 }
-.autocomplete div
-{
-  padding: 5px;
+.autocomplete div div {
+  padding: 5px 15px;
 }
-.autocomplete-open
-{
-  height: 150px !important;
+.autocomplete div div:active {
+  color: white;
+  background-color: #00aeef;
 }
-.hardware-acceleration, .translate-z
-{
+.autocomplete-open {
+  overflow-x: hidden;
+}
+.hardware-acceleration, .translate-z {
    -webkit-backface-visibility: hidden;
    -webkit-perspective: 1000;
    backface-visibility: hidden;
    -webkit-transform-style: flat;
    perspective: 1000;
 }
-#share-button
-{
+
+/*============ Panic Button Stuff ===========*/
+#panic-button {
+  -webkit-transition: opacity 250ms;
+  transition: opacity 250ms;
+  opacity: 0;
+  z-index: 15;
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  width: 50px;
+  padding: 10px;
+  pointer-events: none;
+}
+#panic-icon {
+  width: 30px;
+}
+.panic-active {
+  opacity: 1 !important;
+  pointer-events: initial !important;
+}
+#get-away-button {
+	max-width: 75% !important;
+	font-size: 160%;
+}
+
+/*=========== Vote Buttons Stuff ============*/
+.vote-button {
+  -webkit-transition: opacity 250ms;
+  transition: opacity 250ms;
+  z-index: 15;
+  width: 80px;
+  padding: 10px;
+}
+#vote-button-left {
+  position: absolute;
+  bottom: 5px;
+  left: 50px;
+}
+#vote-button-right {
+  position: absolute;
+  bottom: 5px;
+  right: 50px;
+}
+#downvote-icon {
+	width: 100%;
+	margin: auto;
+}
+#upvote-icon {
+	width: 100%;
+	margin: auto;
+}
+
+/*============== Share Button Stuff ============*/
+#share-button {
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
   opacity: 0;
@@ -367,17 +406,14 @@ a {
   padding: 10px;
   pointer-events: none;
 }
-#share-icon
-{
+#share-icon {
   width: 30px;
 }
-.share-active
-{
+.share-active {
   opacity: 1 !important;
   pointer-events: initial !important;
 }
-.translate-z
-{
+.translate-z {
   -webkit-backface-visibility: hidden;
   -webkit-perspective: 1000;
   backface-visibility: hidden;
@@ -386,26 +422,22 @@ a {
   -moz-transform: translateZ(0);
   transform: translateZ(0);
 }
-.inverted
-{
+.inverted {
         -webkit-transform: scaleX(-1);
 	        transform: scaleX(-1);
 
 }
-.ts-active-button
-{
+.ts-active-button {
   color: #404041;
   background-color: #00719C !important;
 }
-.opaque
-{
+.opaque {
   opacity: 1 !important;
 }
 
-/* unauth prompt content */
-.close_button_container,
-.touch_expander
-{
+/*========= Message Box Stuff ============*/
+.close-button-container,
+.touch-expander {
   float: right;
   clear: both;
   width: 30px;
@@ -413,45 +445,42 @@ a {
   padding: 5px;
   z-index: 1;
 }
-.x_close_button
-{
+.x-close-button {
   width: 20px;
 }
-.prompt_title
-{
+.prompt-title {
   color: #00aeef;
   font-size: 20px;
   clear: both;
   margin: 0;
   position: relative;
 }
-.prompt_message
-{
+.prompt-message {
   display: inline-block;
   color: black;
   text-align: center;
   font-size: 16px;
 }
-.prompt_login_button
-{
-  display: inline-block;
+.msgbox-btn {
+  display: block;
   text-align: center;
   background: #00aeef;
   border-radius: 5px;
   padding: 5px;
+  margin-bottom: 10px;
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 35%;
   cursor: pointer;
 }
-.prompt_container
-{
+.prompt-container {
 	text-align: center;
 }
-.modal_prompt > div
-{
+.modal-prompt > div {
 	display: block;
 	text-align: center;
 }
-.modal_prompt
-{
+.modal-prompt {
   opacity: 0;
   margin: 0 auto;
   text-align: center;
@@ -465,14 +494,15 @@ a {
   border-radius: 10px;
   -webkit-transition: opacity 250ms ease-in-out;
 }
+
+/*========== User Auth Form Stuff =============*/
 .bigplace::-webkit-input-placeholder {
 	font-size: 100%;
 	line-height: 25px;
 	height: 20px;
 	font-weight: 200;
 }
-#su-submit-btn
-{
+#su-submit-btn {
 	font-size: 20px;
 	font-family: 'Raleway', 'sans-serif';
 	font-weight:200;
@@ -496,8 +526,7 @@ a {
 	margin-bottom: 10px !important;
 	margin-top: 10px;
 }
-.su-input
-{
+.su-input {
 	font-family: 'Raleway', 'sans-serif';
 	width: 203px;
 	height: 31px;
@@ -515,8 +544,7 @@ a {
 	transition: border-color 200ms;
 	-webkit-background-clip: padding-box;
 }
-.su-input-container
-{
+.su-input-container {
 	width: 225px;
 	height: 37px;
 	margin-top: 4px;
@@ -527,50 +555,42 @@ a {
 	border-radius: 50px / 50px;
 	-webkit-background-clip: padding-box;
 }
-
 .light-bottom-margin{
   margin-bottom: 4px; 
 }
 
-.reminder_close
-{
+/*===== Close Button for Swipe Reminder =====*/
+.reminder-close {
   position: absolute;
   width: 40px;
   bottom: 15px;
   right: 15px;
 }
-.big-lnk
-{
+.big-lnk {
 	padding: 15px 0;
 }
-
-.wide-text
-{
+.wide-text {
 	display: inline-block;
 }
-.share_link_icon
-{
+.share-link-icon {
 	width: 33%;
 	margin: 0 20px;
 }
-.share_heading_margin
-{
-	margin: 60px 0;
+.share-heading-margin {
+	margin: 40px 0;
 }
-.center-label
-{
+.center-label {
   text-align: center;
-  padding-top: 30%;
+  padding-top: 15%;
 }
-.tos-line{
+.tos-line {
 	position: fixed;
 	bottom: 10px;
 	left: 0;
 	right: 0;
 	font-size: 80%;
 }
-.content 
-{
+.content {
   position: absolute;
   top: 40px;
   bottom: 70px;
@@ -585,29 +605,25 @@ a {
   margin-left: auto;
   margin-right: auto;
 }
-
 .content ul {
   width: 85%;
   margin-left: auto;
   margin-right: auto;
   -webkit-padding-start: 15px;
 }
-
 .content ol {
   width: 85%;
   margin-left: auto;
   margin-right: auto;
   -webkit-padding-start: 15px;
 }
-.bottom 
-{
+.bottom {
   width: 100%;
   position: absolute;
   bottom: 12px;
   overflow: hidden;
 }
-.button 
-{
+.button {
   text-align: center;
   white-space: nowrap;
   font-weight: 200;
@@ -618,53 +634,239 @@ a {
   cursor: pointer;
   overflow: hidden;
 }
-.forward 
-{
+.forward {
   float: right;
   margin-right: -30px;
   padding-right: 40px;
   width: 180px;
 }
-.tos-title
-{
+.tos-title {
   font-size: 120%;
   padding: 5px 10px 10px 15px;
 }
+#url-container {
+	margin-top: 40px;
+}
+#share-url {
+	font-size: 120%;
+	line-height: 40px;
+	padding: 0 10px;
+	margin: 0;
+	background: #2f2f2f;
+	border: 1px solid #00aeef;
+	border-radius: 0;
+	overflow-x: scroll;
+	width: 80%;
+	vertical-align: bottom;
+}
 
+/*===== Options Menu Stuff ======*/
+.options-table {
+	width: 260px;
+}
+.options-title {
+	font-size: 200%;
+	position: relative;
+	top: -25px;
+}
+.options-key-text {
+	font-size: 180%;
+	margin-right: 15px;
+}
+.options-key-desc {
+	padding-top: 5px;
+}
+
+/*==== Options Switch (As seen on proto.io) ====*/
+.onoffswitch-container {
+	position: relative;
+	width: 90px;
+}
+.onoffswitch-container, .options-key-text {
+	margin-top: 20px;
+}
+.onoffswitch {
+	position: relative; width: 90px;
+	-webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.onoffswitch-checkbox {
+	display: none;
+}
+.onoffswitch-label,
+.onoffswitch-cover {
+	display: block; overflow: hidden; cursor: pointer;
+	border: 2px solid #666666; border-radius: 30px;
+}
+.onoffswitch-cover {
+	display: none;
+	position: absolute;
+	z-index: 2;
+	background-color: rgba(0,0,0,.7);
+	border: 2px solid rgba(0,0,0,.7);
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+.onoffswitch-inner {
+	display: block; width: 200%; margin-left: -100%;
+	-moz-transition: margin 0.3s ease-in 0s; -webkit-transition: margin 0.3s ease-in 0s;
+	-o-transition: margin 0.3s ease-in 0s; transition: margin 0.3s ease-in 0s;
+}
+.onoffswitch-inner:before, .onoffswitch-inner:after {
+	display: block; float: left; width: 50%; height: 30px; padding: 0; line-height: 30px;
+	font-size: 16px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+	-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;
+	border-radius: 30px;
+	box-shadow: 0px 15px 0px rgba(0,0,0,0.08) inset;
+}
+.onoffswitch-inner:before {
+	content: "ON";
+	padding-right: 15px;
+	background-color: #6BB2ED; color: #FFFFFF;
+	border-radius: 30px 0 0 30px;
+}
+.onoffswitch-inner:after {
+	content: "OFF";
+	padding-right: 15px;
+	background-color: #FFFFFF; color: #666666;
+	text-align: right;
+	border-radius: 0 30px 30px 0;
+}
+.onoffswitch-switch {
+	display: block; width: 34px; margin: 0px;
+	background: #FFFFFF;
+	border: 2px solid #666666; border-radius: 30px;
+	position: absolute; top: 0; bottom: 0; right: 56px;
+	-moz-transition: all 0.3s ease-in 0s; -webkit-transition: all 0.3s ease-in 0s;
+	-o-transition: all 0.3s ease-in 0s; transition: all 0.3s ease-in 0s; 
+	background-image: -moz-linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%); 
+	background-image: -webkit-linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%); 
+	background-image: -o-linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%); 
+	background-image: linear-gradient(center top, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0) 80%);
+	box-shadow: 0 1px 1px white inset;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-inner {
+	    margin-left: 0;
+}
+.onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
+	    right: 0px; 
+}
+
+/*===== This targets tablets and desktops ========*/
 @media only screen and (min-width: 700px){
-	#add_tag_autocomplete {
+	#add-tag-autocomplete {
 	  top: 47px;
 	  left: 32%;
-	  padding: 0px 7px;
 	  font-size: 140%;
 	}
+	.center-label {
+		padding-top: 13%;
+	}
+	
+	/*===== Share Button =====*/
 	#share-button {
 	  bottom: 10px;
 	  right: 10px;
-  	width: 80px;
+	  width: 80px;
 	}
 	#share-icon {
 		width: 50px;
 	}
-	.share_link_icon
-	{
+	.share-link-icon {
 		padding: 0 50px;
 	}
-	.zoom_wrapper {
+	
+	/*===== Panic Button =====*/
+	#panic-button {
+	  bottom: 10px;
+	  left: 15px;
+	  width: 80px;
+	}
+	#panic-icon {
+		width: 50px;
+	}
+	#get-away-button {
+		max-width: 50% !important;
+		font-size: 280%;
+		margin-top: 22%;
+	}
+	.zoom-wrapper {
 		top: 40px;
 	} 
-	.modal{
-		margin: auto;
-		width: 75%;
-	}
 	.midsize {
 		font-size: 14pt;
 	}
-  .options-msg {
-    font-size: 140%;
-  }
-  .tos-line {
-	  font-size: 120%;
-  }
+	
+	/*===== Options Menu =====*/
+	.options-table {
+		width: 30%;
+	}
+	.options-key-text {
+		text-align: right;
+		margin-right: 30px;
+		font-size: 180% !important;
+	}
+	.options-msg {
+		font-size: 140%;
+	}
+	.options-title {
+		font-size: 220%;
+		top: -85px;
+	}
+	.tos-line {
+		 font-size: 120%;
+	}
+	
+	/*===== Share Menu ======*/
+	#url-container {
+		margin-top: 7%;
+	}
+	#share-url {
+		font-size: 200%;
+		line-height: 55px;
+		padding: 0 20px;
+		width: 61%;
+		margin: 0;
+		-webkit-user-select: all;  
+		-moz-user-select: all;
+		-ms-user-select: all;
+	}
+	#share-url {
+ 		margin: 0;
+ 	}
+ 	.share_heading_margin {
+ 		margin: 60px 0;
+ 	} 
+ 	
+ 	/*===== Vote Buttons ======*/
+ 	.vote-button
+	{
+	  width: 120px;
+	}
+	#vote-button-left
+	{
+	  left: 90px;
+	}
+	#vote-button-right
+	{
+	  right: 90px;
+	}
+    
+	/*===== Close Buttons ======*/
+    .modal-close-button {
+		width: 50px;
+	}
+	#options-close-button {
+		top: 15px;
+		right: 15px;
+	}
+	#share-close-button {
+		bottom: 15px;
+		right: 15px;
+	}
+	#panic-close-button { 
+		bottom: 15px;
+		left: 15px;
+	}
 }
-

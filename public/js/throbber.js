@@ -4,7 +4,7 @@ var throbber =
 	gif: document.createElement('img'),
 	_build: function ()
 	{
-		throbber.gif.src = "/img/spin_throbber.gif";
+		throbber.gif.src = "http://assets.tagsurf.co/img/spin_throbber.gif";
 		throbber.gif.className = "throbber";
 		throbber.gif.onload = function() {
 			throbber.gif.style['left'] = ((window.innerWidth - throbber.gif.offsetWidth) / 2) + "px";
@@ -27,7 +27,7 @@ var throbber =
 		else
 		{
 			throbber.gif.style['top'] = ((window.innerHeight - throbber.gif.offsetHeight) /2) + "px";
-		}
+		}	
 		throbber.gif.style['opacity'] = "1.0";
 	},
 	off: function ()

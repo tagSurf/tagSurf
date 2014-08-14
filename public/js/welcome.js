@@ -1,1 +1,2 @@
 carousel.on();
+fadeInBody();

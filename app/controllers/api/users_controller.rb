@@ -5,7 +5,7 @@ class Api::UsersController < Api::BaseController
   def paginated_history
     @offset = user_params["offset"].to_i
     @limit = user_params["limit"].to_i
-    @voted = Vote.paginated_history(current_user.id, @limit, @offset) 
+    @voted = Vote.paginated_history(@user.id, @limit, @offset, @user.safe_mode) 
     if @voted
       render json: @voted, root: 'data'
     else
@@ -93,10 +93,27 @@ class Api::UsersController < Api::BaseController
       render json: results, status: :not_found
     end
   end
+  
+  def update
+    if @user.update(user_params)
+      render json: @user
+    else
+      render json: "could not be updated", :status => :unprocessible_entity
+    end
+  end
 
   private
 
     def user_params
-      params.permit(:user, :limit, :offset, :email, :confirm_feature_tour) 
+      params.permit(
+        :user, 
+        :safe_mode, 
+        :slug, 
+        :limit, 
+        :offset, 
+        :email, 
+        :confirm_feature_tour
+      ) 
     end
+
 end

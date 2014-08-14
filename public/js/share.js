@@ -2,6 +2,7 @@ var share =
 {
 	cb: null,
 	data: null,
+	shareModalOut: false,
 	button: document.createElement('div'),
 	content: document.createElement('div'),
 	url: function() {
@@ -47,8 +48,8 @@ var share =
 	},
 	_icon: function(network) {
 		var img = document.createElement("img");
-		img.src = "/img/social_media/" + network + ".png";
-		img.className = "share_link_icon";
+		img.src = "http://assets.tagsurf.co/img/social_media/" + network + ".png";
+		img.className = "share-link-icon";
 		gesture.listen('down', img, function() {
 			window.open(share.networks[network]());
 			modal.topModalOut();
@@ -63,37 +64,87 @@ var share =
 	_buildContent: function ()
 	{
 		var heading = document.createElement("div"),
-			blurb = document.createElement("div");
-		heading.className = "really-big share_heading_margin";
+			blurb = document.createElement("div"),
+			urlContainer = document.createElement("div"),
+			url = document.createElement("input"),
+			closebtn = document.createElement("img");
+		heading.className = "really-big share-heading-margin";
 		heading.innerHTML = "Share This Card";
+		closebtn.src = "http://assets.tagsurf.co/img/Close.png";
+		closebtn.className = "modal-close-button";
+		closebtn.id = "share-close-button";
 		share.content.className = "centered";
+		urlContainer.id = "url-container"; 
+		url.id = "share-url";
+		url.type = "text";
+		url.className = "big blue inline";
+		gesture.listen('down', urlContainer, function () { 
+			url.focus();
+			url.setSelectionRange(0, url.value.length);
+			analytics.track('Select Share URL', {
+				card: share.data.id,
+				surfing: current_tag
+			});
+		});
+		urlContainer.appendChild(url);
 		share.content.appendChild(heading);
 		for (var network in share.networks)
 			share._icon(network);
+		share.content.appendChild(urlContainer);
+		share.content.appendChild(closebtn);
 	},
 	_buildButton: function ()
 	{
 		var shareIcon = document.createElement('img');
-		shareIcon.src = "/img/share_icon.png";
+		shareIcon.src = "http://assets.tagsurf.co/img/share_icon.png";
 		shareIcon.id = "share-icon";
 		share.button.id = "share-button";
 		gesture.listen('down', share.button, function () {
-			shareIcon.src = "/img/share_icon-invert.png";
+			shareIcon.src = "http://assets.tagsurf.co/img/share_icon-invert.png";
 		});
 		gesture.listen('up', share.button, function () {
-			shareIcon.src = "/img/share_icon.png";
+			shareIcon.src = "http://assets.tagsurf.co/img/share_icon.png";
 		});
 		gesture.listen('tap', share.button, function () {
-			modal.topModalIn(share.content);
-			share.cb && share.cb();
+			if(share.shareModalOut) {
+				modal.topModalOut();
+				share.shareModalOut =false;
+				analytics.track('Close Share Window', {
+					card: share.data.id,
+					surfing: current_tag
+				});
+			}
+			else {
+				if(panic.panicModalOut)
+					panic.close();
+				modal.topModalIn(share.content, share.close);
+				share.shareModalOut = true;
+				analytics.track('Open Share Window', {
+					card: share.data.id,
+					surfing: current_tag
+				});
+				document.getElementById("share-url").value = share.url();
+				share.cb && share.cb();
+			}
 		});
 		share.button.appendChild(shareIcon);
 		document.body.appendChild(share.button);
 	},
+	close: function() {
+		document.getElementById("share-url").blur();
+		modal.topModalOut();
+		share.shareModalOut = false;
+		analytics.track('Close Share Window', {
+			card: share.data.id,
+			surfing: current_tag
+		});
+	},
 	on: function (data, cb)
 	{
-		share.cb = cb;
-		share.data = data;
+		if (cb)
+			share.cb = cb;
+		if (data)
+			share.data = data;
 		toggleClass.call(share.button, 'share-active', 'on');
 	},
 	off: function ()

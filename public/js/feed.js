@@ -1,78 +1,51 @@
 var castVote = function(card) {
 	xhr("/api/votes/" + card.user_stats.vote + "/" + card.id
-		+ "/tag/" + card.user_stats.tag_voted, "POST");
+		+ "/tag/" + card.user_stats.tag_voted, "POST", null, null);
 };
+
+
 onload = function ()
 {
+	analytics.track('Begin Pageload');
 	populateNavbar();
 
+	if (isAuthorized() && (document.location.href.indexOf('share') != -1)) {
+		analytics.track('Redirected to Authed Feed');
+		window.location = "http://" +
+			document.location.host + '/feed#' +
+			window.location.pathname.replace('/share/','').replace('/','~');
+	} 
 	// defined in util for autocomplete
 	// integration with other sliding elements
 	tinput = document.getElementById("tag-input");
-	current_tag = tinput.value = document.location.hash.slice(1).split("|")[0]
+	current_tag = tinput.value = document.location.hash.slice(1).split("~")[0]
 		|| document.location.pathname.split("/")[2] || "trending";
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
-	reminderTimeout = null;
-	featureBlockContents = buildFeatureBlockerContents();
 
-	var reminderContainer = document.createElement('div');
-	var forgetReminder = function() {
-		if (reminderTimeout) {
-			document.body.removeChild(reminderContainer);
-			clearTimeout(reminderTimeout);
-			reminderTimeout = null;
-		}
-	};
-	var closeReminder = function (direction)
-	{
-		forgetReminder();
-		if (reminderContainer.isOn && direction != "up" && direction != "down")
-		{
-			reminderContainer.isOn = false;
-			reminderContainer.style.opacity = 0;			
-			trans(reminderContainer, function() {
-				reminderContainer.parentNode.removeChild(reminderContainer);
-				reminderTimeout = null;
-			});
-			analytics.track('Closed Swipe Reminder');
-		}
-	};
-	var setReminderTimeout = function ()
-	{
-		var closeContainer = document.createElement('div'),
-			close = document.createElement('img'),
-			leftImage = new Image(), rightImage = new Image();
-		reminderContainer.id = "reminder_container";
-		close.className = "reminder_close";
-		close.src = "/img/Close.png";
-		closeContainer.appendChild(close);
-		reminderContainer.appendChild(closeContainer);
-		leftImage.id = "reminder_left";
-		leftImage.src = "/img/reminder_left.png";
-		rightImage.id = "reminder_right";
-		rightImage.src = "/img/reminder_right.png";
-		reminderContainer.appendChild(leftImage);
-		reminderContainer.appendChild(rightImage);
-		gesture.listen("drag", reminderContainer, function (direction) {
-			if (direction != "left" && direction != "right")
-			{
-				return true;
+	//modal formatting for desktop
+ 	if (!isMobile() && !isTablet() && !isNarrow())
+	 	addCss({
+	 		".modal": function() {
+	 			return "width: 75%; margin: auto;";
+	 		},
+			"#slide-down-menu li:hover": function() {
+				return "background-color: #00aeef;";
+			},
+			"#slide-down-menu li:hover a": function() {
+				return "color: white;";
+			},
+			"#slide-down-menu li:hover div img:nth-child(2)": function() {
+				return "display: inline;";
+			},
+			"#slide-down-menu li:hover div img:first-child": function() {
+				return "display: none;";
+			},
+			".autocomplete div div:hover": function() {
+				return "color: white; background-color: #00aeef;";
 			}
-		});
-		gesture.listen("down", reminderContainer, returnTrue);
-		gesture.listen('down', closeContainer, closeReminder);
-		gesture.listen("tap", reminderContainer, closeReminder);
-		gesture.listen("swipe", reminderContainer, closeReminder);
-		document.body.appendChild(reminderContainer);
-		reminderTimeout = setTimeout(function () {
-			reminderContainer.isOn = true;
-			reminderContainer.style.visibility = "visible";
-			reminderContainer.style.zIndex = "100";
-			reminderContainer.style.opacity = 1;
-		}, 20000);
-	};
+	 	});
 	
 	var scrollCallback = function (event)
 	{
@@ -90,12 +63,57 @@ onload = function ()
 	var data, buffer_minimum = 5, known_keys = {},
 		staticHash = document.getElementById("static-hash"),
 		staticTrending = document.getElementById("static-trending");
-	var refreshCards = function(failMsgNode, zIndex) {
-		cardIndex = 0;
+	var refreshCards = function(failMsgNode, zIndex, startIndex) {
+		cardIndex = (typeof startIndex === "undefined") ? 0 : startIndex;
 		if (failMsgNode && data.length == 0) {
-			failMsgNode.innerHTML = "No more cards in <br>#" + current_tag + " feed";
+			var trendingBtn = document.createElement('div'),
+				orMsg = document.createElement('div'),
+				surfATagMsg = document.createElement('div'),
+				tagSuggestions = document.createElement('div'),
+				numberOfTags = 5;
+			trendingBtn.className = 'trending-returnbtn pointer';
+			trendingBtn.innerHTML = "<img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>Return to <span class='blue'>#trending</span>";	
+			failMsgNode.innerHTML = "<div class='fail-msg'>No more cards in <br>#" + current_tag + " feed...</div>";
+			orMsg.className = "fail-msg";
+			orMsg.id = "or-msg";
+			orMsg.innerHTML = "or";
+			tagSuggestions.className = "taglist";
+			surfATagMsg.className = "fail-msg";
+			surfATagMsg.id = "surf-msg";
+			surfATagMsg.innerHTML = "Surf a popular tag";
+			gesture.listen("down", trendingBtn, function() {
+				trendingBtn.classList.add("active-trending-returnbtn");
+				trendingBtn.firstChild.src = "http://assets.tagsurf.co/img/trending_icon_gray.png";
+			});
+			gesture.listen("up", trendingBtn, function() {
+				trendingBtn.classList.remove("active-trending-returnbtn");
+				trendingBtn.firstChild.src = "http://assets.tagsurf.co/img/trending_icon_blue.png";
+			});
+			gesture.listen("tap", trendingBtn, function() {
+				if(isAuthorized())
+					window.location = "http://" + document.location.host + '/feed';
+				else
+					autocomplete.tapTag("trending", "autocomplete", false);
+			});
+			for(var i = 0; i < numberOfTags; i++) {
+				if (autocomplete.data[i]["name"] == "trending") {
+					++numberOfTags;
+					continue;
+				}
+				else {
+					tagCard(autocomplete.data[i]["name"], tagSuggestions);
+				}
+			}
 			failMsgNode.parentNode.removeChild(failMsgNode.nextSibling);
-		} else {
+			failMsgNode.parentNode.appendChild(trendingBtn);
+			failMsgNode.parentNode.appendChild(orMsg);
+			failMsgNode.parentNode.appendChild(surfATagMsg);
+			failMsgNode.parentNode.appendChild(tagSuggestions);
+			analytics.track('Seen End-Of-Feed Card', {
+				surfing: current_tag
+			});
+		} 
+		else {
 			slideContainer.innerHTML = "";
 			buildCard(zIndex);
 		}
@@ -103,7 +121,7 @@ onload = function ()
 	var popData = function(rdata, firstCard) {
 		var i, starters = [], others = [], preloads = [];
 
-		if (isUnauthorized())
+		if (!isAuthorized())
 			preloads = rdata;
 		else {
 			if (firstCard) known_keys[firstCard.id] = true;
@@ -132,7 +150,7 @@ onload = function ()
 	};
 	var shareSwap, shareOffset = 0;
 	var dataPath = function(firstCard) {
-		if (isUnauthorized()) {
+		if (!isAuthorized()) {
 			var p = "/api";
 			if (shareSwap) {
 				shareSwap = false;
@@ -165,7 +183,10 @@ onload = function ()
 				cardsToLoad = cardsToLoad.concat(popData(rdata, firstCard).slice(3));
 				refreshCards(failMsgNode, 2);
 			}
-		}, function() {
+		}, function(response, status) {
+			if (status == 401){
+				messageBox("Oops", response.errors + " <br><br><i>Control Safe Surf from Options</i>");
+			}
 			if (!update) {
 				data = [];
 				refreshCards(failMsgNode);
@@ -174,8 +195,8 @@ onload = function ()
 	};
 	var firstPopulate = function() {
 		var feed, id, pair, h = document.location.hash.slice(1);
-		if (h.indexOf("|") != -1) {
-			pair = h.split("|");
+		if (h.indexOf('~') != -1) {
+			pair = h.split("~");
 			feed = pair[0];
 			id = pair[1];
 		}
@@ -196,7 +217,7 @@ onload = function ()
 				current_tag = tagName;
 				known_keys = {};
 				populateSlider(null, null, insertCurrent ? slider.card : null);
-				analytics.track('Searched for tag', {
+				analytics.track('Search for Tag', {
 					tag: tagName
 				});
 			}
@@ -235,7 +256,7 @@ onload = function ()
 		".card-container": function() {
 			return "min-height: " + (maxCardHeight + 140) + "px; width: " + ((isMobile() || isTablet() || isNarrow()) ? "95" : "70") + "%;";
 		},
-		".raw_wrapper, .zoom_wrapper, #scroll-container, #scroll-container-container": function() {
+		".raw-wrapper, .zoom-wrapper, #scroll-container, #scroll-container-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
 		}
 		// Why is this necessary? Setting width=100% in feed.css instead.
@@ -302,7 +323,8 @@ onload = function ()
 	};
 	var upCallback = function (androidSoftUp)
 	{
-		toggleClass.apply(slider,['super_card', 'off']);
+		if (modal.zoom.zoomed) return;
+		toggleClass.apply(slider,['super-card', 'off']);
 		slider.supering = false;
 		if (slider.animating == false)
 		{
@@ -376,7 +398,7 @@ onload = function ()
 					activeCard.user_stats.voted = true;
 					activeCard.user_stats.tag_voted = current_tag;
 					activeCard.user_stats.vote = voteDir;
-					if (isUnauthorized())
+					if (!isAuthorized())
 						shareVotes.push(activeCard);
 					else if (voteAlternative)
 						voteAlternative();
@@ -389,52 +411,101 @@ onload = function ()
 			"translate3d(" + translateQuantity + "px," + verticalQuantity
 				+ "px,0) rotate(" + rotateQuantity + "deg)");
 		slider.animating = true;
-
+		forgetReminders();
 		pushTags();
-		setSlider(slider.parentNode.nextSibling.firstChild);
-		setCurrentMedia(slider.card);
+		setSlider();
 		// removed history slider
 //		addHistoryItem(activeCard);
 	};
-	var keyInertia = 0;
-	window.onkeydown = function(e) {
-		keyInertia += 1;
-		e = e || window.event;
-		var code = e.keyCode || e.which;
-		if (code == 38){
-			//boundary checking
-			scrollContainer.scrollTop -= (2 * keyInertia);
-		}
-		else if (code == 40){
-			//boundary checking
-			window.scrollBy(0,10);
-			scrollContainer.scrollTop += (2 * keyInertia);
-		}
-	};
-	window.onkeyup = function(e) {
-		closeReminder("right");
-		keyInertia = 0;
-		e = e || window.event;
-		var code = e.keyCode || e.which;
-		if (code == 32){
-			expandCard();
-		}
-		else if (code == 37){
+	var keyInertia = 0, 
+		scrollDirection,
+		scrollScrollContainer = function (time) {
+			var inertialDecrement = 4, scrollTopIncrement;
+			if (stroke.isDown(40))
+			{
+				if (keyInertia < 50)
+					keyInertia += 5;
+				scrollContainer.scrollTop += (1 * keyInertia);
+				requestAnimFrame(scrollScrollContainer);
+			}
+			else if (stroke.isDown(38))
+			{
+				if (keyInertia < 50)
+					keyInertia += 5;
+				scrollContainer.scrollTop -= (2 * keyInertia);
+				requestAnimFrame(scrollScrollContainer);
+			}
+			else if (keyInertia > 10)
+			{
+				if (scrollDirection == "down")
+				{
+					if (stroke.keys['40'].duration > 100)
+						inertialDecrement = 6;
+					scrollTopIncrement = 2 * keyInertia;
+				}
+				if (scrollDirection == "up")
+				{
+					if (stroke.keys['38'].duration > 100)
+						inertialDecrement = 6;
+					scrollTopIncrement = -2 * keyInertia;
+				}
+				keyInertia -= inertialDecrement;
+				scrollContainer.scrollTop += scrollTopIncrement;
+				requestAnimFrame(scrollScrollContainer);
+			}
+			else if (keyInertia <= 10)
+			{
+				keyInertia = 0;
+				scrollDirection = "";
+			}
+		};
+	['38','40'].forEach(function(index) {
+		var strokeCallback = function(keyObject) {
+			scrollDirection = index == '38' ? "up" : "down";
+			requestAnimFrame(scrollScrollContainer);
+		};
+		['up','down'].forEach(function(direction) {
+			stroke.listen(direction, index, strokeCallback);
+		});
+	});
+	stroke.listen("up", "32", function(){expandCard();});
+	stroke.listen("up", "37", function(){
+			dragCallback("left", -3, -3);
+			flashVoteButton("left");
+			if (slider.card.id == 221281) {	
+				analytics.track("Key Swipe Login Card", {
+					direction: "left",
+					surfing: current_tag
+				});
+			}
+			else {
+				analytics.track("Key Swipe", {
+					card: slider.card.id,
+					direction: "left",
+					surfing: current_tag
+				});
+				analytics.page({
+					title: slider.card.id + " left",
+					url: 'http://beta.tagsurf.co/feed#'+current_tag,
+					path: "/feed#"+current_tag,
+					referrer: 'http://beta.tagsurf.co/'
+				});
+			}
 			swipeSlider("left");
-			analytics.track("Key Swipe", {
-				card: slider.card.id,
-				direction: "left",	
+			// slider id will change to next card 
+			if (slider.card.id == 221281)
+				analytics.track("Seen Login Card");
+	});
+	stroke.listen("up", "39", function(){
+		dragCallback("right", 3, 3);
+		flashVoteButton("right");
+		if (slider.card.id == 221281) {
+			analytics.track("Key Swipe Login Card", {
+				direction: "right",
 				surfing: current_tag
 			});
-			analytics.page({
-				title: slider.card.id + " left",
-				url: 'http://beta.tagsurf.co/feed#'+current_tag,
-				path: "/feed#"+current_tag,
-				referrer: 'http://beta.tagsurf.co/'
-			});
 		}
-		else if (code == 39){
-			swipeSlider("right");
+		else {
 			analytics.track("Key Swipe", {
 				card: slider.card.id,
 				direction: "right",	
@@ -446,14 +517,20 @@ onload = function ()
 				path: "/feed#"+current_tag,
 				referrer: 'http://beta.tagsurf.co/'
 			});
+
 		}
-	};
+		swipeSlider("right");
+		// slider id will change to next card 
+		if (slider.card.id == 221281)
+			analytics.track("Seen Login Card");
+	});
+	stroke.listen("up", null, closeReminders);
 	var swipeCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
+		if (modal.zoom.zoomed) return;
 		if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
 			gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
 		else if (!slider.animating && (direction == "left" || direction == "right")) {
-			swipeSlider(direction, null, 700);
 			if (slider.isContent) {
 				analytics.track("Swipe", {
 					card: slider.card.id,
@@ -467,10 +544,20 @@ onload = function ()
 					referrer: 'http://beta.tagsurf.co/'
 				});
 			}
+			else if (slider.card.id == 221281)
+				analytics.track("Swipe Login Card", {
+					direction: direction,
+					surfing: current_tag
+				});
+			swipeSlider(direction, null, 700);
+			// slider id will change to next card 
+			if (slider.card.id == 221281)
+				analytics.track("Seen Login Card");
 		}
 	};
 	var dragCallback = function (direction, distance, dx, dy)
 	{
+		if (modal.zoom.zoomed) return;
 		if (slider.animating == false)
 		{
 			if (slider.expanded == true && 
@@ -541,6 +628,7 @@ onload = function ()
 	};
 	var tapCallback = function (tapCount)
 	{
+		if (modal.zoom.zoomed) return;
 		if (tapCount == 1)
 		{
 			if (slider.compressing == false)
@@ -557,7 +645,7 @@ onload = function ()
 		if (duration == 3000)
 		{
 			slider.supering = true;
-			toggleClass.apply(slider, ['super_card', 'on']);
+			toggleClass.apply(slider, ['super-card', 'on']);
 		}
 	};
 	var isMine = function(tag) {
@@ -586,11 +674,13 @@ onload = function ()
 		});
 		gesture.listen("up", p, function() {
 			p.classList.remove("active-pictag");
+		});
+		gesture.listen("tap", p, function() {
 			if (ismine) {
 				rmTag(tag);
 				picTags.removeChild(p);
 			} else
-				autocomplete.tapTag(tag, "autocomplete", true);
+				autocomplete.tapTag(tag, "autocomplete", false);
 		});
 		picTags.appendChild(p);
 	};
@@ -598,7 +688,15 @@ onload = function ()
 	var setSlider = function(s) {
 		slider = s || slideContainer.firstChild.firstChild;
 		toggleClass.call(slider, "hardware-acceleration", "on");
-		setCurrentMedia(slider.card, forgetReminder);
+		setCurrentMedia(slider.card, forgetReminders, function() { //panic btn callback
+			swipeSlider("left");
+			forgetReminders();
+			analytics.track('Report Inappropriate Content', {
+				card: panic.data.id,
+				surfing: current_tag
+			});
+			messageBox("Thanks for the Report", "An admin will review that card before anyone sees it again.", "Ok", null, true);
+		});
 		if (expandTimeout) {
 			clearTimeout(expandTimeout);
 			expandTimeout = null;
@@ -622,10 +720,11 @@ onload = function ()
 			c_wrapper.className = "card-wrapper";
 			c_container = document.createElement("div");
 			c_container.className = "card-container center-label";
+			c_container.id = "End-Of-Feed";
 			msg = document.createElement("div");
 			msg.innerHTML = "Searching for more cards in <br>#" + current_tag + " feed...";
 			img = document.createElement("img");
-			img.src = "/img/throbber.gif";
+			img.src = "http://assets.tagsurf.co/img/throbber.gif";
 			c_container.appendChild(msg);
 			c_container.appendChild(img);
 			c_wrapper.appendChild(c_container);
@@ -654,7 +753,7 @@ onload = function ()
 		}
 		if (node && (targetHeight + textContainer.scrollHeight 
 			+ picTags.scrollHeight + iconLine.scrollHeight 
-			< (maxCardHeight + 80)))
+			< (maxCardHeight + (currentUser.vote_btns ? 20 : 80))))
 		{
 			imageContainer.classList.remove("expand-animation");
 			fullscreenButton.className += ' hidden';
@@ -677,10 +776,11 @@ onload = function ()
 			}
 		}
 	};
+	var firstCardLoaded = false;
 	var buildContentCard = function(c, zIndex) {
 		var imageContainer, iconLine, textContainer, picTags, fullscreenButton,
 			truncatedTitle, card, formatter = document.createElement('div'),
-			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img src='" + image.get(c, window.innerWidth - 40).url + "'></div><div class='icon-line'><img class='source-icon' src='/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb_up' src='/img/thumbsup.png'><img class='thumb_down' src='/img/thumbsdown.png'></div><div class='super_label'>SUPER VOTE</div></div></div>";
+			cardTemplate = "<div class='card-wrapper'><div class='card-container' style='z-index:" + zIndex + ";'><div class='image-container expand-animation'><img" + (firstCardLoaded ? (" src='" + image.get(c, window.innerWidth - 40).url + "'") : "") + "></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (c.source || ((c.tags[0] == null || c.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + c.tags[0] + "</span></div><div class='text-container'><p>" + c.caption + "</p></div><div id='pictags" + c.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div></div></div>";
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		imageContainer = formatter.children[0].children[0].children[0];
@@ -691,12 +791,14 @@ onload = function ()
 		if (current_tag == "trending") {
 			gesture.listen("down", iconLine.children[1], function() {
 				iconLine.children[1].classList.add("active-tag-callout");
-				iconLine.children[1].firstChild.src = "/img/trending_icon_gray.png";
+				iconLine.children[1].firstChild.src = "http://assets.tagsurf.co/img/trending_icon_gray.png";
 			});
 			gesture.listen("up", iconLine.children[1], function() {
 				iconLine.children[1].classList.remove("active-tag-callout");
-				iconLine.children[1].firstChild.src = "/img/trending_icon_blue.png";
-				autocomplete.tapTag(c.tags[0], "autocomplete", true);
+				iconLine.children[1].firstChild.src = "http://assets.tagsurf.co/img/trending_icon_blue.png";
+			});
+			gesture.listen("tap", iconLine.children[1], function() {
+				autocomplete.tapTag(c.tags[0], "autocomplete", false);
 			});
 		} else
 			iconLine.children[1].style.display = "none";
@@ -711,18 +813,32 @@ onload = function ()
 		});
 		var card = initCard(formatter);
 		card.isContent = true;
+		card.setSource = function() {
+			imageContainer.firstChild.src = image.get(c, window.innerWidth - 40).url;
+		};
 		formatCardContents(card, image.get(card.card));
-		if (slider == card)
-		{
-			imageContainer.firstChild.onload = firstCardReady;
-		}
-		imageContainer.firstChild.onerror = function() {
-			slideContainer.removeChild(card.parentNode);
-			if (slider == card) {
+		if (slider == card) {
+			slider.setSource();
+			firstCardLoaded = false;
+			imageContainer.firstChild.onload = function() {
+				firstCardLoaded = true;
+				if(slider.parentNode.nextSibling.firstChild)
+					slider.parentNode.nextSibling.firstChild.setSource();
+				if(slider.parentNode.nextSibling.nextSibling.firstChild)
+					slider.parentNode.nextSibling.nextSibling.firstChild.setSource();
 				throbber.off();
 				scrollContainer.style.opacity = 1;
-			}
-			buildCard();
+				analytics.track('Finished Pageload');
+				preloadCards();
+			};
+		}
+		imageContainer.firstChild.onerror = function() {
+			analytics.track('Card Load Error', {card: slider.card.id});
+			slideContainer.removeChild(slider.parentNode.nextSibling);
+			slideContainer.removeChild(slider.parentNode.nextSibling);
+			slideContainer.removeChild(card.parentNode);
+			cardIndex -= 2;
+			refreshCards(null, 2, cardIndex);
 		};
 	};
 	var focusInput = function (input)
@@ -750,20 +866,19 @@ onload = function ()
 	};
 	var buildLoginCard = function(c, zIndex) {
 		var formatter = document.createElement('div'),
-			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='/img/logo_w_border.png'><div class='big bold'>Sign up for a better feed!</div>",
-			form = "<form accept-charset='UTF-8' action='/users' class='new_user' id='new_user' method='post'><div style='margin:0;padding:0;display:inline'><input name='utf8' type='hidden' value='✓'><input name='authenticity_token' type='hidden' value='" + document.getElementsByName("csrf-token")[0].content + "'></div><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center></form>",
-			bottom = "<div class='wide-text'><a id='line-text-login' class='small big-lnk'>Already have an account? <b>Login here</b>.</a></div><div class='smaller wide-text'>By signing up you agree to our <a class='bold big-lnk' id='terms-lnk'>Terms of Use</a> and <a class='bold big-lnk' id='privacy-lnk'>Privacy Policy</a>.</div></div></div>",
+			top = "<div class='card-wrapper'><div class='card-container login-card' style='z-index:" + zIndex + ";'><img src='http://assets.tagsurf.co/img/logo_w_border.png'><div class='big bold'>Hate repeats? Sign up!</div>",
+			form = "<form accept-charset='UTF-8' action='/users' class='new-user' id='new-user' method='post'><div style='margin:0;padding:0;display:inline'><input name='utf8' type='hidden' value='✓'><input name='authenticity_token' type='hidden' value='" + document.getElementsByName("csrf-token")[0].content + "'></div><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='sign up'></center></form>",
+			bottom = "<div class='wide-text'><a id='line-text-login' class='small big-lnk'>Already have an account? <b>Login here</b>.</a></div><div class='smaller block'>By signing up you agree to our <a class='bold big-lnk' id='terms-lnk'>Terms of Use</a> and <a class='bold big-lnk' id='privacy-lnk'>Privacy Policy</a>.</div></div></div>",
 			cardTemplate = top + form + bottom;
 		formattingContainer.appendChild(formatter);
 		formatter.innerHTML = cardTemplate;
 		initCard(formatter);
 		initLoginInputs();
 		initDocLinks();
-		firstCardReady();
 
 		// form validation
 		var p = document.getElementById("password");
-		var f = document.getElementById("new_user");
+		var f = document.getElementById("new-user");
 		f.onsubmit = function() {
 			if (!validEmail(document.getElementById("email").value)) {
 				alert("Please use a valid email address");
@@ -777,16 +892,12 @@ onload = function ()
 				alert("Please submit matching passwords");
 				return false;
 			}
+			analytics.track('Sign Up in Feed');
 			return true;
 		};
 		gesture.listen("down", document.getElementById("su-submit-btn"), function() {
 			f.onsubmit() && f.submit();
 		});
-	};
-	var firstCardReady = function () {
-		throbber.off();
-		scrollContainer.style.opacity = 1;
-		preloadCards();
 	};
 	var initCard = function(formatter) {
 		card = formatter.firstChild.firstChild;
@@ -805,7 +916,7 @@ onload = function ()
 
 		if (c.type == "content")
 			buildContentCard(c, zIndex);
-		else if (c.type == "login")
+		else if (c.type == "login") 
 			buildLoginCard(c, zIndex);
 		else
 			alert("unknown card type: " + c.type);
@@ -820,11 +931,12 @@ onload = function ()
 	};
 	var downCallback = function ()
 	{
+		if (modal.zoom.zoomed) return;
 		if (slider.classList.contains('login-card'))
 		{
 			blurLoginInputs();
 		}
-		forgetReminder();
+		forgetReminders();
 		if (slider.style["-webkit-transform"] == "")
 		{
 			slider.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
@@ -836,10 +948,12 @@ onload = function ()
 		var imageContainer = this.getElementsByClassName('image-container')[0];
 		if (!imageContainer)
 			return;
-		gesture.listen("tap", imageContainer, tapCallback)
-		gesture.listen("down", imageContainer, returnTrue)
-		gesture.listen("up", imageContainer, returnTrue)
-		gesture.listen("drag", imageContainer, returnTrue)
+		gesture.listen("tap", imageContainer, tapCallback);
+		gesture.listen("down", imageContainer, returnTrue);
+		gesture.listen("up", imageContainer, returnTrue);
+		gesture.listen("drag", imageContainer, returnTrue);
+		modal.setPinchLauncher(imageContainer,
+			function() { upCallback(true); });
 	};
 	var initCardGestures = function ()
 	{
@@ -860,6 +974,8 @@ onload = function ()
 			if (slider.children[0].className.indexOf("expanded") == -1)
 				slider.children[0].className += " expanded";
 			slider.children[2].innerHTML = "<p>" + slider.card.caption + "</p>";
+			if(currentUser.vote_btns && (isMobile() || isTablet()))
+				slider.children[3].style.paddingBottom="60px";
 			toggleClass.call(slider.children[3], "hidden");
 			toggleClass.call(slider.children[4], "hidden");
 			scrollCallback();
@@ -879,32 +995,29 @@ onload = function ()
 		slider.card.tags_v2.push(objwrap);
 		tagCard(tag, document.getElementById("pictags" + slider.card.id));
 		formatCardContents();
-		analytics.track('Added Tag from Feed', {
+		analytics.track('Add Tag from Feed', {
 			card: slider.card.id,
 			surfing: current_tag,
 			tag_added: tag
 		});
 	});
 	setStarCallback(function() {
-		if (isUnauthorized())
+		if (!isAuthorized())
 		{
-			modal.promptIn(featureBlockContents);
+			messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
 			return;
 		}
 		slider.style['border-color'] = "green";
 		slider.lastChild.previousSibling.firstChild.style.opacity = 0.8;
-		if (modal.zoom.zoomed) {
-			if (modal.zoom.large)
-				modal.callZoom(2);
+		if (modal.zoom.zoomed)
 			modal.callZoom(1);
-		}
 		setFavIcon(true);
 		xhr("/api/favorites/" + slider.card.id, "POST", function() {
 			swipeSlider("right", function () {
 				setFavIcon(false);
 			});
-		});
-		analytics.track('Favorited from Feed', {
+		}, null);
+		analytics.track('Favorite from Feed', {
 			card: slider.card.id,
 			surfing: current_tag
 		});
@@ -923,28 +1036,22 @@ onload = function ()
 			expandCard();
 		}
 	});
+	
 	firstPopulate();
-	setReminderTimeout();
+
+	buildVoteButtons(dragCallback, swipeSlider);
+	if(currentUser.vote_btns){
+		voteButtonsOn();
+	}
+	
+	analytics.identify(currentUser.id);
+	
+	if(!isAuthorized() && !DEBUG)
+		startOrientation();
 };
 
-xhr('/api/users', null, function(result) {
-	if (result.user != "not found") {
-		if (isUnauthorized()) {
-			window.location = "http://" +
-				document.location.host + '/feed#' +
-				window.location.pathname.replace('/share/','').replace('/','|');
-		} else
-			analytics.identify(result.user.id);
-	}
-});
-
-if (!isUnauthorized())
+if (isAuthorized())
 {
-	addCss({
-		"body, html": function() {
-			return "position: fixed;";
-		}
-	});
 	var lastPath = sessionStorage.getItem("lastPath");
 	if (lastPath) {
 		sessionStorage.removeItem("lastPath");
@@ -957,6 +1064,7 @@ if (!isUnauthorized())
 	}
 }
 
+document.location.hash = document.location.hash.replace('|','~');
 // handle facebook redirects
 if (document.location.href.indexOf("?") != -1)
 	document.location = "http://" +

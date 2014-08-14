@@ -5,7 +5,8 @@ class EnqueueGenerateTagFeed
   recurrence { hourly.minute_of_hour(0, 15, 30, 45) }
 
   def perform
-    GenerateTagFeed.perform_async
+    GenerateTagFeed.perform_async('safe')
+    GenerateTagFeed.perform_async('nsfw')
   end
 
 end

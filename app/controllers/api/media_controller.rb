@@ -30,6 +30,12 @@ class Api::MediaController < Api::BaseController
   end
 
   def share_feed
+   
+    if Tag.blacklisted?(media_params[:tag].downcase)
+      render json: {errors: "This tag is not available in Safe Surf mode"}, status: :unauthorized
+      return
+    end
+
     @media = Media.next(
       @user, 
       media_params[:tag], 
@@ -39,6 +45,7 @@ class Api::MediaController < Api::BaseController
         :offset => media_params[:offset] 
       }
     )
+
     if @media.present?
       render json: @media, root: "data"
     else
@@ -49,6 +56,11 @@ class Api::MediaController < Api::BaseController
   def next
     unless @user
       render json: {errors: 'must be logged in to view feed.'}, status: :unauthorized
+      return
+    end
+
+    if @user.safe_mode? && Tag.blacklisted?(media_params[:tag].downcase)
+      render json: {errors: "This tag is not available in Safe Surf mode"}, status: :unauthorized
       return
     end
       
@@ -74,6 +86,40 @@ class Api::MediaController < Api::BaseController
     end
   end
 
+  def report
+    media = Media.find params[:media_id]
+    media.update_column "reported", true
+    SendReportedNotification.perform_async(current_user.id, media.id)
+    if media.reported?
+      render json: {success: true, media: media}, status: :ok
+    else
+      render json: {errors: "something went wrong"}, status: :unprocessible_entity
+    end
+  end
+
+  def remove_report
+    if current_user and current_user.admin?
+      media = Media.unscoped.find(params[:media_id])
+      media.update_column "reported", false
+
+      if params[:nsfw]
+        media.update_column "nsfw", true
+      end
+
+      if media.reported == false
+        flash[:notice] = "Media #{params[:media_id]} unreported"
+        redirect_to '/feed'
+      else
+        flash[:error] = "Could not report because of error"
+        redirect_to '/feed'
+      end
+
+    else
+      flash[:error] = "not authorized"
+      redirect_to '/feed'
+    end
+
+  end
 
   private
 

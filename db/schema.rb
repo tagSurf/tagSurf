@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140621041218) do
+ActiveRecord::Schema.define(version: 20140720184901) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "pg_stat_statements"
 
   create_table "access_codes", force: true do |t|
     t.string   "name"
@@ -68,11 +69,16 @@ ActiveRecord::Schema.define(version: 20140621041218) do
     t.boolean  "repopulate_score",     default: true,      null: false
     t.boolean  "time_bonus_expired",   default: false,     null: false
     t.string   "ts_type",              default: "content", null: false
+    t.boolean  "reported",             default: false,     null: false
+    t.boolean  "nsfw",                 default: false,     null: false
   end
 
+  add_index "media", ["nsfw"], name: "index_media_on_nsfw", using: :btree
   add_index "media", ["remote_id"], name: "index_media_on_remote_id", unique: true, using: :btree
   add_index "media", ["repopulate_score"], name: "index_media_on_repopulate_score", using: :btree
+  add_index "media", ["reported"], name: "index_media_on_reported", using: :btree
   add_index "media", ["ts_type"], name: "index_media_on_ts_type", using: :btree
+  add_index "media", ["viral"], name: "index_media_on_viral", using: :btree
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"
@@ -126,6 +132,7 @@ ActiveRecord::Schema.define(version: 20140621041218) do
     t.datetime "confirmation_sent_at"
     t.boolean  "completed_feature_tour", default: false
     t.string   "slug"
+    t.boolean  "safe_mode",              default: true,  null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
