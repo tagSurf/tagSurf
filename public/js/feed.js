@@ -576,28 +576,6 @@ onload = function ()
 			listInputs[index].blur();
 		}
 	};
-
-/*	var buildCard = function (zIndex)
-	{
-		if (!dataThrobTest())
-			return;
-		var c = data[cardIndex];
-
-		// if (c.type == "content")
-		// 	buildContentCard(c, zIndex);
-		// else if (c.type == "login") 
-		// 	buildLoginCard(c, zIndex);
-		// else
-		// 	alert("unknown card type: " + c.type);	
-
-		++cardIndex;
-		if (data.length == cardIndex + buffer_minimum)
-			current_deck.build(true);
-		if (zIndex)
-			buildCard(zIndex - 1);
-		else if (getOrientation() == "landscape" && window.innerHeight < 700)
-			topCard().expand(scrollCallback);
-	};*/
 	var downCallback = function ()
 	{
 		if (modal.zoom.zoomed) return;
@@ -628,8 +606,8 @@ onload = function ()
 			return;
 		}
 		var slider = topCard();
-		slider.wrapper.style['border-color'] = "green";
-		slider.lastChild.previousSibling.firstChild.style.opacity = 0.8;
+		slider.contents.style['border-color'] = "green";
+		slider.contents.lastChild.previousSibling.firstChild.style.opacity = 0.8;
 		if (modal.zoom.zoomed)
 			modal.callZoom(1);
 		setFavIcon(true);
