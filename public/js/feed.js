@@ -169,7 +169,7 @@ onload = function ()
 	{
 		if (modal.zoom.zoomed) return;
 		var slider = topCard();
-		toggleClass.apply(slider,['super-card', 'off']);
+		toggleClass.apply(slider.contents,['super-card', 'off']);
 		slider.supering = false;
 		if (slider.animating == false)
 		{
@@ -472,10 +472,11 @@ onload = function ()
 		}
 	};
 	var holdCallback = function (duration) {
+		var slider = topCard();
 		if (duration == 3000)
 		{
 			slider.supering = true;
-			toggleClass.apply(slider, ['super-card', 'on']);
+			toggleClass.apply(slider.contents, ['super-card', 'on']);
 		}
 	};
 	// varred in util...
@@ -613,17 +614,6 @@ onload = function ()
 		return true;
 	};
 	setAddCallback(function(tag) {
-		var objwrap = {};
-		objwrap[tag] = {
-			total_votes: 0,
-			down_votes: 0,
-			up_votes: 0,
-			score: 0,
-			is_trending: false,
-			trend: "up",
-			user_owned: true
-		};
-		// topCard.tags.push(objwrap);
 		topCard().tagCard(tag);
 		analytics.track('Add Tag from Feed', {
 			card: topCard().id,
