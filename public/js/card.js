@@ -28,8 +28,8 @@ var card_proto = {
 			this._buildContentCard();
 		else if (this.type == "login") 
 			this._buildLoginCard();
-		else if (DEBUG)
-			alert("unknown card type: " + this.data.type);
+		// else if (DEBUG)
+		// 	alert("unknown card type: " + this.data.type);
 	},
 	_buildContentCard: function() {
 		var	imageContainer, iconLine, textContainer, picTags, fullscreenButton, truncatedTitle, 
@@ -126,10 +126,13 @@ var card_proto = {
 		this.cbs = cbs;
 		if(this.surfsUp) {
 			slideContainer.appendChild(this.wrapper);
+			this.showing = true;
 			return;
 		}
 		this.build();
 		slideContainer.appendChild(this.wrapper);
+		this.showing = true;
+		scrollContainer.style.opacity = 1;
 		if (slideContainer.childNodes.length == 1)
 			this.setTop();
 	},
@@ -145,6 +148,7 @@ var card_proto = {
 	},
 	setFailMsg: function () {
 		this.surfsUp = false;
+		this.type = "End-Of-Feed";
 		var trendingBtn = document.createElement('div'),
 			orMsg = document.createElement('div'),
 			surfATagMsg = document.createElement('div'),
@@ -199,7 +203,7 @@ var card_proto = {
 		var self = this;
 		this.contents.children[0].firstChild.src = image.get(self.data, window.innerWidth - 40).url;
 		this.contents.children[0].firstChild.onload = function() {
-			self.throbbing = false;
+			self.surfsUp = false;
 			self.cbs.build && self.cbs.build();
 		};
 		this.contents.children[0].firstChild.onerror = function() {
@@ -394,7 +398,13 @@ var card_proto = {
 	remove: function () {
 		this._forgetGestures();
 		slideContainer.removeChild(this.wrapper);
+		this.showing = false;
 		removeFromDecks(this);
+	},
+	unshow: function () {
+		this._forgetGestures();
+		slideContainer.removeChild(this.wrapper);
+		this.showing = false;
 	},
 	pushTags: function () {
 	for (i = 0; i < this.tags.length ; ++i)
@@ -420,6 +430,7 @@ var newCard = function (data) {
 	card.expanded = null;
 	card.expandTimeout = null;
 	card.built = false;
+	card.showing = false;
 	card.surfsUp = false;
 	card.sliding = false;
 	card.supering = false;

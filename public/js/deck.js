@@ -7,14 +7,13 @@ var deck_proto = {
 	topCard: function() {
 		return this.cards[0];
 	},
-	refreshCards: function(zIndex) {
+	refreshCards: function(zIndex, update) {
 		var topCard = this.cards[0];
 		if (this.cards.length == 1 && topCard && topCard.surfsUp)
 			topCard.setFailMsg();
-		else {
-			slideContainer.innerHTML = "";
-			this.deal();
-		}
+		else if (!update)
+			clearStack()
+		this.deal();
 	},
 	popData: function(rdata, firstCard) {
 		var i, starters = [], others = [], preloads = [];
@@ -66,7 +65,7 @@ var deck_proto = {
 	build: function (update, firstCard) {
 		var self = this;
 		if (!update) {
-			throbber.on();
+			throbber.on();			
 			clearStack();
 		}
 		xhr(this.dataPath(firstCard), null, function(response_data) {
@@ -84,7 +83,7 @@ var deck_proto = {
 			}
 			if (!update) {
 				self.cards = [];
-				self.refreshCards();
+				self.refreshCards(update);
 			}
 		});
 	},
@@ -110,24 +109,35 @@ var deck_proto = {
 	},
 	deal: function() {
 		var cardbox = document.getElementById("slider");
+		if(this.cards.length > 1 && (this.topCard().surfsUp || this.topCard().type == "End-Of-Feed"))
+			this.topCard().remove();
+		else if (this.topCard().surfsUp) {
+			this.build(true);
+			return;
+		}
 		for (var i = 0; i < cardbox.childNodes.length; i++)
-			this.cards[i].promote();
-		while(cardbox.childNodes.length < this.constants.stack_depth) {
-			var c = this.cards[cardbox.childNodes.length];
-			c && c.show(this.cbs);
+			this.cards[i].showing && this.cards[i].promote();
+		for (var i = cardbox.childNodes.length; i < this.constants.stack_depth; i++) {
+			var c = this.cards[i];
+			if (typeof c === "undefined" && !this.cards[i-1].surfsUp) {
+				c == newCard();
+				c.show(this.cardCbs);
+			}
+			else
+				c.show(this.cardCbs);
 		}
 	}
 };
 
 var cardDecks = {};
-var getDeck = function(tag, firstCard, cbs){
+var getDeck = function(tag, firstCard, cardCbs){
 	var deck = cardDecks[tag];
 	if (deck) {
 		deck.purge();
 		return deck;
 	}
 	deck = cardDecks[tag] = Object.create(deck_proto);
-	deck.cbs = cbs;
+	deck.cardCbs = cardCbs;
 	deck.tag = tag;
 	deck.shareSwap = false;
 	deck.shareOffset = 0;
@@ -137,6 +147,9 @@ var getDeck = function(tag, firstCard, cbs){
 	return deck;
 };
 var removeFromDecks = function(c) {
-	for (var tag in cardDecks)
-		cardDecks[tag].remove(c);
+	if(c.surfsUp || c.type == "End-Of-Feed")
+		current_deck.remove(c);
+	else
+		for (var tag in cardDecks)
+			cardDecks[tag].remove(c);
 };

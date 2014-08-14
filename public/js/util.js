@@ -84,7 +84,10 @@ var current_tag, current_deck, tinput, inputContainer, slideContainer,
     tinput.active = false;
     location.hash = tinput.value = tagName || current_tag;
   }, clearStack = function() {
-    slideContainer.innerHTML = "";
+    var cardbox = document.getElementById("slider"),
+        current_stack_depth = cardbox.childNodes.length;
+      for (var i = 0; i < current_stack_depth; i++)
+        current_deck.cards[i].showing && current_deck.cards[i].unshow();
     scrollContainer.style.opacity = 0;
   };
 
@@ -590,7 +593,7 @@ var setResizeCb = function(cb) {
 setMaxCardHeight();
 var lastWidth = window.innerWidth;
 window.onresize = function() {
-  if (!isDesktop() && (lastWidth == window.innerWidth))
+  if (!isDesktop() && (lastWidth == window.innerWidth) || throbber.active)
     return;
   lastWidth = window.innerWidth;
   setMaxCardHeight();
