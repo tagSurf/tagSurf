@@ -1,4 +1,4 @@
-var _card = {
+var card_proto = {
 	_init: function(data) {
 		if (data) {
 			var self = this;
@@ -14,8 +14,6 @@ var _card = {
 				}
 				else if(tag != "")
 					self.tags.push(tag); 
-				// if(DEBUG)
-					// console.log(self.id + " tags = ", self.tags);
 			});
 		}
 		else {
@@ -413,7 +411,7 @@ var _card = {
 };
 
 var newCard = function (data) {
-	var card = Object.create(_card);
+	var card = Object.create(card_proto);
 	card.id = null;
 	card.data = null;
 	card.image = null;
