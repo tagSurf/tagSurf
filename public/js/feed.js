@@ -583,11 +583,20 @@ onload = function ()
 				{
 					var thumbContainer = slider.lastChild.previousSibling;
 					slider.sliding = true;
-					slider.velocity = pixelsPerSecond;
-					if (direction == "left")
-						slider.velocity *= -1;
-					if (!slider.x) 
-						slider.x = 0;
+
+					if (isAndroid()) {
+						slider.velocity = pixelsPerSecond;
+						if (direction == "left")
+							slider.velocity *= -1;
+						if (!slider.x) 
+							slider.x = 0;
+					} else {
+						slider.x += dx;
+						slider.style['-webkit-transform'] =
+							"translate3d(" + ( slider.x * translationScale)
+								+ "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
+					}
+
 					if (slider.isContent) {
 						if ( slider.x > 0)
 						{
@@ -946,8 +955,10 @@ onload = function ()
 	var downCallback = function ()
 	{
 		if (modal.zoom.zoomed) return;
-		slider.time = Date.now();
-		slider.rAFid = requestAnimFrame(rAF_drag);
+		if (isAndroid()) {
+			slider.time = Date.now();
+			slider.rAFid = requestAnimFrame(rAF_drag);
+		}
 		if (slider.classList.contains('login-card'))
 		{
 			blurLoginInputs();
