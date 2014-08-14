@@ -198,9 +198,10 @@ onload = function ()
 		slider.verticaling = false;
 		slider.sliding = false;
 	};
-	var swipeSlider = function (direction, voteAlternative, pixelsPerSecond)
+	var swipeSlider = function (direction, voteAlternative, pixelsPerSecond, vote)
 	{
 		var slider = topCard();
+		var vote = (typeof vote === "undefined")? true : vote;
 		var swipedCard = slider;
 		var translateQuantity = 600, rotateQuantity = 60,
 			verticalQuantity = 0;
@@ -235,7 +236,8 @@ onload = function ()
 				slideContainer.children[0].style.zIndex = 2;
 				if (slideContainer.children[1])
 					slideContainer.children[1].style.zIndex = 1;
-				swipedCard.vote(voteDir, current_tag, voteAlternative);
+				if(vote)
+					swipedCard.vote(voteDir, current_tag, voteAlternative);
 				current_deck.refresh();
 			},
 			"swiping",
@@ -481,7 +483,7 @@ onload = function ()
 	};
 	// varred in util...
 	panicCb = function() { //panic btn callback
-		swipeSlider("left");
+		swipeSlider("left", null, null, false);
 		forgetReminders();
 		analytics.track('Report Inappropriate Content', {
 			card: panic.id,
