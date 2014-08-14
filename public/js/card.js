@@ -1,5 +1,5 @@
 var card_proto = {
-	_init: function(data) {
+	init: function(data) {
 		if (data) {
 			var self = this;
 			this.data = data;
@@ -16,11 +16,8 @@ var card_proto = {
 					self.tags.push(tag); 
 			});
 		}
-		else {
-			if(DEBUG)
-				console.log("Error: No data provided for new card");
+		else 
 			return;
-		}
 	},
 	build: function() {
 		this.zIndex = this.wrapper.style.zIndex 
@@ -85,8 +82,6 @@ var card_proto = {
 			cardTemplate = top + form + bottom;
 		this.wrapper.className = 'card-wrapper';
 		container.className = 'card-container login-card';
-		// TODO: do this later with classes
-		//container.id = "";
 		container.innerHTML = cardTemplate;
 		this.cbs.start(this.contents);
 		this._initCardGestures();
@@ -433,6 +428,6 @@ var newCard = function (data) {
 	card.x = card.y = 0;
 	card.wrapper = document.createElement('div');
 	card.contents = document.createElement('div');
-	card._init(data);
+	card.init(data);
 	return card;
 };

@@ -33,7 +33,8 @@ var deck_proto = {
 			}
 			for (i = 0; i < starters.length; i++) preloads.push(starters[i]);
 			for (i = 0; i < others.length; i++) preloads.push(others[i]);
-			if (firstCard) this.cards.unshift(firstCard);
+			if (firstCard && (firstCard != this.cards[0])) this.cards.unshift(firstCard);
+			else if (firstCard) this.cards.splice(1, 1, firstCard);
 		}
 
 		this.cards = this.cards.concat(preloads);
