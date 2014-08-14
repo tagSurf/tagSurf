@@ -227,7 +227,8 @@ var _card = {
 			if(currentUser.vote_btns && (isMobile() || isTablet()))
 				this.contents.children[3].style.paddingBottom="60px";
 			toggleClass.call(this.contents.children[3], "hidden");
-			toggleClass.call(this.contents.children[4], "hidden");
+			if(this.contents.children[4].className.indexOf("hidden") == -1)
+				toggleClass.call(this.contents.children[4], "hidden");
 			this.cbs.expand && this.cbs.expand();
 		}
 	},
@@ -263,7 +264,17 @@ var _card = {
 		tNode.innerHTML = "#" + tag;
 		p.appendChild(tNode);
 		if (isMine) {
-			var delNode = document.createElement("div");
+			var delNode = document.createElement("div"), objwrap = {};
+			objwrap[tag] = {
+				total_votes: 0,
+				down_votes: 0,
+				up_votes: 0,
+				score: 0,
+				is_trending: false,
+				trend: "up",
+				user_owned: true
+			};
+			this.tags.push(objwrap);
 			delNode.className = "smallpadded delNode tcell";
 			delNode.innerHTML = "x";
 			p.appendChild(delNode);
@@ -275,14 +286,16 @@ var _card = {
 			p.classList.remove("active-pictag");
 		});
 		gesture.listen("tap", p, function() {
-			if (isMine) {
+			if (self._isMine(tag)) {
 				self.rmTag(tag);
 			} else
 				autocomplete.tapTag(tag, "autocomplete", false);
 		});
 		self.contents.children[3].appendChild(p);
-		if(self.built)
+		if(self.built) {
 			self._formatContents();
+			self.compressing && self.expand();
+		}
 	},
 	rmTag: function(tag) {
 	  var tobjs = this.tags;
@@ -395,7 +408,7 @@ var _card = {
 	pushTags: function () {
 	for (i = 0; i < this.tags.length ; ++i)
 		if(this._isMine(Object.keys(this.tags[i])[0]))
-		    xhr("/api/media/" + currentMedia.id + "/tags/" + Object.keys(this.tags[i])[0], "POST", null, null);
+		    xhr("/api/media/" + this.id + "/tags/" + Object.keys(this.tags[i])[0], "POST", null, null);
 	}
 };
 

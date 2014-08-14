@@ -623,8 +623,8 @@ onload = function ()
 			trend: "up",
 			user_owned: true
 		};
-		topCard.tags.push(objwrap);
-		topCard.tagCard(tag);
+		// topCard.tags.push(objwrap);
+		topCard().tagCard(tag);
 		analytics.track('Add Tag from Feed', {
 			card: topCard().id,
 			surfing: current_tag,
