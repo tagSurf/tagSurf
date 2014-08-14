@@ -143,15 +143,16 @@ var _card = {
 		slideContainer.appendChild(this.wrapper);
 		if (slideContainer.childNodes.length == 1)
 			this.setTop();
-		if (getOrientation() == "landscape" && window.innerHeight < 700)
-			this.expand();
 	},
 	setTop: function() {
 		setCurrentMedia(this, forgetReminders);
 		if (this.expandTimeout) {
 			this.clearExpandTimeout();
 		}
-		this.setExpandTimeout();
+		if (getOrientation() == "landscape" && window.innerHeight < 700)
+			this.expand();
+		else
+			this.setExpandTimeout();
 	},
 	setFailMsg: function () {
 		this.surfsUp = false;
@@ -392,7 +393,7 @@ var _card = {
 		removeFromDecks(this);
 	},
 	pushTags: function () {
-	for (i = 0; i < card.tags.length ; ++i)
+	for (i = 0; i < this.tags.length ; ++i)
 		if(this._isMine(Object.keys(this.tags[i])[0]))
 		    xhr("/api/media/" + currentMedia.id + "/tags/" + Object.keys(this.tags[i])[0], "POST", null, null);
 	}
