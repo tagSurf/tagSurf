@@ -155,7 +155,8 @@ var card_proto = {
 			container = this.contents;
 			numberOfTags = 5;
 		if (container.className.indexOf("End-Of-Feed") == -1) 
-			container.className += " End-Of-Feed";
+			container.className += " center-label End-Of-Feed";
+		this._forgetGestures();
 		this.type = "End-Of-Feed";
 		container.innerHTML = "<div class='fail-msg'>No more cards in <br>#" + current_tag + " feed...</div>";
 		trendingBtn.className = 'trending-returnbtn pointer';
@@ -220,7 +221,8 @@ var card_proto = {
 			this.contents.children[2].innerHTML = "<p>" + this.data.caption + "</p>";
 			if(currentUser.vote_btns && (isMobile() || isTablet()))
 				this.contents.children[3].style.paddingBottom="60px";
-			toggleClass.call(this.contents.children[3], "hidden");
+			if(this.type == "content")
+				toggleClass.call(this.contents.children[3], "hidden");
 			if(this.contents.children[4].className.indexOf("hidden") == -1)
 				toggleClass.call(this.contents.children[4], "hidden");
 			this.cbs.expand && this.cbs.expand();
@@ -305,7 +307,7 @@ var card_proto = {
 	  }
 	},
 	_isMine: function(tag) {
-		if(this.type != "content")
+		if (this.type != "content")
 			return false;
 		for (var i = 0; i < this.tags.length; i++)
 			if (Object.keys(this.tags[i])[0] == tag)
@@ -313,6 +315,8 @@ var card_proto = {
 		return true;
 	},
 	_formatContents: function (imageData) {
+		if (this.type != "content")
+			return;
 		var imageContainer = this.contents.firstChild,
 			fullscreenButton = this.contents.children[4], 
 			truncatedTitle,
