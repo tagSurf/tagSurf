@@ -40,8 +40,6 @@ var card_proto = {
 			card = this,
 			cardTemplate = "<div class='image-container expand-animation'><img src= ></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (card.source || ((card.data.tags[0] == null || card.data.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + card.data.tags[0] + "</span></div><div class='text-container'><p>" + card.data.caption + "</p></div><div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
 		container.className = 'card-container';
-// TODO: do this later with classes
-//		container.id = "";
 		container.innerHTML = cardTemplate;
 		imageContainer = container.children[0];
 		imageContainer.firstChild.src = "http://assets.tagsurf.co/img/throbber.gif";
@@ -124,9 +122,7 @@ var card_proto = {
 		this.wrapper.className = 'card-wrapper';
 		if(zIndex)
 			this.zIndex = this.wrapper.style.zIndex = zIndex;
-		this.contents.className = "card-container center-label";
-		// TODO: do this later with classes
-		//this.contents.id = "End-Of-Feed";
+		this.contents.className = "card-container center-label End-Of-Feed";
 		this.contents.innerHTML = "<div>Searching for more cards in <br>#" + current_tag + " feed...</div><img src='http://assets.tagsurf.co/img/throbber.gif'>";
 		this.surfsUp = true;
 		this.wrapper.appendChild(this.contents);
@@ -160,6 +156,9 @@ var card_proto = {
 			tagSuggestions = document.createElement('div'),
 			container = this.contents;
 			numberOfTags = 5;
+		if (container.className.indexOf("End-Of-Feed") == -1) 
+			container.className += " End-Of-Feed";
+		container.innerHTML = "";
 		trendingBtn.className = 'trending-returnbtn pointer';
 		trendingBtn.innerHTML = "<img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>Return to <span class='blue'>#trending</span>";	
 		failMsgNode.innerHTML = "<div class='fail-msg'>No more cards in <br>#" + current_tag + " feed...</div>";
@@ -184,7 +183,6 @@ var card_proto = {
 			else
 				autocomplete.tapTag("trending", "autocomplete", false);
 		});
-		container.innerHTML = "";
 		container.appendChild(trendingBtn);
 		container.appendChild(orMsg);
 		container.appendChild(surfATagMsg);
@@ -284,9 +282,9 @@ var card_proto = {
 			p.classList.remove("active-pictag");
 		});
 		gesture.listen("tap", p, function() {
-			if (self._isMine(tag)) {
+			if (self._isMine(tag))
 				self.rmTag(tag);
-			} else
+			else
 				autocomplete.tapTag(tag, "autocomplete", false);
 		});
 		self.contents.children[3].appendChild(p);
