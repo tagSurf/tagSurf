@@ -69,11 +69,25 @@ onload = function ()
 	// autocomplete stuff
 	var autocompleteCbs = {
 		tapCb: function(tagName, insertCurrent) {
+			var cardCbs = {
+				build: function() {
+					throbber.off();
+					scrollContainer.style.opacity = 1;
+				},
+				start: setStartState,
+				swipe: swipeCallback,
+				expand: scrollCallback,
+				drag: dragCallback,
+				hold: holdCallback,
+				tap: tapCallback,
+				up: upCallback,
+				down: downCallback
+			};
 			closeAutoComplete(tagName, !!insertCurrent);
 			if (tagName != current_tag) {
 				shareSwap = true;
 				current_tag = tagName;
-				current_deck = getDeck(current_tag);
+				current_deck = getDeck(current_tag, null, cardCbs);
 				current_deck.build(null, insertCurrent ? topCard() : null);
 				analytics.track('Search for Tag', {
 					tag: tagName
@@ -559,7 +573,7 @@ onload = function ()
 	
 	var firstPopulate = function() {
 		var feed, id, pair, h = document.location.hash.slice(1),
-			cbs = {
+			cardCbs = {
 				build: function() {
 					throbber.off();
 					scrollContainer.style.opacity = 1;
@@ -579,17 +593,17 @@ onload = function ()
 			xhr("/api/card/" + id, null, function(d) {
 				var firstCard = newCard(d);
 				firstCard.show(cbs);
-				current_deck = getDeck(current_tag, firstCard, cbs);
+				current_deck = getDeck(current_tag, firstCard, cardCbs);
 			});
 		} else if (document.location.href.indexOf('share') != -1) {
 			id = document.location.pathname.split("/")[3];
 			xhr("/api/card/" + id, null, function(d) {
 				var firstCard = newCard(d);
 				firstCard.show(cbs);
-				current_deck = getDeck(current_tag, firstCard, cbs);
+				current_deck = getDeck(current_tag, firstCard, cardCbs);
 			});
 		} else
-			current_deck = getDeck(current_tag, null, cbs);
+			current_deck = getDeck(current_tag, null, cardCbs);
 	};
 
 	firstPopulate();
