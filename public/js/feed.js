@@ -193,7 +193,7 @@ onload = function ()
 			{
 				if (slider.compressing == false)
 				{
-					modal.zoomIn(slider.contents);
+					modal.zoomIn(slider);
 				}
 				else if (slider.expanded == false)
 				{
