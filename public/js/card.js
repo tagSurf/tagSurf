@@ -123,7 +123,7 @@ var card_proto = {
 		this.wrapper.appendChild(this.contents);
 	},
 	show: function (cbs) {
-		this.cbs = cbs;
+		this.cbs = typeof cbs === "undefined" ? this.cbs : cbs;
 		if(this.surfsUp) {
 			slideContainer.appendChild(this.wrapper);
 			this.showing = true;
@@ -148,7 +148,6 @@ var card_proto = {
 	},
 	setFailMsg: function () {
 		this.surfsUp = false;
-		this.type = "End-Of-Feed";
 		var trendingBtn = document.createElement('div'),
 			orMsg = document.createElement('div'),
 			surfATagMsg = document.createElement('div'),
@@ -157,10 +156,10 @@ var card_proto = {
 			numberOfTags = 5;
 		if (container.className.indexOf("End-Of-Feed") == -1) 
 			container.className += " End-Of-Feed";
-		container.innerHTML = "";
+		this.type = "End-Of-Feed";
+		container.innerHTML = "<div class='fail-msg'>No more cards in <br>#" + current_tag + " feed...</div>";
 		trendingBtn.className = 'trending-returnbtn pointer';
 		trendingBtn.innerHTML = "<img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>Return to <span class='blue'>#trending</span>";	
-		failMsgNode.innerHTML = "<div class='fail-msg'>No more cards in <br>#" + current_tag + " feed...</div>";
 		orMsg.className = "fail-msg";
 		orMsg.id = "or-msg";
 		orMsg.innerHTML = "or";
@@ -286,7 +285,10 @@ var card_proto = {
 			else
 				autocomplete.tapTag(tag, "autocomplete", false);
 		});
-		self.contents.children[3].appendChild(p);
+		if(self.type == "content")
+			self.contents.children[3].appendChild(p);
+		else if (self.type == "End-Of-Feed")
+			self.contents.children[4].appendChild(p);
 		if(self.built) {
 			self._formatContents();
 			self.compressing && self.expand();
@@ -303,6 +305,8 @@ var card_proto = {
 	  }
 	},
 	_isMine: function(tag) {
+		if(this.type != "content")
+			return false;
 		for (var i = 0; i < this.tags.length; i++)
 			if (Object.keys(this.tags[i])[0] == tag)
 				return this.tags[i][tag].user_owned;
@@ -418,7 +422,7 @@ var newCard = function (data) {
 	card.id = null;
 	card.data = null;
 	card.image = null;
-	card.cbs = null;
+	card.cbs = cardCbs; //varred in util
 	card.tags = [];
 	card.zIndex = null;
 	card.trending = false;

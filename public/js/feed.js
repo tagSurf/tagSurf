@@ -49,8 +49,8 @@ onload = function ()
 	var topCard = function() {
 		return cardDecks[current_tag].topCard();
 	};
-
-	var cardCbs = {
+	// varred in util
+	cardCbs = {
 		build: function() {
 			throbber.off();
 			scrollContainer.style.opacity = 1;
@@ -248,7 +248,6 @@ onload = function ()
 			return true;
 		}
 	};
-
 	drag.makeDraggable(scrollContainer, {
 		constraint: "horizontal",
 		scroll: cardCbs.scroll
@@ -574,18 +573,18 @@ onload = function ()
 			id = pair[1];
 			xhr("/api/card/" + id, null, function(d) {
 				var firstCard = newCard(d);
-				firstCard.show(cbs);
-				current_deck = getDeck(current_tag, firstCard, cardCbs);
+				firstCard.show();
+				current_deck = getDeck(current_tag, firstCard);
 			});
 		} else if (document.location.href.indexOf('share') != -1) {
 			id = document.location.pathname.split("/")[3];
 			xhr("/api/card/" + id, null, function(d) {
 				var firstCard = newCard(d);
-				firstCard.show(cbs);
-				current_deck = getDeck(current_tag, firstCard, cardCbs);
+				firstCard.show();
+				current_deck = getDeck(current_tag, firstCard);
 			});
 		} else
-			current_deck = getDeck(current_tag, null, cardCbs);
+			current_deck = getDeck(current_tag, null);
 	};
 
 	firstPopulate();

@@ -70,7 +70,7 @@ var isAuthorized = function () {
 };
 
 // autocomplete stuff
-var current_tag, current_deck, tinput, inputContainer, slideContainer,
+var current_tag, current_deck, cardCbs, tinput, inputContainer, slideContainer,
   scrollContainer, closeAutoComplete = function(tagName, noback) {
     if (noback) {
       slideContainer.className = "";

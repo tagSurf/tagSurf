@@ -119,9 +119,12 @@ var deck_proto = {
 			this.cards[i].showing && this.cards[i].promote();
 		for (var i = cardbox.childNodes.length; i < this.constants.stack_depth; i++) {
 			var c = this.cards[i];
-			if (typeof c === "undefined" && !this.cards[i-1].surfsUp) {
+			if (!c && this.cards[i-1].surfsUp)
+				return;
+			else if (!c) {
 				c == newCard();
 				c.show(this.cardCbs);
+				return;
 			}
 			else
 				c.show(this.cardCbs);
