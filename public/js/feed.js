@@ -324,6 +324,8 @@ onload = function ()
 	var upCallback = function (androidSoftUp)
 	{
 		if (modal.zoom.zoomed) return;
+		if (slider.rAFid)
+			cancelAnimationFrame(slider.rAFid);
 		toggleClass.apply(slider,['super-card', 'off']);
 		slider.supering = false;
 		if (slider.animating == false)
@@ -555,7 +557,7 @@ onload = function ()
 				analytics.track("Seen Login Card");
 		}
 	};
-	var dragCallback = function (direction, distance, dx, dy)
+	var dragCallback = function (direction, distance, dx, dy, pixelsPerSecond)
 	{
 		if (modal.zoom.zoomed) return;
 		if (slider.animating == false)
@@ -581,7 +583,20 @@ onload = function ()
 				if (slider.verticaling == false)
 				{
 					var thumbContainer = slider.lastChild.previousSibling;
-					slider.x += dx;
+
+					if (isAndroid()) {
+						slider.velocity = pixelsPerSecond;
+						if (direction == "left")
+							slider.velocity *= -1;
+						if (!slider.x) 
+							slider.x = 0;
+					} else {
+						slider.x += dx;
+						slider.style['-webkit-transform'] =
+							"translate3d(" + ( slider.x * translationScale)
+								+ "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
+					}
+
 					if (slider.sliding == false) {
 						slider.sliding = true;
 						toggleClass.call(slider, "card-swiping", "on");
@@ -620,8 +635,6 @@ onload = function ()
 							}
 						}
 					}
-					slider.style['-webkit-transform'] = 
-						"translate3d(" + ( slider.x * translationScale) + "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
 				}
 			}
 		}
@@ -929,9 +942,28 @@ onload = function ()
 		else if (getOrientation() == "landscape" && window.innerHeight < 700)
 			expandCard();
 	};
+	var rAF_drag = function ()
+	{
+		var dt, time = Date.now();
+		if (!slider.time)
+			slider.time = time;
+		else
+		{
+			dt = time - slider.time;
+			slider.time = time;
+			slider.x += slider.velocity * dt ;
+			slider.style['-webkit-transform'] = 
+				"translate3d(" + ( slider.x * translationScale) + "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
+		}
+		slider.rAFid = requestAnimFrame(rAF_drag);
+	};
 	var downCallback = function ()
 	{
 		if (modal.zoom.zoomed) return;
+		if (isAndroid()) {
+			slider.time = Date.now();
+			slider.rAFid = requestAnimFrame(rAF_drag);
+		}
 		if (slider.classList.contains('login-card'))
 		{
 			blurLoginInputs();
