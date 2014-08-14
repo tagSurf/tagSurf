@@ -404,7 +404,6 @@ var card_proto = {
 		this.remove();
 	},
 	remove: function () {
-		this._forgetGestures();
 		slideContainer.removeChild(this.wrapper);
 		this.showing = false;
 		removeFromDecks(this);

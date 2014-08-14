@@ -368,7 +368,7 @@ onload = function ()
 		trans(swipedCard.wrapper,
 			function () {
 				swipedCard.animating = false;
-				gesture.unlisten(swipedCard.wrapper.parentNode);
+				// gesture.unlisten(swipedCard.wrapper.parentNode);
 				if (scrollContainer.scrollTop)
 					scrollContainer.scrollTop = 0;
 				if (scrollContainer.yDrag)
