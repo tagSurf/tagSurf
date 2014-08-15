@@ -10,7 +10,7 @@ html, body
   overflow: auto;
   position: absolute;
   width:100%; 
-  opacity: 0;
+  opacity: 1;
   transition: opacity 500ms ease-in-out;
   -moz-transition: opacity 500ms ease-in-out;
   -webkit-transition: opacity 500ms ease-in-out;

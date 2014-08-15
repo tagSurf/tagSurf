@@ -23,7 +23,7 @@ var throbber =
 		else 
 			document.body.appendChild(throbber.gif);
 	},
-	on: function (addClass, backed)
+	on: function (backed, addClass)
 	{
 		if (throbber.active)
 			return;

@@ -261,7 +261,7 @@ onload = function ()
 			closeAutoComplete(tagName, !!insertCurrent);
 			if (tagName != current_tag) {
 				shareSwap = true;
-				throbber.on();
+				throbber.on(true);
 				current_tag = tagName;
 				current_deck = getDeck(current_tag);
 				analytics.track('Search for Tag', {
@@ -379,9 +379,9 @@ onload = function ()
 						"-webkit-transform 200ms",
 						"translate3d(0,0,0) rotate(0deg)");
 				}
-				slideContainer.children[0].style.zIndex = 2;
-				if (slideContainer.children[1])
-					slideContainer.children[1].style.zIndex = 1;
+				// slideContainer.children[0].style.zIndex = 2;
+				// if (slideContainer.children[1])
+				// 	slideContainer.children[1].style.zIndex = 1;
 				if(vote)
 					swipedCard.vote(voteDir, current_tag, voteAlternative);
 				current_deck.refresh();
@@ -599,7 +599,7 @@ onload = function ()
 };
 
 //This is the first line executed in feed
-throbber.on();
+throbber.on(true);
 
 if (isAuthorized())
 {
