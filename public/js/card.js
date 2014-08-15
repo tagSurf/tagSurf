@@ -71,7 +71,7 @@ var card_proto = {
 		this._initCardGestures();
 		this.isContent = true;
 		this.setSource(); 
-		this._formatContents(image.get(card.data));
+		this._formatContents(image.get(this.data));
 		this.built = true;
 	},
 	_buildLoginCard: function() {
@@ -131,6 +131,7 @@ var card_proto = {
 		}
 		this.build();
 		slideContainer.appendChild(this.wrapper);
+		this._formatContents(image.get(this.data));
 		this.showing = true;
 		scrollContainer.style.opacity = 1;
 		if (slideContainer.childNodes.length == 1)
@@ -291,8 +292,8 @@ var card_proto = {
 			self.contents.children[3].appendChild(p);
 		else if (self.type == "End-Of-Feed")
 			self.contents.children[4].appendChild(p);
-		if(self.built) {
-			self._formatContents();
+		if(self.showing) {
+			self._formatContents(image.get(this.data));
 			self.compressing && self.expand();
 		}
 	},
@@ -319,6 +320,7 @@ var card_proto = {
 			return;
 		var imageContainer = this.contents.firstChild,
 			fullscreenButton = this.contents.children[4], 
+			formattingContainer = document.getElementById('formatter'),
 			truncatedTitle,
 			picTags = this.contents.children[3], 
 			textContainer = this.contents.children[2],
@@ -335,7 +337,8 @@ var card_proto = {
 			< (maxCardHeight + (currentUser.vote_btns ? 20 : 80))) 
 		{
 			imageContainer.classList.remove("expand-animation");
-			fullscreenButton.className += ' hidden';
+			if (!fullscreenButton.classList.contains('hidden'))
+				fullscreenButton.className += ' hidden';
 			this.compressing = false;
 		}
 		else
@@ -343,6 +346,8 @@ var card_proto = {
 			truncatedTitle = this.data.caption.trunc(25);
 			truncatedTitle = "<p>" + truncatedTitle + "</p>";
 			textContainer.innerHTML = truncatedTitle;
+			if(fullscreenButton.classList.contains('hidden'))
+				fullscreenButton.classList.remove('hidden');
 			picTags.className += ' hidden';
 			this.compressing = true;
 		}
