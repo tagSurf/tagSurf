@@ -348,15 +348,16 @@ var card_proto = {
 		}
 	},
 	_initImageGestures: function () {
-		var imageContainer = this.wrapper.getElementsByClassName('image-container')[0];
+		var self = this,
+			imageContainer = this.wrapper.getElementsByClassName('image-container')[0];
 		if (!imageContainer)
 			return;
-		gesture.listen("tap", imageContainer, this.cbs.tap);
+		gesture.listen("tap", imageContainer, self.cbs.tap);
 		gesture.listen("down", imageContainer, returnTrue);
 		gesture.listen("up", imageContainer, returnTrue);
 		gesture.listen("drag", imageContainer, returnTrue);
 		modal.setPinchLauncher(imageContainer,
-			function() { upCallback(true); });
+			function() { self.cbs.up(true); });
 	},
 	_initCardGestures: function () {
 		gesture.listen("swipe", this.wrapper, this.cbs.swipe);
