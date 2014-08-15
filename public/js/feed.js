@@ -52,8 +52,8 @@ onload = function ()
 	// varred in util
 	cardCbs = {
 		build: function() {
-			throbber.off();
-			scrollContainer.style.opacity = 1;
+			// throbber.off();
+			// scrollContainer.style.opacity = 1;
 		},
 		start: function (node) {
 			node.x = 0;
@@ -261,9 +261,9 @@ onload = function ()
 			closeAutoComplete(tagName, !!insertCurrent);
 			if (tagName != current_tag) {
 				shareSwap = true;
+				throbber.on();
 				current_tag = tagName;
-				current_deck = getDeck(current_tag, null, cardCbs);
-				current_deck.build(null, insertCurrent ? topCard() : null);
+				current_deck = getDeck(current_tag);
 				analytics.track('Search for Tag', {
 					tag: tagName
 				});
@@ -572,14 +572,14 @@ onload = function ()
 			pair = h.split("~");
 			id = pair[1];
 			xhr("/api/card/" + id, null, function(d) {
-				var firstCard = newCard(d);
+				var firstCard = newCard(d.data);
 				firstCard.show();
 				current_deck = getDeck(current_tag, firstCard);
 			});
 		} else if (document.location.href.indexOf('share') != -1) {
 			id = document.location.pathname.split("/")[3];
 			xhr("/api/card/" + id, null, function(d) {
-				var firstCard = newCard(d);
+				var firstCard = newCard(d.data);
 				firstCard.show();
 				current_deck = getDeck(current_tag, firstCard);
 			});

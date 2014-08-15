@@ -123,6 +123,8 @@ var card_proto = {
 		this.wrapper.appendChild(this.contents);
 	},
 	show: function (cbs) {
+		if(this.showing)
+			return;
 		this.cbs = typeof cbs === "undefined" ? this.cbs : cbs;
 		if(this.surfsUp) {
 			slideContainer.appendChild(this.wrapper);
@@ -134,6 +136,7 @@ var card_proto = {
 		this._formatContents(image.get(this.data));
 		this.showing = true;
 		scrollContainer.style.opacity = 1;
+		throbber.active && throbber.off();	
 		if (slideContainer.childNodes.length == 1)
 			this.setTop();
 	},

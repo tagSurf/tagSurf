@@ -5,7 +5,10 @@ var deck_proto = {
 	},
 	known_keys: {},
 	topCard: function() {
-		return this.cards[0];
+		if (this.cards[0])
+			return this.cards[0];
+		else if (this.firstCard)
+			return this.firstCard;
 	},
 	refreshCards: function(zIndex, update) {
 		var topCard = this.cards[0];
@@ -15,13 +18,13 @@ var deck_proto = {
 			clearStack()
 		this.deal();
 	},
-	popData: function(rdata, firstCard) {
+	popData: function(rdata) {
 		var i, starters = [], others = [], preloads = [];
 
 		if (!isAuthorized())
 			preloads = rdata;
 		else {
-			if (firstCard) this.known_keys[firstCard.id] = true;
+			if (this.firstCard) this.known_keys[this.firstCard.id] = true;
 			for (i = 0; i < rdata.length; i++) {
 				if (!this.known_keys[rdata[i].id]) {
 					var d = rdata[i];
@@ -32,8 +35,8 @@ var deck_proto = {
 			}
 			for (i = 0; i < starters.length; i++) preloads.push(starters[i]);
 			for (i = 0; i < others.length; i++) preloads.push(others[i]);
-			if (firstCard && (firstCard != this.cards[0])) this.cards.unshift(firstCard);
-			else if (firstCard) this.cards.splice(1, 1, firstCard);
+			if (this.firstCard && (this.firstCard != this.cards[0])) this.cards.unshift(this.firstCard);
+			else if (this.firstCard) this.cards.splice(1, 1, this.firstCard);
 		}
 
 		this.cards = this.cards.concat(preloads);
@@ -62,19 +65,19 @@ var deck_proto = {
 		}
 		return "/api/media/" + current_tag;
 	},
-	build: function (update, firstCard) {
+	build: function (update) {
 		var self = this;
-		if (!update) {
+		if (!update && this.firstCard && !this.firstCard.showing) {
 			throbber.on();			
 			clearStack();
 		}
-		xhr(this.dataPath(firstCard), null, function(response_data) {
+		xhr(this.dataPath(this.firstCard), null, function(response_data) {
 			var rdata = response_data.data.map(newCard);
 			if (update)
 				self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata));
 			else {
 				self.cards = [];
-				self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata, firstCard).slice(self.constants.stack_depth));
+				self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata, self.firstCard).slice(self.constants.stack_depth));
 				self.refreshCards(self.constants.stack_depth - 1);
 			}
 		}, function(response, status) {
@@ -110,7 +113,7 @@ var deck_proto = {
 	deal: function() {
 		var cardbox = document.getElementById("slider");
 		if(this.cards.length > 1 && (this.topCard().surfsUp || this.topCard().type == "End-Of-Feed"))
-			this.topCard().remove();
+			this.topCard().remove(this.topCard());
 		else if (this.topCard().surfsUp) {
 			this.build(true);
 			return;
@@ -119,10 +122,10 @@ var deck_proto = {
 			this.cards[i].showing && this.cards[i].promote();
 		for (var i = cardbox.childNodes.length; i < this.constants.stack_depth; i++) {
 			var c = this.cards[i];
-			if (!c && this.cards[i-1].surfsUp)
+			if (!c && this.cards[i - 1] && this.cards[i - 1].surfsUp)
 				return;
 			else if (!c) {
-				c == newCard();
+				c = newCard();
 				c.show(this.cardCbs);
 				return;
 			}
@@ -142,6 +145,7 @@ var getDeck = function(tag, firstCard, cardCbs){
 	deck = cardDecks[tag] = Object.create(deck_proto);
 	deck.cardCbs = cardCbs;
 	deck.tag = tag;
+	deck.firstCard = firstCard;
 	deck.shareSwap = false;
 	deck.shareOffset = 0;
 	deck.cards = [];

@@ -617,7 +617,7 @@ var xhr = function(path, action, cb, eb, async, payload) {
       if (resp.errors || _xhr.status != 200) {
         if (eb) 
           eb(resp, _xhr.status);
-        if (!(_xhr.status == 404) && DEBUG) {
+        if (!(_xhr.status == 404) && !(_xhr.status == 500) && DEBUG) {
           alert("XHR error! Request failed. Path: " + path + " Errors: " + resp.errors 
             + " Response: " + _xhr.responseText + " Status: " + _xhr.status);
           console.log("XHR error! Path:" + path + " Error: "
