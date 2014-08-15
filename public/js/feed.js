@@ -266,8 +266,10 @@ onload = function ()
 			if (tagName != current_tag) {
 				shareSwap = true;
 				throbber.on(true);
+				clearStack();
 				current_tag = tagName;
 				current_deck = getDeck(current_tag);
+				current_deck.deal();
 				analytics.track('Search for Tag', {
 					tag: tagName
 				});
@@ -587,6 +589,7 @@ onload = function ()
 	};
 
 	firstPopulate();
+	current_deck.deal();
 	buildVoteButtons(cardCbs.drag, swipeSlider);
 	
 	if(currentUser.vote_btns){

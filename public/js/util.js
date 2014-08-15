@@ -88,7 +88,6 @@ var current_tag, current_deck, cardCbs, tinput, inputContainer, slideContainer,
         current_stack_depth = cardbox.childNodes.length;
       for (var i = 0; i < current_stack_depth; i++)
         current_deck.cards[i].showing && current_deck.cards[i].unshow();
-    scrollContainer.style.opacity = 0;
   };
 
 var navMenuSlid = false;

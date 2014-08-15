@@ -7,18 +7,6 @@ var deck_proto = {
 	topCard: function() {
 		return this.cards[0];
 	},
-	refreshCards: function(update) {
-		if (!update)
-			clearStack();
-		if (this.cards.length == 1 && this.topCard() && this.topCard().surfsUp) {
-			this.topCard().setFailMsg();
-			return;
-		}
-		this.deal();
-		if (this.topCard() && this.topCard().surfsUp)
-			this.deal();
-		this.topCard().setTop();
-	},
 	popData: function(rdata) {
 		var i, starters = [], others = [], preloads = [];
 
@@ -53,18 +41,19 @@ var deck_proto = {
 				this.shareSwap = false;
 				this.shareOffset = 0;
 			}
-			if (firstCard || current_tag
+			if (firstCard || this.tag
 				!= document.location.pathname.split("/")[2])
-				p += "/share/" + current_tag + "/" +
+				p += "/share/" + this.tag + "/" +
 					(firstCard ? firstCard.id : 0);
 			else
 				p += document.location.pathname;
 			return p + "/20/" + (this.shareOffset++ * 20);
 		}
-		return "/api/media/" + current_tag;
+		return "/api/media/" + this.tag;
 	},
 	build: function (update, firstCard) {
 		var self = this;
+		self.building = true;
 		if (!update) {
 			throbber.on(true);			
 			clearStack();
@@ -72,17 +61,23 @@ var deck_proto = {
 		xhr(this.dataPath(firstCard), null, function(response_data) {
 			var rdata = response_data.data.map(newCard);
 			self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata));
-			if (!update) {
-				self.preloadCards(3);
-			}
-			self.refreshCards(update);
+			self.building = false;
+			if (update)
+				self.refresh();	
+			else 
+				self.preloadCards(self.stack_depth);
 		}, function(response, status) {
 			if (status == 401){
+				self.cards[0] = newCard();
+				self.cards[0].show();
+				self.cards[0].setFailMsg();
 				messageBox("Oops", response.errors + " <br><br><i>Control Safe Surf from Options</i>");
+				self.building = false;
+				return;
 			}
-			if (!update) {
-				self.refreshCards(update);
-			}
+			self.building = false;
+			if (update)
+				self.refresh();
 		});
 	},
 	skipTutorial: function() {
@@ -101,18 +96,28 @@ var deck_proto = {
 	},
 	refresh: function() {
 		this.preloadCards();
+		if (this.cards.length == 1 && this.topCard() && this.topCard().surfsUp) {
+			this.build(true);
+			this.deal()
+			if (this.topCard().surfsUp)
+				this.topCard().setFailMsg();
+			else
+				this.topCard() && this.topCard().setTop();
+			return;
+		}
 		this.deal();
 		this.topCard() && this.topCard().setTop();
 	},
 	deal: function() {
-		var cardbox = document.getElementById("slider");
+		var cardbox = document.getElementById("slider"),
+			self = this;
+		if (this.building) {
+			setTimeout(function() { self.deal(); }, 1000)
+			return;
+		}
 		if(this.cards.length > 1 && (this.topCard().surfsUp || this.topCard().type == "End-Of-Feed")) {
 			this.topCard().cbs.remove = null;
 			this.topCard().remove();
-		}
-		else if (this.topCard() && this.topCard().surfsUp) {
-			this.build(true);
-			return;
 		}
 		for (var i = 0; i < cardbox.childNodes.length; i++)
 			this.cards[i] && this.cards[i].showing && this.cards[i].promote();
@@ -128,6 +133,7 @@ var deck_proto = {
 			else
 				c.show(this.cardCbs);
 		}
+		throbber.active && throbber.off();
 	}
 };
 
@@ -144,7 +150,8 @@ var getDeck = function(tag, firstCard, cardCbs){
 	deck.shareSwap = false;
 	deck.shareOffset = 0;
 	deck.cards = [];
-	deck.cardsToLoad = [];	
+	deck.cardsToLoad = [];
+	deck.building = false;	
 	if (firstCard && firstCard.showing) {
 		deck.cards[0] = firstCard;
 		deck.known_keys[firstCard.id] = true;

@@ -124,6 +124,7 @@ var card_proto = {
 		if(this.showing)
 			return;
 		this.cbs = typeof cbs === "undefined" ? this.cbs : cbs;
+		this.wrapper.style.opacity = 1;
 		if(this.surfsUp) {
 			slideContainer.appendChild(this.wrapper);
 			this.showing = true;
@@ -414,19 +415,17 @@ var card_proto = {
 		this.pushTags();
 	},
 	remove: function () {
-		var self = this;
 		this._forgetGestures();
 		this.wrapper.style.opacity = 0;
-		slideContainer.removeChild(self.wrapper);
+		slideContainer.removeChild(this.wrapper);
 		this.showing = false;
 		removeFromDecks(this);
 		this.cbs.remove && this.cbs.remove();
 	},
 	unshow: function () {
-		var self = this;
 		this._forgetGestures();
 		this.wrapper.style.opacity = 0;
-		slideContainer.removeChild(self.wrapper);
+		slideContainer.removeChild(this.wrapper);
 		this.showing = false;
 	},
 	pushTags: function () {
