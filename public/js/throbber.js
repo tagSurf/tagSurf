@@ -50,9 +50,9 @@ var throbber =
 	off: function ()
 	{
 		throbber.active = false;
-		trans(throbber.gif, function () {
-			throbber.active = false;
-		})
+		// trans(throbber.gif, function () {
+		// 	throbber.active = false;
+		// })
 		if (throbber.backed) {
 			throbber.back.style.opacity = 0;
 			throbber.gif.style.opacity = 0;

@@ -52,6 +52,7 @@ onload = function ()
 	// varred in util
 	cardCbs = {
 		build: function() {
+			// hard-coded into card.show()
 			// throbber.off();
 			// scrollContainer.style.opacity = 1;
 		},
@@ -246,6 +247,9 @@ onload = function ()
 				slider.contents.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
 			}
 			return true;
+		},
+		remove: function() {
+			current_deck.refresh();
 		}
 	};
 	drag.makeDraggable(scrollContainer, {
@@ -368,7 +372,6 @@ onload = function ()
 		trans(swipedCard.wrapper,
 			function () {
 				swipedCard.animating = false;
-				// gesture.unlisten(swipedCard.wrapper.parentNode);
 				if (scrollContainer.scrollTop)
 					scrollContainer.scrollTop = 0;
 				if (scrollContainer.yDrag)
@@ -379,12 +382,8 @@ onload = function ()
 						"-webkit-transform 200ms",
 						"translate3d(0,0,0) rotate(0deg)");
 				}
-				// slideContainer.children[0].style.zIndex = 2;
-				// if (slideContainer.children[1])
-				// 	slideContainer.children[1].style.zIndex = 1;
 				if(vote)
 					swipedCard.vote(voteDir, current_tag, voteAlternative);
-				current_deck.refresh();
 			},
 			"swiping",
 			"translate3d(" + translateQuantity + "px," + verticalQuantity

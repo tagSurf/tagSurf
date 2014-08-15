@@ -146,6 +146,10 @@ html, body
   position: absolute;
   width: 100%;
   padding-bottom: 10px;
+  opacity: 1;
+  transition: opacity 50ms ease-in-out;
+  -moz-transition: opacity 50ms ease-in-out;
+  -webkit-transition: opacity 50ms ease-in-out;
 }
 .card-container
 {

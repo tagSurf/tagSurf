@@ -1,5 +1,5 @@
 var card_proto = {
-	init: function(data) {
+	_init: function(data) {
 		if (data) {
 			var self = this;
 			this.data = data;
@@ -19,7 +19,7 @@ var card_proto = {
 		else 
 			return;
 	},
-	build: function() {
+	_build: function() {
 		this.zIndex = this.wrapper.style.zIndex 
 			= deck_proto.constants.stack_depth
 				- slideContainer.childNodes.length;
@@ -28,8 +28,6 @@ var card_proto = {
 			this._buildContentCard();
 		else if (this.type == "login") 
 			this._buildLoginCard();
-		// else if (DEBUG)
-		// 	alert("unknown card type: " + this.data.type);
 	},
 	_buildContentCard: function() {
 		var	imageContainer, iconLine, textContainer, picTags, fullscreenButton, truncatedTitle, 
@@ -129,9 +127,10 @@ var card_proto = {
 		if(this.surfsUp) {
 			slideContainer.appendChild(this.wrapper);
 			this.showing = true;
+			throbber.active && throbber.off();	
 			return;
 		}
-		this.build();
+		this._build();
 		slideContainer.appendChild(this.wrapper);
 		this._formatContents(image.get(this.data));
 		this.showing = true;
@@ -142,9 +141,10 @@ var card_proto = {
 	},
 	setTop: function() {
 		setCurrentMedia(this, forgetReminders);
-		if (this.expandTimeout) {
+		if (this.expanded)
+			return;
+		if (this.expandTimeout)
 			this.clearExpandTimeout();
-		}
 		if (getOrientation() == "landscape" && window.innerHeight < 700)
 			this.expand();
 		else
@@ -323,7 +323,6 @@ var card_proto = {
 			return;
 		var imageContainer = this.contents.firstChild,
 			fullscreenButton = this.contents.children[4], 
-			formattingContainer = document.getElementById('formatter'),
 			truncatedTitle,
 			picTags = this.contents.children[3], 
 			textContainer = this.contents.children[2],
@@ -343,6 +342,7 @@ var card_proto = {
 			if (!fullscreenButton.classList.contains('hidden'))
 				fullscreenButton.className += ' hidden';
 			this.compressing = false;
+			this.expanded = true;
 		}
 		else
 		{
@@ -353,6 +353,7 @@ var card_proto = {
 				fullscreenButton.classList.remove('hidden');
 			picTags.className += ' hidden';
 			this.compressing = true;
+			this.expanded = false;
 		}
 	},
 	_initImageGestures: function () {
@@ -396,7 +397,8 @@ var card_proto = {
 		gesture.unlisten(this.wrapper);
 	},
 	vote: function (voteFlag, tag, voteAlternative) {
-		if (this.data.type == "content") {
+		this.remove();
+		if (this.type == "content") {
 			this.data.total_votes += 1;
 			this.data[voteFlag + "_votes"] += 1;
 			this.data.user_stats.voted = true;
@@ -410,16 +412,21 @@ var card_proto = {
 				castVote(this);
 		}
 		this.pushTags();
-		this.remove();
 	},
 	remove: function () {
-		slideContainer.removeChild(this.wrapper);
+		var self = this;
+		this._forgetGestures();
+		this.wrapper.style.opacity = 0;
+		slideContainer.removeChild(self.wrapper);
 		this.showing = false;
 		removeFromDecks(this);
+		this.cbs.remove && this.cbs.remove();
 	},
 	unshow: function () {
+		var self = this;
 		this._forgetGestures();
-		slideContainer.removeChild(this.wrapper);
+		this.wrapper.style.opacity = 0;
+		slideContainer.removeChild(self.wrapper);
 		this.showing = false;
 	},
 	pushTags: function () {
@@ -455,6 +462,6 @@ var newCard = function (data) {
 	card.x = card.y = 0;
 	card.wrapper = document.createElement('div');
 	card.contents = document.createElement('div');
-	card.init(data);
+	card._init(data);
 	return card;
 };

@@ -35,7 +35,7 @@ var image = {
 		});
 	},
 	get: function(card, minWidth, isGallery) {
-		var i, size, d = card && (typeof card.data === "undefined") ? card : card.data;
+		var i, size, d = card && card.data ? card.data : card;
 		if(!d)
 			return;
 		// animated cards and unspecified minWidth force original size

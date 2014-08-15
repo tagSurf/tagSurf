@@ -5,18 +5,19 @@ var deck_proto = {
 	},
 	known_keys: {},
 	topCard: function() {
-		if (this.cards[0])
-			return this.cards[0];
-		else if (this.firstCard)
-			return this.firstCard;
+		return this.cards[0];
 	},
-	refreshCards: function(zIndex, update) {
-		var topCard = this.cards[0];
-		if (this.cards.length == 1 && topCard && topCard.surfsUp)
-			topCard.setFailMsg();
-		else if (!update)
-			clearStack()
+	refreshCards: function(update) {
+		if (!update)
+			clearStack();
+		if (this.cards.length == 1 && this.topCard() && this.topCard().surfsUp) {
+			this.topCard().setFailMsg();
+			return;
+		}
 		this.deal();
+		if (this.topCard() && this.topCard().surfsUp)
+			this.deal();
+		this.topCard().setTop();
 	},
 	popData: function(rdata) {
 		var i, starters = [], others = [], preloads = [];
@@ -24,7 +25,6 @@ var deck_proto = {
 		if (!isAuthorized())
 			preloads = rdata;
 		else {
-			if (this.firstCard) this.known_keys[this.firstCard.id] = true;
 			for (i = 0; i < rdata.length; i++) {
 				if (!this.known_keys[rdata[i].id]) {
 					var d = rdata[i];
@@ -35,18 +35,16 @@ var deck_proto = {
 			}
 			for (i = 0; i < starters.length; i++) preloads.push(starters[i]);
 			for (i = 0; i < others.length; i++) preloads.push(others[i]);
-			if (this.firstCard && (this.firstCard != this.cards[0])) this.cards.unshift(this.firstCard);
-			else if (this.firstCard) this.cards.splice(1, 1, this.firstCard);
 		}
-
 		this.cards = this.cards.concat(preloads);
 		return preloads;
 	},
-	preloadCards: function() {
-		if (this.cardsToLoad.length) {
-			image.load(this.cardsToLoad, window.innerWidth - 40);
-			this.cardsToLoad = [];
-		}
+	preloadCards: function(num) {
+		if (!this.cardsToLoad.length)
+			return;
+		var size = this.cardsToLoad.length < num ? this.cardsToLoad.length : num;
+		size = size ? size : this.cardsToLoad.length;
+		image.load(this.cardsToLoad.splice(0, size), window.innerWidth - 40);
 	},
 	dataPath: function(firstCard) {
 		if (!isAuthorized()) {
@@ -65,27 +63,24 @@ var deck_proto = {
 		}
 		return "/api/media/" + current_tag;
 	},
-	build: function (update) {
+	build: function (update, firstCard) {
 		var self = this;
-		if (!update && this.firstCard && !this.firstCard.showing) {
-			throbber.on();			
+		if (!update) {
+			throbber.on(true);			
 			clearStack();
 		}
-		xhr(this.dataPath(this.firstCard), null, function(response_data) {
+		xhr(this.dataPath(firstCard), null, function(response_data) {
 			var rdata = response_data.data.map(newCard);
-			if (update)
-				self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata));
-			else {
-				self.cards = [];
-				self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata, self.firstCard).slice(self.constants.stack_depth));
-				self.refreshCards(self.constants.stack_depth - 1);
+			self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata));
+			if (!update) {
+				self.preloadCards(3);
 			}
+			self.refreshCards(update);
 		}, function(response, status) {
 			if (status == 401){
 				messageBox("Oops", response.errors + " <br><br><i>Control Safe Surf from Options</i>");
 			}
 			if (!update) {
-				self.cards = [];
 				self.refreshCards(update);
 			}
 		});
@@ -107,26 +102,27 @@ var deck_proto = {
 	refresh: function() {
 		this.preloadCards();
 		this.deal();
-		var topCard = this.topCard();
-		topCard && topCard.setTop();
+		this.topCard() && this.topCard().setTop();
 	},
 	deal: function() {
 		var cardbox = document.getElementById("slider");
-		if(this.cards.length > 1 && (this.topCard().surfsUp || this.topCard().type == "End-Of-Feed"))
-			this.topCard().remove(this.topCard());
-		else if (this.topCard().surfsUp) {
+		if(this.cards.length > 1 && (this.topCard().surfsUp || this.topCard().type == "End-Of-Feed")) {
+			this.topCard().cbs.remove = null;
+			this.topCard().remove();
+		}
+		else if (this.topCard() && this.topCard().surfsUp) {
 			this.build(true);
 			return;
 		}
 		for (var i = 0; i < cardbox.childNodes.length; i++)
-			this.cards[i].showing && this.cards[i].promote();
+			this.cards[i] && this.cards[i].showing && this.cards[i].promote();
 		for (var i = cardbox.childNodes.length; i < this.constants.stack_depth; i++) {
 			var c = this.cards[i];
 			if (!c && this.cards[i - 1] && this.cards[i - 1].surfsUp)
 				return;
 			else if (!c) {
-				c = newCard();
-				c.show(this.cardCbs);
+				c = this.cards[i] = newCard();
+				c.show();
 				return;
 			}
 			else
@@ -145,12 +141,18 @@ var getDeck = function(tag, firstCard, cardCbs){
 	deck = cardDecks[tag] = Object.create(deck_proto);
 	deck.cardCbs = cardCbs;
 	deck.tag = tag;
-	deck.firstCard = firstCard;
 	deck.shareSwap = false;
 	deck.shareOffset = 0;
 	deck.cards = [];
-	deck.cardsToLoad = [];
-	deck.build(false, firstCard);
+	deck.cardsToLoad = [];	
+	if (firstCard && firstCard.showing) {
+		deck.cards[0] = firstCard;
+		deck.known_keys[firstCard.id] = true;
+		deck.deal();
+		deck.build(true);
+	}
+	else
+		deck.build(false, firstCard);
 	return deck;
 };
 var removeFromDecks = function(c) {
