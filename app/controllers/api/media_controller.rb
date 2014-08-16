@@ -1,6 +1,6 @@
 class Api::MediaController < Api::BaseController
 
-  before_action :find_authenticated_user, except: :share_feed
+  before_action :find_authenticated_user, except: :share_feed, except: :show
 
   def create_vote
 
