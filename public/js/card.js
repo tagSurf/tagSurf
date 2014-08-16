@@ -122,7 +122,6 @@ var card_proto = {
 		if (this.type == "login"){
 			this._initLoginInputs();
 			initDocLinks();
-			console.log("ima little teapot");
 		}
 		if (this.expanded)
 			return;
@@ -426,7 +425,7 @@ var card_proto = {
 		slideContainer.removeChild(this.wrapper);
 		this.showing = false;
 		removeFromDecks(this);
-		this.cbs.remove && this.cbs.remove();
+		this.cbs.remove && this.cbs.remove(this);
 	},
 	unshow: function () {
 		this._forgetGestures();

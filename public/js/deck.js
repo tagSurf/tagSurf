@@ -89,7 +89,7 @@ var deck_proto = {
 	},
 	purge: function() {
 		this.cards = this.cards.filter(function(card) {
-			return !this.known_keys[card.id];
+			return !deck_proto.known_keys[card.id];
 		});
 	},
 	remove: function(c) {
@@ -119,7 +119,7 @@ var deck_proto = {
 			setTimeout(function() { self.deal(); }, 1000)
 			return;
 		}
-		if(this.cards.length > 1 && cardbox.childNodes.length > 1 
+		if (this.cards.length > 1 && cardbox.childNodes.length > 1 
 			&& (topCard.surfsUp || topCard.type == "End-Of-Feed")) {
 			this.topCard().remove();
 		}

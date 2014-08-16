@@ -248,9 +248,9 @@ onload = function ()
 			}
 			return true;
 		},
-		remove: function() {
-			if (this.type == "content")
-				current_deck.known_keys[this.id] == true;
+		remove: function(self) {
+			if (self.type == "content")
+				current_deck.known_keys[self.id] = true;
 			current_deck.refresh();
 		}
 	};
