@@ -83,32 +83,8 @@ var card_proto = {
 		container.innerHTML = cardTemplate;
 		this.cbs.start(this.contents);
 		this._initCardGestures();
-		this._initLoginInputs();
-		initDocLinks();
-
-		// form validation
-		var p = document.getElementById("password");
-		var f = document.getElementById("new-user");
-		f.onsubmit = function() {
-			if (!validEmail(document.getElementById("email").value)) {
-				alert("Please use a valid email address");
-				return false;
-			}
-			if (p.value.length < 8) {
-				alert("Please try a longer password");
-				return false;
-			}
-			if (p.value != document.getElementById("repassword").value) {
-				alert("Please submit matching passwords");
-				return false;
-			}
-			analytics.track('Sign Up in Feed');
-			return true;
-		};
-		gesture.listen("down", document.getElementById("su-submit-btn"), function() {
-			f.onsubmit() && f.submit();
-		});
 		this.built = true;
+		this.surfsUp = false;
 	},
 	wavesOn: function (zIndex) {
 		this._forgetGestures();
@@ -131,7 +107,8 @@ var card_proto = {
 			throbber.active && throbber.off();	
 			return;
 		}
-		this._build();
+		if(!this.built)
+			this._build();
 		slideContainer.appendChild(this.wrapper);
 		this._formatContents(image.get(this.data));
 		this.showing = true;
@@ -142,6 +119,11 @@ var card_proto = {
 	},
 	setTop: function() {
 		setCurrentMedia(this, forgetReminders);
+		if (this.type == "login"){
+			this._initLoginInputs();
+			initDocLinks();
+			console.log("ima little teapot");
+		}
 		if (this.expanded)
 			return;
 		if (this.expandTimeout)
@@ -386,6 +368,28 @@ var card_proto = {
 		{
 			this._focusInput(listInputs[index]);
 		}
+		// form validation
+		var p = document.getElementById("password");
+		var f = document.getElementById("new-user");
+		f.onsubmit = function() {
+			if (!validEmail(document.getElementById("email").value)) {
+				alert("Please use a valid email address");
+				return false;
+			}
+			if (p.value.length < 8) {
+				alert("Please try a longer password");
+				return false;
+			}
+			if (p.value != document.getElementById("repassword").value) {
+				alert("Please submit matching passwords");
+				return false;
+			}
+			analytics.track('Sign Up in Feed');
+			return true;
+		};
+		gesture.listen("down", document.getElementById("su-submit-btn"), function() {
+			f.onsubmit() && f.submit();
+		});
 	},
 	_focusInput: function (input) {
 		gesture.listen('down', input, function(){

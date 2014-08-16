@@ -9,15 +9,18 @@ var deck_proto = {
 	},
 	popData: function(rdata) {
 		var i, starters = [], others = [], preloads = [];
-		if (!isAuthorized())
-			preloads = rdata;
+		if (!isAuthorized()) {
+			for (i = 0; i < rdata.length; i++) {
+				if (!this.known_keys[rdata[i].id] || rdata[i].type == "login")
+						preloads.push(rdata[i]);
+			}
+		}
 		else {
 			for (i = 0; i < rdata.length; i++) {
 				if (!this.known_keys[rdata[i].id]) {
 					var d = rdata[i];
-					((!d.animated && starters.length < 3)
+					((!d.animated && starters.length < this.constants.stack_depth)
 						? starters : others).push(d);
-					this.known_keys[d.id] = true;
 				}
 			}
 			for (i = 0; i < starters.length; i++) preloads.push(starters[i]);
@@ -85,8 +88,9 @@ var deck_proto = {
 		});
 	},
 	purge: function() {
-		// get rid of old cards, etc
-		//   - use known_keys
+		this.cards = this.cards.filter(function(card) {
+			return !this.known_keys[card.id];
+		});
 	},
 	remove: function(c) {
 		this.cards.splice(this.cards.indexOf(c), 1);
