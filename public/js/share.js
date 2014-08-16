@@ -1,5 +1,4 @@
-var share =
-{
+var share = {
 	cb: null,
 	data: null,
 	shareModalOut: false,

@@ -9,7 +9,6 @@ var deck_proto = {
 	},
 	popData: function(rdata) {
 		var i, starters = [], others = [], preloads = [];
-
 		if (!isAuthorized())
 			preloads = rdata;
 		else {

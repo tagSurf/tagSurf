@@ -3,10 +3,8 @@
 	-webkit-overflow-scrolling: touch;
 	-webkit-tap-highlight-color: rgba(255, 255, 255, 0) !important;
 }
-
 html,
-body
-{
+body {
 	padding: 0;
 	margin: 0;
 	background-color: #404041;
@@ -19,25 +17,20 @@ body
 	opacity: 0;
 	-webkit-transition: opacity 666ms ease-in-out;
 }
-
 html, input[type="submit"] {
 	font-family: 'Raleway', sans-serif;
 	font-weight: 200;
 }
-
 a, img, input[type="submit"], .pointer {
 	cursor: pointer;
 }
-
 a {
 	color: black;
 	text-decoration: none;
 }
-
 ::-webkit-scrollbar { 
     display: none; 
 }
-
 .nowrap {
 	white-space: nowrap;
 }
@@ -50,15 +43,12 @@ a {
 .alert-success, .hidden {
 	display: none !important;
 }
-.hider
-{
+.hider {
 	visibility: hidden;
 }
-
 .tcell {
 	display: table-cell;
 }
-
 .delNode {
 	border-left: 1px solid white;
 }
@@ -68,91 +58,72 @@ a {
 .centered {
 	text-align: center;
 }
-
-.float-left{
+.float-left {
   float:left;
 }
-
-.float-right{
+.float-right {
   float:right;
 }
-
 .smallpadded {
 	padding: 3px 5px;
 }
-
 .midsize {
 	font-size: 11pt;
 	font-weight: 300;
 }
-
 .halfwidth {
 	width: 50%;
 }
-
 .padded {
 	padding: 10px;
 }
-
 .bigpadded {
 	padding: 25px;
 }
-
 .nopad {
 	padding: 0px !important;
 }
-
 .round {
 	border-radius: 5px;
 }
-
-.twelve{
+.twelve {
   font-size: 12px;
 }
-
 .smaller {
 	font-size: 55%;
 }
-
 .small {
 	font-size: 80%;
 }
-
-.normal{
+.normal {
   font-size: 100%;
 }
-
 .big {
 	font-size: 120%;
 }
-
 .bigger {
 	font-size: 140%;
 }
-
 .biggest {
 	font-size: 160%;
 }
 .really-big {
 	font-size: 240%;
 }
-
 .bold {
 	font-weight: bold;
 }
-
 .blue {
 	color: #00aeef;
 }
-
 .light-gray {
 	color: #989898;
 }
+
 /*===== Pic Tags Stuff =====*/
 .pictags {
 	text-align: center;
 }
-
 .pictags span {
 	display: inline-block;
 	background: #00aeef;
@@ -162,7 +133,6 @@ a {
 	cursor: pointer;
 	font-size: 80%;
 }
-
 .pictagcell {
 	display: inline-block;
 	background: #00aeef;
@@ -170,6 +140,7 @@ a {
 	margin: 5px;
 	cursor: pointer;
 }
+
 /*===== Modal Backing Stuff =====*/
 .blackout {
 	pointer-events: none;
@@ -182,17 +153,14 @@ a {
 	background-color: rgba(0, 0, 0, 0);
 	-webkit-transition: background-color 666ms ease-in-out;
 }
-
 .blackfade {
 	pointer-events: auto;
 	background-color: rgba(0, 0, 0, 1);
 }
-
 .halffade {
 	pointer-events: auto;
 	background-color: rgba(0, 0, 0, 0.7);
 }
-
 .modal {
 	overflow-y: auto;
 	overflow-x: hidden;
@@ -209,6 +177,7 @@ a {
 	-webkit-transition: -webkit-transform 250ms ease-in-out;
 	-webkit-overflow-scrolling: auto;
 }
+
 /*======== Modal Close Button Stuff =========*/
 .modal-close-button {
 	width: 40px;
@@ -236,18 +205,17 @@ a {
 	left: 20px;
 	z-index: 15;
 }
-
 .modalslide {
 	-webkit-transform: translate3d(0, 0, 0) !important;
 	-webkit-overflow-scrolling: touch;
 }
-
 .disabled {
 	z-index: -5 !important;
 	opacity: 0;
 	-webkit-transition: none !important;
 	pointer-events: none;
 }
+
 /*========= Login Page Stuff =========*/
 .tslogo {
   display: block;
@@ -257,9 +225,7 @@ a {
   height:241px;
   margin:20px auto;
 }
-
-.input-border-container
-{
+.input-border-container {
 	width: 218px;
 	height: 37px;
 	border: solid 1px black;
@@ -269,12 +235,9 @@ a {
 	border-radius: 50px / 50px;
 	-webkit-background-clip: padding-box;
 }
-
-.input-checkbox{
+.input-checkbox {
   margin:10px 0 0 0;
 }
-
-
 .ts-input {
 	width: 215px;
 	height: 34px;
@@ -293,9 +256,9 @@ a {
 	transition: border-color 200ms;
 	-webkit-background-clip: padding-box;
 }
+
 /*======== Throbber Stuff =========*/
-.throbber
-{
+.throbber {
 	height: 50px;
 	pointer-events: none;
 	opacity: 0;
@@ -304,13 +267,11 @@ a {
 	-webkit-transition: opacity 500ms;
 	transition: opacity 500ms;
 }
-.throbber-bottom
-{
+.throbber-bottom {
 	bottom: 5px;
 	height: 30px;
 }
-.throbber-back
-{
+.throbber-back {
 	background-color: #404041;
 	position: absolute;
 	opacity: 0;
@@ -320,19 +281,16 @@ a {
 	transition: opacity 500ms;
 }
 /*======== Zoom Modal Stuff =======*/
-.raw-wrapper
-{
+.raw-wrapper {
   display: inline;
   top: 0;
   position: absolute;
   width:100%; 
 }
-.raw-wrapper img
-{
+.raw-wrapper img {
   pointer-events: none;
 }
-.zoom-wrapper
-{
+.zoom-wrapper {
   top: 50px;
   overflow: scroll;
   position: absolute;
@@ -362,7 +320,7 @@ a {
   border-radius: 4px;
   border: 1px solid #00aeef;
   color: #00aeef;
-  font-weight: bold;
+  font-weight: 500;
 }
 .autocomplete {
   z-index: 4;
@@ -373,21 +331,17 @@ a {
   overflow-y: scroll;
   -webkit-transition: height 300ms ease-out;
 }
-.autocomplete div div
-{
+.autocomplete div div {
   padding: 5px 15px;
 }
-.autocomplete div div:active
-{
+.autocomplete div div:active {
   color: white;
   background-color: #00aeef;
 }
-.autocomplete-open
-{
+.autocomplete-open {
   overflow-x: hidden;
 }
-.hardware-acceleration, .translate-z
-{
+.hardware-acceleration, .translate-z {
    -webkit-backface-visibility: hidden;
    -webkit-perspective: 1000;
    backface-visibility: hidden;
@@ -396,8 +350,7 @@ a {
 }
 
 /*============ Panic Button Stuff ===========*/
-#panic-button
-{
+#panic-button {
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
   opacity: 0;
@@ -409,36 +362,32 @@ a {
   padding: 10px;
   pointer-events: none;
 }
-#panic-icon
-{
+#panic-icon {
   width: 30px;
 }
-.panic-active
-{
+.panic-active {
   opacity: 1 !important;
   pointer-events: initial !important;
 }
-#get-away-button
-{
+#get-away-button {
 	max-width: 75% !important;
 	font-size: 160%;
 }
-.vote-button
-{
+
+/*=========== Vote Buttons Stuff ============*/
+.vote-button {
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
   z-index: 15;
   width: 80px;
   padding: 10px;
 }
-#vote-button-left
-{
+#vote-button-left {
   position: absolute;
   bottom: 5px;
   left: 50px;
 }
-#vote-button-right
-{
+#vote-button-right {
   position: absolute;
   bottom: 5px;
   right: 50px;
@@ -453,8 +402,7 @@ a {
 }
 
 /*============== Share Button Stuff ============*/
-#share-button
-{
+#share-button {
   -webkit-transition: opacity 250ms;
   transition: opacity 250ms;
   opacity: 0;
@@ -466,17 +414,14 @@ a {
   padding: 10px;
   pointer-events: none;
 }
-#share-icon
-{
+#share-icon {
   width: 30px;
 }
-.share-active
-{
+.share-active {
   opacity: 1 !important;
   pointer-events: initial !important;
 }
-.translate-z
-{
+.translate-z {
   -webkit-backface-visibility: hidden;
   -webkit-perspective: 1000;
   backface-visibility: hidden;
@@ -485,26 +430,22 @@ a {
   -moz-transform: translateZ(0);
   transform: translateZ(0);
 }
-.inverted
-{
+.inverted {
         -webkit-transform: scaleX(-1);
 	        transform: scaleX(-1);
 
 }
-.ts-active-button
-{
+.ts-active-button {
   color: #404041;
   background-color: #00719C !important;
 }
-.opaque
-{
+.opaque {
   opacity: 1 !important;
 }
 
 /*========= Message Box Stuff ============*/
 .close-button-container,
-.touch-expander
-{
+.touch-expander {
   float: right;
   clear: both;
   width: 30px;
@@ -512,27 +453,23 @@ a {
   padding: 5px;
   z-index: 1;
 }
-.x-close-button
-{
+.x-close-button {
   width: 20px;
 }
-.prompt-title
-{
+.prompt-title {
   color: #00aeef;
   font-size: 20px;
   clear: both;
   margin: 0;
   position: relative;
 }
-.prompt-message
-{
+.prompt-message {
   display: inline-block;
   color: black;
   text-align: center;
   font-size: 16px;
 }
-.msgbox-btn
-{
+.msgbox-btn {
   display: block;
   text-align: center;
   background: #00aeef;
@@ -544,17 +481,14 @@ a {
   max-width: 35%;
   cursor: pointer;
 }
-.prompt-container
-{
+.prompt-container {
 	text-align: center;
 }
-.modal-prompt > div
-{
+.modal-prompt > div {
 	display: block;
 	text-align: center;
 }
-.modal-prompt
-{
+.modal-prompt {
   opacity: 0;
   margin: 0 auto;
   text-align: center;
@@ -576,8 +510,7 @@ a {
 	height: 20px;
 	font-weight: 200;
 }
-#su-submit-btn
-{
+#su-submit-btn {
 	font-size: 20px;
 	font-family: 'Raleway', 'sans-serif';
 	font-weight:200;
@@ -601,8 +534,7 @@ a {
 	margin-bottom: 10px !important;
 	margin-top: 10px;
 }
-.su-input
-{
+.su-input {
 	font-family: 'Raleway', 'sans-serif';
 	width: 203px;
 	height: 31px;
@@ -620,8 +552,7 @@ a {
 	transition: border-color 200ms;
 	-webkit-background-clip: padding-box;
 }
-.su-input-container
-{
+.su-input-container {
 	width: 225px;
 	height: 37px;
 	margin-top: 4px;
@@ -632,50 +563,42 @@ a {
 	border-radius: 50px / 50px;
 	-webkit-background-clip: padding-box;
 }
-
 .light-bottom-margin{
   margin-bottom: 4px; 
 }
+
 /*===== Close Button for Swipe Reminder =====*/
-.reminder-close
-{
+.reminder-close {
   position: absolute;
   width: 40px;
   bottom: 15px;
   right: 15px;
 }
-.big-lnk
-{
+.big-lnk {
 	padding: 15px 0;
 }
-
-.wide-text
-{
+.wide-text {
 	display: inline-block;
 }
-.share-link-icon
-{
+.share-link-icon {
 	width: 33%;
 	margin: 0 20px;
 }
-.share-heading-margin
-{
+.share-heading-margin {
 	margin: 40px 0;
 }
-.center-label
-{
+.center-label {
   text-align: center;
   padding-top: 15%;
 }
-.tos-line{
+.tos-line {
 	position: fixed;
 	bottom: 10px;
 	left: 0;
 	right: 0;
 	font-size: 80%;
 }
-.content 
-{
+.content {
   position: absolute;
   top: 40px;
   bottom: 70px;
@@ -690,29 +613,25 @@ a {
   margin-left: auto;
   margin-right: auto;
 }
-
 .content ul {
   width: 85%;
   margin-left: auto;
   margin-right: auto;
   -webkit-padding-start: 15px;
 }
-
 .content ol {
   width: 85%;
   margin-left: auto;
   margin-right: auto;
   -webkit-padding-start: 15px;
 }
-.bottom 
-{
+.bottom {
   width: 100%;
   position: absolute;
   bottom: 12px;
   overflow: hidden;
 }
-.button 
-{
+.button {
   text-align: center;
   white-space: nowrap;
   font-weight: 200;
@@ -723,24 +642,20 @@ a {
   cursor: pointer;
   overflow: hidden;
 }
-.forward 
-{
+.forward {
   float: right;
   margin-right: -30px;
   padding-right: 40px;
   width: 180px;
 }
-.tos-title
-{
+.tos-title {
   font-size: 120%;
   padding: 5px 10px 10px 15px;
 }
-#url-container
-{
+#url-container {
 	margin-top: 40px;
 }
-#share-url 
-{
+#share-url {
 	font-size: 120%;
 	line-height: 40px;
 	padding: 0 10px;
@@ -752,28 +667,25 @@ a {
 	width: 80%;
 	vertical-align: bottom;
 }
+
 /*===== Options Menu Stuff ======*/
-.options-table 
-{
+.options-table {
 	width: 260px;
 }
-.options-title
-{
+.options-title {
 	font-size: 200%;
 	position: relative;
 	top: -25px;
 }
-.options-key-text
-{
+.options-key-text {
 	font-size: 180%;
 	margin-right: 15px;
 }
-.options-key-desc 
-{
+.options-key-desc {
 	padding-top: 5px;
 }
 
-/*======= As seen on proto.io ========*/
+/*==== Options Switch (As seen on proto.io) ====*/
 .onoffswitch-container {
 	position: relative;
 	width: 90px;
@@ -859,6 +771,7 @@ a {
 	.center-label {
 		padding-top: 13%;
 	}
+	
 	/*===== Share Button =====*/
 	#share-button {
 	  bottom: 10px;
@@ -868,10 +781,10 @@ a {
 	#share-icon {
 		width: 50px;
 	}
-	.share-link-icon
-	{
+	.share-link-icon {
 		padding: 0 50px;
 	}
+	
 	/*===== Panic Button =====*/
 	#panic-button {
 	  bottom: 10px;
@@ -892,6 +805,7 @@ a {
 	.midsize {
 		font-size: 14pt;
 	}
+	
 	/*===== Options Menu =====*/
 	.options-table {
 		width: 30%;
@@ -911,6 +825,7 @@ a {
 	.tos-line {
 		 font-size: 120%;
 	}
+	
 	/*===== Share Menu ======*/
 	#url-container {
 		margin-top: 7%;
@@ -931,6 +846,8 @@ a {
  	.share_heading_margin {
  		margin: 60px 0;
  	} 
+ 	
+ 	/*===== Vote Buttons ======*/
  	.vote-button
 	{
 	  width: 120px;
@@ -943,6 +860,8 @@ a {
 	{
 	  right: 90px;
 	}
+    
+	/*===== Close Buttons ======*/
     .modal-close-button {
 		width: 50px;
 	}

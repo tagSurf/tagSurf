@@ -1,5 +1,5 @@
-/* Global notification styles */
-.alert{
+/*==== Global notification styles =====*/
+.alert {
   position: absolute;
   z-index:1000;
   width: 100%;
@@ -11,18 +11,15 @@
   font-size:14px; 
   top:0;
 }
-
-.flash{
+.flash {
   margin:10px 0 10px 0;
 }
-
 .shadow {
   -moz-box-shadow: 0.5px 0.866px 3px 0px rgb( 0, 0, 0 );
   -webkit-box-shadow: 0.5px 0.866px 3px 0px rgb( 0, 0, 0 ); 
   box-shadow: 0.5px 0.866px 3px 0px rgb( 0, 0, 0 ); 
 }
-
-.bottom-rounded{
+.bottom-rounded {
   border-bottom-left-radius:5px;
   border-bottom-right-radius:5px;
 }

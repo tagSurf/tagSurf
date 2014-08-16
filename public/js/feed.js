@@ -601,9 +601,11 @@ onload = function ()
 	if(currentUser.vote_btns){
 		voteButtonsOn();
 	}
+	
 	analytics.identify(currentUser.id);
+	
 	if(!isAuthorized() && !DEBUG)
-		newReminder(null, null, "Swipe", 13000);
+		startOrientation();
 };
 
 //This is the first line executed in feed

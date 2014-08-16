@@ -2,11 +2,9 @@ html, body {
 	background: white;
 	opacity: 1;
 }
-
 .focused {
 	border-color: #48a4df;
 }
-
 .ts-submit-bar {
 	width: 100%;
 	height: 44px;
@@ -14,18 +12,15 @@ html, body {
 	margin-top: 12px;
 	padding: 4px 2%;
 }
-
 .ts-submit-left {
 	float: left;
 }
-
 .ts-submit-right {
 	width: 44%;
 	float: left;
 	position: relative;
 	left: 25px;
 }
-
 .border-trim {
 	overflow: hidden;
 	width: 50%;
@@ -33,7 +28,6 @@ html, body {
 	position: relative;
 	top: -4px;
 }
-
 #ts-login-btn {
 	background-color: #1dafec;
 	border-left: none;
@@ -55,8 +49,7 @@ html, body {
 	box-shadow: none !important;
 	-webkit-appearance: none;
 }
-
-.ts-signup-btn{
+.ts-signup-btn {
 	color: inherit;
 	font-size: 20pt;
 	white-space: nowrap;
@@ -67,32 +60,27 @@ html, body {
 	left: -3px;
 	text-decoration: none !important;
 }
-
-.ts-blue{
+.ts-blue {
   color: #1dafec;
 }
-
-.forgot-password{
+.forgot-password {
   display:block;
   width:100px;
   margin:20px auto;
 }
-
-.link-to-login{
+.link-to-login {
   display:block;
   width:210px;
   margin:-5px auto 10px;
   color:#272727;
   font-weight:500;
 }
-
-.registration-links-container{
+.registration-links-container {
   display:block;
   width:55px;
   margin:20px auto;
 }
-
-.regs-link{
+.regs-link {
   display:inline-block;
   margin-right: 12px;
 }

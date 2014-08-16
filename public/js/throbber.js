@@ -1,5 +1,4 @@
-var throbber =
-{
+var throbber = {
 	active: false,
 	backed: false,
 	gif: document.createElement('img'),

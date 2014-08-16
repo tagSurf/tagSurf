@@ -1,4 +1,6 @@
-var reminders = [], _reminder = {
+var reminders = [];
+
+var reminder_proto = {
 	forget: function() {
 		if(!this.timeout) 
 			return;
@@ -35,9 +37,12 @@ var reminders = [], _reminder = {
 				console.log("Error: reminder close direction == 'up' || 'down'");
 	},
 	show: function() {
+		for (var i = 0; i < reminders.length; ++i)
+			if(reminders[i].isOn && (reminders[i].zIndex >= this.zIndex))
+				this.zIndex = reminders[i].zIndex + 1;
 		this.isOn = true;
+		this.container.style.zIndex = this.zIndex;
 		this.container.style.visibility = "visible";
-		this.container.style.zIndex = "100";
 		this.container.style.opacity = 1;
 		if(isDesktop())
 			analytics.track('Seen Desktop ' + this.type + ' Reminder');
@@ -64,35 +69,8 @@ var reminders = [], _reminder = {
 		closeContainer.appendChild(close);
 		if(this.node)
 			container.appendChild(this.node);
-		// TODO Refactor this code into vars for each node type 
-		// and simplfy this block by just switching the node
-		else if(this.type == "Swipe"){
-			var leftImage = new Image(), rightImage = new Image();
-			leftImage.id = "reminder-left";
-			rightImage.id = "reminder-right";
-			if(isDesktop()) {
-				var closeInstructions = new Image();
-				closeInstructions.className = "close-instructions block";
-				closeInstructions.src="http://assets.tagsurf.co/img/clearscreen.png";
-				container.appendChild(closeInstructions);
-				rightImage.src = "http://assets.tagsurf.co/img/reminder_right_desktop.png";
-				leftImage.src = "http://assets.tagsurf.co/img/reminder_left_desktop.png";
-				addCss({
-					"#reminder-left": function() {
-						return "width: 18%; top: 20%";
-					},
-					"#reminder-right": function() {
-						return "width: 18%";
-					}
-				});
-			}
-			else {
-				leftImage.src = "http://assets.tagsurf.co/img/reminder_left_mobile.png";	
-				rightImage.src = "http://assets.tagsurf.co/img/reminder_right_mobile.png";
-			}
-			container.appendChild(leftImage);
-			container.appendChild(rightImage);
-		}
+		else if (DEBUG)
+			console.log("Error: no contents for reminder container");
 		gesture.listen("drag", self.container, function (direction) {
 			if (direction != "left" && direction != "right")
 			{
@@ -110,7 +88,7 @@ var reminders = [], _reminder = {
 };
 
 var newReminder = function(node, cb, type, delay) {
-	var reminder = reminders[reminders.length] = Object.create(_reminder);
+	var reminder = reminders[reminders.length] = Object.create(reminder_proto);
 	reminder.container = document.createElement('div');
 	reminder.timeout = null;
 	reminder.isOn = false;
@@ -118,6 +96,7 @@ var newReminder = function(node, cb, type, delay) {
 	reminder.type = type;
 	reminder.delay = delay;
 	reminder.node = node;
+	reminder.zIndex = 100;
 	reminder._build();
 	return reminder;
 };
