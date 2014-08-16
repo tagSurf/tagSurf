@@ -258,6 +258,8 @@ var card_proto = {
 		var self = this,
 			isMine = this._isMine(tag),
 			p = document.createElement("div");
+		if (tag == "trending")
+			return;
 		p.className = "pictagcell";
 		p.id = this.id + tag;
 		var tNode = document.createElement("div");
@@ -304,7 +306,7 @@ var card_proto = {
 	rmTag: function(tag) {
 	  var tobjs = this.tags;
 	  for (var i = 0; i < tobjs.length; i++) {
-		if (Object.keys(tobjs[i])[0] == tag){
+		if (Object.keys(tobjs[i])[0] == tag) {
 			tobjs.splice(i,1);
 			this.contents.children[3].removeChild(document.getElementById(this.id + tag));
 			break;
@@ -391,11 +393,11 @@ var card_proto = {
 		});
 	},
 	_forgetGestures: function() {
-		var imageContainer = this.wrapper.getElementsByClassName('image-container')[0];
-		if (imageContainer) {
-			gesture.unlisten(imageContainer);
-		}
-		gesture.unlisten(this.wrapper);
+		var imageContainer = self.wrapper.getElementsByClassName('image-container')[0];
+		// if (imageContainer) {
+		// 	gesture.unlisten(imageContainer);
+		// }
+		gesture.unlisten(self.wrapper);
 	},
 	vote: function (voteFlag, tag, voteAlternative) {
 		this.remove();
