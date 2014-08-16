@@ -117,7 +117,6 @@ var deck_proto = {
 		}
 		if(this.cards.length > 1 && cardbox.childNodes.length > 1 
 			&& (topCard.surfsUp || topCard.type == "End-Of-Feed")) {
-			this.topCard().cbs.remove = null;
 			this.topCard().remove();
 		}
 		for (var i = 0; i < cardbox.childNodes.length; i++)
