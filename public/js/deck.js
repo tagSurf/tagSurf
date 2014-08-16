@@ -110,12 +110,14 @@ var deck_proto = {
 	},
 	deal: function() {
 		var cardbox = document.getElementById("slider"),
-			self = this;
+			self = this,
+			topCard = this.topCard();
 		if (this.building) {
 			setTimeout(function() { self.deal(); }, 1000)
 			return;
 		}
-		if(this.cards.length > 1 && (this.topCard().surfsUp || this.topCard().type == "End-Of-Feed")) {
+		if(this.cards.length > 1 && cardbox.childNodes.length > 1 
+			&& (topCard.surfsUp || topCard.type == "End-Of-Feed")) {
 			this.topCard().cbs.remove = null;
 			this.topCard().remove();
 		}
@@ -123,7 +125,7 @@ var deck_proto = {
 			this.cards[i] && this.cards[i].showing && this.cards[i].promote();
 		for (var i = cardbox.childNodes.length; i < this.constants.stack_depth; i++) {
 			var c = this.cards[i];
-			if (!c && this.cards[i - 1] && this.cards[i - 1].surfsUp)
+			if (!c && this.cards[i - 1] && (this.cards[i - 1].type == "End-Of-Feed" || this.cards[i - 1].surfsUp))
 				return;
 			else if (!c) {
 				c = this.cards[i] = newCard();
@@ -152,7 +154,7 @@ var getDeck = function(tag, firstCard, cardCbs){
 	deck.cards = [];
 	deck.cardsToLoad = [];
 	deck.building = false;	
-	if (firstCard && firstCard.showing) {
+	if (firstCard) {
 		deck.cards[0] = firstCard;
 		deck.known_keys[firstCard.id] = true;
 		deck.deal();

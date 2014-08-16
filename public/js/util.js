@@ -71,7 +71,7 @@ var isAuthorized = function () {
 
 // autocomplete stuff
 var current_tag, current_deck, cardCbs, tinput, inputContainer, slideContainer,
-  scrollContainer, closeAutoComplete = function(tagName, noback) {
+  scrollContainer, closeAutoComplete = function(noback) {
     if (noback) {
       slideContainer.className = "";
       scrollContainer.insertBefore(inputContainer,
@@ -82,7 +82,6 @@ var current_tag, current_deck, cardCbs, tinput, inputContainer, slideContainer,
         scrollContainer.firstChild);
     });
     tinput.active = false;
-    location.hash = tinput.value = tagName || current_tag;
   }, clearStack = function() {
     var cardbox = document.getElementById("slider"),
         current_stack_depth = cardbox.childNodes.length;

@@ -259,21 +259,26 @@ onload = function ()
 	var staticHash = document.getElementById("static-hash"),
 		staticTrending = document.getElementById("static-trending");
 
+	var switchTag = function (tagName) {
+		if (tagName != current_tag) {
+			shareSwap = true;
+			throbber.on(true);
+			clearStack();
+			current_tag = tagName;
+			current_deck = getDeck(current_tag);
+			current_deck.deal();
+		    location.hash = tinput.value = tagName || current_tag;
+			analytics.track('Search for Tag', {
+				tag: tagName
+			});
+		}
+	};
+
 	// autocomplete stuff
 	var autocompleteCbs = {
 		tapCb: function(tagName, insertCurrent) {
-			closeAutoComplete(tagName, !!insertCurrent);
-			if (tagName != current_tag) {
-				shareSwap = true;
-				throbber.on(true);
-				clearStack();
-				current_tag = tagName;
-				current_deck = getDeck(current_tag);
-				current_deck.deal();
-				analytics.track('Search for Tag', {
-					tag: tagName
-				});
-			}
+			closeAutoComplete(!!insertCurrent);
+			switchTag(tagName);
 		},
 		expandCb: function() {
 			tinput.value = "";
@@ -574,22 +579,23 @@ onload = function ()
 			id = pair[1];
 			xhr("/api/card/" + id, null, function(d) {
 				var firstCard = newCard(d.data);
-				firstCard.show();
 				current_deck = getDeck(current_tag, firstCard);
+				current_deck.deal();
 			});
 		} else if (document.location.href.indexOf('share') != -1) {
 			id = document.location.pathname.split("/")[3];
 			xhr("/api/card/" + id, null, function(d) {
 				var firstCard = newCard(d.data);
-				firstCard.show();
 				current_deck = getDeck(current_tag, firstCard);
+				current_deck.deal();
 			});
-		} else
-			current_deck = getDeck(current_tag, null);
+		} else {
+			current_deck = getDeck(current_tag);
+			current_deck.deal();
+		}
 	};
 
 	firstPopulate();
-	current_deck.deal();
 	buildVoteButtons(cardCbs.drag, swipeSlider);
 	
 	if(currentUser.vote_btns){
