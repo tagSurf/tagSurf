@@ -1,7 +1,8 @@
 var deck_proto = {
 	constants: {
 		buffer_minimum: 5,
-		stack_depth: 3
+		stack_depth: 3,
+		login_spacing: 5
 	},
 	known_keys: {},
 	topCard: function() {
@@ -39,10 +40,7 @@ var deck_proto = {
 	dataPath: function(firstCard) {
 		if (!isAuthorized()) {
 			var p = "/api";
-			if (this.shareSwap) {
-				this.shareSwap = false;
-				this.shareOffset = 0;
-			}
+			this.shareDeck = true;
 			if (firstCard || this.tag
 				!= document.location.pathname.split("/")[2])
 				p += "/share/" + this.tag + "/" +
@@ -91,6 +89,24 @@ var deck_proto = {
 		this.cards = this.cards.filter(function(card) {
 			return !deck_proto.known_keys[card.id];
 		});
+		if (this.shareDeck) {
+			var cards_since_last_login = 0;
+			for (i = 0; i < this.cards.length; ++i) {
+				if (this.cards[i].type != "login")
+					++cards_since_last_login;
+				else {
+					if (cards_since_last_login < (this.constants.login_spacing - 1)) {
+						var login_card = this.cards[i],
+							push_index = cards_since_last_login - (this.constants.login_spacing - 1);
+						if (this.cards[i+push_index].type != "login")
+							this.cards.splice((i+push_index), 0, login_card);
+						else
+							this.cards.splice(i, 1);
+					}
+					cards_since_last_login = 0;
+				}
+			}
+		}
 	},
 	remove: function(c) {
 		this.cards.splice(this.cards.indexOf(c), 1);
@@ -151,7 +167,7 @@ var getDeck = function(tag, firstCard, cardCbs){
 	deck = cardDecks[tag] = Object.create(deck_proto);
 	deck.cardCbs = cardCbs;
 	deck.tag = tag;
-	deck.shareSwap = false;
+	deck.shareDeck = false;
 	deck.shareOffset = 0;
 	deck.cards = [];
 	deck.cardsToLoad = [];
