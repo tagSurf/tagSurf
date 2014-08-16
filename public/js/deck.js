@@ -36,6 +36,7 @@ var deck_proto = {
 		var size = this.cardsToLoad.length < num ? this.cardsToLoad.length : num;
 		size = size ? size : this.cardsToLoad.length;
 		image.load(this.cardsToLoad.splice(0, size), window.innerWidth - 40);
+		console.log("preload cards");
 	},
 	dataPath: function(firstCard) {
 		if (!isAuthorized()) {
@@ -58,6 +59,7 @@ var deck_proto = {
 			throbber.on(true);			
 			clearStack();
 		}
+		console.log("deck build, update =" + update + "firstCard = ", firstCard);
 		xhr(this.dataPath(firstCard), null, function(response_data) {
 			var rdata = response_data.data.map(newCard);
 			self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata));
@@ -86,6 +88,7 @@ var deck_proto = {
 		});
 	},
 	purge: function() {
+		console.log("purge deck");
 		this.cards = this.cards.filter(function(card) {
 			return !deck_proto.known_keys[card.id];
 		});
@@ -110,11 +113,13 @@ var deck_proto = {
 	},
 	remove: function(c) {
 		this.cards.splice(this.cards.indexOf(c), 1);
+		console.log("remove c from deck #" + this.tag + " card = ", c);
 		if (this.cards.length < this.constants.buffer_minimum)
 			this.build(true);
 	},
 	refresh: function() {
 		this.preloadCards();
+		console.log("deck refresh");
 		if (this.cards.length == 1 && this.topCard() && this.topCard().surfsUp) {
 			this.build(true);
 			this.deal()
@@ -133,14 +138,18 @@ var deck_proto = {
 			topCard = this.topCard();
 		if (this.building) {
 			setTimeout(function() { self.deal(); }, 1000)
+			console.log("delay deal because deck is building");
 			return;
 		}
 		if (this.cards.length > 1 && cardbox.childNodes.length > 1 
 			&& (topCard.surfsUp || topCard.type == "End-Of-Feed")) {
+			console.log("removed top card", topCard);
 			this.topCard().remove();
 		}
-		for (var i = 0; i < cardbox.childNodes.length; i++)
+		for (var i = 0; i < cardbox.childNodes.length; i++) {
 			this.cards[i] && this.cards[i].showing && this.cards[i].promote();
+			console.log("promote cards");
+		}
 		for (var i = cardbox.childNodes.length; i < this.constants.stack_depth; i++) {
 			var c = this.cards[i];
 			if (!c && this.cards[i - 1] && (this.cards[i - 1].type == "End-Of-Feed" || this.cards[i - 1].surfsUp))
@@ -148,10 +157,13 @@ var deck_proto = {
 			else if (!c) {
 				c = this.cards[i] = newCard();
 				c.show();
+				console.log("create throbber card");
 				return;
 			}
-			else
+			else {
 				c.show(this.cardCbs);
+				console.log("show bottom card. i = " + i);
+			}
 		}
 		throbber.active && throbber.off();
 	}
