@@ -393,11 +393,11 @@ var card_proto = {
 		});
 	},
 	_forgetGestures: function() {
-		var imageContainer = self.wrapper.getElementsByClassName('image-container')[0];
+		var imageContainer = this.wrapper.getElementsByClassName('image-container')[0];
 		// if (imageContainer) {
 		// 	gesture.unlisten(imageContainer);
 		// }
-		gesture.unlisten(self.wrapper);
+		gesture.unlisten(this.wrapper);
 	},
 	vote: function (voteFlag, tag, voteAlternative) {
 		this.remove();
