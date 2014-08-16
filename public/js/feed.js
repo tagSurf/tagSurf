@@ -615,6 +615,7 @@ throbber.on(true);
 
 if (isAuthorized())
 {
+	console.log("hello world");
 	var lastPath = sessionStorage.getItem("lastPath");
 	if (lastPath) {
 		sessionStorage.removeItem("lastPath");

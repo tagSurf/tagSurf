@@ -43,31 +43,33 @@ var whichGallery = function() {
 };
 
 var isAuthorized = function () {
-  if(authorizedSession == null) {
-    xhr('/api/users', "GET", function(result) {
-      if (result.user != "not found") {
-        authorizedSession = true;
-        currentUser.id = result.user.id;
-        currentUser.email = result.user.email;
-        currentUser.slug = result.user.slug;
-        currentUser.admin = result.user.admin;
-        currentUser.safeSurf = result.user.safe_mode;
-        if(!isDesktop())
-          currentUser.vote_btns = false;
-      }
-      else
-        authorizedSession = false;
-      // var vote_btns = sessionStorage.getItem("vote_btns");
-      // if(typeof vote_btns !== 'undefined')
-      //   currentUser.vote_btns = vote_btns;  
-    }, function(result) {
-      if (result.user == "not found") 
-        authorizedSession = false;
-    }, false);
+  if (authorizedSession != null)
     return authorizedSession;
+  if (document.location.href.indexOf('share') == -1) {
+    authorizedSession = true;
+    if(!isDesktop())
+            currentUser.vote_btns = false;
+    setTimeout(function () { getUser(); }, 3000);
   }
-  else 
-  	return authorizedSession;
+  else
+    authorizedSession = false;
+  return authorizedSession;
+};
+
+var getUser = function () {
+  if (authorizedSession && !currentUser.id)
+    xhr('/api/users', "GET", function(result) {
+        if (result.user != "not found") {
+          currentUser.id = result.user.id;
+          currentUser.email = result.user.email;
+          currentUser.slug = result.user.slug;
+          currentUser.admin = result.user.admin;
+          currentUser.safeSurf = result.user.safe_mode;
+        } 
+      }, function(result) {
+        if (result.user == "not found" && DEBUG) 
+          console.log("Error: User not found");
+      });
 };
 
 // autocomplete stuff
