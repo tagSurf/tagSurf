@@ -123,6 +123,7 @@ var card_proto = {
 			this._initLoginInputs();
 			initDocLinks();
 		}
+		console.log("Set top card #" + this.id);
 		if (this.expanded)
 			return;
 		if (this.expandTimeout)
@@ -181,6 +182,7 @@ var card_proto = {
 				this.tagCard(autocomplete.data[i]["name"]);
 			}
 		}
+		console.log("Set End-Of-Feed card");
 		analytics.track('Seen End-Of-Feed Card', {
 			surfing: current_tag
 		});
@@ -193,6 +195,7 @@ var card_proto = {
 			self.cbs.build && self.cbs.build();
 		};
 		this.contents.children[0].firstChild.onerror = function() {
+			console.log("Image load error on card #" + this.id);
 			self.wavesOn();
 			self.cbs.error && self.cbs.error();
 		};
@@ -428,6 +431,7 @@ var card_proto = {
 		this.cbs.remove && this.cbs.remove(this);
 	},
 	unshow: function () {
+		console.log("Unshow card #" + this.id);
 		this._forgetGestures();
 		this.wrapper.style.opacity = 0;
 		slideContainer.removeChild(this.wrapper);
