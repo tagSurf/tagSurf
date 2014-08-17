@@ -2,7 +2,6 @@ class Media < ActiveRecord::Base
 
   include Redis::Objects
   counter :up_votes
-  list :public_feed
 
   acts_as_taggable
 
