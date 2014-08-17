@@ -2,6 +2,7 @@ class Media < ActiveRecord::Base
 
   include Redis::Objects
   counter :up_votes
+  list :public_feed
 
   acts_as_taggable
 
@@ -93,8 +94,8 @@ class Media < ActiveRecord::Base
   # The brains of tagSurf feeds 
   # TODO evaluate for efficiency
   def self.next(user, tag, options = {})
-    offset = options[:offset].nil? ? 0 : options[:offset].to_i
-    n = options[:limit].nil? ?  20 : options[:limit].to_i
+    offset = options[:offset].try(:to_i) || 0 
+    n = options[:limit].try(:to_i) || 20 
     id = options[:id].to_i
        
     if user.try(:safe_mode) 
@@ -108,9 +109,10 @@ class Media < ActiveRecord::Base
     @media = Media.all
 
     # Media available for non-authed preview
+    # cache versus non, not showing improvement
     if user.nil?
       if tag == 'trending'
-        @media  = @media.where(viral: true, nsfw: false).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
+        @media = @media.where(viral: true, nsfw: false).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
       else
         @media = @media.where(nsfw: false).tagged_with(tag, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')  
         if @media.length < 10
@@ -124,9 +126,14 @@ class Media < ActiveRecord::Base
       # unless has_voted_ids = user.voted_on.present? && user.voted_on.to_a
       # has_voted_ids = has_voted_ids.collect {|v| v.to_i } 
       # end
+
+      # Benchamrks
+      # 87.362 - 230.88143ms
       has_voted_ids = user.votes.pluck(:votable_id) 
 
       if tag == 'trending'
+
+        # Staff pick thread can move to Redis collection
         staffpick_ids = @media.tagged_with('StaffPicks').pluck(:id)
         viral_ids = @media.where(viral: true, nsfw: false).pluck(:id)
 
@@ -183,6 +190,8 @@ class Media < ActiveRecord::Base
       end
       @media = @relation.flatten!
     end
+
+
 
     @media
   end

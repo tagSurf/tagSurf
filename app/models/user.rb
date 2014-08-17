@@ -23,8 +23,6 @@ class User < ActiveRecord::Base
 
   validates_presence_of :slug
 
-  scope :sorted_history, order("created_at ASC")
-
   def welcomed?
     completed_feature_tour?
   end
