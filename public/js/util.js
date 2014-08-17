@@ -13,7 +13,8 @@ var authorizedSession = null,
 // Set DEBUG = true in non-production environments
 if ((document.location.hostname.indexOf("localhost") != -1) 
   || (document.location.hostname.indexOf("staging.tagsurf.co") != -1)
-  || (document.location.hostname.indexOf("192.168") != -1))
+  || (document.location.hostname.indexOf("192.168") != -1)
+  || (document.location.hostname.indexOf("172.20") != -1))
   DEBUG = true;
 var hasClass = function (node, className) 
 {

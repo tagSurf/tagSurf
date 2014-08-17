@@ -54,12 +54,12 @@ var deck_proto = {
 	},
 	build: function (update, firstCard) {
 		var self = this;
-		self.building = true;
 		if (!update) {
 			throbber.on(true);			
 			clearStack();
+			self.building = true;
 		}
-		console.log("deck build, update =" + update + "firstCard = ", firstCard);
+		console.log("deck build, update = " + update + " firstCard = ", firstCard);
 		xhr(this.dataPath(firstCard), null, function(response_data) {
 			var rdata = response_data.data.map(newCard);
 			self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata));
@@ -77,8 +77,9 @@ var deck_proto = {
 				self.building = false;
 				return;
 			}
+			console.log("deck build xhr error");
 			self.building = false;
-			if (update)
+			if (update) 
 				self.refresh();
 		});
 	},
@@ -121,6 +122,7 @@ var deck_proto = {
 		this.preloadCards();
 		console.log("deck refresh");
 		if (this.cards.length == 1 && this.topCard() && this.topCard().surfsUp) {
+			console.log("refresh calls build");
 			this.build(true);
 			this.deal()
 			if (this.topCard().surfsUp)
@@ -143,21 +145,27 @@ var deck_proto = {
 		}
 		if (this.cards.length > 1 && cardbox.childNodes.length > 1 
 			&& (topCard.surfsUp || topCard.type == "End-Of-Feed")) {
-			console.log("removed top card", topCard);
+			console.log("removed top card", this.topCard());
+			console.log("cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length);
 			this.topCard().remove();
 		}
-		for (var i = 0; i < cardbox.childNodes.length; i++) {
-			this.cards[i] && this.cards[i].showing && this.cards[i].promote();
-			console.log("promote cards");
-		}
+		if (this.topCard().zIndex < this.constants.stack_depth)
+			for (var i = 0; i < cardbox.childNodes.length; i++) {
+				this.cards[i] && this.cards[i].showing && this.cards[i].promote();
+				console.log("promote cards");
+				console.log("cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length);
+			}
 		for (var i = cardbox.childNodes.length; i < this.constants.stack_depth; i++) {
 			var c = this.cards[i];
-			if (!c && this.cards[i - 1] && (this.cards[i - 1].type == "End-Of-Feed" || this.cards[i - 1].surfsUp))
+			if (!c && this.cards[i - 1] && (this.cards[i - 1].type == "End-Of-Feed" || this.cards[i - 1].surfsUp)) {
+				console.log("Skip deal because reached end of cards and last card is set");
 				return;
+			}
 			else if (!c) {
 				c = this.cards[i] = newCard();
+				console.log("create throbber card, i = " + i);
+				console.log("cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length);
 				c.show();
-				console.log("create throbber card");
 				return;
 			}
 			else {

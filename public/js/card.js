@@ -66,7 +66,6 @@ var card_proto = {
 			t && card.tagCard(t, picTags);
 		});
 		this.cbs.start(this.contents);
-		this._initCardGestures();
 		this.isContent = true;
 		this.setSource(); 
 		this._formatContents(image.get(this.data));
@@ -82,7 +81,6 @@ var card_proto = {
 		container.className = 'card-container login-card';
 		container.innerHTML = cardTemplate;
 		this.cbs.start(this.contents);
-		this._initCardGestures();
 		this.built = true;
 		this.surfsUp = false;
 	},
@@ -105,11 +103,14 @@ var card_proto = {
 			slideContainer.appendChild(this.wrapper);
 			this.showing = true;
 			throbber.active && throbber.off();	
+			console.log("Throbbing card shown");
 			return;
 		}
 		if(!this.built)
 			this._build();
+		this._initCardGestures();
 		slideContainer.appendChild(this.wrapper);
+		console.log("Show card #" + this.id);
 		this._formatContents(image.get(this.data));
 		this.showing = true;
 		scrollContainer.style.opacity = 1;
@@ -203,6 +204,7 @@ var card_proto = {
 	expand: function () {
 		if (this.isContent && this.compressing)
 		{
+			console.log("Expand card #" + this.id);
 			this.compressing = false;
 			this.expanded = true;
 			if (this.contents.children[0].className.indexOf("expanded") == -1)
@@ -348,6 +350,7 @@ var card_proto = {
 			imageContainer = this.wrapper.getElementsByClassName('image-container')[0];
 		if (!imageContainer)
 			return;
+		console.log("Init image gestures for card #" + this.id);
 		gesture.listen("tap", imageContainer, self.cbs.tap);
 		gesture.listen("down", imageContainer, returnTrue);
 		gesture.listen("up", imageContainer, returnTrue);
@@ -361,6 +364,7 @@ var card_proto = {
 		gesture.listen("drag", this.wrapper, this.cbs.drag);
 		gesture.listen("hold", this.wrapper, this.cbs.hold);
 		gesture.listen("down", this.wrapper, this.cbs.down);
+		console.log("Init card gestures for card #" + this.id);
 		this._initImageGestures();
 	},
 	_initLoginInputs: function () {
@@ -404,9 +408,11 @@ var card_proto = {
 		// 	gesture.unlisten(imageContainer);
 		// }
 		gesture.unlisten(this.wrapper);
+		console.log("forget gestures for card #" + this.id);
 	},
 	vote: function (voteFlag, tag, voteAlternative) {
 		this.remove();
+		console.log("voted on card #" + this.id);
 		if (this.type == "content") {
 			this.data.total_votes += 1;
 			this.data[voteFlag + "_votes"] += 1;
