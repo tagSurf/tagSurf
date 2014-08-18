@@ -40,16 +40,14 @@ class Media < ActiveRecord::Base
     votes.map(&:vote_tag).uniq
   end
 
-  # TODO Redisify
   def media_tag_info(tag)
     trend = [*1..10].sample.odd? ? 'up' : 'down' 
     data = {total_votes: nil, down_votes: nil, up_votes: nil, score: nil, is_trending: false, trend: nil}
-    # Doing count lookups is faster than array actions, but refactor is needed.
-    data[:total_votes]  = Vote.where(votable_id: id, vote_tag: tag).count
-    data[:down_votes]   = Vote.where(votable_id: id, vote_tag: tag, vote_flag: false).count
-    data[:up_votes]     = Vote.where(votable_id: id, vote_tag: tag, vote_flag: true).count
+    #data[:total_votes]  = Vote.where(votable_id: id, vote_tag: tag).count
+    #data[:down_votes]   = Vote.where(votable_id: id, vote_tag: tag, vote_flag: false).count
+    #data[:up_votes]     = Vote.where(votable_id: id, vote_tag: tag, vote_flag: true).count
+    #data[:score]        = (data[:total_votes] - data[:down_votes]) 
     data[:is_trending]  = false
-    data[:score]        = (data[:total_votes] - data[:down_votes]) 
     data[:trend]        = trend 
     data 
   end
