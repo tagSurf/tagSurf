@@ -188,7 +188,6 @@ class Media < ActiveRecord::Base
   end
 
   def self.populate_tag(tag_name) 
-    return if Tag.blacklisted?(tag_name)
     response = RemoteResource.tagged_feed(tag_name)
 
     if response.nil? or response.parsed_response.nil?
