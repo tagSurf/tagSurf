@@ -37,7 +37,6 @@ var card_proto = {
 		container.className = 'card-container';
 		container.innerHTML = cardTemplate;
 		imageContainer = container.children[0];
-		imageContainer.firstChild.src = "http://assets.tagsurf.co/img/throbber.gif";
 		iconLine = container.children[1];
 		textContainer = container.children[2];
 		picTags = container.children[3];
@@ -94,23 +93,27 @@ var card_proto = {
 		this.surfsUp = true;
 		this.wrapper.appendChild(this.contents);
 	},
-	show: function (cbs) {
+	show: function (cbs, zIndex) {
 		if(this.showing)
 			return;
+		if(zIndex)
+			this.zIndex = this.wrapper.style.zIndex = zIndex;
 		this.cbs = typeof cbs === "undefined" ? this.cbs : cbs;
 		this.wrapper.style.opacity = 1;
 		if(this.surfsUp) {
 			slideContainer.appendChild(this.wrapper);
 			this.showing = true;
 			throbber.active && throbber.off();	
-			console.log("Throbbing card shown");
+			if(DEBUG)
+				console.log("Throbbing card shown zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 			return;
 		}
 		if(!this.built)
 			this._build();
 		this._initCardGestures();
 		slideContainer.appendChild(this.wrapper);
-		console.log("Show card #" + this.id);
+		if(DEBUG)
+			console.log("Show card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 		this._formatContents(image.get(this.data));
 		this.showing = true;
 		scrollContainer.style.opacity = 1;
@@ -124,7 +127,8 @@ var card_proto = {
 			this._initLoginInputs();
 			initDocLinks();
 		}
-		console.log("Set top card #" + this.id);
+		if(DEBUG)
+			console.log("Set top card #" + this.id);
 		if (this.expanded)
 			return;
 		if (this.expandTimeout)
@@ -183,7 +187,8 @@ var card_proto = {
 				this.tagCard(autocomplete.data[i]["name"]);
 			}
 		}
-		console.log("Set End-Of-Feed card");
+		if(DEBUG)
+			console.log("Set End-Of-Feed card");
 		analytics.track('Seen End-Of-Feed Card', {
 			surfing: current_tag
 		});
@@ -193,10 +198,14 @@ var card_proto = {
 		this.contents.children[0].firstChild.src = image.get(self.data, window.innerWidth - 40).url;
 		this.contents.children[0].firstChild.onload = function() {
 			self.surfsUp = false;
+			if(DEBUG)
+				console.log("Image load complete card #" + self.id);
 			self.cbs.build && self.cbs.build();
 		};
 		this.contents.children[0].firstChild.onerror = function() {
-			console.log("Image load error on card #" + this.id);
+			if(DEBUG)
+				console.log("Image load error on card #" + self.id);
+			self.type = "failed";
 			self.wavesOn();
 			self.cbs.error && self.cbs.error();
 		};
@@ -204,7 +213,8 @@ var card_proto = {
 	expand: function () {
 		if (this.isContent && this.compressing)
 		{
-			console.log("Expand card #" + this.id);
+			if(DEBUG)
+				console.log("Expand card #" + this.id);
 			this.compressing = false;
 			this.expanded = true;
 			if (this.contents.children[0].className.indexOf("expanded") == -1)
@@ -228,6 +238,20 @@ var card_proto = {
 			++this.zIndex;
 			this.wrapper.style.zIndex = this.zIndex;
 		}
+		if(DEBUG)		
+			console.log("Promote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
+	},
+	demote: function (zIndex) {
+		if(zIndex) {
+			this.zIndex = zIndex;
+			this.wrapper.style.zIndex = zIndex;
+		}
+		else {
+			--this.zIndex;
+			this.wrapper.style.zIndex = this.zIndex;
+		}
+		if(DEBUG)
+			console.log("Demote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length + "deck =", current_deck.cards);
 	},
 	setExpandTimeout: function (time) {
 		var self = this;
@@ -350,7 +374,8 @@ var card_proto = {
 			imageContainer = this.wrapper.getElementsByClassName('image-container')[0];
 		if (!imageContainer)
 			return;
-		console.log("Init image gestures for card #" + this.id);
+		// if(DEBUG)
+		// 	console.log("Init image gestures for card #" + this.id);
 		gesture.listen("tap", imageContainer, self.cbs.tap);
 		gesture.listen("down", imageContainer, returnTrue);
 		gesture.listen("up", imageContainer, returnTrue);
@@ -364,7 +389,8 @@ var card_proto = {
 		gesture.listen("drag", this.wrapper, this.cbs.drag);
 		gesture.listen("hold", this.wrapper, this.cbs.hold);
 		gesture.listen("down", this.wrapper, this.cbs.down);
-		console.log("Init card gestures for card #" + this.id);
+		// if(DEBUG)
+		// 	console.log("Init card gestures for card #" + this.id);
 		this._initImageGestures();
 	},
 	_initLoginInputs: function () {
@@ -408,11 +434,13 @@ var card_proto = {
 		// 	gesture.unlisten(imageContainer);
 		// }
 		gesture.unlisten(this.wrapper);
-		console.log("forget gestures for card #" + this.id);
+		// if(DEBUG)		
+		// 	console.log("forget gestures for card #" + this.id);
 	},
 	vote: function (voteFlag, tag, voteAlternative) {
 		this.remove();
-		console.log("voted on card #" + this.id);
+		if(DEBUG)
+			console.log("Voted on card #" + this.id);
 		if (this.type == "content") {
 			this.data.total_votes += 1;
 			this.data[voteFlag + "_votes"] += 1;
@@ -437,7 +465,8 @@ var card_proto = {
 		this.cbs.remove && this.cbs.remove(this);
 	},
 	unshow: function () {
-		console.log("Unshow card #" + this.id);
+		if(DEBUG)
+			console.log("Unshow card #" + this.id);
 		this._forgetGestures();
 		this.wrapper.style.opacity = 0;
 		slideContainer.removeChild(this.wrapper);

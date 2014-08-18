@@ -250,7 +250,7 @@ onload = function ()
 		},
 		remove: function(self) {
 			if (self.type == "content")
-				current_deck.known_keys[self.id] = true;
+				current_deck.voted_keys[self.id] = true;
 			current_deck.refresh();
 		}
 	};
@@ -391,6 +391,7 @@ onload = function ()
 						"-webkit-transform 200ms",
 						"translate3d(0,0,0) rotate(0deg)");
 				}
+				console.log("Swiped card #" + swipedCard.id);
 				if(vote)
 					swipedCard.vote(voteDir, current_tag, voteAlternative);
 			},
