@@ -153,12 +153,12 @@ var deck_proto = {
 		if (this.building) {
 			setTimeout(function() { self.deal(); }, 3000)
 			if(DEBUG)
-				console.log("delay deal because deck is building");
+				console.log("Delay deal because deck is building");
 			return;
 		}
 		if (this.cards.length > 1 && (this.topCard().surfsUp || this.topCard().type == "End-Of-Feed")) {
 			if(DEBUG)
-				console.log("removed top card #" + this.topCard().id + " cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length + " card.surfsUp=" + this.topCard().surfsUp + " card=", this.topCard());
+				console.log("Removed top card #" + this.topCard().id + " cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length + " card.surfsUp = " + this.topCard().surfsUp + " card = ", this.topCard());
 			if (this.topCard().type != "content")
 				this.topCard().remove();
 		}
