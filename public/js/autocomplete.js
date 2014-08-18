@@ -19,6 +19,7 @@ var autocomplete = {
 		if (!autocomplete.viewing[listName])
 			return;
 		autocomplete.viewing[listName] = false;
+		autocomplete.inputs[listName].blur();
 		var acnode = autocomplete.nodes[listName];
 		acnode.className = "autocomplete";
 		trans(acnode, function() {
@@ -28,7 +29,6 @@ var autocomplete = {
 	tapTag: function(tagName, listName, insertCurrent) {
 		autocomplete.handlers[listName](tagName, insertCurrent);
 	    autocomplete.retract(listName);
-	    autocomplete.inputs[listName].blur();
 	},
 	addTag: function(tagName, listName) {
 		var n = document.createElement("div");
