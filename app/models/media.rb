@@ -123,20 +123,11 @@ class Media < ActiveRecord::Base
 
     # Authenticated users
     else
-      # Migrate has_voted_ids to Redis
-      # unless has_voted_ids = user.voted_on.present? && user.voted_on.to_a
-      # has_voted_ids = has_voted_ids.collect {|v| v.to_i } 
-      # end
-
-      # Benchamrks
-      # 87.362 - 230.88143ms
-      has_voted_ids = user.votes.pluck(:votable_id) 
-
+      has_voted_ids = MediaCache.vote_history
       if tag == 'trending'
 
-        # Staff pick thread can move to Redis collection
-        staffpick_ids = @media.tagged_with('StaffPicks').pluck(:id)
-        viral_ids = @media.where(viral: true, nsfw: false).pluck(:id)
+        staffpick_ids = MediaCache.staff_picks
+        viral_ids = MediaCache.viral_media_ids
 
         # Remove media which the user has voted on
         staffpick_ids = staffpick_ids - has_voted_ids
