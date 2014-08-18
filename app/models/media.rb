@@ -2,6 +2,7 @@ class Media < ActiveRecord::Base
 
   include Redis::Objects
   counter :up_votes
+  counter :down_votes
 
   acts_as_taggable
 
