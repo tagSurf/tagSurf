@@ -251,7 +251,7 @@ var card_proto = {
 			this.wrapper.style.zIndex = this.zIndex;
 		}
 		if(DEBUG)
-			console.log("Demote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length + "deck =", current_deck.cards);
+			console.log("Demote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 	},
 	setExpandTimeout: function (time) {
 		var self = this;

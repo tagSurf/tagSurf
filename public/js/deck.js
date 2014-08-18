@@ -127,7 +127,7 @@ var deck_proto = {
 	refresh: function() {
 		this.preloadCards();
 		if(DEBUG)
-			console.log("deck refresh");
+			console.log("deck.refresh");
 		if (this.cards.length == 1 && this.topCard() && !this.building && (this.topCard().surfsUp || this.topCard().type == "End-Of-Feed")) {
 			if(DEBUG)
 				console.log("deck.refresh calls deck.build");
@@ -156,11 +156,11 @@ var deck_proto = {
 				console.log("Delay deal because deck is building");
 			return;
 		}
-		if (this.cards.length > 1 && (this.topCard().surfsUp || this.topCard().type == "End-Of-Feed")) {
+		if (this.cards.length > 1 && (this.topCard().surfsUp || this.topCard().type == "End-Of-Feed") 
+			&& this.topCard().type != "content") {
 			if(DEBUG)
 				console.log("Removed top card #" + this.topCard().id + " cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length + " card.surfsUp = " + this.topCard().surfsUp + " card = ", this.topCard());
-			if (this.topCard().type != "content")
-				this.topCard().remove();
+			this.topCard().remove();
 		}
 		if (this.topCard().zIndex < this.constants.stack_depth){
 			var indexCatchUp = this.constants.stack_depth - this.topCard().zIndex;
@@ -178,7 +178,7 @@ var deck_proto = {
 			} else if (!c) {
 				c = this.cards[i] = newCard();
 				if(DEBUG)
-					console.log("create throbber card, i = " + i + "cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length);
+					console.log("Create new throbber card, i = " + i + "cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length);
 				c.show();
 				return;
 			} else 
