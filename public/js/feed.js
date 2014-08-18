@@ -270,11 +270,11 @@ onload = function ()
 			current_tag = tagName;
 			current_deck = getDeck(current_tag);
 			current_deck.deal();
-		    location.hash = tinput.value = tagName || current_tag;
 			analytics.track('Search for Tag', {
 				tag: tagName
 			});
 		}
+		location.hash = tinput.value = tagName || current_tag;
 	};
 
 	// autocomplete stuff
