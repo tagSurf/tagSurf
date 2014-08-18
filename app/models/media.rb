@@ -146,7 +146,7 @@ class Media < ActiveRecord::Base
         if staffpick_ids.present?
           if staffpick_ids.length < 20
             trending_limit = n - staffpick_ids.length
-            additional_media = Media.where('id not in (?) and id in (?)', has_voted_ids, viral_ids).limit(trending_limit).order('ts_score DESC NULLS LAST').map(&:id)
+            additional_media = Media.where('id except (?) and id in (?)', has_voted_ids, viral_ids).limit(trending_limit).order('ts_score DESC NULLS LAST').map(&:id)
             media_ids = staffpick_ids + additional_media
 
             # Custom sort order for collections
@@ -158,16 +158,16 @@ class Media < ActiveRecord::Base
           end
         else
           if user.safe_mode? 
-            @media = @media.where('id not in (?) and viral and not nsfw', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
+            @media = @media.where('id except (?) and viral and except nsfw', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
           else
-            @media = @media.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
+            @media = @media.where('id except (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
           end
         end
       else
         if user.safe_mode?
-          @media = Media.where('media.id not in (?) and not nsfw', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+          @media = Media.where('media.id except (?) and except nsfw', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
         else
-          @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+          @media = Media.where('media.id except (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
         end
     
         if @media.length < 10
