@@ -149,6 +149,10 @@ html, body {
   box-shadow: 2px 3px 5px -1px rgba(0,0,0,0.7);
 }
 
+.card-swiping {
+  box-shadow: none !important;
+}
+
 /*========== Login Card Stuff ===========*/
 .login-card {
   background: #00aeef;
