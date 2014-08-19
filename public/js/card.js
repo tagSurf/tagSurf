@@ -9,7 +9,7 @@ var card_proto = {
 			this.type = data.type;
 			this.source = data.source;
 			data.tags_v2.forEach(function(tag) { 
-				if(tag == "trending") {
+				if (tag == "trending") {
 					return;
 				}
 				else if(tag != "")
@@ -20,9 +20,6 @@ var card_proto = {
 			return;
 	},
 	_build: function() {
-		this.zIndex = this.wrapper.style.zIndex 
-			= deck_proto.constants.stack_depth
-				- slideContainer.childNodes.length;
 		if (this.type == "content")
 			this._buildContentCard();
 		else if (this.type == "login") 
@@ -80,12 +77,12 @@ var card_proto = {
 		this.contents.children[0].firstChild.src = image.get(self.data, window.innerWidth - 40).url;
 		this.contents.children[0].firstChild.onload = function() {
 			self.surfsUp = false;
-			if(DEBUG)
+			if (DEBUG)
 				console.log("Image load complete card #" + self.id);
 			self.cbs.build && self.cbs.build();
 		};
 		this.contents.children[0].firstChild.onerror = function() {
-			if(DEBUG)
+			if (DEBUG)
 				console.log("Image load error on card #" + self.id);
 			self.type = "failed";
 			self.wavesOn();
@@ -123,7 +120,7 @@ var card_proto = {
 			truncatedTitle = this.data.caption.trunc(25);
 			truncatedTitle = "<p>" + truncatedTitle + "</p>";
 			textContainer.innerHTML = truncatedTitle;
-			if(fullscreenButton.classList.contains('hidden'))
+			if (fullscreenButton.classList.contains('hidden'))
 				fullscreenButton.classList.remove('hidden');
 			picTags.className += ' hidden';
 			this.compressing = true;
@@ -213,49 +210,11 @@ var card_proto = {
 		// if(DEBUG)		
 		// 	console.log("forget gestures for card #" + this.id);
 	},
-	show: function (cbs, zIndex) {
-		if(this.showing)
-			return;
-		if(zIndex)
-			this.zIndex = this.wrapper.style.zIndex = zIndex;
-		this.cbs = typeof cbs === "undefined" ? this.cbs : cbs;
-		this.wrapper.style.opacity = 1;
-		if(!this.built && !this.surfsUp)
-			this._build();
-		if (this.swipable)
-			this._initCardGestures();
-		slideContainer.appendChild(this.wrapper);
-		if(DEBUG && current_deck)
-			console.log("Show card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
-		this._formatContents(image.get(this.data));
-		this.showing = true;
-		scrollContainer.style.opacity = 1;
-		throbber.active && throbber.off();	
-		if (slideContainer.childNodes.length == 1)
-			this.setTop();
-	},
-	setTop: function() {
-		setCurrentMedia(this, forgetReminders);
-		if (this.type == "login") {
-			this._initLoginInputs();
-			initDocLinks();
-		}
-		if(DEBUG)
-			console.log("Set top card #" + this.id);
-		if (this.expanded)
-			return;
-		if (this.expandTimeout)
-			this.clearExpandTimeout();
-		if (getOrientation() == "landscape" && window.innerHeight < 700)
-			this.expand();
-		else
-			this.setExpandTimeout();
-	},
 	wavesOn: function (zIndex) {
 		this._forgetGestures();
 		this.type = "waves";
 		this.wrapper.className = 'card-wrapper';
-		if(zIndex)
+		if (zIndex)
 			this.zIndex = this.wrapper.style.zIndex = zIndex;
 		this.contents.className = "card-container center-label End-Of-Feed";
 		this.contents.innerHTML = "<div>Searching for more cards in <br>#" + current_tag + " feed...</div><img src='http://assets.tagsurf.co/img/throbber.gif'>";
@@ -293,7 +252,7 @@ var card_proto = {
 			trendingBtn.firstChild.src = "http://assets.tagsurf.co/img/trending_icon_blue.png";
 		});
 		gesture.listen("tap", trendingBtn, function() {
-			if(isAuthorized())
+			if (isAuthorized())
 				window.location = "http://" + document.location.host + '/feed';
 			else
 				autocomplete.tapTag("trending", "autocomplete", false);
@@ -302,7 +261,7 @@ var card_proto = {
 		container.appendChild(orMsg);
 		container.appendChild(surfATagMsg);
 		container.appendChild(tagSuggestions);
-		for(var i = 0; i < numberOfTags; i++) {
+		for (var i = 0; i < numberOfTags; i++) {
 			if (autocomplete.data[i]["name"] == "trending") {
 				++numberOfTags;
 				continue;
@@ -314,58 +273,115 @@ var card_proto = {
 		this.surfsUp = false;
 		this.built = true;
 		this.swipable = false;
-		if(DEBUG)
+		if (DEBUG)
 			console.log("Set End-Of-Feed card");
 		analytics.track('Seen End-Of-Feed Card', {
 			surfing: current_tag
 		});
 	},
+	show: function (cbs, zIndex) {
+		if (this.showing)
+			return;
+		if (zIndex)
+			this.zIndex = this.wrapper.style.zIndex = zIndex;
+		else
+			this.zIndex = this.wrapper.style.zIndex 
+				= deck_proto.constants.stack_depth
+					- slideContainer.childNodes.length;
+		this.cbs = typeof cbs === "undefined" ? this.cbs : cbs;
+		this.wrapper.style.opacity = 1;
+		if (!this.built && !this.surfsUp)
+			this._build();
+		if (this.swipable)
+			this._initCardGestures();
+		slideContainer.appendChild(this.wrapper);
+		if (DEBUG && current_deck)
+			console.log("Show card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
+		this._formatContents(image.get(this.data));
+		this.showing = true;
+		scrollContainer.style.opacity = 1;
+		throbber.active && throbber.off();	
+		if (slideContainer.childNodes.length == 1)
+			this.setTop();
+	},
+	unshow: function () {
+		if (DEBUG)
+			console.log("Unshow card #" + this.id);
+		this._forgetGestures();
+		this.wrapper.style.opacity = 0;
+		slideContainer.removeChild(this.wrapper);
+		this.showing = false;
+	},
+	remove: function () {
+		this._forgetGestures();
+		this.wrapper.style.opacity = 0;
+		slideContainer.removeChild(this.wrapper);
+		this.showing = false;
+		removeFromDecks(this);
+		this.cbs.remove && this.cbs.remove(this);
+	},
 	promote: function (zIndex) {
-		if(zIndex) {
+		if (zIndex)
 			this.zIndex = zIndex;
-			this.wrapper.style.zIndex = zIndex;
-		}
-		else {
+		else 
 			++this.zIndex;
-			this.wrapper.style.zIndex = this.zIndex;
-		}
-		if(DEBUG)		
+		this.wrapper.style.zIndex = this.zIndex;
+		if (this.zIndex == current_deck.constants.stack_depth)
+			this.setTop();
+		if (DEBUG)		
 			console.log("Promote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 	},
 	demote: function (zIndex) {
-		if(zIndex) {
+		if (zIndex)
 			this.zIndex = zIndex;
-			this.wrapper.style.zIndex = zIndex;
-		}
-		else {
+		else 
 			--this.zIndex;
+		if (this.zIndex < 1)
+			this.unshow()
+		else
 			this.wrapper.style.zIndex = this.zIndex;
-		}
-		if(DEBUG)
+		if (DEBUG)
 			console.log("Demote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
+	},
+	setTop: function() {
+		setCurrentMedia(this, forgetReminders);
+		if (this.type == "login") {
+			this._initLoginInputs();
+			initDocLinks();
+		}
+		if (DEBUG)
+			console.log("Set top card #" + this.id);
+		if (this.expanded)
+			return;
+		if (this.expandTimeout)
+			this.clearExpandTimeout();
+		if (getOrientation() == "landscape" && window.innerHeight < 700)
+			this.expand();
+		else
+			this.setExpandTimeout();
 	},
 	expand: function () {
 		if (this.isContent && this.compressing)
 		{
-			if(DEBUG)
+			if (DEBUG)
 				console.log("Expand card #" + this.id);
 			this.compressing = false;
 			this.expanded = true;
 			if (this.contents.children[0].className.indexOf("expanded") == -1)
 				this.contents.children[0].className += " expanded";
 			this.contents.children[2].innerHTML = "<p>" + this.data.caption + "</p>";
-			if(currentUser.vote_btns && (isMobile() || isTablet()))
+			if (currentUser.vote_btns && (isMobile() || isTablet()))
 				this.contents.children[3].style.paddingBottom="60px";
-			if(this.type == "content")
+			if (this.type == "content")
 				toggleClass.call(this.contents.children[3], "hidden");
-			if(this.contents.children[4].className.indexOf("hidden") == -1)
+			if (this.contents.children[4].className.indexOf("hidden") == -1)
 				toggleClass.call(this.contents.children[4], "hidden");
 			this.cbs.expand && this.cbs.expand();
 		}
 	},
 	setExpandTimeout: function (time) {
 		var self = this;
-		if(!this.expandTimeout)
+		if (!this.expandTimeout)
 			this.expandTimeout = setTimeout(function(){ self.expand();}, (time) ? time : 1500);
 	},
 	clearExpandTimeout: function () {
@@ -414,11 +430,11 @@ var card_proto = {
 			else
 				autocomplete.tapTag(tag, "autocomplete", false);
 		});
-		if(self.type == "content")
+		if (self.type == "content")
 			self.contents.children[3].appendChild(p);
 		else if (self.type == "End-Of-Feed")
 			self.contents.children[4].appendChild(p);
-		if(self.showing) {
+		if (self.showing) {
 			self._formatContents(image.get(this.data));
 			self.compressing && self.expand();
 		}
@@ -443,7 +459,7 @@ var card_proto = {
 	},
 	vote: function (voteFlag, tag, voteAlternative) {
 		this.remove();
-		if(DEBUG)
+		if (DEBUG)
 			console.log("Voted on card #" + this.id);
 		if (this.type == "content") {
 			this.data.total_votes += 1;
@@ -459,22 +475,6 @@ var card_proto = {
 				castVote(this);
 		}
 		this.pushTags();
-	},
-	remove: function () {
-		this._forgetGestures();
-		this.wrapper.style.opacity = 0;
-		slideContainer.removeChild(this.wrapper);
-		this.showing = false;
-		removeFromDecks(this);
-		this.cbs.remove && this.cbs.remove(this);
-	},
-	unshow: function () {
-		if(DEBUG)
-			console.log("Unshow card #" + this.id);
-		this._forgetGestures();
-		this.wrapper.style.opacity = 0;
-		slideContainer.removeChild(this.wrapper);
-		this.showing = false;
 	},
 	pushTags: function () {
 	for (i = 0; i < this.tags.length ; ++i)

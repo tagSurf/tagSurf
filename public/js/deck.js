@@ -37,7 +37,7 @@ var deck_proto = {
 		var size = this.cardsToLoad.length < num ? this.cardsToLoad.length : num;
 		size = size ? size : this.cardsToLoad.length;
 		image.load(this.cardsToLoad.splice(0, size), window.innerWidth - 40);
-		if(DEBUG)	
+		if (DEBUG)	
 			console.log("preload " + size + " cards");
 	},
 	dataPath: function(firstCard) {
@@ -59,7 +59,7 @@ var deck_proto = {
 			return;
 		var self = this;
 		self.building = true;
-		if(DEBUG)
+		if (DEBUG)
 			console.log("deck.build, update = " + update + " firstCard = ", firstCard);
 		xhr(this.dataPath(firstCard), null, function(response_data) {
 			var rdata = response_data.data.map(newCard);
@@ -74,15 +74,16 @@ var deck_proto = {
 		}, function(response, status) {
 			if (status == 401){
 				self.building = false;
-				messageBox("Oops", response.errors + "<br/><br/><i>Control Safe Surf from Options</i>");
+				messageBox("Oops", response.errors 
+					+ "<br/><br/><i>Control Safe Surf from Options</i>");
 				self.deal();
 				return;
 			}
-			if(DEBUG)
+			if (DEBUG)
 				console.log("deck.build xhr error");
 			self.building = false;
 			self.build_retry = !self.build_retry
-			if(self.build_retry){
+			if (self.build_retry){
 				self.deal();
 				throbber.active && throbber.off();	
 				self.refresh();
@@ -96,7 +97,7 @@ var deck_proto = {
 		this.refresh();
 	},
 	purge: function() {
-		if(DEBUG)
+		if (DEBUG)
 			console.log("purge deck");
 		this.cards = this.cards.filter(function(card) {
 			return !deck_proto.voted_keys[card.id];
@@ -131,7 +132,7 @@ var deck_proto = {
 	remove: function(c) {
 		if (this.cards.indexOf(c) != -1) {
 			this.cards.splice(this.cards.indexOf(c), 1);
-			if(DEBUG)
+			if (DEBUG)
 				console.log("Remove card ", c, " from deck #" + this.tag);
 		}
 		if (current_deck == this)
@@ -147,7 +148,6 @@ var deck_proto = {
 		console.log("deck.deal");
 		var cardbox = document.getElementById("slider"),
 			self = this;
-		console.log(this.topCard().type);
 		if (this.building && (this.cards.length < 1 || this.topCard().type == "waves")) {
 			// Delay deal until update is complete
 			setTimeout(function() { self.deal(); }, 3000)
@@ -167,7 +167,6 @@ var deck_proto = {
 			this.topCard().remove();
 		}
 		!this.topCard().showing && this.topCard().show(this.cardCb, this.constants.stack_depth);
-		this.topCard().setTop();
 		if (this.topCard().zIndex < this.constants.stack_depth){
 			// If top card needs promoting
 			var zIndexCatchUp = this.constants.stack_depth - this.topCard().zIndex;
@@ -179,13 +178,14 @@ var deck_proto = {
 		}
 		for (var i = cardbox.childNodes.length; i < this.constants.stack_depth; i++) {
 			var c = this.cards[i];
-			if (!c && this.cards[i - 1] && (this.cards[i - 1].type == "End-Of-Feed" || this.cards[i - 1].surfsUp)) {
+			if (!c && this.cards[i - 1] 
+				&& (this.cards[i - 1].type == "End-Of-Feed" || this.cards[i - 1].surfsUp)) {
 				if(DEBUG)				
 					console.log("Skip deal because reached end of cards and last card is set");
 				return;
 			} else if (!c) {
 				c = this.cards[i] = newCard();
-				if(DEBUG)
+				if (DEBUG)
 					console.log("Create new throbber card, i = " + i + " cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length);
 				c.show();
 				return;

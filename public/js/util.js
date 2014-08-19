@@ -246,30 +246,32 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
       }
     };
 
-var currentMedia, checkShare = function(shareCb, panicCb) {
-  var d = currentMedia;
-  if (d && d.type == "content") {
-    share.on(d, shareCb);
-    if(whichGallery()) //no panic modal in galleries
-      return;
-    else
-      panic.on(d, panicCb);
-      if(currentUser.vote_btns)
-        voteButtonsOn();
-  } else if (d && d.type == "login") {
-      if(currentUser.vote_btns)
-        voteButtonsOn();
-  } else {
-    share.off();
-    panic.off();
-    voteButtonsOff();
-    if (addBarSlid)
-      slideAddBar();
-  }
-}, setCurrentMedia = function(d, shareCb) {
-  currentMedia = d;
-  checkShare(shareCb);
-};
+var currentMedia, panicCb, //def in feed
+  checkShare = function(shareCb) {
+    var d = currentMedia;
+    if (d && d.type == "content") {
+      share.on(d, shareCb);
+      if(whichGallery()) //no panic modal in galleries
+        return;
+      else
+        panic.on(d, panicCb);
+        if(currentUser.vote_btns)
+          voteButtonsOn();
+    } else if (d && d.type == "login") {
+        if(currentUser.vote_btns)
+          voteButtonsOn();
+    } else {
+      share.off();
+      panic.off();
+      voteButtonsOff();
+      if (addBarSlid)
+        slideAddBar();
+    }
+  }, 
+  setCurrentMedia = function(d, shareCb) {
+    currentMedia = d;
+    checkShare(shareCb);
+  };
 var _addCss = function(css) {
     var n = document.createElement("style");
     n.type = "text/css";

@@ -517,7 +517,7 @@ onload = function ()
 	
 	// varred in util...
 	panicCb = function() { //panic btn callback
-		swipeSlider("left", null, null, false);
+		topCard().remove();
 		forgetReminders();
 		analytics.track('Report Inappropriate Content', {
 			card: panic.id,
