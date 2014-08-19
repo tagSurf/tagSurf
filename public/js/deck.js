@@ -2,7 +2,7 @@ var deck_proto = {
 	constants: {
 		buffer_minimum: 5,
 		stack_depth: 3,
-		login_spacing: 5
+		login_spacing: 4
 	},
 	voted_keys: {},
 	topCard: function() {
@@ -55,42 +55,45 @@ var deck_proto = {
 		return "/api/media/" + this.tag;
 	},
 	build: function (update, firstCard) {
+		if (this.building)
+			return;
 		var self = this;
-		if (!update) {
-			throbber.on(true);			
-			clearStack();
-			self.building = true;
-		}
+		self.building = true;
 		if(DEBUG)
 			console.log("deck.build, update = " + update + " firstCard = ", firstCard);
 		xhr(this.dataPath(firstCard), null, function(response_data) {
 			var rdata = response_data.data.map(newCard);
 			self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata));
 			self.building = false;
+			console.log("deck build complete");
+			self.build_retry = false;
 			if (update)
-				self.refresh();	
+				self.preloadCards();	
 			else
 				self.preloadCards(self.constants.stack_depth);
 		}, function(response, status) {
 			if (status == 401){
-				self.cards[0] = newCard();
-				self.cards[0].show();
-				self.cards[0].setFailMsg();
-				messageBox("Oops", response.errors + " <br><br><i>Control Safe Surf from Options</i>");
 				self.building = false;
+				messageBox("Oops", response.errors + "<br/><br/><i>Control Safe Surf from Options</i>");
+				self.deal();
 				return;
 			}
 			if(DEBUG)
 				console.log("deck.build xhr error");
 			self.building = false;
-			if (update) 
+			self.build_retry = !self.build_retry
+			if(self.build_retry){
+				self.deal();
+				throbber.active && throbber.off();	
 				self.refresh();
+			}
 		});
 	},
 	skipTutorial: function() {
 		this.cards = this.cards.filter(function(card) {
 			return card.type != "tutorial";
 		});
+		this.refresh();
 	},
 	purge: function() {
 		if(DEBUG)
@@ -99,86 +102,91 @@ var deck_proto = {
 			return !deck_proto.voted_keys[card.id];
 		});
 		if (this.shareDeck) {
-			var cards_since_last_login = 0;
+			// re-space login cards in deck after purge
+			var cardsSinceLoginCard = 0;
 			for (i = 0; i < this.cards.length; ++i) {
-				if (this.cards[i].type != "login")
-					++cards_since_last_login;
-				else {
-					if (cards_since_last_login < (this.constants.login_spacing - 1)) {
-						var login_card = this.cards[i],
-							push_index = cards_since_last_login - (this.constants.login_spacing - 1);
-						if (this.cards[i+push_index].type != "login")
-							this.cards.splice((i+push_index), 0, login_card);
-						else
-							this.cards.splice(i, 1);
-					}
-					cards_since_last_login = 0;
+				if (this.cards[i].type != "login") {
+					++cardsSinceLoginCard;
+					continue;
 				}
+				if (cardsSinceLoginCard < this.constants.login_spacing) {
+					var loginCard = this.cards[i], pushIndex,
+						diff = this.constants.login_spacing - cardsSinceLoginCard;
+						diff = diff < 0 ? this.constants.login_spacing + Math.abs(diff) : diff; 
+						pushIndex = i + diff < this.cards.length - 1 ? i + diff : this.cards.length - 1;
+					if ((this.cards[pushIndex] == "login") && (pushIndex != i)) {
+						this.cards.splice(i, 1);
+						--i;
+						continue;
+					} else {
+						this.cards.splice(pushIndex, 0, this.cards.splice(i, 1)[0]);
+						++cardsSinceLoginCard;
+						continue;
+					}
+				}
+				cardsSinceLoginCard = 0;
 			}
 		}
 	},
 	remove: function(c) {
-		this.cards.splice(this.cards.indexOf(c), 1);
-		if(DEBUG)
-			console.log("Remove card ", c, " from deck #" + this.tag);
-		if (this.cards.length < this.constants.buffer_minimum)
-			this.build(true);
+		if (this.cards.indexOf(c) != -1) {
+			this.cards.splice(this.cards.indexOf(c), 1);
+			if(DEBUG)
+				console.log("Remove card ", c, " from deck #" + this.tag);
+		}
+		if (current_deck == this)
+			this.refresh();
 	},
 	refresh: function() {
 		this.preloadCards();
-		if(DEBUG)
-			console.log("deck.refresh");
-		if (this.cards.length == 1 && this.topCard() && !this.building && (this.topCard().surfsUp || this.topCard().type == "End-Of-Feed")) {
-			if(DEBUG)
-				console.log("deck.refresh calls deck.build");
+		if (this.cards.length < this.constants.buffer_minimum)
 			this.build(true);
-			this.deal()
-			if(DEBUG)
-				console.log("deck.refresh calls deck.deal");
-			if (this.topCard().surfsUp && this.topCard().type != "content" && !this.building)
-				this.topCard().setFailMsg();
-			else
-				this.topCard() && this.topCard().setTop();
-			return;
-		}
-		this.deal();
-		if(DEBUG)
-			console.log("deck.refresh calls deck.deal");
-		this.topCard() && this.topCard().setTop();
 	},
 	deal: function() {
+		// deck dealer
+		console.log("deck.deal");
 		var cardbox = document.getElementById("slider"),
-			self = this,
-			topCard = this.topCard();
-		if (this.building) {
+			self = this;
+		console.log(this.topCard().type);
+		if (this.building && (this.cards.length < 1 || this.topCard().type == "waves")) {
+			// Delay deal until update is complete
 			setTimeout(function() { self.deal(); }, 3000)
 			if(DEBUG)
 				console.log("Delay deal because deck is building");
 			return;
 		}
-		if (this.cards.length > 1 && (this.topCard().surfsUp || this.topCard().type == "End-Of-Feed") 
-			&& this.topCard().type != "content") {
+		if (!this.topCard())
+			return;
+		if (this.cards.length == 1 && this.topCard().type == "End-Of-Feed" && this.topCard().showing)
+			return;
+		else if (this.cards.length == 1 && this.topCard().type == "waves")
+			this.topCard().setFailMsg();
+		if (this.cards.length > 1 && (this.topCard().type == "waves" || this.topCard().type == "End-Of-Feed")) {
 			if(DEBUG)
 				console.log("Removed top card #" + this.topCard().id + " cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length + " card.surfsUp = " + this.topCard().surfsUp + " card = ", this.topCard());
 			this.topCard().remove();
 		}
 		if (this.topCard().zIndex < this.constants.stack_depth){
-			var indexCatchUp = this.constants.stack_depth - this.topCard().zIndex;
-			for (var i = 0; i < indexCatchUp; i++) {
+			// If top card needs promoting
+			var zIndexCatchUp = this.constants.stack_depth - this.topCard().zIndex;
+			for (var i = 0; i < zIndexCatchUp; i++) {
+				// Promote all visible cards as many times as top card needs promoting
 				for (var f = 0; f < cardbox.childNodes.length; f++)
 					this.cards[f] && this.cards[f].showing && this.cards[f].promote();
 			}
 		}
+		!this.topCard().showing && this.topCard().show();
+		this.topCard().setTop();
 		for (var i = cardbox.childNodes.length; i < this.constants.stack_depth; i++) {
 			var c = this.cards[i];
 			if (!c && this.cards[i - 1] && (this.cards[i - 1].type == "End-Of-Feed" || this.cards[i - 1].surfsUp)) {
 				if(DEBUG)				
-					console.log("Skip deal because reached end of cards and last card is set");
+					console.log("Skip deal because reached end of cards and last card is set. this.building = " + this.building);
 				return;
 			} else if (!c) {
 				c = this.cards[i] = newCard();
 				if(DEBUG)
-					console.log("Create new throbber card, i = " + i + "cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length);
+					console.log("Create new throbber card, i = " + i + " cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length);
 				c.show();
 				return;
 			} else 
@@ -198,6 +206,7 @@ var getDeck = function(tag, firstCard, cardCbs){
 	var deck = cardDecks[tag];
 	if (deck) {
 		deck.purge();
+		deck.refresh();
 		return deck;
 	}
 	deck = cardDecks[tag] = Object.create(deck_proto);
@@ -208,15 +217,19 @@ var getDeck = function(tag, firstCard, cardCbs){
 	deck.shareOffset = 0;
 	deck.cards = [];
 	deck.cardsToLoad = [];
-	deck.building = false;	
+	deck.building = false;
+	deck.build_retry = false;	
 	if (firstCard) {
 		deck.cards[0] = firstCard;
 		deck.known_keys[firstCard.id] = true;
 		deck.deal();
 		deck.build(true);
 	}
-	else
-		deck.build(false, firstCard);
+	else {
+		var c = deck.cards[0] = newCard();
+		c.show();
+		deck.build(false);
+	}
 	return deck;
 };
 var removeFromDecks = function(c) {

@@ -23,11 +23,12 @@ var card_proto = {
 		this.zIndex = this.wrapper.style.zIndex 
 			= deck_proto.constants.stack_depth
 				- slideContainer.childNodes.length;
-		this.wavesOn();
 		if (this.type == "content")
 			this._buildContentCard();
 		else if (this.type == "login") 
 			this._buildLoginCard();
+		else
+			this.wavesOn();
 	},
 	_buildContentCard: function() {
 		var	imageContainer, iconLine, textContainer, picTags, fullscreenButton, truncatedTitle, 
@@ -35,6 +36,7 @@ var card_proto = {
 			card = this,
 			cardTemplate = "<div class='image-container expand-animation'><img src= ></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (card.source || ((card.data.tags[0] == null || card.data.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + card.data.tags[0] + "</span></div><div class='text-container'><p>" + card.data.caption + "</p></div><div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
 		container.className = 'card-container';
+		this.wrapper.className = 'card-wrapper';
 		container.innerHTML = cardTemplate;
 		imageContainer = container.children[0];
 		iconLine = container.children[1];
@@ -66,9 +68,66 @@ var card_proto = {
 		});
 		this.cbs.start(this.contents);
 		this.isContent = true;
+		this.wrapper.appendChild(this.contents);
 		this.setSource(); 
 		this._formatContents(image.get(this.data));
 		this.built = true;
+		this.swipable = true;
+	},
+	setSource: function() {
+		var self = this;
+		this.contents.children[0].firstChild.src = image.get(self.data, window.innerWidth - 40).url;
+		this.contents.children[0].firstChild.onload = function() {
+			self.surfsUp = false;
+			if(DEBUG)
+				console.log("Image load complete card #" + self.id);
+			self.cbs.build && self.cbs.build();
+		};
+		this.contents.children[0].firstChild.onerror = function() {
+			if(DEBUG)
+				console.log("Image load error on card #" + self.id);
+			self.type = "failed";
+			self.wavesOn();
+			self.cbs.error && self.cbs.error();
+		};
+	},
+	_formatContents: function (imageData) {
+		if (this.type != "content")
+			return;
+		var imageContainer = this.contents.firstChild,
+			fullscreenButton = this.contents.children[4], 
+			truncatedTitle,
+			picTags = this.contents.children[3], 
+			textContainer = this.contents.children[2],
+			iconLine = this.contents.children[1], 
+			targetHeight = imageData ? 
+				imageData.height * (window.innerWidth - 40) / imageData.width :
+				this.contents.firstChild.scrollHeight;
+		if (this.animated && !imageContainer.firstChild.classList.contains('translate-z'))
+		{
+			imageContainer.firstChild.classList.add('translate-z');
+		}
+		if (targetHeight + textContainer.scrollHeight 
+			+ picTags.scrollHeight + iconLine.scrollHeight 
+			< (maxCardHeight + (currentUser.vote_btns ? 20 : 80))) 
+		{
+			imageContainer.classList.remove("expand-animation");
+			if (!fullscreenButton.classList.contains('hidden'))
+				fullscreenButton.className += ' hidden';
+			this.compressing = false;
+			this.expanded = true;
+		}
+		else
+		{
+			truncatedTitle = this.data.caption.trunc(25);
+			truncatedTitle = "<p>" + truncatedTitle + "</p>";
+			textContainer.innerHTML = truncatedTitle;
+			if(fullscreenButton.classList.contains('hidden'))
+				fullscreenButton.classList.remove('hidden');
+			picTags.className += ' hidden';
+			this.compressing = true;
+			this.expanded = false;
+		}
 	},
 	_buildLoginCard: function() {
 		var container = this.contents,
@@ -80,18 +139,78 @@ var card_proto = {
 		container.className = 'card-container login-card';
 		container.innerHTML = cardTemplate;
 		this.cbs.start(this.contents);
+		this.wrapper.appendChild(this.contents);
 		this.built = true;
+		this.swipable = true;
 		this.surfsUp = false;
 	},
-	wavesOn: function (zIndex) {
-		this._forgetGestures();
-		this.wrapper.className = 'card-wrapper';
-		if(zIndex)
-			this.zIndex = this.wrapper.style.zIndex = zIndex;
-		this.contents.className = "card-container center-label End-Of-Feed";
-		this.contents.innerHTML = "<div>Searching for more cards in <br>#" + current_tag + " feed...</div><img src='http://assets.tagsurf.co/img/throbber.gif'>";
-		this.surfsUp = true;
-		this.wrapper.appendChild(this.contents);
+	_initImageGestures: function () {
+		var self = this,
+			imageContainer = this.wrapper.getElementsByClassName('image-container')[0];
+		if (!imageContainer)
+			return;
+		// if(DEBUG)
+		// 	console.log("Init image gestures for card #" + this.id);
+		gesture.listen("tap", imageContainer, self.cbs.tap);
+		gesture.listen("down", imageContainer, returnTrue);
+		gesture.listen("up", imageContainer, returnTrue);
+		gesture.listen("drag", imageContainer, returnTrue);
+		modal.setPinchLauncher(imageContainer,
+			function() { self.cbs.up(true); });
+	},
+	_initCardGestures: function () {
+		gesture.listen("swipe", this.wrapper, this.cbs.swipe);
+		gesture.listen("up", this.wrapper, this.cbs.up);
+		gesture.listen("drag", this.wrapper, this.cbs.drag);
+		gesture.listen("hold", this.wrapper, this.cbs.hold);
+		gesture.listen("down", this.wrapper, this.cbs.down);
+		// if(DEBUG)
+		// 	console.log("Init card gestures for card #" + this.id);
+		this._initImageGestures();
+	},
+	_initLoginInputs: function () {
+		var listInputs = document.forms[0].getElementsByClassName('su-input'),
+			listLength = listInputs.length;
+		for (var index = 0;index < listLength; ++index)
+		{
+			this._focusInput(listInputs[index]);
+		}
+		// form validation
+		var p = document.getElementById("password");
+		var f = document.getElementById("new-user");
+		f.onsubmit = function() {
+			if (!validEmail(document.getElementById("email").value)) {
+				alert("Please use a valid email address");
+				return false;
+			}
+			if (p.value.length < 8) {
+				alert("Please try a longer password");
+				return false;
+			}
+			if (p.value != document.getElementById("repassword").value) {
+				alert("Please submit matching passwords");
+				return false;
+			}
+			analytics.track('Sign Up in Feed');
+			return true;
+		};
+		gesture.listen("down", document.getElementById("su-submit-btn"), function() {
+			f.onsubmit() && f.submit();
+		});
+	},
+	_focusInput: function (input) {
+		gesture.listen('down', input, function(){
+			input.focus();
+		});
+	},
+	_forgetGestures: function() {
+		var imageContainer = this.wrapper.getElementsByClassName('image-container')[0];
+		// if (imageContainer) {
+		// 	gesture.unlisten(imageContainer);
+		// }
+		gesture.unlisten(this.wrapper);
+		// if(DEBUG)		
+		// 	console.log("forget gestures for card #" + this.id);
 	},
 	show: function (cbs, zIndex) {
 		if(this.showing)
@@ -100,19 +219,12 @@ var card_proto = {
 			this.zIndex = this.wrapper.style.zIndex = zIndex;
 		this.cbs = typeof cbs === "undefined" ? this.cbs : cbs;
 		this.wrapper.style.opacity = 1;
-		if(this.surfsUp) {
-			slideContainer.appendChild(this.wrapper);
-			this.showing = true;
-			throbber.active && throbber.off();	
-			if(DEBUG)
-				console.log("Throbbing card shown zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
-			return;
-		}
-		if(!this.built)
+		if(!this.built && !this.surfsUp)
 			this._build();
-		this._initCardGestures();
+		if (this.swipable)
+			this._initCardGestures();
 		slideContainer.appendChild(this.wrapper);
-		if(DEBUG)
+		if(DEBUG && current_deck)
 			console.log("Show card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 		this._formatContents(image.get(this.data));
 		this.showing = true;
@@ -123,7 +235,7 @@ var card_proto = {
 	},
 	setTop: function() {
 		setCurrentMedia(this, forgetReminders);
-		if (this.type == "login"){
+		if (this.type == "login") {
 			this._initLoginInputs();
 			initDocLinks();
 		}
@@ -138,8 +250,19 @@ var card_proto = {
 		else
 			this.setExpandTimeout();
 	},
+	wavesOn: function (zIndex) {
+		this._forgetGestures();
+		this.type = "waves";
+		this.wrapper.className = 'card-wrapper';
+		if(zIndex)
+			this.zIndex = this.wrapper.style.zIndex = zIndex;
+		this.contents.className = "card-container center-label End-Of-Feed";
+		this.contents.innerHTML = "<div>Searching for more cards in <br>#" + current_tag + " feed...</div><img src='http://assets.tagsurf.co/img/throbber.gif'>";
+		this.surfsUp = true;
+		this.swipable = false;
+		this.wrapper.appendChild(this.contents);
+	},
 	setFailMsg: function () {
-		this.surfsUp = false;
 		var trendingBtn = document.createElement('div'),
 			orMsg = document.createElement('div'),
 			surfATagMsg = document.createElement('div'),
@@ -187,47 +310,14 @@ var card_proto = {
 				this.tagCard(autocomplete.data[i]["name"]);
 			}
 		}
+		this.surfsUp = false;
+		this.built = true;
+		this.swipable = false;
 		if(DEBUG)
 			console.log("Set End-Of-Feed card");
 		analytics.track('Seen End-Of-Feed Card', {
 			surfing: current_tag
 		});
-	},
-	setSource: function() {
-		var self = this;
-		this.contents.children[0].firstChild.src = image.get(self.data, window.innerWidth - 40).url;
-		this.contents.children[0].firstChild.onload = function() {
-			self.surfsUp = false;
-			if(DEBUG)
-				console.log("Image load complete card #" + self.id);
-			self.cbs.build && self.cbs.build();
-		};
-		this.contents.children[0].firstChild.onerror = function() {
-			if(DEBUG)
-				console.log("Image load error on card #" + self.id);
-			self.type = "failed";
-			self.wavesOn();
-			self.cbs.error && self.cbs.error();
-		};
-	},
-	expand: function () {
-		if (this.isContent && this.compressing)
-		{
-			if(DEBUG)
-				console.log("Expand card #" + this.id);
-			this.compressing = false;
-			this.expanded = true;
-			if (this.contents.children[0].className.indexOf("expanded") == -1)
-				this.contents.children[0].className += " expanded";
-			this.contents.children[2].innerHTML = "<p>" + this.data.caption + "</p>";
-			if(currentUser.vote_btns && (isMobile() || isTablet()))
-				this.contents.children[3].style.paddingBottom="60px";
-			if(this.type == "content")
-				toggleClass.call(this.contents.children[3], "hidden");
-			if(this.contents.children[4].className.indexOf("hidden") == -1)
-				toggleClass.call(this.contents.children[4], "hidden");
-			this.cbs.expand && this.cbs.expand();
-		}
 	},
 	promote: function (zIndex) {
 		if(zIndex) {
@@ -252,6 +342,25 @@ var card_proto = {
 		}
 		if(DEBUG)
 			console.log("Demote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
+	},
+	expand: function () {
+		if (this.isContent && this.compressing)
+		{
+			if(DEBUG)
+				console.log("Expand card #" + this.id);
+			this.compressing = false;
+			this.expanded = true;
+			if (this.contents.children[0].className.indexOf("expanded") == -1)
+				this.contents.children[0].className += " expanded";
+			this.contents.children[2].innerHTML = "<p>" + this.data.caption + "</p>";
+			if(currentUser.vote_btns && (isMobile() || isTablet()))
+				this.contents.children[3].style.paddingBottom="60px";
+			if(this.type == "content")
+				toggleClass.call(this.contents.children[3], "hidden");
+			if(this.contents.children[4].className.indexOf("hidden") == -1)
+				toggleClass.call(this.contents.children[4], "hidden");
+			this.cbs.expand && this.cbs.expand();
+		}
 	},
 	setExpandTimeout: function (time) {
 		var self = this;
@@ -331,112 +440,6 @@ var card_proto = {
 				return this.tags[i][tag].user_owned;
 		return true;
 	},
-	_formatContents: function (imageData) {
-		if (this.type != "content")
-			return;
-		var imageContainer = this.contents.firstChild,
-			fullscreenButton = this.contents.children[4], 
-			truncatedTitle,
-			picTags = this.contents.children[3], 
-			textContainer = this.contents.children[2],
-			iconLine = this.contents.children[1], 
-			targetHeight = imageData ? 
-				imageData.height * (window.innerWidth - 40) / imageData.width :
-				this.contents.firstChild.scrollHeight;
-		if (this.animated && !imageContainer.firstChild.classList.contains('translate-z'))
-		{
-			imageContainer.firstChild.classList.add('translate-z');
-		}
-		if (targetHeight + textContainer.scrollHeight 
-			+ picTags.scrollHeight + iconLine.scrollHeight 
-			< (maxCardHeight + (currentUser.vote_btns ? 20 : 80))) 
-		{
-			imageContainer.classList.remove("expand-animation");
-			if (!fullscreenButton.classList.contains('hidden'))
-				fullscreenButton.className += ' hidden';
-			this.compressing = false;
-			this.expanded = true;
-		}
-		else
-		{
-			truncatedTitle = this.data.caption.trunc(25);
-			truncatedTitle = "<p>" + truncatedTitle + "</p>";
-			textContainer.innerHTML = truncatedTitle;
-			if(fullscreenButton.classList.contains('hidden'))
-				fullscreenButton.classList.remove('hidden');
-			picTags.className += ' hidden';
-			this.compressing = true;
-			this.expanded = false;
-		}
-	},
-	_initImageGestures: function () {
-		var self = this,
-			imageContainer = this.wrapper.getElementsByClassName('image-container')[0];
-		if (!imageContainer)
-			return;
-		// if(DEBUG)
-		// 	console.log("Init image gestures for card #" + this.id);
-		gesture.listen("tap", imageContainer, self.cbs.tap);
-		gesture.listen("down", imageContainer, returnTrue);
-		gesture.listen("up", imageContainer, returnTrue);
-		gesture.listen("drag", imageContainer, returnTrue);
-		modal.setPinchLauncher(imageContainer,
-			function() { self.cbs.up(true); });
-	},
-	_initCardGestures: function () {
-		gesture.listen("swipe", this.wrapper, this.cbs.swipe);
-		gesture.listen("up", this.wrapper, this.cbs.up);
-		gesture.listen("drag", this.wrapper, this.cbs.drag);
-		gesture.listen("hold", this.wrapper, this.cbs.hold);
-		gesture.listen("down", this.wrapper, this.cbs.down);
-		// if(DEBUG)
-		// 	console.log("Init card gestures for card #" + this.id);
-		this._initImageGestures();
-	},
-	_initLoginInputs: function () {
-		var listInputs = document.forms[0].getElementsByClassName('su-input'),
-			listLength = listInputs.length;
-		for (var index = 0;index < listLength; ++index)
-		{
-			this._focusInput(listInputs[index]);
-		}
-		// form validation
-		var p = document.getElementById("password");
-		var f = document.getElementById("new-user");
-		f.onsubmit = function() {
-			if (!validEmail(document.getElementById("email").value)) {
-				alert("Please use a valid email address");
-				return false;
-			}
-			if (p.value.length < 8) {
-				alert("Please try a longer password");
-				return false;
-			}
-			if (p.value != document.getElementById("repassword").value) {
-				alert("Please submit matching passwords");
-				return false;
-			}
-			analytics.track('Sign Up in Feed');
-			return true;
-		};
-		gesture.listen("down", document.getElementById("su-submit-btn"), function() {
-			f.onsubmit() && f.submit();
-		});
-	},
-	_focusInput: function (input) {
-		gesture.listen('down', input, function(){
-			input.focus();
-		});
-	},
-	_forgetGestures: function() {
-		var imageContainer = this.wrapper.getElementsByClassName('image-container')[0];
-		// if (imageContainer) {
-		// 	gesture.unlisten(imageContainer);
-		// }
-		gesture.unlisten(this.wrapper);
-		// if(DEBUG)		
-		// 	console.log("forget gestures for card #" + this.id);
-	},
 	vote: function (voteFlag, tag, voteAlternative) {
 		this.remove();
 		if(DEBUG)
@@ -500,6 +503,7 @@ var newCard = function (data) {
 	card.surfsUp = false;
 	card.sliding = false;
 	card.supering = false;
+	card.swipable = null;
 	card.verticaling = false;
 	card.animating = false;
 	card.x = card.y = 0;

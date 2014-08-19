@@ -249,7 +249,7 @@ onload = function ()
 		remove: function(self) {
 			if (self.type == "content")
 				current_deck.voted_keys[self.id] = true;
-			current_deck.refresh();
+			current_deck.deal();
 		},
 		error: function() {
 			// put stuff that a card should do if an error occurs while building here
