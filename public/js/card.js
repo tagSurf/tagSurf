@@ -147,8 +147,6 @@ var card_proto = {
 			imageContainer = this.wrapper.getElementsByClassName('image-container')[0];
 		if (!imageContainer)
 			return;
-		// if(DEBUG)
-		// 	console.log("Init image gestures for card #" + this.id);
 		gesture.listen("tap", imageContainer, self.cbs.tap);
 		gesture.listen("down", imageContainer, returnTrue);
 		gesture.listen("up", imageContainer, returnTrue);
@@ -162,8 +160,6 @@ var card_proto = {
 		gesture.listen("drag", this.wrapper, this.cbs.drag);
 		gesture.listen("hold", this.wrapper, this.cbs.hold);
 		gesture.listen("down", this.wrapper, this.cbs.down);
-		// if(DEBUG)
-		// 	console.log("Init card gestures for card #" + this.id);
 		this._initImageGestures();
 	},
 	_initLoginInputs: function () {
@@ -207,8 +203,6 @@ var card_proto = {
 		// 	gesture.unlisten(imageContainer);
 		// }
 		gesture.unlisten(this.wrapper);
-		// if(DEBUG)		
-		// 	console.log("forget gestures for card #" + this.id);
 	},
 	wavesOn: function (zIndex) {
 		this._forgetGestures();
@@ -217,7 +211,7 @@ var card_proto = {
 		if (zIndex)
 			this.zIndex = this.wrapper.style.zIndex = zIndex;
 		this.contents.className = "card-container center-label End-Of-Feed";
-		this.contents.innerHTML = "<div>Searching for more cards in <br>#" + current_tag + " feed...</div><img src='http://assets.tagsurf.co/img/throbber.gif'>";
+		this.contents.innerHTML = "<div>Searching for more cards in <br/>#" + current_tag + " feed...</div><img src='http://assets.tagsurf.co/img/throbber.gif'>";
 		this.surfsUp = true;
 		this.swipable = false;
 		this.wrapper.appendChild(this.contents);
@@ -233,7 +227,7 @@ var card_proto = {
 			container.className += " center-label End-Of-Feed";
 		this._forgetGestures();
 		this.type = "End-Of-Feed";
-		container.innerHTML = "<div class='fail-msg'>No more cards in <br>#" + current_tag + " feed...</div>";
+		container.innerHTML = "<div class='fail-msg'>No more cards in <br/>#" + current_tag + " feed...</div>";
 		trendingBtn.className = 'trending-returnbtn pointer';
 		trendingBtn.innerHTML = "<img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>Return to <span class='blue'>#trending</span>";	
 		orMsg.className = "fail-msg";

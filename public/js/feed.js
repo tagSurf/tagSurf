@@ -8,12 +8,6 @@ onload = function ()
 	analytics.track('Begin Pageload');
 	populateNavbar();
 
-	if (isAuthorized() && (document.location.href.indexOf('share') != -1)) {
-		analytics.track('Redirected to Authed Feed');
-		window.location = "http://" +
-			document.location.host + '/feed#' +
-			window.location.pathname.replace('/share/','').replace('/','~');
-	} 
 	// defined in util for autocomplete
 	// integration with other sliding elements
 	tinput = document.getElementById("tag-input");
