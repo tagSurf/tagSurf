@@ -212,13 +212,21 @@ var buildOptionsTable = function () {
   gesture.listen('down', safeSurfCheckbox, function () {
     if (isAuthorized())
     {
-      safeSurfCheckbox.firstChild.checked = !safeSurfCheckbox.firstChild.checked;
-      xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
-        JSON.stringify({ safe_mode: safeSurfCheckbox.firstChild.checked }));
-      currentUser.safeSurf = safeSurfCheckbox.firstChild.checked;
-      analytics.track('Toggle Safe Surf', {
-        safeSurf: currentUser.safeSurf
-      });
+      if (isUIWebView())
+      {
+        messageBox("Oops", "Visit tagsurf.co for full features.");
+        analytics.track('Unauthorized iOS Toggle Safe Surf');
+      }
+      else
+      {
+        safeSurfCheckbox.firstChild.checked = !safeSurfCheckbox.firstChild.checked;
+        xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
+          JSON.stringify({ safe_mode: safeSurfCheckbox.firstChild.checked }));
+        currentUser.safeSurf = safeSurfCheckbox.firstChild.checked;
+        analytics.track('Toggle Safe Surf', {
+          safeSurf: currentUser.safeSurf
+        });
+      }
     }
     else
     {
