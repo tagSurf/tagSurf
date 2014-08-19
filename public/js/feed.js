@@ -575,18 +575,28 @@ onload = function ()
 		if (h.indexOf('~') != -1) {
 			pair = h.split("~");
 			id = pair[1];
-			xhr("/api/card/" + id, null, function(d) {
-				var firstCard = newCard(d.data);
-				current_deck = getDeck(current_tag, firstCard);
-				current_deck.deal();
-			});
+			if (id != 0) {
+				xhr("/api/card/" + id, null, function(d) {
+					var firstCard = newCard(d.data);
+					current_deck = getDeck(current_tag, firstCard);
+					current_deck.deal();
+				});
+			} else {
+				current_deck = getDeck(current_tag);
+				current_deck.deal();	
+			}
 		} else if (document.location.href.indexOf('share') != -1) {
 			id = document.location.pathname.split("/")[3];
-			xhr("/api/card/" + id, null, function(d) {
-				var firstCard = newCard(d.data);
-				current_deck = getDeck(current_tag, firstCard);
-				current_deck.deal();
-			});
+			if (id != 0) {
+				xhr("/api/card/" + id, null, function(d) {
+					var firstCard = newCard(d.data);
+					current_deck = getDeck(current_tag, firstCard);
+					current_deck.deal();
+				});
+			} else {
+				current_deck = getDeck(current_tag);
+				current_deck.deal();	
+			}
 		} else {
 			current_deck = getDeck(current_tag);
 			current_deck.deal();

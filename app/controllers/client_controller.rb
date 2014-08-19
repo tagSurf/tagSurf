@@ -88,6 +88,7 @@ class ClientController < ApplicationController
   def submissions; end
   def tag; end
   def device; end
+  def share; end
 
   # Beta access flow
   def access_code; end
