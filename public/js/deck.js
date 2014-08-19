@@ -166,6 +166,8 @@ var deck_proto = {
 				console.log("Removed top card #" + this.topCard().id + " cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length + " card.surfsUp = " + this.topCard().surfsUp + " card = ", this.topCard());
 			this.topCard().remove();
 		}
+		!this.topCard().showing && this.topCard().show(this.constants.stack_depth);
+		this.topCard().setTop();
 		if (this.topCard().zIndex < this.constants.stack_depth){
 			// If top card needs promoting
 			var zIndexCatchUp = this.constants.stack_depth - this.topCard().zIndex;
@@ -175,8 +177,6 @@ var deck_proto = {
 					this.cards[f] && this.cards[f].showing && this.cards[f].promote();
 			}
 		}
-		!this.topCard().showing && this.topCard().show();
-		this.topCard().setTop();
 		for (var i = cardbox.childNodes.length; i < this.constants.stack_depth; i++) {
 			var c = this.cards[i];
 			if (!c && this.cards[i - 1] && (this.cards[i - 1].type == "End-Of-Feed" || this.cards[i - 1].surfsUp)) {
