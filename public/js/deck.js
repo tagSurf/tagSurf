@@ -143,6 +143,29 @@ var deck_proto = {
 		if (this.cards.length < this.constants.buffer_minimum)
 			this.build(true);
 	},
+	demoteCard: function (c, positions) {
+		if (this.cards.indexOf(c) != -1) {
+			var currentIndex = this.cards.indexOf(c),
+				newIndex = currentIndex + positions < this.cards.length - 1 ? 
+					currentIndex + positions : this.cards.length - 1; 
+			for (var i = 0; i < (newIndex - currentIndex); i++)
+				c.demote(); 
+			this.cards.splice(newIndex, 0, this.cards.splice(currentIndex, 1)[0]);
+			if (currentIndex < this.constants.stack_depth)
+				this.deal();
+		}
+	},
+	promoteCard: function (c, positions) {
+		if (this.cards.indexOf(c) != -1) {
+			var currentIndex = this.cards.indexOf(c),
+				newIndex = currentIndex - positions >= 0 ? currentIndex - positions : 0; 
+			for (var i = currentIndex; i > (currentIndex - newIndex); i--)
+				c.promote();
+			this.cards.splice(newIndex, 0, this.cards.splice(currentIndex, 1)[0]);
+			if (newIndex < this.constants.stack_depth)
+				this.deal();
+		}
+	},
 	deal: function() {
 		// deck dealer
 		console.log("deck.deal");
@@ -167,7 +190,7 @@ var deck_proto = {
 			this.topCard().remove();
 		}
 		!this.topCard().showing && this.topCard().show(this.cardCb, this.constants.stack_depth);
-		if (this.topCard().zIndex < this.constants.stack_depth){
+		if (this.topCard().zIndex < this.constants.stack_depth) {
 			// If top card needs promoting
 			var zIndexCatchUp = this.constants.stack_depth - this.topCard().zIndex;
 			for (var i = 0; i < zIndexCatchUp; i++) {
@@ -178,11 +201,18 @@ var deck_proto = {
 		}
 		for (var i = cardbox.childNodes.length; i < this.constants.stack_depth; i++) {
 			var c = this.cards[i];
-			if (!c && this.cards[i - 1] 
-				&& (this.cards[i - 1].type == "End-Of-Feed" || this.cards[i - 1].surfsUp)) {
+			if (!c && this.cards[i - 1] && (this.cards[i - 1].type == "End-Of-Feed" 
+				|| this.cards[i - 1].type == "waves")) {
 				if(DEBUG)				
 					console.log("Skip deal because reached end of cards and last card is set");
 				return;
+			} else if (c && c.type == "waves" && this.cards[i + 1]) {
+				c.remove(null);
+				if (!this.cards[i].showing)
+					this.cards[i].show(this.cardCbs, this.constants.stack_depth - i)
+				else
+					for (var f = i; f < cardbox.childNodes.length; f++)
+						this.cards[f] && this.cards[f].showing && this.cards[f].promote();
 			} else if (!c) {
 				c = this.cards[i] = newCard();
 				if (DEBUG)
@@ -192,13 +222,17 @@ var deck_proto = {
 			} else 
 				c.show(this.cardCbs, this.constants.stack_depth - i);
 		}
-		if (this.cards[1] && this.cards[1].surfsUp && this.cards[1].type == "content") {
-			console.log("Punted card because it wasn't ready to be shown");
-			this.cards[1].unshow();
-			this.cards.splice((this.cards.length-1), 0, this.cards.splice(1, 1)[0]);
-			this.cards[1] && this.cards[1].showing && this.cards[1].promote();
+		if (this.cards[1] && this.cards[1].surfsUp && this.cards[1].type == "content" 
+			&& this.cards[2] && !this.cards[2].surfsUp) {
+			if (this.cards.length > this.constants.stack_depth) {
+				console.log("Punted card because it wasn't ready to be shown");
+				this.demoteCard(this.cards[1], this.cards.length - 1);
+			} 
+			else 
+				this.cards[1].remove();
 		}
 		throbber.active && throbber.off();
+		this.dealing = false;
 	}
 };
 

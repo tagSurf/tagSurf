@@ -241,8 +241,6 @@ onload = function ()
 			return true;
 		},
 		remove: function(self) {
-			if (self.type == "content")
-				current_deck.voted_keys[self.id] = true;
 			current_deck.deal();
 		},
 		error: function() {
@@ -268,7 +266,10 @@ onload = function ()
 				tag: tagName
 			});
 		}
-		location.hash = tinput.value = tagName || current_tag;
+		if (isAuthorized())
+			location.hash = tinput.value = tagName || current_tag;
+		else
+			tinput.value = tagName || current_tag;
 	};
 
 	// autocomplete stuff

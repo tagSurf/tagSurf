@@ -295,10 +295,13 @@ var card_proto = {
 		this.showing = true;
 		scrollContainer.style.opacity = 1;
 		throbber.active && throbber.off();	
-		if (slideContainer.childNodes.length == 1)
+		if (slideContainer.childNodes.length == 1 
+			|| this.zIndex == deck_proto.constants.stack_depth)
 			this.setTop();
 	},
 	unshow: function () {
+		if (!this.showing)
+			return;
 		if (DEBUG)
 			console.log("Unshow card #" + this.id);
 		this._forgetGestures();
@@ -306,15 +309,22 @@ var card_proto = {
 		slideContainer.removeChild(this.wrapper);
 		this.showing = false;
 	},
-	remove: function () {
-		this._forgetGestures();
-		this.wrapper.style.opacity = 0;
-		slideContainer.removeChild(this.wrapper);
-		this.showing = false;
+	remove: function (removeCb) {
+		if (this.showing) {
+			this._forgetGestures();
+			this.wrapper.style.opacity = 0;
+			slideContainer.removeChild(this.wrapper);
+			this.showing = false;
+		}
 		removeFromDecks(this);
-		this.cbs.remove && this.cbs.remove(this);
+		if (typeof removeCb != "undefined")
+			removeCb && removeCb()
+		else
+			this.cbs.remove && this.cbs.remove(this);
 	},
 	promote: function (zIndex) {
+		if (!this.showing)
+			return;
 		if (zIndex)
 			this.zIndex = zIndex;
 		else 
@@ -326,6 +336,8 @@ var card_proto = {
 			console.log("Promote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 	},
 	demote: function (zIndex) {
+		if (!this.showing)
+			return;
 		if (zIndex)
 			this.zIndex = zIndex;
 		else 
@@ -468,6 +480,7 @@ var card_proto = {
 			else
 				castVote(this);
 		}
+		current_deck.voted_keys[self.id] = true;
 		this.pushTags();
 	},
 	pushTags: function () {
