@@ -166,7 +166,7 @@ var deck_proto = {
 				console.log("Removed top card #" + this.topCard().id + " cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length + " card.surfsUp = " + this.topCard().surfsUp + " card = ", this.topCard());
 			this.topCard().remove();
 		}
-		!this.topCard().showing && this.topCard().show(this.constants.stack_depth);
+		!this.topCard().showing && this.topCard().show(this.cardCb, this.constants.stack_depth);
 		this.topCard().setTop();
 		if (this.topCard().zIndex < this.constants.stack_depth){
 			// If top card needs promoting
