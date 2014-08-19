@@ -192,11 +192,11 @@ var deck_proto = {
 			} else 
 				c.show(this.cardCbs, this.constants.stack_depth - i);
 		}
-		// if (this.cards[1] && this.cards[1].surfsUp && this.cards[1].type == "content") {
-		// 	this.cards[1].unshow();
-		// 	this.cards.splice((this.cards.length-1), 0, this.cards.splice(1, 1)[0]);
-		// 	this.cards[1] && this.cards[1].showing && this.cards[1].promote();
-		// }
+		if (this.cards[1] && this.cards[1].surfsUp && this.cards[1].type == "content") {
+			this.cards[1].unshow();
+			this.cards.splice((this.cards.length-1), 0, this.cards.splice(1, 1)[0]);
+			this.cards[1] && this.cards[1].showing && this.cards[1].promote();
+		}
 		throbber.active && throbber.off();
 	}
 };
