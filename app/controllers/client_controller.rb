@@ -88,6 +88,7 @@ class ClientController < ApplicationController
   def submissions; end
   def tag; end
   def device; end
+  def share; end
 
   # Beta access flow
   def access_code; end
@@ -95,9 +96,6 @@ class ClientController < ApplicationController
   def terms; end
   def signup; end
 
-  def share
-    @media = Media.find(params[:id])
-  end
 
 
   def resend_link; 
