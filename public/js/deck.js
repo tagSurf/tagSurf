@@ -223,7 +223,7 @@ var deck_proto = {
 				c.show(this.cardCbs, this.constants.stack_depth - i);
 		}
 		if (this.cards[1] && this.cards[1].surfsUp && this.cards[1].type == "content" 
-			&& this.cards[2] && !this.cards[2].surfsUp) {
+			&& ((this.cards[2] && !this.cards[2].surfsUp) || (this.cards[3] && !this.cards[3].surfsUp))) {
 			if (this.cards.length > this.constants.stack_depth) {
 				console.log("Punted card because it wasn't ready to be shown");
 				this.demoteCard(this.cards[1], this.cards.length - 1);
