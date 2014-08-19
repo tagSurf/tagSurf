@@ -181,7 +181,7 @@ var deck_proto = {
 			var c = this.cards[i];
 			if (!c && this.cards[i - 1] && (this.cards[i - 1].type == "End-Of-Feed" || this.cards[i - 1].surfsUp)) {
 				if(DEBUG)				
-					console.log("Skip deal because reached end of cards and last card is set. this.building = " + this.building);
+					console.log("Skip deal because reached end of cards and last card is set");
 				return;
 			} else if (!c) {
 				c = this.cards[i] = newCard();
@@ -193,6 +193,7 @@ var deck_proto = {
 				c.show(this.cardCbs, this.constants.stack_depth - i);
 		}
 		if (this.cards[1] && this.cards[1].surfsUp && this.cards[1].type == "content") {
+			console.log("Punted card because it wasn't ready to be shown");
 			this.cards[1].unshow();
 			this.cards.splice((this.cards.length-1), 0, this.cards.splice(1, 1)[0]);
 			this.cards[1] && this.cards[1].showing && this.cards[1].promote();
