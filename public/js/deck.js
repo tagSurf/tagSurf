@@ -225,11 +225,14 @@ var deck_proto = {
 		if (this.cards[1] && this.cards[1].surfsUp && this.cards[1].type == "content" 
 			&& ((this.cards[2] && !this.cards[2].surfsUp) || (this.cards[3] && !this.cards[3].surfsUp))) {
 			if (this.cards.length > this.constants.stack_depth) {
-				console.log("Punted card because it wasn't ready to be shown");
+				if (DEBUG)
+					console.log("Punted card #" + this.cards[1].id + " because it wasn't ready to be shown");
 				this.demoteCard(this.cards[1], this.cards.length - 1);
-			} 
-			else 
+			} else {
 				this.cards[1].remove();
+				if (DEBUG)
+					console.log("Removed card #" + this.cards[1].id + " because it wasn't ready to be shown");
+			}
 		}
 		throbber.active && throbber.off();
 		this.dealing = false;
