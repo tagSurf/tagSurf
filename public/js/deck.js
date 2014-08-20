@@ -149,9 +149,9 @@ var deck_proto = {
 				newIndex = currentIndex + positions < this.cards.length - 1 ? 
 					currentIndex + positions : this.cards.length - 1; 
 			for (var i = 0; i < (newIndex - currentIndex); i++)
-				c.demote(); 
-			this.cards.splice(newIndex, 0, this.cards.splice(currentIndex, 1)[0]);
-			if (currentIndex < this.constants.stack_depth)
+				c.demote();
+			this.cards.splice(newIndex, 1, this.cards.splice(currentIndex, 1)[0]);
+			if (false)//currentIndex < this.constants.stack_depth)
 				this.deal();
 		}
 	},
