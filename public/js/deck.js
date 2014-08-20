@@ -103,7 +103,7 @@ var deck_proto = {
 			return !deck_proto.voted_keys[card.id];
 		});
 		if (this.shareDeck) {
-			// re-space login cards in deck after purge
+			// re-space login cards throughout deck after purge
 			var cardsSinceLoginCard = 0;
 			for (i = 0; i < this.cards.length; ++i) {
 				if (this.cards[i].type != "login") {
@@ -150,7 +150,8 @@ var deck_proto = {
 					currentIndex + positions : this.cards.length - 1; 
 			for (var i = 0; i < (newIndex - currentIndex); i++)
 				c.demote();
-			this.cards.splice(newIndex, 1, this.cards.splice(currentIndex, 1)[0]);
+			// splice card from current position and insert it into new index with 0 removals
+			this.cards.splice(newIndex, 0, this.cards.splice(currentIndex, 1)[0]);
 			if (false)//currentIndex < this.constants.stack_depth)
 				this.deal();
 		}
@@ -161,6 +162,7 @@ var deck_proto = {
 				newIndex = currentIndex - positions >= 0 ? currentIndex - positions : 0; 
 			for (var i = currentIndex; i > (currentIndex - newIndex); i--)
 				c.promote();
+			// splice card from current position and insert it into new index with 0 removals
 			this.cards.splice(newIndex, 0, this.cards.splice(currentIndex, 1)[0]);
 			if (newIndex < this.constants.stack_depth)
 				this.deal();
@@ -171,6 +173,7 @@ var deck_proto = {
 		console.log("deck.deal");
 		var cardbox = document.getElementById("slider"),
 			self = this;
+		// If the deck is building and there are no cards to deal
 		if (this.building && (this.cards.length < 1 || this.topCard().type == "waves")) {
 			// Delay deal until update is complete
 			setTimeout(function() { self.deal(); }, 3000)
@@ -178,64 +181,86 @@ var deck_proto = {
 				console.log("Delay deal because deck is building");
 			return;
 		}
+		// If no topCard, there is nothing to deal
 		if (!this.topCard())
 			return;
+		// If topCard is an End-Of-Feed card with no cards behind it and it's showing there is nothing to deal
 		if (this.cards.length == 1 && this.topCard().type == "End-Of-Feed" && this.topCard().showing)
 			return;
+		// If topCard is waves and there are no cards left in the deck set End-Of-Feed
 		else if (this.cards.length == 1 && this.topCard().type == "waves")
 			this.topCard().setFailMsg();
+		// If there are cards in the deck and the topCard is waves or End-Of-Feed remove it
 		if (this.cards.length > 1 && (this.topCard().type == "waves" || this.topCard().type == "End-Of-Feed")) {
 			if(DEBUG)
 				console.log("Removed top card #" + this.topCard().id + " cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length + " card.surfsUp = " + this.topCard().surfsUp + " card = ", this.topCard());
 			this.topCard().remove();
 		}
+		// If topCard isn't showing, show it on top of stack
 		!this.topCard().showing && this.topCard().show(this.cardCb, this.constants.stack_depth);
+		// If topCard needs promoting...
 		if (this.topCard().zIndex < this.constants.stack_depth) {
-			// If top card needs promoting
 			var zIndexCatchUp = this.constants.stack_depth - this.topCard().zIndex;
 			for (var i = 0; i < zIndexCatchUp; i++) {
-				// Promote all visible cards as many times as top card needs promoting
+				// Promote all visible cards as many times as topCard needs promoting
 				for (var f = 0; f < cardbox.childNodes.length; f++)
 					this.cards[f] && this.cards[f].showing && this.cards[f].promote();
 			}
 		}
+		// For as many cards as are missing from the table
 		for (var i = cardbox.childNodes.length; i < this.constants.stack_depth; i++) {
 			var c = this.cards[i];
+			// If this is end of deck and waves or End-Of-Feed card is last one, end deal
 			if (!c && this.cards[i - 1] && (this.cards[i - 1].type == "End-Of-Feed" 
 				|| this.cards[i - 1].type == "waves")) {
 				if(DEBUG)				
 					console.log("Skip deal because reached end of cards and last card is set");
 				return;
-			} else if (c && c.type == "waves" && this.cards[i + 1]) {
+			} 
+			// If there is a waves card with another card behind it, remove it
+			else if (c && c.type == "waves" && this.cards[i + 1]) {
 				c.remove(null);
+				//If the new card isn't showing
 				if (!this.cards[i].showing)
+					// Show it
 					this.cards[i].show(this.cardCbs, this.constants.stack_depth - i)
 				else
+					// If it's showing, promote it and all cards behind it
 					for (var f = i; f < cardbox.childNodes.length; f++)
 						this.cards[f] && this.cards[f].showing && this.cards[f].promote();
-			} else if (!c) {
+			} 
+			// If there is not a card and the previous card is not waves
+			else if (!c) {
+				// Make a new waves card and show it, then end the deal
 				c = this.cards[i] = newCard();
 				if (DEBUG)
 					console.log("Create new throbber card, i = " + i + " cards.length = " + this.cards.length + " cardbox.length = " + cardbox.childNodes.length);
 				c.show();
 				return;
-			} else 
+			} 
+			// Show the next card in the deck
+			else 
 				c.show(this.cardCbs, this.constants.stack_depth - i);
 		}
+		// If the second and third cards do not have populated images
 		if (this.cards[1] && this.cards[1].surfsUp && this.cards[1].type == "content" 
 			&& ((this.cards[2] && !this.cards[2].surfsUp) || (this.cards[3] && !this.cards[3].surfsUp))) {
+			// If there are more cards in the deck than on the table
 			if (this.cards.length > this.constants.stack_depth) {
 				if (DEBUG)
 					console.log("Punted card #" + this.cards[1].id + " because it wasn't ready to be shown");
+				// Send the unpopulated card to back of deck to give time for image load
 				this.demoteCard(this.cards[1], this.cards.length - 1);
-			} else {
+			} 
+			// If what's on the table is all that's left, remove the unpopulated card
+			else {
 				this.cards[1].remove();
 				if (DEBUG)
 					console.log("Removed card #" + this.cards[1].id + " because it wasn't ready to be shown");
 			}
 		}
+		// Turn throbber off
 		throbber.active && throbber.off();
-		this.dealing = false;
 	}
 };
 
