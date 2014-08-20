@@ -391,7 +391,7 @@ var card_proto = {
 	setExpandTimeout: function (time) {
 		var self = this;
 		if (!this.expandTimeout)
-			this.expandTimeout = setTimeout(function(){ self.expand();}, (time) ? time : 15000);
+			this.expandTimeout = setTimeout(function(){ self.expand();}, (time) ? time : 1500);
 	},
 	clearExpandTimeout: function () {
 		if (this.expandTimeout) {
