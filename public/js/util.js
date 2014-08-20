@@ -97,8 +97,11 @@ var current_tag, current_deck, cardCbs, tinput, inputContainer, slideContainer,
 // tagging stuff
 var newtags = [];
 var pushTags = function() {
-  while (newtags.length)
-    xhr("/api/media/" + currentMedia.id + "/tags/" + newtags.shift(), "POST", null, null);
+  if (newtags.length > 0) {
+    while (newtags.length)
+      xhr("/api/media/" + currentMedia.id + "/tags/" + newtags.shift(), "POST", null, null);
+    autocomplete.populate();
+  }
 };
 
 var popTrending; // defined in feed

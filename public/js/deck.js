@@ -98,6 +98,7 @@ var deck_proto = {
 			return card.type != "tutorial";
 		});
 		this.refresh();
+		this.deal();
 	},
 	purge: function() {
 		if (DEBUG)
@@ -109,6 +110,11 @@ var deck_proto = {
 			this.spaceLoginCards();
 		}
 	},
+	removeLoginCards: function () {
+		this.cards = this.cards.filter(function(card){
+			return card.type != "login";
+		});
+	},
 	spaceLoginCards: function() {
 		if (!this.shareDeck)
 			return;
@@ -119,9 +125,7 @@ var deck_proto = {
 				break;
 			}
 		}
-		this.cards = this.cards.filter(function(card){
-			return card.type != "login";
-		});
+		this.removeLoginCards();
 		for (i = this.constants.login_spacing; i < this.cards.length; i += this.constants.login_spacing)
 			this.cards.splice(i, 0, loginCard);
 	},

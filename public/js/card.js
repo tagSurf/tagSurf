@@ -450,6 +450,8 @@ var card_proto = {
 	},
 	rmTag: function(tag) {
 	  var tobjs = this.tags;
+	  if (this._isMine(tag) && newtags.indexOf(tag) != -1)
+	  	newtags.splice(newtags.indexOf(tag), 1);
 	  for (var i = 0; i < tobjs.length; i++) {
 		if (Object.keys(tobjs[i])[0] == tag) {
 			tobjs.splice(i,1);
@@ -487,9 +489,15 @@ var card_proto = {
 		}
 	},
 	pushTags: function () {
-	for (i = 0; i < this.tags.length ; ++i)
-		if(this._isMine(Object.keys(this.tags[i])[0]))
-		    xhr("/api/media/" + this.id + "/tags/" + Object.keys(this.tags[i])[0], "POST", null, null);
+		var newtag = false;
+		for (i = 0; i < this.tags.length ; ++i) {
+			if(this._isMine(Object.keys(this.tags[i])[0])) {
+				newtag = true;
+			    xhr("/api/media/" + this.id + "/tags/" + Object.keys(this.tags[i])[0], "POST", null, null);
+			}
+		}
+		if (newtag)
+			autocomplete.populate();
 	}
 };
 

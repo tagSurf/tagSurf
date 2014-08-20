@@ -44,8 +44,11 @@ var autocomplete = {
 	},
 	_update: function(targetList) {
 		if (autocomplete.data) for (var listName in autocomplete.nodes) {
-			if (!targetList || listName == targetList) {
+			if(targetList && targetList != listName)
+				continue;
+			else {
 				var hasTrending = false;
+				autocomplete.nodes[listName].firstChild.innerHTML = "";
 				autocomplete.data.forEach(function(tag) {
 					if (tag.name) {
 						hasTrending = hasTrending || tag.name == "trending";

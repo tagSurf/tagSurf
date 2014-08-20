@@ -223,6 +223,9 @@ var buildOptionsTable = function () {
         xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
           JSON.stringify({ safe_mode: safeSurfCheckbox.firstChild.checked }));
         currentUser.safeSurf = safeSurfCheckbox.firstChild.checked;
+        autocomplete.populate();
+        if(whichGallery())
+          location.reload();
         analytics.track('Toggle Safe Surf', {
           safeSurf: currentUser.safeSurf
         });
