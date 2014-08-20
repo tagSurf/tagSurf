@@ -65,7 +65,6 @@ var deck_proto = {
 			var rdata = response_data.data.map(newCard);
 			self.cardsToLoad = self.cardsToLoad.concat(self.popData(rdata));
 			self.building = false;
-			console.log("deck build complete");
 			self.build_retry = false;
 			if (update)
 				self.preloadCards();	
@@ -102,7 +101,7 @@ var deck_proto = {
 	},
 	purge: function() {
 		if (DEBUG)
-			console.log("purge deck");
+			console.log("purge deck #" + this.tag);
 		this.cards = this.cards.filter(function(card) {
 			return !deck_proto.voted_keys[card.id];
 		});
@@ -170,7 +169,8 @@ var deck_proto = {
 	},
 	deal: function() {
 		// deck dealer
-		console.log("deck.deal");
+		if (this != current_deck)
+			return;
 		var cardbox = document.getElementById("slider"),
 			self = this;
 		// If the deck is building and there are no cards to deal
