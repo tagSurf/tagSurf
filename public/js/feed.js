@@ -364,6 +364,8 @@ onload = function ()
 		var voteDir = isUp ? "up" : "down";
 		var transitionDistance = translateQuantity - slider.x;
 		var transitionDuration = pixelsPerSecond ? (transitionDistance / pixelsPerSecond) : 250;
+		if (slider.type == "waves" || slider.type == "End-Of-Feed")
+			return;
 		if (slider.supering == true)
 		{
 			verticalQuantity = -500;
@@ -453,6 +455,8 @@ onload = function ()
 	});
 	stroke.listen("up", "37", function() {
 		var slider = topCard();
+		if(topCard().type == "waves" || topCard().type == "End-Of-Feed")
+			return;
 		cardCbs.drag("left", -3, -3);
 		flashVoteButton("left");
 		if (slider.id == 221281) {	
@@ -481,6 +485,8 @@ onload = function ()
 	});
 	stroke.listen("up", "39", function() {
 		var slider = topCard();
+		if(topCard().type == "waves" || topCard().type == "End-Of-Feed")
+			return;
 		cardCbs.drag("right", 3, 3);
 		flashVoteButton("right");
 		if (slider.id == 221281) {
