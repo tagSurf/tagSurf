@@ -19,6 +19,7 @@ var autocomplete = {
 		if (!autocomplete.viewing[listName])
 			return;
 		autocomplete.viewing[listName] = false;
+		autocomplete.inputs[listName].blur();
 		var acnode = autocomplete.nodes[listName];
 		acnode.className = "autocomplete";
 		trans(acnode, function() {
@@ -28,7 +29,6 @@ var autocomplete = {
 	tapTag: function(tagName, listName, insertCurrent) {
 		autocomplete.handlers[listName](tagName, insertCurrent);
 	    autocomplete.retract(listName);
-	    autocomplete.inputs[listName].blur();
 	},
 	addTag: function(tagName, listName) {
 		var n = document.createElement("div");
@@ -44,8 +44,11 @@ var autocomplete = {
 	},
 	_update: function(targetList) {
 		if (autocomplete.data) for (var listName in autocomplete.nodes) {
-			if (!targetList || listName == targetList) {
+			if(targetList && targetList != listName)
+				continue;
+			else {
 				var hasTrending = false;
+				autocomplete.nodes[listName].firstChild.innerHTML = "";
 				autocomplete.data.forEach(function(tag) {
 					if (tag.name) {
 						hasTrending = hasTrending || tag.name == "trending";

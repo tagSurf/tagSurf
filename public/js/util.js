@@ -1,5 +1,6 @@
 //These variables are reinitialized on every pageload
 var authorizedSession = null,
+    cardIndex = 0,
     currentUser = {
       id : null,
       email : null,
@@ -12,7 +13,8 @@ var authorizedSession = null,
 // Set DEBUG = true in non-production environments
 if ((document.location.hostname.indexOf("localhost") != -1) 
   || (document.location.hostname.indexOf("staging.tagsurf.co") != -1)
-  || (document.location.hostname.indexOf("192.168") != -1))
+  || (document.location.hostname.indexOf("192.168") != -1)
+  || (document.location.hostname.indexOf("172.20") != -1))
   DEBUG = true;
 var hasClass = function (node, className) 
 {
@@ -42,36 +44,38 @@ var whichGallery = function() {
 };
 
 var isAuthorized = function () {
-  if(authorizedSession == null) {
-    xhr('/api/users', "GET", function(result) {
-      if (result.user != "not found") {
-        authorizedSession = true;
-        currentUser.id = result.user.id;
-        currentUser.email = result.user.email;
-        currentUser.slug = result.user.slug;
-        currentUser.admin = result.user.admin;
-        currentUser.safeSurf = result.user.safe_mode;
-        if(!isDesktop())
-          currentUser.vote_btns = false;
-      }
-      else
-        authorizedSession = false;
-      // var vote_btns = sessionStorage.getItem("vote_btns");
-      // if(typeof vote_btns !== 'undefined')
-      //   currentUser.vote_btns = vote_btns;  
-    }, function(result) {
-      if (result.user == "not found") 
-        authorizedSession = false;
-    }, false);
+  if (authorizedSession != null)
     return authorizedSession;
+  if (document.location.href.indexOf('share') == -1) {
+    authorizedSession = true;
+    if(!isDesktop())
+            currentUser.vote_btns = false;
+    setTimeout(function () { getUser(); }, 3000);
   }
-  else 
-  	return authorizedSession;
+  else
+    authorizedSession = false;
+  return authorizedSession;
+};
+
+var getUser = function () {
+  if (authorizedSession && !currentUser.id)
+    xhr('/api/users', "GET", function(result) {
+        if (result.user != "not found") {
+          currentUser.id = result.user.id;
+          currentUser.email = result.user.email;
+          currentUser.slug = result.user.slug;
+          currentUser.admin = result.user.admin;
+          currentUser.safeSurf = result.user.safe_mode;
+        } 
+      }, function(result) {
+        if (result.user == "not found" && DEBUG) 
+          console.log("Error: User not found");
+      });
 };
 
 // autocomplete stuff
-var current_tag, tinput, inputContainer, slideContainer,
-  scrollContainer, closeAutoComplete = function(tagName, noback) {
+var current_tag, current_deck, cardCbs, tinput, inputContainer, slideContainer,
+  scrollContainer, closeAutoComplete = function(noback) {
     if (noback) {
       slideContainer.className = "";
       scrollContainer.insertBefore(inputContainer,
@@ -82,32 +86,22 @@ var current_tag, tinput, inputContainer, slideContainer,
         scrollContainer.firstChild);
     });
     tinput.active = false;
-    location.hash = tinput.value = tagName || current_tag;
+  }, clearStack = function() {
+    var cardbox = document.getElementById("slider"),
+        current_stack_depth = cardbox.childNodes.length;
+      for (var i = 0; i < current_stack_depth; i++)
+        current_deck.cards[i].showing && current_deck.cards[i].unshow();
   };
 
+// TODO: Kill this usage in gallery and use card.pushTags() instead 
 // tagging stuff
 var newtags = [];
 var pushTags = function() {
-  while (newtags.length)
-    xhr("/api/media/" + currentMedia.id + "/tags/" + newtags.shift(), "POST", null, null);
-};
-var rmTag = function(tname) {
-  // remove from sensible new tags array
-  var i = newtags.indexOf(tname);
-  if (i != -1)
-    newtags = newtags.slice(0, i).concat(newtags.slice(i+1));
-
-  // remove from unwieldy tags_v2 embedded object array
-  var tIndex = -1;
-  var tobjs = currentMedia.tags_v2;
-  for (var i = 0; i < tobjs.length; i++) {
-    if (Object.keys(tobjs[i])[0] == tname) {
-      tIndex = i;
-      break;
-    }
+  if (newtags.length > 0) {
+    while (newtags.length)
+      xhr("/api/media/" + currentMedia.id + "/tags/" + newtags.shift(), "POST", null, null);
+    autocomplete.populate();
   }
-  if (tIndex != -1)
-    tobjs = tobjs.slice(0, tIndex).concat(tobjs.slice(tIndex + 1));
 };
 
 var popTrending; // defined in feed
@@ -202,11 +196,13 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
         downvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/downvote_btn-invert.png";
       });
       gesture.listen('up', downvoteBtn, function () {
-        downvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/downvote_btn.png";
+        setTimeout(function() {
+          downvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/downvote_btn.png";
+        }, 200);
       });
       gesture.listen('tap', downvoteBtn, function () {
         if (modal.zoom.zoomed)
-          modal.callZoom(1);
+          modal.callZoom(1);    
         dragCallback("left", -3, -3);
         swipeSlider("left");
         analytics.track("Tap Downvote Button");
@@ -216,11 +212,13 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
         upvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/upvote_btn-invert.png";
       });
       gesture.listen('up', upvoteBtn, function () {
-        upvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/upvote_btn.png";
+        setTimeout(function() {
+          upvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/upvote_btn.png";          
+        }, 200);
       });
       gesture.listen('tap', upvoteBtn, function () {
         if (modal.zoom.zoomed)
-          modal.callZoom(1);
+          modal.callZoom(1);     
         dragCallback("right", 3, 3);
         swipeSlider("right");
         analytics.track("Tap Upvote Button");
@@ -255,30 +253,32 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
       }
     };
 
-var currentMedia, checkShare = function(shareCb, panicCb) {
-  var d = currentMedia;
-  if (d && d.type == "content") {
-    share.on(d, shareCb);
-    if(whichGallery()) //no panic modal in galleries
-      return;
-    else
-      panic.on(d, panicCb);
-      if(currentUser.vote_btns)
-        voteButtonsOn();
-  } else if (d && d.type == "login") {
-      if(currentUser.vote_btns)
-        voteButtonsOn();
-  } else {
-    share.off();
-    panic.off();
-    voteButtonsOff();
-    if (addBarSlid)
-      slideAddBar();
-  }
-}, setCurrentMedia = function(d, shareCb, panicCb) {
-  currentMedia = d;
-  checkShare(shareCb, panicCb);
-};
+var currentMedia, panicCb, //def in feed
+  checkShare = function(shareCb) {
+    var d = currentMedia;
+    if (d && d.type == "content") {
+      share.on(d, shareCb);
+      if(whichGallery()) //no panic modal in galleries
+        return;
+      else
+        panic.on(d, panicCb);
+        if(currentUser.vote_btns)
+          voteButtonsOn();
+    } else if (d && d.type == "login") {
+        if(currentUser.vote_btns)
+          voteButtonsOn();
+    } else {
+      share.off();
+      panic.off();
+      voteButtonsOff();
+      if (addBarSlid)
+        slideAddBar();
+    }
+  }, 
+  setCurrentMedia = function(d, shareCb) {
+    currentMedia = d;
+    checkShare(shareCb);
+  };
 var _addCss = function(css) {
     var n = document.createElement("style");
     n.type = "text/css";
@@ -309,7 +309,7 @@ var setResizeCb = function(cb) {
 setMaxCardHeight();
 var lastWidth = window.innerWidth;
 window.onresize = function() {
-  if (lastWidth == window.innerWidth)
+  if (!isDesktop() && (lastWidth == window.innerWidth) || throbber.active)
     return;
   lastWidth = window.innerWidth;
   setMaxCardHeight();
@@ -333,7 +333,7 @@ var xhr = function(path, action, cb, eb, async, payload) {
       if (resp.errors || _xhr.status != 200) {
         if (eb) 
           eb(resp, _xhr.status);
-        if (!(_xhr.status == 404) && DEBUG) {
+        if (!(_xhr.status == 404) && !(_xhr.status == 500) && DEBUG) {
           alert("XHR error! Request failed. Path: " + path + " Errors: " + resp.errors 
             + " Response: " + _xhr.responseText + " Status: " + _xhr.status);
           console.log("XHR error! Path:" + path + " Error: "

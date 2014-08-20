@@ -239,8 +239,6 @@ var modal = {
 		setTimeout(function() {
 			modal.prompt.className = "modal-prompt opaque";
 		}, 0);
-		console.log("back =" + back);
-		console.log("modal.back.on =" + modal.back.on);
 		if (!modal.back.on && back) {
 			modal.backOn();
 			modal.prompt.backed = true;

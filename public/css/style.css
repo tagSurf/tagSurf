@@ -111,7 +111,7 @@ a {
 	font-size: 240%;
 }
 .bold {
-	font-weight: bold;
+	font-weight: 500;
 }
 .blue {
 	color: #00aeef;
@@ -271,7 +271,15 @@ a {
 	bottom: 5px;
 	height: 30px;
 }
-
+.throbber-back {
+	background-color: #404041;
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+	z-index: 100;
+	-webkit-transition: opacity 500ms;
+	transition: opacity 500ms;
+}
 /*======== Zoom Modal Stuff =======*/
 .raw-wrapper {
   display: inline;

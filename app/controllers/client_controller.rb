@@ -96,9 +96,13 @@ class ClientController < ApplicationController
   def terms; end
   def signup; end
 
+  def share
+    if current_user
+      redirect_to "/feed##{params["tag"]}~#{params["id"]}"
+    end
+  end
 
-
-  def resend_link; 
+  def resend_link 
     if current_user and current_user.confirmed? 
       redirect_to root_path
     end

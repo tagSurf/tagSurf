@@ -223,6 +223,9 @@ var buildOptionsTable = function () {
         xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
           JSON.stringify({ safe_mode: safeSurfCheckbox.firstChild.checked }));
         currentUser.safeSurf = safeSurfCheckbox.firstChild.checked;
+        autocomplete.populate();
+        if(whichGallery())
+          location.reload();
         analytics.track('Toggle Safe Surf', {
           safeSurf: currentUser.safeSurf
         });
@@ -281,7 +284,7 @@ var add_icon, add_state = "blue", add_icons = {
 var addBarSlid = false;
 var slideAddBar = function(noback) {
   if (!isAuthorized()) {
-    messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
+    messageBox("Oops", "You need to login to add a tag", "login", stashVotesAndLogin);
     return;
   }
   if (autocomplete.viewing.autocomplete) {
