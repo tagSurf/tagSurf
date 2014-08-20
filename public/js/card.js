@@ -9,11 +9,12 @@ var card_proto = {
 			this.type = data.type;
 			this.source = data.source;
 			data.tags_v2.forEach(function(tag) { 
-				if (tag == "trending") {
-					return;
-				}
-				else if(tag != "")
-					self.tags.push(tag); 
+				self.tags.push(tag); 
+			});
+			self.tags.forEach(function(tagobj) {
+				var t = Object.keys(tagobj)[0];
+				if (t == "trending")
+					self.trending = true;
 			});
 		}
 		else 
@@ -64,7 +65,7 @@ var card_proto = {
 		});
 		this.tags.forEach(function(tagobj) {
 			var t = Object.keys(tagobj)[0];
-			t && card.tagCard(t, picTags);
+			t && card.tagCard(t);
 		});
 		this.cbs.start(this.contents);
 		this.isContent = true;
@@ -294,7 +295,6 @@ var card_proto = {
 		slideContainer.appendChild(this.wrapper);
 		if (DEBUG && current_deck)
 			console.log("Show card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
-		this._formatContents(image.get(this.data));
 		this.showing = true;
 		scrollContainer.style.opacity = 1;
 		throbber.active && throbber.off();	
