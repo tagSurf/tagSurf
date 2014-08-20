@@ -1,6 +1,6 @@
 var reminders = [];
 
-var _reminder = {
+var reminder_proto = {
 	forget: function() {
 		if(!this.timeout) 
 			return;
@@ -61,6 +61,9 @@ var _reminder = {
 	},
 	_build: function () {
 		var self = this,
+	},
+	_build: function () {
+		var self = this,
 			container = this.container = document.createElement('div'),
 			closeContainer = document.createElement('div'),
 			close = document.createElement('img');
@@ -73,8 +76,6 @@ var _reminder = {
 		closeContainer.appendChild(close);
 		if(this.node)
 			container.appendChild(this.node);
-		// TODO Refactor this code into vars for each node type 
-		// and simplfy this block by just switching the node
 		else if (DEBUG)
 			console.log("Error: no contents for reminder container");
 		gesture.listen("drag", self.container, function (direction) {
@@ -94,7 +95,7 @@ var _reminder = {
 };
 
 var newReminder = function(node, cb, type, delay, duration) {
-	var reminder = reminders[reminders.length] = Object.create(_reminder);
+	var reminder = reminders[reminders.length] = Object.create(reminder_proto);
 	reminder.container = document.createElement('div');
 	reminder.timeout = null;
 	reminder.isOn = false;

@@ -111,7 +111,7 @@ a {
 	font-size: 240%;
 }
 .bold {
-	font-weight: bold;
+	font-weight: 500;
 }
 .blue {
 	color: #00aeef;
@@ -119,6 +119,7 @@ a {
 .light-gray {
 	color: #989898;
 }
+
 /*===== Pic Tags Stuff =====*/
 .pictags {
 	text-align: center;
@@ -139,6 +140,7 @@ a {
 	margin: 5px;
 	cursor: pointer;
 }
+
 /*===== Modal Backing Stuff =====*/
 .blackout {
 	pointer-events: none;
@@ -175,6 +177,7 @@ a {
 	-webkit-transition: -webkit-transform 250ms ease-in-out;
 	-webkit-overflow-scrolling: auto;
 }
+
 /*======== Modal Close Button Stuff =========*/
 .modal-close-button {
 	width: 40px;
@@ -212,6 +215,7 @@ a {
 	-webkit-transition: none !important;
 	pointer-events: none;
 }
+
 /*========= Login Page Stuff =========*/
 .tslogo {
   display: block;
@@ -252,6 +256,7 @@ a {
 	transition: border-color 200ms;
 	-webkit-background-clip: padding-box;
 }
+
 /*======== Throbber Stuff =========*/
 .throbber {
 	height: 50px;
@@ -265,6 +270,15 @@ a {
 .throbber-bottom {
 	bottom: 5px;
 	height: 30px;
+}
+.throbber-back {
+	background-color: #404041;
+	position: absolute;
+	opacity: 0;
+	pointer-events: none;
+	z-index: 100;
+	-webkit-transition: opacity 500ms;
+	transition: opacity 500ms;
 }
 /*======== Zoom Modal Stuff =======*/
 .raw-wrapper {
@@ -298,6 +312,7 @@ a {
   position: absolute;
   pointer-events: none;
 }
+
 /*======== Autocomplete Stuff =========*/
 #add-tag-autocomplete {
   top: 43px;
@@ -305,7 +320,7 @@ a {
   border-radius: 4px;
   border: 1px solid #00aeef;
   color: #00aeef;
-  font-weight: bold;
+  font-weight: 500;
 }
 .autocomplete {
   z-index: 4;

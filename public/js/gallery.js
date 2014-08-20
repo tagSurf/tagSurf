@@ -360,7 +360,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		if (populating)
 			return;
 		populating = true;
-		throbber.on('throbber-bottom');
+		throbber.on(false, 'throbber-bottom');
 		xhr(getPath(), null, function(response_data) {
 			response_data.data.forEach(function(d) {
 				addImage(d, getHeader(gallery == "favorites" ?

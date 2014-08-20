@@ -88,6 +88,7 @@ class ClientController < ApplicationController
   def submissions; end
   def tag; end
   def device; end
+  def share; end
 
   # Beta access flow
   def access_code; end
@@ -96,11 +97,12 @@ class ClientController < ApplicationController
   def signup; end
 
   def share
-    @media = Media.find(params[:id])
+    if current_user
+      redirect_to "/feed##{params["tag"]}~#{params["id"]}"
+    end
   end
 
-
-  def resend_link; 
+  def resend_link 
     if current_user and current_user.confirmed? 
       redirect_to root_path
     end
