@@ -233,7 +233,7 @@ var gesture = {
 				node.removeEventListener(gesture.events[evName], e[evName]);
 			if (node.gvars.iosPinch) {
 				for (var evName in gesture.gevents)
-					node.removeEventListener(gesture.gevents[evName], _e[evName]);
+					node.removeEventListener(gesture.gevents[evName], e[evName]);
 			}
 			for (var eventName in gesture.handlers)
 				if (node.gid in gesture.handlers[eventName])

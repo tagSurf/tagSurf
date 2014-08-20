@@ -199,9 +199,9 @@ var card_proto = {
 	},
 	_forgetGestures: function() {
 		var imageContainer = this.wrapper.getElementsByClassName('image-container')[0];
-		// if (imageContainer) {
-		// 	gesture.unlisten(imageContainer);
-		// }
+		if (imageContainer) {
+			gesture.unlisten(imageContainer);
+		}
 		gesture.unlisten(this.wrapper);
 	},
 	wavesOn: function (zIndex) {
