@@ -357,6 +357,8 @@ var mod = function(opts) {
 
 // platform detection
 var __ua = navigator.userAgent, _ua = {
+  isUIWebView: /(iPhone|iPod|iPad).*AppleWebKit(?!.*Safari)/i.test(__ua),
+  isSafariOrUIWebView: /(iPhone|iPod|iPad).*AppleWebKit/i.test(__ua),
   isIphone: __ua.indexOf("iPhone") != -1,
   isIpad: __ua.indexOf("iPad") != -1,
   isIos: (__ua.indexOf("iPhone") != -1) || (__ua.indexOf("iPad") != -1),
@@ -369,6 +371,9 @@ var __ua = navigator.userAgent, _ua = {
 };
 var isIos = function() {
   return _ua.isIos;
+};
+var isUIWebView = function(){
+  return _ua.isUIWebView;
 };
 var isIpad = function(){
   return _ua.isIpad;
