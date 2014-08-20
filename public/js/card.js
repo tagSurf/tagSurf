@@ -54,7 +54,7 @@ var card_proto = {
 				iconLine.children[1].firstChild.src = "http://assets.tagsurf.co/img/trending_icon_blue.png";
 			});
 			gesture.listen("tap", iconLine.children[1], function() {
-				autocomplete.tapTag(card.tags[0], "autocomplete", false);
+				autocomplete.tapTag(Object.keys(current_deck.topCard().tags[0])[0], "autocomplete", false);
 			});
 		} else
 			iconLine.children[1].style.display = "none";
@@ -482,9 +482,9 @@ var card_proto = {
 				voteAlternative();
 			else
 				castVote(this);
+			current_deck.voted_keys[this.id] = true;
+			this.pushTags();		
 		}
-		current_deck.voted_keys[self.id] = true;
-		this.pushTags();
 	},
 	pushTags: function () {
 	for (i = 0; i < this.tags.length ; ++i)

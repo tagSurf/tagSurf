@@ -2,7 +2,7 @@ var deck_proto = {
 	constants: {
 		buffer_minimum: 5,
 		stack_depth: 3,
-		login_spacing: 4
+		login_spacing: 5
 	},
 	voted_keys: {},
 	topCard: function() {
@@ -12,13 +12,13 @@ var deck_proto = {
 		var i, starters = [], others = [], preloads = [];
 		if (!isAuthorized()) {
 			for (i = 0; i < rdata.length; i++) {
-				if (!this.known_keys[rdata[i].id] || rdata[i].type == "login")
+				if ((!this.known_keys[rdata[i].id] && !this.voted_keys[rdata[i].id]) || rdata[i].type == "login")
 						preloads.push(rdata[i]);
 			}
 		}
 		else {
 			for (i = 0; i < rdata.length; i++) {
-				if (!this.known_keys[rdata[i].id]) {
+				if (!this.known_keys[rdata[i].id] && !this.voted_keys[rdata[i].id]) {
 					var d = rdata[i];
 					((!d.animated && starters.length < this.constants.stack_depth)
 						? starters : others).push(d);
@@ -69,8 +69,11 @@ var deck_proto = {
 			self.build_retry = false;
 			if (update)
 				self.preloadCards();	
-			else
+			else {
 				self.preloadCards(self.constants.stack_depth);
+				if (self.shareDeck)
+					self.spaceLoginCards();
+			}
 		}, function(response, status) {
 			if (status == 401){
 				self.building = false;
@@ -103,31 +106,24 @@ var deck_proto = {
 			return !deck_proto.voted_keys[card.id];
 		});
 		if (this.shareDeck) {
-			// re-space login cards throughout deck after purge
-			var cardsSinceLoginCard = 0;
-			for (i = 0; i < this.cards.length; ++i) {
-				if (this.cards[i].type != "login") {
-					++cardsSinceLoginCard;
-					continue;
-				}
-				if (cardsSinceLoginCard < this.constants.login_spacing) {
-					var loginCard = this.cards[i], pushIndex,
-						diff = this.constants.login_spacing - cardsSinceLoginCard;
-						diff = diff < 0 ? this.constants.login_spacing + Math.abs(diff) : diff; 
-						pushIndex = i + diff < this.cards.length - 1 ? i + diff : this.cards.length - 1;
-					if ((this.cards[pushIndex] == "login") && (pushIndex != i)) {
-						this.cards.splice(i, 1);
-						--i;
-						continue;
-					} else {
-						this.cards.splice(pushIndex, 0, this.cards.splice(i, 1)[0]);
-						++cardsSinceLoginCard;
-						continue;
-					}
-				}
-				cardsSinceLoginCard = 0;
+			this.spaceLoginCards();
+		}
+	},
+	spaceLoginCards: function() {
+		if (!this.shareDeck)
+			return;
+		var loginCard;
+		for (i = 0; i < this.cards.length; i++) {
+			if (this.cards[i].type == "login") {
+				loginCard = this.cards.splice(i, 1)[0];
+				break;
 			}
 		}
+		this.cards = this.cards.filter(function(card){
+			return card.type != "login";
+		});
+		for (i = this.constants.login_spacing; i < this.cards.length; i += this.constants.login_spacing)
+			this.cards.splice(i, 0, loginCard);
 	},
 	remove: function(c) {
 		if (this.cards.indexOf(c) != -1) {
@@ -248,7 +244,7 @@ var deck_proto = {
 				c.show(this.cardCbs, this.constants.stack_depth - i);
 		}
 		// If the second and third cards do not have populated images
-		if (this.cards[1] && this.cards[1].surfsUp && this.cards[1].type == "content" 
+		if (!this.shareDeck && this.cards[1] && this.cards[1].surfsUp && this.cards[1].type == "content" 
 			&& ((this.cards[2] && !this.cards[2].surfsUp) || (this.cards[3] && !this.cards[3].surfsUp))) {
 			// If there are more cards in the deck than on the table
 			if (this.cards.length > this.constants.stack_depth) {
@@ -301,7 +297,7 @@ var getDeck = function(tag, firstCard, cardCbs){
 	return deck;
 };
 var removeFromDecks = function(c) {
-	if(c.surfsUp || c.type == "End-Of-Feed")
+	if(c.type == "waves" || c.type == "End-Of-Feed" || c.type == "login")
 		current_deck.remove(c);
 	else
 		for (var tag in cardDecks)
