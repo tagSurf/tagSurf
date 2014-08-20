@@ -284,7 +284,7 @@ var add_icon, add_state = "blue", add_icons = {
 var addBarSlid = false;
 var slideAddBar = function(noback) {
   if (!isAuthorized()) {
-    messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
+    messageBox("Oops", "You need to login to add a tag", "login", stashVotesAndLogin);
     return;
   }
   if (autocomplete.viewing.autocomplete) {

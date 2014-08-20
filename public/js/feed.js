@@ -540,7 +540,7 @@ onload = function ()
 	setStarCallback(function() {
 		if (!isAuthorized())
 		{
-			messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
+			messageBox("Oops", "You need to login to favorite this", "login", stashVotesAndLogin);
 			return;
 		}
 		var slider = topCard();
