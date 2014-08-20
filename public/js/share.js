@@ -102,7 +102,9 @@ var share = {
 			shareIcon.src = "http://assets.tagsurf.co/img/share_icon-invert.png";
 		});
 		gesture.listen('up', share.button, function () {
-			shareIcon.src = "http://assets.tagsurf.co/img/share_icon.png";
+			setTimeout(function(){
+				shareIcon.src = "http://assets.tagsurf.co/img/share_icon.png";
+			}, 200);
 		});
 		gesture.listen('tap', share.button, function () {
 			if(share.shareModalOut) {

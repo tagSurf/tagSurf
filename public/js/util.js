@@ -193,11 +193,13 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
         downvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/downvote_btn-invert.png";
       });
       gesture.listen('up', downvoteBtn, function () {
-        downvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/downvote_btn.png";
+        setTimeout(function() {
+          downvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/downvote_btn.png";
+        }, 200);
       });
       gesture.listen('tap', downvoteBtn, function () {
         if (modal.zoom.zoomed)
-          modal.callZoom(1);
+          modal.callZoom(1);    
         dragCallback("left", -3, -3);
         swipeSlider("left");
         analytics.track("Tap Downvote Button");
@@ -207,11 +209,13 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
         upvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/upvote_btn-invert.png";
       });
       gesture.listen('up', upvoteBtn, function () {
-        upvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/upvote_btn.png";
+        setTimeout(function() {
+          upvoteBtn.firstChild.src = "http://assets.tagsurf.co/img/upvote_btn.png";          
+        }, 200);
       });
       gesture.listen('tap', upvoteBtn, function () {
         if (modal.zoom.zoomed)
-          modal.callZoom(1);
+          modal.callZoom(1);     
         dragCallback("right", 3, 3);
         swipeSlider("right");
         analytics.track("Tap Upvote Button");

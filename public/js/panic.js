@@ -45,7 +45,9 @@ var panic = {
 			panicIcon.src = "http://assets.tagsurf.co/img/panic_icon-invert.png";
 		});
 		gesture.listen('up', panic.button, function () {
-			panicIcon.src = "http://assets.tagsurf.co/img/panic_icon.png";
+			setTimeout(function() {
+				panicIcon.src = "http://assets.tagsurf.co/img/panic_icon.png";
+			});
 		});
 		gesture.listen("tap", panic.button, function () {
 			if (panic.panicModalOut) {
