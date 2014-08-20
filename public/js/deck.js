@@ -152,7 +152,7 @@ var deck_proto = {
 				c.demote();
 			// splice card from current position and insert it into new index with 0 removals
 			this.cards.splice(newIndex, 0, this.cards.splice(currentIndex, 1)[0]);
-			if (false)//currentIndex < this.constants.stack_depth)
+			if (currentIndex < this.constants.stack_depth)
 				this.deal();
 		}
 	},
@@ -207,6 +207,11 @@ var deck_proto = {
 					this.cards[f] && this.cards[f].showing && this.cards[f].promote();
 			}
 		}
+		// If second card needs promoting
+		if (this.cards[1] && this.cards[1].zIndex < this.constants.stack_depth - 1)
+			// promote it 
+			for (var i = 1; i < cardbox.childNodes.length; i++)
+				this.cards[i] && this.cards[i].showing && this.cards[i].promote();
 		// For as many cards as are missing from the table
 		for (var i = cardbox.childNodes.length; i < this.constants.stack_depth; i++) {
 			var c = this.cards[i];

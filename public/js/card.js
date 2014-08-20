@@ -30,9 +30,11 @@ var card_proto = {
 	_buildContentCard: function() {
 		var	imageContainer, iconLine, textContainer, picTags, fullscreenButton, truncatedTitle, 
 			container = this.contents,
+			formattingContainer = document.getElementById('formatter'),
 			card = this,
 			cardTemplate = "<div class='image-container expand-animation'><img src= ></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (card.source || ((card.data.tags[0] == null || card.data.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + card.data.tags[0] + "</span></div><div class='text-container'><p>" + card.data.caption + "</p></div><div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
 		this.surfsUp = true;
+		formattingContainer.appendChild(container);
 		container.className = 'card-container';
 		this.wrapper.className = 'card-wrapper';
 		container.innerHTML = cardTemplate;
@@ -66,9 +68,10 @@ var card_proto = {
 		});
 		this.cbs.start(this.contents);
 		this.isContent = true;
-		this.wrapper.appendChild(this.contents);
-		this.setSource(); 
 		this._formatContents(image.get(this.data));
+		formattingContainer.removeChild(container);
+		this.wrapper.appendChild(container);
+		this.setSource(); 
 		this.built = true;
 		this.swipable = true;
 	},
@@ -107,7 +110,7 @@ var card_proto = {
 		}
 		if (targetHeight + textContainer.scrollHeight 
 			+ picTags.scrollHeight + iconLine.scrollHeight 
-			< (maxCardHeight + (currentUser.vote_btns ? 20 : 80))) 
+			< (maxCardHeight + (currentUser.vote_btns ? 80 : 20))) 
 		{
 			imageContainer.classList.remove("expand-animation");
 			if (!fullscreenButton.classList.contains('hidden'))
@@ -388,7 +391,7 @@ var card_proto = {
 	setExpandTimeout: function (time) {
 		var self = this;
 		if (!this.expandTimeout)
-			this.expandTimeout = setTimeout(function(){ self.expand();}, (time) ? time : 1500);
+			this.expandTimeout = setTimeout(function(){ self.expand();}, (time) ? time : 15000);
 	},
 	clearExpandTimeout: function () {
 		if (this.expandTimeout) {
