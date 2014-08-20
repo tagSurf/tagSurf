@@ -101,7 +101,6 @@ class ClientController < ApplicationController
     end
   end
 
-
   def resend_link 
     if current_user and current_user.confirmed? 
       redirect_to root_path
