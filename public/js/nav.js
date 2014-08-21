@@ -233,7 +233,7 @@ var buildOptionsTable = function () {
     }
     else
     {
-      messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
+      messageBox("Oops", "Login to disable Safe Surf", "login", stashVotesAndLogin);
       analytics.track('Unauthorized Toggle Safe Surf');
     }
   });
