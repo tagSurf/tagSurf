@@ -88,7 +88,6 @@ class ClientController < ApplicationController
   def submissions; end
   def tag; end
   def device; end
-  def share; end
 
   # Beta access flow
   def access_code; end
@@ -100,6 +99,7 @@ class ClientController < ApplicationController
     if current_user
       redirect_to "/feed##{params["tag"]}~#{params["id"]}"
     end
+    @media = Media.where(id: params[:id]).try(:first)
   end
 
   def resend_link 
