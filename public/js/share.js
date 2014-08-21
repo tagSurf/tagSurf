@@ -16,15 +16,15 @@ var share = {
 				+ current_tag + "/" + share.card.id);
 		else
 			return encodeURI("http://" + hostname + "/share/"
-				+ Object.keys(share.card.tags[0])[0] + "/" + share.card.id);
+				+ (isGallery() ? share.card.tags[0] : Object.keys(share.card.tags[0])[0]) + "/" + share.card.id);
 	},
 	networks: {
 		facebook: function() {
 			var c = share.card, u = share.url(), share_tag;
 			if(current_tag)
-				share_tag=current_tag;
+				share_tag = current_tag;
 			else
-				share_tag=Object.keys(share.card.tags[0])[0];
+				share_tag = isGallery() ? share.card.tags[0] : Object.keys(share.card.tags[0])[0];
 			analytics.track('Share to facebook', {
 				card: share.card.id,
 				surfing: current_tag
