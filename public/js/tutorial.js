@@ -2,8 +2,8 @@ var startOrientation = function () {
 	// newReminder(swipeReminder.call(), null, "Swipe", 13000);
 	newReminder(welcomeMessage.call(), function() {
 		newReminder(upvoteMessage.call(), function() {
-			newReminder(downvoteMessage.call(), null, "Downvote", 2000, 4000)
-		}, "Upvote", 5000, 4000);
+			newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000)
+		}, "Upvote", 5000, 5000);
 	}, "Welcome", 1000, 6000);
 };
 
@@ -28,12 +28,16 @@ var welcomeMessage = function() {
 
 var upvoteMessage = function() {
 	var node = document.createElement('div'),
-		upvotebtn = new Image();
+		upvotebtn = new Image(),
+		upvotearrow = new Image();
 	upvotebtn.src = "http://assets.tagsurf.co/img/upvote_btn.png";
 	upvotebtn.id = "reminder-vote-button-right";
+	upvotearrow.src = "/img/upvote_arrow.gif";
+	upvotearrow.id = "reminder-upvote-arrow";
 	node.innerHTML = isMobile ? "Upvote this <br/>and we'll show it<br/>to more people<br/>surfing this tag"
 								: "Upvote this and we'll show it<br/>more to people surfing this tag";
 	node.className = isMobile() ? "centered biggest" : "centered really-big" ;
+	node.appendChild(upvotearrow);	
 	node.appendChild(upvotebtn);
 	node.style.marginTop = isMobile() ? "50%" : "22%";
 	return node;
@@ -41,11 +45,15 @@ var upvoteMessage = function() {
 
 var downvoteMessage = function() {
 	var node = document.createElement('div'),
-		downvotebtn = new Image();
+		downvotebtn = new Image(),
+		downvotearrow = new Image();
 	downvotebtn.src = "http://assets.tagsurf.co/img/downvote_btn.png";
 	downvotebtn.id = "reminder-vote-button-left";
+	downvotearrow.src = "/img/downvote_arrow.gif";
+	downvotearrow.id = "reminder-downvote-arrow";
 	node.innerHTML = "Downvote it<br/> and we'll show it<br/>less in this feed";
 	node.className = isMobile() ? "centered biggest" : "centered really-big" ;
+	node.appendChild(downvotearrow);	
 	node.appendChild(downvotebtn);
 	node.style.marginTop = isMobile() ? "50%" : "23%";
 	return node;

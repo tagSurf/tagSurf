@@ -56,6 +56,18 @@
   margin-top: 7%;
   margin-bottom: 5%;
 }
+#reminder-upvote-arrow {
+  position: absolute;
+  right: 60px;
+  bottom: 70px;
+  width: 60px;
+}
+#reminder-downvote-arrow {
+  position: absolute;
+  left: 60px;
+  bottom: 70px;
+  width: 60px;
+}
 /*== (Desktop Only) ==*/
 .close-instructions {
   position: absolute;
@@ -85,5 +97,15 @@
     margin-left: 40%;
     margin-top: 5%;
     margin-bottom: 4%;
+  }
+  #reminder-upvote-arrow {
+    right: 90px;
+    bottom: 110px;
+    width: 120px;
+  }
+  #reminder-downvote-arrow {
+    left: 90px;
+    bottom: 110px;
+    width: 120px;
   }
 }
