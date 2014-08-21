@@ -1,19 +1,41 @@
 var startOrientation = function () {
 	// newReminder(swipeReminder.call(), null, "Swipe", 13000);
 	newReminder(welcomeMessage.call(), function() {
-		newReminder(downvoteMessage.call(), null, "downvote", 3000, 3000);
-	}, "Test", 3000, 3000);
+		newReminder(upvoteMessage.call(), function() {
+			newReminder(downvoteMessage.call(), null, "Downvote", 2000), 4000)
+		}, "Upvote", 5000, 4000);
+	}, "Welcome", 1000, 4000);
 };
 
 var welcomeMessage = function() {
 	var node = document.createElement('div'),
+		topMessage = document.createElement('div'),
+		logo = document.createElement('img'),
+		bottomMessage = document.createElement('div');
+	topMessage.innerHTML = "Welcome to";
+	topMessage.className = isMobile() ? "centered biggest" : "centered really-big";
+	topMessage.style.marginTop = isMobile() ? "18%" : "7%";
+	logo.src = "http://assets.tagsurf.co/img/ts_logo_stacked_gray_trans.png";
+	logo.className = "tutorial-logo";
+	bottomMessage.innerHTML = isMobile() ? "A place to surf the <br/> top social content<br/>on the web" 
+											: "A place to surf the top<br/>social content on the web";
+	bottomMessage.className = isMobile() ? "centered biggest" : "centered really-big" ;
+	node.appendChild(topMessage);
+	node.appendChild(logo);
+	node.appendChild(bottomMessage);
+	return node;
+};
+
+var upvoteMessage = function() {
+	var node = document.createElement('div'),
 		upvotebtn = new Image();
 	upvotebtn.src = "http://assets.tagsurf.co/img/upvote_btn.png";
 	upvotebtn.id = "reminder-vote-button-right";
-	node.innerHTML = "<p>Upvote it and we'll<br/>show it to more people<br/>who surf this tag</p>";
-	node.className = "centered really-big";
+	node.innerHTML = isMobile ? "Upvote this <br/>and we'll show it<br/>to more people<br/>surfing this tag"
+								: "Upvote this and we'll show it<br/>more to people surfing this tag";
+	node.className = isMobile() ? "centered biggest" : "centered really-big" ;
 	node.appendChild(upvotebtn);
-	node.style.marginTop = "20%";
+	node.style.marginTop = isMobile() ? "50%" : "22%";
 	return node;
 };
 
@@ -22,10 +44,10 @@ var downvoteMessage = function() {
 		downvotebtn = new Image();
 	downvotebtn.src = "http://assets.tagsurf.co/img/downvote_btn.png";
 	downvotebtn.id = "reminder-vote-button-left";
-	node.innerHTML = "<p>Downvote it and we'll...<br/><br/>well you get the point</p>";
-	node.className = "centered really-big";
+	node.innerHTML = "Downvote it<br/> and we'll show it<br/>less in this feed";
+	node.className = isMobile() ? "centered biggest" : "centered really-big" ;
 	node.appendChild(downvotebtn);
-	node.style.marginTop = "20%";
+	node.style.marginTop = isMobile() ? "50%" : "23%";
 	return node;
 };
 

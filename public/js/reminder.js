@@ -61,9 +61,6 @@ var reminder_proto = {
 	},
 	_build: function () {
 		var self = this,
-	},
-	_build: function () {
-		var self = this,
 			container = this.container = document.createElement('div'),
 			closeContainer = document.createElement('div'),
 			close = document.createElement('img');

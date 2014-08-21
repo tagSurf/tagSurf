@@ -233,7 +233,6 @@ onload = function ()
 			{
 				blurLoginInputs();
 			}	
-			forgetReminders();
 			if (slider.contents.style["-webkit-transform"] == "")
 			{
 				slider.contents.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
