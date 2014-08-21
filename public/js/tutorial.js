@@ -32,7 +32,7 @@ var upvoteMessage = function() {
 		upvotearrow = new Image();
 	upvotebtn.src = "http://assets.tagsurf.co/img/upvote_btn.png";
 	upvotebtn.id = "reminder-vote-button-right";
-	upvotearrow.src = "/img/upvote_arrow.gif";
+	upvotearrow.src = "http://assets.tagsurf.co/img/upvote_arrow.gif";
 	upvotearrow.id = "reminder-upvote-arrow";
 	node.innerHTML = isMobile ? "Upvote this <br/>and we'll show it<br/>to more people<br/>surfing this tag"
 								: "Upvote this and we'll show it<br/>more to people surfing this tag";
@@ -49,7 +49,7 @@ var downvoteMessage = function() {
 		downvotearrow = new Image();
 	downvotebtn.src = "http://assets.tagsurf.co/img/downvote_btn.png";
 	downvotebtn.id = "reminder-vote-button-left";
-	downvotearrow.src = "/img/downvote_arrow.gif";
+	downvotearrow.src = "http://assets.tagsurf.co/img/downvote_arrow.gif";
 	downvotearrow.id = "reminder-downvote-arrow";
 	node.innerHTML = "Downvote it<br/> and we'll show it<br/>less in this feed";
 	node.className = isMobile() ? "centered biggest" : "centered really-big" ;
