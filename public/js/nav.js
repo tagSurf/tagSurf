@@ -196,7 +196,7 @@ var buildOptionsTable = function () {
   '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
     ((currentUser && currentUser.safeSurf || !isAuthorized()) ? " checked" : "") +
   '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> <div class="onoffswitch-cover" style="display:' +
-  ((isAuthorized() || !isUIWebView()) ? 'none' : 'block') + ';"></div>';
+  ((isAuthorized() && !isUIWebView()) ? 'none' : 'block') + ';"></div>';
   safeSurfText.innerHTML = "Safe Surf";
   safeSurfText.className = voteButtonsText.className= "options-key-text";
   safeSurfDescCell.colSpan = voteButtonsDescCell.colSpan = 2;
