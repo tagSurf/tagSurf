@@ -88,9 +88,9 @@ var card_proto = {
 			if (DEBUG)
 				console.log("Image load complete card #" + self.id);
 			self.cbs.build && self.cbs.build();
-			if (this.oneTimeCbs.build) {
-				this.oneTimeCbs.build();
-				this.oneTimeCbs.build = null;
+			if (self.oneTimeCbs.build) {
+				self.oneTimeCbs.build();
+				self.oneTimeCbs.build = null;
 			}
 		};
 		this.contents.children[0].firstChild.onerror = function() {
@@ -99,9 +99,9 @@ var card_proto = {
 			self.type = "failed";
 			self.wavesOn();
 			self.cbs.error && self.cbs.error();
-			if (this.oneTimeCbs.error) {
-				this.oneTimeCbs.error();
-				this.oneTimeCbs.error = null;
+			if (self.oneTimeCbs.error) {
+				self.oneTimeCbs.error();
+				self.oneTimeCbs.error = null;
 			}
 		};
 	},

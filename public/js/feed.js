@@ -239,10 +239,10 @@ onload = function ()
 			}
 			return true;
 		},
-		remove: function(self) {
+		remove: function() {
 			current_deck.deal();
 		},
-		vote: function(){
+		vote: function() {
 			// put stuff that a card should do after vote here
 		},
 		error: function() {

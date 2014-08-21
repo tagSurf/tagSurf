@@ -1,9 +1,18 @@
+var tutorialOn = false;
+
 var startOrientation = function () {
-	// newReminder(swipeReminder.call(), null, "Swipe", 13000);
+	tutorialOn = true;
 	newReminder(welcomeMessage.call(), function() {
-		newReminder(upvoteMessage.call(), function() {
-			newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
-			current_deck.topCard().setOneTimeCb("vote", function () { newReminder(swipeReminder.call(), null, "Swipe", 1000, 5000); });
+		if (tutorialOn)
+			newReminder(upvoteMessage.call(), function() {
+				if (tutorialOn) {
+					newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
+					current_deck.topCard().setOneTimeCb("vote", function () { 
+						if (tutorialOn)
+							newReminder(swipeReminder.call(), null, "Swipe", 1000, 5000); 
+						tutorialOn = false;
+				}
+			});
 		}, "Upvote", 5000, 5000);
 	}, "Welcome", 1000, 6000);
 };
