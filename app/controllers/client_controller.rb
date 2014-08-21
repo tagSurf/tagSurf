@@ -99,8 +99,7 @@ class ClientController < ApplicationController
     if current_user
       redirect_to "/feed##{params["tag"]}~#{params["id"]}"
     end
-
-    @media = Media.where(id: params[:id]).first
+    @media = Media.where(id: params[:id]).try(:first)
   end
 
   def resend_link 
