@@ -105,9 +105,8 @@ var deck_proto = {
 		this.cards = this.cards.filter(function(card) {
 			return !deck_proto.voted_keys[card.id];
 		});
-		if (this.shareDeck) {
+		if (this.shareDeck)
 			this.spaceLoginCards();
-		}
 	},
 	removeLoginCards: function () {
 		this.cards = this.cards.filter(function(card){

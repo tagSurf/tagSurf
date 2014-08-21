@@ -2,9 +2,9 @@ var startOrientation = function () {
 	// newReminder(swipeReminder.call(), null, "Swipe", 13000);
 	newReminder(welcomeMessage.call(), function() {
 		newReminder(upvoteMessage.call(), function() {
-			newReminder(downvoteMessage.call(), null, "Downvote", 2000), 4000)
+			newReminder(downvoteMessage.call(), null, "Downvote", 2000, 4000)
 		}, "Upvote", 5000, 4000);
-	}, "Welcome", 1000, 4000);
+	}, "Welcome", 1000, 6000);
 };
 
 var welcomeMessage = function() {
