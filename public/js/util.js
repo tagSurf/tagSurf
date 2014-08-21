@@ -40,6 +40,13 @@ var whichGallery = function() {
       return galleries[i];
   return null;
 };
+var isGallery = function() {
+  var gallery = whichGallery();
+  if (gallery == null)
+    return false;
+  else
+    return true;
+};
 
 var isAuthorized = function () {
   if (authorizedSession != null)
