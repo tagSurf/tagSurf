@@ -100,7 +100,7 @@ class ClientController < ApplicationController
       redirect_to "/feed##{params["tag"]}~#{params["id"]}"
     end
 
-    @media = Media.where(id: params[:id])
+    @media = Media.where(id: params[:id]).first
   end
 
   def resend_link 
