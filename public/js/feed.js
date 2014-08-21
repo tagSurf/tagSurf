@@ -615,14 +615,13 @@ onload = function ()
 	firstPopulate();
 	buildVoteButtons(cardCbs.drag, swipeSlider);
 	
-	if(currentUser.vote_btns){
+	if(currentUser.vote_btns)
 		voteButtonsOn();
-	}
 	
 	analytics.identify(currentUser.id);
 	
 	if(!isAuthorized())
-		startOrientation();
+		startTutorial();
 };
 
 //This is the first line executed in feed

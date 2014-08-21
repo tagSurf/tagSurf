@@ -1,6 +1,6 @@
 var tutorialOn = false;
 
-var startOrientation = function () {
+var startTutorial = function () {
 	tutorialOn = true;
 	newReminder(welcomeMessage.call(), function() {
 		if (tutorialOn)
@@ -11,8 +11,8 @@ var startOrientation = function () {
 						if (tutorialOn)
 							newReminder(swipeReminder.call(), null, "Swipe", 1000, 5000); 
 						tutorialOn = false;
+					});
 				}
-			});
 		}, "Upvote", 5000, 5000);
 	}, "Welcome", 1000, 6000);
 };
