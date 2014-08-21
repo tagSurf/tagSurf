@@ -38,14 +38,14 @@
 }
 #reminder-vote-button-right {
   position: absolute;
-  bottom: 5px;
+  bottom: 9px;
   right: 50px; 
   width: 80px;
   padding: 10px; 
 }
 #reminder-vote-button-left {
   position: absolute;
-  bottom: 5px;
+  bottom: 9px;
   left: 50px; 
   width: 80px;
   padding: 10px; 
@@ -59,13 +59,13 @@
 #reminder-upvote-arrow {
   position: absolute;
   right: 60px;
-  bottom: 70px;
+  bottom: 75px;
   width: 60px;
 }
 #reminder-downvote-arrow {
   position: absolute;
   left: 60px;
-  bottom: 70px;
+  bottom: 75px;
   width: 60px;
 }
 /*== (Desktop Only) ==*/
