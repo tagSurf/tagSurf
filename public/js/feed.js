@@ -242,6 +242,9 @@ onload = function ()
 		remove: function(self) {
 			current_deck.deal();
 		},
+		vote: function(){
+			// put stuff that a card should do after vote here
+		},
 		error: function() {
 			// put stuff that a card should do if an error occurs while building here
 		}
