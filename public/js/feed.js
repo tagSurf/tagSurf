@@ -572,6 +572,8 @@ onload = function ()
 		}
 	};
 	setAddCallback(function(tag) {
+		if (topCard().type != "content")
+			return;
 		topCard().tagCard(tag);
 		analytics.track('Add Tag from Feed', {
 			card: topCard().id,
