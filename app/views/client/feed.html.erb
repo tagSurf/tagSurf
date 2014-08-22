@@ -32,14 +32,16 @@
 <!-- Place body html below -->
 <div id="nav" ontouchmove="return false;"></div>
 <div id="formatter" class="hider"></div>
-<div id="scroll-container">
-  <div id="input-container">
-    <div id="static-icon">
-      <span id="static-hash" class="bold">#</span>
+<div id="scroll-container-container">
+  <div id="scroll-container">
+    <div id="input-container">
+      <div id="static-icon">
+        <span id="static-hash" class="bold">#</span>
+      </div>
+      <input id="tag-input" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off">
+      <div id="search-input"><img src="http://assets.tagsurf.co/img/search_white.png"></div>
     </div>
-    <input id="tag-input" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off">
-    <div id="search-input"><img src="http://assets.tagsurf.co/img/search_white.png"></div>
+    <div id="slider"></div>
   </div>
-  <div id="slider"></div>
 </div>
 <div id="autocomplete" class="autocomplete hider"></div>
