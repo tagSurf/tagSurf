@@ -324,7 +324,10 @@ onload = function ()
 	{
 		if (modal.zoom.zoomed) return;
 		if (slider.rAFid)
+		{
 			cancelAnimationFrame(slider.rAFid);
+			slider.rAFid = null;
+		}
 		toggleClass.apply(slider,['super-card', 'off']);
 		slider.supering = false;
 		if (slider.animating == false)
@@ -585,6 +588,11 @@ onload = function ()
 					slider.sliding = true;
 
 					if (isAndroid()) {
+						if (!slider.rAFid)
+						{
+							slider.time = Date.now();
+							slider.rAFid = requestAnimFrame(rAF_drag);
+						}
 						slider.velocity = pixelsPerSecond;
 						if (direction == "left")
 							slider.velocity *= -1;
@@ -955,10 +963,6 @@ onload = function ()
 	var downCallback = function ()
 	{
 		if (modal.zoom.zoomed) return;
-		if (isAndroid()) {
-			slider.time = Date.now();
-			slider.rAFid = requestAnimFrame(rAF_drag);
-		}
 		if (slider.classList.contains('login-card'))
 		{
 			blurLoginInputs();
