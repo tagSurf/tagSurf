@@ -1,6 +1,6 @@
 var castVote = function(card) {
-	xhr("/api/votes/" + card.user_stats.vote + "/" + card.id
-		+ "/tag/" + card.user_stats.tag_voted, "POST", null, null);
+	xhr("/api/votes/" + card.data.user_stats.vote + "/" + card.id
+		+ "/tag/" + card.data.user_stats.tag_voted, "POST", null, null);
 };
 
 onload = function ()
@@ -377,7 +377,6 @@ onload = function ()
 				thumbContainer.lastChild.style.opacity = 0;
 			}
 		}
-		console.log("slider.x =" + slider.x);
 		if (slider.x != 0) {
 			trans(slider.contents,
 				function (event) {
