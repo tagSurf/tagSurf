@@ -525,6 +525,8 @@ var newCard = function (data) {
 	card.swipable = null;
 	card.verticaling = false;
 	card.animating = false;
+	card.rAFid = null;
+	card.time = null;
 	card.x = card.y = 0;
 	card.wrapper = document.createElement('div');
 	card.contents = document.createElement('div');
