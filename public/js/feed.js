@@ -103,7 +103,7 @@ onload = function ()
 			slider.contents.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
 			slider.contents.lastChild.previousSibling.style.top = (50 + trueScrollTop) + 'px';
 		},
-		drag: function (direction, distance, dx, dy) {
+		drag: function (direction, distance, dx, dy, pixelsPerSecond) {
 			if (modal.zoom.zoomed) return;
 			var slider = topCard();
 			if (slider.animating == false)
@@ -130,7 +130,23 @@ onload = function ()
 					{
 						var thumbContainer = slider.contents.lastChild.previousSibling;
 						slider.sliding = true;
-						slider.x += dx;
+						if (isAndroid()) {
+							if (!slider.rAFid)
+							{
+								slider.time = Date.now();
+								slider.rAFid = requestAnimFrame(rAF_drag);
+							}
+							slider.velocity = pixelsPerSecond;
+							if (direction == "left")
+								slider.velocity *= -1;
+							if (!slider.x) 
+								slider.x = 0;
+						} else {
+							slider.x += dx;
+							slider.contents.style['-webkit-transform'] =
+								"translate3d(" + ( slider.x * translationScale)
+									+ "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
+						}
 						if (slider.isContent) {
 							if ( slider.x > 0)
 							{
@@ -165,8 +181,6 @@ onload = function ()
 								}
 							}
 						}
-						slider.wrapper.style['-webkit-transform'] = 
-							"translate3d(" + ( slider.x * translationScale) + "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
 					}
 				}
 			}
@@ -197,6 +211,11 @@ onload = function ()
 		up: function (androidSoftUp) {
 			if (modal.zoom.zoomed) return;
 			var slider = topCard();
+			if (slider.rAFid)
+			{
+				cancelAnimationFrame(slider.rAFid);
+				slider.rAFid = null;
+			}
 			toggleClass.apply(slider.contents,['super-card', 'off']);
 			slider.supering = false;
 			if (slider.animating == false)
@@ -249,10 +268,27 @@ onload = function ()
 			// put stuff that a card should do if an error occurs while building here
 		}
 	};
+
+	var rAF_drag = function () {
+		var dt, time = Date.now(), slider = topCard();
+		if (!slider.time)
+			slider.time = time;
+		else
+		{
+			dt = time - slider.time;
+			slider.time = time;
+			slider.x += slider.velocity * dt ;
+			slider.contents.style['-webkit-transform'] = 
+				"translate3d(" + ( slider.x * translationScale) + "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
+		}
+		slider.rAFid = requestAnimFrame(rAF_drag);
+	};
+
 	drag.makeDraggable(scrollContainer, {
 		constraint: "horizontal",
 		scroll: cardCbs.scroll
 	});
+
 	var staticHash = document.getElementById("static-hash"),
 		staticTrending = document.getElementById("static-trending");
 
@@ -344,7 +380,7 @@ onload = function ()
 			}
 		}
 		if (slider.x != 0) {
-			trans(slider.wrapper,
+			trans(slider.contents,
 				function (event) {
 					slider.animating = false;
 				},
@@ -526,7 +562,7 @@ onload = function ()
 			card: panic.id,
 			surfing: current_tag
 		});
-		messageBox("Thanks for the Report", "An admin will review that card before anyone sees it again.", "Ok", null, true);
+		messageBox("Thanks for the Report", "An admin will review that card before anyone sees it again.", "OK", null, true);
 	};
 	var blurLoginInputs = function ()
 	{
@@ -538,6 +574,10 @@ onload = function ()
 		}
 	};
 	setAddCallback(function(tag) {
+		if (topCard().type != "content")
+			return;
+		if (tag == "trending")
+			messageBox("Oops", "If you'd like to make this trend just upvote it");
 		topCard().tagCard(tag);
 		analytics.track('Add Tag from Feed', {
 			card: topCard().id,

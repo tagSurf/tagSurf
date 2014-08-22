@@ -50,12 +50,14 @@ var autocomplete = {
 				var hasTrending = false;
 				autocomplete.nodes[listName].firstChild.innerHTML = "";
 				autocomplete.data.forEach(function(tag) {
+					if (tag.name == "trending" && listName == "add-tag-autocomplete")
+						return;
 					if (tag.name) {
 						hasTrending = hasTrending || tag.name == "trending";
 						autocomplete.addTag(tag.name, listName);
 					}
 				});
-				if (!hasTrending)
+				if (!hasTrending && listName != "add-tag-autocomplete")
 					autocomplete.addTag("trending", listName);
 			}
 		}
