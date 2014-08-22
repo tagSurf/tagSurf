@@ -208,8 +208,8 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
       gesture.listen('tap', downvoteBtn, function () {
         if (modal.zoom.zoomed)
           modal.callZoom(1);    
-        dragCallback("left", -3, -3);
-        swipeSlider("left");
+        cardCbs.drag("left", -1, -1);
+        setTimeout(function() { swipeSlider("left"); }, 200);
         analytics.track("Tap Downvote Button");
       });
 
@@ -224,8 +224,8 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
       gesture.listen('tap', upvoteBtn, function () {
         if (modal.zoom.zoomed)
           modal.callZoom(1);     
-        dragCallback("right", 3, 3);
-        swipeSlider("right");
+        cardCbs.drag("right", 1, 1);
+        setTimeout(function() { swipeSlider("right"); }, 200);
         analytics.track("Tap Upvote Button");
       });
       document.body.appendChild(downvoteBtn);
