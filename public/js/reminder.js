@@ -1,7 +1,7 @@
 var reminders = [];
 
 var reminder_proto = {
-	forget: function() {
+	forget: function(remove) {
 		if(!this.timeout) 
 			return;
 		if(this.isOn){
@@ -10,10 +10,17 @@ var reminder_proto = {
 		}
 		clearTimeout(this.timeout);
 		this.timeout = null;
+		if (remove)
+			this.remove();
 		if(isDesktop())
 			analytics.track('Forget Desktop ' + this.type + ' Reminder');
 		else
 			analytics.track('Forget Mobile ' + this.type + ' Reminder');
+	},
+	remove: function() {
+		this.timeout = null;
+		if (reminders.indexOf(this) != -1)
+			reminders.splice(reminders.indexOf(this), 1);
 	},
 	close: function(direction) {
 		var self = this;
@@ -24,12 +31,11 @@ var reminder_proto = {
 			self.isOn = false;
 			self.container.style.opacity = 0;
 			setTimeout(function () { document.body.removeChild(self.container);}, 100);
-			self.timeout = null;
-			for(var i = 0; i < reminders.length; ++i){
-				if (reminders[i] == self)
-					reminders.splice(i,1);
-			}			
-			analytics.track('Close ' + self.type + ' Reminder');
+			this.remove();			
+			if(isDesktop())
+				analytics.track('Close ' + this.type + ' Reminder');
+			else
+				analytics.track('Close ' + this.type + ' Reminder');
 			self.cb && self.cb();
 		}
 		else
