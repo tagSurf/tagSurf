@@ -115,13 +115,18 @@ onload = function ()
 						slider.verticaling = true;
 					if (slider.sliding)
 						return false;
-					if (!isStockAndroid()) {
-						var sc = scrollContainer, atTop = (sc.scrollTop === 0),
-							atBottom = (sc.scrollHeight - sc.scrollTop === sc.clientHeight),
-							goingUp = direction == "down";
-						if ((atTop && goingUp) || (atBottom && !goingUp))
-							return false;
-					}
+
+// this code was supposed to prevent the Chrome and
+// Safari from shifting the whole page. disabled for now.
+//					if (!isStockAndroid()) {
+//						var sc = scrollContainer, atTop = (sc.scrollTop === 0),
+//							atBottom = (sc.scrollHeight - sc.scrollTop === sc.clientHeight),
+//							goingUp = direction == "down";
+//						if ((atTop && goingUp) || (atBottom && !goingUp)) {
+//							console.log("feed - bounded")
+//							return false;
+//						}
+//					}
 					return true;
 				}
 				else 
@@ -284,6 +289,7 @@ onload = function ()
 
 	drag.makeDraggable(scrollContainer, {
 		constraint: "horizontal",
+		force: true,
 		scroll: cardCbs.scroll
 	});
 
