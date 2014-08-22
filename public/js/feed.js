@@ -560,7 +560,7 @@ onload = function ()
 			card: panic.id,
 			surfing: current_tag
 		});
-		messageBox("Thanks for the Report", "An admin will review that card before anyone sees it again.", "Ok", null, true);
+		messageBox("Thanks for the Report", "An admin will review that card before anyone sees it again.", "OK", null, true);
 	};
 	var blurLoginInputs = function ()
 	{
@@ -575,7 +575,7 @@ onload = function ()
 		if (topCard().type != "content")
 			return;
 		if (tag == "trending")
-			messageBox("Oops", "If you'd like to make something trend just upvote it");
+			messageBox("Oops", "If you'd like to make this trend just upvote it");
 		topCard().tagCard(tag);
 		analytics.track('Add Tag from Feed', {
 			card: topCard().id,

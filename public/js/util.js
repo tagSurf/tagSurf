@@ -157,7 +157,7 @@ var messageBox = function (title, message, action_type, cb, backed) {
   contents.appendChild(messageElement);
   link.className = "msgbox-btn";
   if(typeof action_type === "undefined") {
-    link.innerHTML = "ok";
+    link.innerHTML = "OK";
     if(cb)
       gesture.listen("tap", link, cb);
     else
