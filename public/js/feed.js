@@ -574,6 +574,8 @@ onload = function ()
 	setAddCallback(function(tag) {
 		if (topCard().type != "content")
 			return;
+		if (tag == "trending")
+			messageBox("Oops", "If you'd like to make something trend just upvote it");
 		topCard().tagCard(tag);
 		analytics.track('Add Tag from Feed', {
 			card: topCard().id,
