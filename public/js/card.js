@@ -400,11 +400,18 @@ var card_proto = {
 		}
 	},
 	tagCard: function(tag) {
+		if (this.type != "content" && this.type != "End-Of-Feed" || tag == "trending")
+			return;
 		var self = this,
 			isMine = this._isMine(tag),
-			p = document.createElement("div");
-		if (tag == "trending")
-			return;
+			p = document.createElement("div"),
+			pictags = this.type == "content" ? this.contents.children[3] : this.contents.children[4];
+		if (this.type == "content")
+			for (var i = 0; i < this.tags.length; i++) 
+				if (Object.keys(this.tags[i])[0] == tag) 
+					for (var j = 0; j < pictags.childNodes.length; j++)
+						if (pictags.childNodes[j].children[0].innerHTML == "#" + tag)
+							return;
 		p.className = "pictagcell";
 		p.id = this.id + tag;
 		var tNode = document.createElement("div");
@@ -439,10 +446,7 @@ var card_proto = {
 			else
 				autocomplete.tapTag(tag, "autocomplete", false);
 		});
-		if (self.type == "content")
-			self.contents.children[3].appendChild(p);
-		else if (self.type == "End-Of-Feed")
-			self.contents.children[4].appendChild(p);
+		pictags.appendChild(p);
 		if (self.showing) {
 			self._formatContents(image.get(this.data));
 			self.compressing && self.expand();
