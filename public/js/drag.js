@@ -51,17 +51,26 @@ var drag = {
 				opts.swipe();
 			}
 		}, true, false);
-		n.parentNode.addEventListener('scroll', function (event) {
+		n.parentNode._ndcb = function (event) {
 			if (opts.scroll)
 				opts.scroll(event);
 			if (opts.drag)
 				delayedDrag();
 			return true;
-		}, false);
+		};
+		n.parentNode.addEventListener('scroll', n.parentNode._ndcb, false);
+		n.parentNode.isNativeDraggable = true;
 	},
 	makeDraggable: function (node, opts)
 	{
 		opts = opts || {};
+		if (node.isCustomDraggable) {
+			gesture.unlisten(node);
+			node.parentNode.removeEventListener('scroll', returnFalse, false);
+		} else if (node.isNativeDraggable) {
+			gesture.unlisten(node.firstChild);
+			node.removeEventListener('scroll', node._ndcb, false);
+		}
 		if (!opts.interval && !opts.force && !isStockAndroid())
 			return drag.nativeScroll(node.firstChild, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback,
@@ -75,7 +84,7 @@ var drag = {
 			node.style.overflow = "visible";
 			node.parentNode.style.overflow = "visible";
 		};
-		node.parentNode.addEventListener('scroll', function (event) {return false;}, false);
+		node.parentNode.addEventListener('scroll', returnFalse, false);
 		dirs = {
 			horizontal: {
 				drag: "xDrag",
@@ -232,9 +241,7 @@ var drag = {
 			}
 		};
 
-		if (node.isDraggable)
-			gesture.unlisten(node);
-		node.isDraggable = true;
+		node.isCustomDraggable = true;
 		gesture.listen("drag", node, dragCallback);
 		gesture.listen("down", node, downCallback);
 		gesture.listen("swipe", node, swipeCallback);
