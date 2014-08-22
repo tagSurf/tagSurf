@@ -96,11 +96,13 @@ class ClientController < ApplicationController
   def signup; end
 
   def share
-    @media = Media.find(params[:id])
+    if current_user
+      redirect_to "/feed##{params["tag"]}~#{params["id"]}"
+    end
+    @media = Media.where(id: params[:id]).try(:first)
   end
 
-
-  def resend_link; 
+  def resend_link 
     if current_user and current_user.confirmed? 
       redirect_to root_path
     end

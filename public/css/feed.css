@@ -8,7 +8,7 @@ html, body {
   overflow: auto;
   position: absolute;
   width:100%; 
-  opacity: 0;
+  opacity: 1;
   transition: opacity 500ms ease-in-out;
   -moz-transition: opacity 500ms ease-in-out;
   -webkit-transition: opacity 500ms ease-in-out;
@@ -135,6 +135,10 @@ html, body {
   position: absolute;
   width: 100%;
   padding-bottom: 10px;
+  opacity: 1;
+  transition: opacity 50ms ease-in-out;
+  -moz-transition: opacity 50ms ease-in-out;
+  -webkit-transition: opacity 50ms ease-in-out;
 }
 .card-container {
   position: relative;
@@ -399,7 +403,7 @@ html, body {
   max-width: 85%;
   margin: auto;
 }
-#End-Of-Feed {
+.End-Of-Feed {
   padding-top: 9% !important;
 }
 

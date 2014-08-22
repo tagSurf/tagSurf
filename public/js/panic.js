@@ -1,6 +1,6 @@
 var panic = {
 	cb: null,
-	data: null,
+	card: null,
 	panicModalOut: false,
 	button: document.createElement("div"),
 	content: document.createElement("div"),
@@ -21,7 +21,7 @@ var panic = {
 		closebtn.className = "modal-close-button";
 		closebtn.id = "panic-close-button";
 		gesture.listen("tap", getAwayButton, function() {
-			xhr("/api/media/" + panic.data.id + "/report", "POST");
+			xhr("/api/media/" + panic.card.id + "/report", "POST");
 			panic.cb && panic.cb();
 			panic.close();
 		});
@@ -45,13 +45,15 @@ var panic = {
 			panicIcon.src = "http://assets.tagsurf.co/img/panic_icon-invert.png";
 		});
 		gesture.listen('up', panic.button, function () {
-			panicIcon.src = "http://assets.tagsurf.co/img/panic_icon.png";
+			setTimeout(function() {
+				panicIcon.src = "http://assets.tagsurf.co/img/panic_icon.png";
+			});
 		});
 		gesture.listen("tap", panic.button, function () {
 			if (panic.panicModalOut) {
 				panic.close();
 				analytics.track('Close Panic Window', {
-					card: panic.data.id,
+					card: panic.card.id,
 					surfing: current_tag
 				});
 			}
@@ -61,7 +63,7 @@ var panic = {
 				modal.topModalIn(panic.content, panic.close);
 				panic.panicModalOut = true;
 				analytics.track('Open Panic Window', {
-					card: panic.data.id,
+					card: panic.card.id,
 					surfing: current_tag
 				});
 			}
@@ -73,13 +75,13 @@ var panic = {
 		modal.topModalOut();
 		panic.panicModalOut = false;
 		analytics.track('Close Panic Window', {
-			card: panic.data.id,
+			card: panic.card.id,
 			surfing: current_tag
 		});
 	},
-	on: function (data, cb) {
+	on: function (card, cb) {
 		panic.cb = cb;
-		panic.data = data;
+		panic.card = card;
 		toggleClass.call(panic.button, "panic-active", "on");
 	},
 	off: function () {

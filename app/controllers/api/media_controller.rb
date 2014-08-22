@@ -1,6 +1,6 @@
 class Api::MediaController < Api::BaseController
 
-  before_action :find_authenticated_user, except: :share_feed
+  before_action :find_authenticated_user, except: [:share_feed, :show]
 
   def create_vote
 
@@ -73,11 +73,6 @@ class Api::MediaController < Api::BaseController
   end
 
   def show
-    unless @user
-      render json: {errors: 'must be logged in to view media.'}, status: :unauthorized
-      return
-    end
-      
     @media = Media.find(params[:id]) 
     if @media
       render json: @media, root: "data"

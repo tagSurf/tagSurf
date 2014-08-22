@@ -1,5 +1,4 @@
-var carousel = 
-{
+var carousel = {
 	view: document.createElement('div'),
 	activeCircle: null,
 	translateDistance: window.innerWidth,

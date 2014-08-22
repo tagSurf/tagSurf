@@ -34,11 +34,12 @@ var image = {
 			};
 		});
 	},
-	get: function(d, minWidth, isGallery) {
-		var i, size;
-
+	get: function(card, minWidth, isGallery) {
+		var i, size, d = card && card.data ? card.data : card;
+		if(!d)
+			return;
 		// animated cards and unspecified minWidth force original size
-		if ((!isGallery && d.image.animated) || !minWidth || image.cache.original[d.id]) {
+		if ((!isGallery && d && d.image.animated) || !minWidth || image.cache.original[d.id]) {
 			image.cache.original[d.id] = d.image.original;
 			return d.image.original;
 		}
