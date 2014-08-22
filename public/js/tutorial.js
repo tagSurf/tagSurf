@@ -9,8 +9,8 @@ var startTutorial = function () {
 					newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
 					current_deck.topCard().setOneTimeCb("vote", function () { 
 						if (tutorialOn)
-							newReminder(firstvoteMessage.call(), null, "First Vote", 1000, 5000); 
-						tutorialOn = false;
+							newReminder(firstvoteMessage.call(), buildKeepGoing, "First Vote", 1000, 5000); 
+						//tutorialOn = false;
 					});
 				}
 		}, "Upvote", 5000, 5000);
@@ -79,11 +79,17 @@ var firstvoteMessage = function() {
 
 var keepgoingPrompt = function() {
 	var node = document.createElement('div');
-	node.innerHTML = "Keep going and we'll<br/>find you some tags to surf";
+	node.innerHTML = isMobile() ? "Keep going and<br/>we'll find you some<br/>tags to surf" 
+									: "Keep going and we'll<br/>find you some tags to surf";
 	node.className = isMobile() ? "centered biggest" : "centered really-big" ;
 	node.style.marginTop = isMobile() ? "50%" : "23%";
 	return node;
 };
+
+var buildKeepGoing = function() {
+	var keepgoing = newReminder(keepgoingPrompt.call(), null, "Keep Going", 15000, 5000);
+	current_deck.topCard().setOneTimeCb("vote", function() { keepgoing.forget(true); });
+}
 
 var swipeReminder = function () {
 	var leftImage = new Image(), rightImage = new Image(),

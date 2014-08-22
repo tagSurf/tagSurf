@@ -399,7 +399,7 @@ onload = function ()
 			"translate3d(" + translateQuantity + "px," + verticalQuantity
 				+ "px,0) rotate(" + rotateQuantity + "deg)");
 		slider.animating = true;
-		forgetReminders();
+		// forgetReminders();
 	};
 	var keyInertia = 0, 
 		scrollDirection,
