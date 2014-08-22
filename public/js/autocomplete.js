@@ -44,7 +44,6 @@ var autocomplete = {
 	},
 	_update: function(targetList) {
 		if (autocomplete.data) for (var listName in autocomplete.nodes) {
-			console.log("listName = " + listName);
 			if(targetList && targetList != listName)
 				continue;
 			else {
