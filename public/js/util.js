@@ -16,7 +16,7 @@ if ((document.location.hostname.indexOf("localhost") != -1)
   || (document.location.hostname.indexOf("staging.tagsurf.co") != -1)
   || (document.location.hostname.indexOf("192.168") != -1)
   || (document.location.hostname.indexOf("172.20") != -1))
-  DEBUG = true;
+  DEBUG = false;
 var hasClass = function (node, className) 
 {
   return node.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(node.className);
