@@ -353,6 +353,20 @@ var card_proto = {
 			console.log("Demote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 	},
 	setTop: function() {
+		if (this.image && isAndroid()) {
+			var forceCustomDrag = this.contents.firstChild.firstChild.clientHeight
+				< window.innerHeight * 2;
+			console.log("force custom drag:",
+				forceCustomDrag,
+				this.contents.firstChild.firstChild.clientHeight,
+				window.innerHeight * 2);
+			drag.makeDraggable(scrollContainer, {
+				constraint: "horizontal",
+				force: forceCustomDrag,
+				scroll: cardCbs.scroll
+			});
+		}
+
 		setCurrentMedia(this, forgetReminders);
 		if (this.type == "login") {
 			this._initLoginInputs();
