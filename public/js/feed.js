@@ -287,9 +287,8 @@ onload = function ()
 		slider.rAFid = requestAnimFrame(rAF_drag);
 	};
 
-	drag.makeDraggable(scrollContainer, {
+	!isAndroid() && drag.makeDraggable(scrollContainer, {
 		constraint: "horizontal",
-		force: true,
 		scroll: cardCbs.scroll
 	});
 
