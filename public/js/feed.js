@@ -394,7 +394,8 @@ onload = function ()
 		var slider = topCard();
 		var vote = (typeof vote === "undefined")? true : vote;
 		var swipedCard = slider;
-		var translateQuantity = 600, rotateQuantity = 60,
+		var translateQuantity = Math.max(slider.contents.clientHeight / 2, 600),
+			rotateQuantity = slider.clientHeight > 3000 ? 30 : 60,
 			verticalQuantity = 0;
 		var isUp = direction == "right";
 		var voteDir = isUp ? "up" : "down";
