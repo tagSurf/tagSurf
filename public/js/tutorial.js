@@ -44,8 +44,8 @@ var upvoteMessage = function() {
 	upvotebtn.id = "reminder-vote-button-right";
 	upvotearrow.src = "http://assets.tagsurf.co/img/upvote_arrow.gif";
 	upvotearrow.id = "reminder-upvote-arrow";
-	node.innerHTML = isMobile ? "Upvote this <br/>and we'll show it<br/>to more people<br/>surfing this tag"
-								: "Upvote this and we'll show it<br/>more to people surfing this tag";
+	node.innerHTML = isMobile ? "Upvote this<br/>and we'll show<br/>you more things<br/>like it"
+								: "Upvote this and we'll show you<br/>more things like it";
 	node.className = isMobile() ? "centered biggest" : "centered really-big" ;
 	node.appendChild(upvotearrow);	
 	node.appendChild(upvotebtn);
@@ -61,7 +61,7 @@ var downvoteMessage = function() {
 	downvotebtn.id = "reminder-vote-button-left";
 	downvotearrow.src = "http://assets.tagsurf.co/img/downvote_arrow.gif";
 	downvotearrow.id = "reminder-downvote-arrow";
-	node.innerHTML = "Downvote it<br/>and we'll show it<br/>less";
+	node.innerHTML = "Downvote it<br/>and we'll show<br/>less of this<br/>stuff";
 	node.className = isMobile() ? "centered biggest" : "centered really-big" ;
 	node.appendChild(downvotearrow);	
 	node.appendChild(downvotebtn);
@@ -71,7 +71,7 @@ var downvoteMessage = function() {
 
 var firstvoteMessage = function() {
 	var node = document.createElement('div');
-	node.innerHTML = "Great job!<br/>Everyone gets a better feed<br/>when you vote";
+	node.innerHTML = "Great job!<br/>Your votes curate the<br/>feed for anyone surfing<br/>this tag";
 	node.className = isMobile() ? "centered biggest" : "centered really-big" ;
 	node.style.marginTop = isMobile() ? "50%" : "23%";
 	return node;
