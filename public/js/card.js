@@ -356,7 +356,7 @@ var card_proto = {
 		if (this.image && isAndroid()) {
 			var forceCustomDrag = this.contents.firstChild.firstChild.clientHeight
 				< window.innerHeight * 2;
-			console.log("force custom drag:",
+			DEBUG && console.log("force custom drag:",
 				forceCustomDrag,
 				this.contents.firstChild.firstChild.clientHeight,
 				window.innerHeight * 2);

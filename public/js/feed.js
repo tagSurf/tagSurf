@@ -430,7 +430,7 @@ onload = function ()
 						"-webkit-transform 200ms",
 						"translate3d(0,0,0) rotate(0deg)");
 				}
-				console.log("Swiped card #" + swipedCard.id);
+				DEBUG && console.log("Swiped card #" + swipedCard.id);
 				if(vote)
 					swipedCard.vote(voteDir, current_tag, voteAlternative);
 			},
