@@ -313,12 +313,7 @@ var card_proto = {
 		this.showing = false;
 	},
 	remove: function (removeCb) {
-		if (this.showing) {
-			this._forgetGestures();
-			this.wrapper.style.opacity = 0;
-			slideContainer.removeChild(this.wrapper);
-			this.showing = false;
-		}
+		this.unshow();
 		removeFromDecks(this);
 		if (typeof removeCb != "undefined")
 			removeCb && removeCb()
