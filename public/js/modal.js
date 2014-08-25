@@ -101,16 +101,35 @@ var modal = {
 	},
 	zoomToWidth: function(width, fromPinch) {
 		var w = width || window.innerWidth,
-			zNode = modal.zoom.firstChild.firstChild;
+			zNode = modal.zoom.firstChild.firstChild,
+			zNodeWidth = parseInt(zNode.style.width) || zNode.scrollWidth,
+			zNodeHeight = parseInt(zNode.scrollHeight),
+			dw = w - zNodeWidth, percentDw = (dw / zNodeWidth),
+			dh = (zNodeHeight * percentDw), 
+			endScrollLeft = modal.zoom.scrollLeft + (dw / 2),
+			endScrollTop = modal.zoom.scrollTop + (dh / 2),
+			animateScroll = function () {
+				if (modal.zoom.scrollLeft < endScrollLeft) 
+					modal.zoom.scrollLeft += (dw / 2) * (60 / 250);
+				if (modal.zoom.scrollTop < endScrollTop) 
+					modal.zoom.scrollTop += (dh / 2) * (60 / 250);
+				modal.zoom.rAFid = requestAnimFrame(animateScroll);
+			};
 		if (w < window.innerWidth) {
 			modal.zoom.current = window.innerWidth;
 			modal.zoomOut();
 		} else if (w != zNode.clientWidth) {
 			if (!fromPinch) {
+				modal.zoom.rAFid = requestAnimFrame(animateScroll);
 				modal.zoom.current = w;
-				trans(zNode, null, "width 250ms ease-in");
+				trans(zNode, function() {
+					cancelAnimationFrame(modal.zoom.rAFid);
+					modal.zoom.rAFid = null;
+				 }, "width 250ms ease-in");
 			}
 			zNode.style.width = w + "px";
+			modal.zoom.scrollTop += dh / 2;
+			modal.zoom.scrollLeft += dw / 2;
 			modal.zoom.large = (w >= modal.zoom.z2width);
 		}
 	},
