@@ -90,7 +90,7 @@ var card_proto = {
 				console.log("Image load error on card #" + self.id);
 			self.type = "failed";
 			self.wavesOn();
-			self.cbs.error && self.cbs.error();
+			self.cbs.error && self.cbs.error(self);
 		};
 	},
 	_formatContents: function (imageData) {

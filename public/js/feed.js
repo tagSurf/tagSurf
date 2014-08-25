@@ -262,8 +262,9 @@ onload = function ()
 		remove: function(self) {
 			current_deck.deal();
 		},
-		error: function() {
+		error: function(self) {
 			// put stuff that a card should do if an error occurs while building here
+			self.remove();
 		}
 	};
 
