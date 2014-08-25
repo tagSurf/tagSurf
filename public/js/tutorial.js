@@ -10,7 +10,7 @@ var startTutorial = function () {
 					current_deck.topCard().setOneTimeCb("vote", function () { 
 						if (tutorialOn)
 							newReminder(firstvoteMessage.call(), buildKeepGoing, "First Vote", 1000, 5000); 
-						//tutorialOn = false;
+						// tutorialOn = false;
 					});
 				}
 		}, "Upvote", 5000, 5000);
@@ -62,7 +62,7 @@ var downvoteMessage = function() {
 	downvotearrow.src = "http://assets.tagsurf.co/img/downvote_arrow.gif";
 	downvotearrow.id = "reminder-downvote-arrow";
 	node.innerHTML = "Downvote it<br/>and we'll show<br/>less of this<br/>stuff";
-	node.className = isMobile() ? "centered biggest" : "centered really-big" ;
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.appendChild(downvotearrow);	
 	node.appendChild(downvotebtn);
 	node.style.marginTop = isMobile() ? "50%" : "23%";
@@ -71,17 +71,17 @@ var downvoteMessage = function() {
 
 var firstvoteMessage = function() {
 	var node = document.createElement('div');
-	node.innerHTML = "Great job!<br/>Your votes curate the<br/>feed for anyone surfing<br/>this tag";
-	node.className = isMobile() ? "centered biggest" : "centered really-big" ;
+	node.innerHTML = "Great job!<br/>Your votes improve<br/>the feed for<br/>everyone";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "50%" : "23%";
 	return node;
 };
 
-var keepgoingPrompt = function() {
+var keepgoingPrompt = function() {	
 	var node = document.createElement('div');
 	node.innerHTML = isMobile() ? "Keep going and<br/>we'll find you some<br/>tags to surf" 
 									: "Keep going and we'll<br/>find you some tags to surf";
-	node.className = isMobile() ? "centered biggest" : "centered really-big" ;
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "50%" : "23%";
 	return node;
 };
