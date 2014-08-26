@@ -626,26 +626,21 @@ onload = function ()
 			id = document.location.pathname.split("/")[3];
 		if (id && id != 0) {
 			xhr("/api/card/" + id, null, function(d) {
-				var firstCard = newCard(d.data);
-				current_deck = getDeck(current_tag, firstCard);
-				current_deck.deal();
+				current_deck = getDeck(current_tag, newCard(d.data));
 			});
-		} else {
+		} else
 			current_deck = getDeck(current_tag);
-			current_deck.deal();
-		}
 	};
 
 	firstPopulate();
 	buildVoteButtons(cardCbs.drag, swipeSlider);
-	
-	if(currentUser.vote_btns){
+
+	if (currentUser.vote_btns)
 		voteButtonsOn();
-	}
-	
+
 	analytics.identify(currentUser.id);
-	
-	if(!isAuthorized() && !DEBUG)
+
+	if (!isAuthorized() && !DEBUG)
 		startOrientation();
 };
 
