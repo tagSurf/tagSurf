@@ -53,6 +53,16 @@ var deck_proto = {
 				window.innerWidth - 40, function(c) {
 					self.cardLoaded(c);
 				});
+		}, function(response, status) {
+			DEBUG && console.log("deck.refill xhr error");
+			self.refilling = false;
+			if (status == 401)
+				messageBox("Oops", response.errors
+					+ "<br><br><i>Control Safe Surf from Options</i>");
+			else {
+				self.refillTimeout *= 2;
+				setTimeout(function() { self.refill(); }, self.refillTimeout);
+			}
 		});
 	},
 	skipTutorial: function() {
@@ -137,6 +147,7 @@ var getDeck = function(tag, firstCard){
 	deck.known_keys = {};
 	deck.shareDeck = !isAuthorized();
 	deck.shareOffset = 0;
+	deck.refillTimeout = 500;
 	deck.cards = [];
 	if (firstCard) {
 		deck.cards[0] = deck.firstCard = firstCard;
