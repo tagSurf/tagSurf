@@ -37,7 +37,8 @@ var deck_proto = {
 		return "/api/media/" + this.tag;
 	},
 	refill: function () {
-		if (this.refilling)
+		if (this.refilling || (this.cards.length + image.loadCount()
+			>= this.constants.buffer_minimum))
 			return;
 		var self = this;
 		self.refilling = true;
@@ -53,7 +54,7 @@ var deck_proto = {
 		this.cards = this.cards.filter(function(card) {
 			return card.type != "tutorial";
 		});
-		this.refresh();
+		this.refill();
 		this.deal();
 	},
 	purge: function() {
@@ -91,21 +92,20 @@ var deck_proto = {
 				console.log("Remove card ", c, " from deck #" + this.tag);
 		}
 		if (current_deck == this)
-			this.refresh();
-	},
-	refresh: function() {
-		if (this.cards.length + image.loadCount() < this.constants.buffer_minimum)
 			this.refill();
 	},
 	deal: function() {
 		var i, c, slider = document.getElementById("slider");
-		for (i = slider.childNodes.length; i < this.constants.stack_depth; i++) {
+		for (i = 0; i < this.constants.stack_depth; i++) {
 			c = this.cards[i];
 			if (!c) break;
-			c.show();
+			if (i < slider.childNodes.length)
+				c.promote();
+			else
+				c.show();
 		}
 		this.topCard() && throbber.off();
-	},
+	}
 };
 
 var cardDecks = {};
@@ -113,7 +113,7 @@ var getDeck = function(tag, firstCard, cardCbs){
 	var deck = cardDecks[tag];
 	if (deck) {
 		deck.purge();
-		deck.refresh();
+		deck.refill();
 		return deck;
 	}
 	deck = cardDecks[tag] = Object.create(deck_proto);
