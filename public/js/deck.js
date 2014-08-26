@@ -8,6 +8,10 @@ var deck_proto = {
 	topCard: function() {
 		return this.cards[0];
 	},
+	shouldPromote: function() {
+		var topCard = this.topCard();
+		return topCard && topCard.zIndex < this.constants.stack_depth;
+	},
 	popData: function(rdata) {
 		var i, d, preloads = [];
 		for (i = 0; i < rdata.length; i++) {
@@ -20,6 +24,7 @@ var deck_proto = {
 		return preloads;
 	},
 	cardLoaded: function(c) {
+		c.isLoaded = true;
 		this.cards.push(c);
 		this.deal();
 	},
@@ -95,21 +100,32 @@ var deck_proto = {
 			this.refill();
 	},
 	deal: function() {
-		var i, c, slider = document.getElementById("slider");
+		var i, c, topCard = this.topCard(),
+			shouldPromote = this.shouldPromote(),
+			numCards = document.getElementById("slider").childNodes.length - 1;
+
+		if (numCards == -1) {
+			this.endCard = newCard();
+			this.endCard.show();
+		}
+
 		for (i = 0; i < this.constants.stack_depth; i++) {
 			c = this.cards[i];
 			if (!c) break;
-			if (i < slider.childNodes.length)
-				c.promote();
-			else
+			if (i >= numCards)
 				c.show();
+			else if (shouldPromote)
+				c.promote();
 		}
-		this.topCard() && throbber.off();
+		if (topCard && topCard.isLoaded && throbber.active) {
+			scrollContainer.style.opacity = 1;
+			throbber.off();
+		}
 	}
 };
 
 var cardDecks = {};
-var getDeck = function(tag, firstCard, cardCbs){
+var getDeck = function(tag, firstCard){
 	var deck = cardDecks[tag];
 	if (deck) {
 		deck.purge();
@@ -117,7 +133,6 @@ var getDeck = function(tag, firstCard, cardCbs){
 		return deck;
 	}
 	deck = cardDecks[tag] = Object.create(deck_proto);
-	deck.cardCbs = cardCbs;
 	deck.tag = tag;
 	deck.known_keys = {};
 	deck.shareDeck = !isAuthorized();
@@ -126,8 +141,10 @@ var getDeck = function(tag, firstCard, cardCbs){
 	if (firstCard) {
 		deck.cards[0] = deck.firstCard = firstCard;
 		deck.known_keys[firstCard.id] = true;
-		image.load(deck.cards, window.innerWidth - 40,
-			function() { deck.deal(); });
+		image.load(deck.cards, window.innerWidth - 40, function() {
+			deck.firstCard.isLoaded = true;
+			deck.deal();
+		});
 	}
 	deck.refill();
 	return deck;
