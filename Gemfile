@@ -4,7 +4,7 @@ ruby "2.0.0"
 
 gem 'rails', '4.0.2'
 gem 'pg', '0.17.0'
-gem 'unicorn', '4.6.3'
+#gem 'unicorn', '4.6.3'
 gem 'turbolinks', '2.1.0'
 gem 'rails_12factor', group: :production
 gem 'jquery-turbolinks', '2.0.2'
