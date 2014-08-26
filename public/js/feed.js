@@ -297,7 +297,6 @@ onload = function ()
 			clearStack();
 			current_tag = tagName;
 			current_deck = getDeck(current_tag);
-			current_deck.deal();
 			analytics.track('Search for Tag', {
 				tag: tagName
 			});
