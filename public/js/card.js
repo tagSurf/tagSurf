@@ -77,21 +77,8 @@ var card_proto = {
 		this.swipable = true;
 	},
 	setSource: function() {
-		var self = this;
-		this.contents.children[0].firstChild.src = image.get(self.data, window.innerWidth - 40).url;
-		this.contents.children[0].firstChild.onload = function() {
-			self.surfsUp = false;
-			if (DEBUG)
-				console.log("Image load complete card #" + self.id);
-			self.cbs.build && self.cbs.build();
-		};
-		this.contents.children[0].firstChild.onerror = function() {
-			if (DEBUG)
-				console.log("Image load error on card #" + self.id);
-			self.type = "failed";
-			self.wavesOn();
-			self.cbs.error && self.cbs.error();
-		};
+		this.contents.children[0].firstChild.src = image.get(this.data,
+			window.innerWidth - 40).url;
 	},
 	_formatContents: function (imageData) {
 		if (this.type != "content")
@@ -281,7 +268,7 @@ var card_proto = {
 		if (this.showing)
 			return;
 		this.zIndex = this.wrapper.style.zIndex = !this.data
-			? 0 : deck_proto.constants.stack_depth
+			? 0 : 1 + deck_proto.constants.stack_depth
 			- slideContainer.childNodes.length;
 		this.wrapper.style.opacity = 1;
 		if (!this.built && !this.surfsUp)
