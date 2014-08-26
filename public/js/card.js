@@ -330,8 +330,7 @@ var card_proto = {
 			this.setExpandTimeout();
 	},
 	expand: function () {
-		if (this.isContent && this.compressing)
-		{
+		if (this.showing && this.isContent && this.compressing) {
 			if (DEBUG)
 				console.log("Expand card #" + this.id);
 			this.compressing = false;
