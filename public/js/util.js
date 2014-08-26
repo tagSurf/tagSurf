@@ -55,8 +55,8 @@ var isAuthorized = function () {
     return authorizedSession;
   if (document.location.href.indexOf('share') == -1) {
     authorizedSession = true;
-    if(!isDesktop())
-            currentUser.vote_btns = false;
+    if (!isDesktop())
+      currentUser.vote_btns = false;
     setTimeout(function () { getUser(); }, 3000);
   }
   else

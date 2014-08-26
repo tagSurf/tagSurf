@@ -297,7 +297,6 @@ var card_proto = {
 			console.log("Show card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 		this.showing = true;
 		scrollContainer.style.opacity = 1;
-		throbber.active && throbber.off();	
 		if (slideContainer.childNodes.length == 1 
 			|| this.zIndex == deck_proto.constants.stack_depth)
 			this.setTop();
@@ -332,20 +331,6 @@ var card_proto = {
 			this.setTop();
 		if (DEBUG)		
 			console.log("Promote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
-	},
-	demote: function (zIndex) {
-		if (!this.showing)
-			return;
-		if (zIndex)
-			this.zIndex = zIndex;
-		else 
-			--this.zIndex;
-		if (this.zIndex < 1)
-			this.unshow()
-		else
-			this.wrapper.style.zIndex = this.zIndex;
-		if (DEBUG)
-			console.log("Demote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 	},
 	setTop: function() {
 		setCurrentMedia(this, forgetReminders);
@@ -484,7 +469,7 @@ var card_proto = {
 			else
 				castVote(this);
 			current_deck.voted_keys[this.id] = true;
-			this.pushTags();		
+			this.pushTags();
 		}
 	},
 	pushTags: function () {
