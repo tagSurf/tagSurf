@@ -48,6 +48,8 @@ var throbber = {
 	},
 	off: function ()
 	{
+		if (!throbber.active)
+			return;
 		throbber.active = false;
 		// trans(throbber.gif, function () {
 		// 	throbber.active = false;
