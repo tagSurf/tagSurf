@@ -277,28 +277,21 @@ var card_proto = {
 			surfing: current_tag
 		});
 	},
-	show: function (cbs, zIndex) {
+	show: function () {
 		if (this.showing)
 			return;
-		if (zIndex)
-			this.zIndex = this.wrapper.style.zIndex = zIndex;
-		else
-			this.zIndex = this.wrapper.style.zIndex 
-				= deck_proto.constants.stack_depth
-					- slideContainer.childNodes.length;
-		this.cbs = typeof cbs === "undefined" ? this.cbs : cbs;
+		this.zIndex = this.wrapper.style.zIndex = !this.data
+			? 0 : deck_proto.constants.stack_depth
+			- slideContainer.childNodes.length;
 		this.wrapper.style.opacity = 1;
 		if (!this.built && !this.surfsUp)
 			this._build();
 		if (this.swipable)
 			this._initCardGestures();
 		slideContainer.appendChild(this.wrapper);
-		if (DEBUG && current_deck)
-			console.log("Show card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
+		console.log("Show card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 		this.showing = true;
-		scrollContainer.style.opacity = 1;
-		if (slideContainer.childNodes.length == 1 
-			|| this.zIndex == deck_proto.constants.stack_depth)
+		if (this.zIndex == deck_proto.constants.stack_depth)
 			this.setTop();
 	},
 	unshow: function () {
