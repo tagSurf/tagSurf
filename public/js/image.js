@@ -12,6 +12,9 @@ var image = {
 		count: 0,
 		list: []
 	},
+	loadCount: function() {
+		return image._load.count;
+	},
 	load: function(dlist, minWidth, cb) {
 		var load = image._load;
 		dlist.forEach(function(d) {
