@@ -9,6 +9,7 @@ var authorizedSession = null,
       admin : false
     },
     returnTrue = function() { return true; },
+    hasSwiped = false,
     DEBUG = false;
 // Set DEBUG = true in non-production environments
 if ((document.location.hostname.indexOf("localhost") != -1) 

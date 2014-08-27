@@ -135,6 +135,14 @@ var deck_proto = {
 };
 
 var cardDecks = {};
+var noLoad = function(d) {
+	if (DEBUG)
+		console.log("Image load error on card #" + d.id);
+	analytics.track("Image Load Error", {
+		card: d.id,
+		surfing: current_tag
+	});
+};
 var getDeck = function(tag, firstCard){
 	var deck = cardDecks[tag];
 	if (deck) {
@@ -155,7 +163,7 @@ var getDeck = function(tag, firstCard){
 		image.load(deck.cards, window.innerWidth - 40, function() {
 			deck.firstCard.isLoaded = true;
 			deck.deal();
-		});
+		}, noLoad);
 	}
 	deck.refill();
 	return deck;

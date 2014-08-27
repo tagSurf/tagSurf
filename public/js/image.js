@@ -15,7 +15,7 @@ var image = {
 	loadCount: function() {
 		return image._load.count;
 	},
-	load: function(dlist, minWidth, cb) {
+	load: function(dlist, minWidth, cb, eb) {
 		var load = image._load;
 		dlist.forEach(function(d) {
 			if (d.type != "content")
@@ -27,7 +27,7 @@ var image = {
 			load.count += 1;
 			var i = new Image();
 			i.src = image.get(d, minWidth).url;
-			var loadNext = i.onerror = function() {
+			var loadNext = function() {
 				load.count -= 1;
 				if (load.count < load.max && load.list.length) {
 					var loadList = load.list;
@@ -37,6 +37,10 @@ var image = {
 			};
 			i.onload = function() {
 				cb && cb(d);
+				loadNext();
+			};
+			i.onerror = function() {
+				eb && eb(d);
 				loadNext();
 			};
 		});

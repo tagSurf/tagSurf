@@ -45,9 +45,6 @@ onload = function ()
 	};
 	// varred in util
 	cardCbs = {
-		build: function() {
-			// put stuff that a card should do after it's built here
-		},
 		start: function (node) {
 			node.x = 0;
 			node.sliding = false;
@@ -261,9 +258,6 @@ onload = function ()
 		},
 		remove: function(self) {
 			current_deck.deal();
-		},
-		error: function() {
-			// put stuff that a card should do if an error occurs while building here
 		}
 	};
 
