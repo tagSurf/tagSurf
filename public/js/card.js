@@ -276,7 +276,7 @@ var card_proto = {
 		if (this.swipable)
 			this._initCardGestures();
 		slideContainer.appendChild(this.wrapper);
-		DEBUGGER && console.log("Show card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
+		DEBUG && console.log("Show card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 		this.showing = true;
 		if (this.zIndex == deck_proto.constants.stack_depth)
 			this.setTop();
