@@ -267,8 +267,9 @@ onload = function ()
 		remove: function(self) {
 			current_deck.deal();
 		},
-		error: function() {
+		error: function(self) {
 			// put stuff that a card should do if an error occurs while building here
+			self.remove();
 		}
 	};
 
@@ -399,7 +400,8 @@ onload = function ()
 		var slider = topCard();
 		var vote = (typeof vote === "undefined")? true : vote;
 		var swipedCard = slider;
-		var translateQuantity = 600, rotateQuantity = 60,
+		var translateQuantity = Math.max(slider.contents.clientHeight / 2, 600),
+			rotateQuantity = slider.clientHeight > 3000 ? 30 : 60,
 			verticalQuantity = 0;
 		var isUp = direction == "right";
 		var voteDir = isUp ? "up" : "down";

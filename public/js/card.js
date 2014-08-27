@@ -89,8 +89,12 @@ var card_proto = {
 			if (DEBUG)
 				console.log("Image load error on card #" + self.id);
 			self.type = "failed";
+			analytics.track("Image Load Error", {
+				card: self.id,
+				surfing: current_tag
+			});
 			self.wavesOn();
-			self.cbs.error && self.cbs.error();
+			self.cbs.error && self.cbs.error(self);
 		};
 	},
 	_formatContents: function (imageData) {
