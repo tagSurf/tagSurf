@@ -126,7 +126,7 @@ var getDeck = function(tag, firstCard){
 	var deck = cardDecks[tag];
 	if (deck) {
 		deck.purge();
-		deck.refill();
+		deck.deal();
 		return deck;
 	}
 	deck = cardDecks[tag] = Object.create(deck_proto);
