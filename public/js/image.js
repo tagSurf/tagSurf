@@ -32,7 +32,7 @@ var image = {
 				if (load.count < load.max && load.list.length) {
 					var loadList = load.list;
 					load.list = [];
-					image.load(loadList, minWidth, cb);
+					image.load(loadList, minWidth, cb, eb);
 				}
 			};
 			i.onload = function() {
