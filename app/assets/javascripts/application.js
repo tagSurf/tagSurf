@@ -11,5 +11,3 @@
 // about supported directives.
 //
 //= require global-functions
-//= require bootstrap
-//= require underscore
