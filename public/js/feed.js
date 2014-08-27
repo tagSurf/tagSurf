@@ -282,11 +282,16 @@ onload = function ()
 	var staticHash = document.getElementById("static-hash"),
 		staticTrending = document.getElementById("static-trending");
 
+	var last_tag;
+	cardCbs.notSafe = function() {
+		last_tag && switchTag(last_tag);
+	};
 	var switchTag = function (tagName) {
 		if (tagName != current_tag) {
 			shareSwap = true;
 			throbber.on(true);
 			clearStack();
+			last_tag = current_tag;
 			current_tag = tagName;
 			current_deck = getDeck(current_tag);
 			analytics.track('Search for Tag', {
