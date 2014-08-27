@@ -53,6 +53,7 @@ onload = function ()
 			node.animating = false;
 			node.compressing = true;
 			node.expanded = false;
+			node.style['-webkit-transform'] = "";
 		},
 		swipe: function (direction, distance, dx, dy, pixelsPerSecond) {
 			if (modal.zoom.zoomed) return;
@@ -417,7 +418,7 @@ onload = function ()
 						"translate3d(0,0,0) rotate(0deg)");
 				}
 				console.log("Swiped card #" + swipedCard.id);
-				if(vote)
+				if (vote)
 					swipedCard.vote(voteDir, current_tag, voteAlternative);
 			},
 			"swiping",

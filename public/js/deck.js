@@ -16,7 +16,9 @@ var deck_proto = {
 		var i, d, preloads = [];
 		for (i = 0; i < rdata.length; i++) {
 			d = rdata[i];
-			if ((!this.known_keys[d.id] && !this.voted_keys[d.id]) || d.type == "login") {
+			if (d.type == "login") {
+				this.loginCard = d;
+			} else if ((!this.known_keys[d.id] && !this.voted_keys[d.id])) {
 				this.known_keys[d.id] = true
 				preloads.push(d);
 			}
@@ -26,6 +28,11 @@ var deck_proto = {
 	cardLoaded: function(c) {
 		c.isLoaded = true;
 		this.cards.push(c);
+		if (this.shareDeck) {
+			this.shareIndex += 1;
+			if (!(this.shareIndex % this.constants.login_spacing))
+				this.cards.push(this.loginCard);
+		}
 		this.deal();
 	},
 	dataPath: function() {
@@ -82,27 +89,6 @@ var deck_proto = {
 		this.cards = this.cards.filter(function(card) {
 			return !deck_proto.voted_keys[card.id];
 		});
-		if (this.shareDeck)
-			this.spaceLoginCards();
-	},
-	removeLoginCards: function () {
-		this.cards = this.cards.filter(function(card){
-			return card.type != "login";
-		});
-	},
-	spaceLoginCards: function() {
-		if (!this.shareDeck)
-			return;
-		var loginCard;
-		for (i = 0; i < this.cards.length; i++) {
-			if (this.cards[i].type == "login") {
-				loginCard = this.cards.splice(i, 1)[0];
-				break;
-			}
-		}
-		this.removeLoginCards();
-		for (i = this.constants.login_spacing; i < this.cards.length; i += this.constants.login_spacing)
-			this.cards.splice(i, 0, loginCard);
 	},
 	deal: function() {
 		var i, c, topCard = this.topCard(),
@@ -149,6 +135,7 @@ var getDeck = function(tag, firstCard){
 	deck.known_keys = {};
 	deck.shareDeck = !isAuthorized();
 	deck.shareOffset = 0;
+	deck.shareIndex = 0;
 	deck.refillTimeout = 500;
 	deck.cards = [];
 	if (firstCard) {

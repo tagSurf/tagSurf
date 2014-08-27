@@ -442,7 +442,8 @@ var card_proto = {
 				castVote(this);
 			current_deck.voted_keys[this.id] = true;
 			this.pushTags();
-		}
+		} else if (this.type == "login")
+			this.cbs.start(this.contents); // refresh for next time
 	},
 	pushTags: function () {
 		var newtag = false;
