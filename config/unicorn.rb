@@ -1,4 +1,4 @@
-ENV['UNICORN_PROCESSES'] ||= '2'
+ENV['UNICORN_PROCESSES'] ||= '3'
 
 worker_processes ENV['UNICORN_PROCESSES'].to_i
 timeout 25
