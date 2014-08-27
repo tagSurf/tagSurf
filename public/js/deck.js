@@ -63,10 +63,14 @@ var deck_proto = {
 		}, function(response, status) {
 			DEBUG && console.log("deck.refill xhr error");
 			self.refilling = false;
-			if (status == 401)
+			if (status == 401) {
+				cardCbs.notSafe();
 				messageBox("Oops", response.errors
 					+ "<br><br><i>Control Safe Surf from Options</i>");
-			else {
+			} else if (status == 404) {
+				self.getEndCard().setFailMsg();
+				self.fadeIn(true);
+			} else {
 				self.refillTimeout *= 2;
 				setTimeout(function() { self.refill(); }, self.refillTimeout);
 			}
@@ -89,14 +93,24 @@ var deck_proto = {
 			return !deck_proto.voted_keys[card.id];
 		});
 	},
-	deal: function() {
-		var i, c, topCard = this.topCard(),
-			shouldPromote = this.shouldPromote(),
-			numCards = document.getElementById("slider").childNodes.length - 1;
-		if (numCards == -1) {
-			this.endCard = newCard();
-			this.endCard.show();
+	getEndCard: function() {
+		if (!slideContainer.childNodes.length) {
+			this._endCard = newCard();
+			this._endCard.show();
 		}
+		return this._endCard;
+	},
+	fadeIn: function(force) {
+		var topCard = this.topCard();
+		if (throbber.active && (force || (topCard && topCard.isLoaded))) {
+			scrollContainer.style.opacity = 1;
+			throbber.off();
+		}
+	},
+	deal: function() {
+		var i, c, shouldPromote = this.shouldPromote(),
+			numCards = slideContainer.childNodes.length - 1;
+		this.getEndCard();
 		for (i = 0; i < this.constants.stack_depth; i++) {
 			c = this.cards[i];
 			if (!c) break;
@@ -105,10 +119,7 @@ var deck_proto = {
 			else if (shouldPromote)
 				c.promote();
 		}
-		if (topCard && topCard.isLoaded && throbber.active) {
-			scrollContainer.style.opacity = 1;
-			throbber.off();
-		}
+		this.fadeIn();
 		this.refill();
 	}
 };
