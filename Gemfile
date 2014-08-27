@@ -4,7 +4,7 @@ ruby "2.0.0"
 
 gem 'rails', '4.0.2'
 gem 'pg', '0.17.0'
-#gem 'unicorn', '4.6.3'
+gem 'unicorn'
 gem 'rails_12factor', group: :production
 gem 'jquery-ui-sass-rails', '4.0.3.0'
 gem 'jquery-rails', '3.0.4'
