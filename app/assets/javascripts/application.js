@@ -10,18 +10,6 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery
-//= require jquery_ujs
 //= require global-functions
-//= require turbolinks
 //= require bootstrap
 //= require underscore
-//= require jquery.hammer-full
-//= require jquery.turbolinks
-//= require ftscroll
-//= require carousel
-//= require jquery.ui.autocomplete
-//= require autocomplete
-//= require toolbar
-//= require history
-//= require_tree .
