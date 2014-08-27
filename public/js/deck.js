@@ -76,7 +76,6 @@ var deck_proto = {
 		this.cards = this.cards.filter(function(card) {
 			return card.type != "tutorial";
 		});
-		this.refill();
 		this.deal();
 	},
 	shift: function() {
