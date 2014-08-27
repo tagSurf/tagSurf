@@ -255,9 +255,6 @@ onload = function ()
 				slider.contents.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
 			}
 			return true;
-		},
-		remove: function(self) {
-			current_deck.deal();
 		}
 	};
 

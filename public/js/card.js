@@ -291,14 +291,6 @@ var card_proto = {
 		slideContainer.removeChild(this.wrapper);
 		this.showing = false;
 	},
-	remove: function (removeCb) {
-		this.unshow();
-		removeFromDecks(this);
-		if (typeof removeCb != "undefined")
-			removeCb && removeCb()
-		else
-			this.cbs.remove && this.cbs.remove(this);
-	},
 	promote: function (zIndex) {
 		if (!this.showing)
 			return;
@@ -432,7 +424,8 @@ var card_proto = {
 		return true;
 	},
 	vote: function (voteFlag, tag, voteAlternative) {
-		this.remove();
+		this.unshow();
+		current_deck.shift();
 		if (DEBUG)
 			console.log("Voted on card #" + this.id);
 		if (this.type == "content") {

@@ -72,6 +72,10 @@ var deck_proto = {
 		this.refill();
 		this.deal();
 	},
+	shift: function() {
+		this.cards.shift();
+		this.deal();
+	},
 	purge: function() {
 		if (DEBUG)
 			console.log("purge deck #" + this.tag);
@@ -100,25 +104,14 @@ var deck_proto = {
 		for (i = this.constants.login_spacing; i < this.cards.length; i += this.constants.login_spacing)
 			this.cards.splice(i, 0, loginCard);
 	},
-	remove: function(c) {
-		if (this.cards.indexOf(c) != -1) {
-			this.cards.splice(this.cards.indexOf(c), 1);
-			if (DEBUG)
-				console.log("Remove card ", c, " from deck #" + this.tag);
-		}
-		if (current_deck == this)
-			this.refill();
-	},
 	deal: function() {
 		var i, c, topCard = this.topCard(),
 			shouldPromote = this.shouldPromote(),
 			numCards = document.getElementById("slider").childNodes.length - 1;
-
 		if (numCards == -1) {
 			this.endCard = newCard();
 			this.endCard.show();
 		}
-
 		for (i = 0; i < this.constants.stack_depth; i++) {
 			c = this.cards[i];
 			if (!c) break;
@@ -131,6 +124,7 @@ var deck_proto = {
 			scrollContainer.style.opacity = 1;
 			throbber.off();
 		}
+		this.refill();
 	}
 };
 
@@ -167,11 +161,4 @@ var getDeck = function(tag, firstCard){
 	}
 	deck.refill();
 	return deck;
-};
-var removeFromDecks = function(c) {
-	if(c.type == "waves" || c.type == "End-Of-Feed" || c.type == "login")
-		current_deck.remove(c);
-	else
-		for (var tag in cardDecks)
-			cardDecks[tag].remove(c);
 };
