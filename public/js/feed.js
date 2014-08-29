@@ -288,7 +288,6 @@ onload = function ()
 	};
 	var switchTag = function (tagName) {
 		if (tagName != current_tag) {
-			shareSwap = true;
 			throbber.on(true);
 			clearStack();
 			last_tag = current_tag;
