@@ -9,12 +9,21 @@ var throbber = {
 		throbber.gif.className = "throbber";
 		throbber.gif.style.opacity = 0;
 		throbber.gif.onload = function() {
-			throbber.gif.style['left'] = ((window.innerWidth - throbber.gif.offsetWidth) / 2) + "px";
+			addCss({
+				".throbber": function() {
+					return "left: " + ((window.innerWidth
+						- throbber.gif.offsetWidth) / 2) + "px;";
+				}
+			});
 		};
 		throbber.back.className = "throbber-back";
 		throbber.back.style.top = "50px";
-		throbber.back.style.width = window.innerWidth + "px";
-		throbber.back.style.height = (window.innerHeight - 50) + "px";
+		addCss({
+			".throbber-back": function() {
+				return "width: " + window.innerWidth + "px; height: "
+					+ (window.innerHeight - 50) + "px;";
+			}
+		});
 		if (throbber.backed) {
 			throbber.back.appendChild(throbber.gif);
 			document.body.appendChild(throbber.back);
