@@ -130,19 +130,11 @@ onload = function ()
 					{
 						var thumbContainer = slider.contents.lastChild.previousSibling;
 						slider.sliding = true;
+						slider.x += dx;
 						if (isAndroid()) {
 							if (!slider.rAFid)
-							{
-								slider.time = Date.now();
 								slider.rAFid = requestAnimFrame(rAF_drag);
-							}
-							slider.velocity = pixelsPerSecond;
-							if (direction == "left")
-								slider.velocity *= -1;
-							if (!slider.x) 
-								slider.x = 0;
 						} else {
-							slider.x += dx;
 							slider.contents.style['-webkit-transform'] =
 								"translate3d(" + ( slider.x * translationScale)
 									+ "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
@@ -268,17 +260,10 @@ onload = function ()
 	};
 
 	var rAF_drag = function () {
-		var dt, time = Date.now(), slider = topCard();
-		if (!slider.time)
-			slider.time = time;
-		else
-		{
-			dt = time - slider.time;
-			slider.time = time;
-			slider.x += slider.velocity * dt ;
-			slider.contents.style['-webkit-transform'] = 
-				"translate3d(" + ( slider.x * translationScale) + "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
-		}
+		var slider = topCard();
+		slider.contents.style['-webkit-transform'] = 
+			"translate3d(" + ( slider.x * translationScale)
+				+ "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
 		slider.rAFid = requestAnimFrame(rAF_drag);
 	};
 
