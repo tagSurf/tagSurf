@@ -19,6 +19,7 @@ gem 'sinatra', '>= 1.3.0', :require => nil
 gem 'sidetiq'
 gem 'redis'
 gem 'redis-objects', '0.9.1'
+gem 'honeybadger'
 
 gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'

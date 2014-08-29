@@ -75,6 +75,8 @@ GEM
     fssm (0.2.10)
     hashie (1.2.0)
     hike (1.2.3)
+    honeybadger (1.16.4)
+      json
     httparty (0.11.0)
       multi_json (~> 1.0)
       multi_xml (>= 0.5.2)
@@ -232,6 +234,7 @@ DEPENDENCIES
   compass-rails (= 1.1.3)
   debugger
   devise (= 3.2.2)
+  honeybadger
   httparty (= 0.11.0)
   jbuilder (~> 1.2)
   jquery-rails (= 3.0.4)
