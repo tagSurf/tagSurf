@@ -274,6 +274,7 @@ a {
 .throbber-back {
 	background-color: #404041;
 	position: absolute;
+	top: 50px;
 	opacity: 0;
 	pointer-events: none;
 	z-index: 100;

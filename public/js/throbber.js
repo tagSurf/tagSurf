@@ -7,7 +7,6 @@ var throbber = {
 	{
 		throbber.gif.src = "http://assets.tagsurf.co/img/spin_throbber.gif";
 		throbber.gif.className = "throbber";
-		throbber.gif.style.opacity = 0;
 		throbber.gif.onload = function() {
 			addCss({
 				".throbber": function() {
@@ -17,7 +16,6 @@ var throbber = {
 			});
 		};
 		throbber.back.className = "throbber-back";
-		throbber.back.style.top = "50px";
 		addCss({
 			".throbber-back": function() {
 				return "width: " + window.innerWidth + "px; height: "
