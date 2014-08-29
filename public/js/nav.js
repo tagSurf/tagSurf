@@ -196,7 +196,7 @@ var buildOptionsTable = function () {
   '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
     ((currentUser && currentUser.safeSurf || !isAuthorized()) ? " checked" : "") +
   '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> <div class="onoffswitch-cover" style="display:' +
-  (isAuthorized() ? 'none' : 'block') + ';"></div>';
+  ((isAuthorized() && !isUIWebView()) ? 'none' : 'block') + ';"></div>';
   safeSurfText.innerHTML = "Safe Surf";
   safeSurfText.className = voteButtonsText.className= "options-key-text";
   safeSurfDescCell.colSpan = voteButtonsDescCell.colSpan = 2;
@@ -212,17 +212,28 @@ var buildOptionsTable = function () {
   gesture.listen('down', safeSurfCheckbox, function () {
     if (isAuthorized())
     {
-      safeSurfCheckbox.firstChild.checked = !safeSurfCheckbox.firstChild.checked;
-      xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
-        JSON.stringify({ safe_mode: safeSurfCheckbox.firstChild.checked }));
-      currentUser.safeSurf = safeSurfCheckbox.firstChild.checked;
-      analytics.track('Toggle Safe Surf', {
-        safeSurf: currentUser.safeSurf
-      });
+      if (isUIWebView())
+      {
+        messageBox("Oops", "Disabling Safe Surf is not allowed for native applications on this device");
+        analytics.track('Unauthorized iOS Toggle Safe Surf');
+      }
+      else
+      {
+        safeSurfCheckbox.firstChild.checked = !safeSurfCheckbox.firstChild.checked;
+        xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
+          JSON.stringify({ safe_mode: safeSurfCheckbox.firstChild.checked }));
+        currentUser.safeSurf = safeSurfCheckbox.firstChild.checked;
+        autocomplete.populate();
+        if(whichGallery())
+          location.reload();
+        analytics.track('Toggle Safe Surf', {
+          safeSurf: currentUser.safeSurf
+        });
+      }
     }
     else
     {
-      messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
+      messageBox("Oops", "Login to disable Safe Surf", "login", stashVotesAndLogin);
       analytics.track('Unauthorized Toggle Safe Surf');
     }
   });
@@ -273,7 +284,7 @@ var add_icon, add_state = "blue", add_icons = {
 var addBarSlid = false;
 var slideAddBar = function(noback) {
   if (!isAuthorized()) {
-    messageBox("Oops", "You need to login to do that...", "login", stashVotesAndLogin);
+    messageBox("Oops", "You need to login to add a tag", "login", stashVotesAndLogin);
     return;
   }
   if (autocomplete.viewing.autocomplete) {

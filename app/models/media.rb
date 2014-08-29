@@ -44,9 +44,6 @@ class Media < ActiveRecord::Base
   def media_tag_info(tag)
     trend = [*1..10].sample.odd? ? 'up' : 'down' 
     data = {total_votes: nil, down_votes: nil, up_votes: nil, score: nil, is_trending: false, trend: nil}
-    ## Doing count lookups is faster than array actions, but refactor is needed.
-    ## Currently not using individual votes on tags anywhere
-    ## When re-implementing use redis counters.
     #data[:total_votes]  = Vote.where(votable_id: id, vote_tag: tag).count
     #data[:down_votes]   = Vote.where(votable_id: id, vote_tag: tag, vote_flag: false).count
     #data[:up_votes]     = Vote.where(votable_id: id, vote_tag: tag, vote_flag: true).count

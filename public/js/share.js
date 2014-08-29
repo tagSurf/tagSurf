@@ -1,7 +1,6 @@
-var share =
-{
+var share = {
 	cb: null,
-	data: null,
+	card: null,
 	shareModalOut: false,
 	button: document.createElement('div'),
 	content: document.createElement('div'),
@@ -10,37 +9,37 @@ var share =
 		if (hostname.indexOf("localhost") != -1)
 			hostname = "beta.tagsurf.co";
 		//Special share treatment for landing page cards
-		if (share.data.id == 272733 || share.data.id == 272738)
+		if (share.card.id == 272733 || share.card.id == 272738)
 			return encodeURI("http://tagsurf.co");
 		else if (current_tag)
 			return encodeURI("http://" + hostname + "/share/"
-				+ current_tag + "/" + share.data.id);
+				+ current_tag + "/" + share.card.id);
 		else
 			return encodeURI("http://" + hostname + "/share/"
-				+ share.data.tags[0] + "/" + share.data.id);
+				+ (isGallery() ? share.card.tags[0] : Object.keys(share.card.tags[0])[0]) + "/" + share.card.id);
 	},
 	networks: {
 		facebook: function() {
-			var d = share.data, u = share.url(), share_tag;
+			var c = share.card, u = share.url(), share_tag;
 			if(current_tag)
-				share_tag=current_tag;
+				share_tag = current_tag;
 			else
-				share_tag=share.data.tags[0];
+				share_tag = isGallery() ? share.card.tags[0] : Object.keys(share.card.tags[0])[0];
 			analytics.track('Share to facebook', {
-				card: share.data.id,
+				card: share.card.id,
 				surfing: current_tag
 			});
 			return "https://www.facebook.com/dialog/feed"
 				+ "?app_id=676135635790285" + "&link=" + u
 				// + "&picture=" + encodeURI(image.get(d, window.innerWidth - 40).url)
-				+ "&name=" + encodeURI(d.caption)
+				+ "&name=" + encodeURI(c.data.caption)
 				+ "&description=%23" + share_tag
 				// + "&caption=" + document.location.hostname
 				+ "&redirect_uri=" + u;
 		},
 		twitter: function() {
 			analytics.track('Share to twitter', {
-				card: share.data.id,
+				card: share.card.id,
 				surfing: current_tag
 			});
 			return "https://twitter.com/home?status=" + share.url();
@@ -82,7 +81,7 @@ var share =
 			url.focus();
 			url.setSelectionRange(0, url.value.length);
 			analytics.track('Select Share URL', {
-				card: share.data.id,
+				card: share.card.id,
 				surfing: current_tag
 			});
 		});
@@ -103,14 +102,16 @@ var share =
 			shareIcon.src = "http://assets.tagsurf.co/img/share_icon-invert.png";
 		});
 		gesture.listen('up', share.button, function () {
-			shareIcon.src = "http://assets.tagsurf.co/img/share_icon.png";
+			setTimeout(function(){
+				shareIcon.src = "http://assets.tagsurf.co/img/share_icon.png";
+			}, 200);
 		});
 		gesture.listen('tap', share.button, function () {
 			if(share.shareModalOut) {
 				modal.topModalOut();
 				share.shareModalOut =false;
 				analytics.track('Close Share Window', {
-					card: share.data.id,
+					card: share.card.id,
 					surfing: current_tag
 				});
 			}
@@ -120,7 +121,7 @@ var share =
 				modal.topModalIn(share.content, share.close);
 				share.shareModalOut = true;
 				analytics.track('Open Share Window', {
-					card: share.data.id,
+					card: share.card.id,
 					surfing: current_tag
 				});
 				document.getElementById("share-url").value = share.url();
@@ -135,16 +136,16 @@ var share =
 		modal.topModalOut();
 		share.shareModalOut = false;
 		analytics.track('Close Share Window', {
-			card: share.data.id,
+			card: share.card.id,
 			surfing: current_tag
 		});
 	},
-	on: function (data, cb)
+	on: function (card, cb)
 	{
 		if (cb)
 			share.cb = cb;
-		if (data)
-			share.data = data;
+		if (card)
+			share.card = card;
 		toggleClass.call(share.button, 'share-active', 'on');
 	},
 	off: function ()

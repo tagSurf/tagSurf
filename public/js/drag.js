@@ -1,5 +1,4 @@
-var drag =
-{
+var drag = {
 	_direction2constraint: {
 		up: "horizontal",
 		down: "horizontal",
