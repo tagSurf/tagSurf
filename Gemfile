@@ -17,7 +17,6 @@ gem 'analytics-ruby', '~>1.0'
 gem 'sidekiq'
 gem 'sinatra', '>= 1.3.0', :require => nil
 gem 'sidetiq'
-gem "sentry-raven", :git => "https://github.com/getsentry/raven-ruby.git"
 gem 'redis'
 gem 'redis-objects', '0.9.1'
 
