@@ -32,7 +32,7 @@ class Api::MediaController < Api::BaseController
   def share_feed
    
     if Tag.blacklisted?(media_params[:tag].downcase)
-      render json: {errors: "##{media_params[:tag]} is not available in Safe Surf mode"}, status: :unauthorized
+      render json: {errors: "This tag is not available in Safe Surf mode"}, status: :unauthorized
       return
     end
 
@@ -60,7 +60,7 @@ class Api::MediaController < Api::BaseController
     end
 
     if @user.safe_mode? && Tag.blacklisted?(media_params[:tag].downcase)
-      render json: {errors: "##{media_params[:tag]} is not available in Safe Surf mode"}, status: :unauthorized
+      render json: {errors: "This tag is not available in Safe Surf mode"}, status: :unauthorized
       return
     end
       
