@@ -277,7 +277,7 @@ a {
 	top: 50px;
 	opacity: 0;
 	pointer-events: none;
-	z-index: 99;
+	z-index: 89;
 	-webkit-transition: opacity 500ms;
 	transition: opacity 500ms;
 }
