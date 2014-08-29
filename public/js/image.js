@@ -20,6 +20,8 @@ var image = {
 		dlist.forEach(function(d) {
 			if (d.type != "content")
 				return;
+			d._image_load_cb = d._image_load_cb || cb;
+			d._image_load_eb = d._image_load_eb || eb;
 			if (load.count >= load.max) {
 				load.list.push(d);
 				return;
@@ -32,15 +34,15 @@ var image = {
 				if (load.count < load.max && load.list.length) {
 					var loadList = load.list;
 					load.list = [];
-					image.load(loadList, minWidth, cb, eb);
+					image.load(loadList, minWidth);
 				}
 			};
 			i.onload = function() {
-				cb && cb(d);
+				d._image_load_cb && d._image_load_cb(d);
 				loadNext();
 			};
 			i.onerror = function() {
-				eb && eb(d);
+				d._image_load_eb && d._image_load_eb(d);
 				loadNext();
 			};
 		});
