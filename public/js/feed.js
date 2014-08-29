@@ -63,28 +63,18 @@ onload = function ()
 			if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
 				gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
 			else if (!slider.animating && (direction == "left" || direction == "right")) {
-				if (slider.isContent) {
+				if (slider.isContent)
 					analytics.track("Swipe", {
 						card: slider.id,
 						direction: direction,	
 						surfing: current_tag
 					});
-					analytics.page({
-						title: slider.id + " " + direction,
-						url: 'http://beta.tagsurf.co/feed#'+current_tag,
-						path: "/feed#"+current_tag,
-						referrer: 'http://beta.tagsurf.co/'
-					});
-				}
 				else if (slider.id == 221281)
 					analytics.track("Swipe Login Card", {
 						direction: direction,
 						surfing: current_tag
 					});
 				swipeSlider(direction, null, 700);
-				// slider id will change to next card 
-				if (slider.id == 221281)
-					analytics.track("Seen Login Card");
 			}
 		},
 		scroll: function(event) {
@@ -228,10 +218,32 @@ onload = function ()
 					}
 					else if (slider.x > slideThreshold)
 					{
+						if (slider.isContent)
+							analytics.track("Swipe", {
+								card: slider.id,
+								direction: "right",	
+								surfing: current_tag
+							});
+						else if (slider.id == 221281)
+							analytics.track("Swipe Login Card", {
+								direction: "right",
+								surfing: current_tag
+							});
 						swipeSlider("right", null, 100);
 					}
 					else if (slider.x < -slideThreshold)
 					{
+						if (slider.isContent)
+							analytics.track("Swipe", {
+								card: slider.id,
+								direction: "left",	
+								surfing: current_tag
+							});
+						else if (slider.id == 221281)
+							analytics.track("Swipe Login Card", {
+								direction: "left",
+								surfing: current_tag
+							});
 						swipeSlider("left", null, 100);
 					}
 				}
@@ -413,7 +425,13 @@ onload = function ()
 			translateQuantity = -translateQuantity;
 			rotateQuantity = -rotateQuantity;
 			verticalQuantity = -verticalQuantity;
-		}
+		}			
+		analytics.page({
+			title: slider.id + " " + direction,
+			url: 'http://beta.tagsurf.co/feed#'+current_tag,
+			path: "/feed#"+current_tag,
+			referrer: 'http://beta.tagsurf.co/'
+		});
 		trans(swipedCard.wrapper,
 			function () {
 				swipedCard.animating = false;
@@ -509,17 +527,8 @@ onload = function ()
 				direction: "left",
 				surfing: current_tag
 			});
-			analytics.page({
-				title: slider.id + " left",
-				url: 'http://beta.tagsurf.co/feed#'+current_tag,
-				path: "/feed#"+current_tag,
-				referrer: 'http://beta.tagsurf.co/'
-			});
 		}
 		swipeSlider("left");
-		// slider id will change to next card 
-		if (slider.id == 221281)
-			analytics.track("Seen Login Card");
 	});
 	stroke.listen("up", "39", function() {
 		var slider = topCard();
@@ -539,18 +548,8 @@ onload = function ()
 				direction: "right",	
 				surfing: current_tag
 			});
-			analytics.page({
-				title: slider.id + " right",
-				url: 'http://beta.tagsurf.co/feed#'+current_tag,
-				path: "/feed#"+current_tag,
-				referrer: 'http://beta.tagsurf.co/'
-			});
-
 		}
 		swipeSlider("right");
-		// slider id will change to next card 
-		if (slider.id == 221281)
-			analytics.track("Seen Login Card");
 	});
 	stroke.listen("up", null, closeReminders);
 	
@@ -605,12 +604,6 @@ onload = function ()
 		analytics.track('Favorite from Feed', {
 			card: slider.id,
 			surfing: current_tag
-		});
-		analytics.page({
-				title: slider.id + " right",
-				url: 'http://beta.tagsurf.co/feed#'+current_tag,
-				path: "/feed#"+current_tag,
-				referrer: 'http://beta.tagsurf.co/'
 		});
 	});
 	setResizeCb(function() {
