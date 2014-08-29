@@ -65,7 +65,7 @@ var deck_proto = {
 			self.refilling = false;
 			if (status == 401) {
 				cardCbs.notSafe();
-				messageBox("Oops", response.errors
+				messageBox("Sorry, no " + self.tag, response.errors
 					+ "<br><br><i>Control Safe Surf from Options</i>");
 			} else if (status == 404) {
 				self.getEndCard().setFailMsg();
