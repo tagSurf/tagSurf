@@ -37,13 +37,14 @@ var deck_proto = {
 	},
 	dataPath: function() {
 		if (!isAuthorized()) {
-			var p = "/api";
+			var p = "/api",
+				path = document.location.pathname;
 			if (this.firstCard || this.tag
-				!= document.location.pathname.split("/")[2])
+				!= path.split("/")[2])
 				p += "/share/" + this.tag + "/" +
 					(this.firstCard ? this.firstCard.id : 0);
 			else
-				p += document.location.pathname;
+				p += path;
 			return p + "/20/" + (this.shareOffset++ * 20);
 		}
 		return "/api/media/" + this.tag;

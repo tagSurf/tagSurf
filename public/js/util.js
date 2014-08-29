@@ -95,7 +95,8 @@ var current_tag, current_deck, cardCbs, tinput, inputContainer, slideContainer,
     });
     tinput.active = false;
   }, clearStack = function() {
-      current_deck.getEndCard().unshow();
+      var cdec = current_deck.getEndCard();
+      cdec && cdec.unshow();
       var numCards = slideContainer.childNodes.length;
       for (var i = 0; i < numCards; i++)
         current_deck.cards[i].showing && current_deck.cards[i].unshow();

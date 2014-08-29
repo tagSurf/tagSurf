@@ -298,10 +298,9 @@ onload = function ()
 				tag: tagName
 			});
 		}
+		tinput.value = tagName || current_tag;
 		if (isAuthorized())
-			location.hash = tinput.value = tagName || current_tag;
-		else
-			tinput.value = tagName || current_tag;
+			location.hash = tinput.value;
 	};
 
 	// autocomplete stuff

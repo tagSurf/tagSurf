@@ -312,7 +312,7 @@ var card_proto = {
 		}
 		if (DEBUG)
 			console.log("Set top card #" + this.id);
-		if (this.expanded)
+		if (this.expanded || !this.compressing)
 			return;
 		if (this.expandTimeout)
 			this.clearExpandTimeout();
@@ -322,7 +322,7 @@ var card_proto = {
 			this.setExpandTimeout();
 	},
 	expand: function () {
-		if (this.showing && this.isContent && this.compressing) {
+		if (this.showing && this.isContent && this.compressing && this == current_deck.topCard()) {
 			if (DEBUG)
 				console.log("Expand card #" + this.id);
 			this.compressing = false;

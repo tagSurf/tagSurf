@@ -268,10 +268,12 @@ a {
 	transition: opacity 500ms;
 }
 .throbber-bottom {
-	bottom: 5px;
-	height: 30px;
+	bottom: 5px !important;
+	height: 30px !important;
 }
 .throbber-back {
+	width: 100%;
+	height: 100%;
 	background-color: #404041;
 	position: absolute;
 	top: 50px;
