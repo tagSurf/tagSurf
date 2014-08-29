@@ -309,6 +309,7 @@ var card_proto = {
 		if (this.type == "login") {
 			this._initLoginInputs();
 			initDocLinks();
+			analytics.track("Seen Login Card");
 		}
 		if (DEBUG)
 			console.log("Set top card #" + this.id);
