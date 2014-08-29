@@ -4,6 +4,7 @@
 class RequestTaggedMedia
   
   include Sidekiq::Worker
+  sidekiq_options :retry => 2
 
   def perform(tag_name)
     unless tag = Tag.where('name ilike ?', tag_name).first
