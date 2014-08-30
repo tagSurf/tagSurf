@@ -81,29 +81,8 @@ var card_proto = {
 		this.swipable = true;
 	},
 	setSource: function() {
-		var self = this;
-		this.contents.children[0].firstChild.src = image.get(self.data, window.innerWidth - 40).url;
-		this.contents.children[0].firstChild.onload = function() {
-			self.surfsUp = false;
-			if (DEBUG)
-				console.log("Image load complete card #" + self.id);
-			self.cbs.build && self.cbs.build();
-			if (self.oneTimeCbs.build) {
-				self.oneTimeCbs.build();
-				self.oneTimeCbs.build = null;
-			}
-		};
-		this.contents.children[0].firstChild.onerror = function() {
-			if (DEBUG)
-				console.log("Image load error on card #" + self.id);
-			self.type = "failed";
-			self.wavesOn();
-			self.cbs.error && self.cbs.error();
-			if (self.oneTimeCbs.error) {
-				self.oneTimeCbs.error();
-				self.oneTimeCbs.error = null;
-			}
-		};
+		this.contents.children[0].firstChild.src = image.get(this.data,
+			window.innerWidth - 40).url;
 	},
 	_formatContents: function (imageData) {
 		if (this.type != "content")
@@ -293,29 +272,21 @@ var card_proto = {
 			surfing: current_tag
 		});
 	},
-	show: function (cbs, zIndex) {
+	show: function () {
 		if (this.showing)
 			return;
-		if (zIndex)
-			this.zIndex = this.wrapper.style.zIndex = zIndex;
-		else
-			this.zIndex = this.wrapper.style.zIndex 
-				= deck_proto.constants.stack_depth
-					- slideContainer.childNodes.length;
-		this.cbs = typeof cbs === "undefined" ? this.cbs : cbs;
+		this.zIndex = this.wrapper.style.zIndex = !this.data
+			? 0 : 1 + deck_proto.constants.stack_depth
+			- slideContainer.childNodes.length;
 		this.wrapper.style.opacity = 1;
 		if (!this.built && !this.surfsUp)
 			this._build();
 		if (this.swipable)
 			this._initCardGestures();
 		slideContainer.appendChild(this.wrapper);
-		if (DEBUG && current_deck)
-			console.log("Show card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
+		DEBUG && console.log("Show card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 		this.showing = true;
-		scrollContainer.style.opacity = 1;
-		throbber.active && throbber.off();	
-		if (slideContainer.childNodes.length == 1 
-			|| this.zIndex == deck_proto.constants.stack_depth)
+		if (this.zIndex == deck_proto.constants.stack_depth)
 			this.setTop();
 	},
 	unshow: function () {
@@ -327,23 +298,6 @@ var card_proto = {
 		this.wrapper.style.opacity = 0;
 		slideContainer.removeChild(this.wrapper);
 		this.showing = false;
-	},
-	remove: function (removeCb) {
-		if (this.showing) {
-			this._forgetGestures();
-			this.wrapper.style.opacity = 0;
-			slideContainer.removeChild(this.wrapper);
-			this.showing = false;
-		}
-		removeFromDecks(this);
-		if (typeof removeCb != "undefined")
-			removeCb && removeCb()
-		else
-			this.cbs.remove && this.cbs.remove(this);
-		if (this.oneTimeCbs.remove) {
-			this.oneTimeCbs.remove();
-			this.oneTimeCbs.remove = null;
-		}
 	},
 	promote: function (zIndex) {
 		if (!this.showing)
@@ -358,29 +312,16 @@ var card_proto = {
 		if (DEBUG)		
 			console.log("Promote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 	},
-	demote: function (zIndex) {
-		if (!this.showing)
-			return;
-		if (zIndex)
-			this.zIndex = zIndex;
-		else 
-			--this.zIndex;
-		if (this.zIndex < 1)
-			this.unshow()
-		else
-			this.wrapper.style.zIndex = this.zIndex;
-		if (DEBUG)
-			console.log("Demote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
-	},
 	setTop: function() {
 		setCurrentMedia(this, forgetReminders);
 		if (this.type == "login") {
 			this._initLoginInputs();
 			initDocLinks();
+			analytics.track("Seen Login Card");
 		}
 		if (DEBUG)
 			console.log("Set top card #" + this.id);
-		if (this.expanded)
+		if (this.expanded || !this.compressing)
 			return;
 		if (this.expandTimeout)
 			this.clearExpandTimeout();
@@ -390,8 +331,7 @@ var card_proto = {
 			this.setExpandTimeout();
 	},
 	expand: function () {
-		if (this.isContent && this.compressing)
-		{
+		if (this.showing && this.isContent && this.compressing && this == current_deck.topCard()) {
 			if (DEBUG)
 				console.log("Expand card #" + this.id);
 			this.compressing = false;
@@ -497,7 +437,8 @@ var card_proto = {
 		return true;
 	},
 	vote: function (voteFlag, tag, voteAlternative) {
-		this.remove();
+		this.unshow();
+		current_deck.shift();
 		if (DEBUG)
 			console.log("Voted on card #" + this.id);
 		if (this.type == "content") {
@@ -513,9 +454,10 @@ var card_proto = {
 			else
 				castVote(this);
 			current_deck.voted_keys[this.id] = true;
-			this.pushTags();		
-		}
-		this.cbs.vote && this.cbs.vote()
+			this.pushTags();
+		} else if (this.type == "login")
+			this.cbs.start(this.contents); // refresh for next time
+		this.cbs.vote && this.cbs.vote();
 		if (this.oneTimeCbs.vote) {
 			this.oneTimeCbs.vote();
 			this.oneTimeCbs.vote = null;
