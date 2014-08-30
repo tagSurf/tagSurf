@@ -29,7 +29,7 @@ var welcomeMessage = function() {
 	logo.className = "tutorial-logo";
 	bottomMessage.innerHTML = isMobile() ? "A place to surf the <br/> top social content<br/>on the web" 
 											: "A place to surf the top<br/>social content on the web";
-	bottomMessage.className = isMobile() ? "centered biggest" : "centered really-big" ;
+	bottomMessage.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.appendChild(topMessage);
 	node.appendChild(logo);
 	node.appendChild(bottomMessage);
@@ -46,7 +46,7 @@ var upvoteMessage = function() {
 	upvotearrow.id = "reminder-upvote-arrow";
 	node.innerHTML = isMobile ? "Upvote this<br/>and we'll show<br/>you more things<br/>like it"
 								: "Upvote this and we'll show you<br/>more things like it";
-	node.className = isMobile() ? "centered biggest" : "centered really-big" ;
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.appendChild(upvotearrow);	
 	node.appendChild(upvotebtn);
 	node.style.marginTop = isMobile() ? "50%" : "22%";

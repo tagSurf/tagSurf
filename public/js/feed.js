@@ -626,8 +626,8 @@ onload = function ()
 
 	analytics.identify(currentUser.id);
 
-	if (!isAuthorized() && !DEBUG)
-		startOrientation();
+	if (!isAuthorized()) //&& !DEBUG)
+		startTutorial();
 };
 
 //This is the first line executed in feed
