@@ -12,11 +12,16 @@ var image = {
 		count: 0,
 		list: []
 	},
-	load: function(dlist, minWidth) {
+	loadCount: function() {
+		return image._load.count;
+	},
+	load: function(dlist, minWidth, cb, eb) {
 		var load = image._load;
 		dlist.forEach(function(d) {
 			if (d.type != "content")
 				return;
+			d._image_load_cb = d._image_load_cb || cb;
+			d._image_load_eb = d._image_load_eb || eb;
 			if (load.count >= load.max) {
 				load.list.push(d);
 				return;
@@ -24,13 +29,21 @@ var image = {
 			load.count += 1;
 			var i = new Image();
 			i.src = image.get(d, minWidth).url;
-			i.onload = i.onerror = function() {
+			var loadNext = function() {
 				load.count -= 1;
 				if (load.count < load.max && load.list.length) {
 					var loadList = load.list;
 					load.list = [];
 					image.load(loadList, minWidth);
 				}
+			};
+			i.onload = function() {
+				d._image_load_cb && d._image_load_cb(d);
+				loadNext();
+			};
+			i.onerror = function() {
+				d._image_load_eb && d._image_load_eb(d);
+				loadNext();
 			};
 		});
 	},

@@ -4,10 +4,8 @@ ruby "2.0.0"
 
 gem 'rails', '4.0.2'
 gem 'pg', '0.17.0'
-gem 'unicorn', '4.6.3'
-gem 'turbolinks', '2.1.0'
+gem 'unicorn'
 gem 'rails_12factor', group: :production
-gem 'jquery-turbolinks', '2.0.2'
 gem 'jquery-ui-sass-rails', '4.0.3.0'
 gem 'jquery-rails', '3.0.4'
 gem 'httparty', '0.11.0'
@@ -19,9 +17,9 @@ gem 'analytics-ruby', '~>1.0'
 gem 'sidekiq'
 gem 'sinatra', '>= 1.3.0', :require => nil
 gem 'sidetiq'
-gem "sentry-raven", :git => "https://github.com/getsentry/raven-ruby.git"
 gem 'redis'
 gem 'redis-objects', '0.9.1'
+gem 'honeybadger'
 
 gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'

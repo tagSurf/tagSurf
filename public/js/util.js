@@ -57,8 +57,8 @@ var isAuthorized = function () {
     return authorizedSession;
   if (document.location.href.indexOf('share') == -1) {
     authorizedSession = true;
-    if(!isDesktop())
-            currentUser.vote_btns = false;
+    if (!isDesktop())
+      currentUser.vote_btns = false;
     setTimeout(function () { getUser(); }, 3000);
   }
   else
@@ -96,9 +96,10 @@ var current_tag, current_deck, cardCbs, tinput, inputContainer, slideContainer,
     });
     tinput.active = false;
   }, clearStack = function() {
-    var cardbox = document.getElementById("slider"),
-        current_stack_depth = cardbox.childNodes.length;
-      for (var i = 0; i < current_stack_depth; i++)
+      var cdec = current_deck.getEndCard();
+      cdec && cdec.unshow();
+      var numCards = slideContainer.childNodes.length;
+      for (var i = 0; i < numCards; i++)
         current_deck.cards[i].showing && current_deck.cards[i].unshow();
   };
 
@@ -342,11 +343,12 @@ var xhr = function(path, action, cb, eb, async, payload) {
       if (resp.errors || _xhr.status != 200) {
         if (eb) 
           eb(resp, _xhr.status);
-        if (!(_xhr.status == 404) && !(_xhr.status == 500) && DEBUG) {
-          alert("XHR error! Request failed. Path: " + path + " Errors: " + resp.errors 
-            + " Response: " + _xhr.responseText + " Status: " + _xhr.status);
-          console.log("XHR error! Path:" + path + " Error: "
-          + resp.errors + " Response: " + _xhr.responseText + " Status: " + _xhr.status);
+        if (DEBUG && _xhr.status != 401 && _xhr.status != 404) {
+          var errstr = "XHR error! Request failed. Path:"
+            + path + " Errors: " + resp.errors + " Response: "
+            + _xhr.responseText + " Status: " + _xhr.status;
+          console.log(errstr);
+          !isDesktop() && alert(errstr);
         }
       } 
       else
