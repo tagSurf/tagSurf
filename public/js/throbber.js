@@ -15,7 +15,7 @@ var throbber = {
 					".throbber": function() {
 						return "left: " + ((window.innerWidth
 							- throbber.gif.offsetWidth) / 2)
-							+ "px; bottom: " + ((window.innerHeight
+							+ "px; top: " + ((window.innerHeight
 							- throbber.gif.offsetHeight) / 2) + "px";
 					}
 				});
