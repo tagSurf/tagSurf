@@ -45,9 +45,6 @@ onload = function ()
 	};
 	// varred in util
 	cardCbs = {
-		build: function() {
-			// put stuff that a card should do after it's built here
-		},
 		start: function (node) {
 			node.x = 0;
 			node.sliding = false;
@@ -56,6 +53,7 @@ onload = function ()
 			node.animating = false;
 			node.compressing = true;
 			node.expanded = false;
+			node.style['-webkit-transform'] = "";
 		},
 		swipe: function (direction, distance, dx, dy, pixelsPerSecond) {
 			if (modal.zoom.zoomed) return;
@@ -270,13 +268,6 @@ onload = function ()
 				slider.contents.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
 			}
 			return true;
-		},
-		remove: function(self) {
-			current_deck.deal();
-		},
-		error: function(self) {
-			// put stuff that a card should do if an error occurs while building here
-			self.remove();
 		}
 	};
 
@@ -303,22 +294,24 @@ onload = function ()
 	var staticHash = document.getElementById("static-hash"),
 		staticTrending = document.getElementById("static-trending");
 
+	var last_tag;
+	cardCbs.notSafe = function() {
+		last_tag && switchTag(last_tag);
+	};
 	var switchTag = function (tagName) {
 		if (tagName != current_tag) {
-			shareSwap = true;
 			throbber.on(true);
 			clearStack();
+			last_tag = current_tag;
 			current_tag = tagName;
 			current_deck = getDeck(current_tag);
-			current_deck.deal();
 			analytics.track('Search for Tag', {
 				tag: tagName
 			});
 		}
+		tinput.value = tagName || current_tag;
 		if (isAuthorized())
-			location.hash = tinput.value = tagName || current_tag;
-		else
-			tinput.value = tagName || current_tag;
+			location.hash = tinput.value;
 	};
 
 	// autocomplete stuff
@@ -446,7 +439,7 @@ onload = function ()
 						"translate3d(0,0,0) rotate(0deg)");
 				}
 				console.log("Swiped card #" + swipedCard.id);
-				if(vote)
+				if (vote)
 					swipedCard.vote(voteDir, current_tag, voteAlternative);
 			},
 			"swiping",
@@ -613,48 +606,28 @@ onload = function ()
 	});
 	
 	var firstPopulate = function() {
-		var feed, id, pair, h = document.location.hash.slice(1);
-		if (h.indexOf('~') != -1) {
-			pair = h.split("~");
-			id = pair[1];
-			if (id != 0) {
-				xhr("/api/card/" + id, null, function(d) {
-					var firstCard = newCard(d.data);
-					current_deck = getDeck(current_tag, firstCard);
-					current_deck.deal();
-				});
-			} else {
-				current_deck = getDeck(current_tag);
-				current_deck.deal();	
-			}
-		} else if (document.location.href.indexOf('share') != -1) {
+		var id, h = document.location.hash.slice(1);
+		if (h.indexOf('~') != -1)
+			id = h.split("~")[1];
+		else if (document.location.href.indexOf('share') != -1)
 			id = document.location.pathname.split("/")[3];
-			if (id != 0) {
-				xhr("/api/card/" + id, null, function(d) {
-					var firstCard = newCard(d.data);
-					current_deck = getDeck(current_tag, firstCard);
-					current_deck.deal();
-				});
-			} else {
-				current_deck = getDeck(current_tag);
-				current_deck.deal();	
-			}
-		} else {
+		if (id && id != 0) {
+			xhr("/api/card/" + id, null, function(d) {
+				current_deck = getDeck(current_tag, newCard(d.data));
+			});
+		} else
 			current_deck = getDeck(current_tag);
-			current_deck.deal();
-		}
 	};
 
 	firstPopulate();
 	buildVoteButtons(cardCbs.drag, swipeSlider);
-	
-	if(currentUser.vote_btns){
+
+	if (currentUser.vote_btns)
 		voteButtonsOn();
-	}
-	
+
 	analytics.identify(currentUser.id);
-	
-	if(!isAuthorized() && !DEBUG)
+
+	if (!isAuthorized() && !DEBUG)
 		startOrientation();
 };
 
