@@ -491,10 +491,6 @@ var card_proto = {
 };
 
 var newCard = function (data) {
-	}
-};
-
-var newCard = function (data) {
 	var card = Object.create(card_proto);
 	card.id = null;
 	card.data = null;

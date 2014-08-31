@@ -1,20 +1,26 @@
-var tutorialOn = false;
-
-var startTutorial = function () {
-	tutorialOn = true;
-	newReminder(welcomeMessage.call(), function() {
-		if (tutorialOn)
-			newReminder(upvoteMessage.call(), function() {
-				if (tutorialOn) {
-					newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
-					current_deck.topCard().setOneTimeCb("vote", function () { 
-						if (tutorialOn)
-							newReminder(firstvoteMessage.call(), buildKeepGoing, "First Vote", 1000, 5000); 
-						// tutorialOn = false;
+var tutorial = {
+	on: false,
+	paused: false,
+	start: function() {
+		tutorial.on = true;
+		newReminder(welcomeMessage.call(), function() {
+			tutorial.on && newReminder(upvoteMessage.call(), function() {
+				tutorial.on && newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
+				current_deck.topCard().setOneTimeCb("vote", function () { 
+					tutorial.on && newReminder(firstvoteMessage.call(), buildKeepGoing, "First Vote", 1000, 5000); 
+					// tutorial.on = false;
 					});
-				}
-		}, "Upvote", 5000, 5000);
-	}, "Welcome", 1000, 6000);
+			}, "Upvote", 5000, 5000);
+		}, "Welcome", 1000, 6000);
+	},
+	pause: function() {
+		tutorial.on = false;
+		tutorial.paused = true;
+	},
+	resume: function() {
+		tutorial.on = true;
+		tutorial.paused = false;
+	}
 };
 
 var welcomeMessage = function() {
