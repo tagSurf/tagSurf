@@ -4,10 +4,10 @@ var tutorial = {
 	start: function() {
 		tutorial.on = true;
 		newReminder(welcomeMessage.call(), function() {
-			tutorial.on && newReminder(upvoteMessage.call(), function() {
-				tutorial.on && newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
+			newReminder(upvoteMessage.call(), function() {
+				newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
 				current_deck.topCard().setOneTimeCb("vote", function () { 
-					tutorial.on && newReminder(firstvoteMessage.call(), buildKeepGoing, "First Vote", 1000, 5000); 
+					newReminder(firstvoteMessage.call(), buildKeepGoing, "First Vote", 1000, 5000); 
 					// tutorial.on = false;
 					});
 			}, "Upvote", 5000, 5000);
@@ -29,6 +29,11 @@ var tutorial = {
 		reminders[0].startTimeout(timeout);
 	}
 };
+
+var buildKeepGoing = function() {
+	var keepgoing = newReminder(keepgoingPrompt.call(), null, "Keep Going", 15000, 5000);
+	current_deck.topCard().setOneTimeCb("vote", function() { keepgoing.forget(true); });
+}
 
 var welcomeMessage = function() {
 	var node = document.createElement('div'),
@@ -98,11 +103,6 @@ var keepgoingPrompt = function() {
 	node.style.marginTop = isMobile() ? "50%" : "23%";
 	return node;
 };
-
-var buildKeepGoing = function() {
-	var keepgoing = newReminder(keepgoingPrompt.call(), null, "Keep Going", 15000, 5000);
-	current_deck.topCard().setOneTimeCb("vote", function() { keepgoing.forget(true); });
-}
 
 var swipeReminder = function () {
 	var leftImage = new Image(), rightImage = new Image(),
