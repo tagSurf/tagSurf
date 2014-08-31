@@ -484,6 +484,15 @@ a {
   max-width: 35%;
   cursor: pointer;
 }
+.no-fill-btn {
+  border: 1px solid #00aeef;
+  border-radius: 5px;
+  padding: 3px;
+}
+.active-no-fill-btn {
+  background-color: #00aeef;
+  color: #404041;
+}
 .prompt-container {
 	text-align: center;
 }

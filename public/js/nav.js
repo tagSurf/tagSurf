@@ -271,7 +271,8 @@ var buildOptionsTable = function (options_cb) {
   if(!tutorial.paused)
     return optionsTable;
   resumeButton.innerHTML = "Resume Tutorial";
-  resumeButton.className = isMobile() ? "msgbox-btn biggest" : "msgbox-btn really-big";
+  resumeButton.className = isMobile() ? "msgbox-btn biggest pointer" 
+                            : "msgbox-btn really-big pointer";
   resumeButton.id = "resume-btn";
   resumeButtonCell.colSpan = "2";
   gesture.listen("tap", resumeButton, function() {
