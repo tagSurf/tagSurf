@@ -470,6 +470,12 @@ var card_proto = {
 		}
 		if (newtag)
 			autocomplete.populate();
+	},
+	jiggle: function () {
+		var cardContainer = this.contents;
+		if (cardContainer.classList.contains('jiggle'))
+			cardContainer.classList.remove('jiggle')
+		cardContainer.classList.add('jiggle');
 	}
 };
 
