@@ -14,12 +14,19 @@ var tutorial = {
 		}, "Welcome", 1000, 6000);
 	},
 	pause: function() {
+		if(!reminders[0])
+			return
+		reminders[0].close()
+		forgetReminders();
 		tutorial.on = false;
 		tutorial.paused = true;
 	},
-	resume: function() {
+	resume: function(timeout) {
+		if(!reminders[0])
+			return;
 		tutorial.on = true;
 		tutorial.paused = false;
+		reminders[0].startTimeout(timeout);
 	}
 };
 

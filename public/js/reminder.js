@@ -33,7 +33,7 @@ var reminder_proto = {
 			setTimeout(function () { document.body.removeChild(self.container);}, 100);
 			this.remove();			
 			if(isDesktop())
-				analytics.track('Close ' + this.type + ' Reminder');
+				analytics.track('Close Desktop' + this.type + ' Reminder');
 			else
 				analytics.track('Close ' + this.type + ' Reminder');
 			self.cb && self.cb();
@@ -63,7 +63,7 @@ var reminder_proto = {
 			if(self.duration) 
 				setTimeout(function() { self.close(); }, self.duration);
 			self.show();  
-		}, (time) ? time : 14000);
+		}, (time) ? time : self.delay);
 	},
 	_build: function () {
 		var self = this,
