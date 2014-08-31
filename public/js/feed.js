@@ -548,13 +548,16 @@ onload = function ()
 	
 	// varred in util...
 	panicCb = function() { //panic btn callback
-		topCard().remove();
+		topCard().unshow();
+		current_deck.shift();
 		forgetReminders();
 		analytics.track('Report Inappropriate Content', {
-			card: panic.id,
+			card: panic.card.id,
 			surfing: current_tag
 		});
-		messageBox("Thanks for the Report", "An admin will review that card before anyone sees it again.", "OK", null, true);
+		messageBox("Thanks for the Report",
+			"An admin will review that card before anyone sees it again.",
+			"OK", null, true);
 	};
 	var blurLoginInputs = function ()
 	{
