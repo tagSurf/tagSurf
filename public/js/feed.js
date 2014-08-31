@@ -117,7 +117,6 @@ onload = function ()
 					if (slider.verticaling == false)
 					{
 						var thumbContainer = slider.contents.lastChild.previousSibling;
-						slider.sliding = true;
 						slider.x += dx;
 						if (isAndroid()) {
 							if (!slider.rAFid)
@@ -126,6 +125,10 @@ onload = function ()
 							slider.contents.style['-webkit-transform'] =
 								"translate3d(" + ( slider.x * translationScale)
 									+ "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
+						}
+						if (slider.sliding == false) {
+							slider.sliding = true;
+							toggleClass.call(slider.contents, "card-swiping", "on");
 						}
 						if (slider.isContent) {
 							if ( slider.x > 0)
@@ -353,6 +356,7 @@ onload = function ()
 	var revertSlider = function ()
 	{
 		var slider = topCard();
+		toggleClass.call(slider.contents, "card-swiping", "off");
 		if (slider.isContent) {
 			var thumbContainer = slider.contents.lastChild.previousSibling;
 			slider.contents.style['border-color'] = "#353535";
