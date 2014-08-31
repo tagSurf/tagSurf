@@ -407,6 +407,73 @@ html, body {
   padding-top: 9% !important;
 }
 
+/*====== card jiggle animations =======*/
+@keyframes jiggle-card-left
+{
+  0%,100% 
+	{
+		transform: translate3d(0,0,0) rotate(0);
+		border-color: #353535;
+	}
+  50% 
+	{
+		transform: translate3d(83px,0px,0px) rotate(10deg);
+		border-color: green;
+	}
+}
+@keyframes jiggle-card-right
+{
+  0%,100% 
+	{
+		transform: translate3d(0,0,0) rotate(0);
+		border-color: #353535;
+	}
+  50% 
+	{
+		transform: translate3d(-83px,0px,0px) rotate(-10deg);
+		border-color: #C90016;
+	}
+}
+@-webkit-keyframes jiggle-card-left
+{
+  0%,100% 
+	{
+		-webkit-transform: translate3d(0,0,0) rotate(0);
+		border-color: #353535;
+	}
+  50% 
+	{
+		-webkit-transform: translate3d(83px,0px,0px) rotate(10deg);
+		border-color: green;
+	}
+}
+@-webkit-keyframes jiggle-card-right
+{
+  0%,100% 
+	{
+		-webkit-transform: translate3d(0,0,0) rotate(0);
+		border-color: #353535;
+	}
+  50% 
+	{
+		-webkit-transform: translate3d(-83px,0px,0px) rotate(-10deg);
+		border-color: #C90016;
+	}
+}
+.jiggle
+{
+  -webkit-transform-origin: center top;
+  -webkit-animation-name: jiggle-card-left, jiggle-card-right;
+  -webkit-animation-duration: 500ms,500ms;
+  -webkit-animation-delay: 0s,500ms;
+  -webkit-animation-timing-function: ease-in-out, ease-in-out;
+  transform-origin: center top;
+  animation-name: jiggle-card-left, jiggle-card-right;
+  animation-duration: 500ms,500ms;
+  animation-delay: 0s,500ms;
+  animation-timing-function: ease-in-out, ease-in-out;
+	border: solid 2px #353535;
+}
 /*====== This targets tablets and desktops ======*/
 @media only screen and (min-width: 700px){
   .text-container {
@@ -490,3 +557,4 @@ html, body {
     margin-top: 11%;
   }
 }
+
