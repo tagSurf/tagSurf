@@ -25,6 +25,14 @@
 <% end %>
 <%= link_to 'Forgot password?', new_password_path(:user), class: 'forgot-password twelve light-gray' %>
 <script src="/js/util.js"></script>
+<script type="text/javascript">
+  if(isUIWebView())
+    addCss({
+    "body": function() {
+        return "margin-top: 20px;";
+      }
+    });
+</script>
 <script type ="text/javascript">fadeInBody()</script>
 <script>
 var inputs = document.getElementsByClassName("ts-input");
