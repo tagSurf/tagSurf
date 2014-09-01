@@ -42,7 +42,7 @@ var tutorial = {
 };
 
 var buildKeepGoing = function() {
-	var keepgoing = newReminder(keepgoingPrompt.call(), null, "Keep Going", 15000, 5000);
+	var keepgoing = newReminder(keepgoingPrompt.call(), null, "Keep Going", 10000, 5000);
 	current_deck.topCard().setOneTimeCb("vote", function() { keepgoing.forget(true); });
 }
 
@@ -56,7 +56,7 @@ var welcomeMessage = function() {
 	topMessage.style.marginTop = isMobile() ? "18%" : "7%";
 	logo.src = "http://assets.tagsurf.co/img/ts_logo_stacked_gray_trans.png";
 	logo.className = "tutorial-logo";
-	bottomMessage.innerHTML = isMobile() ? "A place to surf the <br/> top social content<br/>on the web" 
+	bottomMessage.innerHTML = isMobile() ? "A place to surf the<br/>top social content<br/>on the web" 
 											: "A place to surf the top<br/>social content on the web";
 	bottomMessage.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.appendChild(topMessage);
@@ -74,7 +74,7 @@ var upvoteMessage = function() {
 	upvotebtn.id = "reminder-vote-button-right";
 	upvotearrow.src = "http://assets.tagsurf.co/img/upvote_arrow.gif";
 	upvotearrow.id = "reminder-upvote-arrow";
-	node.innerHTML = isMobile ? "Upvote this <br/>and we'll show it<br/>to more people<br/>surfing this tag" : "Upvote this and we'll show it<br/>more to people surfing this tag";
+	node.innerHTML = isMobile ? "Upvote this<br/>and we'll show it<br/>to more people<br/>surfing this tag" : "Upvote this and we'll show it<br/>more to people surfing this tag";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.appendChild(upvotearrow);	
 	node.appendChild(upvotebtn);
@@ -141,10 +141,6 @@ var firstvoteMessage = function() {
 	var node = document.createElement('div'),
 		pausebtn = document.createElement('div');
 	node.innerHTML = "Great job!<br/>Your votes improve<br/>the feed for<br/>everyone";
-	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "50%" : "23%";
-	pausebtn.className = "no-fill-btn pointer";
-	gesture.listen("down", pausebtn, function() {
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "50%" : "23%";
 	pausebtn.className = "no-fill-btn pointer";
