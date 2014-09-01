@@ -597,8 +597,8 @@ onload = function ()
 
 	analytics.identify(currentUser.id);
 
-	if (!isAuthorized() && !DEBUG)
-		tutorial.start();
+	// if (!isAuthorized() && !DEBUG)
+	// 	tutorial.start();
 };
 
 //This is the first line executed in feed
