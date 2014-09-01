@@ -94,11 +94,9 @@ onload = function ()
 		drag: function (direction, distance, dx, dy, pixelsPerSecond) {
 			if (modal.zoom.zoomed) return;
 			var slider = topCard();
-			if (slider.animating == false)
-			{
+			if (slider.animating == false) {
 				if (slider.expanded == true && 
-					(direction == "up" || direction == "down"))
-				{
+					(direction == "up" || direction == "down")) {
 					if (slider.sliding == false)
 						slider.verticaling = true;
 					if (slider.sliding)
@@ -112,62 +110,38 @@ onload = function ()
 					}
 					return true;
 				}
-				else 
-				{
-					if (slider.verticaling == false)
-					{
-						var thumbContainer = slider.contents.lastChild.previousSibling;
+				else if (slider.verticaling == false) {
+					slider.x += dx;
+					if (isAndroid()) {
+						if (!slider.rAFid)
+							slider.rAFid = requestAnimFrame(rAF_drag);
+					} else {
+						slider.contents.style['-webkit-transform'] =
+							"translate3d(" + ( slider.x * translationScale)
+								+ "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
+					}
+					if (slider.sliding == false) {
 						slider.sliding = true;
-						if (isAndroid()) {
-							if (!slider.rAFid)
-							{
-								slider.time = Date.now();
-								slider.rAFid = requestAnimFrame(rAF_drag);
+						toggleClass.call(slider.contents, "card-swiping", "on");
+					}
+					if (slider.isContent) {
+						var dir = (slider.x > 0) ? 1 : (slider.x < 0) ? -1 : 0;
+						if (dir != slider.dir) {
+							slider.dir = dir;
+							var thumbContainer = slider.contents.lastChild.previousSibling,
+								dirColor = "", firstOp = 0, lastOp = 0;
+							if (dir == 1) {
+								dirColor = "green";
+								firstOp = 0.8;
+							} else if (dir == -1) {
+								dirColor = "#C90016";
+								lastOp = 0.8;
 							}
-							slider.velocity = pixelsPerSecond;
-							if (direction == "left")
-								slider.velocity *= -1;
-							if (!slider.x) 
-								slider.x = 0;
-						} else {
-							slider.x += dx;
-							slider.contents.style['-webkit-transform'] =
-								"translate3d(" + ( slider.x * translationScale)
-									+ "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
-						}
-						if (slider.isContent) {
-							if ( slider.x > 0)
-							{
-								slider.contents.style['border-color'] = "green";
-								if (slider.supering == true)
-								{
-									slider.contents.style['background-color'] = 'green';
-								}
-								if (thumbContainer.firstChild.style.opacity == 0)
-								{
-									thumbContainer.firstChild.style.opacity = 0.8;
-								}
-								if (thumbContainer.lastChild.style.opacity == .8)
-								{
-									thumbContainer.lastChild.style.opacity = 0;
-								}
-							}
-							else if ( slider.x < 0)
-							{
-								slider.contents.style['border-color'] = "#C90016";
-								if (slider.supering == true)
-								{
-									slider.contents.style['background-color'] = '#C90016';
-								}
-								if (thumbContainer.lastChild.style.opacity == 0)
-								{
-									thumbContainer.lastChild.style.opacity = .8;
-								}
-								if (thumbContainer.firstChild.style.opacity == .8)
-								{
-									thumbContainer.firstChild.style.opacity = 0;
-								}
-							}
+							slider.contents.style['border-color'] = dirColor;
+							if (slider.supering)
+								slider.contents.style['background-color'] = dirColor;
+							thumbContainer.firstChild.style.opacity = firstOp;
+							thumbContainer.lastChild.style.opacity = lastOp;
 						}
 					}
 				}
@@ -175,7 +149,7 @@ onload = function ()
 		},
 		hold: function (duration) {
 			var slider = topCard();
-			if (duration == 3000)
+			if (duration == 3000 && !isAndroid())
 			{
 				slider.supering = true;
 				toggleClass.apply(slider.contents, ['super-card', 'on']);
@@ -266,7 +240,6 @@ onload = function ()
 			{
 				blurLoginInputs();
 			}	
-			forgetReminders();
 			if (slider.contents.style["-webkit-transform"] == "")
 			{
 				slider.contents.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
@@ -276,17 +249,10 @@ onload = function ()
 	};
 
 	var rAF_drag = function () {
-		var dt, time = Date.now(), slider = topCard();
-		if (!slider.time)
-			slider.time = time;
-		else
-		{
-			dt = time - slider.time;
-			slider.time = time;
-			slider.x += slider.velocity * dt ;
-			slider.contents.style['-webkit-transform'] = 
-				"translate3d(" + ( slider.x * translationScale) + "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
-		}
+		var slider = topCard();
+		slider.contents.style['-webkit-transform'] = 
+			"translate3d(" + ( slider.x * translationScale)
+				+ "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
 		slider.rAFid = requestAnimFrame(rAF_drag);
 	};
 
@@ -372,6 +338,7 @@ onload = function ()
 	var revertSlider = function ()
 	{
 		var slider = topCard();
+		toggleClass.call(slider.contents, "card-swiping", "off");
 		if (slider.isContent) {
 			var thumbContainer = slider.contents.lastChild.previousSibling;
 			slider.contents.style['border-color'] = "#353535";
@@ -450,7 +417,7 @@ onload = function ()
 			"translate3d(" + translateQuantity + "px," + verticalQuantity
 				+ "px,0) rotate(" + rotateQuantity + "deg)");
 		slider.animating = true;
-		forgetReminders();
+		// forgetReminders();
 	};
 	var keyInertia = 0, 
 		scrollDirection,
@@ -552,13 +519,16 @@ onload = function ()
 	
 	// varred in util...
 	panicCb = function() { //panic btn callback
-		topCard().remove();
+		topCard().unshow();
+		current_deck.shift();
 		forgetReminders();
 		analytics.track('Report Inappropriate Content', {
-			card: panic.id,
+			card: panic.card.id,
 			surfing: current_tag
 		});
-		messageBox("Thanks for the Report", "An admin will review that card before anyone sees it again.", "OK", null, true);
+		messageBox("Thanks for the Report",
+			"An admin will review that card before anyone sees it again.",
+			"OK", null, true);
 	};
 	var blurLoginInputs = function ()
 	{
@@ -632,7 +602,7 @@ onload = function ()
 	analytics.identify(currentUser.id);
 
 	if (!isAuthorized() && !DEBUG)
-		startOrientation();
+		tutorial.start();
 };
 
 //This is the first line executed in feed

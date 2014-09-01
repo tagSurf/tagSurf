@@ -261,6 +261,7 @@ var gesture = {
 	},
 	triggerSwipe: function(node, direction, distance, dx, dy, pixelsPerSecond) {
 		var handlers = gesture.handlers.swipe[node.gid];
+		hasSwiped = true;
 		if (handlers) for (var i = 0; i < handlers.length; i++)
 			handlers[i](direction, distance, dx, dy, pixelsPerSecond);
 	},
