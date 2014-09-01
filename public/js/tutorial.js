@@ -3,15 +3,19 @@ var tutorial = {
 	paused: false,
 	start: function() {
 		tutorial.on = true;
-		newReminder(welcomeMessage.call(), function() {
-			newReminder(upvoteMessage.call(), function() {
-				newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
+		var welcome = newReminder(welcomeMessage.call(), function() {
+			var upvote = newReminder(upvoteMessage.call(), function() {
+				var downvote = newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
 				current_deck.topCard().setOneTimeCb("vote", function () { 
-					newReminder(firstvoteMessage.call(), buildKeepGoing, "First Vote", 1000, 5000); 
+					var firstvote = newReminder(firstvoteMessage.call(), buildKeepGoing, "First Vote", 1000, 5000); 
 					// tutorial.on = false;
 					});
 			}, "Upvote", 5000, 5000);
 		}, "Welcome", 1000, 6000);
+		welcome.setCb("show", function(){
+			if(isUIWebView())
+				this.container.style.paddingTop = "30px"; 
+		})
 	},
 	pause: function() {
 		if(!reminders[0] || !tutorial.on)

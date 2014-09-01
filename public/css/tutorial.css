@@ -60,18 +60,23 @@
   right: 60px;
   bottom: 75px;
   width: 60px;
+  z-index: 120;
 }
 #reminder-downvote-arrow {
   position: absolute;
   left: 60px;
   bottom: 75px;
   width: 60px;
+  z-index: 120;
 }
 #pause-btn {
   max-width: 70%;
-  margin-top: 15%;
-  margin-left: auto;
-  margin-right: auto;
+  /*margin-top: 15%;*/
+  /*margin-left: auto;*/
+  /*margin-right: auto;*/
+  position: absolute;
+  bottom: 22%;
+  left: 18%;
   font-weight: 200;
 }
 #menu-up-arrow {
@@ -127,5 +132,7 @@
   }
   #pause-btn {
     max-width: 21%;
+    bottom: 7%;
+    left: 41%;
   }
 }
