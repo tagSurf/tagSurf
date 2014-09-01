@@ -74,6 +74,12 @@
   margin-right: auto;
   font-weight: 200;
 }
+#menu-up-arrow {
+  position: absolute;
+  width: 60px;
+  top: 0px;
+  right: 40%;
+}
 
 /*== (Desktop Only) ==*/
 .close-instructions {
@@ -114,6 +120,10 @@
     left: 90px;
     bottom: 110px;
     width: 120px;
+  }
+  #menu-up-arrow {
+    width: 120px;
+    right: 46%;
   }
   #pause-btn {
     max-width: 21%;

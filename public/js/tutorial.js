@@ -18,7 +18,13 @@ var tutorial = {
 			return
 		reminders[0].close()
 		forgetReminders();
-		newReminder(resumeMessage.call(), null, "Resume", 1000, 2000);
+		var pauseReminder = newReminder(resumeMessage.call(), null, "Resume", 1000, 2000),
+			offset = document.getElementById('nav').clientHeight;
+		pauseReminder.container.style.marginTop = offset + "px";
+		pauseReminder.setCb("show", function() {
+			var closebtn = pauseReminder.container.lastChild.children[0];
+			closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
+		});
 		tutorial.on = false;
 		tutorial.paused = true;
 	},
@@ -118,13 +124,12 @@ var downvoteMessage = function() {
 
 var resumeMessage = function() {
 	var node = document.createElement('div'),
-		pausebtn = document.createElement('div'),
-		downvotearrow = new Image();
-	downvotearrow.src = "http://assets.tagsurf.co/img/downvote_arrow.gif";
-	downvotearrow.id = "reminder-downvote-arrow";
+		menuarrow = new Image();
+	menuarrow.src = "/img/up_pointer_arrow_white.gif";
+	menuarrow.id = "menu-up-arrow";
 	node.innerHTML = "Resume Tutorial<br/>From Options Menu";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.appendChild(downvotearrow);	
+	node.appendChild(menuarrow);	
 	node.style.marginTop = isMobile() ? "50%" : "23%";
 	return node;
 };
