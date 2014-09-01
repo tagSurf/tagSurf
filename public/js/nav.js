@@ -137,32 +137,27 @@ var populateNavbar = function () {
     document.getElementById("login").onclick = stashVotesAndLogin;
   }
   document.getElementById("options-btn").onclick = function() {
-    var n = document.createElement("div");
+    var n = document.createElement("div"),
+        title = document.createElement("div"),
+        closebtn = document.createElement("img"),
+        TOS = document.createElement("div"),
+        options_cb = function() {
+          checkShare();
+          modal.backOff();
+          modal.modalOut();
+        },
+        optionsTable = buildOptionsTable(options_cb);
     n.className = "center-label";
-    var title = document.createElement("div");
-    var closebtn = document.createElement("img");
     closebtn.src = "http://assets.tagsurf.co/img/Close.png";
     closebtn.className = "modal-close-button";
     closebtn.id = "options-close-button";
     title.innerHTML = "Options";
     title.className = "options-title";
-    var optionsTable = buildOptionsTable();
-    /*
-    var img = document.createElement("img");
-    img.src = "http://assets.tagsurf.co/img/throbber.gif";
-    */
-    var TOS = document.createElement("div");
     TOS.innerHTML = "<a class='blue bold big-lnk' id='terms-lnk'>Terms of Use</a> | <a class='blue bold big-lnk' id='privacy-lnk'>Privacy Policy</a>";
     TOS.className = "tos-line";
-    var options_cb = function() {
-      checkShare();
-      modal.backOff();
-      modal.modalOut();
-    };
     n.appendChild(title);
     n.appendChild(optionsTable);
     n.appendChild(closebtn);
-    //n.appendChild(img);
     n.appendChild(TOS);
     slideNavMenu(true);
     share.off();
@@ -173,7 +168,7 @@ var populateNavbar = function () {
   };
 };
 
-var buildOptionsTable = function () {
+var buildOptionsTable = function (options_cb) {
   var optionsTable = document.createElement('table'),
       safeSurfRow = optionsTable.insertRow(0),
       safeSurfHelperRow = optionsTable.insertRow(1),
@@ -191,7 +186,15 @@ var buildOptionsTable = function () {
       voteButtonsDesc = document.createElement('div'),
       voteButtonsText = document.createElement('div'),
       voteButtonsCheckbox = document.createElement('div');
+  // Resume Tutorial (if applicable) 
+  if(tutorial.paused)
+    var resumeTutorial = optionsTable.insertRow(0),
+        resumeButtonCell = resumeTutorial.insertCell(0),
+        resumeButton = document.createElement('div');
+  
   optionsTable.className = "inline options-table";
+ 
+  // Safe Surf Switch
   safeSurfCheckbox.innerHTML = 
   '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
     ((currentUser && currentUser.safeSurf || !isAuthorized()) ? " checked" : "") +
@@ -202,13 +205,6 @@ var buildOptionsTable = function () {
   safeSurfDescCell.colSpan = voteButtonsDescCell.colSpan = 2;
   safeSurfDesc.innerHTML = "Safe Surf filters NSFW content<br>out of your feed and galleries.<br><i>(NSFW = Not Safe For Work)</i>";
   safeSurfDesc.className = voteButtonsDesc.className = "options-key-desc";
-  voteButtonsCheckbox.innerHTML = 
-  '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
-    (currentUser.vote_btns ? " checked" : "") +
-  '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label>';
-  voteButtonsText.innerHTML = "Vote Buttons";
-  voteButtonsText.style.fontSize="150%";
-  voteButtonsDesc.innerHTML = "Turn off voting buttons and just swipe";
   gesture.listen('down', safeSurfCheckbox, function () {
     if (isAuthorized())
     {
@@ -237,12 +233,28 @@ var buildOptionsTable = function () {
       analytics.track('Unauthorized Toggle Safe Surf');
     }
   });
+  safeSurfCheckbox.className = voteButtonsCheckbox.className = 'onoffswitch-container';
+  safeSurfTextCell.appendChild(safeSurfText);
+  safeSurfCheckboxCell.appendChild(safeSurfCheckbox);
+  safeSurfDescCell.appendChild(safeSurfDesc);
+  
+  // Vote Buttons Switch
+  voteButtonsCheckbox.innerHTML = 
+  '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
+    (currentUser.vote_btns ? " checked" : "") +
+  '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label>';
+  voteButtonsText.innerHTML = "Vote Buttons";
+  voteButtonsText.style.fontSize="150%";
+  voteButtonsDesc.innerHTML = "Turn off voting buttons and just swipe";
+
   gesture.listen('down', voteButtonsCheckbox, function () {
     voteButtonsCheckbox.firstChild.checked = !voteButtonsCheckbox.firstChild.checked;
+    // Enable this block if votebtn toggle becomes permantent and server tracks this pref
     // xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
     //   JSON.stringify({ vote_btns: voteButtonsCheckbox.firstChild.checked }));
     currentUser.vote_btns = voteButtonsCheckbox.firstChild.checked;
     var session = sessionStorage.getItem('vote_btns')
+    // Retrieve this pref from session storage
     // if(typeof session !== 'undefined')
     //   sessionStorage.vote_btns = voteButtonsCheckbox.firstChild.checked;
     // else
@@ -251,13 +263,29 @@ var buildOptionsTable = function () {
         voteButtons: currentUser.vote_btns
     });
   });
-  safeSurfCheckbox.className = voteButtonsCheckbox.className = 'onoffswitch-container';
-  safeSurfTextCell.appendChild(safeSurfText);
-  safeSurfCheckboxCell.appendChild(safeSurfCheckbox);
-  safeSurfDescCell.appendChild(safeSurfDesc);
   voteButtonsTextCell.appendChild(voteButtonsText);
   voteButtonsCheckboxCell.appendChild(voteButtonsCheckbox);
   voteButtonsDescCell.appendChild(voteButtonsDesc);
+  
+  // Resume Tutorial Button (if applicable)
+  if(!tutorial.paused)
+    return optionsTable;
+  resumeButton.innerHTML = "Resume Tutorial";
+  resumeButton.className = isMobile() ? "msgbox-btn biggest pointer" 
+                            : "msgbox-btn really-big pointer";
+  resumeButton.id = "resume-btn";
+  resumeButtonCell.colSpan = "2";
+  gesture.listen("tap", resumeButton, function() {
+    options_cb();
+    tutorial.resume(1000);
+  });
+  gesture.listen("down", resumeButton, function () {
+      resumeButton.classList.add('ts-active-button');
+    });
+  gesture.listen("up", resumeButton, function () {
+      resumeButton.classList.remove('ts-active-button');
+    });
+  tutorial.paused && resumeButtonCell.appendChild(resumeButton);
   return optionsTable;
 };
 

@@ -180,7 +180,10 @@
   border-bottom-right-radius: 5px;
   border-bottom-left-radius: 5px;
 }
-
+#resume-btn {
+  max-width: initial !important;
+  padding: 10px;
+} 
 /*======= This targets destops and tablets ======*/
 @media only screen and (min-width: 700px){
 /*  #tag_adder
