@@ -123,8 +123,8 @@ var newReminder = function(node, cb, type, delay, duration) {
 	return reminder;
 };
 
-var forgetReminders = function() {
-	reminders.forEach(function (reminder) { reminder.forget(); });
+var forgetReminders = function(remove) {
+	reminders.forEach(function (reminder) { reminder.forget(remove); });
 };
 
 var closeReminders = function() {

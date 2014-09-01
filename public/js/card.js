@@ -329,6 +329,10 @@ var card_proto = {
 			this.expand();
 		else
 			this.setExpandTimeout();
+		if (this.oneTimeCbs.setTop) {
+			this.oneTimeCbs.setTop();
+			this.oneTimeCbs.setTop = null;
+		}
 	},
 	expand: function () {
 		if (this.showing && this.isContent && this.compressing && this == current_deck.topCard()) {

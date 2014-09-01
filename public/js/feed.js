@@ -489,6 +489,7 @@ onload = function ()
 			});
 		}
 		swipeSlider("left");
+		hasKeySwiped = true;
 	});
 	stroke.listen("up", "39", function() {
 		var slider = topCard();
@@ -510,6 +511,7 @@ onload = function ()
 			});
 		}
 		swipeSlider("right");
+		hasKeySwiped = true;
 	});
 	stroke.listen("up", null, closeReminders);
 	

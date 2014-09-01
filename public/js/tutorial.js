@@ -7,7 +7,7 @@ var tutorial = {
 			var upvote = newReminder(upvoteMessage.call(), function() {
 				var downvote = newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
 				current_deck.topCard().setOneTimeCb("vote", function () { 
-					var firstvote = newReminder(firstvoteMessage.call(), buildKeepGoing, "First Vote", 1000, 5000); 
+					var firstvote = newReminder(firstvoteMessage.call(), startPhase2, "First Vote", 1000, 5000); 
 					// tutorial.on = false;
 					});
 			}, "Upvote", 5000, 5000);
@@ -41,9 +41,30 @@ var tutorial = {
 	}
 };
 
-var buildKeepGoing = function() {
-	var keepgoing = newReminder(keepgoingPrompt.call(), null, "Keep Going", 10000, 5000);
-	current_deck.topCard().setOneTimeCb("vote", function() { keepgoing.forget(true); });
+var startPhase2 = function() {
+	current_deck.removeLoginCards();
+	newReminder(keepgoingPrompt.call(), null, "Keep Going", 10000, 5000); 	
+	current_deck.topCard().setOneTimeCb("vote", function() { reminders[0].forget(true); });
+	current_deck.removeLoginCards();
+	remindSwipe();
+}
+
+var remindSwipe = function() {
+	current_deck.cards[4].setOneTimeCb("vote", function() {
+		if(isDesktop() && !hasKeySwiped)
+			newReminder(swipeReminder.call(), remindSwipe, "Swipe", 1000, 5000);
+		else if ((isMobile() || isTablet()) && !hasSwiped)
+			newReminder(swipeReminder.call(), remindSwipe, "Swipe", 1000, 5000);
+		else if (!isDesktop()) {
+			var rmButtonsReminder = newReminder(rmVoteBtnsMessage.call(), null, "Vote Btns", 1000, 5000),
+				offset = document.getElementById('nav').clientHeight;
+			rmButtonsReminder.container.style.marginTop = offset + "px";
+			rmButtonsReminder.setCb("show", function() {
+				var closebtn = rmButtonsReminder.container.lastChild.children[0];
+				closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
+			});
+		}
+	});
 }
 
 var welcomeMessage = function() {
@@ -179,6 +200,18 @@ var keepgoingPrompt = function() {
 	pausebtn.id = "pause-btn";
 	pausebtn.innerHTML = "Pause Tutorial";
 	node.appendChild(pausebtn);
+	return node;
+};
+
+var rmVoteBtnsMessage = function() {
+	var node = document.createElement('div'),
+		menuarrow = new Image();
+	menuarrow.src = "http://assets.tagsurf.co/img/up_pointer_arrow_white.gif";
+	menuarrow.id = "menu-up-arrow";
+	node.innerHTML = "Looking great!<br/><br/>You can turn off<br/>vote buttons in options";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.appendChild(menuarrow);	
+	node.style.marginTop = isMobile() ? "50%" : "23%";
 	return node;
 };
 

@@ -83,6 +83,12 @@ var deck_proto = {
 		});
 		this.deal();
 	},
+	removeLoginCards: function () {
+		this.cards = this.cards.filter(function(card){
+			return card.type != "login";
+		});
+		this.deal();
+	},
 	shift: function() {
 		this.cards.shift();
 		this.deal();
