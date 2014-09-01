@@ -67,7 +67,11 @@ var card_proto = {
 			var t = Object.keys(tagobj)[0];
 			t && card.tagCard(t);
 		});
-		this.cbs.start(this.contents);
+		this.cbs.start && this.cbs.start(this.contents);
+		if (this.oneTimeCbs.start) {
+			this.oneTimeCbs.start();
+			this.oneTimeCbs.start = null;
+		}
 		this.isContent = true;
 		this._formatContents(image.get(this.data));
 		formattingContainer.removeChild(container);
@@ -127,7 +131,11 @@ var card_proto = {
 		this.wrapper.className = 'card-wrapper';
 		container.className = 'card-container login-card';
 		container.innerHTML = cardTemplate;
-		this.cbs.start(this.contents);
+		this.cbs.start && this.cbs.start(this.contents);
+		if (this.oneTimeCbs.start) {
+			this.oneTimeCbs.start();
+			this.oneTimeCbs.start = null;
+		}
 		this.wrapper.appendChild(this.contents);
 		this.built = true;
 		this.swipable = true;
@@ -352,6 +360,10 @@ var card_proto = {
 			if (this.contents.children[4].className.indexOf("hidden") == -1)
 				toggleClass.call(this.contents.children[4], "hidden");
 			this.cbs.expand && this.cbs.expand();
+			if (this.oneTimeCbs.expand) {
+				this.oneTimeCbs.expand();
+				this.oneTimeCbs.expand = null;
+			}
 		}
 	},
 	setExpandTimeout: function (time) {
@@ -459,6 +471,11 @@ var card_proto = {
 			this.pushTags();
 		} else if (this.type == "login")
 			this.cbs.start(this.contents); // refresh for next time
+		this.cbs.vote && this.cbs.vote();
+		if (this.oneTimeCbs.vote) {
+			this.oneTimeCbs.vote();
+			this.oneTimeCbs.vote = null;
+		}
 	},
 	pushTags: function () {
 		var newtag = false;
@@ -470,6 +487,14 @@ var card_proto = {
 		}
 		if (newtag)
 			autocomplete.populate();
+	},
+	setOneTimeCb: function(action, cb) {
+		if(!action) {
+			if (DEBUG)
+				console.log("Error: No action provided for One Time Callback");
+			return;
+		}
+		this.oneTimeCbs[action] = cb;
 	},
 	jiggle: function () {
 		var cardContainer = this.contents;
@@ -485,6 +510,7 @@ var newCard = function (data) {
 	card.data = null;
 	card.image = null;
 	card.cbs = cardCbs; //varred in util
+	card.oneTimeCbs = [];
 	card.tags = [];
 	card.zIndex = null;
 	card.trending = false;

@@ -329,51 +329,6 @@ html, body {
   margin-right: 20px;
 }
 
-/*======= Reminder Stuff =======*/
-.reminder-container {
-  visibility: hidden;
-  z-index: -1;
-  position: absolute;
-  overflow-x: scroll;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0, .8);
-  font-weight: 800;
-  opactiy: 0;
-  -webkit-transition: opacity 250ms;
-  transition: opacity 250ms;
-}
-#reminder-left {
-	position: relative;
-	display: inline;
-	width: 34%;
-	float: left;
-	margin-left: 5%;
-	margin-top: 33%;
-}
-#reminder-right {
-	position: relative;
-	display: inline;
-	width: 25%;
-	float: right;
-	margin-right: 5%;
-  margin-top: 33%;
-}
-.reminder-close {
-  width: 40px;
-  position: absolute;
-  bottom: 20px;
-  right: 15px;
-}  
-/*== (Desktop Only) ==*/
-.close-instructions {
-  position: absolute;
-  left: 43%;
-  bottom: 44%;
-  width: 15%;
-}
-
 /*====== End of Feed Card Stuff =====*/
 .trending-returnbtn {
   border: 1px solid #00aeef;
@@ -537,9 +492,6 @@ html, body {
   .noinput {
     margin-top: 45px;
   }
-  .reminder-close {
-    bottom: 25px;
-  }
   
   /*==== End of Feed Card ====*/
   .trending-returnbtn {
@@ -552,13 +504,4 @@ html, body {
   .taglist {
     max-width: 75%;
   }
-  
-  /*==== Reminder Screen =====*/
-  #reminder-left {
-    margin-top: 11%;
-  }
-  #reminder-right {
-    margin-top: 11%;
-  }
 }
-

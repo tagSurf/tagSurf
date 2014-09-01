@@ -17,9 +17,8 @@ if ((document.location.hostname.indexOf("localhost") != -1)
   || (document.location.hostname.indexOf("staging.tagsurf.co") != -1)
   || (document.location.hostname.indexOf("192.168") != -1)
   || (document.location.hostname.indexOf("172.20") != -1))
-  DEBUG = false; // turned off ... turn back on here
-var hasClass = function (node, className) 
-{
+  DEBUG = true;
+var hasClass = function (node, className) {
   return node.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(node.className);
 };
 Number.prototype.mod = function(n) {
@@ -29,8 +28,7 @@ String.prototype.trunc = String.prototype.trunc ||
   function(n){
     return this.length>n ? this.substr(0,n-1)+'&hellip;' : this;
 };
-var toggleClass = function (className, onOrOff)
-{
+var toggleClass = function (className, onOrOff) {
   var classIsOn = hasClass(this, className);
   if (classIsOn && onOrOff != "on")
     this.classList.remove(className);
@@ -213,8 +211,8 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
       gesture.listen('tap', downvoteBtn, function () {
         if (modal.zoom.zoomed)
           modal.callZoom(1);    
-        dragCallback("left", -3, -3);
-        swipeSlider("left");
+        cardCbs.drag("left", -1, -1);
+        setTimeout(function() { swipeSlider("left"); }, 200);
         analytics.track("Tap Downvote Button");
       });
 
@@ -229,8 +227,8 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
       gesture.listen('tap', upvoteBtn, function () {
         if (modal.zoom.zoomed)
           modal.callZoom(1);     
-        dragCallback("right", 3, 3);
-        swipeSlider("right");
+        cardCbs.drag("right", 1, 1);
+        setTimeout(function() { swipeSlider("right"); }, 200);
         analytics.track("Tap Upvote Button");
       });
       document.body.appendChild(downvoteBtn);

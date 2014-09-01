@@ -241,7 +241,6 @@ onload = function ()
 			{
 				blurLoginInputs();
 			}	
-			forgetReminders();
 			if (slider.contents.style["-webkit-transform"] == "")
 			{
 				slider.contents.style["-webkit-transform"] = "tranform3d(0,0,0) rotate(0)";
@@ -419,7 +418,7 @@ onload = function ()
 			"translate3d(" + translateQuantity + "px," + verticalQuantity
 				+ "px,0) rotate(" + rotateQuantity + "deg)");
 		slider.animating = true;
-		forgetReminders();
+		// forgetReminders();
 	};
 	var keyInertia = 0, 
 		scrollDirection,
@@ -604,7 +603,7 @@ onload = function ()
 	analytics.identify(currentUser.id);
 
 	if (!isAuthorized() && !DEBUG)
-		startOrientation();
+		tutorial.start();
 };
 
 //This is the first line executed in feed
