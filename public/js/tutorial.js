@@ -51,10 +51,14 @@ var startPhase2 = function() {
 
 var remindSwipe = function() {
 	current_deck.cards[4].setOneTimeCb("vote", function() {
-		if(isDesktop() && !hasKeySwiped)
-			newReminder(swipeReminder.call(), remindSwipe, "Swipe", 1000, 5000);
-		else if ((isMobile() || isTablet()) && !hasSwiped)
-			newReminder(swipeReminder.call(), remindSwipe, "Swipe", 1000, 5000);
+		if(isDesktop() && !hasKeySwiped) {
+			var swipeRemind = newReminder(swipeReminder.call(), remindSwipe, "Swipe", 1000, 5000);
+			!tutorial.on && swipeRemind.forget();
+		}
+		else if ((isMobile() || isTablet()) && !hasSwiped) {		
+			var swipeRemind = newReminder(swipeReminder.call(), remindSwipe, "Swipe", 1000, 5000);
+			!tutorial.on && swipeRemind.forget();
+		}
 		else if (!isDesktop()) {
 			var rmButtonsReminder = newReminder(rmVoteBtnsMessage.call(), null, "Vote Btns", 1000, 5000),
 				offset = document.getElementById('nav').clientHeight;
@@ -63,6 +67,7 @@ var remindSwipe = function() {
 				var closebtn = rmButtonsReminder.container.lastChild.children[0];
 				closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
 			});
+			!tutorial.on && rmButtonsReminder.forget();
 		}
 	});
 }
