@@ -182,8 +182,9 @@ onload = function ()
 			}
 		},
 		tap: function (tapCount) {
-			var slider = topCard(), trueScrollTop =
-				scrollContainer.scrollTop ? scrollContainer.scrollTop
+			var slider = topCard(),
+			imageContainer = slider.contents.firstChild,
+			trueScrollTop = scrollContainer.scrollTop ? scrollContainer.scrollTop
 				: (scrollContainer.yDrag ? -scrollContainer.yDrag : 0);
 			if (modal.zoom.zoomed) return;
 			if (tapCount == 1)
@@ -191,8 +192,10 @@ onload = function ()
 				if (slider.compressing == false)
 				{
 					modal.zoomIn(slider);
-					modal.zoom.firstChild.firstChild.style.webkitTransform = 'scale3d(1,1,1)';
-					modal.zoom.scrollTop = trueScrollTop * modal.constants.zoomScale;
+					modal.zoom.firstChild.firstChild.style.webkitTransform =
+						'scale3d(1,1,1)';
+					modal.zoom.scrollTop =
+						trueScrollTop * window.innerWidth / imageContainer.scrollWidth;
 				}
 				else if (slider.expanded == false)
 				{
