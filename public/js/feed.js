@@ -102,7 +102,7 @@ onload = function ()
 					if (slider.sliding)
 						return false;
 
-// this code was supposed to prevent the Chrome and
+// this code was supposed to prevent Chrome and
 // Safari from shifting the whole page. disabled for now.
 //					if (!isStockAndroid()) {
 //						var sc = scrollContainer, atTop = (sc.scrollTop === 0),
