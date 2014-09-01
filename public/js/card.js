@@ -481,6 +481,12 @@ var card_proto = {
 			return;
 		}
 		this.oneTimeCbs[action] = cb;
+	},
+	jiggle: function () {
+		var cardContainer = this.contents;
+		if (cardContainer.classList.contains('jiggle'))
+			cardContainer.classList.remove('jiggle')
+		cardContainer.classList.add('jiggle');
 	}
 };
 

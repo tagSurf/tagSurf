@@ -1,21 +1,50 @@
-var tutorialOn = false;
-
-var startTutorial = function () {
-	tutorialOn = true;
-	newReminder(welcomeMessage.call(), function() {
-		if (tutorialOn)
-			newReminder(upvoteMessage.call(), function() {
-				if (tutorialOn) {
-					newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
-					current_deck.topCard().setOneTimeCb("vote", function () { 
-						if (tutorialOn)
-							newReminder(firstvoteMessage.call(), buildKeepGoing, "First Vote", 1000, 5000); 
-						// tutorialOn = false;
+var tutorial = {
+	on: false,
+	paused: false,
+	start: function() {
+		tutorial.on = true;
+		var welcome = newReminder(welcomeMessage.call(), function() {
+			var upvote = newReminder(upvoteMessage.call(), function() {
+				var downvote = newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
+				current_deck.topCard().setOneTimeCb("vote", function () { 
+					var firstvote = newReminder(firstvoteMessage.call(), buildKeepGoing, "First Vote", 1000, 5000); 
+					// tutorial.on = false;
 					});
-				}
-		}, "Upvote", 5000, 5000);
-	}, "Welcome", 1000, 6000);
+			}, "Upvote", 5000, 5000);
+		}, "Welcome", 1000, 6000);
+		welcome.setCb("show", function(){
+			if(isUIWebView())
+				this.container.style.paddingTop = "30px"; 
+		})
+	},
+	pause: function() {
+		if(!reminders[0] || !tutorial.on)
+			return
+		reminders[0].close()
+		forgetReminders();
+		var pauseReminder = newReminder(resumeMessage.call(), null, "Resume", 1000, 2000),
+			offset = document.getElementById('nav').clientHeight;
+		pauseReminder.container.style.marginTop = offset + "px";
+		pauseReminder.setCb("show", function() {
+			var closebtn = pauseReminder.container.lastChild.children[0];
+			closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
+		});
+		tutorial.on = false;
+		tutorial.paused = true;
+	},
+	resume: function(timeout) {
+		if(!reminders[0])
+			return;
+		tutorial.on = true;
+		tutorial.paused = false;
+		reminders[0].startTimeout(timeout);
+	}
 };
+
+var buildKeepGoing = function() {
+	var keepgoing = newReminder(keepgoingPrompt.call(), null, "Keep Going", 15000, 5000);
+	current_deck.topCard().setOneTimeCb("vote", function() { keepgoing.forget(true); });
+}
 
 var welcomeMessage = function() {
 	var node = document.createElement('div'),
@@ -38,6 +67,7 @@ var welcomeMessage = function() {
 
 var upvoteMessage = function() {
 	var node = document.createElement('div'),
+		pausebtn = document.createElement('div'),
 		upvotebtn = new Image(),
 		upvotearrow = new Image();
 	upvotebtn.src = "http://assets.tagsurf.co/img/upvote_btn.png";
@@ -49,11 +79,25 @@ var upvoteMessage = function() {
 	node.appendChild(upvotearrow);	
 	node.appendChild(upvotebtn);
 	node.style.marginTop = isMobile() ? "50%" : "22%";
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	node.appendChild(pausebtn);
 	return node;
 };
 
 var downvoteMessage = function() {
 	var node = document.createElement('div'),
+		pausebtn = document.createElement('div'),
 		downvotebtn = new Image(),
 		downvotearrow = new Image();
 	downvotebtn.src = "http://assets.tagsurf.co/img/downvote_btn.png";
@@ -65,30 +109,82 @@ var downvoteMessage = function() {
 	node.appendChild(downvotearrow);	
 	node.appendChild(downvotebtn);
 	node.style.marginTop = isMobile() ? "50%" : "23%";
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	node.appendChild(pausebtn);
+	return node;
+};
+
+var resumeMessage = function() {
+	var node = document.createElement('div'),
+		menuarrow = new Image();
+	menuarrow.src = "http://assets.tagsurf.co/img/up_pointer_arrow_white.gif";
+	menuarrow.id = "menu-up-arrow";
+	node.innerHTML = "Resume Tutorial<br/>From Options Menu";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.appendChild(menuarrow);	
+	node.style.marginTop = isMobile() ? "50%" : "23%";
 	return node;
 };
 
 var firstvoteMessage = function() {
-	var node = document.createElement('div');
-	node.innerHTML = "Great job!<br/>Everyone gets a better feed<br/>when you vote";
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div');
+	node.innerHTML = "Great job!<br/>Your votes improve<br/>the feed for<br/>everyone";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "50%" : "23%";
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "50%" : "23%";
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	node.appendChild(pausebtn);
 	return node;
 };
 
 var keepgoingPrompt = function() {	
-	var node = document.createElement('div');
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div');
 	node.innerHTML = isMobile() ? "Keep going and<br/>we'll find you some<br/>tags to surf" 
 									: "Keep going and we'll<br/>find you some tags to surf";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "50%" : "23%";
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	node.appendChild(pausebtn);
 	return node;
 };
-
-var buildKeepGoing = function() {
-	var keepgoing = newReminder(keepgoingPrompt.call(), null, "Keep Going", 15000, 5000);
-	current_deck.topCard().setOneTimeCb("vote", function() { keepgoing.forget(true); });
-}
 
 var swipeReminder = function () {
 	var leftImage = new Image(), rightImage = new Image(),

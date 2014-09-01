@@ -60,12 +60,30 @@
   right: 60px;
   bottom: 75px;
   width: 60px;
+  z-index: 120;
 }
 #reminder-downvote-arrow {
   position: absolute;
   left: 60px;
   bottom: 75px;
   width: 60px;
+  z-index: 120;
+}
+#pause-btn {
+  max-width: 70%;
+  /*margin-top: 15%;*/
+  /*margin-left: auto;*/
+  /*margin-right: auto;*/
+  position: absolute;
+  bottom: 22%;
+  left: 18%;
+  font-weight: 200;
+}
+#menu-up-arrow {
+  position: absolute;
+  width: 60px;
+  top: 0px;
+  right: 40%;
 }
 
 /*== (Desktop Only) ==*/
@@ -107,5 +125,14 @@
     left: 90px;
     bottom: 110px;
     width: 120px;
+  }
+  #menu-up-arrow {
+    width: 120px;
+    right: 46%;
+  }
+  #pause-btn {
+    max-width: 21%;
+    bottom: 7%;
+    left: 41%;
   }
 }

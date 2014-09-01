@@ -33,10 +33,10 @@ var reminder_proto = {
 			setTimeout(function () { document.body.removeChild(self.container);}, 100);
 			this.remove();			
 			if(isDesktop())
-				analytics.track('Close ' + this.type + ' Reminder');
+				analytics.track('Close Desktop' + this.type + ' Reminder');
 			else
 				analytics.track('Close ' + this.type + ' Reminder');
-			self.cb && self.cb();
+			self.closeCb && self.closeCb();
 		}
 		else
 			if(DEBUG)
@@ -54,6 +54,17 @@ var reminder_proto = {
 			analytics.track('Seen Desktop ' + this.type + ' Reminder');
 		else
 			analytics.track('Seen Mobile ' + this.type + ' Reminder');
+		this.showCb && this.showCb();
+	},
+	setCb: function(type, cb){
+		switch(type) {
+			case "show":
+				this.showCb = cb ? cb : this.showCb;
+				break;
+			case "close":
+				this.closeCb = cb ? cb : this.closeCb;
+				break;
+		}
 	},
 	startTimeout: function(time) {
 		var self = this;
@@ -63,7 +74,7 @@ var reminder_proto = {
 			if(self.duration) 
 				setTimeout(function() { self.close(); }, self.duration);
 			self.show();  
-		}, (time) ? time : 14000);
+		}, (time) ? time : self.delay);
 	},
 	_build: function () {
 		var self = this,
@@ -102,7 +113,7 @@ var newReminder = function(node, cb, type, delay, duration) {
 	reminder.container = document.createElement('div');
 	reminder.timeout = null;
 	reminder.isOn = false;
-	reminder.cb = cb;
+	reminder.closeCb = cb;
 	reminder.type = type;
 	reminder.delay = delay;
 	reminder.node = node;
