@@ -98,6 +98,45 @@ var remindSwipe = function() {
 	});
 };
 
+var featureTour = function() {
+	newReminder(tourMessage.call(), function() {
+		var offset,
+			addTagReminder = newReminder(addTagMessage.call(), function() {
+				var offset,
+					favoriteReminder = newReminder(favoriteMessage.call(), function() {
+						var shareReminder = newReminder(shareMessage.call(), function() {
+							newReminder(reportMessage.call(), function(){
+								var offset,
+									thatsAllReminder = newReminder(thatsAllMessage.call(), null, "Add Tag", 1000, 5000);
+								offset = document.getElementById('nav').clientHeight;
+								thatsAllReminder.container.style.marginTop = offset + "px";
+								thatsAllReminder.setCb("show", function() {
+									var closebtn = thatsAllReminder.container.lastChild.children[0];
+									closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
+								});								
+							}, "Report", 1000, 5000);
+						}, "Share", 1000, 5000);
+						shareReminder.setCb("show", function() {
+						 	var closebtn = shareReminder.container.lastChild.children[0];
+						 	closebtn.className += " reminder-close-left";
+						});
+				}, "Favorite", 1000, 5000);
+				offset = document.getElementById('nav').clientHeight;
+				favoriteReminder.container.style.marginTop = offset + "px";
+				favoriteReminder.setCb("show", function() {
+					var closebtn = favoriteReminder.container.lastChild.children[0];
+					closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
+				});
+		}, "Add Tag", 1000, 5000);
+		offset = document.getElementById('nav').clientHeight;
+		addTagReminder.container.style.marginTop = offset + "px";
+		addTagReminder.setCb("show", function() {
+			var closebtn = addTagReminder.container.lastChild.children[0];
+			closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
+		});
+	}, "Tour Start", 2000, 5000);
+}
+
 // Message Builders
 // these funcs all build nodes for tutorial screen reminders
 var welcomeMessage = function() {
@@ -200,7 +239,7 @@ var firstvoteMessage = function() {
 		pausebtn = document.createElement('div');
 	node.innerHTML = "Great job!<br/>Your votes improve<br/>the feed for<br/>everyone";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "50%" : "23%";
+	node.style.marginTop = isMobile() ? "50%" : "20%";
 	pausebtn.className = "no-fill-btn pointer";
 	gesture.listen("down", pausebtn, function() {
 		pausebtn.classList.add("active-no-fill-btn");
@@ -223,7 +262,7 @@ var keepgoingPrompt = function() {
 	node.innerHTML = isMobile() ? "Keep voting and<br/>we'll find you some<br/>tags to surf" 
 									: "Keep voting and we'll<br/>find you some tags to surf";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "50%" : "23%";
+	node.style.marginTop = isMobile() ? "50%" : "20%";
 	pausebtn.className = "no-fill-btn pointer";
 	gesture.listen("down", pausebtn, function() {
 		pausebtn.classList.add("active-no-fill-btn");
@@ -248,7 +287,7 @@ var rmVoteBtnsMessage = function() {
 	node.innerHTML = "Looking great!<br/><br/>You can turn off<br/>vote buttons in options";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.appendChild(menuarrow);	
-	node.style.marginTop = isMobile() ? "50%" : "23%";
+	node.style.marginTop = isMobile() ? "50%" : "20%";
 	return node;
 };
 
@@ -321,7 +360,7 @@ var swipeMessage = function() {
 		pausebtn = document.createElement('div');
 	node.innerHTML = "You can also<br/>swipe to vote<br/>like this...";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "50%" : "23%";
+	node.style.marginTop = isMobile() ? "50%" : "20%";
 	pausebtn.className = "no-fill-btn pointer";
 	gesture.listen("down", pausebtn, function() {
 		pausebtn.classList.add("active-no-fill-btn");
@@ -343,7 +382,7 @@ var tagSwitchMessage = function() {
 		pausebtn = document.createElement('div');
 	node.innerHTML = "Now you're surfing!<br/><br/>tagSurf is all about<br/>discovering trending<br/>social content through hashtags";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "40%" : "23%";
+	node.style.marginTop = isMobile() ? "40%" : "20%";
 	pausebtn.className = "no-fill-btn pointer";
 	gesture.listen("down", pausebtn, function() {
 		pausebtn.classList.add("active-no-fill-btn");
@@ -360,6 +399,86 @@ var tagSwitchMessage = function() {
 	return node;
 };
 
+var tourMessage = function() {
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div');
+	node.innerHTML = "Let's take 5<br/>and go over<br/>some more<br/>features";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "50%" : "20%";
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	node.appendChild(pausebtn);
+	return node;
+};
+
+var addTagMessage = function() {
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div'),
+		offset = document.getElementById('nav').clientHeight,
+		menuarrow = new Image();
+	menuarrow.src = "http://assets.tagsurf.co/img/up_pointer_arrow_white.gif";
+	menuarrow.id = "menu-up-arrow";
+	menuarrow.className = "left-arrow";
+	node.innerHTML = "Add a new tag<br/>to share this<br/>in another feed";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "40%" : "18%";
+	pausebtn.className = "no-fill-btn pointer";
+	pausebtn.id = "pause-btn";
+	pausebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
+	pausebtn.innerHTML = "Pause Tutorial";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	node.appendChild(menuarrow);	
+	node.appendChild(pausebtn);
+	return node;
+};
+
+var favoriteMessage = function() {
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div'),
+		offset = document.getElementById('nav').clientHeight,
+		menuarrow = new Image();
+	menuarrow.src = "http://assets.tagsurf.co/img/up_pointer_arrow_white.gif";
+	menuarrow.id = "menu-up-arrow";
+	menuarrow.className = "right-arrow";
+	node.innerHTML = "Star things you<br/>really really like<br/>to save them<br/>in your favorites";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "40%" : "18%";
+	pausebtn.className = "no-fill-btn pointer";
+	pausebtn.id = "pause-btn";
+	pausebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
+	pausebtn.innerHTML = "Pause Tutorial";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	node.appendChild(menuarrow);	
+	node.appendChild(pausebtn);
+	return node;
+};
+
 var shareMessage = function() {
 	var node = document.createElement('div'),
 		pausebtn = document.createElement('div'),
@@ -367,7 +486,7 @@ var shareMessage = function() {
 		pointerarrow = new Image();
 	node.innerHTML = "Find something<br/>you like?<br/><br/>Share it with your<br/>friends!";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "40%" : "23%";
+	node.style.marginTop = isMobile() ? "40%" : "20%";
 	sharebtn.className = "reminder-share-btn";
 	sharebtn.src = "http://assets.tagsurf.co/img/share_icon.png";
 	pointerarrow.src = "http://assets.tagsurf.co/img/down_pointer_arrow_white.gif";
@@ -390,12 +509,6 @@ var shareMessage = function() {
 	return node;
 };
 
-// Include this somewhere
-	// shareReminder.setCb("show", function() {
-	//  	var closebtn = shareReminder.container.lastChild.children[0];
-	//  	closebtn.className += " reminder-close-left";
-	// });
-
 var reportMessage = function() {
 	var node = document.createElement('div'),
 		pausebtn = document.createElement('div'),
@@ -404,7 +517,7 @@ var reportMessage = function() {
 	node.innerHTML = isMobile() ? "Help us keep the<br/>#feeds clean<br/><br/>Report<br/>inappropriate<br/>content here" 
 								:"Help us keep the<br/>#feeds clean<br/><br/>Report inappropriate<br/>content here";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "40%" : "23%";
+	node.style.marginTop = isMobile() ? "40%" : "20%";
 	reportbtn.className = "reminder-report-btn";
 	reportbtn.src = "http://assets.tagsurf.co/img/panic_icon.png";
 	pointerarrow.src = "http://assets.tagsurf.co/img/down_pointer_arrow_white.gif";
@@ -427,92 +540,14 @@ var reportMessage = function() {
 	return node;
 };
 
-var addTagMessage = function() {
-	var node = document.createElement('div'),
-		pausebtn = document.createElement('div'),
-		menuarrow = new Image();
-	menuarrow.src = "http://assets.tagsurf.co/img/up_pointer_arrow_white.gif";
-	menuarrow.id = "menu-up-arrow";
-	menuarrow.className = "left-arrow";
-	node.innerHTML = "Add a new tag<br/>to share this<br/>in another feed";
-	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "40%" : "23%";
-	pausebtn.className = "no-fill-btn pointer";
-	pausebtn.id = "pause-btn";
-	pausebtn.innerHTML = "Pause Tutorial";
-	gesture.listen("down", pausebtn, function() {
-		pausebtn.classList.add("active-no-fill-btn");
-	});
-	gesture.listen("up", pausebtn, function() {
-		pausebtn.classList.remove("active-no-fill-btn");
-	});
-	gesture.listen("tap", pausebtn, function() {
-		tutorial.pause();
-	});
-	node.appendChild(menuarrow);	
-	node.appendChild(pausebtn);
-	return node;
-};
-
-		// var addTagReminder = newReminder(addTagMessage.call(), null, "Add Tag", 2000, 5000),
-		// 	offset = document.getElementById('nav').clientHeight;
-		// addTagReminder.container.style.marginTop = offset + "px";
-		// addTagReminder.setCb("show", function() {
-		// 	var closebtn = addTagReminder.container.lastChild.children[0];
-		// 	closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
-		// });
-
-var favoriteMessage = function() {
-	var node = document.createElement('div'),
-		pausebtn = document.createElement('div'),
-		menuarrow = new Image();
-	menuarrow.src = "http://assets.tagsurf.co/img/up_pointer_arrow_white.gif";
-	menuarrow.id = "menu-up-arrow";
-	menuarrow.className = "right-arrow";
-	node.innerHTML = "Star things you<br/>really really like<br/>to save them<br/>in your favorites";
-	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "40%" : "23%";
-	pausebtn.className = "no-fill-btn pointer";
-	pausebtn.id = "pause-btn";
-	pausebtn.innerHTML = "Pause Tutorial";
-	gesture.listen("down", pausebtn, function() {
-		pausebtn.classList.add("active-no-fill-btn");
-	});
-	gesture.listen("up", pausebtn, function() {
-		pausebtn.classList.remove("active-no-fill-btn");
-	});
-	gesture.listen("tap", pausebtn, function() {
-		tutorial.pause();
-	});
-	node.appendChild(menuarrow);	
-	node.appendChild(pausebtn);
-	return node;
-};
-
-		// var favoriteReminder = newReminder(addTagMessage.call(), null, "Favorite", 2000, 5000),
-		// 	offset = document.getElementById('nav').clientHeight;
-		// favoriteReminder.container.style.marginTop = offset + "px";
-		// favoriteReminder.setCb("show", function() {
-		// 	var closebtn = favoriteReminder.container.lastChild.children[0];
-		// 	closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
-		// });
-
 var thatsAllMessage = function() {
 	var node = document.createElement('div'),
 		menuarrow = new Image();
 	menuarrow.src = "http://assets.tagsurf.co/img/up_pointer_arrow_white.gif";
 	menuarrow.id = "menu-up-arrow";
-	node.innerHTML = "That's all for now<br/><br/>Signup or log in<br/>to explore more<br/>features of the app";
+	node.innerHTML = "That's all folks<br/><br/>Signup or log in<br/>for more features<br/>and Surf On!";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.appendChild(menuarrow);	
-	node.style.marginTop = isMobile() ? "50%" : "23%";
+	node.style.marginTop = isMobile() ? "40%" : "18%";
 	return node;
 };
-
-		// var thatsAllReminder = newReminder(thatsAllMessage.call(), null, "Add Tag", 2000, 5000),
-		// 	offset = document.getElementById('nav').clientHeight;
-		// thatsAllReminder.container.style.marginTop = offset + "px";
-		// thatsAllReminder.setCb("show", function() {
-		// 	var closebtn = thatsAllReminder.container.lastChild.children[0];
-		// 	closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
-		// });

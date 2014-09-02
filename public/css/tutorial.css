@@ -81,7 +81,7 @@
   /*margin-left: auto;*/
   /*margin-right: auto;*/
   position: absolute;
-  bottom: 5%;
+  bottom: 20px;
   left: 18%;
   font-weight: 200;
 }
@@ -126,7 +126,7 @@
   left: -5px !important;
 }
 .right-arrow {
-  right: -5px !important;
+  right: -8px !important;
 }
 
 /*== (Desktop Only) ==*/
@@ -176,6 +176,7 @@
   #pause-btn {
     max-width: 21%;
     left: 41%;
+    bottom: 15px;
   }
   .reminder-report-btn {
     bottom: 10px;
@@ -198,9 +199,11 @@
     right: 27px;
   }
   .left-arrow {
-    left: -12px !important;
+    left: -10px !important;
+    width: 65px !important;
   }
   .right-arrow {
-    right: -12px !important;
+    right: -10px !important;
+    width: 65px !important;
   }
 }
