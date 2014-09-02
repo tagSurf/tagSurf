@@ -14,8 +14,7 @@ var tutorial = {
 					var firstvote = newReminder(firstvoteMessage.call(), startPhase2, "First Vote", 1000, 5000);
 					clearTimeout(tutorial.jiggleTimeout); 
 					tutorial.jiggleTimeout = null;
-					// tutorial.on = false;
-					});
+				});
 			}, "Upvote", 5000, 5000);
 		}, "Welcome", 1000, 6000);
 		welcome.setCb("show", function(){
@@ -26,6 +25,9 @@ var tutorial = {
 	pause: function() {
 		if(!reminders[0] || !tutorial.on)
 			return
+		analytics.track("Pause Tutorial", {
+			reminder: reminders[0].type
+		});
 		reminders[0].close()
 		forgetReminders();
 		var pauseReminder = newReminder(resumeMessage.call(), null, "Resume", 1000, 2000),
@@ -41,6 +43,9 @@ var tutorial = {
 	resume: function(timeout) {
 		if(!reminders[0])
 			return;
+		analytics.track("Resume Tutorial", {
+			reminder: reminders[0].type
+		});
 		tutorial.on = true;
 		tutorial.paused = false;
 		reminders[0].startTimeout(timeout);
@@ -59,22 +64,22 @@ var startPhase2 = function() {
 	});
 	current_deck.removeLoginCards();
 	remindSwipe();
-}
+};
 
 var remindSwipe = function() {
 	current_deck.removeLoginCards();
 	current_deck.cards[4] && current_deck.cards[4].setOneTimeCb("vote", function() {
 		if(isDesktop() && !hasKeySwiped) {
-			var swipeRemind = newReminder(desktopSwipeReminder.call(), function () {
-					setTimeout(function() { current_deck.topCard().jiggle() }, 2000);
+			var swipeRemind = newReminder(desktopSwipeReminder.call(), function() {
+					tutorial.jiggleTimeout = setTimeout(function() { current_deck.topCard().jiggle() }, 2000);
 					remindSwipe();
 				}, "Swipe", 1000, 6000);
 			!tutorial.on && swipeRemind.forget();
 		}
 		else if ((isMobile() || isTablet()) && !hasSwiped) {		
-			var swipeRemind = newReminder(swipeMessage.call(), function () {
-				newReminder(swipeGif.call(), function () {
-					setTimeout(function() { current_deck.topCard().jiggle() }, 2000);
+			var swipeRemind = newReminder(swipeMessage.call(), function() {
+				newReminder(swipeGif.call(), function() {
+					tutorial.jiggleTimeout = setTimeout(function() { current_deck.topCard().jiggle() }, 2000);
 					remindSwipe();
 				}, "Swipe-Gif", 0, 6000)
 			}, "Swipe", 1000, 3000);
@@ -91,7 +96,7 @@ var remindSwipe = function() {
 			!tutorial.on && rmButtonsReminder.forget();
 		}
 	});
-}
+};
 
 // Message Builders
 // these funcs all build nodes for tutorial screen reminders
