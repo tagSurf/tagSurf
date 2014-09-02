@@ -220,8 +220,8 @@ var firstvoteMessage = function() {
 var keepgoingPrompt = function() {	
 	var node = document.createElement('div'),
 		pausebtn = document.createElement('div');
-	node.innerHTML = isMobile() ? "Keep going and<br/>we'll find you some<br/>tags to surf" 
-									: "Keep going and we'll<br/>find you some tags to surf";
+	node.innerHTML = isMobile() ? "Keep voting and<br/>we'll find you some<br/>tags to surf" 
+									: "Keep voting and we'll<br/>find you some tags to surf";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "50%" : "23%";
 	pausebtn.className = "no-fill-btn pointer";
