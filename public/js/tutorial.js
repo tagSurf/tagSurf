@@ -1,13 +1,19 @@
 var tutorial = {
 	on: false,
 	paused: false,
+	jiggleTimeout: null,
 	start: function() {
 		tutorial.on = true;
 		var welcome = newReminder(welcomeMessage.call(), function() {
 			var upvote = newReminder(upvoteMessage.call(), function() {
 				var downvote = newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
+				tutorial.jiggleTimeout = setTimeout(function() { 
+					current_deck.topCard().jiggle() 
+				}, 10000);
 				current_deck.topCard().setOneTimeCb("vote", function () { 
-					var firstvote = newReminder(firstvoteMessage.call(), startPhase2, "First Vote", 1000, 5000); 
+					var firstvote = newReminder(firstvoteMessage.call(), startPhase2, "First Vote", 1000, 5000);
+					clearTimeout(tutorial.jiggleTimeout); 
+					tutorial.jiggleTimeout = null;
 					// tutorial.on = false;
 					});
 			}, "Upvote", 5000, 5000);
@@ -48,7 +54,9 @@ var tutorial = {
 var startPhase2 = function() {
 	current_deck.removeLoginCards();
 	newReminder(keepgoingPrompt.call(), null, "Keep Going", 10000, 5000); 	
-	current_deck.topCard().setOneTimeCb("vote", function() { reminders[0].forget(true); });
+	current_deck.topCard().setOneTimeCb("vote", function() { 
+		reminders[0] && reminders[0].forget(true); 
+	});
 	current_deck.removeLoginCards();
 	remindSwipe();
 }
