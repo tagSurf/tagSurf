@@ -317,7 +317,7 @@ var setResizeCb = function(cb) {
 setMaxCardHeight();
 var lastWidth = window.innerWidth;
 window.onresize = function() {
-  if (!isDesktop() && (lastWidth == window.innerWidth) || throbber.active)
+  if (!isDesktop() && (lastWidth == window.innerWidth) || (throbber && throbber.active))
     return;
   lastWidth = window.innerWidth;
   setMaxCardHeight();
