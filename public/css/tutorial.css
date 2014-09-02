@@ -106,10 +106,10 @@
 /*====== This targets tablets and desktops ======*/
 @media only screen and (min-width: 700px) {
   #reminder-left {
-    margin-top: 11%;
+    margin-top: -11%;
   }
   #reminder-right {
-    margin-top: 11%;
+    margin-top: -11%;
   }
   #reminder-vote-button-right {
     right: 90px;

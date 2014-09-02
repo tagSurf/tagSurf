@@ -63,9 +63,12 @@ var startPhase2 = function() {
 
 var remindSwipe = function() {
 	current_deck.removeLoginCards();
-	current_deck.cards[4].setOneTimeCb("vote", function() {
+	current_deck.cards[4] && current_deck.cards[4].setOneTimeCb("vote", function() {
 		if(isDesktop() && !hasKeySwiped) {
-			var swipeRemind = newReminder(swipeReminder.call(), remindSwipe, "Swipe", 1000, 6000);
+			var swipeRemind = newReminder(desktopSwipeReminder.call(), function () {
+					setTimeout(function() { current_deck.topCard().jiggle() }, 2000);
+					remindSwipe();
+				}, "Swipe", 1000, 6000);
 			!tutorial.on && swipeRemind.forget();
 		}
 		else if ((isMobile() || isTablet()) && !hasSwiped) {		
@@ -125,7 +128,11 @@ var upvoteMessage = function() {
 	node.appendChild(upvotearrow);	
 	node.appendChild(upvotebtn);
 	node.style.marginTop = isMobile() ? "50%" : "22%";
-	pausebtn.className = "no-fill-btn pointer thumb-clear";
+	pausebtn.id = "pause-btn";
+	pausebtn.className = "no-fill-btn pointer";
+	if(!isDesktop())
+		pausebtn.className += " thumb-clear";
+	pausebtn.innerHTML = "Pause Tutorial";
 	gesture.listen("down", pausebtn, function() {
 		pausebtn.classList.add("active-no-fill-btn");
 	});
@@ -135,8 +142,6 @@ var upvoteMessage = function() {
 	gesture.listen("tap", pausebtn, function() {
 		tutorial.pause();
 	});
-	pausebtn.id = "pause-btn";
-	pausebtn.innerHTML = "Pause Tutorial";
 	node.appendChild(pausebtn);
 	return node;
 };
@@ -155,7 +160,9 @@ var downvoteMessage = function() {
 	node.appendChild(downvotearrow);	
 	node.appendChild(downvotebtn);
 	node.style.marginTop = isMobile() ? "50%" : "23%";
-	pausebtn.className = "no-fill-btn pointer thumb-clear";
+	pausebtn.className = "no-fill-btn pointer";
+	if(!isDesktop())
+		pausebtn.className += " thumb-clear";
 	gesture.listen("down", pausebtn, function() {
 		pausebtn.classList.add("active-no-fill-btn");
 	});
@@ -240,29 +247,42 @@ var rmVoteBtnsMessage = function() {
 	return node;
 };
 
-var swipeReminder = function () {
+var desktopSwipeReminder = function () {
 	var leftImage = new Image(), rightImage = new Image(),
+		pausebtn = document.createElement('div'),
+		message = document.createElement('div'),
 		node = document.createElement('div');
 	leftImage.id = "reminder-left";
 	rightImage.id = "reminder-right";
-	if(isDesktop()) {
-		var closeInstructions = new Image();
-		closeInstructions.className = "close-instructions block";
-		closeInstructions.src="http://assets.tagsurf.co/img/clearscreen.png";
-		node.appendChild(closeInstructions);
-		rightImage.src = "http://assets.tagsurf.co/img/reminder_right_desktop.png";
-		leftImage.src = "http://assets.tagsurf.co/img/reminder_left_desktop.png";
-		addCss({
-			"#reminder-left": function() {
-				return "width: 18%; top: 20%";
-			},
-			"#reminder-right": function() {
-				return "width: 18%";
-			}
-		});
-	}
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "50%" : "23%";
+	message.innerHTML = "You can also vote<br/>with your keyboard<br/>arrow keys";
+	rightImage.src = "http://assets.tagsurf.co/img/reminder_right_desktop.png";
+	leftImage.src = "http://assets.tagsurf.co/img/reminder_left_desktop.png";
+	addCss({
+		"#reminder-left": function() {
+			return "width: 18%; top: 20%";
+		},
+		"#reminder-right": function() {
+			return "width: 18%";
+		}
+	});
 	node.appendChild(leftImage);
 	node.appendChild(rightImage);
+	node.appendChild(message);
+	pausebtn.id = "pause-btn";
+	pausebtn.className = "no-fill-btn pointer";
+	pausebtn.innerHTML = "Pause Tutorial";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	node.appendChild(pausebtn);
 	return node;
 };
 
