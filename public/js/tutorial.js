@@ -98,11 +98,6 @@ var remindSwipe = function() {
 	});
 };
 
-// Include this somewhere
-	// shareReminder.setCb("show", function() {
-	// 	var closebtn = shareReminder.container.lastChild.children[0];
-	// 	closebtn.className += " reminder-close-left";
-
 // Message Builders
 // these funcs all build nodes for tutorial screen reminders
 var welcomeMessage = function() {
@@ -365,34 +360,12 @@ var tagSwitchMessage = function() {
 	return node;
 };
 
-var thatsAllMessage = function() {
-	var node = document.createElement('div'),
-		pausebtn = document.createElement('div');
-	node.innerHTML = "That's all for now<br/><br/>Signup or log in<br/>to explore more<br/>features of the app";
-	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "50%" : "23%";
-	pausebtn.className = "no-fill-btn pointer";
-	gesture.listen("down", pausebtn, function() {
-		pausebtn.classList.add("active-no-fill-btn");
-	});
-	gesture.listen("up", pausebtn, function() {
-		pausebtn.classList.remove("active-no-fill-btn");
-	});
-	gesture.listen("tap", pausebtn, function() {
-		tutorial.pause();
-	});
-	pausebtn.id = "pause-btn";
-	pausebtn.innerHTML = "Pause Tutorial";
-	node.appendChild(pausebtn);
-	return node;
-};
-
 var shareMessage = function() {
 	var node = document.createElement('div'),
 		pausebtn = document.createElement('div'),
 		sharebtn = new Image(),
 		pointerarrow = new Image();
-	node.innerHTML = "See something<br/>you like?<br/><br/>Share it with your<br/>friends!";
+	node.innerHTML = "Find something<br/>you like?<br/><br/>Share it with your<br/>friends!";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "40%" : "23%";
 	sharebtn.className = "reminder-share-btn";
@@ -416,6 +389,12 @@ var shareMessage = function() {
 	node.appendChild(pointerarrow);
 	return node;
 };
+
+// Include this somewhere
+	// shareReminder.setCb("show", function() {
+	//  	var closebtn = shareReminder.container.lastChild.children[0];
+	//  	closebtn.className += " reminder-close-left";
+	// });
 
 var reportMessage = function() {
 	var node = document.createElement('div'),
@@ -447,3 +426,93 @@ var reportMessage = function() {
 	node.appendChild(pointerarrow);
 	return node;
 };
+
+var addTagMessage = function() {
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div'),
+		menuarrow = new Image();
+	menuarrow.src = "http://assets.tagsurf.co/img/up_pointer_arrow_white.gif";
+	menuarrow.id = "menu-up-arrow";
+	menuarrow.className = "left-arrow";
+	node.innerHTML = "Add a new tag<br/>to share this<br/>in another feed";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "40%" : "23%";
+	pausebtn.className = "no-fill-btn pointer";
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	node.appendChild(menuarrow);	
+	node.appendChild(pausebtn);
+	return node;
+};
+
+		// var addTagReminder = newReminder(addTagMessage.call(), null, "Add Tag", 2000, 5000),
+		// 	offset = document.getElementById('nav').clientHeight;
+		// addTagReminder.container.style.marginTop = offset + "px";
+		// addTagReminder.setCb("show", function() {
+		// 	var closebtn = addTagReminder.container.lastChild.children[0];
+		// 	closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
+		// });
+
+var favoriteMessage = function() {
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div'),
+		menuarrow = new Image();
+	menuarrow.src = "http://assets.tagsurf.co/img/up_pointer_arrow_white.gif";
+	menuarrow.id = "menu-up-arrow";
+	menuarrow.className = "right-arrow";
+	node.innerHTML = "Star things you<br/>really really like<br/>to save them<br/>in your favorites";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "40%" : "23%";
+	pausebtn.className = "no-fill-btn pointer";
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	node.appendChild(menuarrow);	
+	node.appendChild(pausebtn);
+	return node;
+};
+
+		// var favoriteReminder = newReminder(addTagMessage.call(), null, "Favorite", 2000, 5000),
+		// 	offset = document.getElementById('nav').clientHeight;
+		// favoriteReminder.container.style.marginTop = offset + "px";
+		// favoriteReminder.setCb("show", function() {
+		// 	var closebtn = favoriteReminder.container.lastChild.children[0];
+		// 	closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
+		// });
+
+var thatsAllMessage = function() {
+	var node = document.createElement('div'),
+		menuarrow = new Image();
+	menuarrow.src = "http://assets.tagsurf.co/img/up_pointer_arrow_white.gif";
+	menuarrow.id = "menu-up-arrow";
+	node.innerHTML = "That's all for now<br/><br/>Signup or log in<br/>to explore more<br/>features of the app";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.appendChild(menuarrow);	
+	node.style.marginTop = isMobile() ? "50%" : "23%";
+	return node;
+};
+
+		// var thatsAllReminder = newReminder(thatsAllMessage.call(), null, "Add Tag", 2000, 5000),
+		// 	offset = document.getElementById('nav').clientHeight;
+		// thatsAllReminder.container.style.marginTop = offset + "px";
+		// thatsAllReminder.setCb("show", function() {
+		// 	var closebtn = thatsAllReminder.container.lastChild.children[0];
+		// 	closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
+		// });

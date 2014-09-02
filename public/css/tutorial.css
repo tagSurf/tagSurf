@@ -122,6 +122,12 @@
   width: 30px;
   right: 17px;
 }
+.left-arrow {
+  left: -5px !important;
+}
+.right-arrow {
+  right: -5px !important;
+}
 
 /*== (Desktop Only) ==*/
 .close-instructions {
@@ -164,7 +170,7 @@
     width: 120px;
   }
   #menu-up-arrow {
-    width: 120px;
+    width: 90px;
     right: 46%;
   }
   #pause-btn {
@@ -190,5 +196,11 @@
     bottom: 75px;
     width: 50px;
     right: 27px;
+  }
+  .left-arrow {
+    left: -12px !important;
+  }
+  .right-arrow {
+    right: -12px !important;
   }
 }
