@@ -57,15 +57,15 @@ var remindSwipe = function() {
 	current_deck.removeLoginCards();
 	current_deck.cards[4].setOneTimeCb("vote", function() {
 		if(isDesktop() && !hasKeySwiped) {
-			var swipeRemind = newReminder(swipeReminder.call(), remindSwipe, "Swipe", 1000, 5000);
+			var swipeRemind = newReminder(swipeReminder.call(), remindSwipe, "Swipe", 1000, 6000);
 			!tutorial.on && swipeRemind.forget();
 		}
 		else if ((isMobile() || isTablet()) && !hasSwiped) {		
 			var swipeRemind = newReminder(swipeMessage.call(), function () {
 				newReminder(swipeGif.call(), function () {
-					setTimeout(function() { current_deck.topCard().jiggle() }, 1000);
+					setTimeout(function() { current_deck.topCard().jiggle() }, 2000);
 					remindSwipe();
-				}, "Swipe-Gif", 0, 5000)
+				}, "Swipe-Gif", 0, 6000)
 			}, "Swipe", 1000, 3000);
 			!tutorial.on && swipeRemind.forget();
 		}
@@ -235,7 +235,8 @@ var rmVoteBtnsMessage = function() {
 var swipeReminder = function () {
 	var leftImage = new Image(), rightImage = new Image(),
 		node = document.createElement('div');
-	leftImage.id = "swipe-gif";
+	leftImage.id = "reminder-left";
+	rightImage.id = "reminder-right";
 	if(isDesktop()) {
 		var closeInstructions = new Image();
 		closeInstructions.className = "close-instructions block";
@@ -252,9 +253,8 @@ var swipeReminder = function () {
 			}
 		});
 	}
-	else 
-		leftImage.src = "/img/swipe.gif";	
 	node.appendChild(leftImage);
+	node.appendChild(rightImage);
 	return node;
 };
 
@@ -263,7 +263,7 @@ var swipeGif = function () {
 		node = document.createElement('div'),
 		pausebtn = document.createElement('div');
 	gif.id = "swipe-gif";
-	gif.src = "/img/swipe.gif";	
+	gif.src = "http://assets.tagsurf.co/img/swipe.gif";	
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "50%" : "23%";
 	pausebtn.className = "no-fill-btn pointer";
