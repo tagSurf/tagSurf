@@ -313,20 +313,6 @@ var card_proto = {
 			console.log("Promote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 	},
 	setTop: function() {
-		if (this.image && isAndroid()) {
-			var forceCustomDrag = this.contents.firstChild.firstChild.clientHeight
-				< window.innerHeight * 2;
-			DEBUG && console.log("force custom drag:",
-				forceCustomDrag,
-				this.contents.firstChild.firstChild.clientHeight,
-				window.innerHeight * 2);
-			drag.makeDraggable(scrollContainer, {
-				constraint: "horizontal",
-				force: forceCustomDrag,
-				scroll: cardCbs.scroll
-			});
-		}
-
 		setCurrentMedia(this, forgetReminders);
 		if (this.type == "login") {
 			this._initLoginInputs();
@@ -348,6 +334,19 @@ var card_proto = {
 		if (this.showing && this.isContent && this.compressing && this == current_deck.topCard()) {
 			if (DEBUG)
 				console.log("Expand card #" + this.id);
+			if (isAndroid()) {
+				var forceCustomDrag = this.contents.firstChild.firstChild.clientHeight
+					< window.innerHeight * 2;
+				DEBUG && console.log("force custom drag:",
+					forceCustomDrag,
+					this.contents.firstChild.firstChild.clientHeight,
+					window.innerHeight * 2);
+				drag.makeDraggable(scrollContainer, {
+					constraint: "horizontal",
+					force: forceCustomDrag,
+					scroll: cardCbs.scroll
+				});
+			}
 			this.compressing = false;
 			this.expanded = true;
 			if (this.contents.children[0].className.indexOf("expanded") == -1)
