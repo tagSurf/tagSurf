@@ -82,14 +82,14 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 				toggleClass.call(closebtn, "hidden");
 			}
 		});
-		gesture.listen("swipe", bigpic, function (direction, distance, dx, dy, velocity) {
+		gesture.listen("swipe", bigpic, function (direction, distance, dx, dy, velocity, vx, vy) {
 			if (direction != "up" && direction != "down")
 			{
 				modal.callModal();
 			}
 			else
 			{
-				gesture.triggerSwipe(modal.modal, direction, distance, dx, dy, velocity);
+				gesture.triggerSwipe(modal.modal, direction, distance, dx, dy, velocity, vx, vy);
 			}
 		});
 		modal.setPinchLauncher(bigpic);
@@ -325,12 +325,12 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			gesture.triggerDown(gridwrapper);
 			return true;
 		});
-		gesture.listen("drag", n, function(direction, distance, dx, dy) {
-			gesture.triggerDrag(gridwrapper, direction, distance, dx, dy);
+		gesture.listen("drag", n, function(direction, distance, dx, dy, velocity, vx, vy) {
+			gesture.triggerDrag(gridwrapper, direction, distance, dx, dy, velocity, vx, vy);
 			return true;
 		});
-		gesture.listen("swipe", n, function(direction, distance, dx, dy, velocity) {
-			gesture.triggerSwipe(gridwrapper, direction, distance, dx, dy, velocity);
+		gesture.listen("swipe", n, function(direction, distance, dx, dy, velocity, vx, vy) {
+			gesture.triggerSwipe(gridwrapper, direction, distance, dx, dy, velocity, vx, vy);
 		});
 		gesture.listen("up", n, function() {
 			gesture.triggerUp(gridwrapper);
