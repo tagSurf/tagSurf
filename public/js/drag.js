@@ -184,7 +184,7 @@ var drag = {
 		dragCallback = function (direction, distance, dx, dy) {
 			if (node.touchedDown) {
 				node.dragging = true;
-				var boundaryDirection = bound(2/3);
+				var boundaryDirection = bound();
 				if (opts.constraint != "vertical"
 					&& boundaryDirection != "up"
 					&& boundaryDirection != "down")

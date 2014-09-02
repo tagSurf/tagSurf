@@ -253,7 +253,7 @@ onload = function ()
 		var slider = topCard();
 		slider.contents.style['-webkit-transform'] = 
 			"translate3d(" + ( slider.x * translationScale)
-				+ "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
+				+ "px,"  + slider.y + "px,0) rotate(" + ( slider.x * rotationScale) + "deg)";
 		slider.rAFid = requestAnimFrame(rAF_drag);
 	};
 
