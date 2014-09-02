@@ -38,9 +38,13 @@ var tutorial = {
 		tutorial.on = true;
 		tutorial.paused = false;
 		reminders[0].startTimeout(timeout);
+		current_deck.removeLoginCards();
 	}
 };
 
+// Sequence Managers
+// these funcs manage sequence and fx for tutorial
+// (The opening set is controlled from tutorial.start())
 var startPhase2 = function() {
 	current_deck.removeLoginCards();
 	newReminder(keepgoingPrompt.call(), null, "Keep Going", 10000, 5000); 	
@@ -50,13 +54,19 @@ var startPhase2 = function() {
 }
 
 var remindSwipe = function() {
+	current_deck.removeLoginCards();
 	current_deck.cards[4].setOneTimeCb("vote", function() {
 		if(isDesktop() && !hasKeySwiped) {
 			var swipeRemind = newReminder(swipeReminder.call(), remindSwipe, "Swipe", 1000, 5000);
 			!tutorial.on && swipeRemind.forget();
 		}
 		else if ((isMobile() || isTablet()) && !hasSwiped) {		
-			var swipeRemind = newReminder(swipeReminder.call(), remindSwipe, "Swipe", 1000, 5000);
+			var swipeRemind = newReminder(swipeMessage.call(), function () {
+				newReminder(swipeGif.call(), function () {
+					setTimeout(function() { current_deck.topCard.jiggle() }, 1000);
+					remindSwipe();
+				}, "Swipe-Gif", 0, 5000)
+			}, "Swipe", 1000, 3000);
 			!tutorial.on && swipeRemind.forget();
 		}
 		else if (!isDesktop()) {
@@ -72,6 +82,8 @@ var remindSwipe = function() {
 	});
 }
 
+// Message Builders
+// these funcs all build nodes for tutorial screen reminders
 var welcomeMessage = function() {
 	var node = document.createElement('div'),
 		topMessage = document.createElement('div'),
@@ -105,7 +117,7 @@ var upvoteMessage = function() {
 	node.appendChild(upvotearrow);	
 	node.appendChild(upvotebtn);
 	node.style.marginTop = isMobile() ? "50%" : "22%";
-	pausebtn.className = "no-fill-btn pointer";
+	pausebtn.className = "no-fill-btn pointer thumb-clear";
 	gesture.listen("down", pausebtn, function() {
 		pausebtn.classList.add("active-no-fill-btn");
 	});
@@ -135,7 +147,7 @@ var downvoteMessage = function() {
 	node.appendChild(downvotearrow);	
 	node.appendChild(downvotebtn);
 	node.style.marginTop = isMobile() ? "50%" : "23%";
-	pausebtn.className = "no-fill-btn pointer";
+	pausebtn.className = "no-fill-btn pointer thumb-clear";
 	gesture.listen("down", pausebtn, function() {
 		pausebtn.classList.add("active-no-fill-btn");
 	});
@@ -223,8 +235,7 @@ var rmVoteBtnsMessage = function() {
 var swipeReminder = function () {
 	var leftImage = new Image(), rightImage = new Image(),
 		node = document.createElement('div');
-	leftImage.id = "reminder-left";
-	rightImage.id = "reminder-right";
+	leftImage.id = "swipe-gif";
 	if(isDesktop()) {
 		var closeInstructions = new Image();
 		closeInstructions.className = "close-instructions block";
@@ -241,11 +252,55 @@ var swipeReminder = function () {
 			}
 		});
 	}
-	else {
-		leftImage.src = "http://assets.tagsurf.co/img/reminder_left_mobile.png";	
-		rightImage.src = "http://assets.tagsurf.co/img/reminder_right_mobile.png";
-	}
+	else 
+		leftImage.src = "/img/swipe.gif";	
 	node.appendChild(leftImage);
-	node.appendChild(rightImage);
+	return node;
+};
+
+var swipeGif = function () {
+	var gif = new Image(),
+		node = document.createElement('div'),
+		pausebtn = document.createElement('div');
+	gif.id = "swipe-gif";
+	gif.src = "/img/swipe.gif";	
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "50%" : "23%";
+	pausebtn.className = "no-fill-btn pointer";
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	node.appendChild(gif);
+	node.appendChild(pausebtn);
+	return node;	
+}
+
+var swipeMessage = function() {
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div');
+	node.innerHTML = "You can also<br/>swipe to vote<br/>like this...";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "50%" : "23%";
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	node.appendChild(pausebtn);
 	return node;
 };

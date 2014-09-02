@@ -21,6 +21,12 @@
 	margin-left: 5%;
 	margin-top: 33%;
 }
+#swipe-gif {
+  position: absolute;
+  width: 70%;
+  bottom: 15%;
+  left: 16%;
+}
 #reminder-right {
 	position: relative;
 	display: inline;
@@ -75,7 +81,7 @@
   /*margin-left: auto;*/
   /*margin-right: auto;*/
   position: absolute;
-  bottom: 22%;
+  bottom: 5%;
   left: 18%;
   font-weight: 200;
 }
@@ -84,6 +90,9 @@
   width: 60px;
   top: 0px;
   right: 40%;
+}
+.thumb-clear {
+  bottom: 22% !important;
 }
 
 /*== (Desktop Only) ==*/
