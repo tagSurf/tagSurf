@@ -31,7 +31,7 @@ var drag = {
 				opts.drag(dirs[lastDirection], 0, 0, 0);
 			}, 100);
 		};
-		gesture.listen("drag", n, function (direction, distance, dx, dy) {
+		gesture.listen("drag", n, function (direction, distance, dx, dy, velocity, vx, vy) {
 			var atBottom = (n.parentNode.scrollHeight - n.parentNode.scrollTop 
 				=== n.parentNode.clientHeight), atTop = (n.parentNode.scrollTop === 0);
 			lastDirection = direction;
@@ -43,7 +43,7 @@ var drag = {
 			return !opts.constraint ||
 				opts.constraint == drag._direction2constraint[direction];
 		}, true, false);
-		gesture.listen("swipe", n, function (direction, distance, dx, dy, pixelsPerSecond) { 
+		gesture.listen("swipe", n, function (direction, distance, dx, dy, velocity, vx, vy) { 
 			if (direction == "up" && (n.parentNode.scrollTop >=
 				(n.parentNode.scrollHeight - (n.parentNode.clientHeight + 800)))
 				&& opts.swipe)
@@ -197,10 +197,10 @@ var drag = {
 				triggerCbs(direction, distance, dx, dy);
 			}
 		};
-		swipeCallback =  function (direction, distance, dx, dy, pixelsPerSecond)
+		swipeCallback =  function (direction, distance, dx, dy, velocity, vx, vy)
 		{
 			var xMod = opts.interval ? node.xDrag % opts.interval : -dx;
-			var yMod = opts.interval ? node.yDrag % opts.interval : pixelsPerSecond * .3;
+			var yMod = opts.interval ? node.yDrag % opts.interval : velocity * .3;
 			if (node.animating == false)
 			{
 				if (opts.constraint != "horizontal" && node.xDrag <= 0 && 

@@ -55,11 +55,11 @@ onload = function ()
 			node.expanded = false;
 			node.style['-webkit-transform'] = "";
 		},
-		swipe: function (direction, distance, dx, dy, pixelsPerSecond) {
+		swipe: function (direction, distance, dx, dy, velocity) {
 			if (modal.zoom.zoomed) return;
 			var slider = topCard();
 			if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
-				gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
+				gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, velocity);
 			else if (!slider.animating && (direction == "left" || direction == "right")) {
 				if (slider.isContent)
 					analytics.track("Swipe", {
@@ -91,7 +91,7 @@ onload = function ()
 			slider.contents.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
 			slider.contents.lastChild.previousSibling.style.top = (50 + trueScrollTop) + 'px';
 		},
-		drag: function (direction, distance, dx, dy, pixelsPerSecond) {
+		drag: function (direction, distance, dx, dy, velocity) {
 			if (modal.zoom.zoomed) return;
 			var slider = topCard();
 			if (slider.animating == false) {
@@ -367,7 +367,7 @@ onload = function ()
 		}
 		revertStateReset(slider);
 	};
-	var swipeSlider = function (direction, voteAlternative, pixelsPerSecond, vote)
+	var swipeSlider = function (direction, voteAlternative, velocity, vote)
 	{
 		var slider = topCard();
 		var vote = (typeof vote === "undefined")? true : vote;
@@ -378,7 +378,7 @@ onload = function ()
 		var isUp = direction == "right";
 		var voteDir = isUp ? "up" : "down";
 		var transitionDistance = translateQuantity - slider.x;
-		var transitionDuration = pixelsPerSecond ? (transitionDistance / pixelsPerSecond) : 250;
+		var transitionDuration = velocity ? (transitionDistance / velocity) : 250;
 		if (slider.type == "waves" || slider.type == "End-Of-Feed")
 			return;
 		if (slider.supering == true)
