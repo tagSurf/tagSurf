@@ -55,11 +55,11 @@ onload = function ()
 			node.expanded = false;
 			node.style['-webkit-transform'] = "";
 		},
-		swipe: function (direction, distance, dx, dy, velocity) {
+		swipe: function (direction, distance, dx, dy, velocity, vx, vy) {
 			if (modal.zoom.zoomed) return;
 			var slider = topCard();
 			if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
-				gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, velocity);
+				gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, velocity, vx, vy);
 			else if (!slider.animating && (direction == "left" || direction == "right")) {
 				if (slider.isContent)
 					analytics.track("Swipe", {
