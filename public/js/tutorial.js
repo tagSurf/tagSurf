@@ -63,7 +63,7 @@ var remindSwipe = function() {
 		else if ((isMobile() || isTablet()) && !hasSwiped) {		
 			var swipeRemind = newReminder(swipeMessage.call(), function () {
 				newReminder(swipeGif.call(), function () {
-					setTimeout(function() { current_deck.topCard.jiggle() }, 1000);
+					setTimeout(function() { current_deck.topCard().jiggle() }, 1000);
 					remindSwipe();
 				}, "Swipe-Gif", 0, 5000)
 			}, "Swipe", 1000, 3000);
