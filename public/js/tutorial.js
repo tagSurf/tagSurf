@@ -17,10 +17,10 @@ var tutorial = {
 				});
 			}, "Upvote", 5000, 5000);
 		}, "Welcome", 1000, 6000);
-		welcome.setCb("show", function(){
+		welcome.setCb("show", function() {
 			if(isUIWebView())
 				this.container.style.paddingTop = "30px"; 
-		})
+		});
 	},
 	pause: function() {
 		if(!reminders[0] || !tutorial.on)
@@ -97,6 +97,11 @@ var remindSwipe = function() {
 		}
 	});
 };
+
+// Include this somewhere
+	// shareReminder.setCb("show", function() {
+	// 	var closebtn = shareReminder.container.lastChild.children[0];
+	// 	closebtn.className += " reminder-close-left";
 
 // Message Builders
 // these funcs all build nodes for tutorial screen reminders
@@ -335,5 +340,110 @@ var swipeMessage = function() {
 	pausebtn.id = "pause-btn";
 	pausebtn.innerHTML = "Pause Tutorial";
 	node.appendChild(pausebtn);
+	return node;
+};
+
+var tagSwitchMessage = function() {
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div');
+	node.innerHTML = "Now you're surfing!<br/><br/>tagSurf is all about<br/>discovering trending<br/>social content through hashtags";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "40%" : "23%";
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	node.appendChild(pausebtn);
+	return node;
+};
+
+var thatsAllMessage = function() {
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div');
+	node.innerHTML = "That's all for now<br/><br/>Signup or log in<br/>to explore more<br/>features of the app";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "50%" : "23%";
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	node.appendChild(pausebtn);
+	return node;
+};
+
+var shareMessage = function() {
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div'),
+		sharebtn = new Image(),
+		pointerarrow = new Image();
+	node.innerHTML = "See something<br/>you like?<br/><br/>Share it with your<br/>friends!";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "40%" : "23%";
+	sharebtn.className = "reminder-share-btn";
+	sharebtn.src = "http://assets.tagsurf.co/img/share_icon.png";
+	pointerarrow.src = "http://assets.tagsurf.co/img/down_pointer_arrow_white.gif";
+	pointerarrow.id = "right-down-arrow";
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	node.appendChild(pausebtn);
+	node.appendChild(sharebtn);
+	node.appendChild(pointerarrow);
+	return node;
+};
+
+var reportMessage = function() {
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div'),
+		reportbtn = new Image(),
+		pointerarrow = new Image();
+	node.innerHTML = isMobile() ? "Help us keep the<br/>#feeds clean<br/><br/>Report<br/>inappropriate<br/>content here" 
+								:"Help us keep the<br/>#feeds clean<br/><br/>Report inappropriate<br/>content here";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "40%" : "23%";
+	reportbtn.className = "reminder-report-btn";
+	reportbtn.src = "http://assets.tagsurf.co/img/panic_icon.png";
+	pointerarrow.src = "http://assets.tagsurf.co/img/down_pointer_arrow_white.gif";
+	pointerarrow.id = "left-down-arrow";
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	node.appendChild(pausebtn);
+	node.appendChild(reportbtn);
+	node.appendChild(pointerarrow);
 	return node;
 };

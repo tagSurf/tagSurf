@@ -586,6 +586,9 @@ a {
   bottom: 15px;
   right: 15px;
 }
+.reminder-close-left {
+  left: 10px !important;
+}
 
 .big-lnk {
 	padding: 15px 0;
@@ -875,7 +878,7 @@ a {
 	}
     
 	/*===== Close Buttons ======*/
-  .modal-close-button {
+	.modal-close-button {
 		width: 50px;
 	}
 	#options-close-button {
@@ -890,7 +893,7 @@ a {
 		bottom: 15px;
 		left: 15px;
 	}
-  .reminder-close {
-    bottom: 20px;
-  }
+    .reminder-close {
+	    bottom: 20px;
+    }
 }
