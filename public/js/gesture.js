@@ -95,9 +95,10 @@ var gesture = {
 				gesture.getPos(e.touches[1]));
 	},
 	velocity: function(distance, timeDiff, gest) {
-		var t = gesture.thresholds[gest];
-		return Math.min(t.maxDP, Math.max(t.minDP,
-			distance / timeDiff)) * (isIos() ? 1 : 0.5);
+		var t = gesture.thresholds[gest],
+			dsign = (distance < 0) ? -1 : 1;
+		return dsign * Math.min(t.maxDP, Math.max(t.minDP,
+			Math.abs(distance) / timeDiff));
 	},
 	isMulti: function(e) {
 		return isMobile() && e.touches.length > 1;
