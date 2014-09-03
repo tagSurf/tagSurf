@@ -491,33 +491,32 @@ var popularTagsMessage = function() {
 	node.style.marginTop = isMobile() ? "30%" : "20%";
 	tagbtns.className = "inline";
 	tagbtns.style.marginTop = "8%";
-	for (var i = 0; i < numberOfTags; i++) {
-		var p = document.createElement('div'),
-			tNode = document.createElement('div'),
-			tag = autocomplete.data[i]["name"];
+	autocomplete.data.forEach(function(tag, i){
+		var tag = tag["name"],
+			p = document.createElement('div'),
+			tNode = document.createElement('div');
 		if (tag == "trending") {
 			++numberOfTags;
-			continue;
+			return;
 		}
-		else {
-			p.className = "pictagcell reminder-tag";
-			var tNode = document.createElement("div");
-			tNode.className = "smallpadded tcell";
-			tNode.innerHTML = "#" + tag;
-			p.appendChild(tNode);
-			gesture.listen("down", p, function() {
-				p.classList.add("active-pictag");
-			});
-			gesture.listen("up", p, function() {
-				p.classList.remove("active-pictag");
-			});
-			gesture.listen("tap", p, function() {
-				closeReminders();
-				autocomplete.tapTag(tag, "autocomplete", false);
-			});
-			tagbtns.appendChild(p);
-		}
-	}
+		if (i >= numberOfTags)
+			return;
+		p.className = "pictagcell reminder-tag";
+		tNode.className = "smallpadded tcell";
+		tNode.innerHTML = "#" + tag;
+		p.appendChild(tNode);
+		gesture.listen("down", p, function() {
+			p.classList.add("active-pictag");
+		});
+		gesture.listen("up", p, function() {
+			p.classList.remove("active-pictag");
+		});
+		gesture.listen("tap", p, function() {
+			closeReminders();
+			autocomplete.tapTag(tag, "autocomplete", false);
+		});
+		tagbtns.appendChild(p);
+	});
 	pausebtn.className = "no-fill-btn pointer";
 	gesture.listen("down", pausebtn, function() {
 		pausebtn.classList.add("active-no-fill-btn");
