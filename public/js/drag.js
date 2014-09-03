@@ -35,7 +35,6 @@ var drag = {
 		left: "right"
 	},
 	constants: {
-		snappiness: 5, // less is more!
 		minVelocity: 0.01,
 		velocityDecay: 0.6,
 		swipeMultiplier: 10
