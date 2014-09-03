@@ -179,8 +179,7 @@ var drag = {
 			var axis, axisdata, dragPos;
 			for (axis in drag._axes) {
 				if (opts.constraint != axis) {
-					axisdata = drag._axes[axis];
-					node[axisdata.drag] = opts.interval *
+					node[drag._axes[axis].drag] = opts.interval *
 						Math[drag._direction2round[direction] || 'round']
 							(node.xDrag / opts.interval);
 				}
