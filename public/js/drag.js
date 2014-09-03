@@ -106,7 +106,7 @@ var drag = {
 		if (!opts.interval && !opts.force && !isStockAndroid())
 			return drag.nativeScroll(node.firstChild, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback,
-			currentDirection, triggerCbs, bounds, canGo, rAF_drag, settle;
+			currentDirection, triggerCbs, _bounds, bounds, canGo, rAF_drag, settle;
 		node.xDrag = 0;
 		node.yDrag = 0;
 		node.classList.add('hardware-acceleration');
@@ -126,10 +126,13 @@ var drag = {
 				opts.scroll();
 		};
 		bounds = function() {
-			return {
-				vertical: node.parentNode.clientHeight - node.scrollHeight,
-				horizontal: node.parentNode.clientWidth - node.scrollWidth
+			if (!_bounds) {
+				_bounds = {
+					vertical: node.parentNode.clientHeight - node.scrollHeight,
+					horizontal: node.parentNode.clientWidth - node.scrollWidth
+				}
 			}
+			return _bounds;
 		};
 		canGo = function(axis) {
 			if (opts.constraint == axis) return false;
