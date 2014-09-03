@@ -31,6 +31,9 @@
       inputs = document.getElementsByClassName("ts-input");
   if(isUIWebView())
     addCss({
+      "body": function() {
+          return "margin-top: 20px;";
+        },
       "#new_user": function() {
             return "margin-top: 40px;";
           }

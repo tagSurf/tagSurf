@@ -31,7 +31,7 @@ var drag = {
 				opts.drag(dirs[lastDirection], 0, 0, 0);
 			}, 100);
 		};
-		gesture.listen("drag", n, function (direction, distance, dx, dy) {
+		gesture.listen("drag", n, function (direction, distance, dx, dy, velocity, vx, vy) {
 			var atBottom = (n.parentNode.scrollHeight - n.parentNode.scrollTop 
 				=== n.parentNode.clientHeight), atTop = (n.parentNode.scrollTop === 0);
 			lastDirection = direction;
@@ -43,7 +43,7 @@ var drag = {
 			return !opts.constraint ||
 				opts.constraint == drag._direction2constraint[direction];
 		}, true, false);
-		gesture.listen("swipe", n, function (direction, distance, dx, dy, pixelsPerSecond) { 
+		gesture.listen("swipe", n, function (direction, distance, dx, dy, velocity, vx, vy) { 
 			if (direction == "up" && (n.parentNode.scrollTop >=
 				(n.parentNode.scrollHeight - (n.parentNode.clientHeight + 800)))
 				&& opts.swipe)
@@ -51,20 +51,30 @@ var drag = {
 				opts.swipe();
 			}
 		}, true, false);
-		n.parentNode.addEventListener('scroll', function (event) {
+		n.parentNode._ndcb = function (event) {
 			if (opts.scroll)
 				opts.scroll(event);
 			if (opts.drag)
 				delayedDrag();
 			return true;
-		}, false);
+		};
+		n.parentNode.addEventListener('scroll', n.parentNode._ndcb, false);
+		n.parentNode.isNativeDraggable = true;
 	},
 	makeDraggable: function (node, opts)
 	{
 		opts = opts || {};
+		if (node.isCustomDraggable) {
+			gesture.unlisten(node);
+			node.parentNode.removeEventListener('scroll', returnFalse, false);
+		} else if (node.isNativeDraggable) {
+			gesture.unlisten(node.firstChild);
+			node.removeEventListener('scroll', node._ndcb, false);
+		}
 		if (!opts.interval && !opts.force && !isStockAndroid())
 			return drag.nativeScroll(node.firstChild, opts);
-		var downCallback, upCallback, dragCallback, swipeCallback;
+		var downCallback, upCallback, dragCallback, swipeCallback,
+			dirs, bound, triggerCbs, translate;
 		node.xDrag = 0;
 		node.yDrag = 0;
 		node.classList.add('hardware-acceleration');
@@ -74,9 +84,59 @@ var drag = {
 			node.style.overflow = "visible";
 			node.parentNode.style.overflow = "visible";
 		};
-		node.parentNode.addEventListener('scroll', function (event) {return false;}, false);
-		downCallback = function () 
-		{
+		node.parentNode.addEventListener('scroll', returnFalse, false);
+		dirs = {
+			horizontal: {
+				drag: "xDrag",
+				dimension: "Width",
+				direction: ["right", "left"]
+			},
+			vertical: {
+				drag: "yDrag",
+				dimension: "Height",
+				direction: ["up", "down"]
+			}
+		};
+		bound = function (mult) {
+			var direction;
+			for (var dir in dirs) {
+				var dirdata = dirs[dir];
+				if (opts.constraint != dir) {
+					var dragPos = node[dirdata.drag],
+						dim = dirdata.dimension,
+						outerBound = (mult || 1)
+							* node.parentNode["client" + dim]
+							- node["scroll" + dim];
+					if (dragPos > 0) {
+						node[dirdata.drag] = 0;
+						direction = dirdata.direction[0];
+					} else if (dragPos < outerBound) {
+						node[dirdata.drag] = outerBound;
+						direction = dirdata.direction[1];
+					}
+				}
+			}
+			return direction;
+		};
+		triggerCbs = function (direction, distance, dx, dy) {
+			if (opts.drag) 
+				opts.drag(direction, distance || 0, dx || 0, dy || 0);
+			if (opts.scroll)
+				opts.scroll();
+		};
+		translate = function (cb) {
+			node.style['-webkit-transform'] =
+				"translate3d(" + node.xDrag + "px,"
+				+ node.yDrag + "px,0)";
+			if (cb) {
+				node.animating = true;
+				trans(node, function() {
+					node.animating = false;
+					(typeof cb == "function") && cb();
+				}, "-webkit-transform 300ms ease-out");
+			}
+		};
+		downCallback = function () {
 			if (node.animating) return;
 			node.dragging = false;
 			node.touchedDown = true;
@@ -87,165 +147,60 @@ var drag = {
 				opts.down();
 		};
 		upCallback = function (direction) {
-			var xMod = 0, yMod = 0, boundaryReached = false;
 			node.touchedDown = node.dragging = false;
-			if (node.animating == false)
-			{
-				if (opts.interval)
-				{
-					if (opts.constraint != "vertical")
-					{
-						yMod = node.yDrag % opts.interval;
-						if (yMod != 0)
-						{
-							if (Math.abs(yMod) <= (opts.interval / 2))
-							{
-								node.yDrag -= yMod;
-							}
-							else
-							{
-								node.yDrag -= (opts.interval + yMod);
-							}
-							if (node.yDrag < node.yDragStart)
-							{
-								direction = "up";
-							}
-							else if (node.yDrag > node.yDragStart)
-							{
-								direction = "down";
-							}
-							else
-							{
-								direction = "hold";
-							}
-						}
-					}
-					if (opts.constraint != "horizontal")
-					{
-						xMod = node.xDrag % opts.interval;
-						if (xMod != 0)
-						{
-							if (Math.abs(xMod) <= (opts.interval / 2))
-							{
-								node.xDrag -= xMod;
-							}
-							else
-							{
-								node.xDrag -= (opts.interval + xMod);
-							}
-							if (node.xDrag < node.xDragStart)
-							{
-								direction = "left";
-							}
-							else if (node.xDrag > node.xDragStart)
-							{
-								direction = "right";
-							}
-							else
-							{
-								direction = "hold";
+			if (node.animating == false) {
+				if (opts.interval) {
+					for (var dir in dirs) {
+						var dirdata = dirs[dir];
+						if (opts.constraint != dir) {
+							var mod = node[dirdata.drag] % opts.interval;
+							if (mod) {
+								var dragStart = node[dirdata.drag + "Start"];
+								node[dirdata.drag] -= (Math.abs(mod)
+									<= (opts.interval / 2))
+									? mod : (opts.interval + mod);
+								if (node[dirdata.drag] < dragStart)
+									direction = dirdata.direction[0];
+								else if (node[dirdata.drag] > dragStart)
+									direction = dirdata.direction[1];
+								else
+									direction = "hold";
 							}
 						}
 					}
 					if (direction)
-					{
-						node.animating = true;
-						trans(node, function () { node.animating = false;},
-							"-webkit-transform 300ms ease-out");
-						node.style['-webkit-transform'] = 
-							"translate3d(" + node.xDrag + "px," + 
-							node.yDrag + "px,0)";
-					}
-				}
-				else	//boundary checking
-				{
-					if (opts.constraint != "horizontal")
-					{
-						if (node.xDrag > 0)
-						{
-							node.xDrag = 0;
-							boundaryReached = true;
-							direction = "right";
-						}
-						else if (Math.abs(node.xDrag) > 
-							(node.scrollWidth - node.parentNode.clientWidth))
-						{
-							node.xDrag = -(node.scrollWidth - node.parentNode.clientWidth);
-							boundaryReached = true;
-							direction = "left";
-						}
-					}
-					if (opts.constraint != "vertical")
-					{
-						if (node.yDrag > 0)
-						{
-							node.yDrag = 0;
-							boundaryReached = true;
-							direction = "up";
-						}
-						else if (node.yDrag < 
-							-(node.scrollHeight - node.parentNode.clientHeight))
-						{
-							node.yDrag = -(node.scrollHeight - node.parentNode.clientHeight);
-							boundaryReached = true;
-							direction = "down";
-						}
-					}
-					if (boundaryReached)
-					{
-						node.animating = true;
-						trans(node, function () {
-							node.animating = false;
-							if (opts.drag)
-								opts.drag(direction, 0, 0, 0);
-							if (opts.scroll)
-								opts.scroll();
-						}, "-webkit-transform 300ms ease-out");
-						node.style['-webkit-transform'] = 
-							"translate3d(" + node.xDrag + "px," + 
-							node.yDrag + "px,0)";
+						translate(true);
+				} else {	//boundary checking
+					var boundaryDirection = bound();
+					if (boundaryDirection) {
+						direction = boundaryDirection;
+						translate(function () { triggerCbs(direction); });
 					}
 				}
 				if (opts.up)
-				{
 					opts.up(direction);
-				}
 			}
 		};
 		dragCallback = function (direction, distance, dx, dy) {
-			if (node.touchedDown)
-			{
+			if (node.touchedDown) {
 				node.dragging = true;
-				if (opts.constraint != "vertical")
-				{
-					if (node.yDrag > -(node.scrollHeight - 
-						 (2 * node.parentNode.clientHeight / 3)))
-					{
-						node.yDrag += dy;
-					}
-				}
-				if (opts.constraint != "horizontal")
-				{
-					if (Math.abs(node.xDrag) < 
-						(node.scrollWidth - 
-						 (2 * node.parentNode.clientWidth / 3)))
-					{
-						node.xDrag += dx;
-					}
-				}
-				node.style['-webkit-transform'] = 
-					"translate3d(" + node.xDrag + "px," + 
-					node.yDrag + "px,0)";
-				if (opts.drag) 
-					opts.drag(direction, distance, dx, dy);
-				if (opts.scroll)
-					opts.scroll();
+				var boundaryDirection = bound();
+				if (opts.constraint != "vertical"
+					&& boundaryDirection != "up"
+					&& boundaryDirection != "down")
+					node.yDrag += dy;
+				if (opts.constraint != "horizontal"
+					&& boundaryDirection != "right"
+					&& boundaryDirection != "left")
+					node.xDrag += dx;
+				translate();
+				triggerCbs(direction, distance, dx, dy);
 			}
 		};
-		swipeCallback =  function (direction, distance, dx, dy, pixelsPerSecond)
+		swipeCallback =  function (direction, distance, dx, dy, velocity, vx, vy)
 		{
 			var xMod = opts.interval ? node.xDrag % opts.interval : -dx;
-			var yMod = opts.interval ? node.yDrag % opts.interval : pixelsPerSecond * .3;
+			var yMod = opts.interval ? node.yDrag % opts.interval : velocity * .3;
 			if (node.animating == false)
 			{
 				if (opts.constraint != "horizontal" && node.xDrag <= 0 && 
@@ -282,20 +237,11 @@ var drag = {
 						return;
 					}
 				}
-				trans(node, function() {
-					node.animating = false;
-					upCallback(direction);//legit?
-				}, "-webkit-transform 300ms ease-out");
-				node.animating = true;
-				node.style['-webkit-transform'] = 
-					"translate3d(" + node.xDrag + "px," + 
-					node.yDrag + "px,0)";
+				translate(function() { upCallback(direction); });
 			}
 		};
 
-		if (node.isDraggable)
-			gesture.unlisten(node);
-		node.isDraggable = true;
+		node.isCustomDraggable = true;
 		gesture.listen("drag", node, dragCallback);
 		gesture.listen("down", node, downCallback);
 		gesture.listen("swipe", node, swipeCallback);

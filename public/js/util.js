@@ -9,6 +9,7 @@ var authorizedSession = null,
       admin : false
     },
     returnTrue = function() { return true; },
+    returnFalse = function() { return false; },
     hasSwiped = false,
     hasKeySwiped = false,
     hasSwitchedTags = false,
@@ -318,7 +319,7 @@ var setResizeCb = function(cb) {
 setMaxCardHeight();
 var lastWidth = window.innerWidth;
 window.onresize = function() {
-  if (!isDesktop() && (lastWidth == window.innerWidth) || throbber.active)
+  if (!isDesktop() && (lastWidth == window.innerWidth) || (throbber && throbber.active))
     return;
   lastWidth = window.innerWidth;
   setMaxCardHeight();
