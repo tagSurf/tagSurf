@@ -91,16 +91,15 @@ onload = function ()
 			slider.contents.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
 			slider.contents.lastChild.previousSibling.style.top = (50 + trueScrollTop) + 'px';
 		},
-		drag: function (direction, distance, dx, dy, velocity) {
+		drag: function (direction, distance, dx, dy, velocity, vx, vy) {
 			if (modal.zoom.zoomed) return;
 			var slider = topCard();
 			if (slider.animating == false) {
-				if (slider.expanded == true && 
+				if (slider.expanded == true &&
 					(direction == "up" || direction == "down")) {
-					if (slider.sliding == false)
-						slider.verticaling = true;
 					if (slider.sliding)
 						return false;
+					slider.verticaling = true;
 
 // this code was supposed to prevent Chrome and
 // Safari from shifting the whole page. disabled for now.
