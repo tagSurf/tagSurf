@@ -147,6 +147,7 @@ var welcomeMessage = function() {
 	topMessage.innerHTML = "Welcome to";
 	topMessage.className = isMobile() ? "centered biggest" : "centered really-big";
 	topMessage.style.marginTop = isMobile() ? "18%" : "7%";
+	node.style.marginTop = isUIWebView() ? "12%" : node.style.marginTop;
 	logo.src = "http://assets.tagsurf.co/img/ts_logo_stacked_gray_trans.png";
 	logo.className = "tutorial-logo";
 	bottomMessage.innerHTML = isMobile() ? "A place to surf the<br/>top social content<br/>on the web" 
@@ -383,6 +384,7 @@ var tagSwitchMessage = function() {
 	node.innerHTML = "Now you're surfing!<br/><br/>tagSurf is all about<br/>discovering trending<br/>social content through hashtags";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "40%" : "20%";
+	node.style.marginTop = isUIWebView() ? "50%" : node.style.marginTop;
 	pausebtn.className = "no-fill-btn pointer";
 	gesture.listen("down", pausebtn, function() {
 		pausebtn.classList.add("active-no-fill-btn");
@@ -432,6 +434,7 @@ var addTagMessage = function() {
 	node.innerHTML = "Add a new tag<br/>to share this<br/>in another feed";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "40%" : "18%";
+	node.style.marginTop = isUIWebView() ? "50%" : node.style.marginTop;
 	pausebtn.className = "no-fill-btn pointer";
 	pausebtn.id = "pause-btn";
 	pausebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
@@ -461,6 +464,7 @@ var favoriteMessage = function() {
 	node.innerHTML = "Star things you<br/>really really like<br/>to save them<br/>in your favorites";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "40%" : "18%";
+	node.style.marginTop = isUIWebView() ? "50%" : node.style.marginTop;
 	pausebtn.className = "no-fill-btn pointer";
 	pausebtn.id = "pause-btn";
 	pausebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
@@ -487,6 +491,7 @@ var shareMessage = function() {
 	node.innerHTML = "Find something<br/>you like?<br/><br/>Share it with your<br/>friends!";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "40%" : "20%";
+	node.style.marginTop = isUIWebView() ? "50%" : node.style.marginTop;
 	sharebtn.className = "reminder-share-btn";
 	sharebtn.src = "http://assets.tagsurf.co/img/share_icon.png";
 	pointerarrow.src = "http://assets.tagsurf.co/img/down_pointer_arrow_white.gif";
@@ -518,6 +523,7 @@ var reportMessage = function() {
 								:"Help us keep the<br/>#feeds clean<br/><br/>Report inappropriate<br/>content here";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "40%" : "20%";
+	node.style.marginTop = isUIWebView() ? "50%" : node.style.marginTop;
 	reportbtn.className = "reminder-report-btn";
 	reportbtn.src = "http://assets.tagsurf.co/img/panic_icon.png";
 	pointerarrow.src = "http://assets.tagsurf.co/img/down_pointer_arrow_white.gif";
@@ -549,5 +555,6 @@ var thatsAllMessage = function() {
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.appendChild(menuarrow);	
 	node.style.marginTop = isMobile() ? "40%" : "18%";
+	node.style.marginTop = isUIWebView() ? "50%" : node.style.marginTop;
 	return node;
 };
