@@ -106,7 +106,7 @@ var drag = {
 		if (!opts.interval && !opts.force && !isStockAndroid())
 			return drag.nativeScroll(node.firstChild, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback,
-			bounds, triggerCbs, currentDirection, rAF_drag, settle;
+			currentDirection, triggerCbs, bounds, canGo, rAF_drag, settle;
 		node.xDrag = 0;
 		node.yDrag = 0;
 		node.classList.add('hardware-acceleration');
