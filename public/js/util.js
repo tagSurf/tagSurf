@@ -10,6 +10,8 @@ var authorizedSession = null,
     },
     returnTrue = function() { return true; },
     hasSwiped = false,
+    hasKeySwiped = false,
+    hasSwitchedTags = false,
     DEBUG = false;
 // Set DEBUG = true in non-production environments
 if ((document.location.hostname.indexOf("localhost") != -1) 

@@ -21,6 +21,12 @@
 	margin-left: 5%;
 	margin-top: 33%;
 }
+#swipe-gif {
+  position: absolute;
+  width: 70%;
+  top: 14%;
+  left: 16%;
+}
 #reminder-right {
 	position: relative;
 	display: inline;
@@ -71,11 +77,15 @@
 }
 #pause-btn {
   max-width: 70%;
-  /*margin-top: 15%;*/
-  /*margin-left: auto;*/
-  /*margin-right: auto;*/
   position: absolute;
-  bottom: 22%;
+  bottom: 20px;
+  left: 18%;
+  font-weight: 200;
+}
+#pause-btn-top {
+  max-width: 70%;
+  position: absolute;
+  top: 65px;
   left: 18%;
   font-weight: 200;
 }
@@ -84,6 +94,49 @@
   width: 60px;
   top: 0px;
   right: 40%;
+}
+.thumb-clear {
+  bottom: 22% !important;
+}
+.reminder-report-btn {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  width: 55px;
+  padding: 10px;
+  pointer-events: none;
+}
+.reminder-share-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  width: 55px;
+  padding: 10px;
+  pointer-events: none;
+}
+#left-down-arrow {
+  position: absolute;
+  bottom: 50px;
+  width: 30px;
+  left: 17px;
+}
+#right-down-arrow {
+  position: absolute;
+  bottom: 50px;
+  width: 30px;
+  right: 17px;
+}
+.left-arrow {
+  left: -5px !important;
+}
+.slightly-left-arrow {
+  left: 25% !important;
+}
+.right-arrow {
+  right: -8px !important;
+}
+.reminder-tag {
+  font-size: 80%;
 }
 
 /*== (Desktop Only) ==*/
@@ -97,10 +150,10 @@
 /*====== This targets tablets and desktops ======*/
 @media only screen and (min-width: 700px) {
   #reminder-left {
-    margin-top: 11%;
+    margin-top: -11%;
   }
   #reminder-right {
-    margin-top: 11%;
+    margin-top: -11%;
   }
   #reminder-vote-button-right {
     right: 90px;
@@ -127,12 +180,48 @@
     width: 120px;
   }
   #menu-up-arrow {
-    width: 120px;
+    width: 90px;
     right: 46%;
   }
   #pause-btn {
     max-width: 21%;
-    bottom: 7%;
     left: 41%;
+    bottom: 15px;
+  }
+  #pause-btn-top {
+    max-width: 21%;
+    left: 41%;
+    top: 65px;
+  }
+  .reminder-report-btn {
+    bottom: 10px;
+    left: 15px;
+    width: 75px;
+  }
+  .reminder-share-btn {
+    bottom: 10px;
+    right: 15px;
+    width: 75px;
+  }
+  #left-down-arrow {
+    bottom: 75px;
+    width: 50px;
+    left: 27px;
+  }
+  #right-down-arrow {
+    bottom: 75px;
+    width: 50px;
+    right: 27px;
+  }
+  .left-arrow {
+    left: -10px !important;
+    width: 65px !important;
+  }
+  .right-arrow {
+    right: -10px !important;
+    width: 65px !important;
+  }
+  .slightly-left-arrow {
+    left: 40% !important;
   }
 }

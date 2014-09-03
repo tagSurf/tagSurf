@@ -274,6 +274,10 @@ onload = function ()
 			analytics.track('Search for Tag', {
 				tag: tagName
 			});
+			if(!isAuthorized()) {
+				hasSwitchedTags = true;
+				tutorial.on && tutorial.tagSwitchCb();
+			}
 		}
 		tinput.value = tagName || current_tag;
 		if (isAuthorized())
@@ -489,6 +493,7 @@ onload = function ()
 			});
 		}
 		swipeSlider("left");
+		hasKeySwiped = true;
 	});
 	stroke.listen("up", "39", function() {
 		var slider = topCard();
@@ -510,6 +515,7 @@ onload = function ()
 			});
 		}
 		swipeSlider("right");
+		hasKeySwiped = true;
 	});
 	stroke.listen("up", null, closeReminders);
 	
@@ -597,8 +603,8 @@ onload = function ()
 
 	analytics.identify(currentUser.id);
 
-	// if (!isAuthorized() && !DEBUG)
-	// 	tutorial.start();
+	if (!isAuthorized() && !DEBUG)
+		tutorial.start();
 };
 
 //This is the first line executed in feed
