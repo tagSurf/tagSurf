@@ -50,6 +50,18 @@ var tutorial = {
 		tutorial.paused = false;
 		reminders[0].startTimeout(timeout);
 		current_deck.removeLoginCards();
+	},
+	tagSwitchCb: function() {
+		newReminder(tagSwitchMessage.call(), function() {
+			current_deck.removeLoginCards();
+			current_deck.cards[5] && current_deck.cards[5].setOneTimeCb("vote", function(){
+				if((isDesktop() && !hasKeySwiped) || (!isDesktop() && !hasSwiped))
+					remindSwipe();
+				else
+					startFeatureTour();
+				!tutorial.on && reminders[0] &&reminders[0].forget();
+			});
+			}, "Tag Switch", 1000, 5000);
 	}
 };
 
@@ -81,13 +93,21 @@ var remindSwipe = function() {
 				newReminder(swipeGif.call(), function() {
 					tutorial.jiggleTimeout = setTimeout(function() { current_deck.topCard().jiggle() }, 2000);
 					remindSwipe();
-				}, "Swipe-Gif", 0, 6000)
-			}, "Swipe", 1000, 3000);
+					}, "Swipe-Gif", 0, 6000)
+				}, "Swipe", 1000, 3000);
 			!tutorial.on && swipeRemind.forget();
 		}
 		else if (!isDesktop()) {
-			var rmButtonsReminder = newReminder(rmVoteBtnsMessage.call(), null, "Vote Btns", 1000, 5000),
-				offset = document.getElementById('nav').clientHeight;
+			var offset,
+				rmButtonsReminder = newReminder(rmVoteBtnsMessage.call(), function(){
+					current_deck.cards[3] && current_deck.cards[3].setOneTimeCb("vote", function(){
+						if (!hasSwitchedTags)
+							promptTagSwitch();
+						else
+							startFeatureTour();
+					});
+				}, "Vote Btns", 1000, 5000);
+			offset = document.getElementById('nav').clientHeight;
 			rmButtonsReminder.container.style.marginTop = offset + "px";
 			rmButtonsReminder.setCb("show", function() {
 				var closebtn = rmButtonsReminder.container.lastChild.children[0];
@@ -95,10 +115,23 @@ var remindSwipe = function() {
 			});
 			!tutorial.on && rmButtonsReminder.forget();
 		}
+		else if (!hasSwitchedTags)
+			promptTagSwitch();
+		else
+			startFeatureTour();
+
 	});
 };
 
-var featureTour = function() {
+var promptTagSwitch = function() {
+	newReminder(trendingMessage.call(), function() {
+		newReminder(moreTagsMessage.call(), function() {
+			newReminder(popularTagsMessage.call(), null, "Popular Tags", 0);
+		}, "More Tags", 0, 5000);
+	}, "Trending", 1000, 5000);
+};
+
+var startFeatureTour = function() {
 	newReminder(tourMessage.call(), function() {
 		var offset,
 			addTagReminder = newReminder(addTagMessage.call(), function() {
@@ -107,7 +140,9 @@ var featureTour = function() {
 						var shareReminder = newReminder(shareMessage.call(), function() {
 							newReminder(reportMessage.call(), function(){
 								var offset,
-									thatsAllReminder = newReminder(thatsAllMessage.call(), null, "Add Tag", 1000, 5000);
+									thatsAllReminder = newReminder(thatsAllMessage.call(), function() {
+										tutorial.on = false;
+									}, "Add Tag", 1000, 5000);
 								offset = document.getElementById('nav').clientHeight;
 								thatsAllReminder.container.style.marginTop = offset + "px";
 								thatsAllReminder.setCb("show", function() {
@@ -135,7 +170,7 @@ var featureTour = function() {
 			closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
 		});
 	}, "Tour Start", 2000, 5000);
-}
+};
 
 // Message Builders
 // these funcs all build nodes for tutorial screen reminders
@@ -397,6 +432,105 @@ var tagSwitchMessage = function() {
 	});
 	pausebtn.id = "pause-btn";
 	pausebtn.innerHTML = "Pause Tutorial";
+	node.appendChild(pausebtn);
+	return node;
+};
+
+var trendingMessage = function() {
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div');
+	node.innerHTML = "Right now you're<br/>surfing #trending<br/><br/>a collection of the<br/>most upvoted things<br/>from all tags";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "40%" : "20%";
+	node.style.marginTop = isUIWebView() ? "50%" : node.style.marginTop;
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	node.appendChild(pausebtn);
+	return node;
+};
+
+var moreTagsMessage = function() {
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div');
+	node.innerHTML = "But there are<br/>lots more fish<br/>in the sea...";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "50%" : "20%";
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	node.appendChild(pausebtn);
+	return node;
+};
+
+var popularTagsMessage = function() {
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div'),
+		tagbtns = document.createElement('div'), 
+		numberOfTags = 5;
+	node.innerHTML = "Here are some<br/>other popular tags<br/><br/>Tap one to go<br/>surf it";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "30%" : "20%";
+	tagbtns.className = "inline";
+	tagbtns.style.marginTop = "8%";
+	for (var i = 0; i < numberOfTags; i++) {
+		var p = document.createElement('div'),
+			tNode = document.createElement('div'),
+			tag = autocomplete.data[i]["name"];
+		if (tag == "trending") {
+			++numberOfTags;
+			continue;
+		}
+		else {
+			p.className = "pictagcell reminder-tag";
+			var tNode = document.createElement("div");
+			tNode.className = "smallpadded tcell";
+			tNode.innerHTML = "#" + tag;
+			p.appendChild(tNode);
+			gesture.listen("down", p, function() {
+				p.classList.add("active-pictag");
+			});
+			gesture.listen("up", p, function() {
+				p.classList.remove("active-pictag");
+			});
+			gesture.listen("tap", p, function() {
+				closeReminders();
+				autocomplete.tapTag(tag, "autocomplete", false);
+			});
+			tagbtns.appendChild(p);
+		}
+	}
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
+	node.appendChild(tagbtns);
 	node.appendChild(pausebtn);
 	return node;
 };

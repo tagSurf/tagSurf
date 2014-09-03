@@ -274,6 +274,10 @@ onload = function ()
 			analytics.track('Search for Tag', {
 				tag: tagName
 			});
+			if(!isAuthorized()) {
+				hasSwitchedTags = true;
+				tutorial.on && tutorial.tagSwitchCb();
+			}
 		}
 		tinput.value = tagName || current_tag;
 		if (isAuthorized())

@@ -128,6 +128,9 @@
 .right-arrow {
   right: -8px !important;
 }
+.reminder-tag {
+  font-size: 80%;
+}
 
 /*== (Desktop Only) ==*/
 .close-instructions {
