@@ -3,8 +3,7 @@ var drag = {
 	// instead be derived programmatically.
 	// the idea is to reduce run-time load by
 	// avoiding things like string concatonations
-	// at potentially critical junctures like bound().
-	// maybe it won't end up mattering. we'll see.
+	// mid-drag. maybe it doesn't matter. we'll see.
 	//  - mario
 	_axes: {
 		horizontal: {
