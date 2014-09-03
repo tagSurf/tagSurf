@@ -153,14 +153,13 @@ var drag = {
 				dt = (time - node.time);
 			for (axis in drag._axes) {
 				axisdata = drag._axes[axis];
-				if (canGo(axis))
+				if (node[axisdata.velocity] && canGo(axis)) {
 					node[axisdata.drag] = Math.min(Math.max(bounds()[axis],
 						node[axisdata.drag] + node[axisdata.velocity] * dt), 0);
-				else
-					node[axisdata.velocity] = 0;
-				node[axisdata.velocity] *= drag.constants.velocityDecay;
-				if (node[axisdata.velocity] && Math.abs(node[axisdata.velocity])
-					< drag.constants.minVelocity)
+					node[axisdata.velocity] *= drag.constants.velocityDecay;
+					if (Math.abs(node[axisdata.velocity]) < drag.constants.minVelocity)
+						node[axisdata.velocity] = 0;
+				} else
 					node[axisdata.velocity] = 0;
 			}
 			node.time = time;
