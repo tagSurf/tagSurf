@@ -33,6 +33,12 @@ var drag = {
 		right: "left",
 		left: "right"
 	},
+	_direction2round: {
+		left: "floor",
+		up: "floor",
+		down: "ceil",
+		right: "ceil"
+	},
 	constants: {
 		minVelocity: 0.01,
 		velocityDecay: 0.6,
@@ -100,7 +106,7 @@ var drag = {
 		if (!opts.interval && !opts.force && !isStockAndroid())
 			return drag.nativeScroll(node.firstChild, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback,
-			bounds, triggerCbs, currentDirection, rAF_drag;
+			bounds, triggerCbs, currentDirection, rAF_drag, settle;
 		node.xDrag = 0;
 		node.yDrag = 0;
 		node.classList.add('hardware-acceleration');
@@ -135,6 +141,10 @@ var drag = {
 				: dragPos < outerBound ? axisdata.directions[1] : null);
 		};
 		rAF_drag = function () {
+			if (node.animating) {
+				node.rAFid = null;
+				return;
+			}
 			var axis, axisdata,
 				time = Date.now(),
 				dt = (time - node.time);
@@ -157,36 +167,45 @@ var drag = {
 				node.rAFid = requestAnimFrame(rAF_drag);
 			else {
 				node.rAFid = null;
-				triggerCbs(currentDirection);
+				if (opts.interval)
+					settle(currentDirection);
+				else
+					triggerCbs(currentDirection);
 			}
+		};
+		settle = function(direction) {
+			if (node.animating) return;
+			node.animating = true;
+			var axis, axisdata, dragPos;
+			for (axis in drag._axes) {
+				if (opts.constraint != axis) {
+					axisdata = drag._axes[axis];
+					node[axisdata.drag] = opts.interval *
+						Math[drag._direction2round[direction] || 'round']
+							(node.xDrag / opts.interval);
+				}
+			}
+			trans(node, function() {
+				node.animating = false;
+				triggerCbs(direction);
+				opts.settle(direction);
+			}, "-webkit-transform 300ms ease-out");
+			node.style['-webkit-transform'] =
+				"translate3d(" + node.xDrag + "px,"
+				+ node.yDrag + "px,0)";
 		};
 		downCallback = function () {
 			if (node.animating) return;
 			node.dragging = false;
 			node.touchedDown = true;
-			if (opts.down)
-				opts.down();
+			opts.down && opts.down();
 		};
 		upCallback = function () {
+			var axis, axisdata, mod;
 			node.touchedDown = node.dragging = false;
-			if (node.animating == false) {
-				if (opts.interval) {
-					for (var dir in drag._axes) {
-						var axisdata = drag._axes[dir];
-						if (opts.constraint != dir) {
-							var mod = node[axisdata.drag] % opts.interval;
-							if (mod) {
-								var dragStart = node[axisdata.drag + "Start"];
-								node[axisdata.drag] += node[axisdata.drag]
-									- (Math.abs(mod) <= (opts.interval / 2))
-									? mod : (opts.interval + mod);
-							}
-						}
-					}
-				}
-				if (opts.up)
-					opts.up();
-			}
+			if (opts.interval && !node.animating)
+				settle();
+			opts.up && opts.up();
 		};
 		dragCallback = function (direction, distance, dx, dy, velocity, vx, vy) {
 			if (node.touchedDown) {
@@ -202,11 +221,16 @@ var drag = {
 			}
 		};
 		swipeCallback = function (direction, distance, dx, dy, velocity, vx, vy) {
-			if (opts.constraint == drag._direction2axis[direction])
+			var axisdata, axis = drag._direction2axis[direction];
+			if (opts.constraint == axis)
 				return;
 			currentDirection = direction;
-			node.vx = vx * drag.constants.swipeMultiplier;
-			node.vy = vy * drag.constants.swipeMultiplier;
+			if (opts.interval)
+				settle(direction);
+			else {
+				node.vx = vx * drag.constants.swipeMultiplier;
+				node.vy = vy * drag.constants.swipeMultiplier;
+			}
 		};
 
 		node.isCustomDraggable = true;

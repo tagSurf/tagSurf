@@ -39,7 +39,7 @@ var carousel = {
 		drag.makeDraggable(container, {
 			constraint: "vertical",
 			interval: carousel.translateDistance, 
-			up: carousel.orderIndicationCallback
+			settle: carousel.orderIndicationCallback
 		});
 		document.body.appendChild(carousel.view);
 		for (index = 1; index <= 6; ++index)
