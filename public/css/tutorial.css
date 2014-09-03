@@ -77,11 +77,15 @@
 }
 #pause-btn {
   max-width: 70%;
-  /*margin-top: 15%;*/
-  /*margin-left: auto;*/
-  /*margin-right: auto;*/
   position: absolute;
   bottom: 20px;
+  left: 18%;
+  font-weight: 200;
+}
+#pause-btn-top {
+  max-width: 70%;
+  position: absolute;
+  top: 65px;
   left: 18%;
   font-weight: 200;
 }
@@ -124,6 +128,9 @@
 }
 .left-arrow {
   left: -5px !important;
+}
+.slightly-left-arrow {
+  left: 25% !important;
 }
 .right-arrow {
   right: -8px !important;
@@ -181,6 +188,11 @@
     left: 41%;
     bottom: 15px;
   }
+  #pause-btn-top {
+    max-width: 21%;
+    left: 41%;
+    top: 65px;
+  }
   .reminder-report-btn {
     bottom: 10px;
     left: 15px;
@@ -208,5 +220,8 @@
   .right-arrow {
     right: -10px !important;
     width: 65px !important;
+  }
+  .slightly-left-arrow {
+    left: 40% !important;
   }
 }
