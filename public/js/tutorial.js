@@ -78,8 +78,8 @@ var startPhase2 = function() {
 		var offset = document.getElementById('nav').offsetHeight 
 				+ document.getElementById('input-container').offsetHeight + 12,
 		searchReminder = newReminder(searchMessage.call(), function() {
-			newReminder(resultsMessage.call(), null, "Results", 1000, 5000);
-		}, "Search", 1000, 5000);
+			newReminder(resultsMessage.call(), null, "Results", 1000, 6000);
+		}, "Search", 1000, 6000);
 		searchReminder.container.style.marginTop = offset + "px";
 		searchReminder.setCb("show", function() {
 			var closebtn = searchReminder.container.lastChild.children[0];
