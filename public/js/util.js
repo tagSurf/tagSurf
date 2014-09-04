@@ -420,22 +420,22 @@ var cancelTrans = function(tobj) {
     tobj.timeout = null;
   }
   tobj.node.removeEventListener("webkitTransitionEnd", tobj.wrapper, false);
-  tobj.node.style['-webkit-transition'] = '';
+  if (tobj.transition && tobj.isClass)
+    tobj.node.classList.remove(tobj.transition);
+  if (tobj.transition) tobj.node.style['-webkit-transition'] = '';
+  if (tobj.transform) tobj.node.style['-webkit-transform'] = "";
 };
 var trans = function(node, cb, transition, transform) {
-  var tobj = { node: node },
-    isClass = transition && transition.split(" ").length == 1;
+  var tobj = { node: node, transition: transition, transform: transform,
+    isClass: transition && transition.split(" ").length == 1 };
   tobj.wrapper = function () {
     if (tobj.cancelled) return;
-    if (transition && isClass)
-      node.classList.remove(transition);
     cancelTrans(tobj);
-    if (transform) node.style['-webkit-transform'] = "";
     cb && cb();
   };
   node.addEventListener("webkitTransitionEnd", tobj.wrapper, false);
   if (transition) {
-    if (isClass)
+    if (tobj.isClass)
       node.classList.add(transition);
     else {
       node.style['-webkit-transition'] = transition;
