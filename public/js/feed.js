@@ -355,7 +355,7 @@ onload = function ()
 			}
 		}
 		if (slider.x != 0) {
-			trans(slider.contents,
+			trans.trans(slider.contents,
 				function (event) {
 					slider.animating = false;
 				},
@@ -396,7 +396,7 @@ onload = function ()
 			path: "/feed#"+current_tag,
 			referrer: 'http://beta.tagsurf.co/'
 		});
-		trans(swipedCard.wrapper,
+		trans.trans(swipedCard.wrapper,
 			function () {
 				swipedCard.animating = false;
 				if (scrollContainer.scrollTop)
@@ -404,7 +404,7 @@ onload = function ()
 				if (scrollContainer.yDrag)
 				{
 					scrollContainer.animating = true;
-					trans(scrollContainer, 
+					trans.trans(scrollContainer, 
 						function(){ scrollContainer.animating = false},
 						"-webkit-transform 200ms",
 						"translate3d(0,0,0) rotate(0deg)");

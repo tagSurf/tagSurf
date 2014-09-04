@@ -108,7 +108,7 @@ var modal = {
 		} else if (w != zNode.clientWidth) {
 			if (!fromPinch) {
 				modal.zoom.current = w;
-				trans(zNode, null, "width 250ms ease-in");
+				trans.trans(zNode, null, "width 250ms ease-in");
 			}
 			zNode.style.width = w + "px";
 			modal.zoom.large = (w >= modal.zoom.z2width);
@@ -133,7 +133,7 @@ var modal = {
 		if (!modal.back.on) {
 			modal.back.on = true;
 			modal.trans.on();
-			trans(modal.back, modal.trans.off);
+			trans.trans(modal.back, modal.trans.off);
 		}
 		if (injectionNode)
 			modal.back.appendChild(injectionNode);
@@ -155,7 +155,7 @@ var modal = {
 		if (modal.back.on) {
 			modal.back.on = false;
 			modal.trans.on();
-			trans(modal.back, function() {
+			trans.trans(modal.back, function() {
 				onOff && onOff();
 				modal.back.className = "blackout disabled";
 				if (modal.back.firstChild)
@@ -194,7 +194,7 @@ var modal = {
 		modal.modal.on = false;
 		modal.modal.className = "modal modalout";
 		modal.modal.cb = null;
-		trans(modal.modal, function (event){
+		trans.trans(modal.modal, function (event){
 			modal.modal.className = "modal disabled";
 			modal.modal.style.display = "none";
 		});
@@ -218,7 +218,7 @@ var modal = {
 		modal.topModal.on = false;
 		modal.topModal.className = "modal modalout";
 		modal.topModal.cb = null;
-		trans(modal.topModal, function (event){
+		trans.trans(modal.topModal, function (event){
 			modal.topModal.className = "modal disabled";
 			modal.topModal.style.display = "none";
 		});
@@ -249,7 +249,7 @@ var modal = {
 		modal.prompt.className = "modal-prompt";
 		modal.prompt.cb = null;
 		modal.prompt.style.opacity = 0;
-		trans(modal.prompt, function (event){
+		trans.trans(modal.prompt, function (event){
 			modal.prompt.className = "modal-prompt disabled";
 		});
 		if (modal.prompt.backed) {
@@ -268,7 +268,7 @@ var modal = {
 		modal.zoom.zoomed = false;
 		modal.zoom.cb = null;
 		modal.zoom.style.opacity = 0;
-		trans(modal.zoom, function (event){
+		trans.trans(modal.zoom, function (event){
 			modal.zoom.style.display = "none";
 		});
 	},

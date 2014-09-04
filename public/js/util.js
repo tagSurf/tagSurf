@@ -412,41 +412,7 @@ var isNarrow = function() {
   return window.innerWidth < 700;
 };
 
-var cancelTrans = function(tobj) {
-  if (tobj.cancelled) return;
-  tobj.cancelled = true;
-  if (tobj.timeout) {
-    clearTimeout(tobj.timeout);
-    tobj.timeout = null;
-  }
-  tobj.node.removeEventListener("webkitTransitionEnd", tobj.wrapper, false);
-  if (tobj.transition && tobj.isClass)
-    tobj.node.classList.remove(tobj.transition);
-  if (tobj.transition) tobj.node.style['-webkit-transition'] = '';
-  // i don't think we should strip transforms. thoughts? -mario
-//  if (tobj.transform) tobj.node.style['-webkit-transform'] = "";
-};
-var trans = function(node, cb, transition, transform) {
-  var tobj = { node: node, transition: transition, transform: transform,
-    isClass: transition && transition.split(" ").length == 1 };
-  tobj.wrapper = function () {
-    if (tobj.cancelled) return;
-    cancelTrans(tobj);
-    cb && cb();
-  };
-  node.addEventListener("webkitTransitionEnd", tobj.wrapper, false);
-  if (transition) {
-    if (tobj.isClass)
-      node.classList.add(transition);
-    else {
-      node.style['-webkit-transition'] = transition;
-      tobj.timeout = setTimeout(tobj.wrapper,
-        parseInt(transition.split(" ")[1]));
-    }
-  }
-  if (transform) node.style['-webkit-transform'] = transform;
-  return tobj;
-};
+// borrowed from cantools
 var validEmail = function(s) {
   var atChar = s.indexOf('@', 1);
   var dotChar = s.indexOf('.', atChar);

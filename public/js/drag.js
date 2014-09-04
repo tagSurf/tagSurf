@@ -170,10 +170,10 @@ var drag = {
 			}
 
 			if (currentTrans) {
-				cancelTrans(currentTrans);
+				trans.cancel(currentTrans);
 				currentTrans = null;
 			}
-			currentTrans = trans(node, function() {
+			currentTrans = trans.trans(node, function() {
 				if (!node.rAFid) {
 					if (opts.interval)
 						settle(currentDirection);
@@ -199,7 +199,7 @@ var drag = {
 							(node.xDrag / opts.interval);
 				}
 			}
-			trans(node, function() {
+			trans.trans(node, function() {
 				triggerCbs(direction);
 				opts.settle(direction);
 			}, "-webkit-transform 300ms ease-out");

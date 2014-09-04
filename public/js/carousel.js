@@ -122,7 +122,7 @@ var carousel = {
 				return;
 			}
 			carousel.orderIndicationCallback(direction);
-			trans(container, function() {
+			trans.trans(container, function() {
 				container.animating = false;
 			}, "-webkit-transform 300ms ease-out");
 			container.animating = true;
@@ -172,7 +172,7 @@ var carousel = {
 	off: function ()
 	{
 		carousel.view.style.opacity = 0;
-		trans(carousel.view, function(){
+		trans.trans(carousel.view, function(){
 			carousel.view.style.visibility = "hidden";
 		});
 		clearInterval(carousel.inactivityTimeout);
