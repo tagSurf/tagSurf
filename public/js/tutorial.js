@@ -70,7 +70,7 @@ var tutorial = {
 // (The opening set is controlled from tutorial.start())
 var startPhase2 = function() {
 	current_deck.removeLoginCards();
-	newReminder(keepgoingPrompt.call(), null, "Keep Going", 10000, 5000); 	
+	newReminder(keepgoingPrompt.call(), remindSwipe, "Keep Going", 10000, 5000); 	
 	current_deck.topCard().setOneTimeCb("vote", function() { 
 		reminders[0] && reminders[0].forget(true); 
 	});
@@ -78,7 +78,7 @@ var startPhase2 = function() {
 		var offset = document.getElementById('nav').offsetHeight 
 				+ document.getElementById('input-container').offsetHeight + 12,
 		searchReminder = newReminder(searchMessage.call(), function() {
-			newReminder(resultsMessage.call(), null, "Results", 1000, 6000);
+			newReminder(resultsMessage.call(), remindSwipe, "Results", 1000, 6000);
 		}, "Search", 1000, 6000);
 		searchReminder.container.style.marginTop = offset + "px";
 		searchReminder.setCb("show", function() {
@@ -88,7 +88,6 @@ var startPhase2 = function() {
 		!tutorial.on && searchReminder.forget();
 	});
 	current_deck.removeLoginCards();
-	remindSwipe();
 };
 
 var remindSwipe = function() {
@@ -132,7 +131,6 @@ var remindSwipe = function() {
 			promptTagSwitch();
 		else
 			startFeatureTour();
-
 	});
 };
 
@@ -182,7 +180,7 @@ var startFeatureTour = function() {
 			var closebtn = addTagReminder.container.lastChild.children[0];
 			closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
 		});
-	}, "Tour Start", 2000, 5000);
+	}, "Tour Start", 1000, 5000);
 };
 
 // Message Builders
@@ -384,6 +382,7 @@ var keepgoingPrompt = function() {
 
 var rmVoteBtnsMessage = function() {
 	var node = document.createElement('div'),
+		pausebtn = document.createElement('div'),
 		offset = document.getElementById('nav').clientHeight,
 		menuarrow = new Image();
 	menuarrow.src = "http://assets.tagsurf.co/img/up_pointer_arrow_white.gif";
