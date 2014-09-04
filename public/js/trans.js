@@ -1,4 +1,7 @@
 var trans = {
+    constants: {
+        tick: 300,
+    },
     cancel: function(tobj) {
         if (tobj.cancelled) return;
         tobj.cancelled = true;
@@ -13,6 +16,33 @@ var trans = {
             else
                 tobj.node.style['-webkit-transition'] = '';
         }
+    },
+    _tick: function(td) {
+        var tn = td.node, tct = trans.constants.tick;
+        if (tn.xVelocity || tn.yVelocity) {
+            trans.go(tn,
+                tn.xDrag + tn.xVelocity * tct,
+                tn.yDrag + tn.yVelocity * tct,
+                tct, function() {
+                    trans._tick(td);
+                });
+        } else {
+            tn.ticking = false;
+            td.onStop();
+        }
+    },
+    start: function(node, onStop) {
+        // node must track and update its own
+        // velocities: node.xVelocity/yVelocity.
+        // these represent TRUE velocity, unlike
+        // node.vx/vy, which are unbounded finger
+        // velocities. node also needs xDrag/yDrag.
+        if (node.ticking) return;
+        node.ticking = true;
+        trans._tick({
+            node: node,
+            onStop: onStop
+        });
     },
     go: function(node, x, y, t, cb) {
         return trans.trans(node, cb,
@@ -40,8 +70,4 @@ var trans = {
         if (transform) node.style['-webkit-transform'] = transform;
         return tobj;
     }
-};
-
-var starttrans = function(node, velocities, cb) {
-
 };

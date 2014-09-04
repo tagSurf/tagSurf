@@ -7,6 +7,7 @@ var drag = {
 	//  - mario
 	_axes: {
 		horizontal: {
+			trueV: "xVelocity",
 			velocity: "vx",
 			drag: "xDrag",
 			clientSize: "clientWidth",
@@ -14,6 +15,7 @@ var drag = {
 			directions: ["right", "left"]
 		},
 		vertical: {
+			trueV: "yVelocity",
 			velocity: "vy",
 			drag: "yDrag",
 			clientSize: "clientHeight",
@@ -108,8 +110,7 @@ var drag = {
 			return drag.nativeScroll(node.firstChild, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback,
 			currentDirection, triggerCbs, _bounds, bounds,
-			setVelocities, canGo, rAF_drag, settle,
-			currentTrans, transDur = 300, tickCount = 0;
+			setVelocities, canGo, rAF_drag, settle;
 		node.xDrag = 0;
 		node.yDrag = 0;
 		node.classList.add('hardware-acceleration');
@@ -148,9 +149,7 @@ var drag = {
 		};
 		rAF_drag = function () {
 			var axis, axisdata, vstr, vel, dval,
-				tdata = { horizontal: node.xDrag, vertical: node.yDrag },
-				time = Date.now(), dt = (time - node.time),
-				slideTick = (tickCount++ % 2), tdt = slideTick ? transDur / dt : 1;
+				time = Date.now(), dt = (time - node.time);
 			node.time = time;
 
 			for (axis in drag._axes) {
@@ -160,30 +159,23 @@ var drag = {
 				if (vel && canGo(axis)) {
 					dval = Math.min(Math.max(bounds()[axis],
 						node[axisdata.drag] + vel * dt), 0);
-					tdata[axis] += (dval - node[axisdata.drag]) * tdt;
+					node[axisdata.trueV] = (dval - node[axisdata.drag]) / dt;
 					node[axisdata.drag] = dval;
 					node[vstr] *= drag.constants.velocityDecay;
 					if (Math.abs(node[vstr]) < drag.constants.minVelocity)
-						node[vstr] = 0;
+						node[axisdata.trueV] = node[vstr] = 0;
 				} else
-					node[vstr] = 0;
+					node[axisdata.trueV] = node[vstr] = 0;
 			}
 
-			if (currentTrans) {
-				trans.cancel(currentTrans);
-				currentTrans = null;
-			}
-			currentTrans = trans.trans(node, function() {
+			trans.start(node, function() {
 				if (!node.rAFid) {
 					if (opts.interval)
 						settle(currentDirection);
 					else
 						triggerCbs(currentDirection);
 				}
-			}, slideTick ?
-				'-webkit-transform ' + transDur + 'ms linear': "",
-				"translate3d(" + tdata.horizontal + "px,"
-					+ tdata.vertical + "px,0)");
+			});
 
 			if (node.vx || node.vy)
 				node.rAFid = requestAnimFrame(rAF_drag);
