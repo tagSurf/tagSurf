@@ -166,10 +166,8 @@ onload = function ()
 				if (slider.compressing == false)
 				{
 					modal.zoomIn(slider);
-					modal.zoom.firstChild.firstChild.style.webkitTransform =
-						'scale3d(1,1,1)';
-					modal.zoom.scrollTop =
-						trueScrollTop * window.innerWidth / imageContainer.scrollWidth;
+					modal.setZoomVerticalPosition(trueScrollTop, 
+						imageContainer.scrollWidth);
 				}
 				else if (slider.expanded == false)
 				{

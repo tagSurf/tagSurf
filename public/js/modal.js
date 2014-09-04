@@ -106,30 +106,47 @@ var modal = {
 			zNodeHeight = parseInt(zNode.scrollHeight),
 			dw = w - zNodeWidth, percentDw = (dw / zNodeWidth),
 			dh = (zNodeHeight * percentDw), 
-			endScrollLeft = modal.zoom.scrollLeft + (dw / 2),
-			endScrollTop = modal.zoom.scrollTop + (dh / 2),
-			animateScroll = function () {
-				if (modal.zoom.scrollLeft < endScrollLeft) 
-					modal.zoom.scrollLeft += (dw / 2) * (60 / 250);
-				if (modal.zoom.scrollTop < endScrollTop) 
-					modal.zoom.scrollTop += (dh / 2) * (60 / 250);
-				modal.zoom.rAFid = requestAnimFrame(animateScroll);
+			direction = (zNodeWidth > w ?  "decreasing" : "increasing");
+		var animateScrollZoom = function () {
+			var zoomToWidth = w, node = zNode, animationDuration = 250, 
+				now = Date.now(), dt = now - modal.zoom.zoomTime, 
+				tick = dt / animationDuration,
+				currentWidth = modal.zoom.current || zNodeWidth,
+				changedWidth = dw * tick, changedHeight = dh * tick,
+				newWidth = currentWidth + changedWidth;
+				modal.zoom.zoomTime = now;
+				if (newWidth > window.innerWidth &&
+					((direction == "increasing" && currentWidth < zoomToWidth)
+					|| (direction == "decreasing" && currentWidth > zoomToWidth)))
+				{
+				console.log(newWidth, window.innerWidth);
+					modal.zoom.current = newWidth;
+					node.style.width = newWidth + 'px';
+					modal.zoom.scrollLeft += changedWidth / 2;
+					modal.zoom.scrollTop += changedHeight / 2;
+					modal.zoom.rAFid = requestAnimFrame(animateScrollZoom);
+				}
+				else
+				{
+					cancelAnimationFrame(modal.zoom.rAFid);
+					modal.zoom.rAFid = null;
+				}
 			};
 		if (w < window.innerWidth) {
 			modal.zoom.current = window.innerWidth;
 			modal.zoomOut();
 		} else if (w != zNode.clientWidth) {
 			if (!fromPinch) {
-				modal.zoom.rAFid = requestAnimFrame(animateScroll);
-				modal.zoom.current = w;
-				trans(zNode, function() {
-					cancelAnimationFrame(modal.zoom.rAFid);
-					modal.zoom.rAFid = null;
-				 }, "width 250ms ease-in");
+				modal.zoom.zoomTime = Date.now();
+				modal.zoom.rAFid = requestAnimFrame(animateScrollZoom);
 			}
-			zNode.style.width = w + "px";
-			modal.zoom.scrollTop += dh / 2;
-			modal.zoom.scrollLeft += dw / 2;
+			else
+			{
+				modal.zoom.current = w;
+				zNode.style.width = w + "px";
+				modal.zoom.scrollTop += dh / 2;
+				modal.zoom.scrollLeft += dw / 2;
+			}
 			modal.zoom.large = (w >= modal.zoom.z2width);
 		}
 	},
@@ -291,6 +308,14 @@ var modal = {
 			modal.zoom.style.display = "none";
 		});
 	},
+	setZoomVerticalPosition: function (startVerticalPosition, startWidth,
+		optionalStart) {
+			var optional = optionalStart || (modal.zoom.scrollWidth > 0 ? 
+				modal.zoom.scrollWidth : window.innerWidth);
+			modal.zoom.firstChild.firstChild.style.webkitTransform =
+				'scale3d(1,1,1)';
+			modal.zoom.scrollTop = startVerticalPosition * optional / startWidth;
+	},
 	dragZoom: function (direction, distance, dx, dy) {
 		var zNodeContainer = modal.zoom,
 			atTop = (zNodeContainer.scrollTop === 0),
@@ -320,11 +345,14 @@ var modal = {
 	},
 	setPinchLauncher: function (node, onZoomCb) {
 		gesture.listen("pinch", node, function(normalizedDistance) {
+			var trueScrollTop = scrollContainer.scrollTop ? scrollContainer.scrollTop
+				: (scrollContainer.yDrag ? -scrollContainer.yDrag : 0);
 			if (normalizedDistance) {
 				onZoomCb && onZoomCb();
 				if (normalizedDistance > 1) {
 					if (!modal.zoom.zoomed) {
 						modal.zoomIn(currentMedia);
+						modal.setZoomVerticalPosition(trueScrollTop, node.scrollWidth);
 						modal.zoom.current = window.innerWidth;
 					}
 					modal.pinchZoom(normalizedDistance);
