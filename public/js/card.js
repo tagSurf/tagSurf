@@ -332,7 +332,12 @@ var card_proto = {
 		setCurrentMedia(this, forgetReminders);
 		if (this.type == "login") {
 			this._initLoginInputs();
-			initDocLinks();
+			share.off();
+			panic.off();
+			initDocLinks(function() {
+				if(window.innerHeight > 500)
+					currentUser.vote_btns && voteButtonsOn();
+			});
 			analytics.track("Seen Login Card");
 			if (window.innerHeight < 500) {
 				var self = this;
