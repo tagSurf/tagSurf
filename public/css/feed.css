@@ -173,6 +173,18 @@ html, body {
 .login-card div {
   padding: 2px;
 }
+.tos-pp {
+  margin-top: 10px;
+}
+#line-text-login {
+  padding: 10px 0;
+}
+#terms-lnk {
+  padding: 8px 0;
+}
+#privacy-lnk {
+  padding: 8px 0;
+}
 
 /*======== Swiping Animation Stuff ========*/
 .swiping {
