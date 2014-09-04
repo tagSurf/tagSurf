@@ -5,8 +5,9 @@ var modal = {
 	topModal: document.createElement("div"),
 	zoom: document.createElement("div"),
 	constants: {
-		zoomScale: 1.5,
-		zoomMax: 3
+		zoomScale: 2.00,
+		zoomMax: 3,
+		animationDuration: 500
 	},
 	trans: {
 		animating: false,
@@ -108,9 +109,9 @@ var modal = {
 			dh = (zNodeHeight * percentDw), 
 			direction = (zNodeWidth > w ?  "decreasing" : "increasing");
 		var animateScrollZoom = function () {
-			var zoomToWidth = w, node = zNode, animationDuration = 250, 
+			var zoomToWidth = w, node = zNode, 
 				now = Date.now(), dt = now - modal.zoom.zoomTime, 
-				tick = dt / animationDuration,
+				tick = dt / modal.constants.animationDuration,
 				currentWidth = modal.zoom.current || zNodeWidth,
 				changedWidth = dw * tick, changedHeight = dh * tick,
 				newWidth = currentWidth + changedWidth;
