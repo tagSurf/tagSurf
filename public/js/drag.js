@@ -40,9 +40,10 @@ var drag = {
 		right: "ceil"
 	},
 	constants: {
+		maxVelocity: 0.8,
 		minVelocity: 0.01,
 		velocityDecay: 0.6,
-		swipeMultiplier: 10
+		swipeMultiplier: 2
 	},
 	nativeScroll: function (n, opts) {
 		gesture.listen("up", n, function () {
@@ -106,7 +107,9 @@ var drag = {
 		if (!opts.interval && !opts.force && !isStockAndroid())
 			return drag.nativeScroll(node.firstChild, opts);
 		var downCallback, upCallback, dragCallback, swipeCallback,
-			currentDirection, triggerCbs, _bounds, bounds, canGo, rAF_drag, settle;
+			currentDirection, triggerCbs, _bounds, bounds,
+			setVelocities, canGo, rAF_drag, settle,
+			currentTrans, transDur = 300, tickCount = 0;
 		node.xDrag = 0;
 		node.yDrag = 0;
 		node.classList.add('hardware-acceleration');
@@ -119,7 +122,7 @@ var drag = {
 		node.parentNode.addEventListener('scroll', returnFalse, false);
 
 		triggerCbs = function (direction, distance, dx, dy, velocity, vx, vy) {
-			if (opts.drag) 
+			if (opts.drag)
 				opts.drag(direction, distance || 0, dx || 0, dy || 0,
 					velocity || 0, vx || 0, vy || 0);
 			if (opts.scroll)
@@ -144,40 +147,50 @@ var drag = {
 				: dragPos < outerBound ? axisdata.directions[1] : null);
 		};
 		rAF_drag = function () {
-			if (node.animating) {
-				node.rAFid = null;
-				return;
-			}
-			var axis, axisdata,
-				time = Date.now(),
-				dt = (time - node.time);
+			var axis, axisdata, vstr, vel, dval,
+				tdata = { horizontal: node.xDrag, vertical: node.yDrag },
+				time = Date.now(), dt = (time - node.time),
+				slideTick = (tickCount++ % 2), tdt = slideTick ? transDur / dt : 1;
+			node.time = time;
+
 			for (axis in drag._axes) {
 				axisdata = drag._axes[axis];
-				if (node[axisdata.velocity] && canGo(axis)) {
-					node[axisdata.drag] = Math.min(Math.max(bounds()[axis],
-						node[axisdata.drag] + node[axisdata.velocity] * dt), 0);
-					node[axisdata.velocity] *= drag.constants.velocityDecay;
-					if (Math.abs(node[axisdata.velocity]) < drag.constants.minVelocity)
-						node[axisdata.velocity] = 0;
+				vstr = axisdata.velocity;
+				vel = node[vstr];
+				if (vel && canGo(axis)) {
+					dval = Math.min(Math.max(bounds()[axis],
+						node[axisdata.drag] + vel * dt), 0);
+					tdata[axis] += (dval - node[axisdata.drag]) * tdt;
+					node[axisdata.drag] = dval;
+					node[vstr] *= drag.constants.velocityDecay;
+					if (Math.abs(node[vstr]) < drag.constants.minVelocity)
+						node[vstr] = 0;
 				} else
-					node[axisdata.velocity] = 0;
+					node[vstr] = 0;
 			}
-			node.time = time;
-			node.style['-webkit-transform'] =
-				"translate3d(" + node.xDrag + "px," + node.yDrag + "px,0)";
+
+			if (currentTrans) {
+				cancelTrans(currentTrans);
+				currentTrans = null;
+			}
+			currentTrans = trans(node, function() {
+				if (!node.rAFid) {
+					if (opts.interval)
+						settle(currentDirection);
+					else
+						triggerCbs(currentDirection);
+				}
+			}, slideTick ?
+				'-webkit-transform ' + transDur + 'ms linear': "",
+				"translate3d(" + tdata.horizontal + "px,"
+					+ tdata.vertical + "px,0)");
+
 			if (node.vx || node.vy)
 				node.rAFid = requestAnimFrame(rAF_drag);
-			else {
+			else
 				node.rAFid = null;
-				if (opts.interval)
-					settle(currentDirection);
-				else
-					triggerCbs(currentDirection);
-			}
 		};
 		settle = function(direction) {
-			if (node.animating) return;
-			node.animating = true;
 			var axis, axisdata, dragPos;
 			for (axis in drag._axes) {
 				if (opts.constraint != axis) {
@@ -187,7 +200,6 @@ var drag = {
 				}
 			}
 			trans(node, function() {
-				node.animating = false;
 				triggerCbs(direction);
 				opts.settle(direction);
 			}, "-webkit-transform 300ms ease-out");
@@ -196,7 +208,6 @@ var drag = {
 				+ node.yDrag + "px,0)";
 		};
 		downCallback = function () {
-			if (node.animating) return;
 			node.dragging = false;
 			node.touchedDown = true;
 			opts.down && opts.down();
@@ -208,6 +219,17 @@ var drag = {
 				settle();
 			opts.up && opts.up();
 		};
+		setVelocities = function(vx, vy, isSwipe) {
+			var axis, vstr, vel, sign,
+				mult = (isSwipe ? drag.constants.swipeMultiplier : 1);
+			for (axis in drag._axes) {
+				vstr = drag._axes[axis].velocity;
+				vel = (axis == "horizontal") ? vx : vy;
+				sign = (vel < 0) ? -1 : 1;
+				node[vstr] = sign * Math.min(drag.constants.maxVelocity,
+					Math.max((node[vstr] || 0) * sign, vel * mult * sign));
+			}
+		};
 		dragCallback = function (direction, distance, dx, dy, velocity, vx, vy) {
 			if (node.touchedDown) {
 				node.dragging = true;
@@ -215,8 +237,7 @@ var drag = {
 					node.time = Date.now();
 					node.rAFid = requestAnimFrame(rAF_drag);
 				}
-				node.vx = Math[vx < 0 ? "min" : "max"](node.vx || 0, vx);
-				node.vy = Math[vx < 0 ? "min" : "max"](node.vy || 0, vy);
+				setVelocities(vx, vy);
 				if (opts.constraint != drag._direction2axis[direction])
 					currentDirection = direction;
 			}
@@ -228,10 +249,8 @@ var drag = {
 			currentDirection = direction;
 			if (opts.interval)
 				settle(direction);
-			else {
-				node.vx = vx * drag.constants.swipeMultiplier;
-				node.vy = vy * drag.constants.swipeMultiplier;
-			}
+			else
+				setVelocities(vx, vy, true);
 		};
 
 		node.isCustomDraggable = true;
