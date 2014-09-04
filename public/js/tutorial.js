@@ -73,7 +73,7 @@ var tutorial = {
 // (The opening set is controlled from tutorial.start())
 var startPhase2 = function() {
 	current_deck.removeLoginCards();
-	newReminder(keepgoingPrompt.call(), remindSwipe, "Keep Going", 10000, 5000); 	
+	newReminder(keepgoingPrompt.call(), null, "Keep Going", 10000, 5000); 	
 	current_deck.topCard().setOneTimeCb("vote", function() { 
 		reminders[0] && reminders[0].forget(true); 
 	});
