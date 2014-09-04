@@ -89,6 +89,13 @@
   left: 18%;
   font-weight: 200;
 }
+#skip-btn {
+  max-width: 70%;
+  position: absolute;
+  bottom: 20px;
+  left: 22%;
+  font-weight: 200;
+}
 #menu-up-arrow {
   position: absolute;
   width: 60px;
@@ -192,6 +199,11 @@
     max-width: 21%;
     left: 41%;
     top: 65px;
+  }
+  #skip-btn {
+    max-width: 21%;
+    left: 41%;
+    bottom: 15px;
   }
   .reminder-report-btn {
     bottom: 10px;
