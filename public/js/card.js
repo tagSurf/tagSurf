@@ -338,6 +338,19 @@ var card_proto = {
 		if (this.showing && this.isContent && this.compressing && this == current_deck.topCard()) {
 			if (DEBUG)
 				console.log("Expand card #" + this.id);
+			if (isAndroid()) {
+				var forceCustomDrag = this.contents.firstChild.firstChild.clientHeight
+					< window.innerHeight * 2;
+				DEBUG && console.log("force custom drag:",
+					forceCustomDrag,
+					this.contents.firstChild.firstChild.clientHeight,
+					window.innerHeight * 2);
+				drag.makeDraggable(scrollContainer, {
+					constraint: "horizontal",
+					force: forceCustomDrag,
+					scroll: cardCbs.scroll
+				});
+			}
 			this.compressing = false;
 			this.expanded = true;
 			if (this.contents.children[0].className.indexOf("expanded") == -1)

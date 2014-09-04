@@ -55,11 +55,11 @@ onload = function ()
 			node.expanded = false;
 			node.style['-webkit-transform'] = "";
 		},
-		swipe: function (direction, distance, dx, dy, pixelsPerSecond) {
+		swipe: function (direction, distance, dx, dy, velocity, vx, vy) {
 			if (modal.zoom.zoomed) return;
 			var slider = topCard();
 			if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
-				gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
+				gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, velocity, vx, vy);
 			else if (!slider.animating && (direction == "left" || direction == "right")) {
 				if (slider.isContent)
 					analytics.track("Swipe", {
@@ -91,23 +91,27 @@ onload = function ()
 			slider.contents.style['-webkit-transform-origin'] = "center " + trueScrollTop + 'px';
 			slider.contents.lastChild.previousSibling.style.top = (50 + trueScrollTop) + 'px';
 		},
-		drag: function (direction, distance, dx, dy, pixelsPerSecond) {
+		drag: function (direction, distance, dx, dy, velocity, vx, vy) {
 			if (modal.zoom.zoomed) return;
 			var slider = topCard();
 			if (slider.animating == false) {
-				if (slider.expanded == true && 
+				if (slider.expanded == true &&
 					(direction == "up" || direction == "down")) {
-					if (slider.sliding == false)
-						slider.verticaling = true;
 					if (slider.sliding)
 						return false;
-					if (!isStockAndroid()) {
-						var sc = scrollContainer, atTop = (sc.scrollTop === 0),
-							atBottom = (sc.scrollHeight - sc.scrollTop === sc.clientHeight),
-							goingUp = direction == "down";
-						if ((atTop && goingUp) || (atBottom && !goingUp))
-							return false;
-					}
+					slider.verticaling = true;
+
+// this code was supposed to prevent Chrome and
+// Safari from shifting the whole page. disabled for now.
+//					if (!isStockAndroid()) {
+//						var sc = scrollContainer, atTop = (sc.scrollTop === 0),
+//							atBottom = (sc.scrollHeight - sc.scrollTop === sc.clientHeight),
+//							goingUp = direction == "down";
+//						if ((atTop && goingUp) || (atBottom && !goingUp)) {
+//							console.log("feed - bounded")
+//							return false;
+//						}
+//					}
 					return true;
 				}
 				else if (slider.verticaling == false) {
@@ -248,11 +252,11 @@ onload = function ()
 		var slider = topCard();
 		slider.contents.style['-webkit-transform'] = 
 			"translate3d(" + ( slider.x * translationScale)
-				+ "px,0,0) rotate(" + ( slider.x * rotationScale) + "deg)";
+				+ "px,"  + slider.y + "px,0) rotate(" + ( slider.x * rotationScale) + "deg)";
 		slider.rAFid = requestAnimFrame(rAF_drag);
 	};
 
-	drag.makeDraggable(scrollContainer, {
+	!isAndroid() && drag.makeDraggable(scrollContainer, {
 		constraint: "horizontal",
 		scroll: cardCbs.scroll
 	});
@@ -355,7 +359,7 @@ onload = function ()
 			}
 		}
 		if (slider.x != 0) {
-			trans(slider.contents,
+			trans.trans(slider.contents,
 				function (event) {
 					slider.animating = false;
 				},
@@ -366,7 +370,7 @@ onload = function ()
 		}
 		revertStateReset(slider);
 	};
-	var swipeSlider = function (direction, voteAlternative, pixelsPerSecond, vote)
+	var swipeSlider = function (direction, voteAlternative, velocity, vote)
 	{
 		var slider = topCard();
 		var vote = (typeof vote === "undefined")? true : vote;
@@ -377,7 +381,7 @@ onload = function ()
 		var isUp = direction == "right";
 		var voteDir = isUp ? "up" : "down";
 		var transitionDistance = translateQuantity - slider.x;
-		var transitionDuration = pixelsPerSecond ? (transitionDistance / pixelsPerSecond) : 250;
+		var transitionDuration = velocity ? (transitionDistance / velocity) : 250;
 		if (slider.type == "waves" || slider.type == "End-Of-Feed")
 			return;
 		if (slider.supering == true)
@@ -396,7 +400,7 @@ onload = function ()
 			path: "/feed#"+current_tag,
 			referrer: 'http://beta.tagsurf.co/'
 		});
-		trans(swipedCard.wrapper,
+		trans.trans(swipedCard.wrapper,
 			function () {
 				swipedCard.animating = false;
 				if (scrollContainer.scrollTop)
@@ -404,12 +408,12 @@ onload = function ()
 				if (scrollContainer.yDrag)
 				{
 					scrollContainer.animating = true;
-					trans(scrollContainer, 
+					trans.trans(scrollContainer, 
 						function(){ scrollContainer.animating = false},
 						"-webkit-transform 200ms",
 						"translate3d(0,0,0) rotate(0deg)");
 				}
-				console.log("Swiped card #" + swipedCard.id);
+				DEBUG && console.log("Swiped card #" + swipedCard.id);
 				if (vote)
 					swipedCard.vote(voteDir, current_tag, voteAlternative);
 			},

@@ -13,7 +13,7 @@ var autocomplete = {
 	expand: function(listName, cb) {
 		autocomplete.viewing[listName] = true;
 		autocomplete.nodes[listName].className = "autocomplete autocomplete-open";
-		cb && trans(autocomplete.nodes[listName], cb);
+		cb && trans.trans(autocomplete.nodes[listName], cb);
 	},
 	retract: function(listName) {
 		if (!autocomplete.viewing[listName])
@@ -22,7 +22,7 @@ var autocomplete = {
 		autocomplete.inputs[listName].blur();
 		var acnode = autocomplete.nodes[listName];
 		acnode.className = "autocomplete";
-		trans(acnode, function() {
+		trans.trans(acnode, function() {
 			acnode.className = "autocomplete hider";
 		});
 	},

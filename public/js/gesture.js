@@ -94,10 +94,11 @@ var gesture = {
 			gesture.getDiff(gesture.getPos(e.touches[0]), 
 				gesture.getPos(e.touches[1]));
 	},
-	pixelsPerSecond: function(distance, timeDiff, gest) {
-		var t = gesture.thresholds[gest];
-		return Math.min(t.maxDP, Math.max(t.minDP,
-			distance / timeDiff)) * (isIos() ? 1 : 0.5);
+	velocity: function(distance, timeDiff, gest) {
+		var t = gesture.thresholds[gest],
+			dsign = (distance < 0) ? -1 : 1;
+		return dsign * Math.min(t.maxDP, Math.max(t.minDP,
+			Math.abs(distance) / timeDiff));
 	},
 	isMulti: function(e) {
 		return isMobile() && e.touches.length > 1;
@@ -162,7 +163,9 @@ var gesture = {
 				&& (diff.distance > t.swipe.minDistance) ) // swipe
 				gesture.triggerSwipe(node, diff.direction,
 					diff.distance, diff.x, diff.y,
-					gesture.pixelsPerSecond(diff.distance, timeDiff, "swipe"));
+					gesture.velocity(diff.distance, timeDiff, "swipe"),
+					gesture.velocity(diff.x, timeDiff, "swipe"),
+					gesture.velocity(diff.y, timeDiff, "swipe"));
 			else if ( (timeDiff < t.tap.maxTime)
 				&& (diff.distance < t.tap.maxDistance) ) { // tap
 				v.tapCount += 1;
@@ -186,7 +189,9 @@ var gesture = {
 			if (!gesture.isMulti(e))
 				return gesture.triggerDrag(node, diff.direction,
 					diff.distance, diff.x, diff.y,
-					gesture.pixelsPerSecond(diff.distance, tdiff, "drag"));
+					gesture.velocity(diff.distance, tdiff, "drag"),
+					gesture.velocity(diff.x, tdiff, "drag"),
+					gesture.velocity(diff.y, tdiff, "drag"));
 			if (isAndroid())
 				gesture.triggerPinch(node,
 					gesture.pinchDiff(e).distance / v.firstPinch.distance);
@@ -259,11 +264,11 @@ var gesture = {
 		if (handlers) for (var i = 0; i < handlers.length; i++)
 			handlers[i](normalizedDistance);
 	},
-	triggerSwipe: function(node, direction, distance, dx, dy, pixelsPerSecond) {
+	triggerSwipe: function(node, direction, distance, dx, dy, velocity, vx, vy) {
 		var handlers = gesture.handlers.swipe[node.gid];
 		hasSwiped = true;
 		if (handlers) for (var i = 0; i < handlers.length; i++)
-			handlers[i](direction, distance, dx, dy, pixelsPerSecond);
+			handlers[i](direction, distance, dx, dy, velocity, vx, vy);
 	},
 	triggerTap: function(node) {
 		var v = node.gvars;
@@ -273,11 +278,12 @@ var gesture = {
 		v.tapCount = 0;
 		v.tapTimeout = null;
 	},
-	triggerDrag: function(node, direction, distance, dx, dy, pixelsPerSecond) {
+	triggerDrag: function(node, direction, distance, dx, dy, velocity, vx, vy) {
 		var returnVal = false;
 		var handlers = gesture.handlers.drag[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
-			returnVal = handlers[i](direction, distance, dx, dy, pixelsPerSecond) || returnVal;
+			returnVal = handlers[i](direction, distance, dx, dy, velocity, vx, vy)
+				|| returnVal;
 		return returnVal;
 	},
 	triggerHold: function(node, duration) {

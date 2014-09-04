@@ -9,6 +9,7 @@ var authorizedSession = null,
       admin : false
     },
     returnTrue = function() { return true; },
+    returnFalse = function() { return false; },
     hasSwiped = false,
     hasKeySwiped = false,
     hasSwitchedTags = false,
@@ -18,7 +19,7 @@ if ((document.location.hostname.indexOf("localhost") != -1)
   || (document.location.hostname.indexOf("staging.tagsurf.co") != -1)
   || (document.location.hostname.indexOf("192.168") != -1)
   || (document.location.hostname.indexOf("172.20") != -1))
-  DEBUG = true;
+  DEBUG = false;
 var hasClass = function (node, className) {
   return node.className && new RegExp("(^|\\s)" + className + "(\\s|$)").test(node.className);
 };
@@ -318,7 +319,7 @@ var setResizeCb = function(cb) {
 setMaxCardHeight();
 var lastWidth = window.innerWidth;
 window.onresize = function() {
-  if (!isDesktop() && (lastWidth == window.innerWidth) || throbber.active)
+  if (!isDesktop() && (lastWidth == window.innerWidth) || (throbber && throbber.active))
     return;
   lastWidth = window.innerWidth;
   setMaxCardHeight();
@@ -413,37 +414,7 @@ var isNarrow = function() {
   return window.innerWidth < 700;
 };
 
-var trans = function(node, cb, transition, transform) {
-  var transTimeout,
-    isClass = transition && transition.split(" ").length == 1;
-  var wrapper = function () {
-    if (transition) {
-      if (isClass)
-        node.classList.remove(transition);
-      else {
-        node.style['-webkit-transition'] = "";
-      }
-    }
-    if (transform) node.style['-webkit-transform'] = "";
-    if (transTimeout) {
-      clearTimeout(transTimeout);
-      transTimeout = null;
-    }
-    node.removeEventListener("webkitTransitionEnd", wrapper, false);
-    cb && cb();
-  };
-  node.addEventListener("webkitTransitionEnd", wrapper, false);
-  if (transition) {
-    if (isClass)
-      node.classList.add(transition);
-    else {
-      node.style['-webkit-transition'] = transition;
-      transTimeout = setTimeout(wrapper,
-        parseInt(transition.split(" ")[1]));
-    }
-  }
-  if (transform) node.style['-webkit-transform'] = transform;
-};
+// borrowed from cantools
 var validEmail = function(s) {
   var atChar = s.indexOf('@', 1);
   var dotChar = s.indexOf('.', atChar);

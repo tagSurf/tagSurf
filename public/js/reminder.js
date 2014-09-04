@@ -4,7 +4,7 @@ var reminder_proto = {
 	forget: function(remove) {
 		if(!this.timeout) 
 			return;
-		if(this.isOn){
+		if(this.isOn) {
 			this.close();
 			return;
 		}
