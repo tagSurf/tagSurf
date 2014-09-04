@@ -18,30 +18,33 @@ var tutorial = {
 			}, "Upvote", 5000, 5000);
 		}, "Welcome", 1000, 6000);
 		welcome.setCb("show", function() {
-			if(isUIWebView())
+			if (isUIWebView())
 				this.container.style.paddingTop = "30px"; 
 		});
 	},
-	pause: function() {
-		if(!reminders[0] || !tutorial.on)
+	pause: function(remind) {
+		remind = (typeof remind === "undefined") ? true : remind; 
+		if (!reminders[0] || !tutorial.on)
 			return
 		analytics.track("Pause Tutorial", {
 			reminder: reminders[0].type
 		});
 		reminders[0].close()
 		forgetReminders();
-		var pauseReminder = newReminder(resumeMessage.call(), null, "Resume", 1000, 2000),
-			offset = document.getElementById('nav').clientHeight;
-		pauseReminder.container.style.marginTop = offset + "px";
-		pauseReminder.setCb("show", function() {
-			var closebtn = pauseReminder.container.lastChild.children[0];
-			closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
-		});
+		if (remind) {
+			var pauseReminder = newReminder(resumeMessage.call(), null, "Resume", 1000, 2000),
+				offset = document.getElementById('nav').clientHeight;
+			pauseReminder.container.style.marginTop = offset + "px";
+			pauseReminder.setCb("show", function() {
+				var closebtn = pauseReminder.container.lastChild.children[0];
+				closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
+			});
+		}
 		tutorial.on = false;
 		tutorial.paused = true;
 	},
 	resume: function(timeout) {
-		if(!reminders[0])
+		if (!reminders[0])
 			return;
 		analytics.track("Resume Tutorial", {
 			reminder: reminders[0].type
@@ -189,19 +192,34 @@ var welcomeMessage = function() {
 	var node = document.createElement('div'),
 		topMessage = document.createElement('div'),
 		logo = document.createElement('img'),
-		bottomMessage = document.createElement('div');
+		bottomMessage = document.createElement('div'),
+		skipbtn = document.createElement('div');
 	topMessage.innerHTML = "Welcome to";
 	topMessage.className = isMobile() ? "centered biggest" : "centered really-big";
-	topMessage.style.marginTop = isMobile() ? "18%" : "7%";
+	topMessage.style.marginTop = isMobile() ? "10%" : "7%";
 	node.style.marginTop = isUIWebView() ? "12%" : node.style.marginTop;
 	logo.src = "http://assets.tagsurf.co/img/ts_logo_stacked_gray_trans.png";
 	logo.className = "tutorial-logo";
 	bottomMessage.innerHTML = isMobile() ? "A place to surf the<br/>top social content<br/>on the web" 
 											: "A place to surf the top<br/>social content on the web";
 	bottomMessage.className = isMobile() ? "centered biggest" : "centered really-big";
+	skipbtn.className = "no-fill-btn pointer";
+	skipbtn.className += isDesktop() ? " really-big" : " biggest";
+	gesture.listen("down", skipbtn, function() {
+		skipbtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", skipbtn, function() {
+		skipbtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", skipbtn, function() {
+		tutorial.pause(false);
+	});
+	skipbtn.id = "skip-btn";
+	skipbtn.innerHTML = "Skip Tutorial";
 	node.appendChild(topMessage);
 	node.appendChild(logo);
 	node.appendChild(bottomMessage);
+	node.appendChild(skipbtn);
 	return node;
 };
 
