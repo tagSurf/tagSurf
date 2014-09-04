@@ -412,36 +412,39 @@ var isNarrow = function() {
   return window.innerWidth < 700;
 };
 
+var cancelTrans = function(tobj) {
+  if (tobj.cancelled) return;
+  tobj.cancelled = true;
+  if (tobj.timeout) {
+    clearTimeout(tobj.timeout);
+    tobj.timeout = null;
+  }
+  tobj.node.removeEventListener("webkitTransitionEnd", tobj.wrapper, false);
+  tobj.node.style['-webkit-transition'] = '';
+};
 var trans = function(node, cb, transition, transform) {
-  var transTimeout,
+  var tobj = { node: node },
     isClass = transition && transition.split(" ").length == 1;
-  var wrapper = function () {
-    if (transition) {
-      if (isClass)
-        node.classList.remove(transition);
-      else {
-        node.style['-webkit-transition'] = "";
-      }
-    }
+  tobj.wrapper = function () {
+    if (tobj.cancelled) return;
+    if (transition && isClass)
+      node.classList.remove(transition);
+    cancelTrans(tobj);
     if (transform) node.style['-webkit-transform'] = "";
-    if (transTimeout) {
-      clearTimeout(transTimeout);
-      transTimeout = null;
-    }
-    node.removeEventListener("webkitTransitionEnd", wrapper, false);
     cb && cb();
   };
-  node.addEventListener("webkitTransitionEnd", wrapper, false);
+  node.addEventListener("webkitTransitionEnd", tobj.wrapper, false);
   if (transition) {
     if (isClass)
       node.classList.add(transition);
     else {
       node.style['-webkit-transition'] = transition;
-      transTimeout = setTimeout(wrapper,
+      tobj.timeout = setTimeout(tobj.wrapper,
         parseInt(transition.split(" ")[1]));
     }
   }
   if (transform) node.style['-webkit-transform'] = transform;
+  return tobj;
 };
 var validEmail = function(s) {
   var atChar = s.indexOf('@', 1);
