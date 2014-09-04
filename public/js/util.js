@@ -423,7 +423,8 @@ var cancelTrans = function(tobj) {
   if (tobj.transition && tobj.isClass)
     tobj.node.classList.remove(tobj.transition);
   if (tobj.transition) tobj.node.style['-webkit-transition'] = '';
-  if (tobj.transform) tobj.node.style['-webkit-transform'] = "";
+  // i don't think we should strip transforms. thoughts? -mario
+//  if (tobj.transform) tobj.node.style['-webkit-transform'] = "";
 };
 var trans = function(node, cb, transition, transform) {
   var tobj = { node: node, transition: transition, transform: transform,
