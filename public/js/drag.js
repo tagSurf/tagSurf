@@ -43,7 +43,7 @@ var drag = {
 		maxVelocity: 0.8,
 		minVelocity: 0.01,
 		velocityDecay: 0.6,
-		swipeMultiplier: 2
+		swipeMultiplier: 5
 	},
 	nativeScroll: function (n, opts) {
 		gesture.listen("up", n, function () {
@@ -243,7 +243,7 @@ var drag = {
 			}
 		};
 		swipeCallback = function (direction, distance, dx, dy, velocity, vx, vy) {
-			var axisdata, axis = drag._direction2axis[direction];
+			var axis = drag._direction2axis[direction];
 			if (opts.constraint == axis)
 				return;
 			currentDirection = direction;
