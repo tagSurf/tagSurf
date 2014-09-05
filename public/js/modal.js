@@ -6,7 +6,7 @@ var modal = {
 	zoom: document.createElement("div"),
 	constants: {
 		zoomScale: 2.00,
-		zoomMax: 3,
+		zoomMax: 4.5,
 		animationDuration: 500
 	},
 	trans: {
