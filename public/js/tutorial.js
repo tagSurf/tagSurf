@@ -14,6 +14,7 @@ var tutorial = {
 					var firstvote = newReminder(firstvoteMessage.call(), startPhase2, "First Vote", 1000, 5000);
 					clearTimeout(tutorial.jiggleTimeout); 
 					tutorial.jiggleTimeout = null;
+					!tutorial.on && firstvote.forget();
 				});
 			}, "Upvote", 5000, 5000);
 		}, "Welcome", 1000, 6000);
