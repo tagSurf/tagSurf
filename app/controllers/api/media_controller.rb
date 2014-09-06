@@ -25,7 +25,7 @@ class Api::MediaController < Api::BaseController
       IncrementMediaVoteCount.perform_async(media_params[:id], vote.vote_flag)
       render json: {success: "true"}
     else
-      render json: {error: "something went wrong: #{e}"}, status: :unprocessible_entity
+      render json: {errors: "something went wrong: #{e}"}, status: :unprocessible_entity
     end
   end
 
