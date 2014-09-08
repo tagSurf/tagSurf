@@ -139,7 +139,7 @@ var slowReminder = null;
 
 setTimeout(function() {
 	slowReminder = newReminder(slowMessage.call(), null, "Slow", 10000, 5000);
-}, 3000);
+}, 5000);
 
 var slowMessage = function() {
 	var node = document.createElement('div'),
