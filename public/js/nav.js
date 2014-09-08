@@ -187,7 +187,7 @@ var buildOptionsTable = function (options_cb) {
       voteButtonsText = document.createElement('div'),
       voteButtonsCheckbox = document.createElement('div');
   // Resume Tutorial (if applicable) 
-  if(tutorial.paused)
+  if(typeof tutorial != "undefined" && tutorial.paused)
     var resumeTutorial = optionsTable.insertRow(0),
         resumeButtonCell = resumeTutorial.insertCell(0),
         resumeButton = document.createElement('div');
@@ -268,7 +268,7 @@ var buildOptionsTable = function (options_cb) {
   voteButtonsDescCell.appendChild(voteButtonsDesc);
   
   // Resume Tutorial Button (if applicable)
-  if(!tutorial.paused)
+  if(typeof tutorial === "undefined" || !tutorial.paused)
     return optionsTable;
   resumeButton.innerHTML = "Resume Tutorial";
   resumeButton.className = isMobile() ? "msgbox-btn biggest pointer" 
