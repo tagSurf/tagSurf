@@ -300,43 +300,34 @@ var resumeMessage = function() {
 	return node;
 };
 
-var resultsMessage = function() {
-	var node = document.createElement('div'),
-		pausebtn = document.createElement('div');
-	node.innerHTML = "Results are ordered<br/>by newness and<br/>popularity amongst<br/>surfers of the tag";
-	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "40%" : "20%";
-	node.style.marginTop = isUIWebView() ? "65%" : node.style.marginTop;
-	pausebtn.className = "no-fill-btn pointer";
-	gesture.listen("down", pausebtn, function() {
-		pausebtn.classList.add("active-no-fill-btn");
-	});
-	gesture.listen("up", pausebtn, function() {
-		pausebtn.classList.remove("active-no-fill-btn");
-	});
-	gesture.listen("tap", pausebtn, function() {
-		tutorial.pause();
-	});
-	pausebtn.id = "pause-btn";
-	pausebtn.innerHTML = "Pause Tutorial";
-	node.appendChild(pausebtn);
-	return node;
-};
-
 var searchMessage = function() {
 	var node = document.createElement('div'),
 		pausebtn = document.createElement('div'),
 		top = document.createElement('div'),
 		offset = document.getElementById('nav').clientHeight 
 				+ document.getElementById('input-container').clientHeight + 12,
-		arrow = new Image();
+		arrow = new Image(),
+		redditIcon = new Image(),
+		imgurIcon = new Image();
 	arrow.src = "http://assets.tagsurf.co/img/up_pointer_arrow_white.gif";
 	arrow.id = "menu-up-arrow";
 	arrow.className = "slightly-left-arrow";
+	redditIcon.id = "reddit-icon";
+	redditIcon.src = "http://assets.tagsurf.co/img/reddit_logo_white.png";
+	redditIcon.className = "block";
+	imgurIcon.id = "imgur-icon";
+	imgurIcon.src = "http://assets.tagsurf.co/img/imgur_logo_white.png";
+	imgurIcon.className = "block";
+	if (isUIWebView()) {
+		redditIcon.style.width = "60%";
+		redditIcon.style.margin = "8% auto";
+		imgurIcon.style.width = "50%";
+		imgurIcon.style.margin = "8% auto";
+	}
 	node.innerHTML = "Type any hashtag<br/>to search social<br/>networks for<br/>content";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "30%" : "20%";
-	node.style.marginTop = isUIWebView() ? "48%" : node.style.marginTop;
+	node.style.marginTop = isMobile() ? "22%" : "9%";
+	node.style.marginTop = isUIWebView() ? "28%" : node.style.marginTop;
 	top.className = "reminder-container";
 	top.id = "reminder-top-patch";
 	pausebtn.className = "no-fill-btn pointer";
@@ -353,7 +344,32 @@ var searchMessage = function() {
 		tutorial.pause();
 	});	
 	node.appendChild(top);
+	node.appendChild(redditIcon);
+	node.appendChild(imgurIcon);
 	node.appendChild(arrow);
+	node.appendChild(pausebtn);
+	return node;
+};
+
+var resultsMessage = function() {
+	var node = document.createElement('div'),
+		pausebtn = document.createElement('div');
+	node.innerHTML = "Results are ordered<br/>by newest and<br/>most popular<br/>amongst surfers<br/>of the #tag";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "40%" : "20%";
+	node.style.marginTop = isUIWebView() ? "65%" : node.style.marginTop;
+	pausebtn.className = "no-fill-btn pointer";
+	gesture.listen("down", pausebtn, function() {
+		pausebtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", pausebtn, function() {
+		pausebtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", pausebtn, function() {
+		tutorial.pause();
+	});
+	pausebtn.id = "pause-btn";
+	pausebtn.innerHTML = "Pause Tutorial";
 	node.appendChild(pausebtn);
 	return node;
 };
