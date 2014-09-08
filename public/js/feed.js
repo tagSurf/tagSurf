@@ -602,7 +602,15 @@ onload = function ()
 		voteButtonsOn();
 
 	analytics.identify(currentUser.id);
-
+	setTimeout(function() {
+		var topCard = current_deck.topCard();
+		if (topCard && !topCard.showing)
+			current_deck.topCard().setOneTimeCb("show", function() {
+				!tutorial.on && reminders[0] && reminders[0].forget(true);
+			});
+		else if (topCard)
+			slowReminder.forget(true);
+	}, 3000);
 	if (!isAuthorized() && !DEBUG)
 	 	tutorial.start();
 };

@@ -18,6 +18,9 @@ var reminder_proto = {
 			analytics.track('Forget Mobile ' + this.type + ' Reminder');
 	},
 	remove: function() {
+		var self = this;
+		if (this.built)
+			setTimeout(function () { document.body.removeChild(self.container);}, 100);
 		this.timeout = null;
 		if (reminders.indexOf(this) != -1)
 			reminders.splice(reminders.indexOf(this), 1);
@@ -30,7 +33,6 @@ var reminder_proto = {
 			var container = document.getElementById(self.type + '-reminder-container');
 			self.isOn = false;
 			self.container.style.opacity = 0;
-			setTimeout(function () { document.body.removeChild(self.container);}, 100);
 			this.remove();			
 			if(isDesktop())
 				analytics.track('Close Desktop ' + this.type + ' Reminder');
@@ -105,6 +107,7 @@ var reminder_proto = {
 		gesture.listen("tap", self.container, function() { self.close(); });
 		gesture.listen("swipe", self.container, function() { self.close(); });
 		this.startTimeout(this.delay);
+		this.built = true;
 	}
 };
 
@@ -113,6 +116,7 @@ var newReminder = function(node, cb, type, delay, duration) {
 	reminder.container = document.createElement('div');
 	reminder.timeout = null;
 	reminder.isOn = false;
+	reminder.built = false;
 	reminder.closeCb = cb;
 	reminder.type = type;
 	reminder.delay = delay;
@@ -129,4 +133,72 @@ var forgetReminders = function(remove) {
 
 var closeReminders = function() {
 	reminders.forEach(function (reminder) { reminder.close(); });
+};
+
+var slowReminder = null;
+
+setTimeout(function() {
+	slowReminder = newReminder(slowMessage.call(), null, "Slow", 10000, 5000);
+}, 3000);
+
+var slowMessage = function() {
+	var node = document.createElement('div'),
+		reloadbtn = document.createElement('div'),
+		waitbtn = document.createElement('div');
+	node.innerHTML = "Opps<br/>Looks like our<br/>connection is<br/>lagging";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "35%" : "18%";
+	node.style.marginTop = isUIWebView() ? "50%" : node.style.marginTop;
+	waitbtn.className = "no-fill-btn pointer";
+	gesture.listen("down", waitbtn, function() {
+		waitbtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", waitbtn, function() {
+		waitbtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", waitbtn, function() {
+		reminders[0].close();
+		newReminder(reallySlowMessage.call(), null, "Really Slow", 10000, 5000);
+	});
+	waitbtn.id = "wait-btn";
+	waitbtn.innerHTML = "Keep Waiting";
+	node.appendChild(waitbtn);	
+	reloadbtn.className = "no-fill-btn pointer";
+	gesture.listen("down", reloadbtn, function() {
+		reloadbtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", reloadbtn, function() {
+		reloadbtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", reloadbtn, function() {
+		location.reload();
+	});
+	reloadbtn.id = "reload-btn";
+	reloadbtn.innerHTML = "Reload Page";
+	node.appendChild(reloadbtn);
+	return node;
+};
+
+var reallySlowMessage = function() {
+	var node = document.createElement('div'),
+		reloadbtn = document.createElement('div');
+	node.innerHTML = "Still Lagging...<br/><br/>Let's try again";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "50%" : "24%";
+	node.style.marginTop = isUIWebView() ? "70%" : node.style.marginTop;
+	reloadbtn.className = "no-fill-btn pointer";
+	gesture.listen("down", reloadbtn, function() {
+		reloadbtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", reloadbtn, function() {
+		reloadbtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", reloadbtn, function() {
+		location.reload();
+	});
+	reloadbtn.id = "reload-btn";
+	reloadbtn.style.bottom = "26%";
+	reloadbtn.innerHTML = "Reload Page";
+	node.appendChild(reloadbtn);
+	return node;
 };

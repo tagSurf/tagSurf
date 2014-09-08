@@ -591,6 +591,21 @@ a {
   left: 10px !important;
 }
 
+/*====== Reminder Stuff =======*/
+#wait-btn {
+  max-width: 70%;
+  position: absolute;
+  bottom: 35%;
+  left: 21%;
+  font-weight: 200;
+}
+#reload-btn {
+  max-width: 70%;
+  position: absolute;
+  bottom: 22%;
+  left: 22%;
+  font-weight: 200;
+}
 .big-lnk {
 	padding: 15px 0;
 }
@@ -896,5 +911,17 @@ a {
 	}
     .reminder-close {
 	    bottom: 20px;
+    }
+
+    /*===== Reminder Stuff =====*/
+    #wait-btn {
+	    max-width: 21%;
+	    left: 41%;
+	    bottom: 30%;
+    }
+    #reload-btn {
+	    max-width: 21%;
+	    left: 41.5%;
+	    bottom: 17%;
     }
 }
