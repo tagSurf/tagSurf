@@ -610,7 +610,7 @@ onload = function ()
 			});
 		else if (topCard)
 			slowReminder.forget(true);
-	}, 5000);
+	}, 8000);
 	if (!isAuthorized() && !DEBUG)
 	 	tutorial.start();
 };
