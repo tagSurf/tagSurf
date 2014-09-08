@@ -158,7 +158,10 @@ var slowMessage = function() {
 	});
 	gesture.listen("tap", waitbtn, function() {
 		reminders[0].close();
-		newReminder(reallySlowMessage.call(), null, "Really Slow", 10000, 5000);
+		setTimeout(function() {
+			if (!current_deck.topCard())
+				newReminder(reallySlowMessage.call(), null, "Really Slow", 1000, 8000);
+		}, 10000);
 	});
 	waitbtn.id = "wait-btn";
 	waitbtn.innerHTML = "Keep Waiting";
