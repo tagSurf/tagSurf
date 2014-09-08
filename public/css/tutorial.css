@@ -145,6 +145,14 @@
 .reminder-tag {
   font-size: 80%;
 }
+#reddit-icon {
+  width: 50%;
+  margin: 3% auto;
+}
+#imgur-icon {
+  width: 40%;
+  margin: 3% auto;
+}
 
 /*== (Desktop Only) ==*/
 .close-instructions {
@@ -235,5 +243,11 @@
   }
   .slightly-left-arrow {
     left: 40% !important;
+  }
+  #reddit-icon {
+    width: 20%;
+  }
+  #imgur-icon {
+    width: 15%;
   }
 }
