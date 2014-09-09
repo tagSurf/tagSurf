@@ -10,12 +10,7 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
+//= require tos_pp
 //= require util
-//= require carousel
 //= require gesture
-//= require nav
-//= require drag
-//= require global
-//= require global-functions
-carousel.on();
-fadeInBody();
+//= require modal

@@ -1,8 +1,5 @@
-<% content_for :stylesheets do %>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/login.css">
-  <link rel="stylesheet" href="/css/beta.css">
-<% end %>
+<%= stylesheet_link_tag "signup", :media => "all" %>
+
 
 <div class="scroller">
 
@@ -38,10 +35,7 @@
 
 </div>
 
-<script src="/js/tos_pp.js"></script>
-<script src="/js/util.js"></script>
-<script src="/js/gesture.js"></script>
-<script src="/js/modal.js"></script>
+<%= javascript_include_tag "signup" %>
 
 <script>
 var inputs = document.getElementsByClassName("su-input");

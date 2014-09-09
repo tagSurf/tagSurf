@@ -2,10 +2,7 @@
   <title>tagSurf</title>
 <% end %>
 
-<% content_for :stylesheets do %>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/login.css">
-<% end %>
+<%= stylesheet_link_tag "sessions", :media => "all" %>
 
 <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:role => 'form'} ) do |f| %>
   <center>
@@ -24,8 +21,7 @@
   </div>
 <% end %>
 <%= link_to 'Forgot password?', new_password_path(:user), class: 'forgot-password twelve light-gray' %>
-<script src="/js/util.js"></script>
-<script src="/js/stroke.js"></script>
+<%= javascript_include_tag "sessions" %>
 <script type="text/javascript">
   var f = document.getElementById("new_user"),
       inputs = document.getElementsByClassName("ts-input");

@@ -11,11 +11,4 @@
 // about supported directives.
 //
 //= require util
-//= require carousel
-//= require gesture
-//= require nav
-//= require drag
-//= require global
-//= require global-functions
-carousel.on();
-fadeInBody();
+//= require stroke
