@@ -21,8 +21,11 @@ Tagsurf::Application.configure do
   # Disable Rails's static asset server (Apache or nginx will already do this).
   config.serve_static_assets = false
 
-  # Compress all assets in production
+  # Compress all assets in production 
   Rails.application.config.assets.compress = true
+
+  # Add sub manifests to list of precompiled assets
+  config.assets.precompile += %w( gallery_page.js sessions.js signup.js welcome.js gallery_page.css.scss sessions.css.scss welcome.css.scss )
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier
