@@ -1,13 +1,9 @@
 /* 
-* require_self
-* require_tree .
-*
+*= require_self
+*= require style
+*= require navbar
+*= require gallery
+*= require feed
+*= require tutorial
+*= require notifications
 */
-
-@import "jquery.ui.all";
-@import "global";
-@import "navigation";
-@import "constants";
-@import "forms";
-@import "sections";
-@import "carousel";

@@ -2,13 +2,7 @@
   <title>tagSurf</title>
 <% end %>
 
-<% content_for :stylesheets do %>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/navbar.css">
-  <link rel="stylesheet" href="/css/gallery.css">
-  <link rel="stylesheet" href="/css/feed.css">
-  <link rel="stylesheet" href="/css/tutorial.css">
-<% end %>
+<%= stylesheet_link_tag "application", :media => "all" %>
 
 <!-- Place body html below -->
 <div id="nav" ontouchmove="return false;"></div>

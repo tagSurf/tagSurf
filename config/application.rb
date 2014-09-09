@@ -9,7 +9,7 @@ CONFIG = {}
 module Tagsurf
 
   class Application < Rails::Application
-    config.assets.enabled = false
+    config.assets.enabled = true
     config.autoload_paths += Dir["#{config.root}/lib/**/**/"]
 
     config.to_prepare do
