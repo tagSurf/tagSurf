@@ -2,16 +2,14 @@
   <title>tagSurf - Submissions</title>
 <% end %>
 
-<%= stylesheet_link_tag "gallery_page", :media => "all" %>
+<div id="nav"></div>
 
 <%= javascript_include_tag "gallery_page" %>
 
 <% content_for :javascripts do %>
   <script>
-  	populateNavbar();
-  	gallerize("history");
-  	gallerize("submissions");
+    populateNavbar();
+    gallerize("history");
+    gallerize("submissions");
   </script>
 <% end %>
-
-<div id="nav"></div>

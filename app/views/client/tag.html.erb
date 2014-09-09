@@ -2,16 +2,14 @@
   <title>tagSurf - Tag</title>
 <% end %>
 
-<%= stylesheet_link_tag "gallery_page", :media => "all" %>
+<!-- Place body html below -->
+<div id="nav"></div>
 
 <%= javascript_include_tag "gallery_page" %>
 
 <% content_for :javascripts do %>
   <script>
-  	populateNavbar();
-  	gallerize("tag");
+    populateNavbar();
+    gallerize("tag");
   </script>
 <% end %>
-
-<!-- Place body html below -->
-<div id="nav"></div>

@@ -1,6 +1,3 @@
-<%= stylesheet_link_tag "signup", :media => "all" %>
-
-
 <div class="scroller">
 
 <%= form_for(User.new, :as => :user, :url => registration_path(:user) ) do |f| %>
@@ -24,7 +21,6 @@
 
       <%= f.submit 'Submit', id: 'su-submit-btn' %>
       
-
     </div>
   </center>
 <% end %>
@@ -38,6 +34,7 @@
 <%= javascript_include_tag "signup" %>
 
 <script>
+document.body.style.width = "100%";
 var inputs = document.getElementsByClassName("su-input");
 inputs[0].onfocus = function () { toggleClass.apply(inputs[0].parentNode, ["focused"]); };
 inputs[0].onblur = function () { toggleClass.apply(inputs[0].parentNode, ["focused"]); };

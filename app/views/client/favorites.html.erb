@@ -2,14 +2,13 @@
   <title>tagSurf - Favorites</title>
 <% end %>
 
+<!-- Place body html below -->
+<div id="nav"></div>
+
 <%= javascript_include_tag "gallery_page" %>
 <% content_for :javascripts do %>
   <script>
-  	populateNavbar();
-  	gallerize("favorites");
+    populateNavbar();
+    gallerize("favorites");
   </script>
 <% end %>
-
-
-<!-- Place body html below -->
-<div id="nav"></div>
