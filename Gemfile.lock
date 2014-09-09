@@ -112,6 +112,8 @@ GEM
     pg (0.17.0)
     polyglot (0.3.3)
     rack (1.5.2)
+    rack-cache (1.2)
+      rack (>= 0.4)
     rack-protection (1.5.2)
       rack
     rack-test (0.6.2)
@@ -141,6 +143,8 @@ GEM
       redis (~> 3.0.4)
     redis-objects (0.9.1)
       redis (>= 3.0.2)
+    redis-store (1.1.4)
+      redis (>= 2.2)
     rspec-collection_matchers (0.0.3)
       rspec-expectations (>= 2.99.0.beta1)
     rspec-core (3.0.0.beta2)
@@ -227,10 +231,12 @@ DEPENDENCIES
   omniauth (= 1.1.0)
   omniauth-oauth2 (= 1.0.3)
   pg (= 0.17.0)
+  rack-cache
   rails (= 4.0.2)
   rails_12factor
   redis
   redis-objects (= 0.9.1)
+  redis-store
   rspec-rails (~> 3.0.0.beta)
   sass-rails (~> 4.0.0)
   sidekiq
