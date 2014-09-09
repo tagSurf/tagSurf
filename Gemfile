@@ -18,8 +18,6 @@ gem 'sidetiq'
 gem 'redis'
 gem 'redis-objects', '0.9.1'
 gem 'honeybadger'
-gem 'sprockets', '2.2.2' 
-gem 'sprockets-rails', :require => 'sprockets/railtie'
 
 gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
