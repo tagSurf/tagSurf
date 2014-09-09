@@ -10,16 +10,22 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery
-//= require jquery_ujs
-//= require global-functions
-//= require bootstrap
-//= require underscore
-//= require jquery.hammer-full
-//= require ftscroll
-//= require carousel
-//= require jquery.ui.autocomplete
+//= require tos_pp
+//= require util
+//= require throbber
+//= require gesture
+//= require reminder
+//= require nav
+//= require image
+//= require stroke
+//= require modal
+//= require drag
+//= require share
+//= require panic
+//= require tutorial
+//= require card
+//= require deck
 //= require autocomplete
-//= require toolbar
-//= require history
-//= require_tree .
+//= require feed
+//= require global
+//= require global-functions
