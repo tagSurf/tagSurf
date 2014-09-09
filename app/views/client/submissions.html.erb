@@ -2,24 +2,14 @@
   <title>tagSurf - Submissions</title>
 <% end %>
 
-<% content_for :stylesheets do %>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/navbar.css">
-  <link rel="stylesheet" href="/css/gallery.css">
-<% end %>
+<div id="nav"></div>
+
+<%= javascript_include_tag "gallery_page" %>
 
 <% content_for :javascripts do %>
-  <script src="/js/nav.js"></script>
-  <script src="/js/util.js"></script>
-  <script src="/js/image.js"></script>
-  <script src="/js/gesture.js"></script>
-  <script src="/js/modal.js"></script>
-  <script src="/js/gallery.js"></script>
   <script>
-  	populateNavbar();
-  	gallerize("history");
-  	gallerize("submissions");
+    populateNavbar();
+    gallerize("history");
+    gallerize("submissions");
   </script>
 <% end %>
-
-<div id="nav"></div>

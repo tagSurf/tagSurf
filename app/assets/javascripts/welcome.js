@@ -10,22 +10,12 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require tos_pp
 //= require util
-//= require throbber
 //= require gesture
-//= require reminder
 //= require nav
-//= require image
-//= require stroke
-//= require modal
 //= require drag
-//= require share
-//= require panic
-//= require tutorial
-//= require card
-//= require deck
-//= require autocomplete
-//= require feed
 //= require global
 //= require global-functions
+//= require carousel
+carousel.on();
+fadeInBody();

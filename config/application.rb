@@ -9,8 +9,11 @@ CONFIG = {}
 module Tagsurf
 
   class Application < Rails::Application
-    config.assets.enabled = false
+    config.assets.enabled = true
     config.autoload_paths += Dir["#{config.root}/lib/**/**/"]
+
+  # Add sub manifests to list of precompiled assets
+  config.assets.precompile += %w( gallery_page.js sessions.js signup.js welcome.js gallery_page.css sessions.css welcome.css )
 
     config.to_prepare do
         Devise::SessionsController.layout "client"

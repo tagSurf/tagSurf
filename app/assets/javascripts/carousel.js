@@ -1,175 +1,182 @@
-/*
-* super simple carousel
-* animation between panes happens with css transitions
-* Specific to tagSurf
-* TODO translate to Coffeescript
-*/
-function Carousel(element)
-{
-    var self = this;
-    element = $(element);
-
-    var container = $(">ul", element);
-    var panes = $.unique($(">ul>li", element));
-
-    var pane_width = 0;
-    var pane_count = panes.length;
-    var current_pane = 2;
-
-
-    /**
-     * initial
-     */
-    this.init = function(starting_pane) {
-        setPaneDimensions();
-        //clearDuplicates();
-
-        $(window).on("load resize orientationchange", function() {
-            setPaneDimensions();
-        })
-        this.showPane(starting_pane, false);
-    };
-
-    function clearDuplicates() {
-      dup = {}
-      $('.carousel-card').each(function() {
-        var data = $(this).data();
-        if (dup[data] == null){
-          dup[data] = true;
-        } else {
-          $(this).remove();
-        };
-      });
-    };
-
-
-    /**
-     * set the pane dimensions and scale the container
-     */
-    function setPaneDimensions() {
-        pane_width = $(document).width();
-        panes.each(function() {
-          $(this).width(pane_width);
-        });
-        container.width(pane_width*pane_count);
-    };
-
-
-    /**
-     * show pane by index
-     */
-    this.showPane = function(index, animate) {
-        // between the bounds
-        index = Math.max(0, Math.min(index, pane_count-1));
-        current_pane = index;
-
-        var offset = -((100/pane_count)*current_pane);
-        setContainerOffset(offset, animate);
-    };
-
-
-    function setContainerOffset(percent, animate) {
-        container.removeClass("animate");
-
-        if(animate) {
-            container.addClass("animate");
-        }
-
-        container.css("transform", "translate("+ percent +"%,0)");
-    }
-
-    this.next = function() { return this.showPane(current_pane+1, true); };
-    this.prev = function() { return this.showPane(current_pane-1, true); };
-
-    function handleHammer(ev) {
-        // disable browser scrolling
-        ev.gesture.preventDefault();
-        var doc_width = $(document).width()
-
-        switch(ev.type) {
-            case 'dragright':
-            case 'dragleft':
-                // stick to the finger
-                var pane_offset = -(100/pane_count)*current_pane;
-                var drag_offset = ((100/pane_width)*ev.gesture.deltaX) / pane_count;
-
-                // slow down at the first and last pane 
-                if (current_pane == pane_count-1 && ev.gesture.direction == "left") {
-                  var el = $('li').last()
-                  var id = el.data("id")
-                  var collection = []
-                  $.ajax({
-                    url: "/api/history/next/" + id
-                  }).success(function(data) {
-                    collection = data.data;
-                    $.each(collection, function(index, value) {
-                      if ($('.carousel-card[data-id='+ value.id + ']')[0]) {
-                        //console.log("already added");
-                      }else{
-                        pane_count = pane_count + 1
-                        container.append( "<li class='pane" + (current_pane + index + 2) + " carousel-card' data-id=" + value.id + " style='width:"+ doc_width +"px'> <div class='carousel-img-container'> <img src='" + value.link + "' class='carousel-img' /> </div> <div class='carousel-txt-container'> <p>" + value.title + "</p> </div> </li>");
-                      };
-                    });
-                    setContainerOffset(drag_offset + pane_offset);
-                    console.log(pane_count);
-                    self.init(pane_count - 11)
-                  });
-                }
-
-                if (current_pane == 0 && ev.gesture.direction == "right") {
-                    var el = $($('.carousel-card')[0]);
-                    var id = el.data("id");
-                    var collection = [];
-                    $.ajax({
-                      url: "/api/history/previous/" + id
-                    }).success(function(data) {
-                      collection = data.data;
-                      $.each(collection, function(index, value) {
-                        if ($('.carousel-card[data-id='+ value.id + ']')[0]) {
-                          //console.log("already added");
-                        }else{
-                          pane_count = pane_count + 1
-                          el.before( "<li class='pane-" + (current_pane + index) + " carousel-card' data-id=" + value.id + " style='width:"+ doc_width +"px'> <div class='carousel-img-container'> <img src='" + value.link + "' class='carousel-img' /> </div> <div class='carousel-txt-container'> <p>" + value.title + "</p> </div> </li>");
-                        };
-                      });
-                      setContainerOffset(drag_offset + pane_offset);
-                      self.init(10)
-                    });
-
-
-
-                    drag_offset *= .4;
-                }
-
-                setContainerOffset(drag_offset + pane_offset);
-                break;
-
-            case 'swipeleft':
-                self.next();
-                ev.gesture.stopDetect();
-                break;
-
-            case 'swiperight':
-                self.prev();
-                ev.gesture.stopDetect();
-                break;
-
-            case 'release':
-                // more then 50% moved, navigate
-                if(Math.abs(ev.gesture.deltaX) > pane_width/2) {
-                    if(ev.gesture.direction == 'right') {
-                        self.prev();
-                    } else {
-                        self.next();
-                    }
-                }
-                else {
-                    self.showPane(current_pane, true);
-                }
-                break;
-        }
-    }
-
-    new Hammer(element[0], { drag_lock_to_axis: true }).on("release dragleft dragright swipeleft swiperight", handleHammer);
-}
+var carousel = {
+	view: document.createElement('div'),
+	activeCircle: null,
+	translateDistance: window.innerWidth,
+	inactivityTimeout: null,
+	animating: false,
+	images: [],
+	current_card: 0,
+	total_cards:0,
+	endButton: false,
+	_build: function ()
+	{
+		addCss({
+			"#carousel": function() {
+				return "height: " + window.innerHeight + "px; width: " + window.innerWidth + "px";
+			},
+			".carousel-container": function() {
+				return "width: " + (5 * window.innerWidth) + "px";
+			},
+			".carousel-image-container": function() {
+				return "width: " + window.innerWidth + "px";
+			}
+		});
+		var index, changeOrder, container = document.createElement('div'),
+			orderIndication = document.createElement('div'),
+			circlesContainer = document.createElement('div'),
+			nextButton = document.createElement('div');
+		carousel.view.id = "carousel";
+		container.className = "carousel-container";
+		orderIndication.className = "carousel-order-indicator";
+		nextButton.id = "next-button";
+		nextButton.className = "advnc-tutorial-btn";
+		nextButton.innerHTML = "Next";
+		gesture.listen("tap", nextButton, carousel.nextButtonCallback);
+		orderIndication.appendChild(circlesContainer);
+		orderIndication.appendChild(nextButton);
+		carousel.view.appendChild(container);
+		carousel.view.appendChild(orderIndication);
+		drag.makeDraggable(container, {
+			constraint: "vertical",
+			interval: carousel.translateDistance, 
+			up: carousel.orderIndicationCallback
+		});
+		document.body.appendChild(carousel.view);
+		for (index = 1; index <= 6; ++index)
+		{
+			carousel.images.push(
+				'http://assets.tagsurf.co/img/tutorial/tutorial_' + index + '.png');
+		}
+		if(isAndroid())
+			carousel.images.push('http://assets.tagsurf.co/img/tutorial/tutorial_homescreen_android.png');
+		else
+			carousel.images.push('http://assets.tagsurf.co/img/tutorial/tutorial_homescreen_ios.png');
+		carousel._populate();
+		//gesture.listen("swipe", carousel.view.firstChild, carousel.swipeCallback);
+		//gesture.listen("up", carousel.view.firstChild, carousel.upCallback);
+		//Stop auto-advance after the first touch event
+		gesture.listen("down", carousel.view.firstChild, carousel.downCallback);
+	},
+	orderIndicationCallback: function (direction) {
+		 if (direction == "left" && 
+			carousel.activeCircle.nextSibling)
+		 {
+			if ((carousel.current_card+1)==(carousel.total_cards-1)) {
+				carousel.setEndButton();
+				carousel.swipeCallback("left");
+			}
+			carousel.activeCircle.classList.remove('active-circle');
+			carousel.activeCircle.nextSibling.classList.add('active-circle');
+			carousel.activeCircle = carousel.activeCircle.nextSibling;
+			carousel.current_card+=1;
+		 }
+		 if (direction == "right" &&
+			carousel.activeCircle.previousSibling)
+		 {
+			carousel.activeCircle.classList.remove('active-circle');
+			carousel.activeCircle.previousSibling.classList.add('active-circle');
+			carousel.activeCircle = carousel.activeCircle.previousSibling;
+			carousel.current_card-=1;
+		 }
+	},
+	_populate: function ()
+	{
+		var index, container, image, circle;
+		for (index in carousel.images)
+		{
+			container = document.createElement('div');
+			container.className = "carousel-image-container";
+			image = new Image();
+			image.src = carousel.images[index];
+			container.appendChild(image);
+			circle = document.createElement('div');
+			circle.className = "indicator-circle";
+			if (index == 0)
+			{
+				circle.className +=  " active-circle";
+				carousel.activeCircle = circle;
+			}
+			carousel.view.firstChild.appendChild(container);
+			carousel.view.lastChild.firstChild.appendChild(circle);
+			carousel.total_cards+=1;
+		}
+	},
+	swipeCallback: function (direction, distance, dx, dy, pixelsPerSecond)
+	{
+		var container = carousel.view.firstChild, 
+			xMod = container.xDrag % carousel.translateDistance;
+		if (container.xDrag <= 0 && container.xDrag >
+			-(container.scrollWidth - carousel.translateDistance) &&
+			carousel.animating == false)
+		{
+			if (direction == "right")
+			{
+				container.xDrag -= xMod;
+			}
+			else if (direction == "left")
+			{
+				container.xDrag -= (carousel.translateDistance + xMod);
+			}
+			else
+			{
+				return;
+			}
+			carousel.orderIndicationCallback(direction);
+			trans(container, function() {
+				container.animating = false;
+			}, "-webkit-transform 300ms ease-out");
+			container.animating = true;
+			container.style['-webkit-transform'] = 
+				"translate3d(" + container.xDrag + "px,0,0)";
+		}
+	},
+	nextButtonCallback: function(){
+		if (carousel.endButton) {
+			carousel.off();
+			analytics.track('Completed Tutorial');
+			document.forms[0].submit();
+		} 
+		else if ((carousel.current_card+1)==(carousel.total_cards-1)) {
+			carousel.setEndButton();
+			carousel.swipeCallback("left");
+		}
+		else {
+			clearInterval(carousel.inactivityTimeout);
+			carousel.inactivityTimeout = null;
+			carousel.swipeCallback("left");
+		};
+	},
+	setEndButton: function(){
+		document.getElementById("next-button").innerHTML = "Got it!";
+		carousel.endButton = true;
+	},
+	// upCallback: function ()
+	// {
+	// 	carousel.inactivityTimeout = setInterval(function(){
+	// 		carousel.swipeCallback("left");
+	// 	},5000);
+	// },
+	downCallback: function ()
+	{
+		clearInterval(carousel.inactivityTimeout);
+		carousel.inactivityTimeout = null;
+	},
+	on: function ()
+	{
+		carousel.view.style.visibility = "visible";
+		carousel.view.style.opacity = 1;
+		carousel.inactivityTimeout = setInterval(function(){
+			carousel.swipeCallback("left");
+		},5000);
+	},
+	off: function ()
+	{
+		carousel.view.style.opacity = 0;
+		trans(carousel.view, function(){
+			carousel.view.style.visibility = "hidden";
+		});
+		clearInterval(carousel.inactivityTimeout);
+	},
+};
+carousel._build();
 

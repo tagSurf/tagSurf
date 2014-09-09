@@ -1,8 +1,4 @@
-<% content_for :stylesheets do %>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/login.css">
-  <link rel="stylesheet" href="/css/beta.css">
-<% end %>
+<%= stylesheet_link_tag "sessions", :media => "all" %>
 
 <div class="scroller">
 
@@ -27,7 +23,6 @@
 
       <%= f.submit 'Submit', id: 'su-submit-btn' %>
       
-
     </div>
   </center>
 <% end %>
@@ -38,12 +33,10 @@
 
 </div>
 
-<script src="/js/tos_pp.js"></script>
-<script src="/js/util.js"></script>
-<script src="/js/gesture.js"></script>
-<script src="/js/modal.js"></script>
+<%= javascript_include_tag "signup" %>
 
 <script>
+document.body.style.width = "100%";
 var inputs = document.getElementsByClassName("su-input");
 inputs[0].onfocus = function () { toggleClass.apply(inputs[0].parentNode, ["focused"]); };
 inputs[0].onblur = function () { toggleClass.apply(inputs[0].parentNode, ["focused"]); };

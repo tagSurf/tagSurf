@@ -1,4 +1,4 @@
-// This is a manifest file that'll be compiled into application.js, which will include all the files
+// This is a manifest file that'll be compiled into signup.js, which will include all the files
 // listed below.
 //
 // Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
@@ -12,20 +12,5 @@
 //
 //= require tos_pp
 //= require util
-//= require throbber
 //= require gesture
-//= require reminder
-//= require nav
-//= require image
-//= require stroke
 //= require modal
-//= require drag
-//= require share
-//= require panic
-//= require tutorial
-//= require card
-//= require deck
-//= require autocomplete
-//= require feed
-//= require global
-//= require global-functions

@@ -1,4 +1,4 @@
-// This is a manifest file that'll be compiled into application.js, which will include all the files
+// This is a manifest file that'll be compiled into gallery_page.js, which will include all the files
 // listed below.
 //
 // Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
@@ -11,21 +11,16 @@
 // about supported directives.
 //
 //= require tos_pp
-//= require util
-//= require throbber
-//= require gesture
-//= require reminder
 //= require nav
+//= require util
 //= require image
-//= require stroke
-//= require modal
+//= require gesture
 //= require drag
+//= require modal
+//= require throbber
+//= require autocomplete
 //= require share
 //= require panic
-//= require tutorial
-//= require card
-//= require deck
-//= require autocomplete
-//= require feed
+//= require gallery
 //= require global
 //= require global-functions
