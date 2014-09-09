@@ -12,11 +12,14 @@ Tagsurf::Application.configure do
   
   # Probably should use redis-cache
   # config.cache_store = :mem_cache_store
+  redis_url = URI.parse(ENV['OPENREDIS_URL'] || "redis://localhost:6379/")
+  config.cache_store = :redis_store, redis_url
+  config.static_cache_control = "public, max-age=2592000"
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
   # Add `rack-cache` to your Gemfile before enabling this.
   # For large-scale production use, consider using a caching reverse proxy like nginx, varnish or squid.
-  # config.action_dispatch.rack_cache = true
+  config.action_dispatch.rack_cache = true
 
   # Disable Rails's static asset server (Apache or nginx will already do this).
   config.serve_static_assets = false
