@@ -13,8 +13,8 @@ module Tagsurf
     config.autoload_paths += Dir["#{config.root}/lib/**/**/"]
 
   # Add sub manifests to list of precompiled assets
-  config.assets.precompile += %w( gallery_page.js sessions.js signup.js welcome.js gallery_page.css.scss sessions.css.scss welcome.css.scss )
-  
+  config.assets.precompile += %w( gallery_page.js sessions.js signup.js welcome.js gallery_page.css sessions.css welcome.css )
+
     config.to_prepare do
         Devise::SessionsController.layout "client"
         Devise::RegistrationsController.layout "client"

@@ -24,9 +24,6 @@ Tagsurf::Application.configure do
   # Compress all assets in production 
   Rails.application.config.assets.compress = true
 
-  # Add sub manifests to list of precompiled assets
-  config.assets.precompile += %w( gallery_page.js sessions.js signup.js welcome.js gallery_page.css.scss sessions.css.scss welcome.css.scss )
-
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier
   # config.assets.css_compressor = :sass
