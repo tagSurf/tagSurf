@@ -377,6 +377,7 @@ var __ua = navigator.userAgent, _ua = {
   isIos: (__ua.indexOf("iPhone") != -1) || (__ua.indexOf("iPad") != -1),
   isMobile: __ua.toLowerCase().indexOf("mobile") != -1,
   isAndroid: __ua.indexOf("Android") != -1,
+  isNativeAndroid: __ua.indexOf("AndroidWebView") != -1,
   isStockAndroid: (__ua.indexOf("Mozilla/5.0") != -1)
     && (__ua.indexOf("Android ") != -1)
     && (__ua.indexOf("AppleWebKit") != -1)
@@ -405,6 +406,9 @@ var isMobile = function() {
 };
 var isAndroid = function() {
   return _ua.isAndroid;
+};
+var isNativeAndroid = function() {
+  return _ua.isNativeAndroid;
 };
 var isStockAndroid = function() {
   return _ua.isStockAndroid;
