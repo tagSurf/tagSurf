@@ -156,13 +156,18 @@ onload = function ()
 			}
 		},
 		tap: function (tapCount) {
-			var slider = topCard();
+			var slider = topCard(),
+			imageContainer = slider.contents.firstChild,
+			trueScrollTop = scrollContainer.scrollTop ? scrollContainer.scrollTop
+				: (scrollContainer.yDrag ? -scrollContainer.yDrag : 0);
 			if (modal.zoom.zoomed) return;
 			if (tapCount == 1)
 			{
 				if (slider.compressing == false)
 				{
 					modal.zoomIn(slider);
+					modal.setZoomVerticalPosition(trueScrollTop, 
+						imageContainer.scrollWidth);
 				}
 				else if (slider.expanded == false)
 				{
