@@ -33,7 +33,7 @@ var reminder_proto = {
 			setTimeout(function () { document.body.removeChild(self.container);}, 100);
 			this.remove();			
 			if(isDesktop())
-				analytics.track('Close Desktop' + this.type + ' Reminder');
+				analytics.track('Close Desktop ' + this.type + ' Reminder');
 			else
 				analytics.track('Close ' + this.type + ' Reminder');
 			self.closeCb && self.closeCb();
@@ -123,8 +123,8 @@ var newReminder = function(node, cb, type, delay, duration) {
 	return reminder;
 };
 
-var forgetReminders = function() {
-	reminders.forEach(function (reminder) { reminder.forget(); });
+var forgetReminders = function(remove) {
+	reminders.forEach(function (reminder) { reminder.forget(remove); });
 };
 
 var closeReminders = function() {

@@ -173,6 +173,44 @@ html, body {
 .login-card div {
   padding: 2px;
 }
+.tos-pp {
+  margin-top: 10px;
+}
+#line-text-login {
+  padding: 10px 0;
+}
+#terms-lnk {
+  padding: 8px 0;
+}
+#privacy-lnk {
+  padding: 8px 0;
+}
+.login-card-btn {
+  font-size: 20px;
+  font-family: 'Raleway', 'sans-serif';
+  font-weight:200;
+  color: white;
+  background-color: #404041;
+  letter-spacing: 1px;
+  height: 45px;
+  padding-top: 10px;
+  border: none;
+  width: 160px;
+  outline-width: 0;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  border-radius: 40px;
+  -webkit-border-radius: 40px;
+  -moz-box-shadow: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+  -webkit-appearance: none;
+}
+.UIWebView-signup-button {
+  background-color: #404041 !important;
+  margin-bottom: 0px !important;
+  margin-top: 10px;
+}
 
 /*======== Swiping Animation Stuff ========*/
 .swiping {

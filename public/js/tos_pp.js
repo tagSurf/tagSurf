@@ -24,6 +24,7 @@ var initDocLinks = function(closeCb) {
 	["terms", "privacy"].forEach(function(doc) {
 		gesture.listen('down', document.getElementById(doc + "-lnk"), function() {
 			gesture.preventDefault = false;
+			voteButtonsOff();
 			modal.halfOn(removeModal);
 			curContent = document.getElementById(doc);
 			modal.modalIn(curContent, removeModal);
