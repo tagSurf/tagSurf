@@ -120,7 +120,6 @@ var modal = {
 					((direction == "increasing" && currentWidth < zoomToWidth)
 					|| (direction == "decreasing" && currentWidth > zoomToWidth)))
 				{
-				console.log(newWidth, window.innerWidth);
 					modal.zoom.current = newWidth;
 					node.style.width = newWidth + 'px';
 					modal.zoom.scrollLeft += changedWidth / 2;
