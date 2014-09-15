@@ -105,7 +105,7 @@ var gesture = {
 	onGestureStart: function(e, node) {
 	},
 	onGestureChange: function(e, node) {
-		gesture.triggerPinch(node, Math.pow(e.scale, (1/3)));
+		gesture.triggerPinch(node, Math.pow(e.scale, (1/8)));
 	},
 	onGestureEnd: function(e, node) {
 		gesture.triggerPinch(node);
