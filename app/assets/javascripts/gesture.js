@@ -78,11 +78,12 @@ var gesture = {
 		}
 		return { x: e.x, y: e.y };
 	},
-	getDiff: function(p1, p2) {
+	getDiff: function(p1, p2, mp) {
 		var d = {};
 		d.x = p2.x - p1.x;
 		d.y = p2.y - p1.y;
 		d.distance = Math.sqrt((d.x * d.x) + (d.y * d.y));
+		if (mp) d.midpoint = gesture.getMidpoint([p1,p2]);
 		if (Math.abs(d.x) > Math.abs(d.y))
 			d.direction = d.x > 0 ? 'right' : 'left';
 		else
@@ -90,9 +91,15 @@ var gesture = {
 		return d;
 	},
 	pinchDiff: function(e) {
-		return isIos() ? e.scale : 
+		return isIos() ? {x:e.layerX, y:e.layerY} :
 			gesture.getDiff(gesture.getPos(e.touches[0]), 
-				gesture.getPos(e.touches[1]));
+				gesture.getPos(e.touches[1]), true);
+	},
+	getMidpoint: function(points) {
+		var midpoint = function (coord) {
+			return (points[0][coord] + points[1][coord]) / 2;
+		};
+		return {x:midpoint('x'), y:midpoint('y')};
 	},
 	pixelsPerSecond: function(distance, timeDiff, gest) {
 		var t = gesture.thresholds[gest];
@@ -105,7 +112,8 @@ var gesture = {
 	onGestureStart: function(e, node) {
 	},
 	onGestureChange: function(e, node) {
-		gesture.triggerPinch(node, Math.pow(e.scale, (1/8)));
+		gesture.triggerPinch(node, Math.pow(e.scale, (1/8)),
+			gesture.pinchDiff(e));
 	},
 	onGestureEnd: function(e, node) {
 		gesture.triggerPinch(node);
@@ -177,7 +185,7 @@ var gesture = {
 	onMove: function(e, node) {
 		var v = node.gvars;
 		if (v.active) {
-			var pos = gesture.getPos(e),
+			var pos = gesture.getPos(e), pdiff,
 				diff = gesture.getDiff(v.lastPos, pos),
 				now = Date.now(),
 				tdiff = now - v.dragTime;
@@ -188,8 +196,11 @@ var gesture = {
 					diff.distance, diff.x, diff.y,
 					gesture.pixelsPerSecond(diff.distance, tdiff, "drag"));
 			if (isAndroid())
+			{
+				pdiff = gesture.pinchDiff(e);
 				gesture.triggerPinch(node,
-					gesture.pinchDiff(e).distance / v.firstPinch.distance);
+				 	pdiff.distance / v.firstPinch.distance, pdiff.midpoint);
+			}
 		}
 	},
 	gWrap: function(node) {
@@ -254,10 +265,10 @@ var gesture = {
 			delete node.gid;
 		}
 	},
-	triggerPinch: function(node, normalizedDistance) {
+	triggerPinch: function(node, normalizedDistance, midpoint) {
 		var handlers = gesture.handlers.pinch[node.gid];
 		if (handlers) for (var i = 0; i < handlers.length; i++)
-			handlers[i](normalizedDistance);
+			handlers[i](normalizedDistance, midpoint);
 	},
 	triggerSwipe: function(node, direction, distance, dx, dy, pixelsPerSecond) {
 		var handlers = gesture.handlers.swipe[node.gid];
