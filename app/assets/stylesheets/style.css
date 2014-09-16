@@ -270,6 +270,7 @@ a {
 }
 .throbber-bottom {
 	bottom: 5px !important;
+	top: initial !important;
 	height: 30px !important;
 }
 .throbber-back {
