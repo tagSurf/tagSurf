@@ -378,7 +378,7 @@ var __ua = navigator.userAgent, _ua = {
   isMobile: __ua.toLowerCase().indexOf("mobile") != -1,
   isAndroid: __ua.indexOf("Android") != -1,
   isNativeAndroid: __ua.indexOf("AndroidWebView") != -1,
-  isFacebook: __ua.indexOf("facebook") != -1,
+  isFacebook: __ua.indexOf("FB") != -1,
   isStockAndroid: (__ua.indexOf("Mozilla/5.0") != -1)
     && (__ua.indexOf("Android ") != -1)
     && (__ua.indexOf("AppleWebKit") != -1)
