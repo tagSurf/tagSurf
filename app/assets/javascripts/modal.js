@@ -74,7 +74,8 @@ var modal = {
 					* window.innerWidth;
 				modal.zoom.z2width = modal.constants.zoomScale
 					* window.innerWidth;
-				return "height: " + (window.innerHeight - 40) + 'px';
+				if (isDesktop())
+					return "height: " + (window.innerHeight - 40) + 'px !important';
 			}
 		});
 	},
