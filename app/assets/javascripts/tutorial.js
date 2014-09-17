@@ -221,6 +221,7 @@ var welcomeMessage = function() {
 	node.appendChild(logo);
 	node.appendChild(bottomMessage);
 	node.appendChild(skipbtn);
+	alert("marginTop = " + node.style.marginTop);
 	return node;
 };
 

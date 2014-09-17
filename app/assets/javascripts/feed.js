@@ -614,6 +614,7 @@ onload = function ()
 	if (!isAuthorized())// && !DEBUG)
 	 	tutorial.start();
 	alert("isUIWebView = " + isUIWebView());
+	alert("User agent = " + navigator.userAgent);
 };
 
 //This is the first line executed in feed
