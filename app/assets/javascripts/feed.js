@@ -613,6 +613,7 @@ onload = function ()
 	}, 8000);
 	if (!isAuthorized())// && !DEBUG)
 	 	tutorial.start();
+	alert("isUIWebView = " + isUIWebView());
 };
 
 //This is the first line executed in feed
