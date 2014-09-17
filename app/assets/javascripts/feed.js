@@ -611,7 +611,7 @@ onload = function ()
 		else if (topCard)
 			slowReminder.forget(true);
 	}, 8000);
-	if (!isAuthorized())// && !DEBUG)
+	if (!isAuthorized() && !DEBUG)
 	 	tutorial.start();
 };
 
