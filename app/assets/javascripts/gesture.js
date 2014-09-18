@@ -212,7 +212,7 @@ var gesture = {
 				node.gvars.stopPropagation && _e.stopPropagation();
 				return gesture['on' + eName](_e, node) 
 					|| (gesture.preventDefault && _e.preventDefault()) 
-					|| (gesture.stopPropagation() && _e.stopPropagation()) 
+					|| (gesture.stopPropagation && _e.stopPropagation()) 
 					|| false;
 			};
 		});

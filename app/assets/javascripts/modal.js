@@ -309,8 +309,9 @@ var modal = {
 		});
 	},
 	webIn: function (card, cb) {
+		var iframe = modal.web.firstChild.firstChild
 		modal.web.out = true;
-		modal.web.firstChild.firstChild.src = "http://imgur.com/gallery/" + card.data.remote_id
+		iframe.src = "http://imgur.com/gallery/" + card.data.remote_id;
 		modal.web.cb = cb || modal.webOut;
 		modal.web.style.display = "block";
 		gesture.preventDefault = false;
