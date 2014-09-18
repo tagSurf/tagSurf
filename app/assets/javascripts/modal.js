@@ -76,6 +76,8 @@ var modal = {
 					* window.innerWidth;
 				if (isDesktop())
 					return "height: " + (window.innerHeight - 40) + 'px !important';
+				else if (isGallery())
+					return "height: " + (window.innerHeight - 50) + 'px !important';
 			}
 		});
 	},
