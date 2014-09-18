@@ -32,7 +32,7 @@ var share = {
 			return "https://www.facebook.com/dialog/feed"
 				+ "?app_id=676135635790285" + "&link=" + u
 				// + "&picture=" + encodeURI(image.get(d, window.innerWidth - 40).url)
-				+ "&name=" + encodeURI(c.data.caption)
+				+ "&name=" + encodeURI(isGallery() ? c.caption : c.data.caption)
 				+ "&description=%23" + share_tag
 				// + "&caption=" + document.location.hostname
 				+ "&redirect_uri=" + u;
