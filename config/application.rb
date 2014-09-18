@@ -148,6 +148,7 @@ module Tagsurf
       "PiercedNSFW",
       "preggoPorn",
       "realolderwomen",
+      "rape",
       "SceneGirls",
       "sexypantyhose",
       "sexystories",
