@@ -210,8 +210,8 @@ var gesture = {
 				node.gvars.preventDefault && _e.preventDefault();
 				node.gvars.stopPropagation && _e.stopPropagation();
 				return gesture['on' + eName](_e, node) 
-					|| (gesture.preventDefault && node.gvars.preventDefault && _e.preventDefault()) 
-					|| node.gvars.stopPropagation &&_e.stopPropagation() 
+					|| (gesture.preventDefault && _e.preventDefault()) 
+					|| _e.stopPropagation() 
 					|| false;
 			};
 		});

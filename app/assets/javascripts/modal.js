@@ -321,6 +321,7 @@ var modal = {
 	webOut: function () {
 		modal.web.out = false;
 		modal.web.cb = null;
+		modal.web.firstChild.firstChild.src = '';
 		modal.web.style.opacity = 0;
 		trans(modal.web, function (event){
 			// modal.web.className -= " modalslide";

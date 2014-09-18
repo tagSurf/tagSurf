@@ -314,11 +314,17 @@ html, body {
   /*margin-top: 8px;*/
 }
 .source-icon {
-  display: block;
+  height: 24px;
+  margin-right: auto;
+  margin-left: auto;
+}
+#source-btn {
   float: right;
   height: 24px;
+  min-width: 30px;
   margin-top: -3px;
   margin-right: 5px;
+  text-align: center;
 }
 .tag-callout {
   border: 1px solid #00aeef;
