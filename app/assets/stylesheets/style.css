@@ -318,39 +318,6 @@ a {
   pointer-events: none;
 }
 
-/*======== Web Modal Stuff =======*/
-.web-raw-wrapper {
-  display: inline;
-  top: 0;
-  position: absolute;
-  width:100%; 
-}
-.web-raw-wrapper iframe {
-  pointer-events: none;
-}
-.web-wrapper {
-  top: 50px;
-  overflow: scroll;
-  position: absolute;
-  display: none;
-  z-index: 11;
-  width:100%; 
-  opacity: 0;
-  padding-top:20px;
-  background-color: rgba(0, 0, 0, 1);
-  transition: opacity 500ms ease-in-out;
-  -moz-transition: opacity 500ms ease-in-out;
-  -webkit-transition: opacity 500ms ease-in-out;
-}
-.basic-web {
-  z-index: 11;
-  top: 0px;
-  left: 0px;
-  width: 100%;
-  position: absolute;
-  pointer-events: none;
-  border: none;
-}
 /*======== Autocomplete Stuff =========*/
 #add-tag-autocomplete {
   top: 43px;

@@ -58,9 +58,6 @@ var card_proto = {
 			});
 		} else
 			iconLine.children[1].style.display = "none";
-		gesture.listen("tap", iconLine.children[0], function() {
-			modal.webIn(card);
-		});
 		this.tags.sort(function(a, b) {
 			var aName = Object.keys(a)[0];
 			var bName = Object.keys(b)[0];
