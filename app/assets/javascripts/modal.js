@@ -313,6 +313,8 @@ var modal = {
 		modal.web.firstChild.firstChild.src = "http://imgur.com/gallery/" + card.data.remote_id
 		modal.web.cb = cb || modal.webOut;
 		modal.web.style.display = "block";
+		gesture.preventDefault = false;
+		gesture.stopPropagation = false;
 		// setTimeout(function() {
 		// 	modal.web.className += " modalslide";
 		// }, 0);
@@ -323,6 +325,8 @@ var modal = {
 		modal.web.cb = null;
 		modal.web.firstChild.firstChild.src = '';
 		modal.web.style.opacity = 0;
+		gesture.preventDefault = true;
+		gesture.stopPropagation = true;
 		trans(modal.web, function (event){
 			// modal.web.className -= " modalslide";
 			modal.web.style.display = "none";

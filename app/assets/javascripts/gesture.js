@@ -1,6 +1,7 @@
 var gesture = {
 	gid: 0,
 	preventDefault: true,
+	stopPropagation: true,
 	thresholds: {
 		swipe: {
 			minDistance: 35,
@@ -211,7 +212,7 @@ var gesture = {
 				node.gvars.stopPropagation && _e.stopPropagation();
 				return gesture['on' + eName](_e, node) 
 					|| (gesture.preventDefault && _e.preventDefault()) 
-					|| _e.stopPropagation() 
+					|| (gesture.stopPropagation() && _e.stopPropagation()) 
 					|| false;
 			};
 		});
