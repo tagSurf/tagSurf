@@ -270,6 +270,7 @@ a {
 }
 .throbber-bottom {
 	bottom: 5px !important;
+	top: initial !important;
 	height: 30px !important;
 }
 .throbber-back {
@@ -508,10 +509,12 @@ a {
   background-color: white;
   border: 1px solid #00aeef;
   z-index: 10;
-  position: relative;
+  position: absolute;
   width: 250px;
   padding: 5px;
-  top: 50px;
+  top: 80px;
+  left: 0;
+  right: 0;
   border-radius: 10px;
   -webkit-transition: opacity 250ms ease-in-out;
 }
