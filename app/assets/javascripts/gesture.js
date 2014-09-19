@@ -91,7 +91,7 @@ var gesture = {
 		return d;
 	},
 	pinchDiff: function(e) {
-		return isIos() ? {x:e.layerX, y:e.layerY} :
+		return isIos() ? {x:e['pageX'], y:e['pageY']} :
 			gesture.getDiff(gesture.getPos(e.touches[0]), 
 				gesture.getPos(e.touches[1]), true);
 	},
@@ -116,7 +116,8 @@ var gesture = {
 			gesture.pinchDiff(e));
 	},
 	onGestureEnd: function(e, node) {
-		gesture.triggerPinch(node);
+		gesture.triggerPinch(node, Math.pow(e.scale, (1/8)),
+			gesture.pinchDiff(e));
 		node.gvars.iosPinching = false;
 	},
 	onStart: function(e, node) {
