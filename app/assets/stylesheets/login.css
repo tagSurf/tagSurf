@@ -1,6 +1,7 @@
 html, body {
 	background: white;
 	opacity: 1;
+	position: initial !important;
 }
 .focused {
 	border-color: #48a4df;
