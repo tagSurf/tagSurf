@@ -112,9 +112,8 @@ var modal = {
 			zNodeHeight = parseInt(zNode.scrollHeight),
 			zoomST = modal.zoom.scrollTop,
 			zoomSL = modal.zoom.scrollLeft,
-			dw = w - zNodeWidth, percentDw = (w / zNodeWidth),
-			h = (zNodeHeight * percentDw), dh = h - zNodeHeight,
-			percentDh = (h / zNodeHeight),
+			dw = w - zNodeWidth, scalar = (w / zNodeWidth),
+			h = (zNodeHeight * scalar), dh = h - zNodeHeight,
 			direction = (zNodeWidth > w ?  "decreasing" : "increasing");
 		var animateScrollZoom = function () {
 			var zoomToWidth = w, node = zNode, 
@@ -150,11 +149,21 @@ var modal = {
 			}
 			else
 			{
-				scrollToCoords = !midpoint ? 
+				var toMid = {
+					y: midpoint.y * scalar,
+					x: midpoint.x * scalar
+				};
+
+				scrollToCoords = {
+					top: zoomST - midpoint.y + toMid.y,
+					left: zoomSL - midpoint.x + toMid.x
+				};
+
+/*				scrollToCoords = !midpoint ? 
 					{ top:(zoomST + dh/2), 
 						left:(zoomSL + dw/2) }
 					: { top:((zoomST + midpoint.y)*percentDh - wih/2),
-						left:((zoomSL + midpoint.x)*percentDw - wiw/2)};
+						left:((zoomSL + midpoint.x)*percentDw - wiw/2)};*/
 				modal.zoom.current = w;
 				zNode.style.width = w + "px";
 				modal.zoom.scrollTop = scrollToCoords.top;
