@@ -9,19 +9,24 @@ var tutorial = {
 				var downvote = newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
 				tutorial.jiggleTimeout = setTimeout(function() { 
 					current_deck.topCard().jiggle() 
-				}, 10000);
+				}, 8000);
 				current_deck.topCard().setOneTimeCb("vote", function () { 
 					var firstvote = newReminder(firstvoteMessage.call(), startPhase2, "First Vote", 1000, 5000);
 					clearTimeout(tutorial.jiggleTimeout); 
 					tutorial.jiggleTimeout = null;
 					!tutorial.on && firstvote.forget();
 				});
-			}, "Upvote", 5000, 5000);
-		}, "Welcome", 1000, 6000);
+			}, "Upvote", 2000, 5000);
+		}, "Welcome", 10000, 6000);
 		welcome.setCb("show", function() {
 			if (isUIWebView())
 				this.container.style.paddingTop = "30px"; 
 		});
+		setTimeout(function() {
+			current_deck.topCard().setOneTimeCb("vote", function() {
+				tutorial.pause(false);
+			});
+		}, 5000);
 	},
 	pause: function(remind) {
 		remind = (typeof remind === "undefined") ? true : remind; 
