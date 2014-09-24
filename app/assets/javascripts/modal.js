@@ -7,6 +7,7 @@ var modal = {
 	constants: {
 		zoomScale: 2.00,
 		zoomMax: 4.5,
+		zoomRate: 0.3,
 		animationDuration: 500
 	},
 	trans: {
@@ -350,8 +351,8 @@ var modal = {
 		var zNode = modal.zoom.firstChild.firstChild;
 		if (normalizedDistance) {
 			modal.zoom.current = modal.zoom.current || zNode.clientWidth;
-			modal.zoomToWidth(Math.min(modal.zoom.current * normalizedDistance,
-				modal.zoom.maxWidth), true, midpoint);
+			modal.zoomToWidth(Math.min(modal.zoom.maxWidth, modal.zoom.current
+				* Math.pow(normalizedDistance, modal.constants.zoomRate)), true, midpoint);
 		} else
 			modal.zoom.current = zNode.clientWidth;
 	},
