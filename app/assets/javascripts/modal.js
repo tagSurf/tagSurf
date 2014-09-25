@@ -88,11 +88,11 @@ var modal = {
 		});
 	},
 	_buildWeb: function() {
-		var wNode = document.createElement('iframe'), 
+		var wNode = document.createElement('iframe'),
 			gesture_wrapper = document.createElement('div');
 		wNode.className = 'basic-web';
-		wNode.style.height = window.innerHeight + 'px';
-		wNode.style.width = window.innerWidth + 'px !important';
+		wNode.style.height = window.innerHeight + (isMobile() ? 0 : 6000) + 'px';
+		wNode.style.width = '100%';
 		modal.web.className = "web-wrapper";
 		gesture_wrapper.className = "web-raw-wrapper";
 		gesture_wrapper.appendChild(wNode);
@@ -311,16 +311,13 @@ var modal = {
 		});
 	},
 	webIn: function (card, cb) {
-		var iframe = modal.web.firstChild.firstChild
+		var iframe = modal.web.firstChild.firstChild;
 		modal.web.out = true;
 		iframe.src = "http://imgur.com/gallery/" + card.data.remote_id;
 		modal.web.cb = cb || modal.webOut;
 		modal.web.style.display = "block";
 		gesture.preventDefault = false;
 		gesture.stopPropagation = false;
-		// setTimeout(function() {
-		// 	modal.web.className += " modalslide";
-		// }, 0);
 		modal.web.style['opacity'] = "1.0";
 	},
 	webOut: function () {
