@@ -471,6 +471,10 @@ html, body {
   animation-timing-function: ease-in, ease-in;
 	border: solid 2px #353535;
 }
+.fb-login-btn {
+  width: 200px !important;
+  margin: 10px 0 !important;
+}
 /*====== This targets tablets and desktops ======*/
 @media only screen and (min-width: 700px){
   .text-container {
