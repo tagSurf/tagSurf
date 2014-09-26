@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, 
          :registerable, :confirmable,
-         :omniauthable, :omniauth_providers => [:imgur]
+         :omniauthable, :omniauth_providers => [:imgur, :facebook]
 
   CLIENT_ID = Rails.env.production? ? 'e0d1a9753eaf289' : '63c3978f06dac10'
   CLIENT_SECRET = Rails.env.production? ? '804e630c072f527b68bdfcc6a08ccbfe2492ab99' : '4eea9bc017f984049cfcd748fb3d8de17ae1cb8e'
@@ -102,6 +102,25 @@ class User < ActiveRecord::Base
     end
     user
   end
+
+  def self.from_omniauth(auth)
+    user = User.where(email: auth.info.email).first
+    unless user
+      user = User.where(provider: auth.provider, uid: auth.uid).first_or_create! do |user|
+        user.uid = auth.uid
+        user.provider = auth.provider
+        user.email = auth.info.email
+        user.password = Devise.friendly_token[0,20]
+        # user.auth_token = auth.credentials.token
+        # user.token_expires_at = auth.credentials.expires_at
+        # user.token_created_at = Time.now
+        # user.gender = auth.extra.raw.gender
+        user.active = true
+        user.beta_user = true
+      end
+    end
+    user
+  end 
 
   protected
 

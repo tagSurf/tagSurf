@@ -15,6 +15,8 @@ Devise.setup do |config|
     config.omniauth :imgur, "e0d1a9753eaf289", "804e630c072f527b68bdfcc6a08ccbfe2492ab99", :strategy_class => OmniAuth::Strategies::Imgur
   end
 
+  config.omniauth :facebook, "676135635790285", "980e60f6ad2889354255bc5b52f077c0", :scope => 'email'
+
   config.scoped_views = true
 
   # ==> Mailer Configuration

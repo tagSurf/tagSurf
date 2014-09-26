@@ -125,20 +125,31 @@ var card_proto = {
 	_buildLoginCard: function() {
 		var self = this,
 			container = this.contents,
-			top = "<img src='http://assets.tagsurf.co/img/logo_w_border.png'><div class='big bold'>Hate repeats? Sign up!</div>",
-			form = "<form accept-charset='UTF-8' action='/users' class='new-user' id='new-user' method='post'><div style='margin:0;padding:0;display:inline'><input name='utf8' type='hidden' value='✓'><input name='authenticity_token' type='hidden' value='" + document.getElementsByName("csrf-token")[0].content + "'></div><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='Sign Up'></center></form>",
+			top = "<img class='login-card-logo' src='http://assets.tagsurf.co/img/logo_w_border.png'><div class='big bold'>Hate repeats? Sign up!</div>",
+			form = "<img class='fb-login-btn' src='http://assets.tagsurf.co/img/fb_login.png'><form accept-charset='UTF-8' action='/users' class='new-user' id='new-user' method='post'><div style='margin:0;padding:0;display:inline'><input name='utf8' type='hidden' value='✓'><input name='authenticity_token' type='hidden' value='" + document.getElementsByName("csrf-token")[0].content + "'></div><center><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='email' name='user[email]' placeholder='email' spellcheck='false' type='email' value=''></div><div class='small'>Password must be at least 8 characters</div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='password' name='user[password]' placeholder='password' spellcheck='false' type='password' value=''></div><div><input autocapitalize='off' autocomplete='off' autocorrect='off' class='su-input bigplace' id='repassword' name='user[password_confirmation]' placeholder='re-enter password' spellcheck='false' type='password' value=''></div><input id='su-submit-btn' class='signup-button' name='commit' type='submit' value='Sign Up'></center></form>",
 			bottom = "<div class='wide-text'><a id='line-text-login' class='small big-lnk'>Already have an account? <span id='login-card-btn' class='bold'>Login Here</span>.</a></div><div class='smaller block tos-pp'>By signing up you agree to our <a class='bold big-lnk' id='terms-lnk'>Terms of Use</a> and <a class='bold big-lnk' id='privacy-lnk'>Privacy Policy</a>.</div>",
 			cardTemplate = top + form + bottom;
 		this.setOneTimeCb("show", function(){
 			var loginBtn = document.getElementById('login-card-btn'),
 				signupBtn = document.getElementById('su-submit-btn'),
+				fbbtn = document.getElementsByClassName('fb-login-btn')[0],
 				tos_pp = document.getElementsByClassName('tos-pp')[0];
-			if (!(window.innerHeight > 500))
+			gesture.listen("tap", fbbtn, function() { 
+				document.location = "http://" + document.location.host + "/users/auth/facebook";
+			});
+			if (window.innerHeight < 500) {
+				var contents = document.getElementsByClassName('login-card')[0];
+				contents.style.maxHeight = "360px";
 				return;
+			}
 			loginBtn.className += ' block login-card-btn';
 			signupBtn.classList.remove('signup-button');
 			signupBtn.className += ' UIWebView-signup-button';
 			tos_pp.style.marginTop = "-20px";
+		});
+		this.setOneTimeCb("setTop", function() {
+			var card = current_deck.topCard()
+			setTimeout(function() { card.jiggle(); }, 2000);
 		});
 		this.wrapper.className = 'card-wrapper';
 		container.className = 'card-container login-card';
@@ -171,7 +182,7 @@ var card_proto = {
 		gesture.listen("drag", this.wrapper, this.cbs.drag);
 		gesture.listen("hold", this.wrapper, this.cbs.hold);
 		gesture.listen("down", this.wrapper, this.cbs.down);
-		this._initImageGestures();
+		if(this.type != "login") this._initImageGestures();
 	},
 	_initLoginInputs: function () {
 		var listInputs = document.forms[0].getElementsByClassName('su-input'),
@@ -302,7 +313,8 @@ var card_proto = {
 			this.setTop();
 		if (this.oneTimeCbs.show) {
 			this.oneTimeCbs.show();
-			this.oneTimeCbs.show = null;
+			if (this.type != 'login') //Don't clear login card cb because it is recycled
+				this.oneTimeCbs.show = null;
 		}
 	},
 	unshow: function () {
@@ -329,22 +341,23 @@ var card_proto = {
 			console.log("Promote card #" + this.id + " zIndex = " + this.zIndex + " cardbox.length = " + slideContainer.childNodes.length + " cards.length = " + current_deck.cards.length);
 	},
 	setTop: function() {
+		var self = this;
 		setCurrentMedia(this, forgetReminders);
 		if (this.type == "login") {
 			this._initLoginInputs();
 			share.off();
 			panic.off();
 			initDocLinks(function() {
-				if(window.innerHeight > 500)
+				if(isDesktop())
 					currentUser.vote_btns && voteButtonsOn();
 			});
 			analytics.track("Seen Login Card");
 			if (window.innerHeight < 500) {
-				var self = this;
-				voteButtonsOff();
-				setTimeout(function() { self.jiggle(); }, 2000);
-				this.setOneTimeCb("vote", function() { currrentUser.vote_btns && voteButtonsOn(); });
+				this.contents.style.maxHeight = "500px";
+				this.expanded = true;
 			}
+			!isDesktop() && voteButtonsOff();
+			this.setOneTimeCb("vote", function() { currrentUser.vote_btns && voteButtonsOn(); })
 		}
 		if (DEBUG)
 			console.log("Set top card #" + this.id);

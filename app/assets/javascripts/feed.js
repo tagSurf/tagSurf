@@ -635,7 +635,8 @@ if (isAuthorized())
 
 document.location.hash = document.location.hash.replace('|','~');
 // handle facebook redirects
-if (document.location.href.indexOf("?") != -1)
+if (document.location.href.indexOf("?") != -1 ||
+	document.location.href.indexOf("=") != -1)
 	document.location = "http://" +
 		document.location.host +
 			document.location.pathname;

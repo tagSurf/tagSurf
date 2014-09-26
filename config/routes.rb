@@ -9,7 +9,8 @@ Tagsurf::Application.routes.draw do
   devise_for :users, controllers: { 
                        registrations: 'registrations', 
                        sessions: 'sessions',  
-                       passwords: 'passwords'
+                       passwords: 'passwords',
+                       :omniauth_callbacks => "omniauth_callbacks"
                      }
 
   get 'users/sign_up', to: redirect('/sign-up')

@@ -163,7 +163,7 @@ html, body {
   border: 2px solid #00aeef;
   text-align: center;
 }
-.login-card img {
+.login-card-logo {
   width: 50px;
   margin: 15px 0 5px 0;
 }
@@ -471,6 +471,10 @@ html, body {
   animation-timing-function: ease-in, ease-in;
 	border: solid 2px #353535;
 }
+.fb-login-btn {
+  width: 200px !important;
+  margin: 10px 0;
+}
 /*====== This targets tablets and desktops ======*/
 @media only screen and (min-width: 700px){
   .text-container {
@@ -493,6 +497,13 @@ html, body {
   }
   .card-container {
     font-size: 160%;
+  }
+  .login-card-btn {
+    margin-left: 38px;
+  }
+  .login-card-logo {
+    width: 150px;
+    margin: 30px 0 10px 0;
   }
   
   /*===== Tag Search Bar ====*/
