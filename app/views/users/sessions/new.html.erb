@@ -7,10 +7,10 @@
 <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => {:role => 'form'} ) do |f| %>
   <center>
     <div class="tslogo"></div>
-    <a href="/users/auth/facebook"><img class="fb-login-btn" src="http://assets.tagsurf.co/img/fb_login.png"></a> 
-    <div class="input-border-container" style="margin-bottom:10px; margin-top:80px;"><%= f.email_field :email, :placeholder => 'email', :class => 'ts-input' %></div>
+    <div class="input-border-container" style="margin-bottom:10px;"><%= f.email_field :email, :placeholder => 'email', :class => 'ts-input' %></div>
     <div class="input-border-container"><%= f.password_field :password, :placeholder => 'password', :class => 'ts-input' %></div>
     <div class="input-checkbox light-gray"><%= f.check_box :remember_me, { :checked => "checked" } %> <%= f.label :remember_me %></div>
+     <a href="/users/auth/facebook"><img class="fb-login-btn" src="http://assets.tagsurf.co/img/fb_login.png"></a> 
   </center>
   <div class="ts-submit-bar">
     <div class="ts-submit-left border-trim">
@@ -30,7 +30,7 @@
   if(isUIWebView())
     addCss({
       "#new_user": function() {
-            return "margin-top: 40px;";
+            return "margin-top: 20px;";
           }
     });
   stroke.listen("up", "13", function() {

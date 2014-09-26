@@ -473,7 +473,7 @@ html, body {
 }
 .fb-login-btn {
   width: 200px !important;
-  margin: 10px 0 !important;
+  margin: 10px 0;
 }
 /*====== This targets tablets and desktops ======*/
 @media only screen and (min-width: 700px){
