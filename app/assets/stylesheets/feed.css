@@ -498,6 +498,13 @@ html, body {
   .card-container {
     font-size: 160%;
   }
+  .login-card-btn {
+    margin-left: 38px;
+  }
+  .login-card-logo {
+    width: 150px;
+    margin: 30px 0 10px 0;
+  }
   
   /*===== Tag Search Bar ====*/
   #input-container {

@@ -348,7 +348,7 @@ var card_proto = {
 			share.off();
 			panic.off();
 			initDocLinks(function() {
-				if(window.innerHeight > 500)
+				if(isDesktop())
 					currentUser.vote_btns && voteButtonsOn();
 			});
 			analytics.track("Seen Login Card");
@@ -356,7 +356,7 @@ var card_proto = {
 				this.contents.style.maxHeight = "500px";
 				this.expanded = true;
 			}
-			voteButtonsOff();
+			!isDesktop() && voteButtonsOff();
 			this.setOneTimeCb("vote", function() { currrentUser.vote_btns && voteButtonsOn(); })
 		}
 		if (DEBUG)
