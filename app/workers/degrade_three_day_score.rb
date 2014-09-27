@@ -8,7 +8,7 @@ class DegradeThreeDayScore
   def perform
     media = Media.select(:id, :ts_score).where(created_at: 3.days.ago..Time.now)
     media.each do |m|
-      score = m.ts_score - 20000000
+      score = m.ts_score - 50000000
       m.update_column('ts_score', score)
     end
   end

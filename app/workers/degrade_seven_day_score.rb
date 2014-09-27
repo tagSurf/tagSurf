@@ -12,12 +12,12 @@ class DegradeSevenDayScore
       :created_at, 
       :time_bonus_expired
     ).where(
-      'created_at < ? and 
-      not time_bonus_expired', 
-      7.days.ago
+      :created_at => 6.days.ago..7.days.ago
+    ).where(
+      :time_bonus_expired => false
     )
     media.each do |m|
-      leftover_time_bonus = m.created_at.to_i - 2 * (20000000)
+      leftover_time_bonus = m.created_at.to_i - 50000000
       score = m.ts_score - leftover_time_bonus
       m.update_columns(time_bonus_expired: true, ts_score: score)
     end
