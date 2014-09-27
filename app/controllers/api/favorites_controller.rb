@@ -7,7 +7,7 @@ class Api::FavoritesController < Api::BaseController
     if @fav.save
       render json: {created: true}, status: :ok
     else
-      render json: {created: false, reason: @fav.errors.full_messages.first }, status: :not_implemented 
+      render json: {created: false, reason: @fav.errors.full_messages.first }, status: :not_implemented
     end
   end
 

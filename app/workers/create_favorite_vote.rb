@@ -19,6 +19,9 @@ class CreateFavoriteVote
           vote_flag: true
         )
       end
+    if vote
+      IncrementMediaVoteCount.perform_async(fav.media_id, vote.vote_flag, 10000000)
+    end
     rescue => e
       raise "Unable to create vote after favorite: #{e}"
     end

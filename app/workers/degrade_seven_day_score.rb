@@ -8,8 +8,7 @@ class DegradeSevenDayScore
   def perform
     media = Media.select(
       :id, 
-      :ts_score, 
-      :remote_score, 
+      :ts_score,  
       :created_at, 
       :time_bonus_expired
     ).where(
@@ -18,12 +17,9 @@ class DegradeSevenDayScore
       7.days.ago
     )
     media.each do |m|
-      if m.up_votes.to_i > 0
-        score_bonus = m.remote_score.to_i + (m.up_votes.to_i * 1000000)
-      else
-        score_bonus = m.remote_score.to_i
-      end
-      m.update_columns(time_bonus_expired: true, ts_score: score_bonus)
+      leftover_time_bonus = m.created_at.to_i - 2 * (20000000)
+      score = m.ts_score - leftover_time_bonus
+      m.update_columns(time_bonus_expired: true, ts_score: score)
     end
   end
 

@@ -6,15 +6,10 @@ class DegradeThreeDayScore
   recurrence { daily.hour_of_day(10) }
 
   def perform
-    media = Media.select(:id, :ts_score, :remote_score, :created_at).where(created_at: 3.days.ago..Time.now)
+    media = Media.select(:id, :ts_score).where(created_at: 3.days.ago..Time.now)
     media.each do |m|
-      time_bonus = m.created_at.to_i - 200000000
-      if m.up_votes.to_i > 0
-        score_bonus = m.remote_score.to_i + (m.up_votes.to_i * 1000000)
-      else
-        score_bonus = m.remote_score.to_i
-      end
-      m.update_column('ts_score',  time_bonus + score_bonus)
+      score = m.ts_score - 20000000
+      m.update_column('ts_score', score)
     end
   end
 
