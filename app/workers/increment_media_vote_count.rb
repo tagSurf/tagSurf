@@ -1,15 +1,15 @@
 class IncrementMediaVoteCount
   include Sidekiq::Worker
 
-  def perform(media_id, vote_flag)
+  def perform(media_id, vote_flag, weight)
     media = Media.find_by(id: media_id)
+    weight ||= 1000000
     return unless media
 
     if vote_flag
-      media.up_votes.increment
-      media.ts_score = media.ts_score + 1000000
+      media.ts_score += weight
     else
-      media.up_votes.decrement
+      media.ts_score -= weight
     end
 
     media.last_touched = Time.now
