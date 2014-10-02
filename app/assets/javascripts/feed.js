@@ -613,15 +613,15 @@ onload = function ()
 			});
 		}, 4000);
 	}
-	setTimeout(function() {
-		var topCard = current_deck.topCard();
-		if (topCard && !topCard.showing)
-			current_deck.topCard().setOneTimeCb("show", function() {
-				reminders[0] && reminders[0].forget(true);
-			});
-		else if (topCard)
-			slowReminder.forget(true);
-	}, 8000);
+	// setTimeout(function() {
+	// 	var topCard = current_deck.topCard();
+	// 	if (topCard && !topCard.showing)
+	// 		current_deck.topCard().setOneTimeCb("show", function() {
+	// 			reminders[0] && reminders[0].forget(true);
+	// 		});
+	// 	else if (topCard)
+	// 		slowReminder.forget(true);
+	// }, 8000);
 	if (!isAuthorized())// && !DEBUG)
 		jiggler();
 
