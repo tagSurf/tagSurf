@@ -22,11 +22,6 @@ var tutorial = {
 			if (isUIWebView())
 				this.container.style.paddingTop = "30px"; 
 		});
-		setTimeout(function() {
-			current_deck.topCard().setOneTimeCb("vote", function() {
-				tutorial.pause(false);
-			});
-		}, 5000);
 	},
 	pause: function(remind) {
 		remind = (typeof remind === "undefined") ? true : remind; 

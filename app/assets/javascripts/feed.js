@@ -611,7 +611,7 @@ onload = function ()
 				clearTimeout(tutorial.jiggleTimeout);
 				tutorial.jiggleTimeout = null;
 			});
-		}, 3000);
+		}, 4000);
 	}
 	setTimeout(function() {
 		var topCard = current_deck.topCard();
