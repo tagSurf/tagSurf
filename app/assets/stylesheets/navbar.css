@@ -90,6 +90,14 @@
   width: auto;
   height: 25px;
 }
+#help-btn {
+  float:right;
+  padding: 6px 5px 13px 10px;
+}
+#help-btn img {
+  width: auto;
+  height: 38px;
+}
 .menu-icon {
   width: 22px;
   height: auto;

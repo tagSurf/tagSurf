@@ -17,7 +17,7 @@ var tutorial = {
 					!tutorial.on && firstvote.forget();
 				});
 			}, "Upvote", 2000, 5000);
-		}, "Welcome", 10000, 6000);
+		}, "Welcome", 1000, 6000);
 		welcome.setCb("show", function() {
 			if (isUIWebView())
 				this.container.style.paddingTop = "30px"; 
@@ -198,8 +198,7 @@ var welcomeMessage = function() {
 	var node = document.createElement('div'),
 		topMessage = document.createElement('div'),
 		logo = document.createElement('img'),
-		bottomMessage = document.createElement('div'),
-		skipbtn = document.createElement('div');
+		bottomMessage = document.createElement('div');
 	topMessage.innerHTML = "Welcome to";
 	topMessage.className = isMobile() ? "centered biggest" : "centered really-big";
 	topMessage.style.marginTop = isMobile() ? "10%" : "7%";
@@ -209,23 +208,9 @@ var welcomeMessage = function() {
 	bottomMessage.innerHTML = isMobile() ? "A place to surf the<br/>top social content<br/>on the web" 
 											: "A place to surf the top<br/>social content on the web";
 	bottomMessage.className = isMobile() ? "centered biggest" : "centered really-big";
-	skipbtn.className = "no-fill-btn pointer";
-	skipbtn.className += isDesktop() ? " really-big" : " biggest";
-	gesture.listen("down", skipbtn, function() {
-		skipbtn.classList.add("active-no-fill-btn");
-	});
-	gesture.listen("up", skipbtn, function() {
-		skipbtn.classList.remove("active-no-fill-btn");
-	});
-	gesture.listen("tap", skipbtn, function() {
-		tutorial.pause(false);
-	});
-	skipbtn.id = "skip-btn";
-	skipbtn.innerHTML = "Skip Tutorial";
 	node.appendChild(topMessage);
 	node.appendChild(logo);
 	node.appendChild(bottomMessage);
-	node.appendChild(skipbtn);
 	return node;
 };
 

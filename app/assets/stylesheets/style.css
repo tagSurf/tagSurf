@@ -188,6 +188,11 @@ a {
 	top: 10px;
 	right: 10px;
 }
+#help-close-button {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+}
 #share-close-button {
 	position: absolute;
 	bottom: 10px;
@@ -375,6 +380,10 @@ a {
   pointer-events: initial !important;
 }
 #get-away-button {
+	max-width: 75% !important;
+	font-size: 160%;
+}
+#tutorial-button {
 	max-width: 75% !important;
 	font-size: 160%;
 }
@@ -840,6 +849,12 @@ a {
 	.midsize {
 		font-size: 14pt;
 	}
+
+	#tutorial-button {
+		max-width: 50% !important;
+		font-size: 280%;
+		margin-top: 22%;
+	}
 	
 	/*===== Options Menu =====*/
 	.options-table {
@@ -901,6 +916,10 @@ a {
 		width: 50px;
 	}
 	#options-close-button {
+		top: 15px;
+		right: 15px;
+	}
+	#help-close-button {
 		top: 15px;
 		right: 15px;
 	}
