@@ -369,7 +369,7 @@ var callHelpModal = function() {
       modal.modalOut();
     };
   n.className = "center-label";
-  tutorialButton.innerHTML = "Play the tutorial";
+  tutorialButton.innerHTML = "Take the tutorial";
   tutorialButton.className = "msgbox-btn";
   tutorialButton.id = "tutorial-button";
   closebtn.src = "http://assets.tagsurf.co/img/Close.png";

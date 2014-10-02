@@ -386,6 +386,7 @@ a {
 #tutorial-button {
 	max-width: 75% !important;
 	font-size: 160%;
+	margin-top: 100px;
 }
 
 /*=========== Vote Buttons Stuff ============*/
