@@ -587,9 +587,9 @@ var trendingMessage = function() {
 var moreTagsMessage = function() {
 	var node = document.createElement('div'),
 		pausebtn = document.createElement('div');
-	node.innerHTML = "But there are<br/>many more...";
+	node.innerHTML = "But there's so<br/>much more...";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "50%" : "20%";
+	node.style.marginTop = isMobile() ? "50%" : "25%";
 	node.style.marginTop = isUIWebView() ? "65%" : node.style.marginTop;
 	pausebtn.className = "no-fill-btn pointer";
 	gesture.listen("down", pausebtn, function() {
@@ -616,7 +616,7 @@ var popularTagsMessage = function() {
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "30%" : "20%";
 	node.style.marginTop = isUIWebView() ? "40%" : node.style.marginTop;
-	tagbtns.className = "inline";
+	tagbtns.className = "inline-block";
 	tagbtns.style.marginTop = "8%";
 	autocomplete.data.forEach(function(tag, i){
 		var tag = tag["name"],
