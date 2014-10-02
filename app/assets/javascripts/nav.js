@@ -11,7 +11,7 @@ var populateNavbar = function () {
   var tag = gallery ? document.location.hash.slice(1) : null;
   var full_navbar_content = [
     "<div id='favorites-btn'>",
-      "<a onclick='starCallback();'><img id='favorites-icon' src='http://img/favorites_icon_blue.png'></a>",
+      "<a onclick='starCallback();'><img id='favorites-icon' src='http://assets.tagsurf.co/img/favorites_icon_blue.png'></a>",
     "</div>",
     "<div id='add-btn'>",
       "<a onclick='slideAddBar();'><img id='add-icon' src='http://assets.tagsurf.co/img/add_icon_blue.png'></a>",
@@ -106,15 +106,17 @@ var populateNavbar = function () {
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
   nav.appendChild(tag_adder);
-  gesture.listen("down", document.getElementById("help-btn"), function () {
-    document.getElementById("help-icon").src = '/img/tutorial_btn_fill.png';
-  });
-  gesture.listen("up", document.getElementById("help-btn"), function () {
-    document.getElementById("help-icon").src = '/img/tutorial_btn.png';
-  });
-  gesture.listen("tap", document.getElementById("help-btn"), function () {
-    callHelpModal();
-  });
+  if (!isAuthorized()) {
+    gesture.listen("down", document.getElementById("help-btn"), function () {
+      document.getElementById("help-icon").src = '/img/tutorial_btn_fill.png';
+    });
+    gesture.listen("up", document.getElementById("help-btn"), function () {
+      document.getElementById("help-icon").src = '/img/tutorial_btn.png';
+    });
+    gesture.listen("tap", document.getElementById("help-btn"), function () {
+      callHelpModal();
+    });
+  }
   tag_adder.firstChild.nextSibling.onclick = function() {
     var newtag = tag_adder.firstChild.value.slice(1);
     if (!newtag || newtag == "newtag") return;
