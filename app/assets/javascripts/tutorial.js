@@ -170,7 +170,7 @@ var startFeatureTour = function() {
 						 	var closebtn = shareReminder.container.lastChild.children[0];
 						 	closebtn.className += " reminder-close-left";
 						});
-						document.getElementById('favorites-icon').src = "/img/help_btn.png";
+						document.getElementById('favorites-icon').src = "http://assets.tagsurf.co/img/help_btn.png";
 						document.getElementById('favorites-icon').id = "help-icon";
 				}, "Favorite", 1000, 5000);
 				offset = document.getElementById('nav').clientHeight;
