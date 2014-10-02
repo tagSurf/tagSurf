@@ -115,6 +115,7 @@ var populateNavbar = function () {
     });
     gesture.listen("tap", document.getElementById("help-btn"), function () {
       callHelpModal();
+      analytics.track('Open Help Modal');
     });
   }
   tag_adder.firstChild.nextSibling.onclick = function() {
