@@ -2,7 +2,7 @@ var deck_proto = {
 	constants: {
 		buffer_minimum: 5,
 		stack_depth: 3,
-		login_spacing: 5
+		login_spacing: 15
 	},
 	voted_keys: {},
 	topCard: function() {
