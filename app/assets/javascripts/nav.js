@@ -30,7 +30,7 @@ var populateNavbar = function () {
   ], 
   reduced_navbar_content = [
     "<div id='help-btn'>",
-      "<img id='help-icon' src='/img/tutorial_btn.png'>",
+      "<img id='help-icon' src='/img/help_btn.png'>",
     "</div>",
     "<div class='navbar-center'>",
       "<label id='slider-label' for='slider-box' ontouchmove='return false;' onclick='slideNavMenu();'>",
@@ -108,10 +108,10 @@ var populateNavbar = function () {
   nav.appendChild(tag_adder);
   if (!isAuthorized()) {
     gesture.listen("down", document.getElementById("help-btn"), function () {
-      document.getElementById("help-icon").src = '/img/tutorial_btn_fill.png';
+      document.getElementById("help-icon").src = '/img/help_btn_fill.png';
     });
     gesture.listen("up", document.getElementById("help-btn"), function () {
-      document.getElementById("help-icon").src = '/img/tutorial_btn.png';
+      document.getElementById("help-icon").src = '/img/help_btn.png';
     });
     gesture.listen("tap", document.getElementById("help-btn"), function () {
       callHelpModal();
