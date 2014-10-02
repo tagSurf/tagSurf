@@ -17,16 +17,11 @@ var tutorial = {
 					!tutorial.on && firstvote.forget();
 				});
 			}, "Upvote", 2000, 5000);
-		}, "Welcome", 10000, 6000);
+		}, "Welcome", 1000, 6000);
 		welcome.setCb("show", function() {
 			if (isUIWebView())
 				this.container.style.paddingTop = "30px"; 
 		});
-		setTimeout(function() {
-			current_deck.topCard().setOneTimeCb("vote", function() {
-				tutorial.pause(false);
-			});
-		}, 5000);
 	},
 	pause: function(remind) {
 		remind = (typeof remind === "undefined") ? true : remind; 
@@ -175,19 +170,33 @@ var startFeatureTour = function() {
 						 	var closebtn = shareReminder.container.lastChild.children[0];
 						 	closebtn.className += " reminder-close-left";
 						});
+						document.getElementById('favorites-icon').src = "http://assets.tagsurf.co/img/help_btn.png";
+						document.getElementById('favorites-icon').id = "help-icon";
 				}, "Favorite", 1000, 5000);
 				offset = document.getElementById('nav').clientHeight;
 				favoriteReminder.container.style.marginTop = offset + "px";
 				favoriteReminder.setCb("show", function() {
-					var closebtn = favoriteReminder.container.lastChild.children[0];
+					var closebtn = favoriteReminder.container.lastChild.children[0],
+						helpIcon = document.getElementById('help-icon');
 					closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
+					helpIcon.src = "http://assets.tagsurf.co/img/favorites_icon_blue.png";
+					helpIcon.id = "favorites-icon";
 				});
+				document.getElementById('navbar').removeChild(document.getElementById('add-btn'));
 		}, "Add Tag", 1000, 5000);
 		offset = document.getElementById('nav').clientHeight;
 		addTagReminder.container.style.marginTop = offset + "px";
 		addTagReminder.setCb("show", function() {
-			var closebtn = addTagReminder.container.lastChild.children[0];
+			var closebtn = addTagReminder.container.lastChild.children[0],
+				navbar = document.getElementById('navbar'),
+				addbtn = document.createElement('div'),
+				addicon = new Image();
 			closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
+			addbtn.id = "add-btn";
+			addicon.id = "add-icon";
+			addicon.src = "http://assets.tagsurf.co/img/add_icon_blue.png";
+			addbtn.appendChild(addicon);
+			navbar.appendChild(addbtn);
 		});
 	}, "Tour Start", 1000, 5000);
 };
@@ -198,8 +207,7 @@ var welcomeMessage = function() {
 	var node = document.createElement('div'),
 		topMessage = document.createElement('div'),
 		logo = document.createElement('img'),
-		bottomMessage = document.createElement('div'),
-		skipbtn = document.createElement('div');
+		bottomMessage = document.createElement('div');
 	topMessage.innerHTML = "Welcome to";
 	topMessage.className = isMobile() ? "centered biggest" : "centered really-big";
 	topMessage.style.marginTop = isMobile() ? "10%" : "7%";
@@ -209,23 +217,9 @@ var welcomeMessage = function() {
 	bottomMessage.innerHTML = isMobile() ? "A place to surf the<br/>top social content<br/>on the web" 
 											: "A place to surf the top<br/>social content on the web";
 	bottomMessage.className = isMobile() ? "centered biggest" : "centered really-big";
-	skipbtn.className = "no-fill-btn pointer";
-	skipbtn.className += isDesktop() ? " really-big" : " biggest";
-	gesture.listen("down", skipbtn, function() {
-		skipbtn.classList.add("active-no-fill-btn");
-	});
-	gesture.listen("up", skipbtn, function() {
-		skipbtn.classList.remove("active-no-fill-btn");
-	});
-	gesture.listen("tap", skipbtn, function() {
-		tutorial.pause(false);
-	});
-	skipbtn.id = "skip-btn";
-	skipbtn.innerHTML = "Skip Tutorial";
 	node.appendChild(topMessage);
 	node.appendChild(logo);
 	node.appendChild(bottomMessage);
-	node.appendChild(skipbtn);
 	return node;
 };
 
@@ -238,8 +232,8 @@ var upvoteMessage = function() {
 	upvotebtn.id = "reminder-vote-button-right";
 	upvotearrow.src = "http://assets.tagsurf.co/img/upvote_arrow.gif";
 	upvotearrow.id = "reminder-upvote-arrow";
-	node.innerHTML = isMobile ? "Upvote this<br/>and we'll show it<br/>to more people<br/>surfing this tag" 
-								: "Upvote this and we'll show it<br/>more to people surfing this tag";
+	node.innerHTML = isMobile ? "Upvote this<br/>and we'll show<br/>you more things<br/>like it" 
+								: "Upvote this and we'll show you<br/>more things like it";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.appendChild(upvotearrow);	
 	node.appendChild(upvotebtn);
@@ -359,7 +353,7 @@ var searchMessage = function() {
 var resultsMessage = function() {
 	var node = document.createElement('div'),
 		pausebtn = document.createElement('div');
-	node.innerHTML = "Results are ordered<br/>by newest and<br/>most popular<br/>amongst surfers<br/>of the #tag";
+	node.innerHTML = "Results start with<br/>the newest and<br/>most popular cards<br/>amongst surfers<br/>of the #tag";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "40%" : "20%";
 	node.style.marginTop = isUIWebView() ? "65%" : node.style.marginTop;
@@ -593,9 +587,9 @@ var trendingMessage = function() {
 var moreTagsMessage = function() {
 	var node = document.createElement('div'),
 		pausebtn = document.createElement('div');
-	node.innerHTML = "But there are<br/>lots more fish<br/>in the sea...";
+	node.innerHTML = "But there's so<br/>much more...";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "50%" : "20%";
+	node.style.marginTop = isMobile() ? "50%" : "25%";
 	node.style.marginTop = isUIWebView() ? "65%" : node.style.marginTop;
 	pausebtn.className = "no-fill-btn pointer";
 	gesture.listen("down", pausebtn, function() {
@@ -622,7 +616,7 @@ var popularTagsMessage = function() {
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "30%" : "20%";
 	node.style.marginTop = isUIWebView() ? "40%" : node.style.marginTop;
-	tagbtns.className = "inline";
+	tagbtns.className = "inline-block";
 	tagbtns.style.marginTop = "8%";
 	autocomplete.data.forEach(function(tag, i){
 		var tag = tag["name"],
@@ -698,7 +692,7 @@ var addTagMessage = function() {
 	menuarrow.src = "http://assets.tagsurf.co/img/up_pointer_arrow_white.gif";
 	menuarrow.id = "menu-up-arrow";
 	menuarrow.className = "left-arrow";
-	node.innerHTML = "Add a new tag<br/>to share this<br/>in another feed";
+	node.innerHTML = "Log in to add<br/>a new tag and share<br/>this in another feed";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "40%" : "18%";
 	node.style.marginTop = isUIWebView() ? "50%" : node.style.marginTop;

@@ -602,17 +602,29 @@ onload = function ()
 		voteButtonsOn();
 
 	analytics.identify(currentUser.id);
+	var jiggler = function() {
+		tutorial.jiggleTimeout = setTimeout(function() { 
+			current_deck.topCard().jiggle() 
+		}, 8000);
+		setTimeout(function() {
+			current_deck.topCard().setOneTimeCb("vote", function () { 
+				clearTimeout(tutorial.jiggleTimeout);
+				tutorial.jiggleTimeout = null;
+			});
+		}, 4000);
+	}
 	setTimeout(function() {
 		var topCard = current_deck.topCard();
 		if (topCard && !topCard.showing)
 			current_deck.topCard().setOneTimeCb("show", function() {
-				!tutorial.on && reminders[0] && reminders[0].forget(true);
+				reminders[0] && reminders[0].forget(true);
 			});
 		else if (topCard)
 			slowReminder.forget(true);
 	}, 8000);
-	if (!isAuthorized() && !DEBUG)
-	 	tutorial.start();
+	if (!isAuthorized())// && !DEBUG)
+		jiggler();
+
 };
 
 //This is the first line executed in feed

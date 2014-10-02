@@ -15,6 +15,7 @@
 //= require throbber
 //= require gesture
 //= require reminder
+//= require tutorial
 //= require nav
 //= require image
 //= require stroke
@@ -22,7 +23,6 @@
 //= require drag
 //= require share
 //= require panic
-//= require tutorial
 //= require card
 //= require deck
 //= require autocomplete

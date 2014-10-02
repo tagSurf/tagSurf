@@ -9,7 +9,7 @@ var populateNavbar = function () {
 
   var gallery = whichGallery();
   var tag = gallery ? document.location.hash.slice(1) : null;
-  var navbar_content = [
+  var full_navbar_content = [
     "<div id='favorites-btn'>",
       "<a onclick='starCallback();'><img id='favorites-icon' src='http://assets.tagsurf.co/img/favorites_icon_blue.png'></a>",
     "</div>",
@@ -28,6 +28,22 @@ var populateNavbar = function () {
       "</label>",
     "</div>",
   ], 
+  reduced_navbar_content = [
+    "<div id='help-btn'>",
+      "<img id='help-icon' src='http://assets.tagsurf.co/img/help_btn.png'>",
+    "</div>",
+    "<div class='navbar-center'>",
+      "<label id='slider-label' for='slider-box' ontouchmove='return false;' onclick='slideNavMenu();'>",
+        "<span id='main-logo'>",
+          gallery ? (gallery == "tag"
+            ? ("<span class='pointer'>#" + tag + "</span>")
+            : ("<img class='gallery-icon' src='http://assets.tagsurf.co/img/" + gallery + "_icon_gray.png'><span id='gallery-name' class='pointer'>" + gallery.toUpperCase() + "</span>"))
+          : "<img id='tagsurf-logo' src='http://assets.tagsurf.co/img/logo_big.png'></img>",
+        "</span><span id='history-logo'>HISTORY</span>",
+        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='http://assets.tagsurf.co/img/down_arrow_nav.png'></img>",
+      "</label>",
+    "</div>",
+  ],
   full_slider_content = [
     "<input type='checkbox' name='slider-box' id='slider-box' style='display:none'>",
     "<div id='slide-down-menu' class='pointer'>",
@@ -83,13 +99,24 @@ var populateNavbar = function () {
     "</div>",
   ],
   menu_slider_content = isAuthorized() ? full_slider_content : reduced_slider_content;
+  navbar_content = isAuthorized() ? full_navbar_content : reduced_navbar_content;
   navbar.innerHTML = navbar_content.join('\n');
   menu_slider.innerHTML = menu_slider_content.join('\n');
   tag_adder.innerHTML = "<input value='#newtag' spellcheck='false' autocomplete='off' autocapitalize='off' autocorrect='off'><img src='http://assets.tagsurf.co/img/add_tag_button.png'><div id='add-tag-autocomplete' class='autocomplete hider'></div>";
   nav.appendChild(navbar);
   nav.appendChild(menu_slider);
   nav.appendChild(tag_adder);
-
+  if (!isAuthorized()) {
+    gesture.listen("down", document.getElementById("help-btn"), function () {
+      document.getElementById("help-icon").src = 'http://assets.tagsurf.co/img/help_btn_fill.png';
+    });
+    gesture.listen("up", document.getElementById("help-btn"), function () {
+      document.getElementById("help-icon").src = 'http://assets.tagsurf.co/img/help_btn.png';
+    });
+    gesture.listen("tap", document.getElementById("help-btn"), function () {
+      callHelpModal();
+    });
+  }
   tag_adder.firstChild.nextSibling.onclick = function() {
     var newtag = tag_adder.firstChild.value.slice(1);
     if (!newtag || newtag == "newtag") return;
@@ -331,6 +358,46 @@ var slideAddBar = function(noback) {
   document.getElementById("tag-adder").firstChild.value = "#newtag";
   if (noback != true && !modal.zoom.zoomed && !modal.modal.on)
     addBarSlid ? modal.halfOn(slideAddBar) : modal.backOff();
+};
+
+var callHelpModal = function() {
+  var n = document.createElement("div"),
+    title = document.createElement("div"),
+    tutorialButton = document.createElement("div")
+    closebtn = document.createElement("img"),
+    help_cb = function() {
+      checkShare();
+      modal.backOff();
+      modal.modalOut();
+    };
+  n.className = "center-label";
+  tutorialButton.innerHTML = "Take the tutorial";
+  tutorialButton.className = "msgbox-btn";
+  tutorialButton.id = "tutorial-button";
+  closebtn.src = "http://assets.tagsurf.co/img/Close.png";
+  closebtn.className = "modal-close-button";
+  closebtn.id = "help-close-button";
+  title.innerHTML = "New here?";
+  title.className = "options-title";
+  n.appendChild(title);
+  n.appendChild(closebtn);
+  n.appendChild(tutorialButton);
+  gesture.listen("tap", tutorialButton, function() {
+    modal.modalOut();
+    checkShare();
+    voteButtonsOn();
+    tutorial.start();
+  });
+  gesture.listen("down", tutorialButton, function () {
+    tutorialButton.classList.add('ts-active-button');
+  });
+  gesture.listen("up", tutorialButton, function () {
+    tutorialButton.classList.remove('ts-active-button');
+  });
+  share.off();
+  panic.off();
+  voteButtonsOff();
+  modal.modalIn(n, help_cb);
 };
 
 var starCallback, setStarCallback = function(cb) {
