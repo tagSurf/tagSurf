@@ -122,42 +122,58 @@ class Media < ActiveRecord::Base
       # unless has_voted_ids = user.voted_on.present? && user.voted_on.to_a
       # has_voted_ids = has_voted_ids.collect {|v| v.to_i } 
       # end
-      has_voted_ids = user.votes.pluck(:votable_id) 
+      has_voted_ids = user.votes.pluck(:votable_id)
 
       if tag == 'trending'
-        staffpick_ids = @media.tagged_with('StaffPicks').pluck(:id)
+        # staffpick_ids = @media.tagged_with('StaffPicks').pluck(:id)
         viral_ids = @media.where(viral: true, nsfw: false).pluck(:id)
 
         # Remove media which the user has voted on
-        staffpick_ids = staffpick_ids - has_voted_ids
+        # staffpick_ids = staffpick_ids - has_voted_ids
 
         # Avoid the extra query if no staffpicks left
         # Reserving optimization for the move to Redis objects
-        if staffpick_ids.present?
-          if staffpick_ids.length < 20
-            trending_limit = n - staffpick_ids.length
-            additional_media = Media.where('id not in (?) and id in (?)', has_voted_ids, viral_ids).limit(trending_limit).order('ts_score DESC NULLS LAST').map(&:id)
-            media_ids = staffpick_ids + additional_media
+        # if staffpick_ids.present?
+        #   if staffpick_ids.length < 20
+        #     trending_limit = n - staffpick_ids.length
+        #     additional_media = Media.where('id not in (?) and id in (?)', has_voted_ids, viral_ids).limit(trending_limit).order('ts_score DESC NULLS LAST').map(&:id)
+        #     media_ids = staffpick_ids + additional_media
 
-            # Custom sort order for collections
-            # TODO candidate for Activerecord extension
-            sort_order = media_ids.collect{|id| "id = #{id} desc"}.join(',')
-            @media =  @media.where('id in (?)', media_ids).limit(n).order(sort_order)
-          else
-            @media =  @media.where('id in (?)', staffpick_ids).limit(n).order('ts_score DESC NULLS LAST')
+        #     # Custom sort order for collections
+        #     # TODO candidate for Activerecord extension
+        #     sort_order = media_ids.collect{|id| "id = #{id} desc"}.join(',')
+        #     @media =  @media.where('id in (?)', media_ids).limit(n).order(sort_order)
+        #   else
+        #     @media =  @media.where('id in (?)', staffpick_ids).limit(n).order('ts_score DESC NULLS LAST')
+        #   end
+        # else
+        if user.safe_mode? 
+          if has_voted_ids.empty?
+            @media = @media.where('viral and not nsfw').limit(n).order('ts_score DESC NULLS LAST')
+          else 
+            @media = @media.where('id not in (?) and viral and not nsfw', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
           end
         else
-          if user.safe_mode? 
-            @media = @media.where('id not in (?) and viral and not nsfw', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
+          if has_voted_ids.empty?
+            @media = @media.where('viral').limit(n).order('ts_score DESC NULLS LAST')
           else
             @media = @media.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
           end
         end
+        # end
       else
         if user.safe_mode?
-          @media = Media.where('media.id not in (?) and not nsfw', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+          if has_voted_ids.empty?
+            @media = Media.where('not nsfw').tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+          else
+            @media = Media.where('media.id not in (?) and not nsfw', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+          end
         else
-          @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+          if has_voted_ids.empty?
+            @media = Media.tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+          else
+            @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+          end
         end
     
         if @media.length < 10
