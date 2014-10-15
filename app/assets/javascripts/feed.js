@@ -5,7 +5,6 @@ var castVote = function(card) {
 
 onload = function ()
 {
-	analytics.track('Begin Pageload');
 	populateNavbar();
 
 	// defined in util for autocomplete
