@@ -327,8 +327,8 @@ class Media < ActiveRecord::Base
     net_votes = up_votes - down_votes
     if net_votes > 0
       self.up_votes.increment(net_votes)
-    else
-      self.up_votes.decrement(net_votes)
+    elsif net_votes < 0
+      self.up_votes.decrement(net_votes.abs)
     end
   end
 end
