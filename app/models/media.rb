@@ -320,4 +320,15 @@ class Media < ActiveRecord::Base
     #}
   #}
 
+  def init_vote_counter!
+    up_votes = votes.where(vote_flag: true).count
+    down_votes = votes.where(vote_flag: false).count
+    self.up_votes.reset
+    net_votes = up_votes - down_votes
+    if net_votes > 0
+      self.up_votes.increment(net_votes)
+    else
+      self.up_votes.decrement(net_votes)
+    end
+  end
 end
