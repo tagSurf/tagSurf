@@ -38,8 +38,8 @@ module Tagsurf
     config.action_mailer.perform_deliveries = true
     config.action_mailer.raise_delivery_errors = false
 
-    redis_active = Rails.env.development? ? false : true
-    CONFIG[:redis_active] = redis_active  
+    # redis_active = Rails.env.development? ? false : true
+    CONFIG[:redis_active] = true #redis_active  
 
     # TODO move to yaml
     CONFIG[:blacklisted_tags] = [ 

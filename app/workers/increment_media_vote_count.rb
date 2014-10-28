@@ -7,9 +7,10 @@ class IncrementMediaVoteCount
 
     if vote_flag
       media.up_votes.increment
-      media.ts_score = media.ts_score + 1000000
+      media.ts_score += 1000000
     else
       media.up_votes.decrement
+      media.ts_score -= 1000000
     end
 
     media.last_touched = Time.now
