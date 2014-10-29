@@ -11,13 +11,16 @@ class CreateFavoriteVote
         voter_type: 'User'
       ).first
       unless vote
-        Vote.create!(
+        vote = Vote.create!(
           voter_id: fav.user_id,
           voter_type: 'User',
           votable_id: fav.media_id,
           votable_type: 'Media',
           vote_flag: true
         )
+      end
+      if vote
+        IncrementMediaVoteCount.perform_async(fav.media_id, true, 10000000)
       end
     rescue => e
       raise "Unable to create vote after favorite: #{e}"

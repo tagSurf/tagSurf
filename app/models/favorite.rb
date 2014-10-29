@@ -62,7 +62,8 @@ class Favorite < ActiveRecord::Base
         voter_type: 'User'
       ).first
       unless vote
-        Vote.create!(
+        puts "hello world"
+        vote = Vote.create!(
           voter_id: self.user_id,
           voter_type: 'User',
           votable_id: self.media_id,
@@ -70,7 +71,10 @@ class Favorite < ActiveRecord::Base
           vote_flag: true
         )
       end
-
+      if vote 
+        puts "incrementing media vote count now..."
+        IncrementMediaVoteCount.perform_async(self.media_id, true, 10000000)
+      end
     end
   end
 
