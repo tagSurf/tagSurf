@@ -8,6 +8,7 @@ class Favorite < ActiveRecord::Base
   belongs_to :media
 
   after_commit :create_vote, on: :create
+  after_commit :downgrade_vote, on: :destroy
 
   def self.paginated_history(user_id, limit, offset, safe)
     if safe
@@ -62,7 +63,7 @@ class Favorite < ActiveRecord::Base
         voter_type: 'User'
       ).first
       unless vote
-        Vote.create!(
+        vote = Vote.create!(
           voter_id: self.user_id,
           voter_type: 'User',
           votable_id: self.media_id,
@@ -70,8 +71,14 @@ class Favorite < ActiveRecord::Base
           vote_flag: true
         )
       end
-
+      if vote 
+        IncrementMediaVoteCount.perform_async(self.media_id, true, 10000000)
+      end
     end
+  end
+
+  def downgrade_vote
+    IncrementMediaVoteCount.perform_async(self.media_id, false, 10000000)
   end
 
 end
