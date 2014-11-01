@@ -11,6 +11,12 @@ class RemoteResource
         "X-Mashape-Authorization" => ENV['TS_MASHAPE']
       }
     )
+    HTTParty.get(
+      "https://beta.urx.io/#{service}",
+      :headers => {
+        "X-API-Key" => ENV['TS_URX']
+      }
+    )
   end
 
   def self.viral_feed
