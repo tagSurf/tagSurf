@@ -202,56 +202,59 @@ class Media < ActiveRecord::Base
   end
 
   def self.populate_tag(tag_name) 
-    response = RemoteResource.tagged_feed(tag_name)
+    updated = false
+    CONFIG[:remote_providers].each do |provider|    
+      begin
+        if provider = 'imgur'
+          response = RemoteResource.tagged_feed(tag_name, provider, nil)
 
-    if response.nil? or response.parsed_response.nil?
-      raise "Failed to fetch with #{tag_name}, response:#{response}"
-    end
+          if response.nil? or response.parsed_response.nil?
+            raise "Failed to fetch with #{tag_name}, response:#{response}"
+          end
 
-    tagged = response.parsed_response["data"]
+          tagged = response.parsed_response["data"]
 
-    # Create tag if not already in the system
-    unless tag = Tag.where('name ilike ?', tag_name).first
-      tag = Tag.create(name: tag_name)
-    end
+          # Create tag if not already in the system
+          unless tag = Tag.where('name ilike ?', tag_name).first
+            tag = Tag.create(name: tag_name)
+          end
 
-    if tagged
-      tagged.each do |obj|
-        next if obj['is_album'].to_s == 'true'
-        media = Media.create({
-          remote_id: obj['id'],
-          remote_provider: 'imgur',
-          remote_created_at: obj['datatime'],
-          image_link_original: obj['link'],
-          viral: false,
-          nsfw:  (obj["nsfw"] || false),
-          title: obj['title'],
-          description: obj['description'],
-          content_type: obj['type'],
-          animated: obj['animated'],
-          width: obj['width'],
-          height: obj['height'],
-          size: obj['size'],
-          remote_views: obj['views'],
-          remote_score: obj['score'],
-          ts_score: (obj['score'] + (Time.new.to_i - 1300000000)),
-          remote_up_votes: obj['ups'],
-          remote_down_votes: obj['downs'],
-          section: obj['section'],
-          delete_hash: obj['deletehash']
-        })
+          if tagged
+            updated = true
+            populate_imgur_tag(tagged)
+          end
 
-        if obj["nsfw"] == 'true'
-          media.tag_list.add(media.section, 'NSFW')
+        elsif provider = 'urx'
+          CONFIG[:urx_domains].each do |domain|
+            response = RemoteResource.tagged_feed(tag_name, provider, domain)
+
+            if response.nil? or response.parsed_response.nil?
+              raise "Failed to fetch with #{tag_name}, response:#{response}"
+            end
+
+            tagged = response.parsed_response["data"]
+
+            # Create tag if not already in the system
+            unless tag = Tag.where('name ilike ?', tag_name).first
+              tag = Tag.create(name: tag_name)
+            end
+
+            if tagged
+              updated = true
+              populate_urx_tag(tagged, domain)
+            end
+          end
         else
-          media.tag_list.add(media.section)
+          raise "Error unknown provider: #{provider}"
         end
-
-        media.save
+      rescue => e
+        puts "Something went wrong with Media.populate_tag: #{e}"
       end
-    else
+    end
+    if !updated 
       tag.update_column("fetch_more_content", true)
     end
+
   end
 
   def self.populate_trending!
@@ -331,4 +334,81 @@ class Media < ActiveRecord::Base
       self.up_votes.decrement(net_votes.abs)
     end
   end
+
+  private 
+
+  def populate_imgur_tag(objs)
+    objs.each do |obj|
+      next if obj['is_album'].to_s == 'true'
+      media = Media.create({
+        remote_id: obj['id'],
+        remote_provider: 'imgur',
+        remote_created_at: obj['datatime'],
+        image_link_original: obj['link'],
+        viral: false,
+        nsfw:  (obj["nsfw"] || false),
+        title: obj['title'],
+        description: obj['description'],
+        content_type: obj['type'],
+        animated: obj['animated'],
+        width: obj['width'],
+        height: obj['height'],
+        size: obj['size'],
+        remote_views: obj['views'],
+        remote_score: obj['score'],
+        ts_score: (obj['score'] + (Time.new.to_i - 1300000000)),
+        remote_up_votes: obj['ups'],
+        remote_down_votes: obj['downs'],
+        section: obj['section'],
+        delete_hash: obj['deletehash']
+      })
+
+      if obj["nsfw"] == 'true'
+        media.tag_list.add(media.section, 'NSFW')
+      else
+        media.tag_list.add(media.section)
+      end
+      media.save
+    end
+  end
+
+  def populate_urx_tag(objs, domain)
+    if domain = 'buzzfeed.com'
+      objs.each do |obj|
+        next if obj['is_album'].to_s == 'true'
+        media = Media.create({
+          remote_id: obj['id'],
+          remote_provider: 'imgur',
+          remote_created_at: obj['datatime'],
+          image_link_original: obj['link'],
+          viral: false,
+          nsfw:  (obj["nsfw"] || false),
+          title: obj['title'],
+          description: obj['description'],
+          content_type: obj['type'],
+          animated: obj['animated'],
+          width: obj['width'],
+          height: obj['height'],
+          size: obj['size'],
+          remote_views: obj['views'],
+          remote_score: obj['score'],
+          ts_score: (obj['score'] + (Time.new.to_i - 1300000000)),
+          remote_up_votes: obj['ups'],
+          remote_down_votes: obj['downs'],
+          section: obj['section'],
+          delete_hash: obj['deletehash']
+        })
+
+        if obj["nsfw"] == 'true'
+          media.tag_list.add(media.section, 'NSFW')
+        else
+          media.tag_list.add(media.section)
+        end
+        media.save
+      end
+    else
+      raise "Error unknown URX domain: #{domain}"
+    end
+  end 
+
 end

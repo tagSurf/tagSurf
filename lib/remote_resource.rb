@@ -3,35 +3,44 @@ require 'httparty'
 class RemoteResource
   include HTTParty
 
-  def self.get_request(service)
-    HTTParty.get(
-      "https://imgur-apiv3.p.mashape.com/3/#{service}",
-      :headers => {
-        "Authorization" => "Client-ID #{ENV['TS_IMGUR']}",
-        "X-Mashape-Authorization" => ENV['TS_MASHAPE']
-      }
-    )
-    HTTParty.get(
-      "https://beta.urx.io/#{service}",
-      :headers => {
-        "X-API-Key" => ENV['TS_URX']
-      }
-    )
+  def self.get_request(uri, provider, domain)
+    if provider = "imgur"
+      HTTParty.get(
+        "https://imgur-apiv3.p.mashape.com/3/#{uri}",
+        :headers => {
+          "Authorization" => "Client-ID #{ENV['TS_IMGUR']}",
+          "X-Mashape-Authorization" => ENV['TS_MASHAPE']
+        }
+      )
+    elsif provider = "urx"
+      HTTParty.get(
+        "https://beta.urx.io/#{domain}+#{uri}",
+        :headers => {
+          "X-API-Key" => ENV['TS_URX']
+        }
+      )
+    end
   end
 
   def self.viral_feed
-    service = 'gallery/hot/viral/0'
+    uri = 'gallery/hot/viral/0'
     RemoteResource.get_request(service)
   end
 
-  def self.tagged_feed(tag)
-    service = "gallery/r/#{tag}/" 
-    RemoteResource.get_request(service)
+  def self.tagged_feed(tag, provider, domain)
+    if provider = 'imgur'
+      uri = "gallery/r/#{tag}/" 
+      RemoteResource.get_request(uri, provider, domain)
+    elsif provider = 'urx'
+      RemoteResource.get_request(tag, provider, domain)
+    else
+      raise "Error unknown provider: #{provider}"
+    end
   end
 
   def self.imgur_media(remote_id)
-    service = "image/#{remote_id}/" 
-    RemoteResource.get_request(service)
+    uri = "image/#{remote_id}/" 
+    RemoteResource.get_request(uri)
   end
 
   def self.content_type(type)
