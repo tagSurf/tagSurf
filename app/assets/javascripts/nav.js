@@ -238,7 +238,7 @@ var buildOptionsTable = function (options_cb) {
     {
       if (isUIWebView())
       {
-        messageBox("Sorry", "Disabling Safe Surf is not allowed for native applications on this device<br/><br/>Visit us in your mobile browser<br/>at <span class='blue'>www.tagsurf.co</span> for full features");
+        messageBox("Sorry", "Disabling Safe Surf is not allowed for native applications on this device<br/><br/>Visit us in your mobile browser<br/>at <span class='blue'>beta.tagsurf.co</span> for full features");
         analytics.track('Unauthorized iOS Toggle Safe Surf');
       }
       else
