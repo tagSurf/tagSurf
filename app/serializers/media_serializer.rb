@@ -80,6 +80,7 @@ class MediaSerializer < BaseSerializer
 
   def caption
     return nil if type == 'login'
+    ## TO-DO: Update this. Buzzfeed article descriptions are not good. Use title instead.
     if media.description
       media.description
     else
