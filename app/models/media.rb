@@ -387,9 +387,11 @@ class Media < ActiveRecord::Base
           nsfw:  false,
           title: obj['name'],
           description: obj['description'],
-          content_type: obj['image'].is_a?(Array) ? "image/#{obj['image'].first.split('.').last.strip}" : "image/#{obj['image'].first.split('.').last.strip}",
+          content_type: obj['image'].is_a?(Array) ? 
+                          "image/#{obj['image'].first.split('.').last.strip}" :
+                           "image/#{obj['image'].split('.').last.strip}",
           animated: false,
-          ts_score: (1000 + (Time.new.to_i - 1300000000)), #Give a small fixed bonus to lift it above some imgur content
+          ts_score: (1000 + (Time.new.to_i - 1300000000)), #Give a small fixed bonus to lift it
           section: tag_name,
           web_link: obj['url'],
           deep_link: obj['potentialAction']['target']['urlTemplate'],
