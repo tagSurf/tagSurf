@@ -24,7 +24,7 @@ class RemoteResource
 
   def self.viral_feed
     uri = 'gallery/hot/viral/0'
-    RemoteResource.get_request(uri)
+    RemoteResource.get_request(uri, 'imgur', nil, nil)
   end
 
   def self.tagged_feed(tag, provider, offset, domain)
