@@ -206,7 +206,7 @@ class Media < ActiveRecord::Base
     CONFIG[:remote_providers].each do |provider|    
       begin
         if provider == 'imgur'
-          response = RemoteResource.tagged_feed(tag_name, provider, nil)
+          response = RemoteResource.tagged_feed(tag_name, provider, nil, nil)
 
           if response.nil? or response.parsed_response.nil?
             raise "Failed to fetch imgur results for tag:##{tag_name}, response:#{response}"
@@ -226,23 +226,31 @@ class Media < ActiveRecord::Base
 
         elsif provider == 'urx'
           CONFIG[:urx_domains].each do |domain|
-            response = RemoteResource.tagged_feed(tag_name, provider, domain)
+            @offset = 0
+            while @offset < 10 do
+              response = RemoteResource.tagged_feed(tag_name, provider, @offset, domain)
 
-            if response.nil? or response.parsed_response.nil?
-              raise "Failed to fetch URX results for tag:##{tag_name}, response:#{response}"
-            end
+              if response.nil?
+                raise "Failed to fetch URX results for tag:##{tag_name}, response:#{response}"
+              end
 
-            parsed = JSON.parse(response.body)
-            tagged = parsed['result']
+              parsed = JSON.parse(response.body)
+              tagged = parsed['result']
 
-            # Create tag if not already in the system
-            unless tag = Tag.where('name ilike ?', tag_name).first
-              tag = Tag.create(name: tag_name)
-            end
+              if tagged.empty?
+                break
+              end
 
-            if tagged
-              updated = true
-              self.populate_urx_tag(tagged, domain, tag_name)
+              # Create tag if not already in the system
+              unless tag = Tag.where('name ilike ?', tag_name).first
+                tag = Tag.create(name: tag_name)
+              end
+
+              if tagged
+                updated = true
+                self.populate_urx_tag(tagged, domain, tag_name)
+              end
+            @offset += 1
             end
           end
         else
@@ -336,7 +344,7 @@ class Media < ActiveRecord::Base
     end
   end
 
-  def populate_imgur_tag(objs)
+  def self.populate_imgur_tag(objs)
     objs.each do |obj|
       next if obj['is_album'].to_s == 'true'
       media = Media.create({
@@ -373,11 +381,12 @@ class Media < ActiveRecord::Base
 
   def self.populate_urx_tag(objs, domain, tag_name)
     if domain == 'buzzfeed.com'
-      resp = Media.select(:remote_id).where(:remote_provider => 'urx/buzzfeed').order('remote_id DESC NULLS LAST').first
-      starting_index = resp.nil? ? 1 : resp.remote_id.split("#")[1].strip.to_i + 1
+      resp = Media.select(:remote_id).where(:remote_provider => 'urx/buzzfeed')
+      starting_index = resp.nil? ? 1 : 
+                        resp.sort_by { |x| -(x.remote_id[/\d+/].to_i) }.first.remote_id.split("#")[1].to_i + 1
       objs.each do |obj|
         media = Media.create({
-          remote_id: "BUZZ#{starting_index}",
+          remote_id: "BUZZ##{starting_index}",
           remote_provider: 'urx/buzzfeed',
           remote_created_at: Time.now,
           image_link_original: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
