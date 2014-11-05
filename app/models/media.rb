@@ -205,11 +205,11 @@ class Media < ActiveRecord::Base
     updated = false
     CONFIG[:remote_providers].each do |provider|    
       begin
-        if provider = 'imgur'
+        if provider == 'imgur'
           response = RemoteResource.tagged_feed(tag_name, provider, nil)
 
           if response.nil? or response.parsed_response.nil?
-            raise "Failed to fetch with #{tag_name}, response:#{response}"
+            raise "Failed to fetch imgur results for tag:##{tag_name}, response:#{response}"
           end
 
           tagged = response.parsed_response["data"]
@@ -224,15 +224,16 @@ class Media < ActiveRecord::Base
             populate_imgur_tag(tagged)
           end
 
-        elsif provider = 'urx'
+        elsif provider == 'urx'
           CONFIG[:urx_domains].each do |domain|
             response = RemoteResource.tagged_feed(tag_name, provider, domain)
 
             if response.nil? or response.parsed_response.nil?
-              raise "Failed to fetch with #{tag_name}, response:#{response}"
+              raise "Failed to fetch URX results for tag:##{tag_name}, response:#{response}"
             end
 
-            tagged = response.parsed_response["data"]
+            parsed = JSON.parse(response.body)
+            tagged = parsed['result']
 
             # Create tag if not already in the system
             unless tag = Tag.where('name ilike ?', tag_name).first
@@ -241,7 +242,7 @@ class Media < ActiveRecord::Base
 
             if tagged
               updated = true
-              populate_urx_tag(tagged, domain)
+              populate_urx_tag(tagged, domain, tag_name)
             end
           end
         else
@@ -372,38 +373,27 @@ class Media < ActiveRecord::Base
     end
   end
 
-  def populate_urx_tag(objs, domain)
-    if domain = 'buzzfeed.com'
+  def populate_urx_tag(objs, domain, tag_name)
+    if domain == 'buzzfeed.com'
+      resp = Media.select(:remote_id).where(:remote_provider => 'urx/buzzfeed').order('remote_id DESC NULLS LAST').first
+      starting_index = resp.remote_id.split("#")[1].strip.to_i + 1
       objs.each do |obj|
-        next if obj['is_album'].to_s == 'true'
         media = Media.create({
-          remote_id: obj['id'],
-          remote_provider: 'imgur',
-          remote_created_at: obj['datatime'],
-          image_link_original: obj['link'],
+          remote_id: "BUZZ#{starting_index}",
+          remote_provider: 'urx/buzzfeed',
+          remote_created_at: Time.now,
+          image_link_original: obj['image'].first,
           viral: false,
-          nsfw:  (obj["nsfw"] || false),
-          title: obj['title'],
-          description: obj['description'],
-          content_type: obj['type'],
-          animated: obj['animated'],
-          width: obj['width'],
-          height: obj['height'],
-          size: obj['size'],
-          remote_views: obj['views'],
-          remote_score: obj['score'],
-          ts_score: (obj['score'] + (Time.new.to_i - 1300000000)),
-          remote_up_votes: obj['ups'],
-          remote_down_votes: obj['downs'],
-          section: obj['section'],
-          delete_hash: obj['deletehash']
+          nsfw:  false,
+          title: obj['name'],
+          content_type: nil, #'image/#{obj['image'].split('.')[1].strip}',
+          animated: false,
+          ts_score: (1000 + (Time.new.to_i - 1300000000)), #Give a small fixed bonus to lift it above some imgur content
+          section: tag_name,
         })
-
-        if obj["nsfw"] == 'true'
-          media.tag_list.add(media.section, 'NSFW')
-        else
-          media.tag_list.add(media.section)
-        end
+        starting_index += 1
+        media.tag_list.add('buzzfeed', 'urx', tag_name)
+        
         media.save
       end
     else

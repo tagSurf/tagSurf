@@ -4,7 +4,7 @@ class RemoteResource
   include HTTParty
 
   def self.get_request(uri, provider, domain)
-    if provider = "imgur"
+    if provider == 'imgur'
       HTTParty.get(
         "https://imgur-apiv3.p.mashape.com/3/#{uri}",
         :headers => {
@@ -12,9 +12,9 @@ class RemoteResource
           "X-Mashape-Authorization" => ENV['TS_MASHAPE']
         }
       )
-    elsif provider = "urx"
+    elsif provider == 'urx'
       HTTParty.get(
-        "https://beta.urx.io/#{domain}+#{uri}",
+        "https://beta.urx.io/#{domain}+action:ReadAction+#{uri}",
         :headers => {
           "X-API-Key" => ENV['TS_URX']
         }
@@ -28,10 +28,10 @@ class RemoteResource
   end
 
   def self.tagged_feed(tag, provider, domain)
-    if provider = 'imgur'
+    if provider == 'imgur'
       uri = "gallery/r/#{tag}/" 
       RemoteResource.get_request(uri, provider, domain)
-    elsif provider = 'urx'
+    elsif provider == 'urx'
       RemoteResource.get_request(tag, provider, domain)
     else
       raise "Error unknown provider: #{provider}"
