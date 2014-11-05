@@ -221,7 +221,7 @@ class Media < ActiveRecord::Base
 
           if tagged
             updated = true
-            populate_imgur_tag(tagged)
+            self.populate_imgur_tag(tagged)
           end
 
         elsif provider == 'urx'
@@ -242,7 +242,7 @@ class Media < ActiveRecord::Base
 
             if tagged
               updated = true
-              populate_urx_tag(tagged, domain, tag_name)
+              self.populate_urx_tag(tagged, domain, tag_name)
             end
           end
         else
@@ -336,8 +336,6 @@ class Media < ActiveRecord::Base
     end
   end
 
-  private 
-
   def populate_imgur_tag(objs)
     objs.each do |obj|
       next if obj['is_album'].to_s == 'true'
@@ -373,20 +371,22 @@ class Media < ActiveRecord::Base
     end
   end
 
-  def populate_urx_tag(objs, domain, tag_name)
+  def self.populate_urx_tag(objs, domain, tag_name)
     if domain == 'buzzfeed.com'
       resp = Media.select(:remote_id).where(:remote_provider => 'urx/buzzfeed').order('remote_id DESC NULLS LAST').first
-      starting_index = resp.remote_id.split("#")[1].strip.to_i + 1
+      starting_index = resp.nil? ? 1 : resp.remote_id.split("#")[1].strip.to_i + 1
       objs.each do |obj|
         media = Media.create({
           remote_id: "BUZZ#{starting_index}",
           remote_provider: 'urx/buzzfeed',
           remote_created_at: Time.now,
-          image_link_original: obj['image'].first,
+          image_link_original: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
+          image_link_large: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
+          image_link_huge: obj['image'].is_a?(Array) ? obj['image'].last : nil, 
           viral: false,
           nsfw:  false,
           title: obj['name'],
-          content_type: nil, #'image/#{obj['image'].split('.')[1].strip}',
+          content_type: obj['image'].is_a?(Array) ? "image/#{obj['image'].first.split('.').last.strip}" : "image/#{obj['image'].first.split('.').last.strip}",
           animated: false,
           ts_score: (1000 + (Time.new.to_i - 1300000000)), #Give a small fixed bonus to lift it above some imgur content
           section: tag_name,

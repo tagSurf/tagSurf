@@ -24,7 +24,7 @@ class RemoteResource
 
   def self.viral_feed
     uri = 'gallery/hot/viral/0'
-    RemoteResource.get_request(service)
+    RemoteResource.get_request(uri)
   end
 
   def self.tagged_feed(tag, provider, domain)
