@@ -391,6 +391,12 @@ class Media < ActiveRecord::Base
           animated: false,
           ts_score: (1000 + (Time.new.to_i - 1300000000)), #Give a small fixed bonus to lift it above some imgur content
           section: tag_name,
+          web_link: obj['url'],
+          deep_link: obj['potentialAction']['target']['urlTemplate'],
+          deep_link_type: obj['potentialAction']['target']['@type'],
+          deep_link_action: obj['potentialAction']['@type'],
+          deep_link_desc: obj['potentialAction']['description'],
+          deep_link_icon: obj['potentialAction']['image']
         })
         starting_index += 1
         media.tag_list.add('buzzfeed', 'urx', tag_name)

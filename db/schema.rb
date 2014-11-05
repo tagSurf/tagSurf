@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141029175923) do
+ActiveRecord::Schema.define(version: 20141105025045) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -71,6 +71,12 @@ ActiveRecord::Schema.define(version: 20141029175923) do
     t.string   "ts_type",              default: "content", null: false
     t.boolean  "reported",             default: false,     null: false
     t.boolean  "nsfw",                 default: false,     null: false
+    t.string   "deep_link"
+    t.string   "web_link"
+    t.string   "deep_link_action"
+    t.string   "deep_link_icon"
+    t.string   "deep_link_desc"
+    t.string   "deep_link_type"
   end
 
   add_index "media", ["nsfw"], name: "index_media_on_nsfw", using: :btree
