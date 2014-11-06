@@ -8,6 +8,8 @@ class Tag < ActiveRecord::Base
 
   validates_presence_of :name
 
+  before_create :scrub_name
+
   # not implemented yet for all tags
   scope :safe_mode, ->(boolean) { where("blacklisted = ?", boolean) }
 
@@ -90,6 +92,15 @@ class Tag < ActiveRecord::Base
         raise "Something else happened #{e}"
       end
     end
+  end
+
+  protected
+
+  def scrub_name
+    self.name.gsub!(/[^0-9A-Za-z]/, '')
+    if self.name.empty?
+      raise "Could not create tag, nothing left after removing whitespace and special chars"
+    end 
   end
 
 end
