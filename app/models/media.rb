@@ -251,7 +251,7 @@ class Media < ActiveRecord::Base
                 updated = true
                 self.populate_urx_tag(tagged, domain, tag_name)
               end
-            @offset += 1
+              @offset += 1
             end
           end
         else
