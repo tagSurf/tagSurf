@@ -94,10 +94,40 @@ class Tag < ActiveRecord::Base
     end
   end
 
+  def self.clean_names
+    Tag.select(:id, :name).find_all do |t|
+      @oldName = t.name
+      @cleanName = t.name.gsub(/[^0-9A-Za-z_]/, '')
+      if @cleanName.empty?
+        puts "About to destroy tag_id = #{t.id} because it is empty"
+        m = Media.tagged_with(@oldName, :wild => true)
+        m.each do |media|
+          media.tag_list.remove(@oldName)
+          media.save
+          puts "tag #{@oldName} removed from Media.id = #{media.id}"
+        end
+        t.destroy
+      else
+        begin
+          t.update_column('name', @cleanName)
+        rescue ActiveRecord::RecordNotUnique
+          m = Media.tagged_with(@oldName, :wild => true)
+          m.each do |media|
+            media.tag_list.remove(@oldName)
+            media.tag_list.add(@cleanName)
+            media.save  
+            puts "Media.id = #{media.id} retagged with #{@cleanName}"
+          end
+          t.destroy
+        end
+      end 
+    end
+  end
+
   protected
 
   def scrub_name
-    self.name.gsub!(/[^0-9A-Za-z]/, '')
+    self.name.gsub!(/[^0-9A-Za-z_]/, '')
     if self.name.empty?
       raise "Could not create tag, nothing left after removing whitespace and special chars"
     end 
