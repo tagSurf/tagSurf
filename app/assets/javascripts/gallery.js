@@ -206,49 +206,12 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 
 		topbar.firstChild.innerHTML = "";
 		topbar.firstChild.appendChild(voteMeter(d, true));
-		topbar.children[2].innerHTML = d.tags[0];
+		topbar.children[2].innerHTML = Object.keys(d.tags[0])[0];
 
 		bigpic.src = image.get(d, window.innerWidth - 40).url;
 		picdesc.innerHTML = d.caption;
-		
-		// tags_v2 example:
-		/*
-			[
-				{
-					"pics": {
-						"total_votes":15,
-						"down_votes":1,
-						"up_votes":14,
-						"score":14,
-						"is_trending":false,
-						"trend":"down"
-					}
-				},
-				{
-					"trending": {
-						"total_votes":0,
-						"down_votes":0,
-						"up_votes":0,
-						"score":0,
-						"is_trending":false,
-						"trend":"up"
-					}
-				},
-				{
-					"": {
-						"total_votes":4,
-						"down_votes":3,
-						"up_votes":1,
-						"score":1,
-						"is_trending":false,
-						"trend":"down"
-					}
-				}
-			]
-		*/
-		// the API shouldn't return data formatted like this
 		pictags.innerHTML = "";
-		d.tags_v2.forEach(function(objwrap) {
+		d.tags.forEach(function(objwrap) {
 			for (var tagName in objwrap) if (tagName)
 				buildTagBlock(objwrap, tagName);
 		});
@@ -265,7 +228,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			trend: "up",
 			user_owned: true
 		};
-		current_image.tags_v2.push(objwrap);
+		current_image.tags.push(objwrap);
 		buildTagBlock(objwrap, tag);
 		analytics.track('Add Tag from Gallery', {
 			card: current_image.id,
