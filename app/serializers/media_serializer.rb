@@ -7,7 +7,6 @@ class MediaSerializer < BaseSerializer
     :image,
     :caption, 
     :tags,
-    :tags_v2,
     :user_stats,
     :permissions,
     :total_votes,
@@ -37,12 +36,6 @@ class MediaSerializer < BaseSerializer
 
   def tags
     return [] if type == 'login'
-    [media.section]
-  end
-
-  def tags_v2
-    return [] if type == 'login'
-    # Fix this fiasco once client is set
     current_tags = (media.tag_list + media.tagged_as).uniq
     if current_user.try(:safe_mode)
       current_tags.delete_if { |tag| Tag.blacklisted?(tag.to_s) }
