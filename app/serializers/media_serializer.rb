@@ -4,10 +4,13 @@ class MediaSerializer < BaseSerializer
   attributes( 
     :id,
     :remote_id,
-    :remote_provider,
+    :source,
     :image,
     :caption, 
     :tags,
+    :web_link,
+    :deep_link,
+    :source_icon,
     :user_stats,
     :permissions,
     :total_votes,
@@ -85,9 +88,13 @@ class MediaSerializer < BaseSerializer
   def caption
     return nil if type == 'login'
     ## TO-DO: Update this. Buzzfeed article descriptions are not good. Use title instead.
-    if media.description
-      media.description
-    else
+    if media.remote_provider == 'imgur'
+      if media.description
+        media.description
+      else
+        media.title
+      end 
+    elsif media.remote_provider == 'urx/buzzfeed'
       media.title
     end 
   end
@@ -145,6 +152,19 @@ class MediaSerializer < BaseSerializer
   def score
     return nil if type == 'login'
     media.remote_score
+  end
+
+  def source_icon
+    return nil if type == 'login'
+    if media.remote_provider == 'urx/buzzfeed'
+      media.deep_link_icon
+    elsif media.remote_provider == 'imgur'
+      if media.section.nil? or media.section == 'imgurhot'
+        return "http://assets.tagsurf.co/img/imgur_icon.png"
+      else
+        return "http://assets.tagsurf.co/img/reddit_icon.png"
+      end
+    end
   end
 
   def trend
