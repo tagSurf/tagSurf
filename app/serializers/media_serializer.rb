@@ -167,6 +167,11 @@ class MediaSerializer < BaseSerializer
     end
   end
 
+  def web_link
+    return media.web_link unless media.remote_provider == 'imgur'
+    return "http://imgur.com/gallery/#{media.remote_id}"
+  end
+
   def trend
     return nil if type == 'login'
     [*1..10].sample.odd? ? 'up' : 'down'
