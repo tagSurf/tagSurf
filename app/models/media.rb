@@ -420,7 +420,7 @@ class Media < ActiveRecord::Base
           deep_link_desc: obj['potentialAction']['description'],
           deep_link_icon: obj['potentialAction']['image']
         })
-        media.tag_list.add('buzzfeed', 'urx', tag_name)
+        media.tag_list.add(tag_name, 'buzzfeed', 'urx')
         
         @success = media.save
         if @success
