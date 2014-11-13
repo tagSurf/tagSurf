@@ -4,6 +4,7 @@ class MediaSerializer < BaseSerializer
   attributes( 
     :id,
     :remote_id,
+    :remote_provider,
     :image,
     :caption, 
     :tags,
@@ -49,15 +50,25 @@ class MediaSerializer < BaseSerializer
 
   def image
     return {} if type == 'login'
-    img = {
-      content_type: media.content_type,
-      animated: media.animated?,
-      tiny: {url: media.image_link_tiny, width: 50, height: 50}.merge!(media.scale_dimensions(160)),
-      medium: {url: media.image_link_medium, width: 320, height: 320}.merge!(media.scale_dimensions(320)),
-      large: {url: media.image_link_large, width: 640, height: 640}.merge!(media.scale_dimensions(640)),
-      huge: {url: media.image_link_huge, width: 1024, height: 1024}.merge!(media.scale_dimensions(1024)),
-      original: {url: media.image_link_original, width: media.width, height: media.height}
-    }
+    if media.remote_provider == 'imgur'
+      img = {
+        content_type: media.content_type,
+        animated: media.animated?,
+        tiny: {url: media.image_link_tiny, width: 50, height: 50}.merge!(media.scale_dimensions(160)),
+        medium: {url: media.image_link_medium, width: 320, height: 320}.merge!(media.scale_dimensions(320)),
+        large: {url: media.image_link_large, width: 640, height: 640}.merge!(media.scale_dimensions(640)),
+        huge: {url: media.image_link_huge, width: 1024, height: 1024}.merge!(media.scale_dimensions(1024)),
+        original: {url: media.image_link_original, width: media.width, height: media.height}
+      }
+    elsif media.remote_provider == 'urx/buzzfeed'
+      img = {
+        content_type: media.content_type,
+        animated: media.animated?,
+        large: {url: media.image_link_large},
+        huge: {url: media.image_link_huge},
+        original: {url: media.image_link_original}
+      }
+    end
     img
   end
 

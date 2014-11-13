@@ -14,7 +14,7 @@ class RemoteResource
       )
     elsif provider == 'urx'
       HTTParty.get(
-        "https://beta.urx.io/#{domain}+action:ReadAction+offset:#{offset}+#{uri}",
+        "https://beta.urx.io/domain:#{domain}+action:ReadAction+offset:#{offset}+#{uri}",
         :headers => {
           "X-API-Key" => ENV['TS_URX']
         }

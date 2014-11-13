@@ -385,6 +385,7 @@ class Media < ActiveRecord::Base
       resp = Media.select(:remote_id).where(:remote_provider => 'urx/buzzfeed')
       starting_index = resp.empty? ? 1 : 
                         resp.sort_by { |x| -(x.remote_id[/\d+/].to_i) }.first.remote_id.split("#")[1].to_i + 1
+      @extensions = ['jpg', 'jpeg', 'png', 'gif']
       objs.each do |obj|
         next if obj['@type'] != 'Thing'
         @extension = obj['image'].is_a?(Array) ? 
@@ -401,7 +402,9 @@ class Media < ActiveRecord::Base
           remote_created_at: Time.now,
           image_link_original: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
           image_link_large: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
-          image_link_huge: obj['image'].is_a?(Array) ? obj['image'].last : nil, 
+          image_link_huge: obj['image'].is_a?(Array) ? 
+                            @extensions.include?(obj['image'].last.split('.').last) ? 
+                              obj['image'].last : nil : nil, 
           viral: false,
           nsfw:  false,
           title: obj['name'].is_a?(Array) ? obj['name'].first : obj['name'],
