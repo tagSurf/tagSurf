@@ -322,7 +322,7 @@ onload = function ()
 		".card-container": function() {
 			return "min-height: " + (maxCardHeight + 140) + "px; width: " + ((isMobile() || isTablet() || isNarrow()) ? "95" : "70") + "%;";
 		},
-		".raw-wrapper, .zoom-wrapper, #scroll-container, #scroll-container-container": function() {
+		".raw-wrapper, .zoom-wrapper, .web-wrapper, .raw-web-wrapper, #scroll-container, #scroll-container-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
 		}
 	});
