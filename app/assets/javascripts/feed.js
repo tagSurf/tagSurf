@@ -3,6 +3,13 @@ var castVote = function(card) {
 		+ "/tag/" + card.data.user_stats.tag_voted, "POST", null, null);
 };
 
+window.onpageshow = function(evt) {
+	if (evt.persisted) {
+		document.body.style.display = "none";
+		location.reload();
+	}
+};
+
 onload = function ()
 {
 	populateNavbar();
@@ -11,7 +18,10 @@ onload = function ()
 	// integration with other sliding elements
 	tinput = document.getElementById("tag-input");
 	current_tag = tinput.value = document.location.hash.slice(1).split("~")[0]
-		|| document.location.pathname.split("/")[2] || "trending";
+		|| document.location.pathname.split("/")[2] 
+		|| document.location.pathname.split("#")[1]
+		|| "trending";
+	console.log("I am executed");
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
