@@ -63,7 +63,18 @@ var card_proto = {
 		} else
 			iconLine.children[1].style.display = "none";
 		gesture.listen("tap", iconLine.children[0], function() {
-			window.location = card.data.deep_link ? card.data.deep_link : card.data.web_link;
+			if (card.data.deep_link)
+				modal.webIn(card)
+			else {
+				// window.open(card.data.web_link);
+			    var a = document.createElement('a');
+			    a.setAttribute("href", card.data.web_link);
+			    a.setAttribute("target", "_blank");
+
+			    var dispatch = document.createEvent("HTMLEvents");
+			    dispatch.initEvent("click", true, true);
+			    a.dispatchEvent(dispatch);
+			}
 		});
 		this.tags.sort(function(a, b) {
 			var aName = Object.keys(a)[0];
