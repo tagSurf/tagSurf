@@ -242,8 +242,7 @@ class Media < ActiveRecord::Base
               end
 
               # Create tag if not already in the system
-              # URX always returns two objects for a buzzfeed domain query
-              unless tag = Tag.where('name ilike ?', tag_name).first or tagged[2] == nil
+              unless tag = Tag.where('name ilike ?', tag_name).first or tagged.empty?
                 tag = Tag.create(name: tag_name)
               end
 
