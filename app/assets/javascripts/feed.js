@@ -170,10 +170,7 @@ onload = function ()
 			{
 				if (slider.compressing == false)
 				{
-					if (slider.source == "urx/buzzfeed")
-						modal.webIn(slider);
-					else
-						modal.zoomIn(slider);
+					modal.zoomIn(slider);
 				}
 				else if (slider.expanded == false)
 				{
