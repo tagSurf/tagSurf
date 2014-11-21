@@ -297,8 +297,8 @@ var modal = {
 	},
 	zoomIn: function (card, cb) {
 		modal.zoom.zoomed = true;
-		if (card.data.source == 'urx/buzzfeed' && card.data.image.huge)
-			modal.zoom.firstChild.firstChild.src = card.data.image.huge.url;
+		if (card.source == 'urx/buzzfeed' && card.image.huge)
+			modal.zoom.firstChild.firstChild.src = card.image.huge.url;
 		else
 			modal.zoom.firstChild.firstChild.src = image.get(card).url;
 		modal.zoom.cb = cb || modal.zoomOut;
