@@ -55,8 +55,7 @@
 #add-btn {
   position: relative;
   float:left;
-  top: 7px;
-  left: 10px;
+  top: -4px;
 }
 #add-btn img { 
   width: auto;
@@ -64,6 +63,8 @@
 }
 #favorites-btn {
   float:right;
+}
+.btn {
   padding: 12px 10px 13px 10px;
 }
 .gallery-icon {
