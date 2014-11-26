@@ -7,6 +7,8 @@ var card_proto = {
 			this.image = data.image;
 			this.animated = data.image.animated;
 			this.type = data.type;
+			this.web_link = data.web_link;
+			this.deep_link = data.deep_link;
 			this.source = data.source;
 			data.tags.forEach(function(tag) { 
 				self.tags.push(tag); 
