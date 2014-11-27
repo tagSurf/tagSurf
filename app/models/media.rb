@@ -384,9 +384,10 @@ class Media < ActiveRecord::Base
       resp = Media.select(:remote_id).where(:remote_provider => 'urx/buzzfeed')
       starting_index = resp.empty? ? 1 : 
                         resp.sort_by { |x| -(x.remote_id[/\d+/].to_i) }.first.remote_id.split("#")[1].to_i + 1
-      @extensions = ['jpg', 'jpeg', 'png', 'gif']
+      @extensions = ['jpg', 'jpeg', 'png', 'gif'] 
       objs.each do |obj|
-        next if obj['@type'] != 'Thing'
+        @title = obj['name'].is_a?(Array) ? obj['name'].first : obj['name']
+        next if (obj['@type'] != 'Thing' or @title.include?("Community Post"))
         @extension = obj['image'].is_a?(Array) ? 
                           obj['image'].first.split('.').last.strip.split('?')[0] : 
                             obj['image'].split('.').last.strip.split('?')[0]
@@ -406,7 +407,7 @@ class Media < ActiveRecord::Base
                               obj['image'].last : nil : nil, 
           viral: false,
           nsfw:  false,
-          title: obj['name'].is_a?(Array) ? obj['name'].first : obj['name'],
+          title: @title,
           description: obj['description'],
           content_type: "image/#{@extension}",
           animated: @extension == 'gif' ? true : false,
