@@ -170,17 +170,7 @@ onload = function ()
 			{
 				if (slider.compressing == false)
 				{
-					if (slider.source.indexOf('urx') > -1) {
-						var a = document.createElement('a');
-					    a.setAttribute("href", isAndroid() ? (slider.deep_link ? slider.deep_link : slider.web_link) : slider.web_link);
-					    a.setAttribute("target", "_blank");
-					    console.log(a);
-
-					    var dispatch = document.createEvent("HTMLEvents");
-					    dispatch.initEvent("click", true, true);
-					    a.dispatchEvent(dispatch);
-					}
-					else { 
+					if (slider.source.indexOf('urx') == -1) {
 						modal.zoomIn(slider);
 					}
 				}

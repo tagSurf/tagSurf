@@ -35,10 +35,9 @@ var card_proto = {
 			container = this.contents,
 			formattingContainer = document.getElementById('formatter'),
 			card = this,
-			cardTemplate = "<div class='image-container expand-animation'><img src= ></div><div class='icon-line'>" +
-			// "<a href='" + (card.data.deep_link ? card.data.deep_link : card.data.web_link) + "'>" +
-			"<div id='source-btn'><img class='source-icon' src='" + card.data.source_icon + "'></div>" +
-			// "</a>" +
+			imageTemplate = (card.source.indexOf('urx') != -1) ? "<a href='" + (isAndroid() ? (card.deep_link ? card.deep_link : card.web_link) : card.web_link) + "' target='_blank'>" + "<div class='image-container expand-animation'><img src= ></div></a>" : "<div class='image-container expand-animation'><img src= ></div>",
+			cardTemplate = imageTemplate + "<div class='icon-line'>" +
+			"<a href='" + (card.deep_link ? card.deep_link : card.web_link) + "' target='_blank'><div id='source-btn'><img class='source-icon' src='" + card.data.source_icon + "'></div></a>" +
 			"<span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + Object.keys(card.data.tags[0])[0] + "</span></div><div class='text-container'><p>" + card.data.caption + "</p></div><div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
 		this.surfsUp = true;
 		formattingContainer.appendChild(container);
@@ -64,15 +63,6 @@ var card_proto = {
 			});
 		} else
 			iconLine.children[1].style.display = "none";
-		gesture.listen("tap", iconLine.children[0], function() {
-		    var a = document.createElement('a');
-		    a.setAttribute("href", card.data.deep_link ? card.data.deep_link : card.data.web_link);
-		    a.setAttribute("target", "_blank");
-
-		    var dispatch = document.createEvent("HTMLEvents");
-		    dispatch.initEvent("click", true, true);
-		    a.dispatchEvent(dispatch);
-		});
 		this.tags.sort(function(a, b) {
 			var aName = Object.keys(a)[0];
 			var bName = Object.keys(b)[0];
@@ -96,8 +86,12 @@ var card_proto = {
 		this.swipable = true;
 	},
 	setSource: function() {
-		this.contents.children[0].firstChild.src = image.get(this.data,
-			window.innerWidth - 40).url;
+		if(this.source.indexOf('urx') != -1)
+			this.contents.children[0].children[0].firstChild.src = image.get(this.data, 
+				window.innerWidth - 40).url;
+		else
+			this.contents.children[0].firstChild.src = image.get(this.data, 
+				window.innerWidth - 40).url;
 	},
 	_formatContents: function (imageData) {
 		if (this.type != "content")
