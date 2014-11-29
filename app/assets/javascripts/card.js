@@ -98,7 +98,8 @@ var card_proto = {
 	_formatContents: function (imageData) {
 		if (this.type.indexOf("content") == -1)
 			return;
-		var imageContainer = this.contents.firstChild,
+		var imageContainer = (this.type.indexOf("web") != -1) ? this.contents.firstChild.firstChild 
+																	:this.contents.firstChild,
 			fullscreenButton = this.contents.children[4], 
 			truncatedTitle,
 			picTags = this.contents.children[3], 
@@ -391,8 +392,13 @@ var card_proto = {
 				console.log("Expand card #" + this.id);
 			this.compressing = false;
 			this.expanded = true;
-			if (this.contents.children[0].className.indexOf("expanded") == -1)
-				this.contents.children[0].className += " expanded";
+			//TODO: refactor this to make more pretty
+			if (this.type.indexOf("web") != -1)
+				if (this.contents.children[0].children[0].className.indexOf("expanded") == -1)
+					this.contents.children[0].children[0].className += " expanded";
+			else
+				if (this.contents.children[0].children[0].className.indexOf("expanded") == -1)
+					this.contents.children[0].children[0].className += " expanded";
 			this.contents.children[2].innerHTML = "<p>" + this.data.caption + "</p>";
 			if (currentUser.vote_btns && (isMobile() || isTablet()))
 				this.contents.children[3].style.paddingBottom="60px";
