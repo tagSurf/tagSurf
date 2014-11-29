@@ -392,13 +392,12 @@ var card_proto = {
 				console.log("Expand card #" + this.id);
 			this.compressing = false;
 			this.expanded = true;
+			var imageContainer = this.type.indexOf('web') != -1 ? 
+									this.contents.children[0].children[0] 
+									: this.contents.children[0];
 			//TODO: refactor this to make more pretty
-			if (this.type.indexOf("web") != -1)
-				if (this.contents.children[0].children[0].className.indexOf("expanded") == -1)
-					this.contents.children[0].children[0].className += " expanded";
-			else
-				if (this.contents.children[0].children[0].className.indexOf("expanded") == -1)
-					this.contents.children[0].children[0].className += " expanded";
+			if (imageContainer.className.indexOf("expanded") == -1)
+				imageContainer.className += " expanded";
 			this.contents.children[2].innerHTML = "<p>" + this.data.caption + "</p>";
 			if (currentUser.vote_btns && (isMobile() || isTablet()))
 				this.contents.children[3].style.paddingBottom="60px";

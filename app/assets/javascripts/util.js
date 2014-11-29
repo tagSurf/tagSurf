@@ -265,7 +265,7 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
 var currentMedia, panicCb, //def in feed
   checkShare = function(shareCb) {
     var d = currentMedia;
-    if (d && d.type == "content") {
+    if (d && d.type.indexOf("content") != -1) {
       share.on(d, shareCb);
       if(whichGallery()) //no panic modal in galleries
         return;
