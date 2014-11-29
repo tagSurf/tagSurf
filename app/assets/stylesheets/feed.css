@@ -320,10 +320,9 @@ html, body {
 }
 #source-btn {
   float: right;
-  height: 24px;
   min-width: 30px;
   margin-top: -3px;
-  margin-right: 5px;
+  padding: 0 7px 10px 10px;
   text-align: center;
 }
 .tag-callout {
