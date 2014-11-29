@@ -238,6 +238,7 @@ class Media < ActiveRecord::Base
               tagged = parsed['result']
 
               if tagged.empty?
+                puts "no results from #{domain}"
                 break
               end
 
@@ -380,56 +381,58 @@ class Media < ActiveRecord::Base
   end
 
   def self.populate_urx_tag(objs, domain, tag_name)
-    if domain == 'buzzfeed.com'
-      resp = Media.select(:remote_id).where(:remote_provider => 'urx/buzzfeed')
-      starting_index = resp.empty? ? 1 : 
-                        resp.sort_by { |x| -(x.remote_id[/\d+/].to_i) }.first.remote_id.split("#")[1].to_i + 1
-      @extensions = ['jpg', 'jpeg', 'png', 'gif'] 
-      objs.each do |obj|
-        @title = obj['name'].is_a?(Array) ? obj['name'].first : obj['name']
-        next if (obj['@type'] != 'Thing' or @title.include?("Community Post"))
-        @extension = obj['image'].is_a?(Array) ? 
-                          obj['image'].first.split('.').last.strip.split('?')[0] : 
-                            obj['image'].split('.').last.strip.split('?')[0]
-        
-        if @extension == 'jpg'
-          @extension = 'jpeg'
-        end
-        
-        media = Media.create({
-          remote_id: "BUZZ##{starting_index}",
-          remote_provider: 'urx/buzzfeed',
-          remote_created_at: Time.now,
-          image_link_original: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
-          image_link_large: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
-          image_link_huge: obj['image'].is_a?(Array) ? 
-                            @extensions.include?(obj['image'].last.split('.').last) ? 
-                              obj['image'].last : nil : nil, 
-          viral: false,
-          nsfw:  false,
-          title: @title,
-          description: obj['description'],
-          content_type: "image/#{@extension}",
-          animated: @extension == 'gif' ? true : false,
-          ts_score: (1000 + (Time.new.to_i - 1300000000)), #Give a small fixed bonus to lift it
-          section: tag_name,
-          web_link: obj['url'],
-          deep_link: obj['potentialAction']['target']['urlTemplate'],
-          deep_link_type: obj['potentialAction']['target']['@type'],
-          deep_link_action: obj['potentialAction']['@type'],
-          deep_link_desc: obj['potentialAction']['description'],
-          deep_link_icon: obj['potentialAction']['image']
-        })
-        media.tag_list.add(tag_name, 'buzzfeed', 'urx')
-        
-        @success = media.save
-        if @success
-          starting_index += 1
-        end        
+    @extensions = ['jpg', 'jpeg', 'png', 'gif'] 
+    @provider = domain.split('.')[0];
+    puts "#{@provider}"
+    resp = Media.select(:remote_id).where(:remote_provider => "urx/#{@provider}")
+    @starting_index = resp.empty? ? 1 : resp.sort_by { |x| -(x.remote_id[/\d+/].to_i) }.first.remote_id.split("#")[1].to_i + 1
+
+    objs.each do |obj|
+      next if obj['@type'] != 'Thing'
+      @success = false
+      @extension = obj['image'].is_a?(Array) ? 
+                            obj['image'].first.split('.').last.strip.split('?')[0] : 
+                              obj['image'].split('.').last.strip.split('?')[0]
+      @title = obj['name'].is_a?(Array) ? obj['name'].first : obj['name']
+      next if @title.include?("Community Post")
+
+      if @extension == 'jpg'
+        @extension = 'jpeg'
       end
-    else
-      raise "Error unknown URX domain: #{domain}"
+
+      media = Media.create({
+        remote_id: "#{@provider[0...4].upcase}##{@starting_index}",
+        remote_provider: "urx/#{@provider}",
+        remote_created_at: Time.now,
+        image_link_original: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
+        image_link_large: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
+        image_link_huge: obj['image'].is_a?(Array) ? 
+                          @extensions.include?(obj['image'].last.split('.').last) ? 
+                            obj['image'].last : nil : nil, 
+        viral: false,
+        nsfw:  false,
+        title: @title,
+        description: obj['description'],
+        content_type: "image/#{@extension}",
+        animated: @extension == 'gif' ? true : false,
+        ts_score: (1000 + (Time.new.to_i - 1300000000)), #Give a small fixed bonus to lift it
+        section: tag_name,
+        web_link: obj['url'],
+        deep_link: obj['potentialAction']['target']['urlTemplate'],
+        deep_link_type: obj['potentialAction']['target']['@type'],
+        deep_link_action: obj['potentialAction']['@type'],
+        deep_link_desc: obj['potentialAction']['description'],
+        deep_link_icon: obj['potentialAction']['image']
+      })
+        
+      media.tag_list.add(tag_name, @provider, 'urx')
+        
+      @success = media.save  
+
+      if @success
+        @starting_index += 1
+      end
+
     end
   end 
-
 end

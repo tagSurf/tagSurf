@@ -63,7 +63,7 @@ class MediaSerializer < BaseSerializer
         huge: {url: media.image_link_huge, width: 1024, height: 1024}.merge!(media.scale_dimensions(1024)),
         original: {url: media.image_link_original, width: media.width, height: media.height}
       }
-    elsif media.remote_provider == 'urx/buzzfeed'
+    elsif media.remote_provider.include?('urx')
       img = {
         content_type: media.content_type,
         animated: media.animated?,
@@ -87,15 +87,10 @@ class MediaSerializer < BaseSerializer
 
   def caption
     return nil if type == 'login'
-    ## TO-DO: Update this. Buzzfeed article descriptions are not good. Use title instead.
-    if media.remote_provider == 'imgur'
-      if media.description
-        media.description
-      else
-        media.title
-      end 
-    elsif media.remote_provider == 'urx/buzzfeed'
+    if media.remote_provider == 'urx/buzzfeed'
       media.title
+    else
+      media.description ? media.description : media.title
     end 
   end
 
@@ -156,7 +151,7 @@ class MediaSerializer < BaseSerializer
 
   def source_icon
     return nil if type == 'login'
-    if media.remote_provider == 'urx/buzzfeed'
+    if media.remote_provider.include?('urx')
       media.deep_link_icon
     elsif media.remote_provider == 'imgur'
       if media.section.nil? or media.section == 'imgurhot'

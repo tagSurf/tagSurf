@@ -43,7 +43,7 @@ module Tagsurf
 
     CONFIG[:remote_providers] = ["imgur", "urx"]
 
-    CONFIG[:urx_domains] = ["buzzfeed.com"]
+    CONFIG[:urx_domains] = ["buzzfeed.com", "pinterest.com"]
 
     # TODO move to yaml
     CONFIG[:blacklisted_tags] = [ 
