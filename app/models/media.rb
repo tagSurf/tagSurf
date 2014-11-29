@@ -382,22 +382,33 @@ class Media < ActiveRecord::Base
 
   def self.populate_urx_tag(objs, domain, tag_name)
     @extensions = ['jpg', 'jpeg', 'png', 'gif'] 
+    @accepted_types = ['Thing','http://schema.org/Article']
     @provider = domain.split('.')[0];
     resp = Media.select(:remote_id).where(:remote_provider => "urx/#{@provider}")
-    @starting_index = resp.empty? ? 1 : resp.sort_by { |x| -(x.remote_id[/\d+/].to_i) }.first.remote_id.split("#")[1].to_i + 1
+    @starting_index = resp.empty? ? 1 : 
+          resp.sort_by { |x| -(x.remote_id[/\d+/].to_i) }.first.remote_id.split("#")[1].to_i + 1
 
     objs.each do |obj|
-      next if obj['@type'] != 'Thing'
+      next if !@accepted_types.include?(obj['@type'])
+      @type = obj['@type'].split('/').last
       @success = false
+
       @extension = obj['image'].is_a?(Array) ? 
                             obj['image'].first.split('.').last.strip.split('?')[0] : 
                               obj['image'].split('.').last.strip.split('?')[0]
-      @title = obj['name'].is_a?(Array) ? obj['name'].first : obj['name']
-      next if @provider == 'buzzfeed' and @title.include?("Community Post")
-
       if @extension == 'jpg'
         @extension = 'jpeg'
       end
+
+      case @type
+      when 'Article'
+        @title = obj['headline name']
+        @nsfw = obj['isFamilyFriendly']
+      else
+        @title = obj['name'].is_a?(Array) ? obj['name'].first : obj['name']
+        @nsfw = false
+      end
+      next if @provider == 'buzzfeed' and @title.include?("Community Post")
 
       media = Media.create({
         remote_id: "#{@provider[0...4].upcase}##{@starting_index}",
@@ -409,9 +420,9 @@ class Media < ActiveRecord::Base
                           @extensions.include?(obj['image'].last.split('.').last) ? 
                             obj['image'].last : nil : nil, 
         viral: false,
-        nsfw:  false,
+        nsfw:  @nsfw,
         title: @title,
-        description: obj['description'],
+        description: obj['description'].is_a?(Array) ? obj['description'].first : obj['description'],
         content_type: "image/#{@extension}",
         animated: @extension == 'gif' ? true : false,
         ts_score: (1000 + (Time.new.to_i - 1300000000)), #Give a small fixed bonus to lift it

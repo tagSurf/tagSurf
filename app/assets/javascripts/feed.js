@@ -170,7 +170,7 @@ onload = function ()
 			{
 				if (slider.compressing == false)
 				{
-					if (slider.source.indexOf('web') == -1) {
+					if (slider.type.indexOf('web') == -1) {
 						modal.zoomIn(slider);
 					}
 				}
