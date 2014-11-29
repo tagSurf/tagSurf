@@ -88,7 +88,7 @@ var card_proto = {
 		this.swipable = true;
 	},
 	setSource: function() {
-		if(this.source.indexOf('web') != -1)
+		if(this.type.indexOf('web') != -1)
 			this.contents.children[0].children[0].firstChild.src = image.get(this.data, 
 				window.innerWidth - 40).url;
 		else
