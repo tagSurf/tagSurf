@@ -231,14 +231,14 @@ class Media < ActiveRecord::Base
               response = RemoteResource.tagged_feed(tag_name, provider, @offset, domain)
 
               if response.nil?
-                raise "Failed to fetch URX results for tag:##{tag_name}, response:#{response}"
+                raise "Failed to fetch URX results for ##{tag_name} from #{domain}, response:#{response}"
               end
 
               parsed = JSON.parse(response.body)
               tagged = parsed['result']
 
               if tagged.empty?
-                puts "no results from #{domain}"
+                puts "no more results for ##{tag_name} from #{domain}, offset = #{@offset}"
                 break
               end
 
@@ -383,7 +383,6 @@ class Media < ActiveRecord::Base
   def self.populate_urx_tag(objs, domain, tag_name)
     @extensions = ['jpg', 'jpeg', 'png', 'gif'] 
     @provider = domain.split('.')[0];
-    puts "#{@provider}"
     resp = Media.select(:remote_id).where(:remote_provider => "urx/#{@provider}")
     @starting_index = resp.empty? ? 1 : resp.sort_by { |x| -(x.remote_id[/\d+/].to_i) }.first.remote_id.split("#")[1].to_i + 1
 
@@ -394,7 +393,7 @@ class Media < ActiveRecord::Base
                             obj['image'].first.split('.').last.strip.split('?')[0] : 
                               obj['image'].split('.').last.strip.split('?')[0]
       @title = obj['name'].is_a?(Array) ? obj['name'].first : obj['name']
-      next if @title.include?("Community Post")
+      next if @provider == 'buzzfeed' and @title.include?("Community Post")
 
       if @extension == 'jpg'
         @extension = 'jpeg'
