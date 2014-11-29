@@ -45,6 +45,8 @@ module Tagsurf
 
     CONFIG[:urx_domains] = ["buzzfeed.com", "pinterest.com"]
 
+    CONFIG[:web_domains] = ["buzzfeed"]
+
     # TODO move to yaml
     CONFIG[:blacklisted_tags] = [ 
       "boobies", 

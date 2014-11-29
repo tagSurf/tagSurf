@@ -26,6 +26,14 @@ class MediaSerializer < BaseSerializer
   end
 
   def type
+    unless media.remote_provider.include?('urx')
+      return media.ts_type
+    end
+
+    if CONFIG[:web_domains].include?(media.remote_provider.split('/')[1])
+      return "content/web"
+    end
+    
     media.ts_type
   end
 
