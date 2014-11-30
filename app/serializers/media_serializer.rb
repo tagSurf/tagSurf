@@ -96,9 +96,11 @@ class MediaSerializer < BaseSerializer
   def caption
     return nil if type == 'login'
     case media.remote_provider
-    when 'urx/buzzfeed'
+    when 'urx/buzzfeed' 
       media.title
-    when 'urx/bleacherreport'
+    when 'urx/bleacherreport' 
+      media.title
+    when 'urx/techcrunch'
       media.title
     else
       media.description ? media.description : media.title

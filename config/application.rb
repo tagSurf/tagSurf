@@ -46,12 +46,16 @@ module Tagsurf
     CONFIG[:urx_domains] = [
       "buzzfeed.com", 
       "pinterest.com", 
-      "bleacherreport.com"
+      "bleacherreport.com",
+      "engadget.com",
+      "techcrunch.com"
     ]
 
     CONFIG[:web_domains] = [
       "buzzfeed", 
-      "bleacherreport"
+      "bleacherreport",
+      "engadget",
+      "techcrunch"
     ]
 
     # TODO move to yaml
