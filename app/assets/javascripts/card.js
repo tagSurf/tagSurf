@@ -65,6 +65,12 @@ var card_proto = {
 			});
 		} else
 			iconLine.children[1].style.display = "none";
+		gesture.listen("down", iconLine.children[0].firstChild, function() {
+			iconLine.children[0].firstChild.style.opacity = 0.5;
+		});
+		gesture.listen("up", iconLine.children[0].firstChild, function() {
+			iconLine.children[0].firstChild.style.opacity = 1;
+		});
 		gesture.listen("tap", iconLine.children[0].firstChild, function() {
 			var dispatch = document.createEvent("HTMLEvents");
 		    dispatch.initEvent("click", true, true);
