@@ -65,6 +65,11 @@ var card_proto = {
 			});
 		} else
 			iconLine.children[1].style.display = "none";
+		gesture.listen("tap", iconLine.children[0].firstChild, function() {
+			var dispatch = document.createEvent("HTMLEvents");
+		    dispatch.initEvent("click", true, true);
+		    current_deck.topCard().contents.children[1].children[0].dispatchEvent(dispatch);
+		});
 		this.tags.sort(function(a, b) {
 			var aName = Object.keys(a)[0];
 			var bName = Object.keys(b)[0];

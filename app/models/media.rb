@@ -381,49 +381,48 @@ class Media < ActiveRecord::Base
   end
 
   def self.populate_urx_tag(objs, domain, tag_name)
-    @extensions = ['jpg', 'jpeg', 'png', 'gif'] 
-    @accepted_types = ['Thing','http://schema.org/Article']
-    @provider = domain.split('.')[0];
-    resp = Media.select(:remote_id).where(:remote_provider => "urx/#{@provider}")
-    @starting_index = resp.empty? ? 1 : 
+    extensions = ['jpg', 'jpeg', 'png', 'gif'] 
+    accepted_types = ['Thing','http://schema.org/Article']
+    provider = domain.split('.')[0];
+    resp = Media.select(:remote_id).where(:remote_provider => "urx/#{provider}")
+    starting_index = resp.empty? ? 1 : 
           resp.sort_by { |x| -(x.remote_id[/\d+/].to_i) }.first.remote_id.split("#")[1].to_i + 1
 
     objs.each do |obj|
-      next if !@accepted_types.include?(obj['@type'])
-      @type = obj['@type'].split('/').last
-      @success = false
-
-      @extension = obj['image'].is_a?(Array) ? 
+      next if !accepted_types.include?(obj['@type'])
+      type = obj['@type'].split('/').last
+      success = false
+      extension = obj['image'].is_a?(Array) ? 
                             obj['image'].first.split('.').last.strip.split('?')[0] : 
                               obj['image'].split('.').last.strip.split('?')[0]
-      if @extension == 'jpg'
-        @extension = 'jpeg'
+      if extension == 'jpg'
+        extension = 'jpeg'
       end
 
-      case @type
+      case type
       when 'Article'
-        @title = obj['headline name']
-        @nsfw = obj['isFamilyFriendly']
+        title = obj['headline name']
+        nsfw = obj['isFamilyFriendly']
       else
-        @title = obj['name'].is_a?(Array) ? obj['name'].first : obj['name']
-        @nsfw = false
+        title = obj['name'].is_a?(Array) ? obj['name'].first : obj['name']
+        nsfw = false
       end
-      next if @provider == 'buzzfeed' and @title.include?("Community Post")
+      next if provider == 'buzzfeed' and title.include?("Community Post")
 
       media = Media.create({
-        remote_id: "#{@provider[0...4].upcase}##{@starting_index}",
-        remote_provider: "urx/#{@provider}",
+        remote_id: "#{provider[0...4].upcase}##{starting_index}",
+        remote_provider: "urx/#{provider}",
         remote_created_at: Time.now,
         image_link_original: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
         image_link_large: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
         image_link_huge: obj['image'].is_a?(Array) ? 
-                          @extensions.include?(obj['image'].last.split('.').last) ? 
+                          extensions.include?(obj['image'].last.split('.').last) ? 
                             obj['image'].last : nil : nil, 
         viral: false,
-        nsfw:  @nsfw,
-        title: @title,
+        nsfw:  nsfw,
+        title: title,
         description: obj['description'].is_a?(Array) ? obj['description'].first : obj['description'],
-        content_type: "image/#{@extension}",
+        content_type: "image/#{extension}",
         animated: @extension == 'gif' ? true : false,
         ts_score: (1000 + (Time.new.to_i - 1300000000)), #Give a small fixed bonus to lift it
         section: tag_name,
@@ -435,12 +434,12 @@ class Media < ActiveRecord::Base
         deep_link_icon: obj['potentialAction']['image']
       })
         
-      media.tag_list.add(tag_name, @provider, 'urx')
+      media.tag_list.add(tag_name, provider, 'urx')
         
-      @success = media.save  
+      success = media.save  
 
-      if @success
-        @starting_index += 1
+      if success
+        starting_index += 1
       end
 
     end
