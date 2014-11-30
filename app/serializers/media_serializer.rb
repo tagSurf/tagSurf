@@ -26,6 +26,7 @@ class MediaSerializer < BaseSerializer
   end
 
   def type
+    return "login" if media.ts_type == 'login'
     unless media.remote_provider.include?('urx')
       return media.ts_type
     end
@@ -33,7 +34,7 @@ class MediaSerializer < BaseSerializer
     if CONFIG[:web_domains].include?(media.remote_provider.split('/')[1])
       return "content/web"
     end
-    
+  
     media.ts_type
   end
 
