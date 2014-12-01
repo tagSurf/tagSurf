@@ -165,11 +165,6 @@ onload = function ()
 		},
 		tap: function (tapCount) {
 			var slider = topCard();
-			if (slider.type.indexOf('web') != -1) {
-				var dispatch = document.createEvent("HTMLEvents");
-			    dispatch.initEvent("click", true, true);
-			    slider.contents.firstChild.dispatchEvent(dispatch);
-			}
 			if (modal.zoom.zoomed) return;
 			if (tapCount == 1)
 			{
@@ -179,9 +174,10 @@ onload = function ()
 						modal.zoomIn(slider);
 					}
 					else {
-						var url = isAndroid() ? (card.deep_link ? card.deep_link : card.web_link) 
-												: card.web_link;
-						window.open(url);
+						var dispatch = document.createEvent("HTMLEvents");
+					    console.log("tap registered");
+					    dispatch.initEvent("click", true, true);
+					    slider.contents.firstChild.dispatchEvent(dispatch);
 					}
 				}
 				else if (slider.expanded == false)
