@@ -173,9 +173,9 @@ onload = function ()
 					if (slider.type.indexOf('web') == -1) {
 						modal.zoomIn(slider);
 					}
-					else {
+					else if (!isDesktop()) {
 						var dispatch = document.createEvent("HTMLEvents");
-					    console.log("tap registered");
+					    DEBUG && console.log("tap registered");
 					    dispatch.initEvent("click", true, true);
 					    slider.contents.firstChild.dispatchEvent(dispatch);
 					}

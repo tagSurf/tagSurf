@@ -72,6 +72,7 @@ var card_proto = {
 			iconLine.children[0].firstChild.style.opacity = 1;
 		});
 		gesture.listen("tap", iconLine.children[0].firstChild, function() {
+			if(isDesktop()) return;
 			var dispatch = document.createEvent("HTMLEvents");
 		    dispatch.initEvent("click", true, true);
 		    current_deck.topCard().contents.children[1].children[0].dispatchEvent(dispatch);
