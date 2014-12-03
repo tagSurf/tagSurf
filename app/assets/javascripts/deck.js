@@ -135,7 +135,7 @@ var deck_proto = {
 	deal: function() {
 		var i, c, shouldPromote = this.shouldPromote(),
 			numCards = slideContainer.childNodes.length - 1;
-		console.log('deck.deal for deck #' this.tag);
+		console.log('deck.deal for deck #' + this.tag);
 		this.getEndCard();
 		for (i = 0; i < this.constants.stack_depth; i++) {
 			c = this.cards[i];
