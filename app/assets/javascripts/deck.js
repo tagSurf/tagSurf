@@ -135,7 +135,7 @@ var deck_proto = {
 	deal: function() {
 		if (this != current_deck)
 			return;
-		
+
 		var i, c, shouldPromote = this.shouldPromote(),
 			numCards = slideContainer.childNodes.length - 1;
 		console.log('deck.deal for deck #' + this.tag);
@@ -163,14 +163,15 @@ var noLoad = function(d) {
 		surfing: current_tag
 	});
 };
-var getDeck = function(tag, firstCard){
+var setDeck = function(tag, firstCard){
 	var deck = cardDecks[tag];
 	if (deck) {
+		current_deck = deck;
 		deck.purge();
 		deck.deal();
-		return deck;
+		return;
 	}
-	deck = cardDecks[tag] = Object.create(deck_proto);
+	current_deck = deck = cardDecks[tag] = Object.create(deck_proto);
 	deck.tag = tag;
 	deck.known_keys = {};
 	deck.shareDeck = !isAuthorized();
@@ -188,5 +189,4 @@ var getDeck = function(tag, firstCard){
 		}, noLoad);
 	}
 	deck.refill();
-	return deck;
 };
