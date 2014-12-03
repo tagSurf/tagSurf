@@ -133,6 +133,9 @@ var deck_proto = {
 		}
 	},
 	deal: function() {
+		if (this != current_deck)
+			return;
+		
 		var i, c, shouldPromote = this.shouldPromote(),
 			numCards = slideContainer.childNodes.length - 1;
 		console.log('deck.deal for deck #' + this.tag);
