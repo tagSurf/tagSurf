@@ -30,6 +30,7 @@ var deck_proto = {
 	},
 	cardLoaded: function(c) {
 		c.isLoaded = true;
+		console.log("card loaded for deck #" + this.tag);
 		this.cards.push(c);
 		if (this.shareDeck) {
 			this.shareIndex += 1;
@@ -53,11 +54,11 @@ var deck_proto = {
 		return "/api/media/" + this.tag;
 	},
 	refill: function () {
-		console.log("deck.refill called");
+		console.log("deck.refill called #" + this.tag);
 		if (this.refilling)
 			return;
 		var self = this;
-		console.log("deck.refill executed");
+		console.log("deck.refill executed #" + this.tag);
 		self.refilling = true;
 		xhr(this.dataPath(), null, function(response_data) {
 			self.refilling = false;
@@ -134,7 +135,7 @@ var deck_proto = {
 	deal: function() {
 		var i, c, shouldPromote = this.shouldPromote(),
 			numCards = slideContainer.childNodes.length - 1;
-		console.log('deck.deal');
+		console.log('deck.deal for deck #' this.tag);
 		this.getEndCard();
 		for (i = 0; i < this.constants.stack_depth; i++) {
 			c = this.cards[i];
