@@ -17,6 +17,7 @@ var image = {
 	},
 	load: function(dlist, minWidth, cb, eb) {
 		var load = image._load;
+		console.log('image.load');
 		dlist.forEach(function(d) {
 			if (d.type != "content")
 				return;
@@ -24,12 +25,15 @@ var image = {
 			d._image_load_eb = d._image_load_eb || eb;
 			if (load.count >= load.max) {
 				load.list.push(d);
+				console.log("load count > load.max");
 				return;
 			}
+			console.log("load count = "+ load.count);
 			load.count += 1;
 			var i = new Image();
 			i.src = image.get(d, minWidth).url;
 			var loadNext = function() {
+				console.log("load next");
 				load.count -= 1;
 				if (load.count < load.max && load.list.length) {
 					var loadList = load.list;
@@ -39,10 +43,12 @@ var image = {
 			};
 			i.onload = function() {
 				d._image_load_cb && d._image_load_cb(d);
+				DEBUG && console.log('image load successful for image #' + d.id);
 				loadNext();
 			};
 			i.onerror = function() {
 				d._image_load_eb && d._image_load_eb(d);
+				DEBUG && console.log('image load fail for image at load image #' + d.id);
 				loadNext();
 			};
 		});

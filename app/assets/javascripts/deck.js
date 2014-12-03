@@ -2,7 +2,8 @@ var deck_proto = {
 	constants: {
 		buffer_minimum: 5,
 		stack_depth: 3,
-		login_spacing: 15
+		login_spacing: 15,
+		retries: 2
 	},
 	voted_keys: {},
 	topCard: function() {
@@ -21,9 +22,11 @@ var deck_proto = {
 			} else if ((!this.known_keys[d.id] && !this.voted_keys[d.id])) {
 				this.known_keys[d.id] = true
 				preloads.push(d);
+			} else if (preloads.length == 0 && this.cards.length == 0) {
+				this.deal();
 			}
 		}
-		return preloads;
+		return preloads;		
 	},
 	cardLoaded: function(c) {
 		c.isLoaded = true;
@@ -50,11 +53,11 @@ var deck_proto = {
 		return "/api/media/" + this.tag;
 	},
 	refill: function () {
-		console.log("refilling deck");
-		if (this.refilling || (this.cards.length + image.loadCount()
-			>= this.constants.buffer_minimum))
+		console.log("deck.refill called");
+		if (this.refilling)
 			return;
 		var self = this;
+		console.log("deck.refill executed");
 		self.refilling = true;
 		xhr(this.dataPath(), null, function(response_data) {
 			self.refilling = false;
@@ -63,6 +66,8 @@ var deck_proto = {
 				window.innerWidth - 40, function(c) {
 					self.cardLoaded(c);
 				});
+			self.retries = 0;
+			self.refillTimeout = 500;
 		}, function(response, status) {
 			DEBUG && console.log("deck.refill xhr error");
 			self.refilling = false;
@@ -71,9 +76,19 @@ var deck_proto = {
 				messageBox("Sorry, no #" + self.tag, response.errors
 					+ "<br><br>Control Safe Surf from Options");
 			} else if (status == 404) {
-				self.getEndCard().setFailMsg();
-				self.fadeIn(true);
+				if (self.retries < self.constants.retries) {
+					self.retries += 1;
+					setTimeout(function() { self.refill(); }, self.refillTimeout);
+					self.refillTimeout *= 2;
+				}
+				else {
+					self.getEndCard().setFailMsg();
+					self.fadeIn(true);
+					self.retries = 0;
+					self.refillTimeout = 500;
+				}
 			} else {
+				self.retries += 1;
 				self.refillTimeout *= 2;
 				setTimeout(function() { self.refill(); }, self.refillTimeout);
 			}
@@ -119,6 +134,7 @@ var deck_proto = {
 	deal: function() {
 		var i, c, shouldPromote = this.shouldPromote(),
 			numCards = slideContainer.childNodes.length - 1;
+		console.log('deck.deal');
 		this.getEndCard();
 		for (i = 0; i < this.constants.stack_depth; i++) {
 			c = this.cards[i];
@@ -129,7 +145,8 @@ var deck_proto = {
 				c.promote();
 		}
 		this.fadeIn();
-		this.refill();
+		if ((this.cards.length + image.loadCount()) <= this.constants.buffer_minimum)
+			this.refill();
 	}
 };
 
@@ -155,6 +172,7 @@ var getDeck = function(tag, firstCard){
 	deck.shareDeck = !isAuthorized();
 	deck.shareOffset = 0;
 	deck.shareIndex = 0;
+	deck.retries = 0;
 	deck.refillTimeout = 500;
 	deck.cards = [];
 	if (firstCard) {
