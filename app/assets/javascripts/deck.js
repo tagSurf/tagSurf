@@ -50,6 +50,7 @@ var deck_proto = {
 		return "/api/media/" + this.tag;
 	},
 	refill: function () {
+		console.log("refilling deck");
 		if (this.refilling || (this.cards.length + image.loadCount()
 			>= this.constants.buffer_minimum))
 			return;
@@ -57,6 +58,7 @@ var deck_proto = {
 		self.refilling = true;
 		xhr(this.dataPath(), null, function(response_data) {
 			self.refilling = false;
+			console.log("card get successful");
 			image.load(self.popData(response_data.data.map(newCard)),
 				window.innerWidth - 40, function(c) {
 					self.cardLoaded(c);
