@@ -31,9 +31,10 @@ class Api::MediaController < Api::BaseController
 
   def share_feed
     tags = Array.new
-    if media_params[:tag].first == '{'
+    if media_params[:tag].include?(',')
       tags = media_params[:tag].delete'{}'
       tags = tags.split(',')
+      puts "#{tags}"
     else
       tags << media_params[:tag]
     end
@@ -66,7 +67,7 @@ class Api::MediaController < Api::BaseController
     end
 
     tags = Array.new
-    if media_params[:tag].first == '{'
+    if media_params[:tag].include?(',')
       tags = media_params[:tag].delete'{}'
       tags = tags.split(',')
     else

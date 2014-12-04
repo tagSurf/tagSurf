@@ -1,6 +1,8 @@
 var castVote = function(card) {
+	var tag = card.data.user_stats.tag_voted;
+	tag = tag.indexOf(',') != -1 ? tag.split(',').pop() : tag;
 	xhr("/api/votes/" + card.data.user_stats.vote + "/" + card.id
-		+ "/tag/" + card.data.user_stats.tag_voted, "POST", null, null);
+		+ "/tag/" + tag, "POST", null, null);
 };
 
 // window.onpageshow = function(evt) {

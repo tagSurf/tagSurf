@@ -72,6 +72,9 @@ class Tag < ActiveRecord::Base
   end
 
   def self.blacklisted?(tags)
+    unless tags.is_a?(Array)
+      return CONFIG[:blacklisted_tags].include?(tags.downcase)
+    end
     blacklisted = false
     tags.each do |tag|
       blacklisted ||= CONFIG[:blacklisted_tags].include?(tag.downcase)

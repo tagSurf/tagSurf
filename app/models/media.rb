@@ -153,8 +153,10 @@ class Media < ActiveRecord::Base
           end
         end
     
-        if @media.length < 10
-          RequestTaggedMedia.perform_async(tag)
+        if @media.length < 10 
+          tags.each do |tag|
+            RequestTaggedMedia.perform_async(tag)
+          end
         end
       end
     end
