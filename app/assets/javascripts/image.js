@@ -15,9 +15,11 @@ var image = {
 	loadCount: function() {
 		return image._load.count;
 	},
+	clearLoadList: function() {
+		image._load.list = [];
+	},
 	load: function(dlist, minWidth, cb, eb) {
 		var load = image._load;
-		console.log('image.load');
 		dlist.forEach(function(d) {
 			if (d.type != "content" || current_deck.known_keys[d.id])
 				return;
@@ -33,22 +35,23 @@ var image = {
 			var i = new Image();
 			i.src = image.get(d, minWidth).url;
 			var loadNext = function() {
-				console.log("load next");
+				console.log("load next image #" + d.id);
 				load.count -= 1;
 				if (load.count < load.max && load.list.length) {
 					var loadList = load.list;
 					load.list = [];
-					image.load(loadList, minWidth);
+					image.load(loadList, minWidth, cb, eb);
 				}
 			};
 			i.onload = function() {
-				d._image_load_cb && d._image_load_cb(d);
 				DEBUG && console.log('image load successful for image #' + d.id);
+				d._image_load_cb && d._image_load_cb(d);
 				loadNext();
 			};
 			i.onerror = function() {
+				DEBUG && console.log('image load failed for image #' + d.id);
+				i.parentNode.removeChild(i);
 				d._image_load_eb && d._image_load_eb(d);
-				DEBUG && console.log('image load fail for image at load image #' + d.id);
 				loadNext();
 			};
 		});

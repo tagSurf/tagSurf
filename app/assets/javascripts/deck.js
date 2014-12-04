@@ -65,11 +65,11 @@ var deck_proto = {
 			image.load(self.popData(response_data.data.map(newCard)),
 				window.innerWidth - 40, function(c) {
 					self.cardLoaded(c);
-				});
+				}, noLoad);
 			self.retries = 0;
 			self.refillTimeout = 500;
 		}, function(response, status) {
-			DEBUG && console.log("deck.refill xhr error");
+			DEBUG && console.log("deck.refill xhr error: " + status);
 			self.refilling = false;
 			if (status == 401) {
 				cardCbs.notSafe();
@@ -155,8 +155,7 @@ var deck_proto = {
 
 var cardDecks = {};
 var noLoad = function(d) {
-	if (DEBUG)
-		console.log("Image load error on card #" + d.id);
+	DEBUG && console.log("Image load error on card #" + d.id);
 	analytics.track("Image Load Error", {
 		card: d.id,
 		surfing: current_tag
@@ -164,7 +163,8 @@ var noLoad = function(d) {
 };
 var setDeck = function(tag, firstCard){
 	var deck = cardDecks[tag];
-	if (deck) {
+	image.clearLoadList();
+	if (deck)  {
 		current_deck = deck;
 		deck.purge();
 		deck.deal();
