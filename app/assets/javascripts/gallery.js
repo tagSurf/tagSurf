@@ -77,7 +77,17 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		gesture.listen("tap", bigpic, function() {
 			if(picbox.dragging)
 				return true; 
-			else {
+			else if (current_image.type.indexOf('web') != -1) {
+				var link = document.createElement('a');
+				if (isAndroid() && current_image.deep_link)
+					link.setAttribute('href', current_image.deep_link);
+				else
+					link.setAttribute('href', current_image.web_link);
+				link.setAttribute('target', '_blank');
+				var dispatch = document.createEvent("HTMLEvents");
+				dispatch.initEvent("click", true, true);
+			    link.dispatchEvent(dispatch);
+			} else {
 				modal.zoomModal();
 				toggleClass.call(closebtn, "hidden");
 			}
