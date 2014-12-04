@@ -17,19 +17,18 @@ var deck_proto = {
 		var i, d, preloads = [];
 		for (i = 0; i < rdata.length; i++) {
 			d = rdata[i];
-			if (d.type == "login") {
+			if (d.type == "login")
 				this.loginCard = d;
-			} else if ((!this.known_keys[d.id] && !this.voted_keys[d.id])) {
-				this.known_keys[d.id] = true
+			else if ((!this.known_keys[d.id] && !this.voted_keys[d.id]))
 				preloads.push(d);
-			} else if (preloads.length == 0 && this.cards.length == 0) {
-				this.deal();
-			}
 		}
+		if (preloads.length == 0 && this.cards.length == 0) 
+			this.deal();
 		return preloads;		
 	},
 	cardLoaded: function(c) {
 		c.isLoaded = true;
+		this.known_keys[c.id] = true;
 		console.log("card loaded for deck #" + this.tag);
 		this.cards.push(c);
 		if (this.shareDeck) {

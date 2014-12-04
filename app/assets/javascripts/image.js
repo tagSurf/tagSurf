@@ -19,7 +19,7 @@ var image = {
 		var load = image._load;
 		console.log('image.load');
 		dlist.forEach(function(d) {
-			if (d.type != "content")
+			if (d.type != "content" || current_deck.known_keys[d.id])
 				return;
 			d._image_load_cb = d._image_load_cb || cb;
 			d._image_load_eb = d._image_load_eb || eb;
