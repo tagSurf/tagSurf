@@ -1,6 +1,6 @@
 var gnodes = {}, current_image, favGrid, slideGallery,
 	addHistoryItem, gallerize = function(gallery) {
-	var picbox, topbar, bigpic, picdesc, pictags;
+	var picbox, topbar, bigpic, picdesc, pictags, link;
 	var grid = document.createElement("div");
 	var gridwrapper = document.createElement("div");
 	grid.className = "grid";
@@ -71,23 +71,20 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 
 		bigpic = document.createElement("img");
 		bigpic.id = "bigpic";
+		link = document.createElement('a');
+		link.id = "web_link";
+		link.setAttribute('target', '_blank');
 		gesture.listen("up", bigpic, returnTrue);
 		gesture.listen("down", bigpic, returnTrue);
 		gesture.listen("drag", bigpic, returnTrue);
 		gesture.listen("tap", bigpic, function() {
 			if(picbox.dragging)
 				return true; 
-			else if (current_image.type.indexOf('web') != -1) {
-				var link = document.createElement('a');
-				if (isAndroid() && current_image.deep_link)
-					link.setAttribute('href', current_image.deep_link);
-				else
-					link.setAttribute('href', current_image.web_link);
-				link.setAttribute('target', '_blank');
+			else if (current_image.type.indexOf('web') != -1 && !isDesktop()) {
 				var dispatch = document.createEvent("HTMLEvents");
 				dispatch.initEvent("click", true, true);
 			    link.dispatchEvent(dispatch);
-			} else {
+			} else if (current_image.type.indexOf('web') == -1) {
 				modal.zoomModal();
 				toggleClass.call(closebtn, "hidden");
 			}
@@ -206,9 +203,11 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 				closebtn.classList.add('hidden');
 				modal.backOff();
 				modal.modalOut();
+				picbox.replaceChild(bigpic, link);
 			}
 		}, function() { modal.zoomIn(d, function() {
 				modal.zoomOut();
+				toggleClass.call(closebtn, "hidden");
 			}); 
 		});
 		votize(modal.modal, d);
@@ -218,6 +217,14 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		topbar.firstChild.appendChild(voteMeter(d, true));
 		topbar.children[2].innerHTML = Object.keys(d.tags[0])[0];
 
+		if (current_image.type.indexOf('web') != -1) {
+			picbox.replaceChild(link, bigpic);
+			link.appendChild(bigpic);
+			if (isAndroid() && current_image.deep_link)
+				link.setAttribute('href', current_image.deep_link);
+			else if (current_image.web_link)
+				link.setAttribute('href', current_image.web_link);
+		}
 		bigpic.src = image.get(d, window.innerWidth - 40).url;
 		picdesc.innerHTML = d.caption;
 		pictags.innerHTML = "";
