@@ -175,9 +175,9 @@ var setDeck = function(tag, firstCard){
 	deck.cards = [];
 	if (firstCard) {
 		deck.cards[0] = deck.firstCard = firstCard;
-		deck.known_keys[firstCard.id] = true;
 		image.load(deck.cards, window.innerWidth - 40, function() {
 			deck.firstCard.isLoaded = true;
+			deck.known_keys[deck.firstCard.id] = true;
 			deck.deal();
 		}, noLoad);
 	}
