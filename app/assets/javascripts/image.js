@@ -8,7 +8,7 @@ var image = {
 		tiny: {}
 	},
 	_load: {
-		max: 10,
+		max: 3,
 		count: 0,
 		list: []
 	},
@@ -17,7 +17,6 @@ var image = {
 	},
 	clearLoadList: function() {
 		image._load.list = [];
-		image._load.count = 0;
 	},
 	load: function(dlist, minWidth, cb, eb) {
 		var load = image._load;
@@ -51,7 +50,6 @@ var image = {
 			};
 			i.onerror = function() {
 				DEBUG && console.log('image load failed for image #' + d.id);
-				i.parentNode.removeChild(i);
 				d._image_load_eb && d._image_load_eb(d);
 				loadNext();
 			};
