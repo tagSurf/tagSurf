@@ -17,6 +17,7 @@ var image = {
 	},
 	clearLoadList: function() {
 		image._load.list = [];
+		image._load.count = 0;
 	},
 	load: function(dlist, minWidth, cb, eb) {
 		var load = image._load;
