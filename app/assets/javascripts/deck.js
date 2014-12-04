@@ -29,7 +29,6 @@ var deck_proto = {
 	cardLoaded: function(c) {
 		c.isLoaded = true;
 		this.known_keys[c.id] = true;
-		console.log("card loaded for deck #" + this.tag);
 		this.cards.push(c);
 		if (this.shareDeck) {
 			this.shareIndex += 1;
@@ -53,15 +52,12 @@ var deck_proto = {
 		return "/api/media/" + this.tag;
 	},
 	refill: function () {
-		console.log("deck.refill called #" + this.tag);
 		if (this.refilling)
 			return;
 		var self = this;
-		console.log("deck.refill executed #" + this.tag);
 		self.refilling = true;
 		xhr(this.dataPath(), null, function(response_data) {
 			self.refilling = false;
-			console.log("card get successful");
 			image.load(self.popData(response_data.data.map(newCard)),
 				window.innerWidth - 40, function(c) {
 					self.cardLoaded(c);
@@ -111,8 +107,7 @@ var deck_proto = {
 		this.deal();
 	},
 	purge: function() {
-		if (DEBUG)
-			console.log("purge deck #" + this.tag);
+		DEBUG && console.log("purge deck #" + this.tag);
 		this.cards = this.cards.filter(function(card) {
 			return !deck_proto.voted_keys[card.id];
 		});
@@ -137,7 +132,6 @@ var deck_proto = {
 
 		var i, c, shouldPromote = this.shouldPromote(),
 			numCards = slideContainer.childNodes.length - 1;
-		console.log('deck.deal for deck #' + this.tag);
 		this.getEndCard();
 		for (i = 0; i < this.constants.stack_depth; i++) {
 			c = this.cards[i];

@@ -27,15 +27,12 @@ var image = {
 			d._image_load_eb = d._image_load_eb || eb;
 			if (load.count >= load.max) {
 				load.list.push(d);
-				console.log("load count > load.max");
 				return;
 			}
-			console.log("load count = "+ load.count);
 			load.count += 1;
 			var i = new Image();
 			i.src = image.get(d, minWidth).url;
 			var loadNext = function() {
-				console.log("load next image #" + d.id);
 				load.count -= 1;
 				if (load.count < load.max && load.list.length) {
 					var loadList = load.list;
@@ -44,12 +41,10 @@ var image = {
 				}
 			};
 			i.onload = function() {
-				DEBUG && console.log('image load successful for image #' + d.id);
 				d._image_load_cb && d._image_load_cb(d);
 				loadNext();
 			};
 			i.onerror = function() {
-				DEBUG && console.log('image load failed for image #' + d.id);
 				d._image_load_eb && d._image_load_eb(d);
 				loadNext();
 			};
