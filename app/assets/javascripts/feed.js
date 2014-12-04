@@ -286,7 +286,7 @@ onload = function ()
 			clearStack();
 			last_tag = current_tag;
 			current_tag = tagName;
-			current_deck = getDeck(current_tag);
+			setDeck(current_tag);
 			analytics.track('Search for Tag', {
 				tag: tagName
 			});
@@ -605,10 +605,10 @@ onload = function ()
 			id = document.location.pathname.split("/")[3];
 		if (id && id != 0) {
 			xhr("/api/card/" + id, null, function(d) {
-				current_deck = getDeck(current_tag, newCard(d.data));
+				setDeck(current_tag, newCard(d.data));
 			});
 		} else
-			current_deck = getDeck(current_tag);
+			setDeck(current_tag);
 	};
 
 	firstPopulate();
