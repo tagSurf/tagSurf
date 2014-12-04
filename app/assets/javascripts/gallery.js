@@ -1,5 +1,9 @@
-var gnodes = {}, current_image, favGrid, slideGallery,
-	addHistoryItem, gallerize = function(gallery) {
+var gnodes = {},  
+	favGrid, 
+	slideGallery,
+	addHistoryItem, 
+	gallerize = function(gallery) {
+
 	var picbox, topbar, bigpic, picdesc, pictags, link;
 	var grid = document.createElement("div");
 	var gridwrapper = document.createElement("div");
@@ -80,11 +84,11 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		gesture.listen("tap", bigpic, function() {
 			if(picbox.dragging)
 				return true; 
-			else if (current_image.type.indexOf('web') != -1 && !isDesktop()) {
+			else if ((current_gallery_image.type.indexOf('web') != -1) && !isDesktop()) {
 				var dispatch = document.createEvent("HTMLEvents");
 				dispatch.initEvent("click", true, true);
 			    link.dispatchEvent(dispatch);
-			} else if (current_image.type.indexOf('web') == -1) {
+			} else if (current_gallery_image.type.indexOf('web') == -1) {
 				modal.zoomModal();
 				toggleClass.call(closebtn, "hidden");
 			}
@@ -190,20 +194,21 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		pictags.appendChild(p);
 	};
 	var showImage = function(d) {
-		current_image = d;
-		setCurrentMedia(current_image);
+		current_gallery_image = d;
+		setCurrentMedia(current_gallery_image);
 		closebtn = document.getElementById('gallery-close-button');
 		toggleClass.call(closebtn, "hidden");
 		modal.modalIn(picbox, function(direction) {
 			if (!direction || !isNaN(direction) || direction == "right") {
 				pushTags();
-				current_image = null;
+				current_gallery_image = null;
 				setFavIcon(false);
 				setCurrentMedia();
 				closebtn.classList.add('hidden');
 				modal.backOff();
 				modal.modalOut();
-				picbox.replaceChild(bigpic, link);
+				if (document.getElementById('web_link'))
+					picbox.replaceChild(bigpic, link);
 			}
 		}, function() { modal.zoomIn(d, function() {
 				modal.zoomOut();
@@ -217,13 +222,13 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 		topbar.firstChild.appendChild(voteMeter(d, true));
 		topbar.children[2].innerHTML = Object.keys(d.tags[0])[0];
 
-		if (current_image.type.indexOf('web') != -1) {
+		if (current_gallery_image.type.indexOf('web') != -1) {
 			picbox.replaceChild(link, bigpic);
 			link.appendChild(bigpic);
-			if (isAndroid() && current_image.deep_link)
-				link.setAttribute('href', current_image.deep_link);
-			else if (current_image.web_link)
-				link.setAttribute('href', current_image.web_link);
+			if (isAndroid() && current_gallery_image.deep_link)
+				link.setAttribute('href', current_gallery_image.deep_link);
+			else if (current_gallery_image.web_link)
+				link.setAttribute('href', current_gallery_image.web_link);
 		}
 		bigpic.src = image.get(d, window.innerWidth - 40).url;
 		picdesc.innerHTML = d.caption;
@@ -232,7 +237,7 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			for (var tagName in objwrap) if (tagName)
 				buildTagBlock(objwrap, tagName);
 		});
-		setFavIcon(current_image.user_stats.has_favorited);
+		setFavIcon(current_gallery_image.user_stats.has_favorited);
 	};
 	setAddCallback(function(tag) {
 		var objwrap = {};
@@ -245,27 +250,27 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 			trend: "up",
 			user_owned: true
 		};
-		current_image.tags.push(objwrap);
+		current_gallery_image.tags.push(objwrap);
 		buildTagBlock(objwrap, tag);
 		analytics.track('Add Tag from Gallery', {
-			card: current_image.id,
-			gallery: current_image.gallery,
+			card: current_gallery_image.id,
+			gallery: current_gallery_image.gallery,
 			tag_added: tag
 		});
 	});
 	var updateFavorited = function() {
 		var gall, ndata;
 		for (gall in gnodes) {
-			ndata = gnodes[gall][current_image.id];
+			ndata = gnodes[gall][current_gallery_image.id];
 			if (ndata)
 				ndata.user_stats.has_favorited
-					= current_image.user_stats.has_favorited;
+					= current_gallery_image.user_stats.has_favorited;
 		}
-		setFavIcon(current_image.user_stats.has_favorited);
+		setFavIcon(current_gallery_image.user_stats.has_favorited);
 	};
 	var removeFavImage = function() {
-		var cid = current_image.id;
-		current_image.user_stats.has_favorited = false;
+		var cid = current_gallery_image.id;
+		current_gallery_image.user_stats.has_favorited = false;
 		xhr("/api/favorites/" + cid, "DELETE", null, null);
 		if (favGrid) {
 			var n = document.getElementById("favorites" + cid);
@@ -368,32 +373,32 @@ var gnodes = {}, current_image, favGrid, slideGallery,
 	});
 
 	document.getElementById("favorites-btn").onclick = function() {
-		if (current_image) {
-			if (current_image.gallery == "history") {
-				current_image.user_stats.has_favorited =
-					!current_image.user_stats.has_favorited;
-				xhr("/api/favorites/" + current_image.id,
-					current_image.user_stats.has_favorited
+		if (current_gallery_image) {
+			if (gallery == "history") {
+				current_gallery_image.user_stats.has_favorited =
+					!current_gallery_image.user_stats.has_favorited;
+				xhr("/api/favorites/" + current_gallery_image.id,
+					current_gallery_image.user_stats.has_favorited
 						? "POST" : "DELETE", null, null);
 				updateFavorited();
-				if (current_image.user_stats.has_favorited){
+				if (current_gallery_image.user_stats.has_favorited){
 					analytics.track('Favorite from Gallery',{
-						card: current_image.id,
-						gallery: current_image.gallery
+						card: current_gallery_image.id,
+						gallery: current_gallery_image.gallery
 					});
 				} else {
 					analytics.track('Unfavorite from Gallery',{
-						card: current_image.id,
-						gallery: current_image.gallery
+						card: current_gallery_image.id,
+						gallery: current_gallery_image.gallery
 					});
 				};
-			} else if (current_image.gallery == "favorites") {
+			} else if (current_gallery_image.gallery == "favorites") {
 				removeFavImage();
 				updateFavorited();
 				modal.callModal();
 				analytics.track('Unfavorite from Gallery',{
-					card: current_image.id,
-					gallery: current_image.gallery
+					card: current_gallery_image.id,
+					gallery: current_gallery_image.gallery
 				});
 			}
 		} else if (starCallback)

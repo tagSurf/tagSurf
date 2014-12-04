@@ -12,6 +12,7 @@ var authorizedSession = null,
     hasSwiped = false,
     hasKeySwiped = false,
     hasSwitchedTags = false,
+    current_gallery_image = null,
     DEBUG = false;
 // Set DEBUG = true in non-production environments
 if ((document.location.hostname.indexOf("localhost") != -1) 
