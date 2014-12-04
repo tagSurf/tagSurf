@@ -15,10 +15,13 @@ var image = {
 	loadCount: function() {
 		return image._load.count;
 	},
+	clearLoadList: function() {
+		image._load.list = [];
+	},
 	load: function(dlist, minWidth, cb, eb) {
 		var load = image._load;
 		dlist.forEach(function(d) {
-			if (d.type != "content")
+			if (d.type != "content" || current_deck.known_keys[d.id])
 				return;
 			d._image_load_cb = d._image_load_cb || cb;
 			d._image_load_eb = d._image_load_eb || eb;
@@ -34,7 +37,7 @@ var image = {
 				if (load.count < load.max && load.list.length) {
 					var loadList = load.list;
 					load.list = [];
-					image.load(loadList, minWidth);
+					image.load(loadList, minWidth, cb, eb);
 				}
 			};
 			i.onload = function() {

@@ -2,7 +2,8 @@ var deck_proto = {
 	constants: {
 		buffer_minimum: 5,
 		stack_depth: 3,
-		login_spacing: 15
+		login_spacing: 15,
+		retries: 2
 	},
 	voted_keys: {},
 	topCard: function() {
@@ -16,17 +17,18 @@ var deck_proto = {
 		var i, d, preloads = [];
 		for (i = 0; i < rdata.length; i++) {
 			d = rdata[i];
-			if (d.type == "login") {
+			if (d.type == "login")
 				this.loginCard = d;
-			} else if ((!this.known_keys[d.id] && !this.voted_keys[d.id])) {
-				this.known_keys[d.id] = true
+			else if ((!this.known_keys[d.id] && !this.voted_keys[d.id]))
 				preloads.push(d);
-			}
 		}
-		return preloads;
+		if (preloads.length == 0 && this.cards.length == 0) 
+			this.deal();
+		return preloads;		
 	},
 	cardLoaded: function(c) {
 		c.isLoaded = true;
+		this.known_keys[c.id] = true;
 		this.cards.push(c);
 		if (this.shareDeck) {
 			this.shareIndex += 1;
@@ -50,8 +52,7 @@ var deck_proto = {
 		return "/api/media/" + this.tag;
 	},
 	refill: function () {
-		if (this.refilling || (this.cards.length + image.loadCount()
-			>= this.constants.buffer_minimum))
+		if (this.refilling)
 			return;
 		var self = this;
 		self.refilling = true;
@@ -60,18 +61,30 @@ var deck_proto = {
 			image.load(self.popData(response_data.data.map(newCard)),
 				window.innerWidth - 40, function(c) {
 					self.cardLoaded(c);
-				});
+				}, noLoad);
+			self.retries = 0;
+			self.refillTimeout = 500;
 		}, function(response, status) {
-			DEBUG && console.log("deck.refill xhr error");
+			DEBUG && console.log("deck.refill xhr error: " + status);
 			self.refilling = false;
 			if (status == 401) {
 				cardCbs.notSafe();
 				messageBox("Sorry, no #" + self.tag, response.errors
 					+ "<br><br>Control Safe Surf from Options");
 			} else if (status == 404) {
-				self.getEndCard().setFailMsg();
-				self.fadeIn(true);
+				if (self.retries < self.constants.retries) {
+					self.retries += 1;
+					setTimeout(function() { self.refill(); }, self.refillTimeout);
+					self.refillTimeout *= 2;
+				}
+				else {
+					self.getEndCard().setFailMsg();
+					self.fadeIn(true);
+					self.retries = 0;
+					self.refillTimeout = 500;
+				}
 			} else {
+				self.retries += 1;
 				self.refillTimeout *= 2;
 				setTimeout(function() { self.refill(); }, self.refillTimeout);
 			}
@@ -94,8 +107,7 @@ var deck_proto = {
 		this.deal();
 	},
 	purge: function() {
-		if (DEBUG)
-			console.log("purge deck #" + this.tag);
+		DEBUG && console.log("purge deck #" + this.tag);
 		this.cards = this.cards.filter(function(card) {
 			return !deck_proto.voted_keys[card.id];
 		});
@@ -115,6 +127,9 @@ var deck_proto = {
 		}
 	},
 	deal: function() {
+		if (this != current_deck)
+			return;
+
 		var i, c, shouldPromote = this.shouldPromote(),
 			numCards = slideContainer.childNodes.length - 1;
 		this.getEndCard();
@@ -127,32 +142,35 @@ var deck_proto = {
 				c.promote();
 		}
 		this.fadeIn();
-		this.refill();
+		if ((this.cards.length + image.loadCount()) <= this.constants.buffer_minimum)
+			this.refill();
 	}
 };
 
 var cardDecks = {};
 var noLoad = function(d) {
-	if (DEBUG)
-		console.log("Image load error on card #" + d.id);
+	DEBUG && console.log("Image load error on card #" + d.id);
 	analytics.track("Image Load Error", {
 		card: d.id,
 		surfing: current_tag
 	});
 };
-var getDeck = function(tag, firstCard){
+var setDeck = function(tag, firstCard){
 	var deck = cardDecks[tag];
-	if (deck) {
+	image.clearLoadList();
+	if (deck)  {
+		current_deck = deck;
 		deck.purge();
 		deck.deal();
-		return deck;
+		return;
 	}
-	deck = cardDecks[tag] = Object.create(deck_proto);
+	current_deck = deck = cardDecks[tag] = Object.create(deck_proto);
 	deck.tag = tag;
 	deck.known_keys = {};
 	deck.shareDeck = !isAuthorized();
 	deck.shareOffset = 0;
 	deck.shareIndex = 0;
+	deck.retries = 0;
 	deck.refillTimeout = 500;
 	deck.cards = [];
 	if (firstCard) {
@@ -164,5 +182,4 @@ var getDeck = function(tag, firstCard){
 		}, noLoad);
 	}
 	deck.refill();
-	return deck;
 };
