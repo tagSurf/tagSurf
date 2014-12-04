@@ -51,7 +51,7 @@ class MediaSerializer < BaseSerializer
     return [] if type == 'login'
     current_tags = (media.tag_list + media.tagged_as).uniq
     if current_user.try(:safe_mode)
-      current_tags.delete_if { |tag| Tag.blacklisted?(tag.to_s) }
+      current_tags.delete_if { |tag| Tag.blacklisted?([tag.to_s]) }
     end
     tagged_medias = []
     current_tags.each do |tag|
