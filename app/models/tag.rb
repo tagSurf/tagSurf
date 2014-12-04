@@ -71,8 +71,12 @@ class Tag < ActiveRecord::Base
     tag_feed.redis.zrangebylex("tag::tag_feed","[#{query}","[#{query}\xff",["LIMIT","0","10"])
   end
 
-  def self.blacklisted?(tag)
-    CONFIG[:blacklisted_tags].include?(tag.downcase)
+  def self.blacklisted?(tags)
+    blacklisted = false
+    tags.each do |tag|
+      blacklisted ||= CONFIG[:blacklisted_tags].include?(tag.downcase)
+    end
+    return blacklisted
   end
 
   def self.populate_from_existing!

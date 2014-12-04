@@ -30,15 +30,21 @@ class Api::MediaController < Api::BaseController
   end
 
   def share_feed
-   
-    if Tag.blacklisted?(media_params[:tag].downcase)
+    tags = Array.new
+    if media_params[:tag].first == '{'
+      tags = media_params[:tag].delete'{}'
+      tags = tags.split(',')
+    else
+      tags << media_params[:tag]
+    end
+    if Tag.blacklisted?(tags)
       render json: {errors: "This tag is not available in Safe Surf mode"}, status: :unauthorized
       return
     end
 
     @media = Media.next(
       @user, 
-      media_params[:tag], 
+      tags, 
       {
         :id => media_params[:id], 
         :limit => media_params[:limit],
@@ -59,12 +65,20 @@ class Api::MediaController < Api::BaseController
       return
     end
 
-    if @user.safe_mode? && Tag.blacklisted?(media_params[:tag].downcase)
+    tags = Array.new
+    if media_params[:tag].first == '{'
+      tags = media_params[:tag].delete'{}'
+      tags = tags.split(',')
+    else
+      tags << media_params[:tag]
+    end
+
+    if @user.safe_mode? && Tag.blacklisted?(tags)
       render json: {errors: "This tag is not available in Safe Surf mode"}, status: :unauthorized
       return
     end
       
-    @media = Media.next(@user, media_params[:tag])
+    @media = Media.next(@user, tags)
     if @media.present?
       render json: @media, root: "data"
     else

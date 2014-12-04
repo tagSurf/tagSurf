@@ -90,27 +90,27 @@ class Media < ActiveRecord::Base
   # Gather the next set of media for feeds 
   # The brains of tagSurf feeds 
   # TODO evaluate for efficiency
-  def self.next(user, tag, options = {})
+  def self.next(user, tags, options = {})
     offset = options[:offset].nil? ? 0 : options[:offset].to_i
     n = options[:limit].nil? ?  20 : options[:limit].to_i
     id = options[:id].to_i
        
     if user.try(:safe_mode) 
-      return [] if Tag.blacklisted?(tag)
+      return [] if Tag.blacklisted?(tags)
     end
 
     unless user
-      return [] if Tag.blacklisted?(tag)
+      return [] if Tag.blacklisted?(tags)
     end
 
     @media = Media.all
 
     # Media available for non-authed preview
     if user.nil?
-      if tag == 'trending'
-        @media  = @media.where(viral: true, nsfw: false).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
+      if tags.include?('trending')
+        @media  = @media.where(viral: true, nsfw: false).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
       else
-        @media = @media.where(nsfw: false).tagged_with(tag, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')  
+        @media = @media.where(nsfw: false).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')  
         if @media.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
@@ -124,29 +124,7 @@ class Media < ActiveRecord::Base
       # end
       has_voted_ids = user.votes.pluck(:votable_id)
 
-      if tag == 'trending'
-        # staffpick_ids = @media.tagged_with('StaffPicks').pluck(:id)
-        viral_ids = @media.where(viral: true, nsfw: false).pluck(:id)
-
-        # Remove media which the user has voted on
-        # staffpick_ids = staffpick_ids - has_voted_ids
-
-        # Avoid the extra query if no staffpicks left
-        # Reserving optimization for the move to Redis objects
-        # if staffpick_ids.present?
-        #   if staffpick_ids.length < 20
-        #     trending_limit = n - staffpick_ids.length
-        #     additional_media = Media.where('id not in (?) and id in (?)', has_voted_ids, viral_ids).limit(trending_limit).order('ts_score DESC NULLS LAST').map(&:id)
-        #     media_ids = staffpick_ids + additional_media
-
-        #     # Custom sort order for collections
-        #     # TODO candidate for Activerecord extension
-        #     sort_order = media_ids.collect{|id| "id = #{id} desc"}.join(',')
-        #     @media =  @media.where('id in (?)', media_ids).limit(n).order(sort_order)
-        #   else
-        #     @media =  @media.where('id in (?)', staffpick_ids).limit(n).order('ts_score DESC NULLS LAST')
-        #   end
-        # else
+      if tags.include?('trending') && tags.length == 1
         if user.safe_mode? 
           if has_voted_ids.empty?
             @media = @media.where('viral and not nsfw').limit(n).order('ts_score DESC NULLS LAST')
@@ -160,19 +138,18 @@ class Media < ActiveRecord::Base
             @media = @media.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
           end
         end
-        # end
       else
         if user.safe_mode?
           if has_voted_ids.empty?
-            @media = Media.where('not nsfw').tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+            @media = Media.where('not nsfw').tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
           else
-            @media = Media.where('media.id not in (?) and not nsfw', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+            @media = Media.where('media.id not in (?) and not nsfw', has_voted_ids).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
           end
         else
           if has_voted_ids.empty?
-            @media = Media.tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+            @media = Media.tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
           else
-            @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+            @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
           end
         end
     
@@ -187,12 +164,12 @@ class Media < ActiveRecord::Base
       @media = @media.uniq_by(&:id)
     end
 
-    # Embedds login card every third card
+    # Embedds login card every 15th card
     if user.nil?
       @login_card = Media.unscoped.where(ts_type: 'login').limit(1)
       # creates an empty relation
       @relation = Media.where(id: nil)
-      @media.each_slice(4) do |media|
+      @media.each_slice(14) do |media|
         @relation << media + @login_card
       end
       @media = @relation.flatten!
@@ -395,7 +372,7 @@ class Media < ActiveRecord::Base
       extension = obj['image'].is_a?(Array) ? 
                             obj['image'].first.split('.').last.strip.split('?')[0] : 
                               obj['image'].split('.').last.strip.split('?')[0]
-      if extension == 'jpg'
+      if extension.downcase == 'jpg'
         extension = 'jpeg'
       end
 
@@ -434,7 +411,7 @@ class Media < ActiveRecord::Base
         deep_link_icon: obj['potentialAction']['image']
       })
         
-      media.tag_list.add(tag_name, provider, 'urx')
+      media.tag_list.add('urx', provider, tag_name)
         
       success = media.save  
 
