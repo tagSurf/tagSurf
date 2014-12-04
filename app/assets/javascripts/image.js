@@ -8,7 +8,7 @@ var image = {
 		tiny: {}
 	},
 	_load: {
-		max: 5,
+		max: 10,
 		count: 0,
 		list: []
 	},
