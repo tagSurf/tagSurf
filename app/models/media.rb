@@ -388,7 +388,7 @@ class Media < ActiveRecord::Base
       next if provider == 'buzzfeed' and title.include?("Community Post")
 
       if obj['datePublished']
-        t = obj['datePublished'].gsub(/[A-Za-z-:]/, ' ').split(' ')
+        t = obj['datePublished'].gsub(/[A-Za-z\-:]/, ' ').split(' ')
         zone = obj['datePublished'].last(3)
         case zone
         when 'EDT'
