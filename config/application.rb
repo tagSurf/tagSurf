@@ -55,7 +55,12 @@ module Tagsurf
       "flickr.com",
       "flipboard.com",
       "foxnews.com",
-      "theguardian.com"
+      "theguardian.com",
+      "huffingtonpost.com",
+      "medium.com",
+      "tumblr.com",
+      "washingtonpost.com",
+      "youtube.com"
     ]
 
     CONFIG[:web_domains] = [
@@ -67,7 +72,11 @@ module Tagsurf
       "etsy",
       "flipboard",
       "foxnews",
-      "theguardian"
+      "theguardian",
+      "huffingtonpost",
+      "medium",
+      "washingtonpost",
+      "youtube"
     ]
 
     # TODO move to yaml
