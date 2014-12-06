@@ -387,10 +387,24 @@ class Media < ActiveRecord::Base
       end
       next if provider == 'buzzfeed' and title.include?("Community Post")
 
+      if obj['datePublished']
+        t = obj['datePublished'].gsub(/[A-Za-z-:]/, ' ').split(' ')
+        zone = obj['datePublished'].last(3)
+        case zone
+        when 'EDT'
+          gmt = "-05:00"
+        when 'PST'
+          gmt = "-08:00"
+        else 
+          gmt = "-07:00"
+        end
+        created_at = Time.new(t[0],t[1],t[2],t[3],t[4],t[5].nil? ? 0 : t[5], gmt)
+      end
+
       media = Media.create({
         remote_id: "#{provider[0...4].upcase}##{starting_index}",
         remote_provider: "urx/#{provider}",
-        remote_created_at: Time.now,
+        remote_created_at: created_at.nil? ? Time.now : created_at,
         image_link_original: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
         image_link_large: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
         image_link_huge: obj['image'].is_a?(Array) ? 
@@ -402,7 +416,8 @@ class Media < ActiveRecord::Base
         description: obj['description'].is_a?(Array) ? obj['description'].first : obj['description'],
         content_type: "image/#{extension}",
         animated: @extension == 'gif' ? true : false,
-        ts_score: (1000 + (Time.new.to_i - 1300000000)), #Give a small fixed bonus to lift it
+        #Give a small fixed bonus to lift it above some imgur content
+        ts_score: (1000 + ((created_at.nil? ? Time.new.to_i : created_at.to_i) - 1300000000)), 
         section: tag_name,
         web_link: obj['url'],
         deep_link: obj['potentialAction']['target']['urlTemplate'],

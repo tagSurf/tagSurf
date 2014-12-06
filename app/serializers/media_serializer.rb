@@ -103,6 +103,16 @@ class MediaSerializer < BaseSerializer
       media.title
     when 'urx/techcrunch'
       media.title
+    when 'urx/etsy'
+      media.title
+    when 'urx/flickr'
+      media.title
+    when 'urx/500px'
+      media.title
+    when 'urx/foxnews'
+      media.title
+    when 'urx/theguardian'
+      media.title
     else
       media.description ? media.description : media.title
     end 

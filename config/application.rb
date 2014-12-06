@@ -49,14 +49,25 @@ module Tagsurf
       "bleacherreport.com",
       "engadget.com",
       "techcrunch.com",
-      "500px.com"
+      "500px.com",
+      "cbs.com",
+      "etsy.com",
+      "flickr.com",
+      "flipboard.com",
+      "foxnews.com",
+      "theguardian.com"
     ]
 
     CONFIG[:web_domains] = [
       "buzzfeed", 
       "bleacherreport",
       "engadget",
-      "techcrunch"
+      "techcrunch",
+      "cbs",
+      "etsy",
+      "flipboard",
+      "foxnews",
+      "theguardian"
     ]
 
     # TODO move to yaml
