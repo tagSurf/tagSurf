@@ -363,9 +363,8 @@ class Media < ActiveRecord::Base
     extensions = ['jpg', 'jpeg', 'png', 'gif'] 
     accepted_types = ['Thing','http://schema.org/Article']
     provider = domain.split('.')[0];
-    resp = Media.select(:remote_id).where(:remote_provider => "urx/#{provider}")
-    starting_index = resp.empty? ? 1 : 
-          resp.sort_by { |x| -(x.remote_id[/\d+/].to_i) }.first.remote_id.split("#")[1].to_i + 1
+    resp = Media.select(:remote_id).where(:remote_provider => "urx/#{provider}").last
+    starting_index = resp.nil? ? 1 : resp.remote_id.split("#")[1].to_i + 1
 
     objs.each do |obj|
       next if !accepted_types.include?(obj['@type'])

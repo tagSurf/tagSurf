@@ -48,7 +48,8 @@ module Tagsurf
       "pinterest.com", 
       "bleacherreport.com",
       "engadget.com",
-      "techcrunch.com"
+      "techcrunch.com",
+      "500px.com"
     ]
 
     CONFIG[:web_domains] = [
