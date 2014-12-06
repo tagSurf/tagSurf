@@ -380,7 +380,7 @@ class Media < ActiveRecord::Base
       case type
       when 'Article'
         title = obj['headline name']
-        nsfw = obj['isFamilyFriendly']
+        nsfw = obj['isFamilyFriendly'].nil? ? false : obj['isFamilyFriendly'].nil?
       else
         title = obj['name'].is_a?(Array) ? obj['name'].first : obj['name']
         nsfw = false
