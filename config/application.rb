@@ -193,7 +193,8 @@ module Tagsurf
       "cock",
       "cum",
       "orgasm",
-      "oface"
+      "oface",
+      "faptogifs"
     ]
 
   end
