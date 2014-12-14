@@ -203,7 +203,7 @@ class Media < ActiveRecord::Base
             self.populate_imgur_tag(tagged)
           end
 
-        elsif provider == 'urx'
+        elsif provider == 'urx' && !Tag.blacklisted?(tag_name)
           CONFIG[:urx_domains].each do |domain|
             @offset = 0
             while @offset < 11 do
@@ -233,8 +233,6 @@ class Media < ActiveRecord::Base
               @offset += 1
             end
           end
-        else
-          raise "Error unknown provider: #{provider}"
         end
       rescue => e
         puts "Something went wrong with Media.populate_tag: #{e}"
