@@ -172,11 +172,11 @@ class MediaSerializer < BaseSerializer
     if media.remote_provider.include?('urx')
       media.deep_link_icon
     elsif media.remote_provider == 'imgur'
-      if media.section.nil? or media.section == 'imgurhot'
+      # if media.section.nil? or media.section == 'imgurhot'
         return "http://assets.tagsurf.co/img/imgur_icon.png"
-      else
-        return "http://assets.tagsurf.co/img/reddit_icon.png"
-      end
+      # else
+        # return "http://assets.tagsurf.co/img/reddit_icon.png"
+      # end
     end
   end
 
