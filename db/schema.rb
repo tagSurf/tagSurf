@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141106005558) do
+ActiveRecord::Schema.define(version: 20141105181752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,7 +41,7 @@ ActiveRecord::Schema.define(version: 20141106005558) do
     t.string   "remote_id"
     t.string   "remote_provider"
     t.datetime "remote_created_at"
-    t.string   "image_link_original"
+    t.text     "image_link_original"
     t.text     "title"
     t.text     "description"
     t.string   "content_type"
@@ -56,21 +56,27 @@ ActiveRecord::Schema.define(version: 20141106005558) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "viral",                default: false
-    t.string   "image_link_tiny"
-    t.string   "image_link_thumbnail"
-    t.string   "image_link_medium"
-    t.string   "image_link_large"
+    t.text     "image_link_tiny"
+    t.text     "image_link_thumbnail"
+    t.text     "image_link_medium"
+    t.text     "image_link_large"
     t.integer  "remote_up_votes"
     t.integer  "remote_down_votes"
     t.integer  "remote_score"
     t.integer  "ts_score",             default: 0,         null: false
     t.datetime "last_touched"
-    t.string   "image_link_huge"
+    t.text     "image_link_huge"
     t.boolean  "repopulate_score",     default: true,      null: false
     t.boolean  "time_bonus_expired",   default: false,     null: false
     t.string   "ts_type",              default: "content", null: false
     t.boolean  "reported",             default: false,     null: false
     t.boolean  "nsfw",                 default: false,     null: false
+    t.text     "deep_link"
+    t.text     "web_link"
+    t.string   "deep_link_action"
+    t.string   "deep_link_icon"
+    t.string   "deep_link_desc"
+    t.string   "deep_link_type"
   end
 
   add_index "media", ["nsfw"], name: "index_media_on_nsfw", using: :btree

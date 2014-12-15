@@ -12,6 +12,7 @@ var authorizedSession = null,
     hasSwiped = false,
     hasKeySwiped = false,
     hasSwitchedTags = false,
+    current_gallery_image = null,
     DEBUG = false;
 // Set DEBUG = true in non-production environments
 if ((document.location.hostname.indexOf("localhost") != -1) 
@@ -265,7 +266,7 @@ var buildVoteButtons = function (dragCallback, swipeSlider) {
 var currentMedia, panicCb, //def in feed
   checkShare = function(shareCb) {
     var d = currentMedia;
-    if (d && d.type == "content") {
+    if (d && d.type.indexOf("content") != -1) {
       share.on(d, shareCb);
       if(whichGallery()) //no panic modal in galleries
         return;

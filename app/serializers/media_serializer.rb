@@ -4,9 +4,13 @@ class MediaSerializer < BaseSerializer
   attributes( 
     :id,
     :remote_id,
+    :source,
     :image,
     :caption, 
     :tags,
+    :web_link,
+    :deep_link,
+    :source_icon,
     :user_stats,
     :permissions,
     :total_votes,
@@ -22,6 +26,15 @@ class MediaSerializer < BaseSerializer
   end
 
   def type
+    return "login" if media.ts_type == 'login'
+    unless media.remote_provider.include?('urx')
+      return media.ts_type
+    end
+
+    if CONFIG[:web_domains].include?(media.remote_provider.split('/')[1])
+      return "content/web"
+    end
+  
     media.ts_type
   end
 
@@ -38,7 +51,7 @@ class MediaSerializer < BaseSerializer
     return [] if type == 'login'
     current_tags = (media.tag_list + media.tagged_as).uniq
     if current_user.try(:safe_mode)
-      current_tags.delete_if { |tag| Tag.blacklisted?(tag.to_s) }
+      current_tags.delete_if { |tag| Tag.blacklisted?([tag.to_s]) }
     end
     tagged_medias = []
     current_tags.each do |tag|
@@ -49,15 +62,25 @@ class MediaSerializer < BaseSerializer
 
   def image
     return {} if type == 'login'
-    img = {
-      content_type: media.content_type,
-      animated: media.animated?,
-      tiny: {url: media.image_link_tiny, width: 50, height: 50}.merge!(media.scale_dimensions(160)),
-      medium: {url: media.image_link_medium, width: 320, height: 320}.merge!(media.scale_dimensions(320)),
-      large: {url: media.image_link_large, width: 640, height: 640}.merge!(media.scale_dimensions(640)),
-      huge: {url: media.image_link_huge, width: 1024, height: 1024}.merge!(media.scale_dimensions(1024)),
-      original: {url: media.image_link_original, width: media.width, height: media.height}
-    }
+    if media.remote_provider == 'imgur'
+      img = {
+        content_type: media.content_type,
+        animated: media.animated?,
+        tiny: {url: media.image_link_tiny, width: 50, height: 50}.merge!(media.scale_dimensions(160)),
+        medium: {url: media.image_link_medium, width: 320, height: 320}.merge!(media.scale_dimensions(320)),
+        large: {url: media.image_link_large, width: 640, height: 640}.merge!(media.scale_dimensions(640)),
+        huge: {url: media.image_link_huge, width: 1024, height: 1024}.merge!(media.scale_dimensions(1024)),
+        original: {url: media.image_link_original, width: media.width, height: media.height}
+      }
+    elsif media.remote_provider.include?('urx')
+      img = {
+        content_type: media.content_type,
+        animated: media.animated?,
+        large: {url: media.image_link_large},
+        huge: {url: media.image_link_huge},
+        original: {url: media.image_link_original}
+      }
+    end
     img
   end
 
@@ -73,8 +96,17 @@ class MediaSerializer < BaseSerializer
 
   def caption
     return nil if type == 'login'
-    if media.description
-      media.description
+    case media.remote_provider
+    when 'imgur'
+      media.description ? media.description : media.title
+    when 'urx/pinterest'
+      media.description ? media.description : media.title
+    when 'urx/engadget'
+      media.description ? media.description : media.title
+    when 'urx/cbs'
+      media.description ? media.description : media.title
+    when 'urx/flipboard'
+      media.description ? media.description : media.title
     else
       media.title
     end 
@@ -133,6 +165,24 @@ class MediaSerializer < BaseSerializer
   def score
     return nil if type == 'login'
     media.remote_score
+  end
+
+  def source_icon
+    return nil if type == 'login'
+    if media.remote_provider.include?('urx')
+      media.deep_link_icon
+    elsif media.remote_provider == 'imgur'
+      if media.section.nil? or media.section == 'imgurhot'
+        return "http://assets.tagsurf.co/img/imgur_icon.png"
+      else
+        return "http://assets.tagsurf.co/img/reddit_icon.png"
+      end
+    end
+  end
+
+  def web_link
+    return media.web_link unless media.remote_provider == 'imgur'
+    return "http://imgur.com/gallery/#{media.remote_id}"
   end
 
   def trend
