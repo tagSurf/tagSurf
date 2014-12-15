@@ -7,6 +7,8 @@ var card_proto = {
 			this.image = data.image;
 			this.animated = data.image.animated;
 			this.type = data.type;
+			this.web_link = data.web_link;
+			this.deep_link = data.deep_link;
 			this.source = data.source;
 			data.tags.forEach(function(tag) { 
 				self.tags.push(tag); 
@@ -21,7 +23,9 @@ var card_proto = {
 			return;
 	},
 	_build: function() {
-		if (this.type == "content")
+		if (!this.data)
+			this.wavesOn();
+		else if (this.type.indexOf("content") != -1)
 			this._buildContentCard();
 		else if (this.type == "login") 
 			this._buildLoginCard();
@@ -33,7 +37,10 @@ var card_proto = {
 			container = this.contents,
 			formattingContainer = document.getElementById('formatter'),
 			card = this,
-			cardTemplate = "<div class='image-container expand-animation'><img src= ></div><div class='icon-line'><img class='source-icon' src='http://assets.tagsurf.co/img/" + (card.source || ((card.data.tags[0] == null || card.data.tags[0] == "imgurhot") ? "imgur" : "reddit")) + "_icon.png'><span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + Object.keys(card.data.tags[0])[0] + "</span></div><div class='text-container'><p>" + card.data.caption + "</p></div><div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
+			imageTemplate = (card.type.indexOf('web') != -1) ? "<a href='" + (isAndroid() ? (card.deep_link ? card.deep_link : card.web_link) : card.web_link) + "' target='_blank'>" + "<div class='image-container expand-animation'><img src= ></div></a>" : "<div class='image-container expand-animation'><img src= ></div>",
+			cardTemplate = imageTemplate + "<div class='icon-line'>" +
+			"<a href='" + (card.deep_link ? card.deep_link : card.web_link) + "' target='_blank'><div id='source-btn'><img class='source-icon' src='" + card.data.source_icon + "'></div></a>" +
+			"<span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + Object.keys(card.data.tags[0])[0] + "</span></div><div class='text-container'><p>" + card.data.caption + "</p></div><div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
 		this.surfsUp = true;
 		formattingContainer.appendChild(container);
 		container.className = 'card-container';
@@ -58,6 +65,18 @@ var card_proto = {
 			});
 		} else
 			iconLine.children[1].style.display = "none";
+		gesture.listen("down", iconLine.children[0].firstChild, function() {
+			iconLine.children[0].firstChild.style.opacity = 0.5;
+		});
+		gesture.listen("up", iconLine.children[0].firstChild, function() {
+			iconLine.children[0].firstChild.style.opacity = 1;
+		});
+		gesture.listen("tap", iconLine.children[0].firstChild, function() {
+			if(isDesktop()) return;
+			var dispatch = document.createEvent("HTMLEvents");
+		    dispatch.initEvent("click", true, true);
+		    current_deck.topCard().contents.children[1].children[0].dispatchEvent(dispatch);
+		});
 		this.tags.sort(function(a, b) {
 			var aName = Object.keys(a)[0];
 			var bName = Object.keys(b)[0];
@@ -81,13 +100,18 @@ var card_proto = {
 		this.swipable = true;
 	},
 	setSource: function() {
-		this.contents.children[0].firstChild.src = image.get(this.data,
-			window.innerWidth - 40).url;
+		if(this.type.indexOf('web') != -1)
+			this.contents.children[0].children[0].firstChild.src = image.get(this.data, 
+				window.innerWidth - 40).url;
+		else
+			this.contents.children[0].firstChild.src = image.get(this.data, 
+				window.innerWidth - 40).url;
 	},
 	_formatContents: function (imageData) {
-		if (this.type != "content")
+		if (this.type.indexOf("content") == -1)
 			return;
-		var imageContainer = this.contents.firstChild,
+		var imageContainer = (this.type.indexOf("web") != -1) ? this.contents.firstChild.firstChild 
+																	:this.contents.firstChild,
 			fullscreenButton = this.contents.children[4], 
 			truncatedTitle,
 			picTags = this.contents.children[3], 
@@ -380,12 +404,16 @@ var card_proto = {
 				console.log("Expand card #" + this.id);
 			this.compressing = false;
 			this.expanded = true;
-			if (this.contents.children[0].className.indexOf("expanded") == -1)
-				this.contents.children[0].className += " expanded";
+			var imageContainer = this.type.indexOf('web') != -1 ? 
+									this.contents.children[0].children[0] 
+									: this.contents.children[0];
+			//TODO: refactor this to make more pretty
+			if (imageContainer.className.indexOf("expanded") == -1)
+				imageContainer.className += " expanded";
 			this.contents.children[2].innerHTML = "<p>" + this.data.caption + "</p>";
 			if (currentUser.vote_btns && (isMobile() || isTablet()))
 				this.contents.children[3].style.paddingBottom="60px";
-			if (this.type == "content")
+			if (this.type.indexOf("content") != -1)
 				toggleClass.call(this.contents.children[3], "hidden");
 			if (this.contents.children[4].className.indexOf("hidden") == -1)
 				toggleClass.call(this.contents.children[4], "hidden");
@@ -408,13 +436,13 @@ var card_proto = {
 		}
 	},
 	tagCard: function(tag) {
-		if (this.type != "content" && this.type != "End-Of-Feed" || tag == "trending")
+		if (this.type.indexOf("content") == -1 && this.type != "End-Of-Feed" || tag == "trending")
 			return;
 		var self = this,
 			isMine = this._isMine(tag),
 			p = document.createElement("div"),
-			pictags = this.type == "content" ? this.contents.children[3] : this.contents.children[4];
-		if (this.type == "content")
+			pictags = (this.type.indexOf("content") != -1) ? this.contents.children[3] : this.contents.children[4];
+		if (this.type.indexOf("content") != -1)
 			for (var i = 0; i < this.tags.length; i++) 
 				if (Object.keys(this.tags[i])[0] == tag) 
 					for (var j = 0; j < pictags.childNodes.length; j++)
@@ -473,7 +501,7 @@ var card_proto = {
 	  }
 	},
 	_isMine: function(tag) {
-		if (this.type != "content")
+		if (this.type.indexOf("content") == -1)
 			return false;
 		for (var i = 0; i < this.tags.length; i++)
 			if (Object.keys(this.tags[i])[0] == tag)
@@ -485,7 +513,7 @@ var card_proto = {
 		current_deck.shift();
 		if (DEBUG)
 			console.log("Voted on card #" + this.id);
-		if (this.type == "content") {
+		if (this.type.indexOf("content") != -1) {
 			this.data.total_votes += 1;
 			this.data[voteFlag + "_votes"] += 1;
 			this.data.user_stats.voted = true;

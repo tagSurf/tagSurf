@@ -41,6 +41,44 @@ module Tagsurf
     # redis_active = Rails.env.development? ? false : true
     CONFIG[:redis_active] = true #redis_active  
 
+    CONFIG[:remote_providers] = ["imgur", "urx"]
+
+    CONFIG[:urx_domains] = [
+      "buzzfeed.com", 
+      "pinterest.com", 
+      "bleacherreport.com",
+      "engadget.com",
+      "techcrunch.com",
+      "500px.com",
+      "cbs.com",
+      "etsy.com",
+      "flickr.com",
+      "flipboard.com",
+      "foxnews.com",
+      "theguardian.com",
+      "huffingtonpost.com",
+      "medium.com",
+      "tumblr.com",
+      "washingtonpost.com",
+      "youtube.com"
+    ]
+
+    CONFIG[:web_domains] = [
+      "buzzfeed", 
+      "bleacherreport",
+      "engadget",
+      "techcrunch",
+      "cbs",
+      "etsy",
+      "flipboard",
+      "foxnews",
+      "theguardian",
+      "huffingtonpost",
+      "medium",
+      "washingtonpost",
+      "youtube"
+    ]
+
     # TODO move to yaml
     CONFIG[:blacklisted_tags] = [ 
       "boobies", 

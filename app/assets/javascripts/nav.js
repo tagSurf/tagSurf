@@ -223,7 +223,7 @@ var buildOptionsTable = function (options_cb) {
   '<input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="safe-surf-checkbox"' +
     ((currentUser && currentUser.safeSurf || !isAuthorized()) ? " checked" : "") +
   '> <label class="onoffswitch-label" for="myonoffswitch"> <span class="onoffswitch-inner"></span> <span class="onoffswitch-switch"></span> </label> <div class="onoffswitch-cover" style="display:' +
-  ((isAuthorized() && !isUIWebView()) ? 'none' : 'block') + ';"></div>';
+  ((isAuthorized() && (!isUIWebView() || !currentUser.safeSurf)) ? 'none' : 'block') + ';"></div>';
   safeSurfText.innerHTML = "Safe Surf";
   safeSurfText.className = voteButtonsText.className= "options-key-text";
   safeSurfDescCell.colSpan = voteButtonsDescCell.colSpan = 2;
@@ -234,8 +234,17 @@ var buildOptionsTable = function (options_cb) {
     {
       if (isUIWebView())
       {
-        messageBox("Sorry", "Disabling Safe Surf is not allowed for native applications on this device<br/><br/>Visit us in your mobile browser<br/>at <span class='blue'>beta.tagsurf.co</span> for full features");
-        analytics.track('Unauthorized iOS Toggle Safe Surf');
+        if (!currentUser.safeSurf) { 
+          safeSurfCheckbox.firstChild.checked = !safeSurfCheckbox.firstChild.checked;
+          xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
+            JSON.stringify({ safe_mode: safeSurfCheckbox.firstChild.checked }));
+          currentUser.safeSurf = safeSurfCheckbox.firstChild.checked;
+          autocomplete.populate();
+        }
+        else {
+          messageBox("Sorry", "Disabling Safe Surf is not allowed for native applications on this device<br/><br/>Visit us in your mobile browser<br/>at <span class='blue'>beta.tagsurf.co</span> for full features");
+          analytics.track('Unauthorized iOS Toggle Safe Surf');
+        }
       }
       else
       {

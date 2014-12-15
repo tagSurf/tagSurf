@@ -1,7 +1,16 @@
 var castVote = function(card) {
+	var tag = card.data.user_stats.tag_voted;
+	tag = tag.indexOf(',') != -1 ? tag.split(',').pop() : tag;
 	xhr("/api/votes/" + card.data.user_stats.vote + "/" + card.id
-		+ "/tag/" + card.data.user_stats.tag_voted, "POST", null, null);
+		+ "/tag/" + tag, "POST", null, null);
 };
+
+// window.onpageshow = function(evt) {
+// 	if (evt.persisted) {
+// 		document.body.style.display = "none";
+// 		location.reload();
+// 	}
+// };
 
 onload = function ()
 {
@@ -11,7 +20,9 @@ onload = function ()
 	// integration with other sliding elements
 	tinput = document.getElementById("tag-input");
 	current_tag = tinput.value = document.location.hash.slice(1).split("~")[0]
-		|| document.location.pathname.split("/")[2] || "trending";
+		|| document.location.pathname.split("/")[2] 
+		|| document.location.pathname.split("#")[1]
+		|| "trending";
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
@@ -161,7 +172,15 @@ onload = function ()
 			{
 				if (slider.compressing == false)
 				{
-					modal.zoomIn(slider);
+					if (slider.type.indexOf('web') == -1) {
+						modal.zoomIn(slider);
+					}
+					else if (!isDesktop()) {
+						var dispatch = document.createEvent("HTMLEvents");
+					    DEBUG && console.log("tap registered");
+					    dispatch.initEvent("click", true, true);
+					    slider.contents.firstChild.dispatchEvent(dispatch);
+					}
 				}
 				else if (slider.expanded == false)
 				{
@@ -322,7 +341,7 @@ onload = function ()
 		".card-container": function() {
 			return "min-height: " + (maxCardHeight + 140) + "px; width: " + ((isMobile() || isTablet() || isNarrow()) ? "95" : "70") + "%;";
 		},
-		".raw-wrapper, .zoom-wrapper, #scroll-container, #scroll-container-container": function() {
+		".raw-wrapper, .zoom-wrapper, .web-wrapper, .raw-web-wrapper, #scroll-container, #scroll-container-container": function() {
 			return "height: " + (window.innerHeight - 50) + "px";
 		}
 	});

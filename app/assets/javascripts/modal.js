@@ -4,6 +4,7 @@ var modal = {
 	prompt: document.createElement("div"),
 	topModal: document.createElement("div"),
 	zoom: document.createElement("div"),
+	web: document.createElement("div"),
 	constants: {
 		zoomScale: 1.5,
 		zoomMax: 3
@@ -36,11 +37,13 @@ var modal = {
 		modal.topModal.style.zIndex = 20;
 		modal._buildZoom();
 		modal._buildPrompt();
+		modal._buildWeb();
 		document.body.appendChild(modal.back);
 		document.body.appendChild(modal.modal);
 		document.body.appendChild(modal.topModal);
 		document.body.appendChild(modal.prompt);
 		document.body.appendChild(modal.zoom);
+		document.body.appendChild(modal.web);
 		gesture.listen("tap", modal.back, modal.callBack);
 		gesture.listen("swipe", modal.back, modal.callBack);
 
@@ -54,6 +57,9 @@ var modal = {
 		gesture.listen("drag", modal.zoom, modal.dragZoom, true);
 		gesture.listen("pinch", modal.zoom, modal.pinchZoom, true);
 		gesture.listen("down", modal.zoom, returnTrue, true);
+
+		gesture.listen("tap", modal.web, modal.callWeb, false, false);
+		// gesture.listen("drag", modal.web, modal.dragWeb, true);
 	},
 	_buildZoom: function() {
 		var zNode = document.createElement('img'), 
@@ -78,6 +84,32 @@ var modal = {
 					return "height: " + (window.innerHeight - 40) + 'px !important';
 				else if (isGallery())
 					return "height: " + (window.innerHeight - 50) + 'px !important';
+			}
+		});
+	},
+	_buildWeb: function() {
+		var wNode = document.createElement('iframe'),
+			gesture_wrapper = document.createElement('div');
+		wNode.className = 'basic-web';
+		wNode.style.height = window.innerHeight + (isMobile() ? 0 : 6000) + 'px';
+		wNode.style.width = '100%';
+		modal.web.className = "web-wrapper";
+		gesture_wrapper.className = "web-raw-wrapper";
+		gesture_wrapper.appendChild(wNode);
+		modal.web.appendChild(gesture_wrapper);
+		modal.web.large = false;
+		modal.web.zoomed = false;
+		addCss({
+			".raw-web-wrapper": function() {
+				return "height: " + (window.innerHeight - 110) + 'px';
+			},
+			".web-wrapper": function() {
+				modal.web.maxWidth = modal.constants.zoomMax
+					* window.innerWidth;
+				modal.web.z2width = modal.constants.zoomScale
+					* window.innerWidth;
+				if (isDesktop())
+					return "height: " + (window.innerHeight - 40) + 'px !important';
 			}
 		});
 	},
@@ -123,6 +155,9 @@ var modal = {
 			return modal.zoom.cb && modal.zoom.cb();
 		} else if (tapCount == 2)
 			modal.zoomToWidth(!modal.zoom.large && modal.zoom.z2width);
+	},
+	callWeb: function(direction) {
+		return modal.web.cb && modal.web.cb();
 	},
 	_backOn: function(degree, cb, injectionNode, opacity) {
 		if (modal.trans.animating) {
@@ -262,7 +297,10 @@ var modal = {
 	},
 	zoomIn: function (card, cb) {
 		modal.zoom.zoomed = true;
-		modal.zoom.firstChild.firstChild.src = image.get(card).url;
+		if (card.source == 'urx/buzzfeed' && card.image.huge)
+			modal.zoom.firstChild.firstChild.src = card.image.huge.url;
+		else
+			modal.zoom.firstChild.firstChild.src = image.get(card).url;
 		modal.zoom.cb = cb || modal.zoomOut;
 		modal.zoom.style.display = "block";
 		modal.zoom.style['opacity'] = "1.0";
@@ -275,6 +313,28 @@ var modal = {
 			modal.zoom.style.display = "none";
 		});
 	},
+	webIn: function (card, cb) {
+		var iframe = modal.web.firstChild.firstChild;
+		modal.web.out = true;
+		iframe.src = card.data.web_link;
+		modal.web.cb = cb || modal.webOut;
+		modal.web.style.display = "block";
+		gesture.preventDefault = false;
+		gesture.stopPropagation = false;
+		modal.web.style['opacity'] = "1.0";
+	},
+	webOut: function () {
+		modal.web.out = false;
+		modal.web.cb = null;
+		modal.web.firstChild.firstChild.src = '';
+		modal.web.style.opacity = 0;
+		gesture.preventDefault = true;
+		gesture.stopPropagation = true;
+		trans(modal.web, function (event){
+			// modal.web.className -= " modalslide";
+			modal.web.style.display = "none";
+		});
+	},
 	dragZoom: function (direction, distance, dx, dy) {
 		var zNodeContainer = modal.zoom,
 			atTop = (zNodeContainer.scrollTop === 0),
@@ -283,6 +343,23 @@ var modal = {
 				=== zNodeContainer.clientHeight),
 			atLeft = (zNodeContainer.scrollWidth - zNodeContainer.scrollLeft
 				=== zNodeContainer.clientWidth);
+		if ((atTop && direction == "down") ||
+			(atBottom && direction == "up") ||
+			(atLeft && direction == "left") ||
+			(atRight && direction == "right"))
+		{
+			return;
+		}
+		return true;
+	},
+	dragWeb: function (direction, distance, dx, dy) {
+		var wNodeContainer = modal.web,
+			atTop = (wNodeContainer.scrollTop === 0),
+			atRight = (wNodeContainer.scrollLeft === 0),
+			atBottom = (wNodeContainer.scrollHeight - wNodeContainer.scrollTop 
+				=== wNodeContainer.clientHeight),
+			atLeft = (wNodeContainer.scrollWidth - wNodeContainer.scrollLeft
+				=== wNodeContainer.clientWidth);
 		if ((atTop && direction == "down") ||
 			(atBottom && direction == "up") ||
 			(atLeft && direction == "left") ||
