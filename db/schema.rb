@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141219061609) do
+ActiveRecord::Schema.define(version: 20141219084504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,7 +90,7 @@ ActiveRecord::Schema.define(version: 20141219061609) do
     t.integer  "referable_id"
     t.string   "referable_type"
     t.integer  "user_id"
-    t.integer  "referer"
+    t.integer  "referer_id"
     t.string   "referrer_type"
     t.datetime "created_at"
     t.datetime "updated_at"

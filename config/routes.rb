@@ -79,6 +79,9 @@ Tagsurf::Application.routes.draw do
     get  'favorites/previous/:id'        => 'favorites#previous_history'
     post 'favorites/:card_id'            => 'favorites#create'
     delete 'favorites/:card_id'          => 'favorites#delete'
+
+    # Referrals API
+    post 'referral/:card_id/:user_ids'   => 'referrals#create'
   end
 
   get '/desktop' => 'client#desktop'
