@@ -6,7 +6,7 @@ class Api::ReferralsController < Api::BaseController
     @success = false
     users = Array.new
     if ref_params[:user_ids].include?(',')
-      users = media_params[:user_ids].delete'{}'
+      users = ref_params[:user_ids].delete'{}'
       users = users.split(',')
       puts "#{users}"
     else
