@@ -7,7 +7,7 @@ class Media < ActiveRecord::Base
 
   has_many :votes, :foreign_key => :votable_id
   has_many :favorites
-  has_many :referrals, :foreign_key => :referable_id
+  has_many :referrals, :foreign_key => :referrable_id
 
   validates_uniqueness_of :remote_id, :image_link_original
 

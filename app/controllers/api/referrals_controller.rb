@@ -13,14 +13,14 @@ class Api::ReferralsController < Api::BaseController
       users << ref_params[:user_ids]
     end
     users.each do |user|
-      ref = Referral.new(
-        referer_id: @user.id,
+      @ref = Referral.new(
+        referrer_id: @user.id,
         referrer_type: "User", 
-        referable_id: ref_params[:card_id],
-        referable_type: "Media",
+        referrable_id: ref_params[:card_id],
+        referrable_type: "Media",
         user_id: user
       )
-      @success = ref.save
+      @success = @ref.save
     end
     if @success
       render json: {created: true}, status: :ok

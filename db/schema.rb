@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141219084504) do
+ActiveRecord::Schema.define(version: 20141219162845) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,14 +87,19 @@ ActiveRecord::Schema.define(version: 20141219084504) do
   add_index "media", ["viral"], name: "index_media_on_viral", using: :btree
 
   create_table "referrals", force: true do |t|
-    t.integer  "referable_id"
-    t.string   "referable_type"
+    t.integer  "referrable_id"
+    t.string   "referrable_type"
     t.integer  "user_id"
-    t.integer  "referer_id"
+    t.integer  "referrer_id"
     t.string   "referrer_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "voted",           default: false, null: false
   end
+
+  add_index "referrals", ["referrable_id"], name: "index_referrals_on_referrable_id", using: :btree
+  add_index "referrals", ["user_id"], name: "index_referrals_on_user_id", using: :btree
+  add_index "referrals", ["voted"], name: "index_referrals_on_voted", using: :btree
 
   create_table "taggings", force: true do |t|
     t.integer  "tag_id"
