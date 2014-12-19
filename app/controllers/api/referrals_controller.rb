@@ -8,7 +8,6 @@ class Api::ReferralsController < Api::BaseController
     if ref_params[:user_ids].include?(',')
       users = ref_params[:user_ids].delete'{}'
       users = users.split(',')
-      puts "#{users}"
     else
       users << ref_params[:user_ids]
     end
