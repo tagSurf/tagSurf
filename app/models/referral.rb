@@ -2,7 +2,7 @@ class Referral < ActiveRecord::Base
   validates_presence_of :user_id
   validates_presence_of :referrer_id
   validates_presence_of :referrable_id
-  validates_uniqueness_of :user_id, :scope => :referrer_id, :scope => :referrable_id, :message => "referral already made."
+  validates_uniqueness_of :user_id, scope: [:referrer_id, :referrable_id], :message => "referral already made."
 
 	default_scope { where(voted: false) }
 
