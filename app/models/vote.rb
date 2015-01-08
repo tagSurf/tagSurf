@@ -7,6 +7,7 @@ class Vote < ActiveRecord::Base
 
   after_commit :relate_tag,        on: :create
   after_commit :update_tag_feed,   if: :persisted?
+  after_commit :check_referrals,   on: :create
 
   def self.paginated_history(user_id, limit, offset, safe) 
     if safe
@@ -60,6 +61,13 @@ class Vote < ActiveRecord::Base
     else
       tag.nsfw_tag_feed[tag.name] = Vote.where(vote_tag: tag.name).count
       tag.safe_tag_feed[tag.name] = Vote.where(vote_tag: tag.name).count
+    end
+  end
+
+  def check_referrals
+    referrals = Referral.where(user_id: self.voter_id).where(referrable_id: self.votable_id)
+    referrals.each do |ref|
+      ref.update_column("voted", true);
     end
   end
    

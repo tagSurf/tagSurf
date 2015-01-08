@@ -4,6 +4,8 @@ class Referral < ActiveRecord::Base
   validates_presence_of :referrable_id
   validates_uniqueness_of :user_id, :scope => :referrer_id, :scope => :referrable_id, :message => "referral already made."
 
+	default_scope { where(voted: false) }
+
   belongs_to :user
   belongs_to :media
 
