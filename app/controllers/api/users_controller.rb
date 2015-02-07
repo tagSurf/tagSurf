@@ -102,6 +102,10 @@ class Api::UsersController < Api::BaseController
     end
   end
 
+  def buddies
+    render json: User.select(:id, :email).all.map{|user| [user.id, user.email]}
+  end
+
   private
 
     def user_params

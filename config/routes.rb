@@ -64,6 +64,7 @@ Tagsurf::Application.routes.draw do
     # Users API
     get  'users/:id/stats'               => 'votes#stats'
     get  'users'                         => 'users#stats'
+    get  'users/buddies'                 => 'users#buddies'
     patch  'users/:id'                   => 'users#update'
 
     # History API
