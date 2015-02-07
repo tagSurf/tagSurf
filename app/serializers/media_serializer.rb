@@ -18,7 +18,8 @@ class MediaSerializer < BaseSerializer
     :up_votes,
     :score,
     :type,
-    :trend
+    :trend,
+    :referral
   )
 
   def media
@@ -184,6 +185,18 @@ class MediaSerializer < BaseSerializer
   def trend
     return nil if type == 'login'
     [*1..10].sample.odd? ? 'up' : 'down'
+  end
+
+  def referral
+    return nil if media.referred.nil?
+    referral = Array.new
+    media.referrers.each do |ref|
+      referral << {
+        user_id: ref.id,
+        username: ref.email
+      }
+    end
+    referral
   end
 
   

@@ -16,6 +16,9 @@ class Media < ActiveRecord::Base
 
   scope :nsfw, ->(boolean) { where("nsfw = ?", boolean) }
 
+  attr_accessor :referred
+  attr_accessor :referrers
+
   # Imgur specific
   before_create :resize_image_links
   def resize_image_links
@@ -131,6 +134,15 @@ class Media < ActiveRecord::Base
           referral_ids << ref.referrable_id
         end
         @media = @media.where('id in (?)', referral_ids).order('ts_score DESC NULLS LAST')
+        @media.each do |m|
+          m.referred = true
+          users = Array.new
+          ref = Referral.where(referrable_id: m.id)
+          ref.each do |r|
+            users << r.referrer_id
+          end
+          m.referrers = User.where('id in(?)', users)
+        end 
       else
         if tags.include?('trending') && tags.length == 1
           if user.safe_mode? 
