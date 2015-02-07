@@ -14,8 +14,8 @@ class Referral < ActiveRecord::Base
   private 
 
   def find_vote
-  	votes = Vote.where(voter_id: self.user_id).where(votable_id: self.referrable_id)
-  	if !votes.empty?
+  	vote = Vote.where(voter_id: self.user_id).where(votable_id: self.referrable_id)
+  	if !vote.empty?
   		self.update_column("voted", true)
   	end
 	end
