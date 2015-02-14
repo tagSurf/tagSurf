@@ -10,6 +10,7 @@ var card_proto = {
 			this.web_link = data.web_link;
 			this.deep_link = data.deep_link;
 			this.source = data.source;
+			this.referral = data.referral;
 			data.tags.forEach(function(tag) { 
 				self.tags.push(tag); 
 			});
@@ -40,7 +41,9 @@ var card_proto = {
 			imageTemplate = (card.type.indexOf('web') != -1) ? "<a href='" + (isAndroid() ? (card.deep_link ? card.deep_link : card.web_link) : card.web_link) + "' target='_blank'>" + "<div class='image-container expand-animation'><img src= ></div></a>" : "<div class='image-container expand-animation'><img src= ></div>",
 			cardTemplate = imageTemplate + "<div class='icon-line'>" +
 			"<a href='" + (card.deep_link ? card.deep_link : card.web_link) + "' target='_blank'><div id='source-btn'><img class='source-icon' src='" + card.data.source_icon + "'></div></a>" +
-			"<span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + Object.keys(card.data.tags[0])[0] + "</span></div><div class='text-container'><p>" + card.data.caption + "</p></div><div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
+			"<span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + Object.keys(card.data.tags[0])[0] + "</span>" +
+			"<div id='refer-btn' class='msgbox-btn'>Share!</div>" + 			
+			"</div><div class='text-container'><p>" + card.data.caption + "</p></div><div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
 		this.surfsUp = true;
 		formattingContainer.appendChild(container);
 		container.className = 'card-container';
@@ -77,6 +80,16 @@ var card_proto = {
 		    dispatch.initEvent("click", true, true);
 		    current_deck.topCard().contents.children[1].children[0].dispatchEvent(dispatch);
 		});
+		gesture.listen("tap", iconLine.children[2], function() {
+			share.open();
+		});
+		gesture.listen("down", iconLine.children[2], function () {
+		    iconLine.children[2].classList.add('ts-active-button');
+	    });
+		gesture.listen("up", iconLine.children[2], function () {
+		    iconLine.children[2].classList.remove('ts-active-button');
+	    });
+
 		this.tags.sort(function(a, b) {
 			var aName = Object.keys(a)[0];
 			var bName = Object.keys(b)[0];
@@ -591,6 +604,7 @@ var newCard = function (data) {
 	card.animating = false;
 	card.rAFid = null;
 	card.time = null;
+	card.referral = null;
 	card.x = card.y = 0;
 	card.wrapper = document.createElement('div');
 	card.contents = document.createElement('div');

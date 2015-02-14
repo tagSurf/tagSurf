@@ -142,6 +142,16 @@ a {
 	font-weight: 200;
 }
 
+/*===== Refer Btn Stuff ======*/
+#refer-btn {
+	display: inline-block !important;
+	position: absolute;
+	left: 0;
+	right: 0;
+	margin-top: -2px;
+	max-width: 30%;
+}
+
 /*===== Modal Backing Stuff =====*/
 .blackout {
 	pointer-events: none;
@@ -861,6 +871,11 @@ a {
 	}
 	.share-link-icon {
 		padding: 0 50px;
+	}
+
+	/*===== Referral Button Stuff =====*/
+	#refer-btn {
+		margin-top: -4px;
 	}
 	
 	/*===== Panic Button =====*/
