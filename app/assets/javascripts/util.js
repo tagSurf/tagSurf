@@ -268,6 +268,7 @@ var currentMedia, panicCb, //def in feed
     var d = currentMedia;
     if (d && d.type.indexOf("content") != -1) {
       share.on(d, shareCb);
+      refer.on(d);
       if(whichGallery()) //no panic modal in galleries
         return;
       else

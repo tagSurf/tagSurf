@@ -126,6 +126,7 @@ a {
 /*===== Pic Tags Stuff =====*/
 .pictags {
 	text-align: center;
+	font-size: 18px;
 }
 .pictags span {
 	display: inline-block;
@@ -147,12 +148,11 @@ a {
 
 /*===== Refer Btn Stuff ======*/
 #refer-btn {
-	display: inline-block !important;
-	position: absolute;
+	display: block !important;
 	left: 0; 
 	right: 0;
-	margin-top: -2px;
-	max-width: 30%;
+	margin-top: 10px;
+	max-width: 40%;
 }
 .referrals {
 	border: 2px solid #00aeef;
@@ -213,6 +213,43 @@ a {
 	-webkit-overflow-scrolling: auto;
 }
 
+/*======== Refer Buddy List Stuff =========*/
+.buddy-list-container {
+	border: 1px solid #00aeef;
+	border-radius: 5px;
+	min-height: 500px;
+	margin: 2%;
+}
+.send-btn {
+	max-width: 15% !important;
+}
+.search-bar {
+	background: #6a6a6a;
+	border-radius: 50px;
+	height: 38px;
+	width: 400px;
+	margin: 10px auto;
+}
+.search-icon {
+	height: 27px;
+	display: inline;
+	float: left;
+	margin: 6px 12px;
+}
+#buddy-search {
+	display: inline;
+	position: relative;
+	float: left;
+	margin: 2px 0 2px -10px;
+	height: 88%;
+	width: 85%;
+	color: white;
+	font-weight: 100;
+	border: none;
+	background: #6a6a6a;
+}
+
+
 /*======== Modal Close Button Stuff =========*/
 .modal-close-button {
 	width: 40px;
@@ -228,6 +265,11 @@ a {
 	right: 10px;
 }
 #share-close-button {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+#refer-close-button {
 	position: absolute;
 	bottom: 10px;
 	right: 10px;

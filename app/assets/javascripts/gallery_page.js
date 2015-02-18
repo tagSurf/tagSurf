@@ -21,6 +21,7 @@
 //= require autocomplete
 //= require share
 //= require panic
+//= require refer
 //= require gallery
 //= require global
 //= require global-functions
