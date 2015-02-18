@@ -602,7 +602,7 @@ var card_proto = {
 			pic.className = "user-pic";
 			pic.src = "http://assets.tagsurf.co/img/UserAvatar.png";
 			usr.className = "user-name";
-			usr.innerHTML = r.username;
+			usr.innerHTML = r.username.split("@")[0];
 			cell.appendChild(pic);
 			cell.appendChild(usr);
 			referralBox.appendChild(cell);

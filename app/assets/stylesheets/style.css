@@ -213,7 +213,7 @@ a {
 	-webkit-overflow-scrolling: auto;
 }
 
-/*======== Refer Buddy List Stuff =========*/
+/*======== Referral Modal Stuff =========*/
 .buddy-list-container {
 	border: 1px solid #00aeef;
 	border-radius: 5px;
@@ -248,7 +248,30 @@ a {
 	border: none;
 	background: #6a6a6a;
 }
-
+.buddy-cell {
+	border: 1px solid white;
+	border-radius: 5px;
+	width: 95%;
+	margin:5px auto;
+	max-height: 140px;
+	text-align: initial !important;
+}
+.buddy-pic {
+	width: 118px;
+	margin: 10px;
+}
+.buddy-name {
+	top:0;
+	bottom: 0;
+	width: 65%;
+	display: inline-block;
+	font-size: 400%;
+	margin-left: 3%;
+	transform: translateY(-48px);
+}
+.checkmark {
+	width: 12%;
+}
 
 /*======== Modal Close Button Stuff =========*/
 .modal-close-button {

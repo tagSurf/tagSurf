@@ -64,20 +64,20 @@ var refer = {
 	_updateList: function()
 	{
 		var buddyList = refer.content.children[2];
-
-		console.log("buddyList = " + buddyList);
-
 		refer.buddies.forEach(function(b) {
 			var buddyCell = document.createElement('div'),
 				buddyPic = document.createElement('img'),
+				buddyName = document.createElement('div'),
 				checkmark = document.createElement('img');
 			buddyCell.className = 'buddy-cell';
 			buddyPic.src = "http://assets.tagsurf.co/img/UserAvatar.png";
-			buddyPic.className = 'buddyPic';
+			buddyPic.className = 'buddy-pic';
+			buddyName.className = 'buddy-name';
+			buddyName.innerHTML = b.users[1].split("@")[0];	
 			checkmark.src = "http://assets.tagsurf.co/img/Checkmark.png";
 			checkmark.className = 'checkmark hidden';
 			buddyCell.appendChild(buddyPic);
-			buddyCell.innerHTML += b.users[1];	
+			buddyCell.appendChild(buddyName);
 			buddyCell.appendChild(checkmark);
 			gesture.listen("down", buddyCell, function() {
 				buddyCell.classList.add('active-buddy-cell');
@@ -85,8 +85,8 @@ var refer = {
 			gesture.listen("up", buddyCell, function() {
 				buddyCell.classList.remove('active-buddy-cell');
 			});
-			gesture.listen("tap", buddyCell, function(b) {
-				console.log(b.username);
+			gesture.listen("tap", buddyCell, function(buddy) {
+				console.log(buddy.users[0]);
 			});
 			buddyList.appendChild(buddyCell);
 		});
