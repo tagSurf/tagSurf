@@ -87,14 +87,29 @@ var refer = {
 			buddyCell.appendChild(buddyName);
 			buddyCell.appendChild(checkmark);
 			gesture.listen("down", buddyCell, function() {
-				buddyCell.classList.add('active-buddy-cell');
+				if (listContainer.dragging)
+					return;
+				gesture.triggerDown(listContainer);
+				return true;
 			});
-			gesture.listen("up", buddyCell, function() {
-				buddyCell.classList.remove('active-buddy-cell');
+			gesture.listen("up", buddyCell, function(direction, distance, dx, dy) {
+				if (listContainer.dragging)
+					return;
+				gesture.triggerDrag(listContainer, direction, distance, dx, dy);
+				return true;			
+			});
+			gesture.listen("swipe", buddyCell, function(direction, distance, dx, dy, pixelsPerSecond) {
+				gesture.triggerSwipe(listContainer, direction, distance, dx, dy, pixelsPerSecond);
 			});
 			gesture.listen("tap", buddyCell, function() {
+				if (listContainer.dragging)
+					return;
 				toggleClass.call(checkmark, "hidden");
 				toggleClass.call(buddyCell, "selected-cell");
+			});
+			gesture.listen("drag", buddyCell, function(direction, distance, dx, dy, pixelsPerSecond) {
+				gesture.triggerDrag(listContainer, direction, distance, dx, dy, pixelsPerSecond);
+				return true;
 			});
 			++position;
 		});

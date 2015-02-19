@@ -294,7 +294,7 @@ a {
 	float: right;
 	margin: 15px 10px 0 0;
 }
-.active-buddy-cell {
+.buddy-cell:active {
 	color: #404041;
 	background-color: #00719C !important;
 	border-color: #00719C !important;
