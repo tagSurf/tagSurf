@@ -11,15 +11,15 @@ var refer = {
 	},
 	_buildContent: function ()
 	{
-		var heading = document.createElement("div"),
-			searchBar = document.createElement("div"),
-			searchIcon = document.createElement("img"),
+		var heading = document.createElement('div'),
+			searchBar = document.createElement('div'),
+			searchIcon = document.createElement('img'),
 			searchInput = document.createElement('input'),
-			listContainer = document.createElement("div"),
-			closebtn = document.createElement("img"),
-			sendbtn = document.createElement("div");
-		heading.className = "really-big";
-		heading.innerHTML = "Recommend This To";
+			listContainer = document.createElement('div'),
+			closebtn = document.createElement('img'),
+			sendbtn = document.createElement('div');
+		heading.className = "buddy-title";
+		heading.innerHTML = "Recommend This";
 		searchBar.className = "search-bar";
 		searchIcon.src = "http://assets.tagsurf.co/img/search_white.png"
 		searchIcon.className = "search-icon";
@@ -32,13 +32,14 @@ var refer = {
 		searchBar.appendChild(searchIcon);
 		searchBar.appendChild(searchInput);
 		listContainer.className = "buddy-list-container";
-		listContainer.id = "buddy-list";
 		closebtn.src = "http://assets.tagsurf.co/img/Close.png";
 		closebtn.className = "modal-close-button";
 		closebtn.id = "refer-close-button";
-		sendbtn.className = "msgbox-btn really-big send-btn";
+		sendbtn.className = "msgbox-btn send-btn";
+		sendbtn.classList.add(isMobile() ? "biggest" : "really-big");
 		sendbtn.innerHTML = "Send";
 		refer.content.className = "centered";
+		refer.content.style.height = "100%";
 		refer.content.appendChild(heading);
 		refer.content.appendChild(searchBar);
 		refer.content.appendChild(listContainer);
@@ -63,9 +64,15 @@ var refer = {
 	},
 	_updateList: function()
 	{
-		var buddyList = refer.content.children[2];
+		var listContainer = refer.content.children[2],
+			buddyList = document.createElement('table'),
+			position = 0;
+		buddyList.id = "buddy-list";
+		listContainer.innerHTML = "";
+
 		refer.buddies.forEach(function(b) {
-			var buddyCell = document.createElement('div'),
+			var row = buddyList.insertRow(position),
+				buddyCell = row.insertCell(0),
 				buddyPic = document.createElement('img'),
 				buddyName = document.createElement('div'),
 				checkmark = document.createElement('img');
@@ -73,8 +80,8 @@ var refer = {
 			buddyPic.src = "http://assets.tagsurf.co/img/UserAvatar.png";
 			buddyPic.className = 'buddy-pic';
 			buddyName.className = 'buddy-name';
-			buddyName.innerHTML = b.users[1].split("@")[0];	
-			checkmark.src = "http://assets.tagsurf.co/img/Checkmark.png";
+			buddyName.innerHTML += b.users[1].split("@")[0];  
+			checkmark.src = "http://assets.tagsurf.co/img/Checkmark_white.png";
 			checkmark.className = 'checkmark hidden';
 			buddyCell.appendChild(buddyPic);
 			buddyCell.appendChild(buddyName);
@@ -85,12 +92,14 @@ var refer = {
 			gesture.listen("up", buddyCell, function() {
 				buddyCell.classList.remove('active-buddy-cell');
 			});
-			gesture.listen("tap", buddyCell, function(buddy) {
-				console.log(buddy.users[0]);
+			gesture.listen("tap", buddyCell, function() {
+				toggleClass.call(checkmark, "hidden");
+				toggleClass.call(buddyCell, "selected-cell");
 			});
-			buddyList.appendChild(buddyCell);
+			++position;
 		});
-
+		listContainer.appendChild(buddyList);
+	    drag.makeDraggable(listContainer, {constraint: "horizontal"});
 	},
 	on: function (card)
 	{
