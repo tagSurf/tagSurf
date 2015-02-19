@@ -54,6 +54,12 @@ var refer = {
 		gesture.listen("up", sendbtn, function () {
 		    sendbtn.classList.remove('ts-active-button');
 	    });
+
+	    gesture.listen("down", searchBar, function() {
+	    	var tinput = searchBar.children[1];
+	    	tinput.active = true;
+	    	tinput.focus();
+	    });
 	},
 	_populateBuddies: function ()
 	{
@@ -75,12 +81,15 @@ var refer = {
 				buddyCell = row.insertCell(0),
 				buddyPic = document.createElement('img'),
 				buddyName = document.createElement('div'),
-				checkmark = document.createElement('img');
+				checkmark = document.createElement('img'),
+				username = b.users[1].split("@")[0];  
 			buddyCell.className = 'buddy-cell';
+			for (var i = 1; i <= username.length; i++)
+				buddyCell.className += " " + username.slice(0, i);
 			buddyPic.src = "http://assets.tagsurf.co/img/UserAvatar.png";
 			buddyPic.className = 'buddy-pic';
 			buddyName.className = 'buddy-name';
-			buddyName.innerHTML += b.users[1].split("@")[0];  
+			buddyName.innerHTML += username;  
 			checkmark.src = "http://assets.tagsurf.co/img/Checkmark_white.png";
 			checkmark.className = 'checkmark hidden';
 			buddyCell.appendChild(buddyPic);

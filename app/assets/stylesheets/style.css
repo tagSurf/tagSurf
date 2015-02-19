@@ -229,7 +229,6 @@ a {
 }
 #buddy-list {
 	width: 100%;
-	border-spacing: 10px;
 }
 .buddy-list-container::-webkit-scrollbar {
 	display: initial !important;
