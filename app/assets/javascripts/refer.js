@@ -1,16 +1,14 @@
 var refer = {
 	cb: null,
-	buddies: null,
+	buddies: [],
 	card: null,
 	referModalOut: false,
 	content: document.createElement('div'),
-	build: function ()
-	{
+	build: function () {
 		refer._buildContent();
 		refer._populateBuddies();
 	},
-	_buildContent: function ()
-	{
+	_buildContent: function () {
 		var heading = document.createElement('div'),
 			searchBar = document.createElement('div'),
 			searchIcon = document.createElement('img'),
@@ -45,6 +43,7 @@ var refer = {
 		refer.content.appendChild(listContainer);
 		refer.content.appendChild(sendbtn);
 		refer.content.appendChild(closebtn);
+
 		gesture.listen("tap", sendbtn, function() {
 	// Select the cell
 		});
@@ -57,32 +56,45 @@ var refer = {
 
 	    gesture.listen("down", searchBar, function() {
 	    	var tinput = searchBar.children[1];
-	    	tinput.active = true;
-	    	tinput.focus();
+		    	tinput.active = true;
+		    	tinput.focus();
+	    });
+	    gesture.listen("tap", searchBar, function() {
+	    	var tinput = searchBar.children[1];
+		    	tinput.active = true;
+		    	tinput.focus();
 	    });
 	},
-	_populateBuddies: function ()
-	{
+	startInput: function() {
+
+	},
+	_populateBuddies: function () {
 		xhr("/api/users/buddies", "GET", function(response_data) {
-			refer.buddies = response_data.users;
-			refer._updateList();
+			refer._updateList(response_data.users);
 		});
 	},
-	_updateList: function()
-	{
+	_updateList: function(buddies) {
 		var listContainer = refer.content.children[2],
 			buddyList = document.createElement('table'),
 			position = 0;
 		buddyList.id = "buddy-list";
 		listContainer.innerHTML = "";
 
-		refer.buddies.forEach(function(b) {
+		buddies.forEach(function(b) {
 			var row = buddyList.insertRow(position),
 				buddyCell = row.insertCell(0),
 				buddyPic = document.createElement('img'),
 				buddyName = document.createElement('div'),
 				checkmark = document.createElement('img'),
-				username = b.users[1].split("@")[0];  
+				username = b.users[1].split("@")[0],
+				buddy = {
+					id: b.users[0],
+					username: username,
+					cell: buddyCell, 
+					selected: false
+				};
+			refer.buddies.push(buddy);
+
 			buddyCell.className = 'buddy-cell';
 			for (var i = 1; i <= username.length; i++)
 				buddyCell.className += " " + username.slice(0, i);
@@ -114,6 +126,7 @@ var refer = {
 				if (listContainer.dragging)
 					return;
 				toggleClass.call(checkmark, "hidden");
+				buddy.selected = !buddy.selected;
 				toggleClass.call(buddyCell, "selected-cell");
 			});
 			gesture.listen("drag", buddyCell, function(direction, distance, dx, dy, pixelsPerSecond) {
@@ -123,10 +136,10 @@ var refer = {
 			++position;
 		});
 		listContainer.appendChild(buddyList);
+	    
 	    drag.makeDraggable(listContainer, {constraint: "horizontal"});
 	},
-	on: function (card)
-	{
+	on: function (card) {
 		if (card)
 			refer.card = card;
 	},
