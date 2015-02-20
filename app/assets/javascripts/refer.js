@@ -45,7 +45,26 @@ var refer = {
 		refer.content.appendChild(closebtn);
 
 		gesture.listen("tap", sendbtn, function() {
-	// Select the cell
+			var selectionList = [];
+			modal.topModalOut();
+			searchBar.children[1].value = "";
+			refer.buddies.forEach(function(b) {
+				if(b.selected) {
+					selectionList.push(b.id)
+					b.selected = !b.selected;
+					toggleClass.call(b.cell, "selected-cell");
+					toggleClass.call(b.cell.children[2], "hidden");
+				}
+			});
+			if (selectionList.length == 0) {
+				return;
+			} else if (selectionList.lenght > 1) {
+				var path = "/api/referral/" + refer.card.id + "/{" + selectionList.join(',') + "}";
+				xhr(path, "POST", function(response_data) {  });
+			} else {
+				var path = "/api/referral/" + refer.card.id + "/" + selectionList[0];
+				xhr(path, "POST", function(response_data) {  });
+			}			
 		});
 		gesture.listen("down", sendbtn, function () {
 		    sendbtn.classList.add('ts-active-button');
