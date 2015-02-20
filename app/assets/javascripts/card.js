@@ -231,7 +231,7 @@ var card_proto = {
 		gesture.listen("hold", this.wrapper, this.cbs.hold);
 		gesture.listen("down", this.wrapper, this.cbs.down);
 		if(this.type != "login") this._initImageGestures();
-		drag.makeDraggable(this.contents.children[4].lastChild, {constraint: "vertical"});
+		drag.makeDraggable(this.contents.children[4].lastChild, { constraint: "vertical" });
 	},
 	_initLoginInputs: function () {
 		var listInputs = document.forms[0].getElementsByClassName('su-input'),

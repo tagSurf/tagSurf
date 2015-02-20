@@ -33,7 +33,9 @@ var drag = {
 		};
 		gesture.listen("drag", n, function (direction, distance, dx, dy) {
 			var atBottom = (n.parentNode.scrollHeight - n.parentNode.scrollTop 
-				=== n.parentNode.clientHeight), atTop = (n.parentNode.scrollTop === 0);
+				=== n.parentNode.clientHeight), atTop = (n.parentNode.scrollTop === 0),
+				atLeft = (n.parentNode.scrollLeft === 0), atRight = (n.parentNode.clientWidth 
+				+ n.parentNode.scrollLeft === n.parentNode.scrollWidth);
 			lastDirection = direction;
 			if (opts.drag)
 				opts.drag(direction, distance, dx, dy);

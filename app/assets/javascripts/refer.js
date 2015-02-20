@@ -48,6 +48,12 @@ var refer = {
 			var selectionList = [];
 			modal.topModalOut();
 			searchBar.children[1].value = "";
+			mod({
+				className: "buddy-cell",
+				show: true,
+				value: "table-cell"
+			});
+			document.getElementById('buddy-list').style.borderSpacing = "2px";
 			refer.buddies.forEach(function(b) {
 				if(b.selected) {
 					selectionList.push(b.id)
