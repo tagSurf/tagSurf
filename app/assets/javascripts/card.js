@@ -10,6 +10,7 @@ var card_proto = {
 			this.web_link = data.web_link;
 			this.deep_link = data.deep_link;
 			this.source = data.source;
+			this.referral = data.referral;
 			data.tags.forEach(function(tag) { 
 				self.tags.push(tag); 
 			});
@@ -38,19 +39,24 @@ var card_proto = {
 			formattingContainer = document.getElementById('formatter'),
 			card = this,
 			imageTemplate = (card.type.indexOf('web') != -1) ? "<a href='" + (isAndroid() ? (card.deep_link ? card.deep_link : card.web_link) : card.web_link) + "' target='_blank'>" + "<div class='image-container expand-animation'><img src= ></div></a>" : "<div class='image-container expand-animation'><img src= ></div>",
-			cardTemplate = imageTemplate + "<div class='icon-line'>" +
+			cardTemplate = imageTemplate + 
+			"<div id='refer-btn' class='msgbox-btn'>Recommend!</div>" + 				
+			"<div class='icon-line'>" +
 			"<a href='" + (card.deep_link ? card.deep_link : card.web_link) + "' target='_blank'><div id='source-btn'><img class='source-icon' src='" + card.data.source_icon + "'></div></a>" +
-			"<span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + Object.keys(card.data.tags[0])[0] + "</span></div><div class='text-container'><p>" + card.data.caption + "</p></div><div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
+			"<span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + Object.keys(card.data.tags[0])[0] + "</span>" +
+			"</div><div class='text-container'><p>" + card.data.caption + "</p></div>" +
+			(this.referral ? "<div class='referrals'>Recommended For You By<div class='referral-scroller'></div></div>" : "") +
+			"<div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
 		this.surfsUp = true;
 		formattingContainer.appendChild(container);
 		container.className = 'card-container';
 		this.wrapper.className = 'card-wrapper';
 		container.innerHTML = cardTemplate;
 		imageContainer = container.children[0];
-		iconLine = container.children[1];
-		textContainer = container.children[2];
-		picTags = container.children[3];
-		fullscreenButton = container.children[4];
+		iconLine = container.children[2];
+		textContainer = container.children[3];
+		picTags = this.referral ? container.children[5] : container.children[4];
+		fullscreenButton = this.referral ? container.children[6] : container.children[5];
 		if (this.trending && (current_tag == "trending")) {
 			gesture.listen("down", iconLine.children[1], function() {
 				iconLine.children[1].classList.add("active-tag-callout");
@@ -75,8 +81,21 @@ var card_proto = {
 			if(isDesktop()) return;
 			var dispatch = document.createEvent("HTMLEvents");
 		    dispatch.initEvent("click", true, true);
-		    current_deck.topCard().contents.children[1].children[0].dispatchEvent(dispatch);
+		    current_deck.topCard().contents.children[2].children[0].dispatchEvent(dispatch);
 		});
+		gesture.listen("tap", container.children[1], function() {
+			refer.open();
+		});
+		gesture.listen("down", container.children[1], function () {
+		    current_deck.topCard().contents.children[1].classList.add('ts-active-button');
+	    });
+		gesture.listen("up", container.children[1], function () {
+		    current_deck.topCard().contents.children[1].classList.remove('ts-active-button');
+	    });
+
+	    if (this.referral)
+	    	this.populateReferrals();
+
 		this.tags.sort(function(a, b) {
 			var aName = Object.keys(a)[0];
 			var bName = Object.keys(b)[0];
@@ -112,11 +131,11 @@ var card_proto = {
 			return;
 		var imageContainer = (this.type.indexOf("web") != -1) ? this.contents.firstChild.firstChild 
 																	:this.contents.firstChild,
-			fullscreenButton = this.contents.children[4], 
+			fullscreenButton = this.referral ? this.contents.children[6] : this.contents.children[5], 
 			truncatedTitle,
-			picTags = this.contents.children[3], 
-			textContainer = this.contents.children[2],
-			iconLine = this.contents.children[1], 
+			picTags = this.referral ? this.contents.children[5] : this.contents.children[4], 
+			textContainer = this.contents.children[3],
+			iconLine = this.contents.children[2], 
 			targetHeight = imageData ? 
 				imageData.height * (window.innerWidth - 40) / imageData.width :
 				this.contents.firstChild.scrollHeight;
@@ -141,7 +160,12 @@ var card_proto = {
 			textContainer.innerHTML = truncatedTitle;
 			if (fullscreenButton.classList.contains('hidden'))
 				fullscreenButton.classList.remove('hidden');
+			if (this.referral) {
+				this.contents.children[4].className += ' hidden';
+				this.contents.className += ' referred';
+			}
 			picTags.className += ' hidden';
+			toggleClass.call(this.contents.children[1], "hidden");
 			this.compressing = true;
 			this.expanded = false;
 		}
@@ -207,6 +231,7 @@ var card_proto = {
 		gesture.listen("hold", this.wrapper, this.cbs.hold);
 		gesture.listen("down", this.wrapper, this.cbs.down);
 		if(this.type != "login") this._initImageGestures();
+		drag.makeDraggable(this.contents.children[4].lastChild, { constraint: "vertical" });
 	},
 	_initLoginInputs: function () {
 		var listInputs = document.forms[0].getElementsByClassName('su-input'),
@@ -406,17 +431,28 @@ var card_proto = {
 			this.expanded = true;
 			var imageContainer = this.type.indexOf('web') != -1 ? 
 									this.contents.children[0].children[0] 
-									: this.contents.children[0];
+									: this.contents.children[0],
+				picTags = this.referral ? 
+							this.contents.children[5] 
+							: this.contents.children[4],
+				fullscreenButton = this.referral ? 
+										this.contents.children[6] 
+										: this.contents.children[5];
 			//TODO: refactor this to make more pretty
 			if (imageContainer.className.indexOf("expanded") == -1)
 				imageContainer.className += " expanded";
-			this.contents.children[2].innerHTML = "<p>" + this.data.caption + "</p>";
+			this.contents.children[3].innerHTML = "<p>" + this.data.caption + "</p>";
 			if (currentUser.vote_btns && (isMobile() || isTablet()))
-				this.contents.children[3].style.paddingBottom="60px";
+				picTags.style.paddingBottom="60px";
 			if (this.type.indexOf("content") != -1)
-				toggleClass.call(this.contents.children[3], "hidden");
-			if (this.contents.children[4].className.indexOf("hidden") == -1)
+				toggleClass.call(picTags, "hidden");
+			if (fullscreenButton.className.indexOf("hidden") == -1)
+				toggleClass.call(fullscreenButton, "hidden");
+			toggleClass.call(this.contents.children[1], "hidden");
+			if (this.referral) {
 				toggleClass.call(this.contents.children[4], "hidden");
+				this.contents.classList.remove('referred');
+			}
 			this.cbs.expand && this.cbs.expand();
 			if (this.oneTimeCbs.expand) {
 				this.oneTimeCbs.expand();
@@ -441,7 +477,9 @@ var card_proto = {
 		var self = this,
 			isMine = this._isMine(tag),
 			p = document.createElement("div"),
-			pictags = (this.type.indexOf("content") != -1) ? this.contents.children[3] : this.contents.children[4];
+			pictags = (this.type.indexOf("content") != -1 && !this.referral) ? 
+						this.contents.children[4] 
+						: this.contents.children[5];
 		if (this.type.indexOf("content") != -1)
 			for (var i = 0; i < this.tags.length; i++) 
 				if (Object.keys(this.tags[i])[0] == tag) 
@@ -495,7 +533,7 @@ var card_proto = {
 	  for (var i = 0; i < tobjs.length; i++) {
 		if (Object.keys(tobjs[i])[0] == tag) {
 			tobjs.splice(i,1);
-			this.contents.children[3].removeChild(document.getElementById(this.id + tag));
+			this.contents.children[4].removeChild(document.getElementById(this.id + tag));
 			break;
 		}
 	  }
@@ -554,6 +592,24 @@ var card_proto = {
 		}
 		this.oneTimeCbs[action] = cb;
 	},
+	populateReferrals: function() {
+		if(!this.referral)
+			return;
+		referralBox = this.contents.children[4].lastChild
+		this.referral.forEach(function(r) {
+			cell = document.createElement('div');
+			pic = document.createElement('img');
+			usr = document.createElement('div');
+			cell.className = "user-cell";
+			pic.className = "user-pic";
+			pic.src = "http://assets.tagsurf.co/img/UserAvatar.png";
+			usr.className = "user-name";
+			usr.innerHTML = r.username.split("@")[0];
+			cell.appendChild(pic);
+			cell.appendChild(usr);
+			referralBox.appendChild(cell);
+		});
+	},
 	jiggle: function () {
 		var self = this,
 			cardContainer = this.contents;
@@ -591,6 +647,7 @@ var newCard = function (data) {
 	card.animating = false;
 	card.rAFid = null;
 	card.time = null;
+	card.referral = null;
 	card.x = card.y = 0;
 	card.wrapper = document.createElement('div');
 	card.contents = document.createElement('div');

@@ -61,7 +61,8 @@ def heroku_version
 end
 
 def has_heroku?
-  @has_heroku ||= (heroku_version =~ /^heroku-.+?\/\d+\.\d+\.\d+/) == 0
+  # @has_heroku ||= (heroku_version =~ /^heroku-.+?\/\d+\.\d+\.\d+/) == 0
+  @has_heroku = true
 end
 
 def heroku_instructions

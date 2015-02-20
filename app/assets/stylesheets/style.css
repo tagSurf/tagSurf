@@ -96,7 +96,7 @@ a {
 	font-size: 80%;
 }
 .normal {
-  font-size: 100%;
+	font-size: 100%;
 }
 .big {
 	font-size: 120%;
@@ -119,10 +119,14 @@ a {
 .light-gray {
 	color: #989898;
 }
+.referred {
+	border-color: #00aeef !important;
+}
 
 /*===== Pic Tags Stuff =====*/
 .pictags {
 	text-align: center;
+	font-size: 18px;
 }
 .pictags span {
 	display: inline-block;
@@ -140,6 +144,36 @@ a {
 	margin: 5px;
 	cursor: pointer;
 	font-weight: 200;
+}
+
+/*===== Refer Btn Stuff ======*/
+#refer-btn {
+	display: block;
+	left: 0; 
+	right: 0;
+	margin-top: 10px;
+	max-width: 40%;
+}
+.referrals {
+	border: 2px solid #00aeef;
+	border-radius: 5px;
+	text-align: center;
+	font-size: 1.5em;
+	margin: 20px 0;
+}
+.referral-scroller {
+	overflow-x: scroll;
+	white-space: nowrap;
+}
+.user-cell {
+	margin: 10px 0;
+	display: inline-block;
+}
+.user-name {
+	font-size: 0.7em;
+}
+.user-pic {
+	width: 40%;
 }
 
 /*===== Modal Backing Stuff =====*/
@@ -179,6 +213,113 @@ a {
 	-webkit-overflow-scrolling: auto;
 }
 
+/*======== Referral Modal Stuff =========*/
+.buddy-title {
+	font-size: 200%;
+}
+
+.buddy-list-container {
+	width: 100%;	
+	overflow-y: scroll;
+	border: 1px solid #00aeef;
+	border-radius: 5px;
+	margin: 2%;
+	width: 96%;	
+	max-height: 60%;
+}
+#buddy-list {
+	width: 100%;
+}
+.buddy-list-container::-webkit-scrollbar {
+	display: initial !important;
+	width: 12px;
+}
+.buddy-list-container::-webkit-scrollbar-thumb {
+	border-radius: 10px;
+	background-color: #00aeef;
+	min-height: 50px;
+}
+.send-btn {
+	max-width: 30% !important;
+	margin-top: 10px;
+}
+.search-bar {
+	background: #6a6a6a;
+	border-radius: 50px;
+	height: 38px;
+	width: 90%;
+	margin: 10px auto;
+}
+.search-icon {
+	height: 27px;
+	display: inline;
+	float: left;
+	margin: 6px 0 6px 12px;
+}
+#buddy-search {
+	display: inline;
+	position: relative;
+	float: left;
+	height: 100%;
+	width: 84%;
+	color: white;
+	font-weight: 100;
+	border: none;
+	background: #6a6a6a;
+	outline-width: 0px;
+	font-size: 180%;
+	font-weight: 100;
+	font-family: 'Raleway', 'sans-serif';  
+	-moz-border-bottom-top-radius: 50px;
+	-moz-border-bottom-left-radius: 0px;
+	-moz-border-bottom-bottom-radius: 0px;
+	-moz-border-bottom-right-radius: 50px;
+	-webkit-border-top-right-radius: 50px;
+	-webkit-border-top-left-radius: 0px;
+	-webkit-border-bottom-right-radius: 50px;
+	-webkit-border-bottom-left-radius: 0px;
+	border-top-right-radius: 50px;
+	border-top-left-radius: 0px;
+	border-bottom-right-radius: 50px;
+	border-bottom-left-radius: 0px;
+}
+.buddy-cell {
+	border: 1px solid white;
+	border-radius: 5px;
+	width: 97%;
+	margin: 15px 0 0 15px;
+	text-align: initial !important;
+	display: table-cell;
+	position: relative;
+}
+.buddy-pic {
+	width: 50px;
+	margin: 5px;
+}
+.buddy-name {
+	display: inline-block;
+	font-size: 150%;
+	margin-left: 3%;
+	vertical-align: top;
+	margin-top: 15px;
+}
+.checkmark {
+	width: 40px;
+	float: right;
+	margin: 15px 0 0 0;
+	position: absolute;
+	right: 10px;
+}
+.buddy-cell:active {
+	color: #404041;
+	background-color: #00719C !important;
+	border-color: #00719C !important;
+}
+.selected-cell {
+	background-color: #00aeef;
+	border-color: #00aeef !important;
+}
+
 /*======== Modal Close Button Stuff =========*/
 .modal-close-button {
 	width: 40px;
@@ -194,6 +335,11 @@ a {
 	right: 10px;
 }
 #share-close-button {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+}
+#refer-close-button {
 	position: absolute;
 	bottom: 10px;
 	right: 10px;
@@ -839,6 +985,16 @@ a {
 	    right: 0px; 
 }
 
+/*===== This Targets Anything Above iPhone 5 ========*/
+@media only screen and (min-width: 340px){
+	#buddy-search {
+		width: 86%;
+	}
+	.buddy-list-container {
+		max-height: 68%;
+	}
+}
+
 /*===== This targets tablets and desktops ========*/
 @media only screen and (min-width: 700px){
 	#add-tag-autocomplete {
@@ -861,6 +1017,11 @@ a {
 	}
 	.share-link-icon {
 		padding: 0 50px;
+	}
+
+	/*===== Referral Button Stuff =====*/
+	#refer-btn {
+		margin-top: -4px;
 	}
 	
 	/*===== Panic Button =====*/
@@ -980,4 +1141,37 @@ a {
 	    left: 41.5%;
 	    bottom: 17%;
     }
+    
+	/*===== Referral Window Stuff =====*/
+    .search-bar {
+		max-width: 400px;
+	}
+	.search-icon {
+		margin: 6px 12px;
+	}
+	.buddy-list-container {
+		max-height: 77%;
+	}
+	.buddy-tite {
+		font-size: 240%;
+	}
+	.buddy-pic {
+		width: 118px;
+		margin: 10px;
+	}
+	.buddy-name {
+		font-size: 400%;
+		margin-top: 34px;
+	}
+	.checkmark {
+		width: 100px;
+		margin: 33px 20px 0 0;
+	}
+	.send-btn {
+		max-width: 15% !important;
+	}
+	#buddy-search {
+		width: 87%;
+		margin: 0px 0 2px -3px;
+	}
 }

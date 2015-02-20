@@ -131,6 +131,18 @@ var share = {
 		share.button.appendChild(shareIcon);
 		document.body.appendChild(share.button);
 	},
+	open: function() {
+		if(panic.panicModalOut)
+			panic.close();
+		modal.topModalIn(share.content, share.close);
+		share.shareModalOut = true;
+		analytics.track('Open Share Window', {
+			card: share.card.id,
+			surfing: current_tag
+		});
+		document.getElementById("share-url").value = share.url();
+		share.cb && share.cb();
+	},
 	close: function() {
 		document.getElementById("share-url").blur();
 		modal.topModalOut();

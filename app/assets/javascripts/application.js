@@ -22,6 +22,7 @@
 //= require modal
 //= require drag
 //= require share
+//= require refer
 //= require panic
 //= require card
 //= require deck

@@ -34,7 +34,6 @@ class Api::MediaController < Api::BaseController
     if media_params[:tag].include?(',')
       tags = media_params[:tag].delete'{}'
       tags = tags.split(',')
-      puts "#{tags}"
     else
       tags << media_params[:tag]
     end
