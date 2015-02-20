@@ -165,6 +165,7 @@ var card_proto = {
 				this.contents.className += ' referred';
 			}
 			picTags.className += ' hidden';
+			toggleClass.call(this.contents.children[1], "hidden");
 			this.compressing = true;
 			this.expanded = false;
 		}
@@ -447,6 +448,7 @@ var card_proto = {
 				toggleClass.call(picTags, "hidden");
 			if (fullscreenButton.className.indexOf("hidden") == -1)
 				toggleClass.call(fullscreenButton, "hidden");
+			toggleClass.call(this.contents.children[1], "hidden");
 			if (this.referral) {
 				toggleClass.call(this.contents.children[4], "hidden");
 				this.contents.classList.remove('referred');

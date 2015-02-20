@@ -148,7 +148,7 @@ a {
 
 /*===== Refer Btn Stuff ======*/
 #refer-btn {
-	display: block !important;
+	display: block;
 	left: 0; 
 	right: 0;
 	margin-top: 10px;
