@@ -60,10 +60,10 @@ var refer = {
 				return;
 			} else if (selectionList.lenght > 1) {
 				var path = "/api/referral/" + refer.card.id + "/{" + selectionList.join(',') + "}";
-				xhr(path, "POST", function(response_data) {  });
+				xhr(path, "POST");
 			} else {
 				var path = "/api/referral/" + refer.card.id + "/" + selectionList[0];
-				xhr(path, "POST", function(response_data) {  });
+				xhr(path, "POST");
 			}			
 		});
 		gesture.listen("down", sendbtn, function () {
