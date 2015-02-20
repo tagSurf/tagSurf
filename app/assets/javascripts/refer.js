@@ -64,6 +64,39 @@ var refer = {
 		    	tinput.active = true;
 		    	tinput.focus();
 	    });
+	    searchBar.children[1].onkeyup = function(e) {
+			var tinput = searchBar.children[1];
+			e = e || window.event;
+			var code = e.keyCode || e.which;
+			if (code == 13 || code == 3) {
+				tinput.value = "";
+				mod({
+					className: "buddy-cell",
+					show: true,
+					value: "table-cell"
+				});
+				document.getElementById('buddy-list').style.borderSpacing = "2px";
+			} else if (tinput.value) {
+				mod({
+					className: "buddy-cell",
+					hide: true
+				});
+				var namefrag = tinput.value.toLowerCase();
+				mod({
+					className: namefrag,
+					show: true,
+					value: "table-cell"
+				});
+				document.getElementById('buddy-list').style.borderSpacing = "0px";
+			} else { 
+				mod({
+					className: "buddy-cell",
+					show: true,
+					value: "table-cell"
+				});
+				document.getElementById('buddy-list').style.borderSpacing = "2px";
+			}
+		};
 	},
 	startInput: function() {
 

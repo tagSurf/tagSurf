@@ -225,7 +225,7 @@ a {
 	border-radius: 5px;
 	margin: 2%;
 	width: 96%;	
-	max-height: 68%;
+	max-height: 60%;
 }
 #buddy-list {
 	width: 100%;
@@ -254,15 +254,14 @@ a {
 	height: 27px;
 	display: inline;
 	float: left;
-	margin: 6px 12px;
+	margin: 6px 0 6px 12px;
 }
 #buddy-search {
 	display: inline;
 	position: relative;
 	float: left;
-	margin: 0px 0 2px -3px;
 	height: 100%;
-	width: 87%;
+	width: 84%;
 	color: white;
 	font-weight: 100;
 	border: none;
@@ -291,6 +290,7 @@ a {
 	margin: 15px 0 0 15px;
 	text-align: initial !important;
 	display: table-cell;
+	position: relative;
 }
 .buddy-pic {
 	width: 50px;
@@ -306,7 +306,9 @@ a {
 .checkmark {
 	width: 40px;
 	float: right;
-	margin: 15px 10px 0 0;
+	margin: 15px 0 0 0;
+	position: absolute;
+	right: 10px;
 }
 .buddy-cell:active {
 	color: #404041;
@@ -983,6 +985,16 @@ a {
 	    right: 0px; 
 }
 
+/*===== This Targets Anything Above iPhone 5 ========*/
+@media only screen and (min-width: 340px){
+	#buddy-search {
+		width: 86%;
+	}
+	.buddy-list-container {
+		max-height: 68%;
+	}
+}
+
 /*===== This targets tablets and desktops ========*/
 @media only screen and (min-width: 700px){
 	#add-tag-autocomplete {
@@ -1134,6 +1146,9 @@ a {
     .search-bar {
 		max-width: 400px;
 	}
+	.search-icon {
+		margin: 6px 12px;
+	}
 	.buddy-list-container {
 		max-height: 77%;
 	}
@@ -1154,5 +1169,9 @@ a {
 	}
 	.send-btn {
 		max-width: 15% !important;
+	}
+	#buddy-search {
+		width: 87%;
+		margin: 0px 0 2px -3px;
 	}
 }
