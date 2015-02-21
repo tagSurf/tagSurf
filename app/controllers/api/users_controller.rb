@@ -103,7 +103,7 @@ class Api::UsersController < Api::BaseController
   end
 
   def buddies
-    render json: User.select(:id, :email).all.map{|user| [user.id, user.email]}
+    render json: User.select(:id, :email).order('sign_in_count DESC NULLS LAST').all.map{|user| [user.id, user.email]}
   end
 
   private
