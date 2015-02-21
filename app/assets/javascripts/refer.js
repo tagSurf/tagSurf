@@ -5,6 +5,17 @@ var refer = {
 	referModalOut: false,
 	content: document.createElement('div'),
 	build: function () {
+		if (!isAuthorized()){
+			refer.content.innerHTML = "<div class='really-big centered'>Login To Recommend This For A Friend</div>"
+			var loginbtn = document.createElement('img');
+			loginbtn.className = 'fb-login-btn refer-login-btn';
+			loginbtn.src = 'http://assets.tagsurf.co/img/fb_login.png';
+			refer.content.appendChild(loginbtn);
+			gesture.listen("tap", loginbtn, function() { 
+				document.location = "http://" + document.location.host + "/users/auth/facebook";
+			});
+			return;
+		}
 		refer._buildContent();
 		refer._populateBuddies();
 	},

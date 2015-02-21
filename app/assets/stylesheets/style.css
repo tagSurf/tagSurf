@@ -319,6 +319,14 @@ a {
 	background-color: #00aeef;
 	border-color: #00aeef !important;
 }
+.refer-login-btn {
+	position: absolute;
+	right: 0;
+	left: 0;
+	margin-right: auto !important;
+	margin-left: auto !important;
+	margin-top: 28% !important; 
+}
 
 /*======== Modal Close Button Stuff =========*/
 .modal-close-button {
