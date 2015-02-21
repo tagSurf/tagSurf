@@ -98,6 +98,9 @@ class ClientController < ApplicationController
   def share
     if current_user
       redirect_to "/feed##{params["tag"]}~#{params["id"]}"
+    elsif params["id"] == "0"
+      puts "id = #{params[:id]}"
+      confirm_surfable
     end
     @media = Media.where(id: params[:id]).try(:first)
   end
