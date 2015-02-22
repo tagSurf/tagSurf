@@ -312,6 +312,7 @@ html, body {
 }
 .icon-line {
   margin-top: 18px;
+  min-height: 19px;
 }
 .source-icon {
   height: 24px;
@@ -515,6 +516,7 @@ html, body {
   }
   .icon-line {
     margin-top: initial !important;
+    min-height: 47px;
   }
 
   /*===== Tag Search Bar ====*/
