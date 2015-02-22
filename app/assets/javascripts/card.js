@@ -183,6 +183,8 @@ var card_proto = {
 				fbbtn = document.getElementsByClassName('fb-login-btn')[0],
 				tos_pp = document.getElementsByClassName('tos-pp')[0];
 			gesture.listen("tap", fbbtn, function() { 
+				sessionStorage.setItem("lastPath", current_tag + "~" + currentMedia.id);
+				sessionStorage.setItem("shareVotes", JSON.stringify(shareVotes));
 				document.location = "http://" + document.location.host + "/users/auth/facebook";
 			});
 			if (window.innerHeight < 500) {

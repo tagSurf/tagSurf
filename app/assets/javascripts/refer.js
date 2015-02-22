@@ -12,6 +12,8 @@ var refer = {
 			loginbtn.src = 'http://assets.tagsurf.co/img/fb_login.png';
 			refer.content.appendChild(loginbtn);
 			gesture.listen("tap", loginbtn, function() { 
+				sessionStorage.setItem("lastPath", current_tag + "~" + currentMedia.id);
+				sessionStorage.setItem("shareVotes", JSON.stringify(shareVotes));
 				document.location = "http://" + document.location.host + "/users/auth/facebook";
 			});
 			return;
