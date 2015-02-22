@@ -152,7 +152,7 @@ var refer = {
 		listContainer.innerHTML = "";
 
 		buddies.forEach(function(b) {
-			if (currentUser.email == b.users[1] || b.users[1].indexOf('tagsurf') != -1)
+			if (currentUser.email == b.users[1])
 				return;
 			var row = buddyList.insertRow(position),
 				buddyCell = row.insertCell(0),
