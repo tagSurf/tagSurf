@@ -152,6 +152,8 @@ var refer = {
 		listContainer.innerHTML = "";
 
 		buddies.forEach(function(b) {
+			if (currentUser.email == b.users[1] || b.users[1].indexOf('tagsurf') != -1)
+				return;
 			var row = buddyList.insertRow(position),
 				buddyCell = row.insertCell(0),
 				buddyPic = document.createElement('img'),

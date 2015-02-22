@@ -194,10 +194,13 @@ var populateNavbar = function () {
 
 var buildOptionsTable = function (options_cb) {
   var optionsTable = document.createElement('table'),
-      safeSurfRow = optionsTable.insertRow(0),
-      safeSurfHelperRow = optionsTable.insertRow(1),
-      voteButtonsRow = optionsTable.insertRow(2),
-      voteButtonsHelperRow = optionsTable.insertRow(3),
+      usernameRow = optionsTable.insertRow(0),
+      safeSurfRow = optionsTable.insertRow(1),
+      safeSurfHelperRow = optionsTable.insertRow(2),
+      voteButtonsRow = optionsTable.insertRow(3),
+      voteButtonsHelperRow = optionsTable.insertRow(4),
+      usernameCell = usernameRow.insertCell(0),
+      usernameText = document.createElement('div'),
       voteButtonsTextCell = voteButtonsRow.insertCell(0),
       voteButtonsCheckboxCell = voteButtonsRow.insertCell(1),
       voteButtonsDescCell = voteButtonsHelperRow.insertCell(0),
@@ -217,6 +220,14 @@ var buildOptionsTable = function (options_cb) {
         resumeButton = document.createElement('div');
   
   optionsTable.className = "inline options-table";
+
+  usernameText.innerHTML = "User:<span class='blue'> " 
+    + currentUser.email.split("@")[0] + "</span>";
+  usernameText.className = "options-key-text";
+  usernameText.style.textAlign = "center";
+  usernameCell.appendChild(usernameText);
+  usernameCell.colSpan = 2;
+
  
   // Safe Surf Switch
   safeSurfCheckbox.innerHTML = 
