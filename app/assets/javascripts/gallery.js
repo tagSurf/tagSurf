@@ -54,6 +54,7 @@ var gnodes = {},
 		if (picbox) { // image detail modal frame already exists
 			topbar = document.getElementById("topbar");
 			bigpic = document.getElementById("bigpic");
+			refbtn = document.getElementById("ref-btn");
 			picdesc = document.getElementById("picdesc");
 			pictags = document.getElementById("pictags");
 			return;
@@ -128,6 +129,24 @@ var gnodes = {},
 			}
 		};
 		picbox.appendChild(bigpic);
+
+		refbtn = document.createElement("div");
+		refbtn.id = "ref-btn";
+		refbtn.className = "msgbox-btn";
+		refbtn.innerHTML = "Recommend!";
+		refbtn.style.marginTop = "10px";
+		picbox.appendChild(refbtn);
+
+		gesture.listen("tap", refbtn, function() {
+			refer.open();
+		});
+		gesture.listen("down", refbtn, function () {
+		    refbtn.classList.add('ts-active-button');
+	    });
+		gesture.listen("up", refbtn, function () {
+		    refbtn.classList.remove('ts-active-button');
+	    });
+
 
 		picdesc = document.createElement("div");
 		picdesc.id = "picdesc";
