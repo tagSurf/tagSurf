@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Hi <%= @username %>!</h1>
+    <p><%= @referrer_name %> has recommended this for you on tagSurf. Click on the card to login and check it out!</p>
+    <img width="220" src="<%= @media.image_link_original %>" />
+
+    <p>Surf on!</p>
+
+    <p><a href="<%= @url %>"><h2>Unsubscribe</h2></a></p>
+    
+  </body>
+</html>
+
