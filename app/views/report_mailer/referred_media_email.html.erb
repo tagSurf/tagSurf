@@ -6,12 +6,19 @@
   <body>
     <h1>Hi <%= @username %>!</h1>
     <p><%= @referrer_name %> has recommended this for you on tagSurf. Click on the card to login and check it out!</p>
-    <style> 
-     .card{background-color: #353535; border: 2px solid #353535; border-radius: 10px; width: 70%; margin: auto; position: relative; padding: 5px; box-shadow: 2px 3px 5px -1px rgba(0,0,0,0.7);}
-    </style>
-    <div class="card">
-      <img width="500px" src="<%= @media.image_link_original %>" />
-    </div>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" style="padding: 25px 0 0 0;">
+          <table width="80%" style="background-color:#353535; border:2px solid #353535; border-radius: 10px;" cellspacing="0" cellpadding="0">
+            <tr>
+              <td>
+                <img width="500px" src="<%= @media.image_link_original %>" />
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
 
     <p>Surf on!</p>
 
