@@ -26,11 +26,11 @@ module Tagsurf
     config.action_mailer.default_url_options = { host: 'localhost:3000' }
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.smtp_settings = {
-      :address              => "smtp.gmail.com",
+      :address              => "smtp.mandrillapp.com",
       :port                 => 587,
       :domain               => "tagsurf.co",
-      :user_name            => "beta@tagsurf.co",
-      :password             => ENV["TS_MAIL_SECRET"],
+      :user_name            => "paul@tagsurf.co",
+      :password             => ENV["TS_MANDRILL"],
       :authentication       => 'plain',
       :enable_starttls_auto => true
     }
