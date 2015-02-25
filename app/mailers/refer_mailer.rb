@@ -3,6 +3,7 @@ class ReferMailer < ActionMailer::Base
 
   def referred_media_email(user_id, referrer_id, media)
     @referrer_name = User.where(id: referrer_id)[0].email.split("@")[0]
+    @user_id = user_id
     @email = User.where(id: user_id)[0].email
     @username = @email.split("@")[0]
     @media = media
