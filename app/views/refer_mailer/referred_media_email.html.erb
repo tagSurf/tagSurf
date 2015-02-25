@@ -9,19 +9,21 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td align="center" style="padding: 15px 0 0 0;">
-          <table width="80%" style="background-color:#353535; border:2px solid #353535; border-radius: 10px;" cellspacing="0" cellpadding="0">
-            <tr>
-              <td>
-                <img style="padding:5px; border-radius:5px;" src="<%= @media.image_link_original %>" />
-              </td>
-            </tr>
-            <tr>
-              <td align="center">
-                <!-- Update this if URX cards are shared more -->
-                <p style="color:white; font-family: 'Raleway', sans-serif; font-weight: 200;"><%= @media.title %></p>
-              <td>
-            </tr>
-          </table>
+          <a href="http://beta.tagsurf.co/share/trending/<%= @media.id %>">
+            <table width="80%" style="background-color:#353535; border:2px solid #353535; border-radius: 10px;" cellspacing="0" cellpadding="0">
+              <tr>
+                <td>
+                  <img style="padding:5px; border-radius:5px;" src="<%= @media.image_link_original %>" />
+                </td>
+              </tr>
+              <tr>
+                <td align="center" style="border-radius: 5px;">
+                  <!-- Update this if URX cards are shared more -->
+                  <p style="color:white; font-family: 'Raleway', sans-serif; font-weight: 200; font-size: 150%;"><%= @media.title %></p>
+                <td>
+              </tr>
+            </table>
+          </a>
         </td>
       </tr>
     </table>
