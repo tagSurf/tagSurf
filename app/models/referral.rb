@@ -9,6 +9,8 @@ class Referral < ActiveRecord::Base
   belongs_to :user
   belongs_to :media
 
+  has_many :bumps, :foreign_key => :referral_id
+
   after_commit :find_vote, 	on: :create
 
   private 
