@@ -20,6 +20,9 @@ class Api::ReferralsController < Api::BaseController
         user_id: user
       )
       @success = @ref.save
+      if @success
+        SendReferNotification.perform_async(user, @user.id, ref_params[:card_id])
+      end
     end
     if @success
       render json: {created: true}, status: :ok

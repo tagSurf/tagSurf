@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Hi @<%= @username %>!</h1> 
+    <p>@<%= @referrer_name %> has recommended this for you on tagSurf. Click on the card to login and check it out!</p>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" style="padding: 15px 0 0 0;">
+          <a href="http://beta.tagsurf.co/share/trending/<%= @media.id %>">
+            <table style="background-color:#353535; border:2px solid #353535; border-radius: 10px; min-width: 80%; max-width: 90%;" cellspacing="0" cellpadding="0">
+              <tr>
+                <td>
+                  <img width="98%;" style="padding:1%; border: 1px solid #353535; border-radius:5px;" src="<%= @media.image_link_original %>" />
+                </td>
+              </tr>
+              <tr>
+                <td align="center" style="border-radius: 5px;">
+                  <!-- Update this if URX cards are shared more -->
+                  <p style="color:white; font-family: 'Raleway', sans-serif; font-weight: 200; font-size: 130%; padding: 0 10px 30px 10px;"><%= @media.title %></p>
+                <td>
+              </tr>
+            </table>
+          </a>
+        </td>
+      </tr>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-top:20px">
+      <tr>
+        <td align="left">
+          <p>Surf on!</p>
+        </td>
+        <td align="right">
+          <img width="200px" src="http://assets.tagsurf.co/img/ts_logo_horiz_gray.png">
+        </td>
+      </tr>
+    </table>
+    <a href="<%= @url %>/api/users/unsubscribe/<%= @user_id %>/refer">
+      <h2>Unsubscribe</h2>
+    </a>
+    
+  </body>
+</html>
+
