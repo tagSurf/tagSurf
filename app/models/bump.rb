@@ -9,15 +9,12 @@ class Bump < ActiveRecord::Base
   belongs_to :media
   belongs_to :referral 
 
-  # after_commit :find_vote, 	on: :create
+	after_commit :bump_referral, 	on: :create
 
   private 
 
-  def find_vote
-  	vote = Vote.where(voter_id: self.user_id).where(votable_id: self.referrable_id)
-  	if !vote.empty?
-  		self.update_column("voted", true)
-  	end
+  def bump_referral
+  	Referral.unscoped.find(self.referral_id).update_column(:bumped, true)
 	end
 
 end
