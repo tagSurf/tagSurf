@@ -106,6 +106,27 @@ class Api::UsersController < Api::BaseController
     render json: User.select(:id, :email).order('sign_in_count DESC NULLS LAST').all.map{|user| [user.id, user.email]}
   end
 
+  def unsubscribe
+    if current_user
+      user = User.find(params[:id])
+      user.update_column "#{params[:type]}_mailers", false
+
+      if user["#{params[:type]}_mailers"] == false
+        flash[:notice] = "Unsubscribed from #{params[:type]} emails"
+        redirect_to '/feed'
+      else
+        flash[:error] = "Could not unscubscribe because of error"
+        redirect_to '/feed'
+      end
+
+    else
+      flash[:error] = "not authorized"
+      redirect_to '/feed'
+    end
+  end
+
+
+
   private
 
     def user_params
