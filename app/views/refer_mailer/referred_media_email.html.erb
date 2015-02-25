@@ -4,8 +4,15 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1 style="display:inline;">Hi @<%= @username %>!</h1> 
-    <img width="200px" style="display:inline; right:0; top:0; padding-left: 30%; padding-bottom: -5%;" src="http://assets.tagsurf.co/img/ts_logo_horiz_gray.png">
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+      <td align="left">
+        <h1>Hi @<%= @username %>!</h1> 
+      </td>
+      <td align="right">
+        <img width="200px" src="http://assets.tagsurf.co/img/ts_logo_horiz_gray.png">
+      </td>
+    </tr>
     <p>@<%= @referrer_name %> has recommended this for you on tagSurf. Click on the card to login and check it out!</p>
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
