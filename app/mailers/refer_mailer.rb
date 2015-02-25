@@ -1,5 +1,4 @@
 class ReferMailer < ActionMailer::Base
-  default from: "no-reply@tagsurf.co"
 
   def referred_media_email(user_id, referrer_id, media)
     @referrer_name = User.where(id: referrer_id)[0].email.split("@")[0]
