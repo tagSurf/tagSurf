@@ -4,21 +4,21 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
   </head>
   <body>
-    <h1>Hi <%= @username %>!</h1>
-    <p><%= @referrer_name %> has recommended this for you on tagSurf. Click on the card to login and check it out!</p>
+    <h1>Hi @<%= @username %>!</h1>
+    <p>@<%= @referrer_name %> has recommended this for you on tagSurf. Click on the card to login and check it out!</p>
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td align="center" style="padding: 15px 0 0 0;">
           <table width="80%" style="background-color:#353535; border:2px solid #353535; border-radius: 10px;" cellspacing="0" cellpadding="0">
             <tr>
               <td>
-                <img width="95%" style="padding:5px;" src="<%= @media.image_link_original %>" />
+                <img style="padding:5px; border-radius:5px;" src="<%= @media.image_link_original %>" />
               </td>
             </tr>
             <tr>
-              <td>
+              <td align="center">
                 <!-- Update this if URX cards are shared more -->
-                <p style="color:white;"><%= @media.title %></p>
+                <p style="color:white; font-family: 'Raleway', sans-serif; font-weight: 200;"><%= @media.title %></p>
               <td>
             </tr>
           </table>
