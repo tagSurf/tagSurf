@@ -84,6 +84,7 @@ Tagsurf::Application.routes.draw do
 
     # Referrals API
     post 'referral/:card_id/:user_ids'   => 'referrals#create'
+    post 'referral/:card_id/:referrer_id' => 'referrals#bump'
   end
 
   get '/desktop' => 'client#desktop'

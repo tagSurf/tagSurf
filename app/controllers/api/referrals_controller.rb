@@ -31,6 +31,10 @@ class Api::ReferralsController < Api::BaseController
     end
   end
 
+  def bump
+
+  end
+
   private
 
     def ref_params
