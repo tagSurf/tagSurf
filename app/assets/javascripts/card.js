@@ -597,19 +597,44 @@ var card_proto = {
 	populateReferrals: function() {
 		if(!this.referral)
 			return;
-		referralBox = this.contents.children[4].lastChild
+		var referralBox = this.contents.children[4].lastChild,
+			card_id = this.id;
 		this.referral.forEach(function(r) {
-			cell = document.createElement('div');
-			pic = document.createElement('img');
-			usr = document.createElement('div');
+			var cell = document.createElement('div'),
+			pic = document.createElement('img'),
+			usr = document.createElement('div'),
+			bumpBtn = document.createElement('div'),
+			bumpIcon = document.createElement('img'),
+			referrer_id = r.user_id;
 			cell.className = "user-cell";
 			pic.className = "user-pic";
 			pic.src = "http://assets.tagsurf.co/img/UserAvatar.png";
 			usr.className = "user-name";
 			usr.innerHTML = r.username.split("@")[0];
+			bumpBtn.className = "bump-btn";
+			bumpIcon.className = "bump-icon";
+			bumpIcon.src = r.bumped ? "http://assets.tagsurf.co/img/bumped.png" 
+				: "http://assets.tagsurf.co/img/bump_white.png";
+			bumpBtn.appendChild(bumpIcon);
 			cell.appendChild(pic);
 			cell.appendChild(usr);
+			cell.appendChild(bumpBtn);
 			referralBox.appendChild(cell);
+			
+			if(!r.bumped) {
+				gesture.listen("tap", bumpBtn, function() {
+				    bumpIcon.src = "/img/bumped.png";
+				    gesture.unlisten(bumpBtn);
+				    xhr("/api/bump/" + card_id + "/" + referrer_id, "POST", null, null);
+				});
+				gesture.listen("down", bumpBtn, function () {
+				    bumpBtn.classList.add('bump-btn-active');
+			    });
+				gesture.listen("up", bumpBtn, function () {
+				    bumpBtn.classList.remove('bump-btn-active');
+			    });
+			}
+
 		});
 	},
 	jiggle: function () {
