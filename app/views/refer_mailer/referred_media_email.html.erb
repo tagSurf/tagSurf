@@ -7,7 +7,7 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td>
-          <h1>Hi <span style="font-color:#00aeef;">@<%= @username %></span>!</h1> 
+          <h1>Hi @<%= @username %>!</h1> 
         </td>
         <td align="right">
           <img width="75px" src="http://assets.tagsurf.co/img/ts_logo_stacked_gray.png"/>
@@ -15,7 +15,7 @@
       </tr>
       <tr>
         <td colspan="2">
-          <p><span color="#00aeef">@<%= @referrer_name %></span> has recommended this for you on tagSurf. Click on the card to check it out!</p>        
+          <p>@<%= @referrer_name %> has recommended this for you on tagSurf. Click on the card to check it out!</p>        
         </td>
       </tr>
     </table>
@@ -45,7 +45,7 @@
           <img width="100px" style="padding: 20px;" src="http://assets.tagsurf.co/img/bump_white.png"/>
         </td>
         <td>
-          <h2><- give <span color="#00aeef">@<%= @username %></span> a bump for this recommendation!</h2>
+          <h2>Give @<%= @referrer_name %> a bump for this share!</h2>
         </td>
       </tr>
       <tr style="padding-top:10px">
@@ -54,7 +54,7 @@
         </td>
       </tr>
     </table>
-    <a href="<%= @url %>/api/users/unsubscribe/<%= @user_id %>/refer" color="#00aeef">
+    <a href="<%= @url %>/api/users/unsubscribe/<%= @user_id %>/refer">
       <h2>Unsubscribe</h2>
     </a>
     
