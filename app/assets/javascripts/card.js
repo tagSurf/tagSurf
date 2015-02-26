@@ -624,7 +624,7 @@ var card_proto = {
 			
 			if(!r.bumped) {
 				gesture.listen("tap", bumpBtn, function() {
-				    bumpIcon.src = "/img/bumped.png";
+				    bumpIcon.src = "http://assets.tagsurf.co/img/bumped.png";
 				    gesture.unlisten(bumpBtn);
 				    xhr("/api/bump/" + card_id + "/" + referrer_id, "POST", null, null);
 				});
