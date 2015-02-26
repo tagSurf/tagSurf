@@ -11,7 +11,7 @@ class Bump < ActiveRecord::Base
 
 	after_commit :set_referral_flag, 	on: :create
 
-  def bump_referral(id)
+  def self.bump_referral(id)
     @ref = Referral.unscoped.find(id)
     @bump = Bump.new(
           bumper_id: @ref.user_id,
