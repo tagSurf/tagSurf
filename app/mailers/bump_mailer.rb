@@ -7,6 +7,7 @@ class BumpMailer < ActionMailer::Base
     @email = User.find(user_id).email
     @username = @email.split("@")[0]
     @media = media
+    @caption =  @media.description ? @media.description : @media.title
     @url = Rails.env.production? ? "http://beta.tagsurf.co" : "http://localhost:3000"
     mail(to: @email, subject: "#{@bumper_name} has bumped something you recommended on tagSurf!", from_email: "tagSurf@tagsurf.co", async: "true", from_name: "tagSurf")
   end
