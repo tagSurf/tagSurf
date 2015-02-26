@@ -480,9 +480,9 @@ var card_proto = {
 		var self = this,
 			isMine = this._isMine(tag),
 			p = document.createElement("div"),
-			pictags = (this.type.indexOf("content") != -1 && !this.referral) ? 
-						this.contents.children[4] 
-						: this.contents.children[5];
+			pictags = (this.type.indexOf("content") != -1 && !this.referral 
+				|| this.type == "End-Of-Feed") ? 
+					this.contents.children[4] : this.contents.children[5];
 		if (this.type.indexOf("content") != -1)
 			for (var i = 0; i < this.tags.length; i++) 
 				if (Object.keys(this.tags[i])[0] == tag) 
