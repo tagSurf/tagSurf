@@ -188,7 +188,7 @@ class MediaSerializer < BaseSerializer
   end
 
   def referral
-    referrals = Referral.where(referrable_id: media.id)
+    referrals = Referral.unscoped.where(referrable_id: media.id)
     return nil if referrals.empty?
     ref = Array.new
     referrals.each do |r|
