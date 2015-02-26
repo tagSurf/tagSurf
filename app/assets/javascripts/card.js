@@ -145,6 +145,7 @@ var card_proto = {
 		}
 		if (targetHeight + textContainer.scrollHeight 
 			+ picTags.scrollHeight + iconLine.scrollHeight 
+			+ (this.referral ? this.contents.children[4].scrollHeight : 0) 
 			< (maxCardHeight + (currentUser.vote_btns ? 80 : 20))) 
 		{
 			imageContainer.classList.remove("expand-animation");
