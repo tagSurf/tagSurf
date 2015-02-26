@@ -29,8 +29,7 @@ class Api::BumpsController < Api::BaseController
         @success = @bump.save
 
         if @success
-          # Not implemented
-          # SendReferNotification.perform_async(sharer, @user.id, bump_params[:media_id])
+          SendBumpNotification.perform_async(sharer, @user.id, bump_params[:media_id])
         end
       end
     end 
