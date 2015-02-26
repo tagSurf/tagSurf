@@ -3,9 +3,13 @@ class SendBumpNotification
 
   sidekiq_options :backtrace => true
 
-  def perform(user_id, bumper_id, media_id)
+  def perform(referral_id)
+	@ref = Referral.unscoped.find(referral_id)
+	media = Media.unscoped.find(@ref.referrable_id)
+	user_id = @ref.referrer_id
+	bumper_id = @ref.user_id
     unless !User.find(user_id).bump_mailers
-	    BumpMailer.bumped_media_email(user_id, bumper_id, Media.unscoped.find(media_id)).deliver
+	    BumpMailer.bumped_media_email(user_id, bumper_id, media, referral_id).deliver
 	end
   end
 

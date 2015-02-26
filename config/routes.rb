@@ -23,6 +23,7 @@ Tagsurf::Application.routes.draw do
   get 'favorites'       => 'client#favorites'
   get 'submissions'     => 'client#submissions'
   get 'tag'             => 'client#tag'
+  get 'bump/:ref_id'    => 'client#bump'
 
   # Beta access flow, ordered by good path
   get 'code'        => 'client#access_code'
