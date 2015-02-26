@@ -7,6 +7,7 @@ class ReferMailer < ActionMailer::Base
     @email = User.where(id: user_id)[0].email
     @username = @email.split("@")[0]
     @media = media
+    @caption =  @media.description ? @media.description : @media.title
     @url = Rails.env.production? ? "http://beta.tagsurf.co" : "http://localhost:3000"
     mail(to: @email, subject: "#{@referrer_name} has recommended something for you on tagSurf!", from_email: "tagSurf@tagsurf.co", async: "true", from_name: "tagSurf")
   end

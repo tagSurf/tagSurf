@@ -8,6 +8,7 @@ class Media < ActiveRecord::Base
   has_many :votes, :foreign_key => :votable_id
   has_many :favorites
   has_many :referrals, :foreign_key => :referrable_id
+  has_many :bumps, :foreign_key => :media_id
 
   validates_uniqueness_of :remote_id, :image_link_original
 
@@ -15,9 +16,6 @@ class Media < ActiveRecord::Base
   default_scope { where(reported: false) }
 
   scope :nsfw, ->(boolean) { where("nsfw = ?", boolean) }
-
-  attr_accessor :referred
-  attr_accessor :referrers
 
   # Imgur specific
   before_create :resize_image_links
@@ -127,22 +125,9 @@ class Media < ActiveRecord::Base
       # end
       has_voted_ids = user.votes.pluck(:votable_id)
 
-      referrals = Referral.where(user_id: user.id)
+      referrals = Referral.select(:referrable_id).where(user_id: user.id)
       if !referrals.empty?
-        referral_ids = Array.new
-        referrals.each do |ref|
-          referral_ids << ref.referrable_id
-        end
-        @media = @media.where('id in (?)', referral_ids).order('ts_score DESC NULLS LAST')
-        @media.each do |m|
-          m.referred = true
-          users = Array.new
-          ref = Referral.where(referrable_id: m.id)
-          ref.each do |r|
-            users << r.referrer_id
-          end
-          m.referrers = User.where('id in(?)', users)
-        end 
+        @media = @media.where('id in (?)', referrals).order('ts_score DESC NULLS LAST')
       else
         if tags.include?('trending') && tags.length == 1
           if user.safe_mode? 

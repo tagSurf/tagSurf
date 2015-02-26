@@ -5,7 +5,7 @@
   </head>
   <body>
     <h1>Hi @<%= @username %>!</h1> 
-    <p>@<%= @referrer_name %> has recommended this for you on tagSurf. Click on the card to login and check it out!</p>
+    <p>@<%= @bumper_name %> gave you a bump for this awesome recommendation on tagSurf. Rad!</p>
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td align="center" style="padding: 15px 0 0 0;">
@@ -36,10 +36,9 @@
         </td>
       </tr>
     </table>
-    <a href="<%= @url %>/api/users/unsubscribe/<%= @user_id %>/refer">
+    <a href="<%= @url %>/api/users/unsubscribe/<%= @user_id %>/bump">
       <h2>Unsubscribe</h2>
     </a>
     
   </body>
 </html>
-

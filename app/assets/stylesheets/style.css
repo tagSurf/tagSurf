@@ -165,7 +165,7 @@ a {
 	white-space: nowrap;
 }
 .user-cell {
-	margin: 10px 0;
+	margin: 10px 0 0 0;
 	display: inline-block;
 }
 .user-name {
@@ -173,6 +173,15 @@ a {
 }
 .user-pic {
 	width: 40%;
+}
+.bump-btn {
+	padding: 5px;
+}
+.bump-icon {
+	width: 40%;
+}
+.bump-btn-active {
+	opacity: 0.3 !important;
 }
 
 /*===== Modal Backing Stuff =====*/

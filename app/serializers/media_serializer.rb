@@ -188,15 +188,17 @@ class MediaSerializer < BaseSerializer
   end
 
   def referral
-    return nil if media.referred.nil?
-    referral = Array.new
-    media.referrers.each do |ref|
-      referral << {
-        user_id: ref.id,
-        username: ref.email
+    referrals = Referral.where(referrable_id: media.id)
+    return nil if referrals.empty?
+    ref = Array.new
+    referrals.each do |r|
+      ref << {
+        user_id: r.referrer_id,
+        username: User.find(r.referrer_id).email,
+        bumped: r.bumped        
       }
     end
-    referral
+    ref
   end
 
   

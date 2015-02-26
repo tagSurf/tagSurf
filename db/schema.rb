@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150225031447) do
+ActiveRecord::Schema.define(version: 20150226011118) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,20 @@ ActiveRecord::Schema.define(version: 20150225031447) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "bumps", force: true do |t|
+    t.integer  "referral_id"
+    t.integer  "media_id"
+    t.integer  "sharer_id"
+    t.string   "sharer_type"
+    t.integer  "bumper_id"
+    t.string   "bumper_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "bumps", ["bumper_id"], name: "index_bumps_on_bumper_id", using: :btree
+  add_index "bumps", ["sharer_id"], name: "index_bumps_on_sharer_id", using: :btree
 
   create_table "favorites", force: true do |t|
     t.integer  "media_id"
@@ -95,6 +109,7 @@ ActiveRecord::Schema.define(version: 20150225031447) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "voted",           default: false, null: false
+    t.boolean  "bumped",          default: false, null: false
   end
 
   add_index "referrals", ["referrable_id"], name: "index_referrals_on_referrable_id", using: :btree
@@ -155,6 +170,7 @@ ActiveRecord::Schema.define(version: 20150225031447) do
     t.string   "slug"
     t.boolean  "safe_mode",              default: true,  null: false
     t.boolean  "refer_mailers",          default: true,  null: false
+    t.boolean  "bump_mailers",           default: true,  null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

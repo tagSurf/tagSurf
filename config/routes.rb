@@ -66,7 +66,7 @@ Tagsurf::Application.routes.draw do
     get  'users'                         => 'users#stats'
     get  'users/buddies'                 => 'users#buddies'
     patch  'users/:id'                   => 'users#update'
-    get 'users/unsubscribe/:id/:type'   => 'users#unsubscribe'
+    get 'users/unsubscribe/:id/:type'    => 'users#unsubscribe'
 
     # History API
     get  'history/paginated/:limit/:offset'  => 'users#paginated_history'
@@ -83,7 +83,12 @@ Tagsurf::Application.routes.draw do
     delete 'favorites/:card_id'          => 'favorites#delete'
 
     # Referrals API
-    post 'referral/:card_id/:user_ids'   => 'referrals#create'
+    post 'referral/:card_id/:user_ids'       => 'referrals#create'
+    post 'referral/:card_id/:referral_id'    => 'referrals#bump'
+
+    #Bumps API
+    post 'bump/:media_id/:sharer_ids'       => 'bumps#create'
+
   end
 
   get '/desktop' => 'client#desktop'
