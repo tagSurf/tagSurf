@@ -14,6 +14,7 @@ class Bump < ActiveRecord::Base
 
   def self.bump_referral(id)
     @ref = Referral.unscoped.find(id)
+
     @bump = Bump.new(
           bumper_id: @ref.user_id,
           bumper_type: "User",
