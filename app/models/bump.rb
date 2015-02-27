@@ -9,12 +9,34 @@ class Bump < ActiveRecord::Base
   belongs_to :media
   belongs_to :referral 
 
-	after_commit :bump_referral, 	on: :create
+	after_commit :set_referral_flag, 	on: :create
+  after_commit :send_notification,  on: :create
+
+  def self.bump_referral(id)
+    @ref = Referral.unscoped.find(id)
+
+    @bump = Bump.new(
+          bumper_id: @ref.user_id,
+          bumper_type: "User",
+          referral_id: id,
+          media_id: @ref.referrable_id,
+          sharer_id: @ref.referrer_id,
+          sharer_type: "User"
+        )
+    @success = @bump.save 
+
+    @success
+
+  end
 
   private 
 
-  def bump_referral
+  def set_referral_flag
   	Referral.unscoped.find(self.referral_id).update_column(:bumped, true)
 	end
+
+  def send_notification
+    SendBumpNotification.perform_async(self.referral_id)
+  end
 
 end

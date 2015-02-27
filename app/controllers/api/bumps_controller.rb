@@ -17,20 +17,7 @@ class Api::BumpsController < Api::BaseController
     sharers.each do |sharer|
       ref = Referral.unscoped.where(referrable_id: media_id, referrer_id: sharer, user_id: @user.id)
       unless ref.empty?
-        ref_id = ref.first.id
-        @bump = Bump.new(
-          bumper_id: @user.id,
-          bumper_type: "User",
-          referral_id: ref_id,
-          media_id: media_id,
-          sharer_id: sharer,
-          sharer_type: "User"
-        )
-        @success = @bump.save
-
-        if @success
-          SendBumpNotification.perform_async(sharer, @user.id, bump_params[:media_id])
-        end
+        @success = Bump.bump_referral(ref.first.id)
       end
     end 
     if @success

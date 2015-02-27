@@ -12,6 +12,7 @@ class Referral < ActiveRecord::Base
   has_many :bumps, :foreign_key => :referral_id
 
   after_commit :find_vote, 	on: :create
+  after_commit :send_notification, on: :create
 
   private 
 
@@ -21,6 +22,10 @@ class Referral < ActiveRecord::Base
   		self.update_column("voted", true)
   	end
 	end
+
+  def send_notification
+    SendReferNotification.perform_async(self.id)
+  end
 
 end
 

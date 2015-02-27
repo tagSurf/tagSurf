@@ -105,6 +105,14 @@ class ClientController < ApplicationController
     @media = Media.where(id: params[:id]).try(:first)
   end
 
+  def bump
+    unless !current_user || current_user.id != Referral.unscoped.find(params[:ref_id]).user_id
+      Bump.bump_referral(params[:ref_id])
+    end 
+    media_id = Referral.unscoped.find(params[:ref_id]).referrable_id
+    redirect_to "/feed#trending~#{media_id}"
+  end
+  
   def resend_link 
     if current_user and current_user.confirmed? 
       redirect_to root_path
