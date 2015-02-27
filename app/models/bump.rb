@@ -10,6 +10,7 @@ class Bump < ActiveRecord::Base
   belongs_to :referral 
 
 	after_commit :set_referral_flag, 	on: :create
+  after_commit :send_notification,  on: :create
 
   def self.bump_referral(id)
     @ref = Referral.unscoped.find(id)
@@ -23,10 +24,6 @@ class Bump < ActiveRecord::Base
         )
     @success = @bump.save 
 
-    if @success
-      SendBumpNotification.perform_async(id)
-    end
-
     @success
 
   end
@@ -36,5 +33,9 @@ class Bump < ActiveRecord::Base
   def set_referral_flag
   	Referral.unscoped.find(self.referral_id).update_column(:bumped, true)
 	end
+
+  def send_notification
+    SendBumpNotification.perform_async(self.referral_id)
+  end
 
 end
