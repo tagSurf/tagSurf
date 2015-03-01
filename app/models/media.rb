@@ -17,6 +17,8 @@ class Media < ActiveRecord::Base
 
   scope :nsfw, ->(boolean) { where("nsfw = ?", boolean) }
 
+  attr_accessor :referrals
+
   # Imgur specific
   before_create :resize_image_links
   def resize_image_links
