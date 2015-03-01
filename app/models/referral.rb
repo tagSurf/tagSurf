@@ -14,6 +14,14 @@ class Referral < ActiveRecord::Base
   after_commit :find_vote, 	on: :create
   after_commit :send_notification, on: :create
 
+  def self.paginated_collection(user_id, limit, offset, safe)
+    if safe
+      Media.joins(:referrals).where("referrals.referrer_id = #{user_id}").nsfw(false).order('referrals.id desc').limit(limit).offset(offset)
+    else
+      Media.joins(:referrals).where("referrals.referrer_id = #{user_id}").order('referrals.id desc').limit(limit).offset(offset)
+    end
+  end
+
   private 
 
   def find_vote

@@ -84,6 +84,10 @@ Tagsurf::Application.routes.draw do
     delete 'favorites/:card_id'          => 'favorites#delete'
 
     # Referrals API
+    get  'referral/paginated/:limit/:offset'      => 'referrals#paginated_collection'
+    # get  'referral/bracketed/:id'       => 'referrals#bracketed_history'
+    # get  'referral/next/:id'            => 'referralss#next_history'
+    # get  'referral/previous/:id'        => 'referrals#previous_history'
     post 'referral/:card_id/:user_ids'       => 'referrals#create'
     post 'referral/:card_id/:referral_id'    => 'referrals#bump'
 
