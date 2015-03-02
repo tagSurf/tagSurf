@@ -16,63 +16,102 @@ class Referral < ActiveRecord::Base
 
   
 # Return referrals made BY a user
-  def self.paginated_collection(user_id, limit, offset, safe, prev_keys = nil)
-    known_keys = prev_keys ? prev_keys : Array.new
-    media_ids = Array.new
+  def self.made_paginated_collection(user_id, limit, offset, safe)
+    media = Array.new
     @offset = offset
     @limit = limit
 
     # Get media ids and de-dupe collection
-    while media_ids.length < limit do
-      if !media_ids.empty?
-        @limit = limit - media_ids.length
+    while media.length < limit do
+      if !media.empty?
+        @limit = limit - media.length
       end
 
-      if !known_keys.empty?
-        keys = Referral.unscoped.select(:media_id, :created_at, :referrer_id).where(referrer_id: user_id).where("referrals.media_id not in (?)", known_keys).order('created_at desc').limit(@limit).offset(@offset)
-      else
-        keys = Referral.unscoped.select(:media_id, :created_at, :referrer_id,).where(referrer_id: user_id).order('created_at desc').limit(@limit).offset(@offset)
-      end
+      referrals = Referral.unscoped.where(referrer_id: user_id).order('created_at desc').limit(@limit).offset(@offset)
 
-      if keys.empty?
+      if referrals.empty?
         break
       end
 
-      keys.each do |ref|
-        media_ids << ref.media_id
-        known_keys << ref.media_id
+      referrals.each do |ref|
+        next if safe && ref.media.nsfw
+        media << ref.media
       end
       
-      media_ids.uniq!
-      known_keys.uniq!
+      media.uniq!
 
       if @limit == limit
-        @offset = offset + media_ids.length
+        @offset = offset + media.length
       else
         @offset = @offset + @limit
       end
     end
 
-    if safe
-      media = Media.unscoped.joins(:referrals).where("media.id in (?)", media_ids).nsfw(false).order('referrals.created_at desc')
-    else
-      media = Media.unscoped.joins(:referrals).where("media.id in (?)", media_ids).order('referrals.created_at desc')
-    end
-
-    # media.each do |m|
-    #   m.referrals = Array.new
-
-    #   refs = Referral.unscoped.select(:id, :referrer_id, :media_id).where(referrer_id: user_id).where(media_id: m.id).order('created_at desc')
-
-    #   refs.each do |ref|
-    #     m.referrals << ref.id
-    #   end
-    # end
+    media.each do |m|
+      refs = Referral.unscoped.where(media_id: m.id, referrer_id: user_id)
+      m.referrals = Array.new
+      refs.each do |r|
+        m.referrals << {
+          referral_id: r.id,
+          user_id: r.user_id,
+          username: User.find(r.user_id).email,
+          bumped: r.bumped        
+        }
+      end
+    end 
 
     media
 
   end
 
+# Return referrals made to a user
+  def self.received_paginated_collection(user_id, limit, offset, safe)
+    media = Array.new
+    @offset = offset
+    @limit = limit
+
+    # Get media ids and de-dupe collection
+    while media.length < limit do
+      if !media.empty?
+        @limit = limit - media.length
+      end
+
+      referrals = Referral.unscoped.where(user_id: user_id).order('created_at desc').limit(@limit).offset(@offset)
+
+      if referrals.empty?
+        break
+      end
+
+      referrals.each do |ref|
+        next if safe && ref.media.nsfw
+        media << ref.media
+      end
+      
+      media.uniq!
+
+      if @limit == limit
+        @offset = offset + media.length
+      else
+        @offset = @offset + @limit
+      end
+    end
+
+    media.each do |m|
+      refs = Referral.unscoped.where(media_id: m.id, user_id: user_id)
+      m.referrals = Array.new
+      refs.each do |r|
+        m.referrals << {
+          referral_id: r.id,
+          user_id: r.referrer_id,
+          username: User.find(r.referrer_id).email,
+          bumped: r.bumped        
+        }
+      end
+    end 
+
+    media
+
+  end
   private 
 
   def find_vote

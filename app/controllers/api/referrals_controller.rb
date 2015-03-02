@@ -32,7 +32,7 @@ class Api::ReferralsController < Api::BaseController
     end
   end
 
-  def paginated_collection
+  def made_paginated_collection
     @offset = ref_params["offset"].to_i
     @limit = ref_params["limit"].to_i
     @user = current_user
@@ -42,7 +42,25 @@ class Api::ReferralsController < Api::BaseController
       @limit = 50
     end
 
-    @media = Referral.paginated_collection(@user.id, @limit, @offset, @user.safe_mode)
+    @media = Referral.made_paginated_collection(@user.id, @limit, @offset, @user.safe_mode)
+    if @media
+      render json: @media, root: 'data'
+    else
+      render json: "Nothing here"
+    end
+  end
+
+  def received_paginated_collection
+    @offset = ref_params["offset"].to_i
+    @limit = ref_params["limit"].to_i
+    @user = current_user
+
+    # limit responses to 50 cards
+    if @limit > 50
+      @limit = 50
+    end
+
+    @media = Referral.received_paginated_collection(@user.id, @limit, @offset, @user.safe_mode)
     if @media
       render json: @media, root: 'data'
     else

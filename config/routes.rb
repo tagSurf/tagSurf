@@ -77,19 +77,17 @@ Tagsurf::Application.routes.draw do
 
     # Favorites API
     get  'favorites/paginated/:limit/:offset'      => 'favorites#paginated_history'
-    get  'favorites/bracketed/:id'       => 'favorites#bracketed_history'
-    get  'favorites/next/:id'            => 'favorites#next_history'
-    get  'favorites/previous/:id'        => 'favorites#previous_history'
-    post 'favorites/:card_id'            => 'favorites#create'
-    delete 'favorites/:card_id'          => 'favorites#delete'
+    get  'favorites/bracketed/:id'                 => 'favorites#bracketed_history'
+    get  'favorites/next/:id'                      => 'favorites#next_history'
+    get  'favorites/previous/:id'                  => 'favorites#previous_history'
+    post 'favorites/:card_id'                      => 'favorites#create'
+    delete 'favorites/:card_id'                    => 'favorites#delete'
 
     # Referrals API
-    get  'referral/paginated/:limit/:offset'      => 'referrals#paginated_collection'
-    # get  'referral/bracketed/:id'       => 'referrals#bracketed_history'
-    # get  'referral/next/:id'            => 'referralss#next_history'
-    # get  'referral/previous/:id'        => 'referrals#previous_history'
-    post 'referral/:card_id/:user_ids'       => 'referrals#create'
-    post 'referral/:card_id/:referral_id'    => 'referrals#bump'
+    get  'referral/made/paginated/:limit/:offset'         => 'referrals#made_paginated_collection'
+    get  'referral/received/paginated/:limit/:offset'     => 'referrals#received_paginated_collection'
+    post 'referral/:card_id/:user_ids'                    => 'referrals#create'
+    post 'referral/:card_id/:referral_id'                 => 'referrals#bump'
 
     #Bumps API
     post 'bump/:media_id/:sharer_ids'       => 'bumps#create'
