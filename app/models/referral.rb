@@ -1,8 +1,8 @@
 class Referral < ActiveRecord::Base
   validates_presence_of :user_id
   validates_presence_of :referrer_id
-  validates_presence_of :referrable_id
-  validates_uniqueness_of :user_id, scope: [:referrer_id, :referrable_id], :message => "referral already made."
+  validates_presence_of :media_id
+  validates_uniqueness_of :user_id, scope: [:referrer_id, :media_id], :message => "referral already made."
 
 	default_scope { where(voted: false) }
 
@@ -29,9 +29,9 @@ class Referral < ActiveRecord::Base
       end
 
       if !known_keys.empty?
-        keys = Referral.unscoped.select(:referrable_id, :created_at, :referrer_id).where(referrer_id: user_id).where("referrals.referrable_id not in (?)", known_keys).order('created_at desc').limit(@limit).offset(@offset)
+        keys = Referral.unscoped.select(:media_id, :created_at, :referrer_id).where(referrer_id: user_id).where("referrals.media_id not in (?)", known_keys).order('created_at desc').limit(@limit).offset(@offset)
       else
-        keys = Referral.unscoped.select(:referrable_id, :created_at, :referrer_id,).where(referrer_id: user_id).order('created_at desc').limit(@limit).offset(@offset)
+        keys = Referral.unscoped.select(:media_id, :created_at, :referrer_id,).where(referrer_id: user_id).order('created_at desc').limit(@limit).offset(@offset)
       end
 
       if keys.empty?
@@ -39,8 +39,8 @@ class Referral < ActiveRecord::Base
       end
 
       keys.each do |ref|
-        media_ids << ref.referrable_id
-        known_keys << ref.referrable_id
+        media_ids << ref.media_id
+        known_keys << ref.media_id
       end
       
       media_ids.uniq!
@@ -54,15 +54,15 @@ class Referral < ActiveRecord::Base
     end
 
     if safe
-      media = Media.unscoped.where("id in (?)", media_ids).nsfw(false)
+      media = Media.unscoped.joins(:referrals).where("media.id in (?)", media_ids).nsfw(false).order('referrals.created_at desc')
     else
-      media = Media.unscoped.where("id in (?)", media_ids)
+      media = Media.unscoped.joins(:referrals).where("media.id in (?)", media_ids).order('referrals.created_at desc')
     end
 
     # media.each do |m|
     #   m.referrals = Array.new
 
-    #   refs = Referral.unscoped.select(:id, :referrer_id, :referrable_id).where(referrer_id: user_id).where(referrable_id: m.id).order('created_at desc')
+    #   refs = Referral.unscoped.select(:id, :referrer_id, :media_id).where(referrer_id: user_id).where(media_id: m.id).order('created_at desc')
 
     #   refs.each do |ref|
     #     m.referrals << ref.id
@@ -76,7 +76,7 @@ class Referral < ActiveRecord::Base
   private 
 
   def find_vote
-  	vote = Vote.where(voter_id: self.user_id).where(votable_id: self.referrable_id)
+  	vote = Vote.where(voter_id: self.user_id).where(votable_id: self.media_id)
   	if !vote.empty?
   		self.update_column("voted", true)
   	end

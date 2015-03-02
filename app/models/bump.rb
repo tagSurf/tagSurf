@@ -19,7 +19,7 @@ class Bump < ActiveRecord::Base
           bumper_id: @ref.user_id,
           bumper_type: "User",
           referral_id: id,
-          media_id: @ref.referrable_id,
+          media_id: @ref.media_id,
           sharer_id: @ref.referrer_id,
           sharer_type: "User"
         )

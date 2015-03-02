@@ -5,7 +5,7 @@ class SendReferNotification
 
   def perform(referral_id)
 	ref = Referral.unscoped.find(referral_id)
-	media = Media.unscoped.find(ref.referrable_id)
+	media = Media.unscoped.find(ref.media_id)
 	referrer_id = ref.referrer_id
 	user_id = ref.user_id
     unless !User.find(user_id).refer_mailers

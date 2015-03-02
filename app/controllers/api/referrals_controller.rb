@@ -16,7 +16,7 @@ class Api::ReferralsController < Api::BaseController
         @ref = Referral.new(
           referrer_id: @user.id,
           referrer_type: "User", 
-          referrable_id: ref_params[:card_id],
+          media_id: ref_params[:card_id],
           referrable_type: "Media",
           user_id: user
         )

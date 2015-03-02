@@ -109,7 +109,7 @@ class ClientController < ApplicationController
     unless !current_user || current_user.id != Referral.unscoped.find(params[:ref_id]).user_id
       Bump.bump_referral(params[:ref_id])
     end 
-    media_id = Referral.unscoped.find(params[:ref_id]).referrable_id
+    media_id = Referral.unscoped.find(params[:ref_id]).media_id
     redirect_to "/feed#trending~#{media_id}"
   end
   

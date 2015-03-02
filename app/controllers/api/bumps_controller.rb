@@ -15,7 +15,7 @@ class Api::BumpsController < Api::BaseController
     end
 
     sharers.each do |sharer|
-      ref = Referral.unscoped.where(referrable_id: media_id, referrer_id: sharer, user_id: @user.id)
+      ref = Referral.unscoped.where(media_id: media_id, referrer_id: sharer, user_id: @user.id)
       unless ref.empty?
         @success = Bump.bump_referral(ref.first.id)
       end
