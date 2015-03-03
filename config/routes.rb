@@ -22,6 +22,7 @@ Tagsurf::Application.routes.draw do
   get 'history'         => 'client#history'
   get 'favorites'       => 'client#favorites'
   get 'submissions'     => 'client#submissions'
+  get 'recommendations' => 'client#recommendations'
   get 'tag'             => 'client#tag'
   get 'bump/:ref_id'    => 'client#bump'
 

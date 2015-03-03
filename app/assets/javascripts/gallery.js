@@ -1,7 +1,8 @@
 var gnodes = {},  
 	favGrid, 
 	slideGallery,
-	addHistoryItem, 
+	addHistoryItem,
+	referrals_made = false, 
 	gallerize = function(gallery) {
 
 	var picbox, topbar, bigpic, picdesc, pictags, link;
@@ -358,6 +359,8 @@ var gnodes = {},
 	var getPath = function() {
 		if (gallery == "tag")
 			return "/api/media/" + location.hash.slice(1);
+		else if (gallery == "recommendations")
+			return "/api/referral/" + (referrals_made ? "made" : "received") + "/paginated/" + chunk_size + "/" + chunk_offset;
 		return "/api/" + gallery + "/paginated/" + chunk_size + "/" + chunk_offset;
 	};
 	var populateGallery = function() {
@@ -367,8 +370,9 @@ var gnodes = {},
 		throbber.on(false, 'throbber-bottom');
 		xhr(getPath(), null, function(response_data) {
 			response_data.data.forEach(function(d) {
-				addImage(d, getHeader(gallery == "favorites" ?
-					d.user_stats.time_favorited : d.user_stats.time_discovered));
+				addImage(d, getHeader(gallery == "recommendations" ? d.referral[0].time : 
+					(gallery == "favorites" ? d.user_stats.time_favorited : 
+						d.user_stats.time_discovered)));
 			});
 			populating = false;
 			throbber.off();

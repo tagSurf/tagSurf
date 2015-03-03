@@ -55,7 +55,8 @@ class Referral < ActiveRecord::Base
           referral_id: r.id,
           user_id: r.user_id,
           username: User.find(r.user_id).email,
-          bumped: r.bumped        
+          bumped: r.bumped,
+          time: r.created_at
         }
       end
     end 
@@ -104,7 +105,8 @@ class Referral < ActiveRecord::Base
           referral_id: r.id,
           user_id: r.referrer_id,
           username: User.find(r.referrer_id).email,
-          bumped: r.bumped        
+          bumped: r.bumped,
+          time: r.created_at
         }
       end
     end 
