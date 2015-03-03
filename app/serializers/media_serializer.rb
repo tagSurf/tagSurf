@@ -194,6 +194,7 @@ class MediaSerializer < BaseSerializer
       end
       media.referrals
     else 
+      return nil if !current_user
       referrals = Referral.unscoped.where(media_id: media.id, user_id: current_user.id)
       return nil if referrals.empty?
       ref = Array.new
