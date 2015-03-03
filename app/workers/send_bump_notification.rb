@@ -5,7 +5,7 @@ class SendBumpNotification
 
   def perform(referral_id)
 	ref = Referral.unscoped.find(referral_id)
-	media = Media.unscoped.find(ref.referrable_id)
+	media = Media.unscoped.find(ref.media_id)
 	user_id = ref.referrer_id
 	bumper_id = ref.user_id
     unless !User.find(user_id).bump_mailers

@@ -65,7 +65,7 @@ class Vote < ActiveRecord::Base
   end
 
   def check_referrals
-    referrals = Referral.where(user_id: self.voter_id).where(referrable_id: self.votable_id)
+    referrals = Referral.where(user_id: self.voter_id).where(media_id: self.votable_id)
     referrals.each do |ref|
       ref.update_column("voted", true);
     end

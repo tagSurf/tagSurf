@@ -37,7 +37,7 @@ var toggleClass = function (className, onOrOff) {
   else if (!classIsOn && onOrOff != "off")
     this.classList.add(className);
 };
-var galleries = ["history", "favorites", "submissions", "tag"];
+var galleries = ["history", "favorites", "submissions", "tag", "recommendations"];
 var whichGallery = function() {
   for (var i = 0; i < galleries.length; i++)
     if (document.location.pathname.indexOf(galleries[i]) != -1)

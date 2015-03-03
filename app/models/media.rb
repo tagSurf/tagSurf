@@ -7,7 +7,7 @@ class Media < ActiveRecord::Base
 
   has_many :votes, :foreign_key => :votable_id
   has_many :favorites
-  has_many :referrals, :foreign_key => :referrable_id
+  has_many :referrals
   has_many :bumps, :foreign_key => :media_id
 
   validates_uniqueness_of :remote_id, :image_link_original
@@ -16,6 +16,8 @@ class Media < ActiveRecord::Base
   default_scope { where(reported: false) }
 
   scope :nsfw, ->(boolean) { where("nsfw = ?", boolean) }
+
+  attr_accessor :referrals
 
   # Imgur specific
   before_create :resize_image_links
@@ -125,7 +127,7 @@ class Media < ActiveRecord::Base
       # end
       has_voted_ids = user.votes.pluck(:votable_id)
 
-      referrals = Referral.select(:referrable_id).where(user_id: user.id)
+      referrals = Referral.select(:media_id).where(user_id: user.id)
       if !referrals.empty?
         @media = @media.where('id in (?)', referrals).order('ts_score DESC NULLS LAST')
       else
