@@ -454,7 +454,7 @@ var card_proto = {
 			toggleClass.call(this.contents.children[1], "hidden");
 			if (this.referral) {
 				toggleClass.call(this.contents.children[4], "hidden");
-				this.contents.classList.remove('referred');
+				// this.contents.classList.remove('referred');
 			}
 			this.cbs.expand && this.cbs.expand();
 			if (this.oneTimeCbs.expand) {
