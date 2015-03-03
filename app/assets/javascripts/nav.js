@@ -44,7 +44,7 @@ var populateNavbar = function () {
     "<input type='checkbox' name='slider-box' id='slider-box' style='display:none'>",
     "<div id='slide-down-menu' class='pointer'>",
       "<ul>",
-        "<li><a href='/feed'><div>",
+        "<li><a href='/share/trending/0'><div>",
           "<img class='menu-icon' src='http://assets.tagsurf.co/img/trending_icon_gray.png'></img>",
           "<img class='menu-icon' src='http://assets.tagsurf.co/img/trending_icon_white.png'></img>",
           "&nbsp;&nbsp;&nbsp;TRENDING",
