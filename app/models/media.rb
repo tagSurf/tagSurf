@@ -118,7 +118,7 @@ class Media < ActiveRecord::Base
         @media  = Media.where(
             viral: true, 
             nsfw: false,
-            :created_at => span..Time.now 
+            :created_at => 2.days.ago..Time.now 
           ).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
         # If it is empty, run again with unlimited scope
         unless !@media.empty?
@@ -132,7 +132,7 @@ class Media < ActiveRecord::Base
       
         @media = Media.where(
             nsfw: false,
-            :created_at => span.Time.now
+            :created_at => 2.days.ago..Time.now
           ).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
         
         unless !@media.empty?
