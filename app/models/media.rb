@@ -143,7 +143,7 @@ class Media < ActiveRecord::Base
         
 
         if @media.length < 10
-          RequestTaggedMedia.perform_async(tag)
+          RequestTaggedMedia.perform_async(tags.first)
         end
       end
 
@@ -278,23 +278,23 @@ class Media < ActiveRecord::Base
                 else 
               
                   @media = Media.where(
-                      'id not in (?)', has_voted_ids
-                    ).where(
-                      'viral'
-                    ).limit(n).order('ts_score DESC NULLS LAST')
+                    'id not in (?)', has_voted_ids
+                  ).where(
+                    'viral'
+                  ).limit(n).order('ts_score DESC NULLS LAST')
               
                 end
               end
             end
           end
  
-        # tags.include?('trending')
+        # !tags.include?('trending')
         else
           if user.safe_mode?          
             if recent_voted_ids.empty?
              
               @media = Media.where(
-                'viral and not nsfw', 
+                'not nsfw', 
                 :created_at => span..Time.now
               ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
                 
@@ -305,7 +305,7 @@ class Media < ActiveRecord::Base
                 if has_voted_ids.empty?
             
                   @media = Media.where(
-                    'viral and not nsfw'
+                    'not nsfw'
                   ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
             
                 # !has_voted_ids.empty?
@@ -314,7 +314,7 @@ class Media < ActiveRecord::Base
                   @media = Media.where(
                     'media.id not in (?)', has_voted_ids
                   ).where(
-                    'viral'
+                    'not nsfw'
                   ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
             
                 end
@@ -328,7 +328,7 @@ class Media < ActiveRecord::Base
               ).where(
                 'media.id not in (?)', recent_voted_ids
               ).where(
-                'viral and not nsfw'
+                'not nsfw'
               ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
               
               unless !@media.empty?
@@ -337,7 +337,7 @@ class Media < ActiveRecord::Base
                 if has_voted_ids.empty?
               
                   @media = Media.where(
-                    'viral and not nsfw'
+                    'not nsfw'
                   ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
               
                 # !has_voted_ids.empty?
@@ -346,7 +346,7 @@ class Media < ActiveRecord::Base
                   @media = Media.where(
                     'media.id not in (?)', has_voted_ids
                   ).where(
-                    'viral'
+                    'not nsfw'
                   ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
               
                 end
@@ -359,7 +359,6 @@ class Media < ActiveRecord::Base
             if recent_voted_ids.empty?
             
               @media = Media.where(
-                'viral',
                 :created_at => span..Time.now
               ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
               
@@ -368,17 +367,13 @@ class Media < ActiveRecord::Base
               
                 if has_voted_ids.empty?
               
-                  @media = Media.where(
-                    'viral'
-                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+                  @media = Media.tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
                 
                 # !has_voted_ids.empty?
                 else 
               
                   @media = Media.where(
                     'media.id not in (?)', has_voted_ids
-                  ).where(
-                    'viral'
                   ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
               
                 end
@@ -391,8 +386,6 @@ class Media < ActiveRecord::Base
                 :created_at => span..Time.now
               ).where( 
                 'media.id not in (?)', recent_voted_ids
-              ).where(
-                'viral'
               ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
               
               unless !@media.empty?
@@ -400,17 +393,13 @@ class Media < ActiveRecord::Base
               
                 if has_voted_ids.empty?
               
-                  @media = Media.where(
-                    'viral'
-                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+                  @media = Media.tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
               
                 # !has_voted_ids.empty?
                 else 
               
                   @media = Media.where(
                     'media.id not in (?)', has_voted_ids
-                  ).where(
-                    'viral'
                   ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
               
                 end
