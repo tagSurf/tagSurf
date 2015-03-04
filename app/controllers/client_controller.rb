@@ -97,7 +97,9 @@ class ClientController < ApplicationController
   def signup; end
 
   def share
-    if current_user
+    if current_user and params[:tag] == "trending" 
+      redirect_to "/feed#funny~#{params["id"]}"
+    elsif current_user 
       redirect_to "/feed##{params["tag"]}~#{params["id"]}"
     elsif params["id"] == "0"
       puts "id = #{params[:id]}"
