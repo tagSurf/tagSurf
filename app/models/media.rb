@@ -98,6 +98,7 @@ class Media < ActiveRecord::Base
     offset = options[:offset].nil? ? 0 : options[:offset].to_i
     n = options[:limit].nil? ?  20 : options[:limit].to_i
     id = options[:id].to_i
+    span = 7.days.ago
        
     if user.try(:safe_mode) 
       return [] if Tag.blacklisted?(tags)
@@ -107,13 +108,40 @@ class Media < ActiveRecord::Base
       return [] if Tag.blacklisted?(tags)
     end
 
-    @media = Media.all
     # Media available for non-authed preview
+    # TODO - Holy fracking shit, refactor this!!
+    # If there is no user
     if user.nil?
+      # Viral:true NSFW:true
       if tags.include?('trending')
-        @media  = @media.where(viral: true, nsfw: false).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
+        
+        @media  = Media.where(
+            viral: true, 
+            nsfw: false,
+            :created_at => 2.days.ago..Time.now 
+          ).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
+        # If it is empty, run again with unlimited scope
+        unless !@media.empty?
+          @media  = Media.where(
+            viral: true, 
+            nsfw: false
+          ).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
+        end
+      # NSFW:true
       else
-        @media = @media.where(nsfw: false).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')  
+      
+        @media = Media.where(
+            nsfw: false,
+            :created_at => 2.days.ago..Time.now
+          ).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
+        
+        unless !@media.empty?
+          @media = Media.where(
+            nsfw: false
+          ).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
+        end
+        
+
         if @media.length < 10
           RequestTaggedMedia.perform_async(tag)
         end
@@ -121,45 +149,275 @@ class Media < ActiveRecord::Base
 
     # Authenticated users
     else
-      # Migrate has_voted_ids to Redis
-      # unless has_voted_ids = user.voted_on.present? && user.voted_on.to_a
-      # has_voted_ids = has_voted_ids.collect {|v| v.to_i } 
-      # end
-      has_voted_ids = user.votes.pluck(:votable_id)
+      # Various branches of existance testing and switching based on params.
+      # Complete bullshit. Refactor this please!
+      recent_voted_ids = user.votes.where(:created_at => span..Time.now).pluck(:votable_id)
 
       referrals = Referral.select(:media_id).where(user_id: user.id)
       if !referrals.empty?
-        @media = @media.where('id in (?)', referrals).order('ts_score DESC NULLS LAST')
+ 
+        @media = Media.where('id in (?)', referrals).order('ts_score DESC NULLS LAST')
+ 
       else
         if tags.include?('trending') && tags.length == 1
-          if user.safe_mode? 
-            if has_voted_ids.empty?
-              @media = @media.where('viral and not nsfw').limit(n).order('ts_score DESC NULLS LAST')
+          if user.safe_mode?          
+            if recent_voted_ids.empty?
+             
+              @media = Media.where(
+                'viral and not nsfw', 
+                :created_at => span..Time.now
+              ).limit(n).order('ts_score DESC NULLS LAST')
+                
+              # Nothing returned from limited scope
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+            
+                if has_voted_ids.empty?
+            
+                  @media = Media.where(
+                    'viral and not nsfw'
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+            
+                # !has_voted_ids.empty?
+                else
+            
+                  @media = Media.where(
+                    'viral and not nsfw'
+                  ).where(
+                    'id not in (?)', has_voted_ids 
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+            
+                end
+              end
+            
+            # !recent_vote_ids.empty?
             else 
-              @media = @media.where('id not in (?) and viral and not nsfw', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
+             
+              @media = Media.where(
+                :created_at => span..Time.now
+              ).where(
+                'viral and not nsfw'
+              ).where(
+                'id not in (?)', recent_voted_ids
+              ).limit(n).order('ts_score DESC NULLS LAST')
+              
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+            
+                if has_voted_ids.empty?
+              
+                  @media = Media.where(
+                    'viral and not nsfw'
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+              
+                # !has_voted_ids.empty?
+                else 
+              
+                  @media = Media.where(
+                    'id not in (?)', has_voted_ids
+                  ).where(
+                    'viral and not nsfw'
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+              
+                end
+              end
             end
+          
+          # !user.safe_mode?          
           else
-            if has_voted_ids.empty?
-              @media = @media.where('viral').limit(n).order('ts_score DESC NULLS LAST')
-            else
-              @media = @media.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
+         
+            if recent_voted_ids.empty?
+            
+              @media = Media.where(
+                'viral',
+                :created_at => span..Time.now 
+              ).limit(n).order('ts_score DESC NULLS LAST')
+              
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+              
+                if has_voted_ids.empty?
+              
+                  @media = Media.where(
+                    'viral'
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+                
+                # !has_voted_ids.empty?
+                else 
+              
+                  @media = Media.where(
+                    'id not in (?)', has_voted_ids
+                  ).where(
+                    'viral'
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+              
+                end
+              end
+            
+            # !recent_voted_ids.empty?
+            else 
+
+              @media = Media.where(
+                :created_at => span..Time.now
+              ).where( 
+                'id not in (?)', recent_voted_ids
+              ).where(
+                'viral'
+              ).limit(n).order('ts_score DESC NULLS LAST')
+              
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+              
+                if has_voted_ids.empty?
+              
+                  @media = Media.where(
+                    'viral'
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+              
+                # !has_voted_ids.empty?
+                else 
+              
+                  @media = Media.where(
+                      'id not in (?)', has_voted_ids
+                    ).where(
+                      'viral'
+                    ).limit(n).order('ts_score DESC NULLS LAST')
+              
+                end
+              end
             end
           end
+ 
+        # tags.include?('trending')
         else
-          if user.safe_mode?
-            if has_voted_ids.empty?
-              @media = Media.where('not nsfw').tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
-            else
-              @media = Media.where('media.id not in (?) and not nsfw', has_voted_ids).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+          if user.safe_mode?          
+            if recent_voted_ids.empty?
+             
+              @media = Media.where(
+                'viral and not nsfw', 
+                :created_at => span..Time.now
+              ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+                
+              # Nothing returned from limited scope
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+            
+                if has_voted_ids.empty?
+            
+                  @media = Media.where(
+                    'viral and not nsfw'
+                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+            
+                # !has_voted_ids.empty?
+                else
+            
+                  @media = Media.where(
+                    'media.id not in (?)', has_voted_ids
+                  ).where(
+                    'viral'
+                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+            
+                end
+              end
+            
+            # !recent_vote_ids.empty?
+            else 
+             
+              @media = Media.where(
+                :created_at => span..Time.now
+              ).where(
+                'media.id not in (?)', recent_voted_ids
+              ).where(
+                'viral and not nsfw'
+              ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+            
+                if has_voted_ids.empty?
+              
+                  @media = Media.where(
+                    'viral and not nsfw'
+                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+                # !has_voted_ids.empty?
+                else 
+              
+                  @media = Media.where(
+                    'media.id not in (?)', has_voted_ids
+                  ).where(
+                    'viral'
+                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+                end
+              end
             end
+          
+          # !user.safe_mode?          
           else
-            if has_voted_ids.empty?
-              @media = Media.tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
-            else
-              @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+         
+            if recent_voted_ids.empty?
+            
+              @media = Media.where(
+                'viral',
+                :created_at => span..Time.now
+              ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+              
+                if has_voted_ids.empty?
+              
+                  @media = Media.where(
+                    'viral'
+                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+                
+                # !has_voted_ids.empty?
+                else 
+              
+                  @media = Media.where(
+                    'media.id not in (?)', has_voted_ids
+                  ).where(
+                    'viral'
+                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+                end
+              end
+
+            # !recent_voted_ids.empty?
+            else 
+
+              @media = Media.where(
+                :created_at => span..Time.now
+              ).where( 
+                'media.id not in (?)', recent_voted_ids
+              ).where(
+                'viral'
+              ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+              
+                if has_voted_ids.empty?
+              
+                  @media = Media.where(
+                    'viral'
+                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+                # !has_voted_ids.empty?
+                else 
+              
+                  @media = Media.where(
+                    'media.id not in (?)', has_voted_ids
+                  ).where(
+                    'viral'
+                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+                end
+              end
             end
           end
-      
+
           if @media.length < 10 
             tags.each do |tag|
               RequestTaggedMedia.perform_async(tag)
