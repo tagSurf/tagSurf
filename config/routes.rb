@@ -27,12 +27,13 @@ Tagsurf::Application.routes.draw do
   get 'bump/:ref_id'    => 'client#bump'
 
   # Beta access flow, ordered by good path
-  get 'code'        => 'client#access_code'
-  get 'disclaimer'  => 'client#disclaimer'
-  get 'terms'       => 'client#terms'
-  get 'sign-up'     => 'client#signup'
-  get 'resend'      => 'client#resend_link'
-  get 'welcome'     => 'client#welcome'
+  get 'code'               => 'client#access_code'
+  get 'disclaimer'         => 'client#disclaimer'
+  get 'terms'              => 'client#terms'
+  get 'sign-up'            => 'client#signup'
+  get 'resend'             => 'client#resend_link'
+  get 'welcome'            => 'client#welcome'
+  get 'selectusername'     => 'client#username_select'
     
   # Multi-step beta access flow
   post 'confirm-beta'              => 'client#confirm_beta_token'
@@ -69,6 +70,7 @@ Tagsurf::Application.routes.draw do
     get  'users/buddies'                 => 'users#buddies'
     patch  'users/:id'                   => 'users#update'
     get 'users/unsubscribe/:id/:type'    => 'users#unsubscribe'
+    post 'users/check-name/:username'    => 'users#check_username'
 
     # History API
     get  'history/paginated/:limit/:offset'  => 'users#paginated_history'

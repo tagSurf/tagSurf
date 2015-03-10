@@ -27,13 +27,17 @@ class ClientController < ApplicationController
   def index
     # Decide how to direct the user base on state
     usr = current_user
-    if usr and usr.welcomed?
-      redirect_to feed_path
-    elsif usr and !usr.welcomed? 
-      redirect_to welcome_path
-    else 
-      redirect_to user_session_path
+    unless !usr 
+      if !usr.welcomed?
+        redirect_to welcome_path
+      elsif !usr.username
+        redirect_to selectusername_path
+      else
+        redirect_to feed_path
+      end
+      return
     end
+    redirect_to user_session_path
   end
 
   # !!! Deprecated !!!
@@ -127,6 +131,10 @@ class ClientController < ApplicationController
       redirect_to feed_path
     end
   end
+
+  def username_select 
+    @user = current_user
+  end 
 
 
   private

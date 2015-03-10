@@ -3,7 +3,8 @@ class UsersController < ApplicationController
   layout 'client'
 
   def update
-    current_user.update_columns(completed_feature_tour: update_user_params[:confirm_feature_tour])
+    current_user.update(update_user_params)
+
     if current_user.welcomed? 
       redirect_to feed_path
     else
@@ -30,7 +31,7 @@ class UsersController < ApplicationController
   private
   
   def update_user_params
-    params.require(:user).permit(:confirm_feature_tour) 
+    params.require(:user).permit(:confirm_feature_tour, :username) 
   end
 
 

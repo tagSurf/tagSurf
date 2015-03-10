@@ -125,6 +125,16 @@ class Api::UsersController < Api::BaseController
     end
   end
 
+  def check_username
+    username = params[:username]
+    user = User.where(:username => username).first
+    if user.present?
+      render :json =>  [:available => false, :message => "This username is already taken"]
+    else
+      render :json =>  [:available => true]
+    end      
+  end
+
 
 
   private
@@ -137,6 +147,7 @@ class Api::UsersController < Api::BaseController
         :limit, 
         :offset, 
         :email, 
+        :username,
         :confirm_feature_tour
       ) 
     end

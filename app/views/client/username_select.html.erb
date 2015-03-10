@@ -1,0 +1,16 @@
+<%= stylesheet_link_tag "sessions", :media => "all" %>
+
+<%= form_for(@user, :url => user_path(@user), :html => {:method => 'put', :role => 'form'}) do |f| %>
+  <center>
+   <div class="tslogo"></div>
+   <div class="ac-text-container">
+    <p>Pick your surfer name!</p>
+   </div>
+  <div class="input-border-container" style="margin-bottom:10px;">
+    <%= f.text_field :username, placeholder: @user.username, autocomplete: "off", spellcheck: "false", autocapitalize: "off", autocorrect: "off", class: 'ts-input' %>
+  </div>
+
+  <%= f.submit "Submit", class: 'button input-width' %>
+
+  </center>
+<% end %>
