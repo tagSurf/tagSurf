@@ -2,10 +2,11 @@ class ReferMailer < ActionMailer::Base
   default from: "tagSurf@tagsurf.co"
 
   def referred_media_email(user_id, referrer_id, media, referral_id)
-    @referrer_name = User.where(id: referrer_id)[0].email.split("@")[0]
+    @referrer_name = User.find(referrer_id).username ? User.find(referrer_id).username : 
+                                                        User.find(referrer_id).email.split("@")[0]
     @user_id = user_id
-    @email = User.where(id: user_id)[0].email
-    @username = @email.split("@")[0]
+    @email = User.find(user_id).email
+    @username = User.find(user_id).username ? User.find(user_id).username : @email.split("@")[0]
     @media = media
     @referral_id = referral_id
     @caption =  @media.description ? @media.description : @media.title
