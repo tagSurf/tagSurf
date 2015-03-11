@@ -217,7 +217,8 @@ var buildOptionsTable = function (options_cb) {
       safeSurfCheckbox = document.createElement('div'),
       voteButtonsDesc = document.createElement('div'),
       voteButtonsText = document.createElement('div'),
-      voteButtonsCheckbox = document.createElement('div');
+      voteButtonsCheckbox = document.createElement('div'),
+      username = currentUser.username ? currentUser.username : currentUser.email.split("@")[0];
   // Resume Tutorial (if applicable) 
   if(typeof tutorial != "undefined" && tutorial.paused)
     var resumeTutorial = optionsTable.insertRow(0),
@@ -227,7 +228,7 @@ var buildOptionsTable = function (options_cb) {
   optionsTable.className = "inline options-table";
 
   usernameText.innerHTML = "User:<span class='blue'> " 
-    + currentUser.email.split("@")[0] + "</span>";
+    + username + "</span>";
   usernameText.className = "options-key-text";
   usernameText.style.textAlign = "center";
   usernameCell.appendChild(usernameText);

@@ -103,7 +103,7 @@ class Api::UsersController < Api::BaseController
   end
 
   def buddies
-    render json: User.select(:id, :email).order('sign_in_count DESC NULLS LAST').all.map{|user| [user.id, user.email]}
+    render json: User.select(:id, :email, :username).order('sign_in_count DESC NULLS LAST').all.map{|user| [user.id, user.email, user.username]}
   end
 
   def unsubscribe
@@ -125,6 +125,16 @@ class Api::UsersController < Api::BaseController
     end
   end
 
+  def check_username
+    username = params[:username].downcase
+    user = User.where(:username => username).first
+    if user.present?
+      render :json =>  [:available => false, :message => "This username is already taken"]
+    else
+      render :json =>  [:available => true]
+    end      
+  end
+
 
 
   private
@@ -137,6 +147,7 @@ class Api::UsersController < Api::BaseController
         :limit, 
         :offset, 
         :email, 
+        :username,
         :confirm_feature_tour
       ) 
     end

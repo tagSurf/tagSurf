@@ -1,6 +1,6 @@
 
   <%= form_for(current_user, url: user_path, method: :put, class: 'hidden') do |f| %>
-    <%= f.hidden_field :confirm_feature_tour, value: true %>
+    <%= f.hidden_field :completed_feature_tour, value: true %>
     <%= f.submit "Got it!", class: 'button hidden', id: "welcome-submit-btn" %>
   <% end %>
 

@@ -2,10 +2,11 @@ class BumpMailer < ActionMailer::Base
   default from: "tagSurf@tagsurf.co"
 
   def bumped_media_email(user_id, bumper_id, media, referral_id)
-    @bumper_name = User.find(bumper_id).email.split("@")[0]
+    @bumper_name = User.find(bumper_id).username ? User.find(bumper_id).username : 
+                                                    User.find(bumper_id).email.split("@")[0]
     @user_id = user_id
     @email = User.find(user_id).email
-    @username = @email.split("@")[0]
+    @username = User.find(user_id).username ? User.find(user_id).username : @email.split("@")[0]
     @media = media
     @referral_id = referral_id
     @caption =  @media.description ? @media.description : @media.title

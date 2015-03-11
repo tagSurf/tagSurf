@@ -159,7 +159,7 @@ var refer = {
 				buddyPic = document.createElement('img'),
 				buddyName = document.createElement('div'),
 				checkmark = document.createElement('img'),
-				username = b.users[1].split("@")[0],
+				username = b.users[2] ? b.users[2] : b.users[1].split("@")[0],
 				buddy = {
 					id: b.users[0],
 					username: username,

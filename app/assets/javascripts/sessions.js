@@ -12,3 +12,4 @@
 //
 //= require util
 //= require stroke
+//= require gesture

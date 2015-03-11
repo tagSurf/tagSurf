@@ -4,6 +4,7 @@ var authorizedSession = null,
     currentUser = {
       id : null,
       email : null,
+      username: null,
       slug : null,
       vote_btns : true,
       admin : false
@@ -72,6 +73,7 @@ var getUser = function () {
         if (result.user != "not found") {
           currentUser.id = result.user.id;
           currentUser.email = result.user.email;
+          currentUser.username = result.user.username;
           currentUser.slug = result.user.slug;
           currentUser.admin = result.user.admin;
           currentUser.safeSurf = result.user.safe_mode;
