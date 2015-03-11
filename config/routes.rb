@@ -70,7 +70,7 @@ Tagsurf::Application.routes.draw do
     get  'users/buddies'                 => 'users#buddies'
     patch  'users/:id'                   => 'users#update'
     get 'users/unsubscribe/:id/:type'    => 'users#unsubscribe'
-    post 'users/check-name/:username'    => 'users#check_username'
+    get 'users/check-name/:username'     => 'users#check_username'
 
     # History API
     get  'history/paginated/:limit/:offset'  => 'users#paginated_history'

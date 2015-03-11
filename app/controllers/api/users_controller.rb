@@ -126,7 +126,7 @@ class Api::UsersController < Api::BaseController
   end
 
   def check_username
-    username = params[:username]
+    username = params[:username].downcase
     user = User.where(:username => username).first
     if user.present?
       render :json =>  [:available => false, :message => "This username is already taken"]

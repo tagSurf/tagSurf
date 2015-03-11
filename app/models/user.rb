@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
 
   validates_presence_of :slug
 
-  validates_uniqueness_of :username, :message => "username taken"
+  validates_uniqueness_of :username, :allow_blank => true, :message => "username taken"
 
   scope :sorted_history, order("created_at ASC")
 

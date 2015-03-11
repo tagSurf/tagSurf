@@ -94,3 +94,15 @@ html, body {
 	margin-bottom: 0px !important;
 	width: 225px;
 }
+#check-indicator {
+	position: relative;
+	left: 60%;
+	top: -100%;
+	font-size: 200%;
+}
+.available {
+	color:#00a651;
+}
+.unavailable {
+	color:#ff0000;
+}

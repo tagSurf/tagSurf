@@ -5,11 +5,11 @@ class UsersController < ApplicationController
   def update
     current_user.update(update_user_params)
 
-    if current_user.welcomed? 
-      redirect_to feed_path
-    else
+    # if current_user.welcomed? 
+    #   redirect_to feed_path
+    # else
       redirect_to root_path
-    end
+    # end
   end
 
   def new
@@ -31,7 +31,7 @@ class UsersController < ApplicationController
   private
   
   def update_user_params
-    params.require(:user).permit(:confirm_feature_tour, :username) 
+    params.require(:user).permit(:completed_feature_tour, :username) 
   end
 
 
