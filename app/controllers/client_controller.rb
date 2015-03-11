@@ -101,7 +101,9 @@ class ClientController < ApplicationController
   def signup; end
 
   def share
-    if current_user and params[:tag] == "trending" 
+    if current_user and !current_user.username
+      redirect_to selectusername_path
+    elsif current_user and params[:tag] == "trending" 
       redirect_to "/feed#funny~#{params["id"]}"
     elsif current_user 
       redirect_to "/feed##{params["tag"]}~#{params["id"]}"
@@ -128,7 +130,7 @@ class ClientController < ApplicationController
 
   def welcome
     if current_user.welcomed?
-      redirect_to feed_path
+      redirect_to root_path
     end
   end
 
