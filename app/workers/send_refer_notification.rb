@@ -8,15 +8,15 @@ class SendReferNotification
 	media = Media.unscoped.find(ref.media_id)
 	referrer_id = ref.referrer_id
 	user_id = ref.user_id
-	referrer = User.find(referrer_id)
+	referrer_name = User.find(referrer_id).username
     unless !User.find(user_id).refer_mailers
 	    ReferMailer.referred_media_email(user_id, referrer_id, media, referral_id).deliver
 	end
 
-	message = '@#{referrer.username} shared something with you!'
+	message = "@#{referrer_name} shared something with you!"
 
 	notification = {
-		:aliases => ['#{user_id}'],
+		:aliases => [user_id],
 		:aps => {:alert => message, :badge => 1}
 	}
 

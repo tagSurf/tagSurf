@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150312234149) do
+ActiveRecord::Schema.define(version: 20150317223840) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,7 @@ ActiveRecord::Schema.define(version: 20150312234149) do
     t.string   "bumper_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "seen",        default: false, null: false
   end
 
   add_index "bumps", ["bumper_id"], name: "index_bumps_on_bumper_id", using: :btree
@@ -110,6 +111,7 @@ ActiveRecord::Schema.define(version: 20150312234149) do
     t.datetime "updated_at"
     t.boolean  "voted",           default: false, null: false
     t.boolean  "bumped",          default: false, null: false
+    t.boolean  "seen",            default: false, null: false
   end
 
   add_index "referrals", ["media_id"], name: "index_referrals_on_media_id", using: :btree
