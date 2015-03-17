@@ -32,6 +32,8 @@ class ClientController < ApplicationController
         redirect_to welcome_path
       elsif !usr.username
         redirect_to selectusername_path
+      elsif !usr.push_requested
+        redirect_to "/push##{current_user.id}"
       else
         redirect_to feed_path
       end
@@ -103,15 +105,25 @@ class ClientController < ApplicationController
   def share
     if current_user and !current_user.username
       redirect_to selectusername_path
+    elsif current_user and !current_user.push_requested
+      redirect_to "/push##{current_user.id}"
     elsif current_user and params[:tag] == "trending" 
       redirect_to "/feed#funny~#{params["id"]}"
     elsif current_user 
       redirect_to "/feed##{params["tag"]}~#{params["id"]}"
     elsif params["id"] == "0"
-      puts "id = #{params[:id]}"
       confirm_surfable
     end
     @media = Media.where(id: params[:id]).try(:first)
+  end
+
+  def push_enable
+    user = User.find(current_user.id)
+    user.update_column :push_requested, true
+    redirect_to "/feed#funny~0"    
+  end
+
+  def push
   end
 
   def bump

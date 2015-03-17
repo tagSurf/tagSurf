@@ -38,6 +38,13 @@ module Tagsurf
     config.action_mailer.perform_deliveries = true
     config.action_mailer.raise_delivery_errors = false
 
+    # Urban Airship Config
+    Urbanairship.application_key = 'mrUA6v29S_qi2NrV_avUsA'
+    Urbanairship.application_secret = 'mVtZIrpMRjuaug4RdNdwOw'
+    Urbanairship.master_secret = 'z0pJo8KuSdKt2wolfj3Oiw'
+    Urbanairship.logger = Rails.logger
+    Urbanairship.request_timeout = 5 #default value
+
     # redis_active = Rails.env.development? ? false : true
     CONFIG[:redis_active] = true #redis_active  
 

@@ -26,6 +26,10 @@ Tagsurf::Application.routes.draw do
   get 'tag'             => 'client#tag'
   get 'bump/:ref_id'    => 'client#bump'
 
+  #Enable Push
+  get 'push-enable/:user_id'  => 'client#push_enable'
+  get 'push'                  => 'client#push'
+
   # Beta access flow, ordered by good path
   get 'code'               => 'client#access_code'
   get 'disclaimer'         => 'client#disclaimer'
@@ -41,7 +45,7 @@ Tagsurf::Application.routes.draw do
   post 'confirm-terms'             => 'client#terms_agreement'
 
   # User routes
-  put 'user'                           => 'users#update'
+  put 'user'               => 'users#update'
 
   # JSON API
   namespace :api do
@@ -94,6 +98,7 @@ Tagsurf::Application.routes.draw do
 
     #Bumps API
     post 'bump/:media_id/:sharer_ids'       => 'bumps#create'
+
 
   end
 
