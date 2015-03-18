@@ -84,9 +84,11 @@ class Api::UsersController < Api::BaseController
     @user = current_user
     results = {:user => @user}
     if @user
-      results['total_votes'] = @user.find_voted_items.count
-      results['up_votes']    = @user.find_up_voted_items.count
-      results['down_votes']  = @user.find_down_voted_items.count
+      # results['total_votes'] = @user.find_voted_items.count
+      # results['up_votes']    = @user.find_up_voted_items.count
+      # results['down_votes']  = @user.find_down_voted_items.count
+      results['unseen_bumps'] = Bump.unscoped.where(:sharer_id => @user.id, :seen => false).count
+      results['unseen_referrals'] = Referral.unscoped.where(:user_id => @user.id, :seen => false).count
       render json: results
     else
       results[:user] = "not found"

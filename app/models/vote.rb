@@ -68,7 +68,9 @@ class Vote < ActiveRecord::Base
     referrals = Referral.where(user_id: self.voter_id).where(media_id: self.votable_id)
     referrals.each do |ref|
       ref.update_column("voted", true);
+      ref.update_column("seen", true);
     end
+    UpdateBadgeIcon.perform_async(self.voter_id)
   end
    
 end
