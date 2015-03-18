@@ -14,7 +14,7 @@ var gnodes = {},
 	if (gallery == "favorites") favGrid = grid;
 	addCss({
 		".gridwrapper": function() {
-			return "height: " + (window.innerHeight - 50) +
+			return "height: " + (window.innerHeight - 39) +
 				"px; width:" + window.innerWidth + "px";
 		}
 	});
@@ -24,8 +24,62 @@ var gnodes = {},
 	 			return "width: 75%; margin: auto;";
 	 		}
 	 	});
-	gridwrapper.appendChild(grid);
+
 	document.body.appendChild(gridwrapper);
+
+	if (gallery == "shares"){
+		var selector = document.createElement('div'),
+			from_box = document.createElement('div'),
+			to_box = document.createElement('div');
+
+		selector.id = "gallery-toggler";
+		to_box.id = "to-selector";
+		to_box.innerHTML = "to";
+		to_box.className = 'inline selected-cell';
+		from_box.id = "from-selector";		
+		from_box.innerHTML = "from";
+		from_box.className = 'inline';
+		selector.appendChild(to_box);
+		selector.appendChild(from_box);
+		gridwrapper.appendChild(selector);
+
+		gesture.listen("down", to_box, function(){
+			toggleClass.call(to_box, "active-cell");
+		});
+		gesture.listen("up", to_box, function(){
+			toggleClass.call(to_box, "active-cell");
+		});
+		gesture.listen("tap", to_box, function() {
+			if(!referrals_made)
+				return;
+			toggleClass.call(to_box, "selected-cell");
+			toggleClass.call(from_box, "selected-cell");
+			referrals_made = false;
+			grid.innerHTML = "";
+			chunk_offset = 0;
+			populateGallery();
+		});
+
+
+		gesture.listen("down", from_box, function(){
+			toggleClass.call(from_box, "active-cell");
+		});
+		gesture.listen("up", from_box, function(){
+			toggleClass.call(from_box, "active-cell");
+		});
+		gesture.listen("tap", from_box, function() {
+			if(referrals_made)
+				return;
+			toggleClass.call(from_box, "selected-cell");
+			toggleClass.call(to_box, "selected-cell");
+			referrals_made = true;
+			grid.innerHTML = "";
+			chunk_offset = 0;
+			populateGallery();
+		});
+	}
+	
+	gridwrapper.appendChild(grid);
 
 	var voteMeter = function(d, fullRound) {
 		var trending = d.trend == "up";

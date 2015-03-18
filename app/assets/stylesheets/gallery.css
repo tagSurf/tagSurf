@@ -120,6 +120,32 @@ img[src="img/history_icon_gray.png"] {
   background-color: #00719C !important;
 }
 
+/*===== Share toggler stuff =====*/
+#gallery-toggler {
+	padding-top: 30px;
+	text-align: center;
+	font-size: 200%;
+}
+#to-selector {
+	border: 3px solid #00aeef;
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
+	min-width: 25%;
+}
+#from-selector {
+	border: 3px solid #00aeef;
+	border-top-right-radius: 8px;
+	border-bottom-right-radius: 8px;
+	min-width: 25%;
+}
+.selected-cell {
+	background-color: #00aeef;
+}
+.active-cell {
+  color: #404041;
+  background-color: #00719C !important;
+}
+
 /*===== This targets tablets and desktops ========*/
 @media only screen and (min-width: 700px){
 	.header {
@@ -178,5 +204,11 @@ img[src="img/history_icon_gray.png"] {
 	}
 	.pictagcell {
 		margin: 10px 7px;
+	}
+	#to-selector {
+		min-width: 8%;
+	}
+	#from-selector {
+		min-width: 8%;
 	}
 }
