@@ -7,7 +7,9 @@ var authorizedSession = null,
       username: null,
       slug : null,
       vote_btns : true,
-      admin : false
+      admin : false,
+      unseen_bumps : 0,
+      unseen_refs : 0
     },
     returnTrue = function() { return true; },
     hasSwiped = false,
@@ -60,7 +62,7 @@ var isAuthorized = function () {
     authorizedSession = true;
     if (!isDesktop())
       currentUser.vote_btns = false;
-    setTimeout(function () { getUser(); }, 3000);
+    setTimeout(function() { getUser(); }, 3000);
   }
   else
     authorizedSession = false;
@@ -77,12 +79,39 @@ var getUser = function () {
           currentUser.slug = result.user.slug;
           currentUser.admin = result.user.admin;
           currentUser.safeSurf = result.user.safe_mode;
+          currentUser.unseen_bumps = result.unseen_bumps;
+          currentUser.unseen_refs = result.unseen_referrals;
+          if ((currentUser.unseen_bumps + currentUser.unseen_refs) != 0)
+            updateMenuBadges(currentUser.unseen_bumps + currentUser.unseen_refs);
         } 
       }, function(result) {
         if (result.user == "not found" && DEBUG) 
           console.log("Error: User not found");
       });
+  setTimeout(function() { userStatsPoller()}, 5000);
 };
+
+// This might degrade performance at scale.
+// Consider websockets as possible alternative
+var userStatsPoller = function () {
+  xhr('/api/users', "GET", function(result) {
+      if (result.user != "not found") {
+        currentUser.safeSurf = result.user.safe_mode;
+        if (currentUser.unseen_bumps != result.unseen_bumps 
+            || currentUser.unseen_refs != result.unseen_referrals) {
+          currentUser.unseen_bumps = result.unseen_bumps;
+          currentUser.unseen_refs = result.unseen_referrals;
+          updateMenuBadges(currentUser.unseen_bumps + currentUser.unseen_refs);
+        }
+      }
+    }, function(result) {
+      if (result.user == "not found" && DEBUG) 
+        console.log("Error: User not found");
+    });
+  setTimeout(function() { userStatsPoller(); }, 5000);
+}
+
+
 
 // autocomplete stuff
 var current_tag, current_deck, cardCbs, tinput, inputContainer, slideContainer,

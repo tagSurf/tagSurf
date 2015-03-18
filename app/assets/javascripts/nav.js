@@ -20,7 +20,7 @@ var populateNavbar = function () {
             : ("<img class='gallery-icon' src='http://assets.tagsurf.co/img/" + gallery + "_icon_gray.png'><span id='gallery-name' class='pointer'>" + gallery.toUpperCase() + "</span>"))
           : "<img id='tagsurf-logo' src='http://assets.tagsurf.co/img/logo_big.png'></img>",
         "</span><span id='history-logo'>HISTORY</span>",
-        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='http://assets.tagsurf.co/img/down_arrow_nav.png'></img><div id='nav-badge' class='badge-icon'>50</div>",
+        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='http://assets.tagsurf.co/img/down_arrow_nav.png'></img><div id='nav-badge' class='badge-icon hidden'>0</div>",
       "</label>",
     "</div>",
   ], 
@@ -435,6 +435,12 @@ var setFavIcon = function(filled) {
 };
 
 var updateMenuBadges = function(number) {
-  menuBadge = document.getElementById('nav-badge');
-  menuBadge.innerHTML = number;
+  var navBarBadge = document.getElementById('nav-badge');
+  
+  if (number == 0 && !navBarBadge.classList.contains('hidden'))
+    navBarBadge.classList.add('hidden');
+  else if (number != 0 && navBarBadge.classList.contains('hidden'))
+    navBarBadge.classList.remove('hidden');
+  
+  navBarBadge.innerHTML = number;
 }

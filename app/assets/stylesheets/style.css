@@ -911,10 +911,10 @@ a {
 	color: white;
 	background-color: red;
 	border-radius: 50px;
-	padding: 0 9px 6px 9px;
+	padding: 0 9px 5px 9px;
+	margin-top: 2px;
 	text-align: center;
 }
-
 #nav-badge {
 	position: absolute;
 	left: 62%;
