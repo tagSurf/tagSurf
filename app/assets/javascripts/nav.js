@@ -20,7 +20,7 @@ var populateNavbar = function () {
             : ("<img class='gallery-icon' src='http://assets.tagsurf.co/img/" + gallery + "_icon_gray.png'><span id='gallery-name' class='pointer'>" + gallery.toUpperCase() + "</span>"))
           : "<img id='tagsurf-logo' src='http://assets.tagsurf.co/img/logo_big.png'></img>",
         "</span><span id='history-logo'>HISTORY</span>",
-        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='http://assets.tagsurf.co/img/down_arrow_nav.png'></img>",
+        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='http://assets.tagsurf.co/img/down_arrow_nav.png'></img><div id='nav-badge' class='badge-icon'>50</div>",
       "</label>",
     "</div>",
   ], 
@@ -433,3 +433,8 @@ var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
     "http://assets.tagsurf.co/img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
 };
+
+var updateMenuBadges = function(number) {
+  menuBadge = document.getElementById('nav-badge');
+  menuBadge.innerHTML = number;
+}

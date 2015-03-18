@@ -907,6 +907,19 @@ a {
 	width: 80%;
 	vertical-align: bottom;
 }
+.badge-icon {
+	color: white;
+	background-color: red;
+	border-radius: 50px;
+	padding: 0 9px 6px 9px;
+	text-align: center;
+}
+
+#nav-badge {
+	position: absolute;
+	left: 62%;
+	top: 0;
+}
 
 /*===== Options Menu Stuff ======*/
 .options-table {
@@ -1009,10 +1022,14 @@ a {
 	.buddy-list-container {
 		max-height: 68%;
 	}
+	.nav-badge{ 
+		left: 62%;
+	}
+
 }
 
 /*===== This targets tablets and desktops ========*/
-@media only screen and (min-width: 700px){
+@media only screen and (min-width: 1000px){
 	#add-tag-autocomplete {
 	  top: 47px;
 	  left: 32%;
@@ -1189,5 +1206,8 @@ a {
 	#buddy-search {
 		width: 87%;
 		margin: 0px 0 2px -3px;
+	}
+	#nav-badge {
+		left: 54%;
 	}
 }
