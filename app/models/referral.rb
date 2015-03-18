@@ -16,7 +16,7 @@ class Referral < ActiveRecord::Base
 
   
 # Return referrals made BY a user
-  def self.made_paginated_collection(user_id, limit, offset, safe)
+  def self.paginated_collection_made(user_id, limit, offset, safe)
     media = Array.new
     @offset = offset
     @limit = limit
@@ -66,7 +66,7 @@ class Referral < ActiveRecord::Base
   end
 
 # Return referrals made to a user
-  def self.received_paginated_collection(user_id, limit, offset, safe)
+  def self.paginated_collection_received(user_id, limit, offset, safe)
     media = Array.new
     @offset = offset
     @limit = limit
