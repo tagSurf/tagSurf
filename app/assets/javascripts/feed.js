@@ -22,7 +22,7 @@ onload = function ()
 	current_tag = tinput.value = document.location.hash.slice(1).split("~")[0]
 		|| document.location.pathname.split("/")[2] 
 		|| document.location.pathname.split("#")[1]
-		|| "holdmybeer";
+		|| "funny";
 	inputContainer = document.getElementById("input-container");
 	scrollContainer = document.getElementById('scroll-container');
 	slideContainer = document.getElementById('slider');
