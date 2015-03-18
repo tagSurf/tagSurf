@@ -40,7 +40,7 @@ var toggleClass = function (className, onOrOff) {
   else if (!classIsOn && onOrOff != "off")
     this.classList.add(className);
 };
-var galleries = ["history", "favorites", "submissions", "tag", "recommendations"];
+var galleries = ["history", "favorites", "submissions", "tag", "shares"];
 var whichGallery = function() {
   for (var i = 0; i < galleries.length; i++)
     if (document.location.pathname.indexOf(galleries[i]) != -1)
@@ -58,7 +58,8 @@ var isGallery = function() {
 var isAuthorized = function () {
   if (authorizedSession != null)
     return authorizedSession;
-  if (document.location.href.indexOf('share') == -1) {
+  if (document.location.href.indexOf('share') == -1 
+    || document.location.href.indexOf('shares') != -1) {
     authorizedSession = true;
     if (!isDesktop())
       currentUser.vote_btns = false;

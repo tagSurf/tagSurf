@@ -920,6 +920,17 @@ a {
 	left: 62%;
 	top: 0;
 }
+#slider-badge {
+	position: absolute !important;
+	left: 59% !important;
+	top: 50%;
+	width: initial !important;
+}
+.small-badge {
+	font-size: 80%;
+	padding: 0 7px 3px 7px;
+	border-radius: 90px;
+}
 
 /*===== Options Menu Stuff ======*/
 .options-table {

@@ -92,7 +92,7 @@ class ClientController < ApplicationController
   def favorites; end
   def history; end
   def submissions; end
-  def recommendations; end
+  def shares; end
   def tag; end
   def device; end
 
