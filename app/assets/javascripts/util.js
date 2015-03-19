@@ -84,6 +84,8 @@ var getUser = function () {
           currentUser.unseen_refs = result.unseen_referrals;
           if ((currentUser.unseen_bumps + currentUser.unseen_refs) != 0)
             updateMenuBadges(currentUser.unseen_bumps + currentUser.unseen_refs);
+            if (isGallery() && whichGallery() == "shares")
+              updateGalleryBadges(currentUser.unseen_refs, currentUser.unseen_bumps, true);
         } 
       }, function(result) {
         if (result.user == "not found" && DEBUG) 
@@ -103,6 +105,8 @@ var userStatsPoller = function () {
           currentUser.unseen_bumps = result.unseen_bumps;
           currentUser.unseen_refs = result.unseen_referrals;
           updateMenuBadges(currentUser.unseen_bumps + currentUser.unseen_refs);
+          if (isGallery() && whichGallery() == "shares")
+            updateGalleryBadges(currentUser.unseen_refs, currentUser.unseen_bumps);
         }
       }
     }, function(result) {

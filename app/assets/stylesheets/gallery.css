@@ -145,7 +145,18 @@ img[src="img/history_icon_gray.png"] {
   color: #404041;
   background-color: #00719C !important;
 }
-
+#to-badge {
+	position: absolute;
+	font-size: 55%;
+	left: 22%;
+	top: 3%;
+}
+#from-badge {
+	position: absolute;
+	font-size: 55%;
+	right: 22%;
+	top: 3%;
+}
 /*===== This targets tablets and desktops ========*/
 @media only screen and (min-width: 700px){
 	.header {
@@ -210,5 +221,13 @@ img[src="img/history_icon_gray.png"] {
 	}
 	#from-selector {
 		min-width: 8%;
+	}
+	#to-badge {
+		left: 41%;
+		top: 2%;
+	}
+	#from-badge {
+		right: 41%;
+		top: 2%;
 	}
 }
