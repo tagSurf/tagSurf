@@ -164,6 +164,7 @@ img[src="img/history_icon_gray.png"] {
 	right: -7%;
 	top: -9%;
 	padding: 0 9px 4px 9px;
+	min-width: 30%;
 }
 #referrals {
 	border: 2px solid #00aeef;
@@ -206,6 +207,7 @@ img[src="img/history_icon_gray.png"] {
 	right: 2%;
 	top: -8%;
 	z-index: 3;
+	min-width: initial;
 }
 
 /*===== This Targets Anything Above iPhone 5 ========*/
@@ -215,6 +217,9 @@ img[src="img/history_icon_gray.png"] {
 	}
 	.gallery-user-name {
 		font-size: 120%;
+	}
+	.chicklet-badge {
+		min-width: 28%;
 	}
 }
 
@@ -298,6 +303,7 @@ img[src="img/history_icon_gray.png"] {
 		right: -4%;
 		top: -3%;
 		padding: 0 11px 5px 11px;
+		min-width: 8%;
 	}
 	.gallery-user-pic {
 		width: 100px;
