@@ -1,4 +1,5 @@
 .box {
+	position: relative;
 	width: 29.75%;
 	float: left;
 	background-size: cover;
@@ -157,6 +158,67 @@ img[src="img/history_icon_gray.png"] {
 	right: 22%;
 	top: 3%;
 }
+.chicklet-badge {
+	font-size: 140%;
+	position: absolute;
+	right: -7%;
+	top: -9%;
+	padding: 0 9px 4px 9px;
+}
+#referrals {
+	border: 2px solid #00aeef;
+	border-radius: 5px;
+	text-align: center;
+	margin: 20px 0;
+	font-size: 140%;
+}
+.gallery-user-cell {
+	position: relative;
+	text-align: left;
+	margin: 2% 0;
+}
+.gallery-user-pic {
+	width: 50px;
+	margin-left: 2%;
+}
+.gallery-bump-btn {
+	padding: 5px;
+	position: absolute;
+	right: 2%;
+	top: 0;
+}
+.gallery-user-name {
+	font-size: 110%;
+	vertical-align: top;
+	font-weight: 300;
+	margin: 2% 0 0 2%;
+}
+.gallery-bump-btn-active {
+	opacity: 0.3 !important;
+}
+.gallery-bump-icon {
+	width: 50px;
+}
+.ref-badge {
+	width: 25px;
+	height: 25px;
+	position: absolute;
+	right: 2%;
+	top: -8%;
+	z-index: 3;
+}
+
+/*===== This Targets Anything Above iPhone 5 ========*/
+@media only screen and (min-width: 340px){
+	#referrals {
+		font-size: 160%;
+	}
+	.gallery-user-name {
+		font-size: 120%;
+	}
+}
+
+
 /*===== This targets tablets and desktops ========*/
 @media only screen and (min-width: 700px){
 	.header {
@@ -229,5 +291,31 @@ img[src="img/history_icon_gray.png"] {
 	#from-badge {
 		right: 41%;
 		top: 2%;
+	}
+	.chicklet-badge {
+		font-size: 180%;
+		position: absolute;
+		right: -4%;
+		top: -3%;
+		padding: 0 11px 5px 11px;
+	}
+	.gallery-user-pic {
+		width: 100px;
+		margin-left: 1%;
+	}
+	.gallery-user-name {
+		font-size: 180%;
+	}
+	.gallery-bump-icon {
+		width: 100px;
+	}
+	#referrals {
+		font-size: 180%;
+	}
+	.ref-badge {
+		width: 50px;
+		height: 50px;
+		right: 1%;
+		top: -10%;
 	}
 }

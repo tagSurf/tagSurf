@@ -6,7 +6,7 @@ var gnodes = {},
 	populateGallery = null,
 	chunk_offset = 0, 
 	gallerize = function(gallery) {
-		var picbox, topbar, bigpic, picdesc, pictags, link;
+		var picbox, topbar, bigpic, picdesc, pictags, link, refbtn, refbox;
 		var grid = document.createElement("div");
 		var gridwrapper = document.createElement("div");
 		grid.className = "grid";
@@ -121,6 +121,7 @@ var gnodes = {},
 				refbtn = document.getElementById("ref-btn");
 				picdesc = document.getElementById("picdesc");
 				pictags = document.getElementById("pictags");
+				refbox = document.getElementById("referrals");
 				return;
 			}
 			var closebtn = document.createElement('img');
@@ -217,6 +218,11 @@ var gnodes = {},
 			picdesc.className = "centered";
 			picbox.appendChild(picdesc);
 
+			refbox = document.createElement("div");
+			refbox.id = "referrals";
+			refbox.className = "hidden";
+			picbox.appendChild(refbox);
+
 			pictags = document.createElement("div");
 			pictags.id = pictags.className = "pictags";
 			picbox.appendChild(pictags);
@@ -276,6 +282,58 @@ var gnodes = {},
 			});
 			pictags.appendChild(p);
 		};
+
+		var populateReferral = function(ref, card_id) {
+			if(!ref)
+				return;
+			var cell = document.createElement('div'),
+				pic = document.createElement('img'),
+				usr = document.createElement('div'),
+				bumpBtn = document.createElement('div'),
+				bumpIcon = document.createElement('img'),
+				badge = document.createElement('div'),
+				referrer_id = ref.user_id;
+			cell.className = "gallery-user-cell";
+			pic.className = "gallery-user-pic inline";
+			pic.src = "http://assets.tagsurf.co/img/UserAvatar.png";
+			usr.className = "gallery-user-name inline";
+			usr.innerHTML = ref.username.split("@")[0];
+			bumpBtn.className = "gallery-bump-btn";
+			bumpIcon.className = "gallery-bump-icon";
+			bumpIcon.src = ref.bumped ? "http://assets.tagsurf.co/img/bumped.png" 
+				: "http://assets.tagsurf.co/img/bump_white.png";
+			bumpBtn.appendChild(bumpIcon);
+			
+			badge.className = "badge-icon ref-badge hidden";
+			if (!ref.seen && ref.seen !== null)
+				toggleClass.apply(badge, ["hidden", "off"]);
+
+			cell.appendChild(badge);
+			cell.appendChild(pic);
+			cell.appendChild(usr);
+			cell.appendChild(bumpBtn);
+			refbox.appendChild(cell);
+
+			if (referrals_made && !ref.bumped)
+				toggleClass.apply(bumpIcon, ["hidden", "on"]);
+			
+			if(!referrals_made && !ref.bumped) {
+				gesture.listen("tap", bumpBtn, function() {
+				    bumpIcon.src = "http://assets.tagsurf.co/img/bumped.png";
+				    gesture.unlisten(bumpBtn);
+				    toggleClass.apply(badge, ["hidden", "on"]);
+				    xhr("/api/bump/" + card_id + "/" + referrer_id, "POST", null, null);
+				});
+				gesture.listen("down", bumpBtn, function () {
+				    bumpBtn.classList.add('gallery-bump-btn-active');
+			    });
+				gesture.listen("up", bumpBtn, function () {
+				    bumpBtn.classList.remove('gallery-bump-btn-active');
+			    });
+			}
+		};
+
+
 		var showImage = function(d) {
 			current_gallery_image = d;
 			setCurrentMedia(current_gallery_image);
@@ -321,6 +379,26 @@ var gnodes = {},
 					buildTagBlock(objwrap, tagName);
 			});
 			setFavIcon(current_gallery_image.user_stats.has_favorited);
+
+			if (d.referral && gallery == "shares") {
+				refbox.innerHTML = referrals_made ? "Recommended By You To" 
+														: "Recommended For You By";
+				toggleClass.apply(refbox, ["hidden", "off"]);
+				var badge = document.getElementById(d.id + "-badge");
+				d.referral.forEach(function(r) {
+					populateReferral(r, d.id);
+					if (!r.seen && r.seen !== null){
+						if (r.bump_id)
+							xhr("/api/bump/seen/" + r.bump_id, "GET", null, null);
+						else 
+							xhr("/api/referral/seen/" + r.referral_id, "GET", null, null);
+					}
+				});
+				badge.innerHTML = 0
+				toggleClass.apply(badge, ["hidden", "on"]);
+			}
+			else
+				toggleClass.apply(refbox, ["hidden", "on"]);
 		};
 		setAddCallback(function(tag) {
 			var objwrap = {};
@@ -384,6 +462,22 @@ var gnodes = {},
 				spacerHeightPercent = Math.round(100 * (spacerHeight / boxWidth));
 			spacer.style.paddingTop = spacerHeightPercent + "%";
 
+			// Gallery badge stuff  
+			var badge = document.createElement("div"), 
+				badge_count = 0;
+			badge.id = d.id + "-badge";
+			badge.className = "badge-icon small-badge inline chicklet-badge hidden";
+			if (d.referral) {
+				d.referral.forEach(function(r) {
+					if(!r.seen && r.seen !== null)
+						badge_count += 1;
+				});
+			};
+			badge.innerHTML = badge_count;
+			if (badge_count != 0 && gallery == "shares")
+				toggleClass.apply(badge, ["hidden", "off"]);
+
+			n.appendChild(badge);
 			n.appendChild(top);
 			n.appendChild(spacer);
 			n.appendChild(voteMeter(d));
@@ -459,7 +553,7 @@ var gnodes = {},
 
 		document.getElementById("favorites-btn").onclick = function() {
 			if (current_gallery_image) {
-				if (gallery == "history") {
+				if (gallery == "history" || gallery == "shares") {
 					current_gallery_image.user_stats.has_favorited =
 						!current_gallery_image.user_stats.has_favorited;
 					xhr("/api/favorites/" + current_gallery_image.id,
