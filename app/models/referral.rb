@@ -9,7 +9,7 @@ class Referral < ActiveRecord::Base
   belongs_to :user
   belongs_to :media
 
-  has_many :bumps, :foreign_key => :referral_id
+  has_one :bump, :foreign_key => :referral_id
 
   after_commit :find_vote, 	on: :create
   after_commit :send_notification, on: :create
@@ -56,6 +56,8 @@ class Referral < ActiveRecord::Base
           user_id: r.user_id,
           username: User.find(r.user_id).email,
           bumped: r.bumped,
+          seen: r.bump ? r.bump.seen : nil,
+          bump_id: r.bump ? r.bump.id : nil,
           time: r.created_at
         }
       end
@@ -106,6 +108,7 @@ class Referral < ActiveRecord::Base
           user_id: r.referrer_id,
           username: User.find(r.referrer_id).email,
           bumped: r.bumped,
+          seen: r.seen,
           time: r.created_at
         }
       end

@@ -13,7 +13,7 @@
 <%= javascript_include_tag "push" %>
 
 <script type="text/javascript">
-	if (isUIWebView()) {
+	if (isUIWebView() && !isAndroid()) {
 		var container = document.getElementById('container'),
 			button = document.getElementById('btn-lnk'),
 			user_id = document.location.hash.split('#')[1].split('~')[0],
