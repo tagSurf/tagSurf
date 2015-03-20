@@ -108,7 +108,7 @@ class ClientController < ApplicationController
     elsif current_user and !current_user.push_requested
       redirect_to "/push##{current_user.id}"
     elsif current_user and params[:tag] == "trending" 
-      redirect_to "/feed#funny~#{params["id"]}"
+      redirect_to "/feed#holdmybeer~#{params["id"]}"
     elsif current_user 
       redirect_to "/feed##{params["tag"]}~#{params["id"]}"
     elsif params["id"] == "0"
