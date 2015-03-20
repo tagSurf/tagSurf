@@ -91,11 +91,11 @@ Tagsurf::Application.routes.draw do
     delete 'favorites/:card_id'                    => 'favorites#delete'
 
     # Referrals API
-    get  'referral/made/paginated/:limit/:offset'         => 'referrals#paginated_collection_made'
-    get  'referral/received/paginated/:limit/:offset'     => 'referrals#paginated_collection_received'
-    post 'referral/:card_id/:user_ids'                    => 'referrals#create'
-    post 'referral/:card_id/:referral_id'                 => 'referrals#bump'
-    get 'referral/seen/:referral_id'                     => 'referrals#seen'
+    get  'referrals/made/paginated/:limit/:offset'         => 'referrals#paginated_collection_made'
+    get  'referrals/received/paginated/:limit/:offset'     => 'referrals#paginated_collection_received'
+    post 'referrals/:card_id/:user_ids'                    => 'referrals#create'
+    post 'referrals/:card_id/:referral_id'                 => 'referrals#bump'
+    get 'referrals/seen/:referral_id'                     => 'referrals#seen'
 
     #Bumps API
     post 'bump/:media_id/:sharer_ids'       => 'bumps#create'
