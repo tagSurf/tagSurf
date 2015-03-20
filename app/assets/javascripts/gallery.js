@@ -381,8 +381,8 @@ var gnodes = {},
 			setFavIcon(current_gallery_image.user_stats.has_favorited);
 
 			if (d.referral && gallery == "shares") {
-				refbox.innerHTML = referrals_made ? "Recommended By You To" 
-														: "Recommended For You By";
+				refbox.innerHTML = referrals_made ? "Recommended To" 
+														: "Recommended By";
 				toggleClass.apply(refbox, ["hidden", "off"]);
 				var badge = document.getElementById(d.id + "-badge");
 				d.referral.forEach(function(r) {
