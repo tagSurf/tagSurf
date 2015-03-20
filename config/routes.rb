@@ -95,7 +95,7 @@ Tagsurf::Application.routes.draw do
     get  'referral/received/paginated/:limit/:offset'     => 'referrals#paginated_collection_received'
     post 'referral/:card_id/:user_ids'                    => 'referrals#create'
     post 'referral/:card_id/:referral_id'                 => 'referrals#bump'
-    get 'referral/seen/:referral_id'                     => 'referrals#seen'
+    get 'referral/seen/:referral_id'                      => 'referrals#seen'
 
     #Bumps API
     post 'bump/:media_id/:sharer_ids'       => 'bumps#create'
