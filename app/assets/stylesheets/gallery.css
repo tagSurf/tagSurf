@@ -102,6 +102,7 @@ img[src="img/history_icon_gray.png"] {
 }
 #picdesc {
 	font-size: 11pt;
+	margin-top: 7%;
 }
 #votemeter {
 	float: right;
@@ -131,13 +132,13 @@ img[src="img/history_icon_gray.png"] {
 	border: 3px solid #00aeef;
 	border-top-left-radius: 8px;
 	border-bottom-left-radius: 8px;
-	min-width: 25%;
+	min-width: 30%;
 }
 #from-selector {
 	border: 3px solid #00aeef;
 	border-top-right-radius: 8px;
 	border-bottom-right-radius: 8px;
-	min-width: 25%;
+	min-width: 30%;
 }
 .selected-cell {
 	background-color: #00aeef;
@@ -149,13 +150,13 @@ img[src="img/history_icon_gray.png"] {
 #to-badge {
 	position: absolute;
 	font-size: 55%;
-	left: 22%;
+	left: 17%;
 	top: 3%;
 }
 #from-badge {
 	position: absolute;
 	font-size: 55%;
-	right: 22%;
+	right: 17%;
 	top: 3%;
 }
 .chicklet-badge {
@@ -209,6 +210,10 @@ img[src="img/history_icon_gray.png"] {
 	z-index: 3;
 	min-width: initial;
 }
+#ref-btn {
+	max-width: 50%;
+	font-size: 120%;
+}
 
 /*===== This Targets Anything Above iPhone 5 ========*/
 @media only screen and (min-width: 340px){
@@ -221,8 +226,10 @@ img[src="img/history_icon_gray.png"] {
 	.chicklet-badge {
 		min-width: 28%;
 	}
+	#picdesc {
+		margin-top: 6%;
+	}
 }
-
 
 /*===== This targets tablets and desktops ========*/
 @media only screen and (min-width: 700px){
@@ -278,7 +285,7 @@ img[src="img/history_icon_gray.png"] {
 	}
 	#picdesc {
 		font-size: 14pt;
-		margin-top: 10px;
+		margin-top: 2%;
 	}
 	.pictagcell {
 		margin: 10px 7px;
@@ -323,5 +330,9 @@ img[src="img/history_icon_gray.png"] {
 		height: 50px;
 		right: 1%;
 		top: -10%;
+	}
+	#ref-btn {
+		font-size: 180%;
+		max-width: 25%;
 	}
 }

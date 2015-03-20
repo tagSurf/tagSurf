@@ -37,12 +37,12 @@ var gnodes = {},
 
 			selector.id = "gallery-toggler";
 			to_box.id = "to-selector";
-			to_box.innerHTML = "to";
+			to_box.innerHTML = "inbox";
 			to_box.className = 'inline selected-cell';
 			to_badge.id = "to-badge";
 			to_badge.className = 'badge-icon small-badge inline hidden';
 			from_box.id = "from-selector";		
-			from_box.innerHTML = "from";
+			from_box.innerHTML = "sent";
 			from_box.className = 'inline';
 			from_badge.id = "from-badge";
 			from_badge.className = 'badge-icon small-badge inline hidden';
