@@ -32,7 +32,10 @@ class Bump < ActiveRecord::Base
   private 
 
   def set_referral_flag
-  	Referral.unscoped.find(self.referral_id).update_column(:bumped, true)
+  	ref = Referral.unscoped.find(self.referral_id)
+    ref.update_column(:bumped, true)
+    ref.update_column(:seen, true)
+    UpdateBadgeIcon.perform_async(ref.user_id)
 	end
 
   def send_notification

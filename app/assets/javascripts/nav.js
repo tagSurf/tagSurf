@@ -20,7 +20,7 @@ var populateNavbar = function () {
             : ("<img class='gallery-icon' src='http://assets.tagsurf.co/img/" + gallery + "_icon_gray.png'><span id='gallery-name' class='pointer'>" + gallery.toUpperCase() + "</span>"))
           : "<img id='tagsurf-logo' src='http://assets.tagsurf.co/img/logo_big.png'></img>",
         "</span><span id='history-logo'>HISTORY</span>",
-        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='http://assets.tagsurf.co/img/down_arrow_nav.png'></img>",
+        "<img id='slider-icon' " + (gallery ? "" : "class='vtop' ") + "src='http://assets.tagsurf.co/img/down_arrow_nav.png'></img><div id='nav-badge' class='badge-icon hidden'>0</div>",
       "</label>",
     "</div>",
   ], 
@@ -59,11 +59,11 @@ var populateNavbar = function () {
           "<img class='menu-icon' src='http://assets.tagsurf.co/img/history_icon_white.png'></img>",
           "&nbsp;&nbsp;&nbsp;HISTORY",
         "</div></a></li>",
-        // "<li><a href='/recommendations'><div>",
-          // "<img class='menu-icon' src='http://assets.tagsurf.co/img/history_icon_gray.png'></img>",
-          // "<img class='menu-icon' src='http://assets.tagsurf.co/img/history_icon_white.png'></img>",
-          // "&nbsp;&nbsp;&nbsp;RECOMMENDATIONS",
-        // "</div></a></li>",
+        "<li><a href='/shares'><div>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/shares_icon_gray.png'></img>",
+          "<img class='menu-icon' src='http://assets.tagsurf.co/img/shares_icon_white.png'></img>",
+          "&nbsp;&nbsp;&nbsp;SHARES",
+        "</div><div id='slider-badge' class='badge-icon small-badge inline hidden'></div></a></li>",
         "<li><a id='options-btn'><div>",
           "<img class='menu-icon' src='http://assets.tagsurf.co/img/options_icon_gray.png'></img>",
           "<img class='menu-icon' src='http://assets.tagsurf.co/img/options_icon_white.png'></img>",
@@ -350,6 +350,9 @@ var slideNavMenu = function(noback) {
     ["slid", navMenuSlid ? "on" : "off"]);
   toggleClass.apply(document.getElementById("slide-down-menu"),
     ["opened-menu", navMenuSlid ? "on" : "off"]);
+  toggleClass.apply(document.getElementById("nav-badge"),
+    ["hidden", !navMenuSlid && document.getElementById("nav-badge").innerHTML != 0 
+                                                                        ? "off" : "on"]);
   if (noback != true && !modal.zoom.zoomed && !modal.modal.on)
     navMenuSlid ? modal.halfOn(slideNavMenu) : modal.backOff();
 };
@@ -433,3 +436,14 @@ var setFavIcon = function(filled) {
   document.getElementById("favorites-icon").src =
     "http://assets.tagsurf.co/img/favorites_icon_" + (filled ? "fill" : "blue") + ".png";
 };
+
+var updateMenuBadges = function(number) {
+  var navBarBadge = document.getElementById('nav-badge'),
+      sliderBadge = document.getElementById('slider-badge');
+  
+  toggleClass.apply(navBarBadge, ["hidden", !navMenuSlid && number != 0 ? "off" : "on"]);
+  toggleClass.apply(sliderBadge, ["hidden", number != 0 ? "off" : "on"]);
+  
+  navBarBadge.innerHTML = number;
+  sliderBadge.innerHTML = number;
+}

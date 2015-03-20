@@ -9,14 +9,14 @@ class Referral < ActiveRecord::Base
   belongs_to :user
   belongs_to :media
 
-  has_many :bumps, :foreign_key => :referral_id
+  has_one :bump, :foreign_key => :referral_id
 
   after_commit :find_vote, 	on: :create
   after_commit :send_notification, on: :create
 
   
 # Return referrals made BY a user
-  def self.made_paginated_collection(user_id, limit, offset, safe)
+  def self.paginated_collection_made(user_id, limit, offset, safe)
     media = Array.new
     @offset = offset
     @limit = limit
@@ -54,8 +54,11 @@ class Referral < ActiveRecord::Base
         m.referrals << {
           referral_id: r.id,
           user_id: r.user_id,
-          username: User.find(r.user_id).email,
+          username:  User.find(r.user_id).username ? 
+                      User.find(r.user_id).username : User.find(r.user_id).email,
           bumped: r.bumped,
+          seen: r.bump ? r.bump.seen : nil,
+          bump_id: r.bump ? r.bump.id : nil,
           time: r.created_at
         }
       end
@@ -66,7 +69,7 @@ class Referral < ActiveRecord::Base
   end
 
 # Return referrals made to a user
-  def self.received_paginated_collection(user_id, limit, offset, safe)
+  def self.paginated_collection_received(user_id, limit, offset, safe)
     media = Array.new
     @offset = offset
     @limit = limit
@@ -104,8 +107,10 @@ class Referral < ActiveRecord::Base
         m.referrals << {
           referral_id: r.id,
           user_id: r.referrer_id,
-          username: User.find(r.referrer_id).email,
+          username:  User.find(r.referrer_id).username ? 
+                      User.find(r.referrer_id).username : User.find(r.referrer_id).email,
           bumped: r.bumped,
+          seen: r.seen,
           time: r.created_at
         }
       end

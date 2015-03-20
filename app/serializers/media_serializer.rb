@@ -204,7 +204,8 @@ class MediaSerializer < BaseSerializer
           user_id: r.referrer_id,
           username: User.find(r.referrer_id).username ? 
                       User.find(r.referrer_id).username : User.find(r.referrer_id).email,
-          bumped: r.bumped        
+          bumped: r.bumped,
+          seen: r.seen        
         }
       end
       ref
