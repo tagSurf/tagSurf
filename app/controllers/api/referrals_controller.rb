@@ -32,7 +32,7 @@ class Api::ReferralsController < Api::BaseController
     end
   end
 
-  def made_paginated_collection
+  def paginated_collection_made
     @offset = ref_params["offset"].to_i
     @limit = ref_params["limit"].to_i
     @user = current_user
@@ -42,7 +42,7 @@ class Api::ReferralsController < Api::BaseController
       @limit = 50
     end
 
-    @media = Referral.made_paginated_collection(@user.id, @limit, @offset, @user.safe_mode)
+    @media = Referral.paginated_collection_made(@user.id, @limit, @offset, @user.safe_mode)
     if @media
       render json: @media, root: 'data'
     else
@@ -50,7 +50,7 @@ class Api::ReferralsController < Api::BaseController
     end
   end
 
-  def received_paginated_collection
+  def paginated_collection_received
     @offset = ref_params["offset"].to_i
     @limit = ref_params["limit"].to_i
     @user = current_user
@@ -60,13 +60,29 @@ class Api::ReferralsController < Api::BaseController
       @limit = 50
     end
 
-    @media = Referral.received_paginated_collection(@user.id, @limit, @offset, @user.safe_mode)
+    @media = Referral.paginated_collection_received(@user.id, @limit, @offset, @user.safe_mode)
     if @media
       render json: @media, root: 'data'
     else
       render json: "Nothing here"
     end
   end
+
+  def seen
+    unless current_user.id != Referral.unscoped.find(params[:referral_id]).user_id
+      @success = false
+      ref = Referral.unscoped.find(params[:referral_id])
+      @success = ref.update_column('seen', true)
+      if @success
+        render json: {seen: true}, status: :ok
+        UpdateBadgeIcon.perform_async(current_user.id)
+      else 
+        render json: {created: false, reason: @success.errors }, status: :not_implemented
+      end
+      return
+    end 
+    render json: {created: false, reason: "not authorized"}, status: :not_implemented
+  end 
 
   private
 

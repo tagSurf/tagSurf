@@ -22,9 +22,13 @@ Tagsurf::Application.routes.draw do
   get 'history'         => 'client#history'
   get 'favorites'       => 'client#favorites'
   get 'submissions'     => 'client#submissions'
-  get 'recommendations' => 'client#recommendations'
+  get 'shares'          => 'client#shares'
   get 'tag'             => 'client#tag'
   get 'bump/:ref_id'    => 'client#bump'
+
+  #Enable Push
+  get 'push-enable/:user_id'  => 'client#push_enable'
+  get 'push'                  => 'client#push'
 
   # Beta access flow, ordered by good path
   get 'code'               => 'client#access_code'
@@ -41,7 +45,7 @@ Tagsurf::Application.routes.draw do
   post 'confirm-terms'             => 'client#terms_agreement'
 
   # User routes
-  put 'user'                           => 'users#update'
+  put 'user'               => 'users#update'
 
   # JSON API
   namespace :api do
@@ -87,13 +91,16 @@ Tagsurf::Application.routes.draw do
     delete 'favorites/:card_id'                    => 'favorites#delete'
 
     # Referrals API
-    get  'referral/made/paginated/:limit/:offset'         => 'referrals#made_paginated_collection'
-    get  'referral/received/paginated/:limit/:offset'     => 'referrals#received_paginated_collection'
+    get  'referral/made/paginated/:limit/:offset'         => 'referrals#paginated_collection_made'
+    get  'referral/received/paginated/:limit/:offset'     => 'referrals#paginated_collection_received'
     post 'referral/:card_id/:user_ids'                    => 'referrals#create'
     post 'referral/:card_id/:referral_id'                 => 'referrals#bump'
+    get 'referral/seen/:referral_id'                      => 'referrals#seen'
 
     #Bumps API
     post 'bump/:media_id/:sharer_ids'       => 'bumps#create'
+    get 'bump/seen/:bump_id'               => 'bumps#seen'
+
 
   end
 

@@ -907,6 +907,32 @@ a {
 	width: 80%;
 	vertical-align: bottom;
 }
+.badge-icon {
+	color: white;
+	background-color: red;
+	border-radius: 50px;
+	padding: 0 9px 5px 9px;
+	margin-top: 2px;
+	text-align: center;
+	min-width: 9%;
+}
+#nav-badge {
+	position: absolute;
+	left: 67%;
+	top: 0;
+}
+#slider-badge {
+	position: absolute !important;
+	left: 59% !important;
+	top: 50%;
+	width: initial !important;
+}
+.small-badge {
+	font-size: 80%;
+	padding: 0 7px 4px 7px;
+	border-radius: 90px;
+	min-width: 7%;
+}
 
 /*===== Options Menu Stuff ======*/
 .options-table {
@@ -1009,10 +1035,23 @@ a {
 	.buddy-list-container {
 		max-height: 68%;
 	}
+	#nav-badge{ 
+		left: 64%;
+	}
+	.badge-icon {
+		min-width: 8%;
+	}
+	.small-badge {
+		min-width: 6%;
+	}
+	#slider-badge {
+		left: 57% !important;
+	}
+
 }
 
 /*===== This targets tablets and desktops ========*/
-@media only screen and (min-width: 700px){
+@media only screen and (min-width: 1000px){
 	#add-tag-autocomplete {
 	  top: 47px;
 	  left: 32%;
@@ -1189,5 +1228,17 @@ a {
 	#buddy-search {
 		width: 87%;
 		margin: 0px 0 2px -3px;
+	}
+	#nav-badge {
+		left: 54%;
+	}
+	#slider-badge {
+		left: 53% !important;
+	}
+	.badge-icon {
+		min-width: 2%;
+	}
+	.small-badge {
+		min-width: 2%;
 	}
 }

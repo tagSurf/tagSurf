@@ -1,4 +1,5 @@
 .box {
+	position: relative;
 	width: 29.75%;
 	float: left;
 	background-size: cover;
@@ -101,6 +102,7 @@ img[src="img/history_icon_gray.png"] {
 }
 #picdesc {
 	font-size: 11pt;
+	margin-top: 7%;
 }
 #votemeter {
 	float: right;
@@ -118,6 +120,115 @@ img[src="img/history_icon_gray.png"] {
 .active-pictag {
   color: #404041;
   background-color: #00719C !important;
+}
+
+/*===== Share toggler stuff =====*/
+#gallery-toggler {
+	padding-top: 30px;
+	text-align: center;
+	font-size: 200%;
+}
+#to-selector {
+	border: 3px solid #00aeef;
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
+	min-width: 30%;
+}
+#from-selector {
+	border: 3px solid #00aeef;
+	border-top-right-radius: 8px;
+	border-bottom-right-radius: 8px;
+	min-width: 30%;
+}
+.selected-cell {
+	background-color: #00aeef;
+}
+.active-cell {
+  color: #404041;
+  background-color: #00719C !important;
+}
+#to-badge {
+	position: absolute;
+	font-size: 55%;
+	left: 17%;
+	top: 3%;
+}
+#from-badge {
+	position: absolute;
+	font-size: 55%;
+	right: 17%;
+	top: 3%;
+}
+.chicklet-badge {
+	font-size: 140%;
+	position: absolute;
+	right: -7%;
+	top: -9%;
+	padding: 0 9px 4px 9px;
+	min-width: 30%;
+}
+#referrals {
+	border: 2px solid #00aeef;
+	border-radius: 5px;
+	text-align: center;
+	margin: 20px 0;
+	font-size: 140%;
+}
+.gallery-user-cell {
+	position: relative;
+	text-align: left;
+	margin: 2% 0;
+}
+.gallery-user-pic {
+	width: 50px;
+	margin-left: 2%;
+}
+.gallery-bump-btn {
+	padding: 5px;
+	position: absolute;
+	right: 2%;
+	top: 0;
+}
+.gallery-user-name {
+	font-size: 110%;
+	vertical-align: top;
+	font-weight: 300;
+	margin: 2% 0 0 2%;
+}
+.gallery-bump-btn-active {
+	opacity: 0.3 !important;
+}
+.gallery-bump-icon {
+	width: 50px;
+}
+.ref-badge {
+	width: 25px;
+	height: 25px;
+	position: absolute;
+	right: 2%;
+	top: -8%;
+	z-index: 3;
+	min-width: initial;
+}
+#ref-btn {
+	max-width: 50%;
+	font-size: 120%;
+}
+
+/*===== This Targets Anything Above iPhone 5 ========*/
+@media only screen and (min-width: 340px){
+	#referrals {
+		font-size: 160%;
+	}
+	.gallery-user-name {
+		font-size: 120%;
+	}
+	.chicklet-badge {
+		min-width: 28%;
+	}
+	#picdesc {
+		margin-top: 6%;
+	}
 }
 
 /*===== This targets tablets and desktops ========*/
@@ -174,9 +285,54 @@ img[src="img/history_icon_gray.png"] {
 	}
 	#picdesc {
 		font-size: 14pt;
-		margin-top: 10px;
+		margin-top: 2%;
 	}
 	.pictagcell {
 		margin: 10px 7px;
+	}
+	#to-selector {
+		min-width: 8%;
+	}
+	#from-selector {
+		min-width: 8%;
+	}
+	#to-badge {
+		left: 41%;
+		top: 2%;
+	}
+	#from-badge {
+		right: 41%;
+		top: 2%;
+	}
+	.chicklet-badge {
+		font-size: 180%;
+		position: absolute;
+		right: -4%;
+		top: -3%;
+		padding: 0 11px 5px 11px;
+		min-width: 8%;
+	}
+	.gallery-user-pic {
+		width: 100px;
+		margin-left: 1%;
+	}
+	.gallery-user-name {
+		font-size: 180%;
+	}
+	.gallery-bump-icon {
+		width: 100px;
+	}
+	#referrals {
+		font-size: 180%;
+	}
+	.ref-badge {
+		width: 50px;
+		height: 50px;
+		right: 1%;
+		top: -10%;
+	}
+	#ref-btn {
+		font-size: 180%;
+		max-width: 25%;
 	}
 }

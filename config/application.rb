@@ -13,7 +13,7 @@ module Tagsurf
     config.autoload_paths += Dir["#{config.root}/lib/**/**/"]
 
   # Add sub manifests to list of precompiled assets
-  config.assets.precompile += %w( gallery_page.js sessions.js signup.js welcome.js gallery_page.css sessions.css welcome.css )
+  config.assets.precompile += %w( gallery_page.js sessions.js signup.js welcome.js push.js gallery_page.css sessions.css welcome.css )
 
     config.to_prepare do
         Devise::SessionsController.layout "client"
@@ -37,6 +37,13 @@ module Tagsurf
 
     config.action_mailer.perform_deliveries = true
     config.action_mailer.raise_delivery_errors = false
+
+    # Urban Airship Config
+    Urbanairship.application_key = Rails.env.production? ? 'xAP0Hge-StGbQvVSzyOa6Q' : 'mrUA6v29S_qi2NrV_avUsA'
+    Urbanairship.application_secret = Rails.env.production? ? '2ottmDAoQ-C5aLaYSWWFTA' : 'mVtZIrpMRjuaug4RdNdwOw'
+    Urbanairship.master_secret = Rails.env.production? ? 'Mf8zfYJDQO6yrUc9XBoFQA' : 'z0pJo8KuSdKt2wolfj3Oiw'
+    Urbanairship.logger = Rails.logger
+    Urbanairship.request_timeout = 5 #default value
 
     # redis_active = Rails.env.development? ? false : true
     CONFIG[:redis_active] = true #redis_active  

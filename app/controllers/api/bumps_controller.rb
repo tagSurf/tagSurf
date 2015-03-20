@@ -29,10 +29,26 @@ class Api::BumpsController < Api::BaseController
     end
   end
 
+  def seen
+    unless current_user.id != Bump.unscoped.find(params[:bump_id]).sharer_id
+      @success = false
+      bump = Bump.unscoped.find(bump_params[:bump_id])
+      @success = bump.update_column('seen', true)
+      if @success
+        render json: {seen: true}, status: :ok
+        UpdateBadgeIcon.perform_async(current_user.id)
+      else 
+        render json: {created: false, reason: @success.errors }, status: :not_implemented
+      end
+      return
+    end 
+    render json: {created: false, reason: "not authorized"}, status: :not_implemented
+  end 
+
   private
 
     def bump_params
-      params.permit(:media_id, :sharer_ids)
+      params.permit(:media_id, :sharer_ids, :bump_id)
     end
 
 end
