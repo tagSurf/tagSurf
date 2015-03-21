@@ -150,7 +150,7 @@ class Api::UsersController < Api::BaseController
         :offset, 
         :email, 
         :username,
-        :confirm_feature_tour
+        :completed_feature_tour
       ) 
     end
 

@@ -28,9 +28,7 @@ class ClientController < ApplicationController
     # Decide how to direct the user base on state
     usr = current_user
     unless !usr 
-      if !usr.welcomed?
-        redirect_to welcome_path
-      elsif !usr.username
+      if !usr.username
         redirect_to selectusername_path
       elsif !usr.push_requested
         redirect_to "/push##{current_user.id}"
@@ -140,11 +138,13 @@ class ClientController < ApplicationController
     end
   end
 
-  def welcome
-    if current_user.welcomed?
-      redirect_to root_path
-    end
-  end
+  # Depricated!
+  # Card-based tutorial no longer in use
+  # def welcome
+  #   if current_user.welcomed?
+  #     redirect_to root_path
+  #   end
+  # end
 
   def username_select 
     @user = current_user
