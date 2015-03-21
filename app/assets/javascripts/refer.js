@@ -77,7 +77,7 @@ var refer = {
 			});
 			if (selectionList.length == 0) {
 				return;
-			} else if (selectionList.lenght > 1) {
+			} else if (selectionList.length > 1) {
 				var path = "/api/referral/" + refer.card.id + "/{" + selectionList.join(',') + "}";
 				xhr(path, "POST");
 			} else {
