@@ -7,7 +7,7 @@ class Media < ActiveRecord::Base
 
   has_many :votes, :foreign_key => :votable_id
   has_many :favorites
-  has_many :referrals
+  has_many :referrals, :foreign_key => :media_id
   has_many :bumps, :foreign_key => :media_id
 
   validates_uniqueness_of :remote_id, :image_link_original
@@ -17,7 +17,7 @@ class Media < ActiveRecord::Base
 
   scope :nsfw, ->(boolean) { where("nsfw = ?", boolean) }
 
-  attr_accessor :referrals
+  attr_accessor :referrals_list
 
   # Imgur specific
   before_create :resize_image_links

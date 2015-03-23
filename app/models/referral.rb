@@ -28,9 +28,9 @@ class Referral < ActiveRecord::Base
 
     media.each do |m|
       refs = Referral.unscoped.where(media_id: m.id, referrer_id: user_id).order('created_at desc').reverse
-      m.referrals = Array.new
+      m.referrals_list = Array.new
       refs.each do |r|
-        m.referrals << {
+        m.referrals_list << {
           referral_id: r.id,
           user_id: r.user_id,
           username:  User.find(r.user_id).username ? 
@@ -60,9 +60,9 @@ class Referral < ActiveRecord::Base
 
     media.each do |m|
       refs = Referral.unscoped.where(media_id: m.id, user_id: user_id).order('created_at desc')
-      m.referrals = Array.new
+      m.referrals_list = Array.new
       refs.each do |r|
-        m.referrals << {
+        m.referrals_list << {
           referral_id: r.id,
           user_id: r.referrer_id,
           username:  User.find(r.referrer_id).username ? 

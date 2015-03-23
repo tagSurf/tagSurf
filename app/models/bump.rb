@@ -11,6 +11,7 @@ class Bump < ActiveRecord::Base
 
 	after_commit :set_referral_flag, 	on: :create
   after_commit :send_notification,  on: :create
+  after_commit :update_media_score, on: :create
 
   def self.bump_referral(id)
     @ref = Referral.unscoped.find(id)
@@ -40,6 +41,10 @@ class Bump < ActiveRecord::Base
 
   def send_notification
     SendBumpNotification.perform_async(self.referral_id)
+  end
+
+  def update_media_score
+    IncrementMediaVoteCount.perform_async(self.media_id, true, 10000000)
   end
 
 end

@@ -9,7 +9,8 @@ class DegradeThreeDayScore
     media = Media.select(:id, :ts_score, :remote_score, :created_at).where(created_at: 3.days.ago..Time.now)
     media.each do |m|
       time_bonus = m.created_at.to_i - 1350000000
-      score_bonus = m.remote_score.to_i + (m.up_votes.to_i * 1000000)
+      score_bonus = m.remote_score.to_i + (m.up_votes.to_i * 1000000) + 
+        ((m.favorites.count + m.bumps.count) * 10000000)
       m.update_column('ts_score',  time_bonus + score_bonus)
     end
   end
