@@ -99,7 +99,7 @@ Tagsurf::Application.routes.draw do
 
     #Bumps API
     post 'bump/:media_id/:sharer_ids'       => 'bumps#create'
-    get 'bump/seen/:bump_id'               => 'bumps#seen'
+    get 'bump/seen/:bump_id'                => 'bumps#seen'
 
 
   end

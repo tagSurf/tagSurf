@@ -17,38 +17,17 @@ class Referral < ActiveRecord::Base
   
 # Return referrals made BY a user
   def self.paginated_collection_made(user_id, limit, offset, safe)
-    media = Array.new
-    @offset = offset
-    @limit = limit
 
-    # Get media ids and de-dupe collection
-    while media.length < limit do
-      if !media.empty?
-        @limit = limit - media.length
-      end
+    media_ids = Referral.unscoped.where(referrer_id: user_id).select(:media_id).order('created_at desc').map { |r| r.media_id }
 
-      referrals = Referral.unscoped.where(referrer_id: user_id).order('created_at desc').limit(@limit).offset(@offset)
+    media_ids.uniq!
 
-      if referrals.empty?
-        break
-      end
+    media = Media.where('media.id in (?)', media_ids).index_by(&:id).values_at(*media_ids)
 
-      referrals.each do |ref|
-        next if safe && ref.media.nsfw
-        media << ref.media
-      end
-      
-      media.uniq!
-
-      if @limit == limit
-        @offset = offset + media.length
-      else
-        @offset = @offset + @limit
-      end
-    end
+    media = media[offset..(offset+limit-1)]
 
     media.each do |m|
-      refs = Referral.unscoped.where(media_id: m.id, referrer_id: user_id)
+      refs = Referral.unscoped.where(media_id: m.id, referrer_id: user_id).order('created_at desc').reverse
       m.referrals = Array.new
       refs.each do |r|
         m.referrals << {
@@ -70,38 +49,17 @@ class Referral < ActiveRecord::Base
 
 # Return referrals made to a user
   def self.paginated_collection_received(user_id, limit, offset, safe)
-    media = Array.new
-    @offset = offset
-    @limit = limit
 
-    # Get media ids and de-dupe collection
-    while media.length < limit do
-      if !media.empty?
-        @limit = limit - media.length
-      end
+    media_ids = Referral.unscoped.where(user_id: user_id).select(:media_id).order('created_at desc').map { |r| r.media_id }
 
-      referrals = Referral.unscoped.where(user_id: user_id).order('created_at desc').limit(@limit).offset(@offset)
+    media_ids.uniq!
 
-      if referrals.empty?
-        break
-      end
+    media = Media.where('media.id in (?)', media_ids).index_by(&:id).values_at(*media_ids)
 
-      referrals.each do |ref|
-        next if safe && ref.media.nsfw
-        media << ref.media
-      end
-      
-      media.uniq!
-
-      if @limit == limit
-        @offset = offset + media.length
-      else
-        @offset = @offset + @limit
-      end
-    end
+    media = media[offset..(offset+limit-1)]
 
     media.each do |m|
-      refs = Referral.unscoped.where(media_id: m.id, user_id: user_id)
+      refs = Referral.unscoped.where(media_id: m.id, user_id: user_id).order('created_at desc')
       m.referrals = Array.new
       refs.each do |r|
         m.referrals << {
@@ -119,6 +77,7 @@ class Referral < ActiveRecord::Base
     media
 
   end
+
   private 
 
   def find_vote
