@@ -526,9 +526,9 @@ var gnodes = {},
 			throbber.on(false, 'throbber-bottom');
 			xhr(getPath(), null, function(response_data) {
 				response_data.data.forEach(function(d) {
-					addImage(d, getHeader(gallery == "shares" ? d.referral[0].time : 
-						(gallery == "favorites" ? d.user_stats.time_favorited : 
-							d.user_stats.time_discovered)));
+					addImage(d, getHeader(gallery == "shares" ? 
+						d.referral[d.referral.length - 1].time : (gallery == "favorites" ? 
+								d.user_stats.time_favorited : d.user_stats.time_discovered)));
 				});
 				populating = false;
 				throbber.off();
