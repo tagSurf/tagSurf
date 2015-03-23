@@ -125,6 +125,23 @@ class User < ActiveRecord::Base
     user
   end 
 
+  def self.buddy_list(user_id)
+    recent_shares = Array.new
+    buddy_ids = Array.new
+
+    recent_shares = Referral.unscoped.where(referrer_id: user_id).select(:user_id).map{|r| r.user_id}
+
+    buddy_ids = recent_shares.inject(Hash.new(1)) { |h, e| h[e] += 1 ; h }.to_a.sort_by(&:last).reverse.map {|x,y| x}
+
+    buddies = User.find(buddy_ids).index_by(&:id).values_at(*buddy_ids).map{|u| [u.id,u.email,u.username]}
+    buddies.concat(User.select(:id, :email, :username).map { |user| [user.id, user.email, user.username] })
+    
+    buddies.uniq!
+
+    buddies
+
+  end
+
   protected
 
   def generate_slug
