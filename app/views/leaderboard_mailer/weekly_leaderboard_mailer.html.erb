@@ -7,41 +7,83 @@
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
         <td>
-          <h1>Results are in!</h1> 
+          <h1>@<%= @username %></h1>
+          <h2>The results are in!<br/>Did you win??</h2> 
         </td>
         <td align="right">
-          <img width="75px" src="http://assets.tagsurf.co/img/ts_logo_stacked_gray.png"/>
+          <a href="http://tagsurf.co">
+            <img width="75px" src="http://assets.tagsurf.co/img/ts_logo_stacked_gray.png"/>
+          </a>
         </td>
       </tr>
       <tr>
         <td colspan="2">
-          <p>Here are the top cards on tagSurf this week</p>        
+          <p>Here were the top cards and shares on tagSurf last week</p>        
         </td>
       </tr>
     </table>
 
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+    <table width="100%" cellspacing="0" cellpadding="0">
+      <% i = 0 %>
       <% @top_media.each do |m| %>
-      <tr>
-        <td align="center" style="padding: 15px 0 0 0;">
-          <a href="http://beta.tagsurf.co/share/trending/<%= m.id %>">
-            <table style="background-color: #353535; border: solid #353535; border-radius: 10px; min-width: 80%; max-width: 90%;" cellspacing="0" cellpadding="0">
-              <tr>
-                <td>
-                  <img width="98%;" style="padding:1%; border: 1px solid #353535; border-radius:5px;" src="<%= m.image_link_original %>" />
-                </td>
+        <% i = i + 1 %>
+        <tr>
+          <td>
+            <tr>
+              <td align="left" style="padding: 15px 0 0 10px;" colspan="7">
+                <h1 style="margin-top:-10%; display:inline;"><%= i %></h1>
+                <a href="http://beta.tagsurf.co/share/trending/<%= m.id %>">
+                  <table style="background-color: #353535; border: solid #353535; border-radius: 10px; min-width: 80%; max-width: 90%;" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td>
+                        <img width="98%;" style="padding:1%; border: 1px solid #353535; border-radius:5px;" src="<%= m.image_link_original %>" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" style="border-radius: 5px;">
+                        <p style="color: white; font-family: 'Raleway', sans-serif; font-weight: 200; font-size: 130%; padding: 0 10px 30px 10px;"><%= m.description ? m.description : m.title %></p>
+                      <td>
+                    </tr>
+                  </table>
+                </a>          
+              </td>
+            </tr>
+            
+            <tr style="border: 0;">
+              <td colspan="2" align="center" style="border: 0;"><h4>Shared By</h4></td>
+              <td align="center" style="border: 0;"><h4>Shares</h4></td>
+              <td align="center" style="border: 0;"><h4>/</h4></td>
+              <td align="center" style="border: 0;"><h4>Bumps</h4></td>
+              <td align="center" style="border: 0;">(Bump)<br/>ratio</td>
+              <td align="center" style="border: 0;"><h4>Share Score</h4></td>
+            </tr>
+              
+            <% m.referrals_list.each do |r| %>
+              <tr style="border: 0;">
+                <td style="border: 0; width: 60px;"><img style="padding-left: 10px; width:50px;" src="http://assets.tagsurf.co/img/UserAvatar.png" /></td>
+                <td align="left" style="border: 0; padding-left:10px;"><h4>@<%=r[:username]%></h4></td>
+                <td align="center" style="border: 0;"><%=r[:shares]%></td>
+                <td align="center" style="border: 0;">/</td>
+                <td align="center" style="border: 0;"><%=r[:bumps]%></td>
+                <td align="center" style="border: 0;">(<%=(r[:ratio]).round(2)%>)</td>
+                <td align="center" style="border: 0;"><%=(r[:score]).round(2)%></td>
               </tr>
-              <tr>
-                <td align="center" style="border-radius: 5px;">
-                  <p style="color: white; font-family: 'Raleway', sans-serif; font-weight: 200; font-size: 130%; padding: 0 10px 30px 10px;"><%= m.description ? m.description : m.title %></p>
-                <td>
-              </tr>
-            </table>
-          </a>
-        </td>
-      </tr>
+            <% end %>
+          </td>
+        </tr>
       <% end %>
     </table>
+    <br/>
+    <br/>
+    <p>And the winningest sharer is <h2 style="display:inline;">...drumroll...</h2></p>
+    <br/>
+    <h2>@<%= @winner %>!</h2>
+    <div style="display:inline-block;"><h3>With a share score of  </h3></div><div style="display:inline-block; padding-left: 5px;"><h2><%= @winner_score %></h2></div>
+    <br/>
+    <br/>
+    <p>Share hilarious things with your friends on tagSurf for your chance to win next week.</p>
+    <br/>
+    <p>See you in the surf!</p>
 <!--     <a href="<%= @url %>/api/users/unsubscribe/<%= @user_id %>/refer">
       <h2>Unsubscribe</h2>
     </a> -->
