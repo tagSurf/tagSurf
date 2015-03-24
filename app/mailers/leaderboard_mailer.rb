@@ -47,7 +47,7 @@ class LeaderboardMailer < ActionMailer::Base
     end
 
     @url = Rails.env.production? ? "http://beta.tagsurf.co" : "http://localhost:3000"
-    mail(to: "tagsurf@tagSurf.co", bcc: @email, subject: "And the winner is...", from_email: "tagSurf@tagsurf.co", async: "true", from_name: "tagSurf")
+    mail(to: "tagsurf@tagSurf.co", bcc: @emails, subject: "And the winner is...", from_email: "tagSurf@tagsurf.co", async: "true", from_name: "tagSurf")
   end
 
 end
