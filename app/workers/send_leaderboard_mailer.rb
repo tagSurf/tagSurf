@@ -6,13 +6,13 @@ class SendLeaderboardMailer
   
   def perform
 	
-		media_ids = Vote.where(:created_at => 7.days.ago..Time.now).select(:votable_id).map { |e| e.votable_id }
+		# media_ids = Vote.where(:created_at => 7.days.ago..Time.now).select(:votable_id).map { |e| e.votable_id }
 
-		media_ids.concat(Referral.where(:created_at => 7.days.ago..Time.now).select(:media_id).map { |e| e.media_id})
+		media_ids = Referral.where(:created_at => 9.days.ago..2.days.ago).select(:media_id).map { |e| e.media_id}
 
 		media_ids.uniq!
 
-	  @top_media = Media.where('not nsfw and id in (?)', media_ids).where(:created_at => 7.days.ago..Time.now).limit(10).order('ts_score DESC NULLS LAST')
+	  @top_media = Media.where('not nsfw and id in (?)', media_ids).where(:created_at => 9.days.ago..2.days.ago).limit(10).order('ts_score DESC NULLS LAST')
 
 	  scores = Hash.new(0)
 
@@ -53,7 +53,7 @@ class SendLeaderboardMailer
 		winner_id = scores.first[0]
 		winner_score = scores.first[1]
 
-    User.all.select(:id).where(:email => "paul@tagsurf.co").map { |u| u.id }.each do |u|
+    User.all.select(:id).where(:leaderboard_mailers => true).map { |u| u.id }.each do |u|
 	  	LeaderboardMailer.weekly_leaderboard_mailer(u, @top_media, winner_id, winner_score).deliver
 		end
   end

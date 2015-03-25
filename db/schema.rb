@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150317223840) do
+ActiveRecord::Schema.define(version: 20150325004402) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -174,6 +174,7 @@ ActiveRecord::Schema.define(version: 20150317223840) do
     t.boolean  "refer_mailers",          default: true,  null: false
     t.boolean  "bump_mailers",           default: true,  null: false
     t.boolean  "push_requested",         default: false, null: false
+    t.boolean  "leaderboard_mailers",    default: true,  null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

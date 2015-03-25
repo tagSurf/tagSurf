@@ -32,7 +32,7 @@ class ClientController < ApplicationController
         redirect_to welcome_path
       elsif !usr.username
         redirect_to selectusername_path
-      elsif !usr.push_requested
+      elsif !usr.push_requested && params[:id] == 0
         redirect_to "/push##{current_user.id}"
       else
         redirect_to feed_path
@@ -105,7 +105,7 @@ class ClientController < ApplicationController
   def share
     if current_user and !current_user.username
       redirect_to selectusername_path
-    elsif current_user and !current_user.push_requested
+    elsif current_user and !current_user.push_requested and params[:id].to_i == 0
       redirect_to "/push##{current_user.id}"
     elsif current_user and params[:tag] == "trending" 
       redirect_to "/feed#funny~#{params["id"]}"
