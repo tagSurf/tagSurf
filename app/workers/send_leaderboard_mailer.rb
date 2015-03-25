@@ -53,7 +53,7 @@ class SendLeaderboardMailer
 		winner_id = scores.first[0]
 		winner_score = scores.first[1]
 
-    User.all.select(:id).where(:leaderboard_mailers => true).map { |u| u.id }.each do |u|
+    User.all.select(:id).where(:leaderboard_mailers => true, :email => "paul@tagsurf.co").map { |u| u.id }.each do |u|
 	  	LeaderboardMailer.weekly_leaderboard_mailer(u, @top_media, winner_id, winner_score).deliver
 		end
   end
