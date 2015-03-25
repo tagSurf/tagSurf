@@ -32,7 +32,7 @@ class ClientController < ApplicationController
         redirect_to welcome_path
       elsif !usr.username
         redirect_to selectusername_path
-      elsif !usr.push_requested && params[:id] == 0
+      elsif !usr.push_requested && params[:id].to_i == 0
         redirect_to "/push##{current_user.id}"
       else
         redirect_to feed_path
