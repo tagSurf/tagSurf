@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <p>Hi <b>@<%= @username%></b>,</p>
+    <p>Come play a game with me on tagSurf! Here's how it works.</p>
+    <p>Earlier this month I developed a new feature so you can share tagSurf cards privately with your friends. Just ask them what their anonymous username is and you can share hilarious things from tagSurf without letting all of Facebook know you're a horrible person. It's so much fun to stay relevant in your friend's lives by sending them awesome shares throughout your day. If you haven't tried it yet, share some cards with me! My username is <b>@eagle_d</b></p>
+    <p>I'm also really digging this bump feature, which lets your friends tell you which of your shares they think are really awesome with a single button. It's kind of a private 'like' between you and them. It was a bit of an after-thought when first I threw it in, but now I live for the bumps! So, let's make it a game!</p> 
+    <h2>Do you think you can get more bumps than me this week??</h2>
+    <p>tagSurf will now be keeping score of the top cards every week, along with who shared them the most and how many bumps they got for those shares. Find great cards in the surf, share them with your friends, get the most bumps, and you win!</p>
+    <h2>#ChallengeAccepted?</h2>
+    <p>Great! Now you might be thinking 'I'll just share everything with everyone and win'. Not so fast! Your share score will actually be the ratio of (bumps/shares) times the number of bumps for each top card. And while you sharpen your pencil to work out the beautiful intricacies of my ingenius formula, let me just give you the gist: <b>#spoileralert!</b> if you share with a lot of people who don't give you bumps you will be penalized!</p>
+    <p>Starting next week, the robots at tagSurf will send us a weekly email with the top cards, who shared them the most, and the overall winner for the week. Here's an example below from last week's data. Congrats to my co-founder <b>@frankthetank</b>... you win this round! Good luck to the rest of you. Game on!</p>
+    <br/>
+    Paul Lacey
+    <br/>
+    CEO - tagSurf Corp.
+    <br/>
+    <br/>
+
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>
+          <h1>@<%= @username %></h1>
+          <h2>The results are in!<br/>Did you win??</h2> 
+        </td>
+        <td align="right">
+          <a href="http://tagsurf.co">
+            <img width="75px" src="http://assets.tagsurf.co/img/ts_logo_stacked_gray.png"/>
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <p>Here were the top cards and shares on tagSurf last week</p>        
+        </td>
+      </tr>
+    </table>
+
+    <table width="100%" cellspacing="0" cellpadding="0">
+      <% i = 0 %>
+      <% @top_media.each do |m| %>
+        <% i = i + 1 %>
+        <tr>
+          <td>
+            <tr>
+              <td align="left" style="padding: 15px 0 0 10px;" colspan="7">
+                <h1 style="margin-top:-10%; display:inline;"><%= i %></h1>
+                <a href="http://beta.tagsurf.co/share/trending/<%= m.id %>">
+                  <table style="background-color: #353535; border: solid #353535; border-radius: 10px; min-width: 80%; max-width: 90%;" cellspacing="0" cellpadding="0">
+                    <tr>
+                      <td>
+                        <img width="98%;" style="padding:1%; border: 1px solid #353535; border-radius:5px;" src="<%= m.image_link_original %>" />
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" style="border-radius: 5px;">
+                        <p style="color: white; font-family: 'Raleway', sans-serif; font-weight: 200; font-size: 130%; padding: 0 10px 30px 10px;"><%= m.description ? m.description : m.title %></p>
+                      <td>
+                    </tr>
+                  </table>
+                </a>          
+              </td>
+            </tr>
+            
+            <tr style="border: 0;">
+              <td colspan="2" align="center" style="border: 0;"><h4>Shared By</h4></td>
+              <td align="center" style="border: 0;"><h4>Shares</h4></td>
+              <td align="center" style="border: 0;"><h4>/</h4></td>
+              <td align="center" style="border: 0;"><h4>Bumps</h4></td>
+              <td align="center" style="border: 0;">(Bump)<br/>ratio</td>
+              <td align="center" style="border: 0;"><h4>Share Score</h4></td>
+            </tr>
+              
+            <% m.referrals_list.each do |r| %>
+              <tr style="border: 0;">
+                <td style="border: 0; width: 60px;"><img style="padding-left: 10px; width:50px;" src="http://assets.tagsurf.co/img/UserAvatar.png" /></td>
+                <td align="left" style="border: 0; padding-left:10px;"><h4>@<%=r[:username]%></h4></td>
+                <td align="center" style="border: 0;"><%=r[:shares]%></td>
+                <td align="center" style="border: 0;">/</td>
+                <td align="center" style="border: 0;"><%=r[:bumps]%></td>
+                <td align="center" style="border: 0;">(<%=(r[:ratio]).round(2)%>)</td>
+                <td align="center" style="border: 0;"><%=(r[:score]).round(2)%></td>
+              </tr>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+    <br/>
+    <br/>
+    <p>And the winningest sharer this week is <h2 style="display:inline;">...drumroll...</h2></p>
+    <br/>
+    <h2>@<%= @winner %>!</h2>
+    <div style="display:inline-block;"><h3>With a share score of  </h3></div><div style="display:inline-block; padding-left: 5px;"><h2><%= (@winner_score).round(2) %></h2></div>
+    <br/>
+    <br/>
+    <p>Share hilarious things with your friends on tagSurf for your chance to win next week.</p>
+    <br/>
+    <p>See you in the surf!</p>
+    <br/>
+    <a href="<%= @url %>/api/users/unsubscribe/<%= @user_id %>/leaderboard">
+      <h2>Unsubscribe</h2>
+    </a>
+  </body>
+</html>
+

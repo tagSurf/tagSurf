@@ -188,11 +188,11 @@ class MediaSerializer < BaseSerializer
   end
 
   def referral
-    if media.referrals
-      media.referrals.each do |r|
+    if media.referrals_list
+      media.referrals_list.each do |r|
         r[:time] = "#{time_ago_in_words(r[:time])} ago"
       end
-      media.referrals
+      media.referrals_list
     else 
       return nil if !current_user
       referrals = Referral.unscoped.where(media_id: media.id, user_id: current_user.id)
