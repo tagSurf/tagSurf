@@ -4,9 +4,11 @@ var gnodes = {},
 	addHistoryItem,
 	referrals_made = false,
 	populateGallery = null,
-	chunk_offset = 0, 
+	chunk_offset = 0,
+	srclnk,
+	srcbtn,
 	gallerize = function(gallery) {
-		var picbox, topbar, bigpic, picdesc, pictags, link, refbtn, refbox;
+		var picbox, topbar, bigpic, picdesc, pictags, link, refbtn, refbox, srcicon;
 		var grid = document.createElement("div");
 		var gridwrapper = document.createElement("div");
 		grid.className = "grid";
@@ -69,7 +71,6 @@ var gnodes = {},
 				populateGallery();
 			});
 
-
 			gesture.listen("down", from_box, function(){
 				toggleClass.call(from_box, "active-cell");
 			});
@@ -119,6 +120,9 @@ var gnodes = {},
 				topbar = document.getElementById("topbar");
 				bigpic = document.getElementById("bigpic");
 				refbtn = document.getElementById("ref-btn");
+				srclnk = document.getElementById("source-link");
+				srcbtn = document.getElementById("source-btn");
+				srcicon = document.getElementById("source-icon");
 				picdesc = document.getElementById("picdesc");
 				pictags = document.getElementById("pictags");
 				refbox = document.getElementById("referrals");
@@ -195,6 +199,7 @@ var gnodes = {},
 			};
 			picbox.appendChild(bigpic);
 
+			//  Refer button stuff
 			refbtn = document.createElement("div");
 			refbtn.id = "ref-btn";
 			refbtn.className = "msgbox-btn";
@@ -212,6 +217,31 @@ var gnodes = {},
 			    refbtn.classList.remove('ts-active-button');
 		    });
 
+			// Source icon stuff
+			srclnk = document.createElement('a');
+			srclnk.setAttribute("target", "_blank");
+			srclnk.id = "source-link";
+			srcbtn = document.createElement('div');
+			srcbtn.id = "source-btn";
+			srcicon = document.createElement('img');
+			srcicon.id = "source-icon";
+
+			srcbtn.appendChild(srcicon);
+			srclnk.appendChild(srcbtn);
+			picbox.appendChild(srclnk);
+
+			gesture.listen("down", srclnk, function() {
+				srcbtn.style.opacity = 0.5;
+			});
+			gesture.listen("up", srclnk, function() {
+				srcbtn.style.opacity = 1;
+			});
+			gesture.listen("tap", srclnk, function() {
+				if(isDesktop()) return;
+				var dispatch = document.createEvent("HTMLEvents");
+			    dispatch.initEvent("click", true, true);
+			    srclnk.dispatchEvent(dispatch);
+			});
 
 			picdesc = document.createElement("div");
 			picdesc.id = "picdesc";
@@ -379,6 +409,9 @@ var gnodes = {},
 					buildTagBlock(objwrap, tagName);
 			});
 			setFavIcon(current_gallery_image.user_stats.has_favorited);
+
+			srclnk.href = d.deep_link ? d.deep_link : d.web_link;
+			srcicon.src = d.source_icon;
 
 			if (d.referral && gallery == "shares") {
 				refbox.innerHTML = referrals_made ? "Recommended To" 

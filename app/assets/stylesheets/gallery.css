@@ -102,7 +102,7 @@ img[src="img/history_icon_gray.png"] {
 }
 #picdesc {
 	font-size: 11pt;
-	margin-top: 7%;
+	margin-top: 14%;
 }
 #votemeter {
 	float: right;
@@ -214,6 +214,22 @@ img[src="img/history_icon_gray.png"] {
 	max-width: 50%;
 	font-size: 120%;
 }
+#source-icon {
+  height: 24px;
+  margin-right: auto;
+  margin-left: auto;
+}
+#source-btn {
+  float: right;
+  min-width: 30px;
+  margin-top: -3px;
+  padding: 0 7px 10px 10px;
+  text-align: center;
+}
+#source-link {
+	position: absolute;
+	right: 1%;
+}
 
 /*===== This Targets Anything Above iPhone 5 ========*/
 @media only screen and (min-width: 340px){
@@ -227,7 +243,10 @@ img[src="img/history_icon_gray.png"] {
 		min-width: 28%;
 	}
 	#picdesc {
-		margin-top: 6%;
+		margin-top: 12%;
+	}
+	#source-link {
+		right: 2%;
 	}
 }
 
@@ -334,5 +353,8 @@ img[src="img/history_icon_gray.png"] {
 	#ref-btn {
 		font-size: 180%;
 		max-width: 25%;
+	}
+	#source-link {
+		right: 1%;
 	}
 }
