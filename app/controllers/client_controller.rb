@@ -28,9 +28,9 @@ class ClientController < ApplicationController
     # Decide how to direct the user base on state
     usr = current_user
     unless !usr 
-      if !usr.welcomed?
-        redirect_to welcome_path
-      elsif !usr.username
+      # if !usr.welcomed?
+      #   redirect_to welcome_path
+      if !usr.username
         redirect_to selectusername_path
       elsif !usr.push_requested && params[:id].to_i == 0
         redirect_to "/push##{current_user.id}"
@@ -165,7 +165,7 @@ class ClientController < ApplicationController
     end
 
     def confirm_surfable
-      unless current_user and current_user.welcomed?
+      unless current_user
         redirect_to root_path
       end
     end
