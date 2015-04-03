@@ -4,6 +4,10 @@ class SendBumpNotification
   sidekiq_options :backtrace => true
 
   def perform(referral_id)
+	if Rails.env.development? 
+		return
+	end
+
 	ref = Referral.unscoped.find(referral_id)
 	media = Media.unscoped.find(ref.media_id)
 	user_id = ref.referrer_id
@@ -11,7 +15,7 @@ class SendBumpNotification
 	bumper = User.find(bumper_id)
 	badge_number = Referral.unscoped.where(:user_id => user_id, :seen => false).count +
 					Bump.unscoped.where(:sharer_id => user_id, :seen => false).count
-    unless !User.find(user_id).bump_mailers && !Rails.env.development?
+    unless !User.find(user_id).bump_mailers
 	    BumpMailer.bumped_media_email(user_id, bumper_id, media, referral_id).deliver
 	end
 
