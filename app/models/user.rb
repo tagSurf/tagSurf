@@ -134,7 +134,7 @@ class User < ActiveRecord::Base
     buddy_ids = recent_shares.inject(Hash.new(1)) { |h, e| h[e] += 1 ; h }.to_a.sort_by(&:last).reverse.map {|x,y| x}
 
     buddies = User.find(buddy_ids).index_by(&:id).values_at(*buddy_ids).map{|u| [u.id,u.email,u.username]}
-    buddies.concat(User.select(:id, :email, :username).map { |user| [user.id, user.email, user.username] })
+    buddies.concat(User.select(:id, :email, :username).order('sign_in_count DESC NULLS LAST').map { |user| [user.id, user.email, user.username] })
     
     buddies.uniq!
 

@@ -11,7 +11,7 @@ class SendBumpNotification
 	bumper = User.find(bumper_id)
 	badge_number = Referral.unscoped.where(:user_id => user_id, :seen => false).count +
 					Bump.unscoped.where(:sharer_id => user_id, :seen => false).count
-    unless !User.find(user_id).bump_mailers
+    unless !User.find(user_id).bump_mailers && !Rails.env.development?
 	    BumpMailer.bumped_media_email(user_id, bumper_id, media, referral_id).deliver
 	end
 
