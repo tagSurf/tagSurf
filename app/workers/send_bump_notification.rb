@@ -4,6 +4,10 @@ class SendBumpNotification
   sidekiq_options :backtrace => true
 
   def perform(referral_id)
+	if Rails.env.development? 
+		return
+	end
+
 	ref = Referral.unscoped.find(referral_id)
 	media = Media.unscoped.find(ref.media_id)
 	user_id = ref.referrer_id

@@ -5,7 +5,6 @@ class SendLeaderboardMailer
   recurrence { weekly.day(:monday).hour_of_day(15).minute_of_hour(30) }
   
   def perform
-	
 		if Rails.env.development? 
 			return
 		end
