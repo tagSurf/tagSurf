@@ -40,12 +40,12 @@ var card_proto = {
 			card = this,
 			imageTemplate = (card.type.indexOf('web') != -1) ? "<a href='" + (isAndroid() ? (card.deep_link ? card.deep_link : card.web_link) : card.web_link) + "' target='_blank'>" + "<div class='image-container expand-animation'><img src= ></div></a>" : "<div class='image-container expand-animation'><img src= ></div>",
 			cardTemplate = imageTemplate + 
-			"<div id='refer-btn' class='msgbox-btn'>Recommend!</div>" + 				
+			"<div id='refer-btn' class='msgbox-btn'>Bump It!</div>" + 				
 			"<div class='icon-line'>" +
 			"<a href='" + (card.deep_link ? card.deep_link : card.web_link) + "' target='_blank'><div id='source-btn'><img class='source-icon' src='" + card.data.source_icon + "'></div></a>" +
 			"<span class='tag-callout pointer'><img src='http://assets.tagsurf.co/img/trending_icon_blue.png'>&nbsp;#" + Object.keys(card.data.tags[0])[0] + "</span>" +
 			"</div><div class='text-container'><p>" + card.data.caption + "</p></div>" +
-			(this.referral ? "<div class='referrals'>Recommended For You By<div class='referral-scroller'></div></div>" : "") +
+			(this.referral ? "<div class='referrals'>Bumped To You By<div class='referral-scroller'></div></div>" : "") +
 			"<div id='pictags" + card.id + "' class='pictags'></div><div class='expand-button'><img src='http://assets.tagsurf.co/img/down_arrow.png'></div><div id='thumb-vote-container'><img class='thumb-up' src='http://assets.tagsurf.co/img/thumbsup.png'><img class='thumb-down' src='http://assets.tagsurf.co/img/thumbsdown.png'></div><div class='super-label'>SUPER VOTE</div>";
 		this.surfsUp = true;
 		formattingContainer.appendChild(container);

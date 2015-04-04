@@ -19,7 +19,7 @@ class SendReferNotification
 	    ReferMailer.referred_media_email(user_id, referrer_id, media, referral_id).deliver
 	end
 
-	message = "@#{referrer_name} shared something with you!"
+	message = "@#{referrer_name} bumped something to you!"
 
 	notification = {
 		:aliases => [user_id],

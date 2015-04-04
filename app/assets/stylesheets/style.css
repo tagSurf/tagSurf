@@ -923,8 +923,8 @@ a {
 }
 #slider-badge {
 	position: absolute !important;
-	left: 59% !important;
-	top: 50%;
+	left: 57% !important;
+	top: 18%;
 	width: initial !important;
 }
 .small-badge {
@@ -1045,7 +1045,7 @@ a {
 		min-width: 6%;
 	}
 	#slider-badge {
-		left: 57% !important;
+		left: 56% !important;
 	}
 
 }
