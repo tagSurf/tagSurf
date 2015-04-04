@@ -19,7 +19,7 @@
 			user_id = document.location.hash.split('#')[1].split('~')[0],
 			model = document.location.hash.split('~')[1];
 		container.classList.remove('hidden');
-		document.getElementsByClassName('ac-text-container')[0].innerHTML = document.location;
+		document.getElementsByClassName('ac-text-container')[0].innerHTML = document.location.hash.split('~')[1];
 		button.setAttribute('href', "/push-enable/" + user_id);
 		if (model && model.indexOf('iPhone7') == -1) {
 			// button.setAttribute('target', '_blank');
