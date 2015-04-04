@@ -30,7 +30,7 @@ var gnodes = {},
 
 		document.body.appendChild(gridwrapper);
 
-		if (gallery == "shares"){
+		if (gallery == "bumps"){
 			var selector = document.createElement('div'),
 				from_box = document.createElement('div'),
 				to_box = document.createElement('div'),
@@ -203,7 +203,7 @@ var gnodes = {},
 			refbtn = document.createElement("div");
 			refbtn.id = "ref-btn";
 			refbtn.className = "msgbox-btn";
-			refbtn.innerHTML = "Recommend!";
+			refbtn.innerHTML = "Bump It!";
 			refbtn.style.marginTop = "10px";
 			picbox.appendChild(refbtn);
 
@@ -413,9 +413,9 @@ var gnodes = {},
 			srclnk.href = d.deep_link ? d.deep_link : d.web_link;
 			srcicon.src = d.source_icon;
 
-			if (d.referral && gallery == "shares") {
-				refbox.innerHTML = referrals_made ? "Recommended To" 
-														: "Recommended By";
+			if (d.referral && gallery == "bumps") {
+				refbox.innerHTML = referrals_made ? "Bumped To" 
+														: "Bumped By";
 				toggleClass.apply(refbox, ["hidden", "off"]);
 				var badge = document.getElementById(d.id + "-badge");
 				d.referral.forEach(function(r) {
@@ -507,7 +507,7 @@ var gnodes = {},
 				});
 			};
 			badge.innerHTML = badge_count;
-			if (badge_count != 0 && gallery == "shares")
+			if (badge_count != 0 && gallery == "bumps")
 				toggleClass.apply(badge, ["hidden", "off"]);
 
 			n.appendChild(badge);
@@ -548,7 +548,7 @@ var gnodes = {},
 		var getPath = function() {
 			if (gallery == "tag")
 				return "/api/media/" + location.hash.slice(1);
-			else if (gallery == "shares")
+			else if (gallery == "bumps")
 				return "/api/referral/" + (referrals_made ? "made" : "received") + "/paginated/" + chunk_size + "/" + chunk_offset;
 			return "/api/" + gallery + "/paginated/" + chunk_size + "/" + chunk_offset;
 		};
@@ -559,7 +559,7 @@ var gnodes = {},
 			throbber.on(false, 'throbber-bottom');
 			xhr(getPath(), null, function(response_data) {
 				response_data.data.forEach(function(d) {
-					addImage(d, getHeader(gallery == "shares" ? 
+					addImage(d, getHeader(gallery == "bumps" ? 
 						d.referral[d.referral.length - 1].time : (gallery == "favorites" ? 
 								d.user_stats.time_favorited : d.user_stats.time_discovered)));
 				});
@@ -586,7 +586,7 @@ var gnodes = {},
 
 		document.getElementById("favorites-btn").onclick = function() {
 			if (current_gallery_image) {
-				if (gallery == "history" || gallery == "shares") {
+				if (gallery == "history" || gallery == "bumps") {
 					current_gallery_image.user_stats.has_favorited =
 						!current_gallery_image.user_stats.has_favorited;
 					xhr("/api/favorites/" + current_gallery_image.id,

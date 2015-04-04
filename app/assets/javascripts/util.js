@@ -40,7 +40,7 @@ var toggleClass = function (className, onOrOff) {
   else if (!classIsOn && onOrOff != "off")
     this.classList.add(className);
 };
-var galleries = ["history", "favorites", "submissions", "tag", "shares"];
+var galleries = ["history", "favorites", "submissions", "tag", "bumps"];
 var whichGallery = function() {
   for (var i = 0; i < galleries.length; i++)
     if (document.location.pathname.indexOf(galleries[i]) != -1)
@@ -84,7 +84,7 @@ var getUser = function () {
           currentUser.unseen_refs = result.unseen_referrals;
           if ((currentUser.unseen_bumps + currentUser.unseen_refs) != 0)
             updateMenuBadges(currentUser.unseen_bumps + currentUser.unseen_refs);
-            if (isGallery() && whichGallery() == "shares")
+            if (isGallery() && whichGallery() == "bumps")
               updateGalleryBadges(currentUser.unseen_refs, currentUser.unseen_bumps, true);
         } 
       }, function(result) {
@@ -105,7 +105,7 @@ var userStatsPoller = function () {
           currentUser.unseen_bumps = result.unseen_bumps;
           currentUser.unseen_refs = result.unseen_referrals;
           updateMenuBadges(currentUser.unseen_bumps + currentUser.unseen_refs);
-          if (isGallery() && whichGallery() == "shares")
+          if (isGallery() && whichGallery() == "bumps")
             updateGalleryBadges(currentUser.unseen_refs, currentUser.unseen_bumps);
         }
       }

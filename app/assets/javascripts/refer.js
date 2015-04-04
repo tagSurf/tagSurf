@@ -6,7 +6,7 @@ var refer = {
 	content: document.createElement('div'),
 	build: function () {
 		if (!isAuthorized()){
-			refer.content.innerHTML = "<div class='really-big centered'>Login To Recommend This For A Friend</div>"
+			refer.content.innerHTML = "<div class='really-big centered'>Login To Bump This To A Friend</div>"
 			var loginbtn = document.createElement('img');
 			loginbtn.className = 'fb-login-btn refer-login-btn';
 			loginbtn.src = 'http://assets.tagsurf.co/img/fb_login.png';
@@ -30,7 +30,7 @@ var refer = {
 			closebtn = document.createElement('img'),
 			sendbtn = document.createElement('div');
 		heading.className = "buddy-title";
-		heading.innerHTML = "Recommend This";
+		heading.innerHTML = "Bump This To";
 		searchBar.className = "search-bar";
 		searchIcon.src = "http://assets.tagsurf.co/img/search_white.png"
 		searchIcon.className = "search-icon";
