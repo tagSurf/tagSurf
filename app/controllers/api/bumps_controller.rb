@@ -22,8 +22,8 @@ class Api::BumpsController < Api::BaseController
     end 
     if @success
       render json: {created: true}, status: :ok
-    elsif @bump 
-      render json: {created: false, reason: @bump.errors.full_messages.first }, status: :not_implemented
+    # elsif @bump 
+    #   render json: {created: false, reason: @bump.errors.full_messages.first }, status: :not_implemented
     else 
       render json: {created: false, reason: "no referral found" }, status: :not_implemented
     end
