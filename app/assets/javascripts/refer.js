@@ -170,7 +170,7 @@ var refer = {
 
 			buddyCell.className = 'buddy-cell';
 			for (var i = 1; i <= username.length; i++)
-				buddyCell.className += " " + username.slice(0, i);
+				buddyCell.className += " " + username.slice(0, i).toLowerCase();
 			buddyPic.src = "http://assets.tagsurf.co/img/UserAvatar.png";
 			buddyPic.className = 'buddy-pic';
 			buddyName.className = 'buddy-name';
