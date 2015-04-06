@@ -3,6 +3,9 @@ class UsersController < ApplicationController
   layout 'client'
 
   def update
+    if !params[:user][:username].nil?
+      params[:user][:username].strip!
+    end
     current_user.update(update_user_params)
 
     # if current_user.welcomed? 

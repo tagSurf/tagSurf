@@ -22,7 +22,7 @@
   var inputs = document.getElementsByClassName('ts-input');
 
   var check_availability = function() {
-    var username = document.getElementById('user_username').value;
+    var username = document.getElementById('user_username').value.trim();
 
     xhr('/api/users/check-name/' + username, 'Get', function(response) {
     }, null);
@@ -30,7 +30,7 @@
   };
 
   var form_submit = function() {
-    var username = document.getElementById('user_username').value,
+    var username = document.getElementById('user_username').value.trim(),
     f = document.getElementById('username_form');
     if(username == "")
       alert('Please pick a surfer name');
