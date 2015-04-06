@@ -1,4 +1,5 @@
 var gnodes = {},  
+	data = [],
 	favGrid, 
 	slideGallery,
 	addHistoryItem,
@@ -66,6 +67,7 @@ var gnodes = {},
 				toggleClass.call(to_box, "selected-cell");
 				toggleClass.call(from_box, "selected-cell");
 				referrals_made = false;
+				data = [];
 				grid.innerHTML = "";
 				chunk_offset = 0;
 				populateGallery();
@@ -84,6 +86,7 @@ var gnodes = {},
 				toggleClass.call(to_box, "selected-cell");
 				referrals_made = true;
 				grid.innerHTML = "";
+				data = [];
 				chunk_offset = 0;
 				populateGallery();
 			});
@@ -352,6 +355,7 @@ var gnodes = {},
 				    bumpIcon.src = "http://assets.tagsurf.co/img/bumped.png";
 				    gesture.unlisten(bumpBtn);
 				    toggleClass.apply(badge, ["hidden", "on"]);
+				    ref.bumped = true;
 				    xhr("/api/bump/" + card_id + "/" + referrer_id, "POST", null, null);
 				});
 				gesture.listen("down", bumpBtn, function () {
@@ -425,6 +429,7 @@ var gnodes = {},
 							xhr("/api/bump/seen/" + r.bump_id, "GET", null, null);
 						else 
 							xhr("/api/referral/seen/" + r.referral_id, "GET", null, null);
+						r.seen = true;
 					}
 				});
 				badge.innerHTML = 0
@@ -559,7 +564,8 @@ var gnodes = {},
 			throbber.on(false, 'throbber-bottom');
 			xhr(getPath(), null, function(response_data) {
 				response_data.data.forEach(function(d) {
-					addImage(d, getHeader(gallery == "bumps" ? 
+					data.push(d);
+					addImage(data[data.length - 1], getHeader(gallery == "bumps" ? 
 						d.referral[d.referral.length - 1].time : (gallery == "favorites" ? 
 								d.user_stats.time_favorited : d.user_stats.time_discovered)));
 				});
