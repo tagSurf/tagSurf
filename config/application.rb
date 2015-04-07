@@ -123,7 +123,7 @@ module Tagsurf
       "babygotback", 
       "babe", 
       "porn",
-      "Pornlovers",
+      "pornlovers",
       "o_face",
       "bdsm",
       "fapfapfap",
@@ -239,7 +239,12 @@ module Tagsurf
       "cum",
       "orgasm",
       "oface",
-      "faptogifs"
+      "faptogifs",
+      "asianpussy",
+      "asianass",
+      "asianporn",
+      "naked asians",
+      "asianhottiesgifs"
     ]
 
   end
