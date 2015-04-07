@@ -28,6 +28,8 @@ class User < ActiveRecord::Base
 
   scope :sorted_history, order("created_at ASC")
 
+  after_commit :destroy_all_relations, on: :destroy
+
   def welcomed?
     completed_feature_tour?
   end
@@ -154,6 +156,29 @@ class User < ActiveRecord::Base
 
   def confirmation_required?
     false
+  end
+
+  def destroy_all_relations
+    self.votes.each do |v|
+      v.destroy!
+    end
+
+    Referral.unscoped.where(:referrer_id => id).each do |r|
+      r.destroy!
+    end
+
+    Referral.unscoped.where(:user_id => id).each do |r|
+      r.destroy!
+    end
+
+    Bump.where(:sharer_id => id).each do |b|
+      b.destroy!
+    end
+
+    Bump.where(:bumper_id => id).each do |b|
+      b.destroy!
+    end
+
   end
   
 end
