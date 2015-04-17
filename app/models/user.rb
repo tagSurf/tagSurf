@@ -129,6 +129,29 @@ class User < ActiveRecord::Base
       end
     end
     user
+  end
+
+  def self.from_native(fb_params)
+    user = User.where(email: fb_params[:email]).first
+    unless user
+      user = User.where(provider: 'facebook', uid: fb_params[:uid]).first_or_create! do |user|
+        user.uid = fb_params[:uid]
+        user.provider = 'facebook'
+        user.email = fb_params[:email]
+        user.first_name = fb_params[:first_name]
+        user.last_name = fb_params[:last_name]
+        user.profile_pic_link = fb_params[:profile_pic_link]
+        user.password = Devise.friendly_token[0,20]
+        user.facebook_auth_token = fb_params[:facebook_auth_token]
+        user.facebook_token_expires_at = fb_params[:facebook_token_expires_at]
+        user.facebook_token_created_at = Time.now
+        user.gender = fb_params[:gender]
+        user.location = fb_params[:locale]
+        user.active = true
+        user.beta_user = true
+      end
+    end
+    user
   end 
 
   def self.buddy_list(user_id)

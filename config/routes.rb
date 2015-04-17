@@ -46,6 +46,7 @@ Tagsurf::Application.routes.draw do
 
   # User routes
   put 'user'               => 'users#update'
+  post 'authentication/from-native' =>  'users#from_native'
 
   # JSON API
   namespace :api do

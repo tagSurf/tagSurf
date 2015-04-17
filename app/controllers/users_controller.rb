@@ -1,6 +1,9 @@
 class UsersController < ApplicationController
+  include Devise::Controllers::Rememberable
 
   layout 'client'
+
+  skip_before_filter :verify_authenticity_token, :only => [:from_native]
 
   def update
     if !params[:user][:username].nil?
@@ -28,6 +31,19 @@ class UsersController < ApplicationController
     end
   end
 
+  def from_native
+    # You need to implement the method below in your model (e.g. app/models/user.rb)
+    @user = User.from_native(fb_params)
+
+    if @user.persisted?
+      sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
+      remember_me(@user)
+    else
+      session["devise.facebook_data"] = fb_params
+      redirect_to new_user_registration_url
+    end
+  end
+
   def history
   end
  
@@ -37,5 +53,18 @@ class UsersController < ApplicationController
     params.require(:user).permit(:completed_feature_tour, :username) 
   end
 
+  def fb_params
+    params.permit(
+      :uid,
+      :email,
+      :first_name,
+      :last_name,
+      :facebook_auth_token,
+      :profile_pic_link,
+      :facebook_token_expires_at,
+      :gender,
+      :location
+      )
+  end
 
 end
