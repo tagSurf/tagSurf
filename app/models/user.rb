@@ -123,8 +123,8 @@ class User < ActiveRecord::Base
         user.facebook_auth_token = auth.credentials.token
         user.facebook_token_expires_at = auth.credentials.expires_at
         user.facebook_token_created_at = Time.now
-        user.gender = auth.extra.raw.gender
-        user.location = auth.extra.raw.location
+        user.gender = auth.extra.gender
+        user.location = auth.extra.locale
         user.active = true
         user.beta_user = true
       end
