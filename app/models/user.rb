@@ -146,7 +146,7 @@ class User < ActiveRecord::Base
         user.facebook_token_expires_at = fb_params[:facebook_token_expires_at]
         user.facebook_token_created_at = Time.now
         user.gender = fb_params[:gender]
-        user.location = fb_params[:locale]
+        user.location = fb_params[:location]
         user.active = true
         user.beta_user = true
       end
