@@ -115,11 +115,38 @@ class User < ActiveRecord::Base
         user.uid = auth.uid
         user.provider = auth.provider
         user.email = auth.info.email
+        user.first_name = auth.info.first_name
+        user.last_name = auth.info.last_name
+        user.profile_pic_link = auth.info.image
         user.password = Devise.friendly_token[0,20]
-        # user.auth_token = auth.credentials.token
-        # user.token_expires_at = auth.credentials.expires_at
-        # user.token_created_at = Time.now
-        # user.gender = auth.extra.raw.gender
+        user.facebook_auth_token = auth.credentials.token
+        user.facebook_token_expires_at = auth.credentials.expires_at
+        user.facebook_token_created_at = Time.now
+        user.gender = auth.extra.raw_info.gender
+        user.location = auth.extra.raw_info.locale
+        user.active = true
+        user.beta_user = true
+      end
+    end
+    user
+  end
+
+  def self.from_native(fb_params)
+    user = User.where(email: fb_params[:email]).first
+    unless user
+      user = User.where(provider: 'facebook', uid: fb_params[:uid]).first_or_create! do |user|
+        user.uid = fb_params[:uid]
+        user.provider = 'facebook'
+        user.email = fb_params[:email]
+        user.first_name = fb_params[:first_name]
+        user.last_name = fb_params[:last_name]
+        user.profile_pic_link = fb_params[:profile_pic_link]
+        user.password = Devise.friendly_token[0,20]
+        user.facebook_auth_token = fb_params[:facebook_auth_token]
+        user.facebook_token_expires_at = fb_params[:facebook_token_expires_at]
+        user.facebook_token_created_at = Time.now
+        user.gender = fb_params[:gender]
+        user.location = fb_params[:location]
         user.active = true
         user.beta_user = true
       end

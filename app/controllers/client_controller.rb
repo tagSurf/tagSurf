@@ -10,7 +10,8 @@ class ClientController < ApplicationController
     :signup,
     :disclaimer_agreement,
     :terms_agreement,
-    :password_submission
+    :password_submission,
+    :authentication
   ]
 
   before_action :confirm_surfable, only: [
@@ -101,6 +102,7 @@ class ClientController < ApplicationController
   def disclaimer; end
   def terms; end
   def signup; end
+  def authentication; end
 
   def share
     if current_user and !current_user.username
