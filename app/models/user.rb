@@ -110,7 +110,6 @@ class User < ActiveRecord::Base
 
   def self.from_omniauth(auth)
     user = User.where(email: auth.info.email).first
-    puts auth
     unless user
       user = User.where(provider: auth.provider, uid: auth.uid).first_or_create! do |user|
         user.uid = auth.uid
@@ -123,8 +122,8 @@ class User < ActiveRecord::Base
         user.facebook_auth_token = auth.credentials.token
         user.facebook_token_expires_at = auth.credentials.expires_at
         user.facebook_token_created_at = Time.now
-        user.gender = auth.extra.gender
-        user.location = auth.extra.locale
+        user.gender = auth.extra.raw_info.gender
+        user.location = auth.extra.raw_info.locale
         user.active = true
         user.beta_user = true
       end
