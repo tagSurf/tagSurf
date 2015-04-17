@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150325004402) do
+ActiveRecord::Schema.define(version: 20150417000456) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,12 +140,12 @@ ActiveRecord::Schema.define(version: 20150325004402) do
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                  default: "",    null: false
-    t.string   "encrypted_password",     default: "",    null: false
+    t.string   "email",                     default: "",    null: false
+    t.string   "encrypted_password",        default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,     null: false
+    t.integer  "sign_in_count",             default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
@@ -162,19 +162,27 @@ ActiveRecord::Schema.define(version: 20150325004402) do
     t.boolean  "imgur_pro_expiration"
     t.boolean  "active"
     t.boolean  "beta_user"
-    t.boolean  "admin",                  default: false
+    t.boolean  "admin",                     default: false
     t.integer  "access_code_id"
-    t.boolean  "beta_tester_agreement",  default: false, null: false
+    t.boolean  "beta_tester_agreement",     default: false, null: false
     t.string   "confirmation_token"
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
-    t.boolean  "completed_feature_tour", default: false
+    t.boolean  "completed_feature_tour",    default: false
     t.string   "slug"
-    t.boolean  "safe_mode",              default: true,  null: false
-    t.boolean  "refer_mailers",          default: true,  null: false
-    t.boolean  "bump_mailers",           default: true,  null: false
-    t.boolean  "push_requested",         default: false, null: false
-    t.boolean  "leaderboard_mailers",    default: true,  null: false
+    t.boolean  "safe_mode",                 default: true,  null: false
+    t.boolean  "refer_mailers",             default: true,  null: false
+    t.boolean  "bump_mailers",              default: true,  null: false
+    t.boolean  "push_requested",            default: false, null: false
+    t.boolean  "leaderboard_mailers",       default: true,  null: false
+    t.string   "first_name"
+    t.string   "last_name"
+    t.string   "profile_pic_link"
+    t.string   "facebook_auth_token"
+    t.datetime "facebook_token_created_at"
+    t.datetime "facebook_token_expires_at"
+    t.string   "gender"
+    t.string   "location"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

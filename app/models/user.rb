@@ -115,11 +115,15 @@ class User < ActiveRecord::Base
         user.uid = auth.uid
         user.provider = auth.provider
         user.email = auth.info.email
+        user.first_name = auth.info.first_name
+        user.last_name = auth.info.last_name
+        user.profile_pic_link = auth.info.image
         user.password = Devise.friendly_token[0,20]
-        # user.auth_token = auth.credentials.token
-        # user.token_expires_at = auth.credentials.expires_at
-        # user.token_created_at = Time.now
-        # user.gender = auth.extra.raw.gender
+        user.facebook_auth_token = auth.credentials.token
+        user.facebook_token_expires_at = auth.credentials.expires_at
+        user.facebook_token_created_at = Time.now
+        user.gender = auth.extra.raw.gender
+        user.location = auth.extra.raw.location
         user.active = true
         user.beta_user = true
       end
