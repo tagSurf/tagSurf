@@ -110,6 +110,7 @@ class User < ActiveRecord::Base
 
   def self.from_omniauth(auth)
     user = User.where(email: auth.info.email).first
+    puts auth
     unless user
       user = User.where(provider: auth.provider, uid: auth.uid).first_or_create! do |user|
         user.uid = auth.uid
