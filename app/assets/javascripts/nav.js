@@ -137,6 +137,44 @@ var populateNavbar = function () {
         + "px !important";
     }
   });
+
+  if(isUIWebView())
+    addCss({
+      "#navbar" : function() {
+        return "height: 40px";
+      },
+      "#nav" : function() {
+        return "height: 40px";
+      },
+      "#add-btn" : function() {
+        return "top: -9px";
+      },
+      ".navbar-center" : function() {
+        return "padding-top: 5px";
+      },
+      "#favorites-btn" : function() {
+        return "padding-top: 7px";
+      },
+      "#tag-adder" : function() {
+        return "top: -10px";
+      },
+      "#scroll-container" : function() {
+        return "top: 40px";
+      },
+      ".opened-menu" : function() {
+        return "top: 40px !important";
+      },
+      ".blackout" : function() {
+        return "top: 40px";
+      },
+      ".throbber-back" : function() {
+        return "top: 40px";
+      },
+      ".badge-icon" : function() {
+        return "margin-top: 0px";
+      }
+    });
+
   autocomplete.register("add-tag-autocomplete", tag_adder.firstChild, {
     enterCb: function() {
       autocomplete.tapTag(tag_adder.firstChild.value.slice(1),
