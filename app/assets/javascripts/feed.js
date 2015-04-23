@@ -18,6 +18,7 @@ onload = function ()
 	// Pause on facebook redirect to handle bug in iPhone5 FB Browser
 	if (isFacebook() && isIos()) {
 		setTimeout(function() { 
+				var originalUrl = window.location;
 				if (isIos() && !isUIWebView() && isAuthorized())
 					window.location = "tagSurf://card/" + document.location.hash.split("#")[1];
 				else if (isIos() && !isUIWebView() && !isAuthorized())
@@ -25,7 +26,7 @@ onload = function ()
 						document.location.pathname.split("/")[2] + "~" + 
 							document.location.pathname.split("/")[3];
 				setTimeout(function() {
-					window.location = share.url();
+					window.location = originalUrl;
 				}, 2000);
 		}, 2000);
 	}
