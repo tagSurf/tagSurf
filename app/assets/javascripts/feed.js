@@ -14,11 +14,11 @@ var castVote = function(card) {
 
 onload = function ()
 {
-	if (isIos() && !isUIWebView() && isAuthorized())
-		window.location = "tagSurf://card/" + document.location.hash.split("#")[1];
-	else if (isIos() && !isUIWebView() && !isAuthorized())
-		window.location = "tagSurf://card/" + document.location.pathname.split("/")[2] + "~" +
-							document.location.pathname.split("/")[3];
+	// if (isIos() && !isUIWebView() && isAuthorized())
+	// 	window.location = "tagSurf://card/" + document.location.hash.split("#")[1];
+	// else if (isIos() && !isUIWebView() && !isAuthorized())
+	// 	window.location = "tagSurf://card/" + document.location.pathname.split("/")[2] + "~" +
+	// 						document.location.pathname.split("/")[3];
 	populateNavbar();
 
 	// defined in util for autocomplete
