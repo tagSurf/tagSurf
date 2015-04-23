@@ -107,7 +107,7 @@ var share = {
 			}, 200);
 		});
 		gesture.listen('tap', share.button, function () {
-			if(isUIWebView) {
+			if(isUIWebView()) {
 				window.location = "nativeShare://" + share.url());
 			}
 			else if(share.shareModalOut) {
