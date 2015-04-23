@@ -23,7 +23,7 @@ onload = function ()
 					window.location = "tagSurf://card/" + 
 						document.location.pathname.split("/")[2] + "~" + 
 							document.location.pathname.split("/")[3];
-		}, 1000);
+		}, 500);
 	}
 	else if (isIos() && !isUIWebView() && isAuthorized())
 		window.location = "tagSurf://card/" + document.location.hash.split("#")[1];
