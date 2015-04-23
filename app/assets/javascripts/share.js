@@ -112,15 +112,12 @@ var share = {
 			}, 200);
 		});
 		gesture.listen('tap', share.button, function () {
-			if(false) {
-				// var link = document.createElement('a'),
-				// 	dispatch = document.createEvent("HTMLEvents");
+			if(isUIWebView()) {
+				var link = document.getElementById('share-link'),
+					dispatch = document.createEvent("HTMLEvents");
 			    
-			 //    dispatch.initEvent("click", true, true);
-				// link.href = "nativeShare://" + share.url();
-				// console.log("nativeShare://" + share.url());
-				// document.body.appendChild(link);
-				// link.dispatchEvent(dispatch);
+			    dispatch.initEvent("click", true, true);
+				link.dispatchEvent(dispatch);
 
 				// window.location = "nativeShare://" + share.url();
 			}
