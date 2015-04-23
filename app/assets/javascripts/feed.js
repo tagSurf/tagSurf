@@ -26,7 +26,7 @@ onload = function ()
 							document.location.pathname.split("/")[3];
 				setTimeout(fucntion() {
 					window.location = share.url();
-				}, 2000)
+				}, 2000);
 		}, 2000);
 	}
 	else if (isIos() && !isUIWebView() && isAuthorized())
