@@ -108,7 +108,15 @@ var share = {
 		});
 		gesture.listen('tap', share.button, function () {
 			if(isUIWebView()) {
-				window.location = "nativeShare://" + share.url();
+				var link = document.createElement('a'),
+					dispatch = document.createEvent("HTMLEvents");
+			    
+			    dispatch.initEvent("click", true, true);
+				link.href = "nativeShare://" + share.url();
+				document.body.appendChild(link);
+				link.dispatchEvent(dispatch);
+
+				// window.location = "nativeShare://" + share.url();
 			}
 			else if(share.shareModalOut) {
 				modal.topModalOut();
@@ -132,7 +140,15 @@ var share = {
 			}
 		});
 		share.button.appendChild(shareIcon);
-		document.body.appendChild(share.button);
+
+		// if (isDesktop()) {
+		// 	var link = document.createElement('a');
+		// 	link.href = "nativeShare://" + share.url();
+		// 	link.appendChild(share.button);
+		// 	document.body.appendChild(link);
+		// }
+		// else 
+			document.body.appendChild(share.button);
 	},
 	open: function() {
 		if(panic.panicModalOut)
