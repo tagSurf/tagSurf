@@ -412,7 +412,6 @@ var __ua = navigator.userAgent, _ua = {
   isSafariOrUIWebView: /(iPhone|iPod|iPad).*AppleWebKit/i.test(__ua),
   isIphone: __ua.indexOf("iPhone") != -1,
   isIpad: __ua.indexOf("iPad") != -1,
-  isIphone5: __ua.indexOf("iPhone5") != -1,
   isIos: (__ua.indexOf("iPhone") != -1) || (__ua.indexOf("iPad") != -1),
   isMobile: __ua.toLowerCase().indexOf("mobile") != -1,
   isAndroid: __ua.indexOf("Android") != -1,
@@ -434,9 +433,6 @@ var isIpad = function(){
 };
 var isIphone = function(){
   return _ua.isIphone;
-};
-var isIphone5 = function(){
-  return _ua.isIphone5;
 };
 var isDesktop = function(){
   return !_ua.isMobile && !_ua.isAndroid && !_ua.isIos;
