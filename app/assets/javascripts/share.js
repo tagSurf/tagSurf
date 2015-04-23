@@ -107,7 +107,10 @@ var share = {
 			}, 200);
 		});
 		gesture.listen('tap', share.button, function () {
-			if(share.shareModalOut) {
+			if(isUIWebView) {
+				window.location = "nativeShare://" + share.url());
+			}
+			else if(share.shareModalOut) {
 				modal.topModalOut();
 				share.shareModalOut =false;
 				analytics.track('Close Share Window', {
