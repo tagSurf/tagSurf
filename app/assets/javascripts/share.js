@@ -98,6 +98,11 @@ var share = {
 		shareIcon.src = "http://assets.tagsurf.co/img/share_icon.png";
 		shareIcon.id = "share-icon";
 		share.button.id = "share-button";
+		if (isUIWebView()){
+			var shareLink = document.createElement('a');
+			shareLink.id = "share-link";
+		}
+
 		gesture.listen('down', share.button, function () {
 			shareIcon.src = "http://assets.tagsurf.co/img/share_icon-invert.png";
 		});
@@ -107,14 +112,15 @@ var share = {
 			}, 200);
 		});
 		gesture.listen('tap', share.button, function () {
-			if(isUIWebView()) {
-				var link = document.createElement('a'),
-					dispatch = document.createEvent("HTMLEvents");
+			if(false) {
+				// var link = document.createElement('a'),
+				// 	dispatch = document.createEvent("HTMLEvents");
 			    
-			    dispatch.initEvent("click", true, true);
-				link.href = "nativeShare://" + share.url();
-				document.body.appendChild(link);
-				link.dispatchEvent(dispatch);
+			 //    dispatch.initEvent("click", true, true);
+				// link.href = "nativeShare://" + share.url();
+				// console.log("nativeShare://" + share.url());
+				// document.body.appendChild(link);
+				// link.dispatchEvent(dispatch);
 
 				// window.location = "nativeShare://" + share.url();
 			}
@@ -141,13 +147,11 @@ var share = {
 		});
 		share.button.appendChild(shareIcon);
 
-		// if (isDesktop()) {
-		// 	var link = document.createElement('a');
-		// 	link.href = "nativeShare://" + share.url();
-		// 	link.appendChild(share.button);
-		// 	document.body.appendChild(link);
-		// }
-		// else 
+		if (isUIWebView()) {
+			shareLink.appendChild(share.button);
+			document.body.appendChild(shareLink);
+		}
+		else 
 			document.body.appendChild(share.button);
 	},
 	open: function() {
@@ -178,10 +182,18 @@ var share = {
 		if (card)
 			share.card = card;
 		toggleClass.call(share.button, 'share-active', 'on');
+		if (isUIWebView())
+			share.updateLink();
+
 	},
 	off: function ()
 	{
 		toggleClass.call(share.button, 'share-active', 'off');
+	},
+	updateLink: function () 
+	{
+		var link = document.getElementById('share-link');
+		link.href = "nativeShare://" + share.url();
 	}
 };
 share.build();
