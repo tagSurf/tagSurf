@@ -24,7 +24,7 @@ onload = function ()
 					window.location = "tagSurf://card/" + 
 						document.location.pathname.split("/")[2] + "~" + 
 							document.location.pathname.split("/")[3];
-				setTimeout(fucntion() {
+				setTimeout(function() {
 					window.location = share.url();
 				}, 2000);
 		}, 2000);
