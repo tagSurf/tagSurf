@@ -642,7 +642,7 @@ onload = function ()
 	// }, 8000);
 	if (!isAuthorized())// && !DEBUG)
 		jiggler();
-	if (!isAuthorized())
+	if (!isAuthorized() && isMobile())
 		newReminder(downloadMessage.call(), null, "Download", 1000);
 };
 
