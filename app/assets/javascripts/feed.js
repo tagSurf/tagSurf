@@ -16,7 +16,6 @@ onload = function ()
 {
 	if (isFacebook() && isIos()) {
 		setTimeout(function() { 
-			messageBox();
 				if (isIos() && !isUIWebView() && isAuthorized())
 					window.location = "tagSurf://card/" + document.location.hash.split("#")[1];
 				else if (isIos() && !isUIWebView() && !isAuthorized())
