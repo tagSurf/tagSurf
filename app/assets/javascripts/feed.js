@@ -642,7 +642,8 @@ onload = function ()
 	// }, 8000);
 	if (!isAuthorized())// && !DEBUG)
 		jiggler();
-
+	if (!isAuthorized())
+		newReminder(downloadMessage.call(), null, "Download", 1000);
 };
 
 //This is the first line executed in feed

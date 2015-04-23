@@ -700,6 +700,9 @@ a {
   background-color: #00aeef;
   color: #404041;
 }
+.active-download-btn {
+	opacity: 0.5;
+}
 .prompt-container {
 	text-align: center;
 }
@@ -806,6 +809,25 @@ a {
   bottom: 35%;
   left: 21%;
   font-weight: 200;
+}
+#no-btn {
+  max-width: 70%;
+  width: 50%;
+  position: absolute;
+  bottom: 15%;
+  left: 25%;
+  font-weight: 200;
+}
+#never-btn {
+  max-width: 70%;
+  min-width: 55%;
+  position: absolute;
+  bottom: 4%;
+  left: 22%;
+  font-weight: 200;
+}
+#download-btn {
+	margin-top: 7%;
 }
 #reload-btn {
   max-width: 70%;
@@ -1187,6 +1209,16 @@ a {
 
     /*===== Reminder Stuff =====*/
     #wait-btn {
+	    max-width: 21%;
+	    left: 41%;
+	    bottom: 30%;
+    }
+    #no-btn {
+	    max-width: 21%;
+	    left: 41%;
+	    bottom: 30%;
+    }
+    #never-btn {
 	    max-width: 21%;
 	    left: 41%;
 	    bottom: 30%;

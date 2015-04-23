@@ -168,6 +168,13 @@ var shareVotes = [], stashVotesAndLogin = function () {
   window.location = "/users/sign_in";
 };
 
+stashVotes = function () {
+  sessionStorage.setItem("lastPath",
+    current_tag + "~" + currentMedia.id);
+  sessionStorage.setItem("shareVotes",
+    JSON.stringify(shareVotes));
+};
+
 var messageBox = function (title, message, action_type, cb, backed) {
   var contents = document.createElement('div'),
       closeContainer = document.createElement('div'),
