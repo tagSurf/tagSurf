@@ -455,6 +455,9 @@ var isStockAndroid = function() {
 var isNarrow = function() {
   return window.innerWidth < 700;
 };
+var isFacebook = function() {
+  return _ua.isFacebook;
+};
 
 var trans = function(node, cb, transition, transform) {
   var transTimeout,
