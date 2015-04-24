@@ -179,7 +179,9 @@ var downloadMessage = function() {
 		nobtn.classList.remove("active-no-fill-btn");
 	});
 	gesture.listen("tap", nobtn, function() {
+		var menuBtn = document.getElementById('appstore-btn');
 		reminders[0].close();
+		menuBtn.classList.remove('hidden');
 	});
 	nobtn.id = "no-btn";
 	nobtn.innerHTML = "Not Now";

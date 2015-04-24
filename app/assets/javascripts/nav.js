@@ -27,7 +27,13 @@ var populateNavbar = function () {
   reduced_navbar_content = [
     "<div id='help-btn'>",
       "<img id='help-icon' src='http://assets.tagsurf.co/img/help_btn.png'>",
-    "</div>",
+    "</div>", ((!isAuthorized() && isMobile()) 
+      ? (("<a href='" + (isIos() 
+        ? ("https://appsto.re/us/hYmt1.i") 
+        : ("https://play.google.com/store/apps/details?id=co.tagsurf.tagsurf")) + "' ><div id='appstore-btn' class='btn hidden'><img id='appstore-icon' src='" + (isIos() 
+        ? ("http://assets.tagsurf.co/img/Download_on_the_App_Store_Badge_US-UK_135x40.svg") 
+        : ("http://assets.tagsurf.co/img/get-it-on-google-play-store-logo.png")) + "' >") + "</div></a>") 
+      : ("")),
     "<div class='navbar-center'>",
       "<label id='slider-label' for='slider-box' ontouchmove='return false;' onclick='slideNavMenu();'>",
         "<span id='main-logo'>",
@@ -118,6 +124,20 @@ var populateNavbar = function () {
       callHelpModal();
       analytics.track('Open Help Modal');
     });
+    if (isMobile()) {
+      var appstoreBtn = document.getElementById('appstore-btn');
+      gesture.listen("down", appstoreBtn, function () {
+        appstoreBtn.classList.add("active-download-btn");
+      });
+      gesture.listen("up", appstoreBtn, function () {
+        appstoreBtn.classList.remove("active-download-btn");
+      });
+      gesture.listen("tap", appstoreBtn, function () {
+        var destination = isIos() ? "https://appsto.re/us/hYmt1.i" : 
+              "https://play.google.com/store/apps/details?id=co.tagsurf.tagsurf";
+        window.location = destination;
+      });
+    }
   }
   tag_adder.firstChild.nextSibling.onclick = function() {
     var newtag = tag_adder.firstChild.value.slice(1);
