@@ -623,7 +623,7 @@ onload = function ()
 	var jiggler = function() {
 		tutorial.jiggleTimeout = setTimeout(function() { 
 			current_deck.topCard().jiggle() 
-		}, 8000);
+		}, 6000);
 		setTimeout(function() {
 			current_deck.topCard().setOneTimeCb("vote", function () { 
 				clearTimeout(tutorial.jiggleTimeout);
@@ -642,7 +642,8 @@ onload = function ()
 	// }, 8000);
 	if (!isAuthorized())// && !DEBUG)
 		jiggler();
-
+	if (!isAuthorized() && isMobile())
+		newReminder(downloadMessage.call(), null, "Download", 12000, 5000);
 };
 
 //This is the first line executed in feed

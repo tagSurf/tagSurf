@@ -64,6 +64,12 @@
 #favorites-btn {
   float:right;
 }
+#appstore-btn {
+  position: absolute;
+}
+#appstore-icon {
+    width:70%;
+}
 .btn {
   padding: 12px 10px 13px 10px;
 }
@@ -218,4 +224,11 @@
   .menu-icon {
     width: 24px;
   }
+  #appstore-btn {
+    padding-top: 4px;
+  }
+  #appstore-icon {
+    width:23%;
+  }
+
 }
