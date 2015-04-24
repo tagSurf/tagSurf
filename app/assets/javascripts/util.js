@@ -452,6 +452,9 @@ var isNativeAndroid = function() {
 var isStockAndroid = function() {
   return _ua.isStockAndroid;
 };
+var isFacebook = function() {
+  return _ua.isFacebook;
+};
 var isNarrow = function() {
   return window.innerWidth < 700;
 };
