@@ -43,6 +43,7 @@ Tagsurf::Application.routes.draw do
   post 'confirm-beta'              => 'client#confirm_beta_token'
   post 'confirm-disclaimer'        => 'client#disclaimer_agreement'
   post 'confirm-terms'             => 'client#terms_agreement'
+  post 'sms'                       => 'sms#receive'
 
   # User routes
   put 'user'               => 'users#update'
