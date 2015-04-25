@@ -5,6 +5,6 @@ class BlastMailer < ActionMailer::Base
 		@email = User.find(user_id).email
 		@user_id = user_id
 		@username = User.find(user_id).username ? User.find(user_id).username : @email.split("@")[0]
-    mail(to: @email, subject: "Oops we did it again...", from_email: "Paul@tagSurf.co", async: "true", from_name: "Paul")
+    mail(to: @email, subject: "Thanks for being awesome", from_email: "Paul@tagSurf.co", async: "true", from_name: "Paul")
   end
 end
