@@ -22,7 +22,13 @@ class Referral < ActiveRecord::Base
 
     media_ids.uniq!
 
-    media = Media.where('media.id in (?)', media_ids).index_by(&:id).values_at(*media_ids)
+    if safe
+      media = Media.where('not nsfw and media.id in (?)', media_ids).index_by(&:id).values_at(*media_ids)
+    else
+      media = Media.where('media.id in (?)', media_ids).index_by(&:id).values_at(*media_ids)
+    end
+
+    media.compact!
 
     media = media[offset..(offset+limit-1)]
 
@@ -54,7 +60,13 @@ class Referral < ActiveRecord::Base
 
     media_ids.uniq!
 
-    media = Media.where('media.id in (?)', media_ids).index_by(&:id).values_at(*media_ids)
+    if safe
+      media = Media.unscoped.where('not nsfw and media.id in (?)', media_ids).index_by(&:id).values_at(*media_ids)
+    else
+      media = Media.unscoped.where('media.id in (?)', media_ids).index_by(&:id).values_at(*media_ids)
+    end
+
+    media.compact!
 
     media = media[offset..(offset+limit-1)]
 
