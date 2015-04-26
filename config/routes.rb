@@ -46,7 +46,7 @@ Tagsurf::Application.routes.draw do
   post 'sms'                       => 'sms#receive'
 
   # User routes
-  put 'user'               => 'users#update'
+  put 'user'                        => 'users#update'
   post 'authentication/from-native' =>  'users#from_native'
 
   # JSON API
