@@ -100,7 +100,13 @@ class Referral < ActiveRecord::Base
 	end
 
   def send_notification
-    SendReferNotification.perform_async(self.id)
+    safe_mode = User.find(self.user_id).safe_mode
+    nsfw = Media.find(self.media_id).nsfw
+    if safe_mode && nsfw
+      return
+    else
+      SendReferNotification.perform_async(self.id)
+    end
   end
 
 end
