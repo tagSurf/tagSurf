@@ -174,20 +174,28 @@ class User < ActiveRecord::Base
       end
     end
     if user.provider != 'facebook'
-      user.uid = fb_params[:uid]
-      user.provider = 'facebook'
-      user.profile_pic_link = fb_params[:profile_pic_link].nil? ? "http://graph.facebook.com/" + fb_params[:uid] + "/picture?type=square" : fb_params[:profile_pic_link]
-      user.facebook_auth_token = fb_params[:facebook_auth_token]
-      user.facebook_token_expires_at = fb_params[:facebook_token_expires_at]
+      user.uid = auth.uid
+      user.provider = auth.provider
+      user.facebook_auth_token = auth.credentials.token
+      user.facebook_token_expires_at = auth.credentials.expires_at
       user.facebook_token_created_at = Time.now
-      user.gender = fb_params[:gender]
-      user.location = fb_params[:location]
-      if user.first_name.nil? || fb_params[:first_name] != user.first_name
-        user.first_name = fb_params[:first_name]
-        user.last_name = fb_params[:last_name]
-      end
+      user.gender = auth.extra.raw_info.gender
+      user.location = auth.extra.raw_info.locale
+
       user.save
     end
+    if user.profile_pic_link.nil?
+      user.profile_pic_link = (auth.provider == "facebook") ? "http://graph.facebook.com/" + auth.uid + "/picture?type=square" : auth.info.image
+      
+      user.save
+    end
+    if user.first_name.nil? || fb_params[:first_name] != user.first_name
+      user.first_name = auth.info.first_name
+      user.last_name = auth.info.last_name
+
+      user.save
+    end
+    
     user
   end 
 
