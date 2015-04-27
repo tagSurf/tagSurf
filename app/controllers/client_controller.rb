@@ -33,6 +33,8 @@ class ClientController < ApplicationController
       #   redirect_to welcome_path
       if !usr.username
         redirect_to selectusername_path
+      elsif !usr.fb_link_requested && !usr.profile_pic_link
+        redirect_to linkfb_path
       elsif !usr.push_requested && params[:id].to_i == 0
         redirect_to "/push##{current_user.id}"
       else
@@ -107,6 +109,8 @@ class ClientController < ApplicationController
   def share
     if current_user and !current_user.username
       redirect_to selectusername_path
+    elsif current_user and !current_user.fb_link_requested and !current_user.profile_pic_link
+      redirect_to linkfb_path
     elsif current_user and !current_user.push_requested and params[:id].to_i == 0
       redirect_to "/push##{current_user.id}"
     elsif current_user and params[:tag] == "trending" 
@@ -151,6 +155,11 @@ class ClientController < ApplicationController
   def username_select 
     @user = current_user
   end 
+
+  def linkfb
+    user = User.find(current_user.id)
+    user.update_column :fb_link_requested, true
+  end
 
 
   private
