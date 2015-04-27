@@ -33,6 +33,7 @@ class UsersController < ApplicationController
 
   def from_native
     if current_user
+      puts 'launched from_native'
       User.link_fb(current_user.id, fb_params)
       redirect_to feed_path, :notice => "facebook account linked!"
     else
