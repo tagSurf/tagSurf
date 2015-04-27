@@ -19,7 +19,7 @@ class SendLeaderboardMailer
 	  scores = Hash.new(0)
 
 	  @top_media.each do |m|
-			refs = Referral.unscoped.where(:media_id => m.id).select(:referrer_id, :bumped)	
+		refs = Referral.unscoped.where(:media_id => m.id).select(:referrer_id, :bumped)	
 	  	users = Hash[refs.map { |h| [h.referrer_id] }.uniq]
 	  	shares = refs.map { |h| h.referrer_id }.inject(Hash.new(0)) { |h, e| h[e] += 1 ; h }
 	  	bumps = Hash.new(0)
@@ -52,6 +52,7 @@ class SendLeaderboardMailer
 	  end
 	    
 		scores = Hash[*scores.sort_by{|k,v| v}.reverse.flatten]
+		scores.delete_if {|x| x < 4}
 		winner_id = scores.first[0]
 		winner_score = scores.first[1]
 
