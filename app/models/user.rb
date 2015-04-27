@@ -144,7 +144,7 @@ class User < ActiveRecord::Base
       
       user.save
     end
-    if user.first_name.nil? || fb_params[:first_name] != user.first_name
+    if user.first_name.nil? || auth.info.first_name != user.first_name
       user.first_name = auth.info.first_name
       user.last_name = auth.info.last_name
 
