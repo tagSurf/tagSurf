@@ -303,10 +303,12 @@ a {
 .buddy-pic {
 	width: 50px;
 	margin: 5px;
+	border-radius: 64px;
 }
 .buddy-name {
 	display: inline-block;
 	font-size: 150%;
+	font-weight: 300;
 	margin-left: 3%;
 	vertical-align: top;
 	margin-top: 15px;

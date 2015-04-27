@@ -158,6 +158,7 @@ var refer = {
 				buddyCell = row.insertCell(0),
 				buddyPic = document.createElement('img'),
 				buddyName = document.createElement('div'),
+				realName = document.createElement('div'),
 				checkmark = document.createElement('img'),
 				username = b.users[2] ? b.users[2] : b.users[1].split("@")[0],
 				first_name = b.users[3],
@@ -181,7 +182,19 @@ var refer = {
 								"http://assets.tagsurf.co/img/UserAvatar.png";
 			buddyPic.className = 'buddy-pic';
 			buddyName.className = 'buddy-name';
-			buddyName.innerHTML += username;  
+			buddyName.innerHTML += username;
+			if (first_name) {
+				realName.innerHTML += "(" + first_name + " " + last_name + ")"; 
+				realName.style.fontSize = "80%"; 
+				realName.style.fontWeight = "100";
+				buddyName.style.marginTop = isDesktop() ? "0" : "3px";
+				buddyName.style.fontWeight = "300";
+				buddyName.appendChild(realName);
+				for (var i = 1; i <= first_name.length; i++)
+					buddyCell.className += " " + first_name.slice(0, i).toLowerCase();
+				for (var i = 1; i <= last_name.length; i++)
+					buddyCell.className += " " + last_name.slice(0, i).toLowerCase();
+			}
 			checkmark.src = "http://assets.tagsurf.co/img/Checkmark_white.png";
 			checkmark.className = 'checkmark hidden';
 			buddyCell.appendChild(buddyPic);
