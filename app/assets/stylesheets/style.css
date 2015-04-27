@@ -172,7 +172,8 @@ a {
 	font-size: 0.7em;
 }
 .user-pic {
-	width: 40%;
+	width: 60px;
+	border-radius: 50%;
 }
 .bump-btn {
 	padding: 5px;
@@ -1230,8 +1231,13 @@ a {
 	    left: 41.5%;
 	    bottom: 17%;
     }
-    
-	/*===== Referral Window Stuff =====*/
+   
+	/*===== Referral Stuff =====*/
+	.user-pic {
+		width: 80px;
+	}
+
+	/*===== Buddy List Stuff =====*/
     .search-bar {
 		max-width: 400px;
 	}

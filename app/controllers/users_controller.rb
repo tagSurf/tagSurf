@@ -32,15 +32,19 @@ class UsersController < ApplicationController
   end
 
   def from_native
-    # You need to implement the method below in your model (e.g. app/models/user.rb)
-    @user = User.from_native(fb_params)
-
-    if @user.persisted?
-      sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
-      remember_me(@user)
+    if current_user
+      User.link_fb(current_user.id, fb_params)
+      redirect_to feed_path, :notice => "facebook account linked!"
     else
-      session["devise.facebook_data"] = fb_params
-      redirect_to new_user_registration_url
+      @user = User.from_native(fb_params)
+
+      if @user.persisted?
+        sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
+        remember_me(@user)
+      else
+        session["devise.facebook_data"] = fb_params
+        redirect_to new_user_registration_url
+      end
     end
   end
 
