@@ -117,7 +117,7 @@ class User < ActiveRecord::Base
         user.email = auth.info.email
         user.first_name = auth.info.first_name
         user.last_name = auth.info.last_name
-        user.profile_pic_link = auth.info.image
+        user.profile_pic_link = (auth.provider == "facebook") ? "http://graph.facebook.com/" + auth.uid + "/picture?type=square" : auth.info.image
         user.password = Devise.friendly_token[0,20]
         user.facebook_auth_token = auth.credentials.token
         user.facebook_token_expires_at = auth.credentials.expires_at
@@ -140,7 +140,7 @@ class User < ActiveRecord::Base
         user.email = fb_params[:email]
         user.first_name = fb_params[:first_name]
         user.last_name = fb_params[:last_name]
-        user.profile_pic_link = fb_params[:profile_pic_link]
+        user.profile_pic_link = fb_params[:profile_pic_link].nil? ? "http://graph.facebook.com/" + fb_params[:uid] + "/picture?type=square" : fb_params[:profile_pic_link]
         user.password = Devise.friendly_token[0,20]
         user.facebook_auth_token = fb_params[:facebook_auth_token]
         user.facebook_token_expires_at = fb_params[:facebook_token_expires_at]
