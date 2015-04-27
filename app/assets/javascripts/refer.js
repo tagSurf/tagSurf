@@ -160,9 +160,15 @@ var refer = {
 				buddyName = document.createElement('div'),
 				checkmark = document.createElement('img'),
 				username = b.users[2] ? b.users[2] : b.users[1].split("@")[0],
+				first_name = b.users[3],
+				last_name = b.users[4],
+				profile_pic = b.users[5],
 				buddy = {
 					id: b.users[0],
 					username: username,
+					first_name: first_name,
+					last_name: last_name,
+					profile_pic: profile_pic,
 					cell: buddyCell, 
 					selected: false
 				};
@@ -171,7 +177,8 @@ var refer = {
 			buddyCell.className = 'buddy-cell';
 			for (var i = 1; i <= username.length; i++)
 				buddyCell.className += " " + username.slice(0, i).toLowerCase();
-			buddyPic.src = "http://assets.tagsurf.co/img/UserAvatar.png";
+			buddyPic.src = profile_pic ? profile_pic : 
+								"http://assets.tagsurf.co/img/UserAvatar.png";
 			buddyPic.className = 'buddy-pic';
 			buddyName.className = 'buddy-name';
 			buddyName.innerHTML += username;  
