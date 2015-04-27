@@ -35,6 +35,8 @@ class ClientController < ApplicationController
         redirect_to selectusername_path
       elsif !usr.fb_link_requested && !usr.profile_pic_link
         redirect_to linkfb_path
+      elsif !usr.first_name
+        redirect_to name_path
       elsif !usr.push_requested && params[:id].to_i == 0
         redirect_to "/push##{current_user.id}"
       else
@@ -111,6 +113,8 @@ class ClientController < ApplicationController
       redirect_to selectusername_path
     elsif current_user and !current_user.fb_link_requested and !current_user.profile_pic_link
       redirect_to linkfb_path
+    elsif current_user and !current_user.first_name
+      redirect_to name_path
     elsif current_user and !current_user.push_requested and params[:id].to_i == 0
       redirect_to "/push##{current_user.id}"
     elsif current_user and params[:tag] == "trending" 
@@ -161,6 +165,9 @@ class ClientController < ApplicationController
     user.update_column :fb_link_requested, true
   end
 
+  def enter_name
+    @user = current_user
+  end
 
   private
 

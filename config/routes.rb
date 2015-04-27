@@ -39,6 +39,7 @@ Tagsurf::Application.routes.draw do
   get 'welcome'            => 'client#welcome'
   get 'selectusername'     => 'client#username_select'
   get 'linkfb'             => 'client#linkfb'
+  get 'name'               => 'client#enter_name'
     
   # Multi-step beta access flow
   post 'confirm-beta'              => 'client#confirm_beta_token'
