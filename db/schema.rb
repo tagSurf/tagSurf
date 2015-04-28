@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150417075727) do
+ActiveRecord::Schema.define(version: 20150427211817) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -183,6 +183,7 @@ ActiveRecord::Schema.define(version: 20150417075727) do
     t.datetime "facebook_token_expires_at"
     t.string   "gender"
     t.string   "location"
+    t.boolean  "fb_link_requested",         default: false, null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

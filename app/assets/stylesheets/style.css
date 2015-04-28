@@ -122,6 +122,10 @@ a {
 .referred {
 	border-color: #00aeef !important;
 }
+.container {
+	position: absolute;
+	width: 100%;
+}
 
 /*===== Pic Tags Stuff =====*/
 .pictags {
@@ -172,7 +176,8 @@ a {
 	font-size: 0.7em;
 }
 .user-pic {
-	width: 40%;
+	width: 60px;
+	border-radius: 50%;
 }
 .bump-btn {
 	padding: 5px;
@@ -303,10 +308,12 @@ a {
 .buddy-pic {
 	width: 50px;
 	margin: 5px;
+	border-radius: 64px;
 }
 .buddy-name {
 	display: inline-block;
 	font-size: 150%;
+	font-weight: 300;
 	margin-left: 3%;
 	vertical-align: top;
 	margin-top: 15px;
@@ -959,15 +966,27 @@ a {
 /*===== Options Menu Stuff ======*/
 .options-table {
 	width: 260px;
+	margin: 0 auto;
+}
+.user-table {
+	width: 260px;
+	margin: 0 auto;
 }
 .options-title {
 	font-size: 200%;
 	position: relative;
 	top: -25px;
 }
+.options-container {
+	max-height: 70%;
+	overflow-y: scroll;
+}
 .options-key-text {
 	font-size: 180%;
 	margin-right: 15px;
+}
+.username-text {
+	font-size: 180%;
 }
 .options-key-desc {
 	padding-top: 5px;
@@ -1132,9 +1151,16 @@ a {
 	.options-table {
 		width: 30%;
 	}
+	.user-table {
+		width: 30%;
+	}
 	.options-key-text {
 		text-align: right;
 		margin-right: 30px;
+		font-size: 180% !important;
+	}
+	.username-text {
+		text-align: center;
 		font-size: 180% !important;
 	}
 	.options-msg {
@@ -1228,8 +1254,13 @@ a {
 	    left: 41.5%;
 	    bottom: 17%;
     }
-    
-	/*===== Referral Window Stuff =====*/
+   
+	/*===== Referral Stuff =====*/
+	.user-pic {
+		width: 80px;
+	}
+
+	/*===== Buddy List Stuff =====*/
     .search-bar {
 		max-width: 400px;
 	}

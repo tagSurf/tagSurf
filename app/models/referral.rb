@@ -41,6 +41,7 @@ class Referral < ActiveRecord::Base
           user_id: r.user_id,
           username:  User.find(r.user_id).username ? 
                       User.find(r.user_id).username : User.find(r.user_id).email,
+          profile_pic: User.find(r.user_id).profile_pic_link,
           bumped: r.bumped,
           seen: r.bump ? r.bump.seen : nil,
           bump_id: r.bump ? r.bump.id : nil,
@@ -79,6 +80,7 @@ class Referral < ActiveRecord::Base
           user_id: r.referrer_id,
           username:  User.find(r.referrer_id).username ? 
                       User.find(r.referrer_id).username : User.find(r.referrer_id).email,
+          profile_pic: User.find(r.user_id).profile_pic_link,
           bumped: r.bumped,
           seen: r.seen,
           time: r.created_at

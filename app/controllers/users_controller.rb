@@ -9,6 +9,14 @@ class UsersController < ApplicationController
     if !params[:user][:username].nil?
       params[:user][:username].strip!
     end
+    if !params[:user][:first_name].empty?
+      params[:user][:first_name].strip!
+      params[:user][:first_name].capitalize!
+    end
+    if !params[:user][:last_name].empty?
+      params[:user][:last_name].strip!
+      params[:user][:last_name].capitalize!
+    end
     current_user.update(update_user_params)
 
     # if current_user.welcomed? 
@@ -32,15 +40,19 @@ class UsersController < ApplicationController
   end
 
   def from_native
-    # You need to implement the method below in your model (e.g. app/models/user.rb)
-    @user = User.from_native(fb_params)
-
-    if @user.persisted?
-      sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
-      remember_me(@user)
+    if current_user
+      User.link_fb(current_user.id, fb_params)
+      redirect_to feed_path, :notice => "facebook account linked!"
     else
-      session["devise.facebook_data"] = fb_params
-      redirect_to new_user_registration_url
+      @user = User.from_native(fb_params)
+
+      if @user.persisted?
+        sign_in_and_redirect @user, :event => :authentication #this will throw if @user is not activated
+        remember_me(@user)
+      else
+        session["devise.facebook_data"] = fb_params
+        redirect_to new_user_registration_url
+      end
     end
   end
 
@@ -50,7 +62,7 @@ class UsersController < ApplicationController
   private
   
   def update_user_params
-    params.require(:user).permit(:completed_feature_tour, :username) 
+    params.require(:user).permit(:completed_feature_tour, :username, :first_name, :last_name) 
   end
 
   def fb_params
