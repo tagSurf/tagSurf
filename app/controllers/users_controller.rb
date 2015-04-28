@@ -9,11 +9,11 @@ class UsersController < ApplicationController
     if !params[:user][:username].nil?
       params[:user][:username].strip!
     end
-    if !params[:user][:first_name].empty?
+    if !params[:user][:first_name].nil? && !params[:user][:first_name].empty?
       params[:user][:first_name].strip!
       params[:user][:first_name].capitalize!
     end
-    if !params[:user][:last_name].empty?
+    if !params[:user][:last_name].nil? && !params[:user][:last_name].empty?
       params[:user][:last_name].strip!
       params[:user][:last_name].capitalize!
     end
