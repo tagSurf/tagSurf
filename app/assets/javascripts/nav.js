@@ -288,17 +288,17 @@ var buildOptionsTable = function (options_cb) {
                               : "msgbox-btn really-big pointer";
     facebookBtn.id = "link-facebook-btn";
     facebookCell.colSpan = "2";
-    gesture.listen("down", facebookBtn, function () {
-      facebookBtn.classList.add('ts-active-button');
-    });
-    gesture.listen("up", facebookBtn, function () {
-      facebookBtn.classList.remove('ts-active-button');
-    });
-    gesture.listen("tap", facebookBtn, function() {
-      var dispatch = document.createEvent("HTMLEvents");
-        dispatch.initEvent("click", true, true);
-        facebookLnk.dispatchEvent(dispatch);
-    });
+    // gesture.listen("down", facebookBtn, function () {
+    //   facebookBtn.classList.add('ts-active-button');
+    // });
+    // gesture.listen("up", facebookBtn, function () {
+    //   facebookBtn.classList.remove('ts-active-button');
+    // });
+    // gesture.listen("tap", facebookBtn, function() {
+    //   var dispatch = document.createEvent("HTMLEvents");
+    //     dispatch.initEvent("click", true, true);
+    //     facebookLnk.dispatchEvent(dispatch);
+    // });
     facebookLnk.appendChild(facebookBtn);
     facebookCell.appendChild(facebookLnk);
   }
