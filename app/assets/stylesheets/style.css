@@ -122,6 +122,10 @@ a {
 .referred {
 	border-color: #00aeef !important;
 }
+.container {
+	position: absolute;
+	width: 100%;
+}
 
 /*===== Pic Tags Stuff =====*/
 .pictags {
@@ -962,15 +966,27 @@ a {
 /*===== Options Menu Stuff ======*/
 .options-table {
 	width: 260px;
+	margin: 0 auto;
+}
+.user-table {
+	width: 260px;
+	margin: 0 auto;
 }
 .options-title {
 	font-size: 200%;
 	position: relative;
 	top: -25px;
 }
+.options-container {
+	max-height: 70%;
+	overflow-y: scroll;
+}
 .options-key-text {
 	font-size: 180%;
 	margin-right: 15px;
+}
+.username-text {
+	font-size: 180%;
 }
 .options-key-desc {
 	padding-top: 5px;
@@ -1135,9 +1151,16 @@ a {
 	.options-table {
 		width: 30%;
 	}
+	.user-table {
+		width: 30%;
+	}
 	.options-key-text {
 		text-align: right;
 		margin-right: 30px;
+		font-size: 180% !important;
+	}
+	.username-text {
+		text-align: center;
 		font-size: 180% !important;
 	}
 	.options-msg {

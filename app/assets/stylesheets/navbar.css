@@ -199,6 +199,15 @@
   max-width: initial !important;
   padding: 10px;
 } 
+#link-facebook-btn {
+  max-width: initial !important;
+  padding: 5px;
+  margin-top: 10px;
+  margin-bottom: 0;
+  color: white;
+  max-width: 50%;
+} 
+
 /*======= This targets destops and tablets ======*/
 @media only screen and (min-width: 700px){
 /*  #tag_adder
