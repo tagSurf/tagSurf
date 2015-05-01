@@ -29,3 +29,4 @@
 //= require autocomplete
 //= require feed
 //= require global
+//= require global-functions

@@ -151,7 +151,10 @@ namespace :deploy do
       abort 'Could not precompile assets!'
     end
 
-    system "git add -f public/assets"
+    system "bundle exec rake deploy:html5_manifest"
+    puts "=== generating appCache Manifest"
+
+    system "git add -f public"
     system "git commit --no-verify -m 'Precompiling assets'"
 
 
@@ -260,6 +263,25 @@ Hash:   #{hash}\" #{tag} #{hash}"
       puts (message.presence || "Could not find tag information for #{v}.")
       puts
     end
+  end
+
+  desc "Create html5 appcache manifest"
+  task :html5_manifest do
+      File.truncate("public/tagsurf.appcache", 0)
+      File.open("public/tagsurf.appcache", "w") do |f|
+          f.write("CACHE MANIFEST\n")
+          f.write("# #{Time.now.to_i}\n")
+          assets = Dir.glob(File.join(Rails.root, 'public/assets/**/*'))
+          assets.each do |file|
+              if File.extname(file) != '.gz'
+                  f.write("assets/#{File.basename(file)}\n")
+              end
+          end
+          f.write("http://fonts.googleapis.com/css?family=Raleway:100,200,300,500\n")
+          f.write("\n\nNETWORK\n")
+          f.write("/api/*\n")
+          f.write("*\n")
+      end
   end
 
   desc "Helps you setup heroku and git"
