@@ -283,7 +283,7 @@ Hash:   #{hash}\" #{tag} #{hash}"
           # f.write("history.html\n")
           # f.write("favorites.html\n")
           f.write("\n\nNETWORK\n")
-          f.write("/api")
+          f.write("http:\\*")
       end
   end
 
