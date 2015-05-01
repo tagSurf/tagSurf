@@ -1,6 +1,7 @@
 //These variables are reinitialized on every pageload
 var authorizedSession = null,
     cardIndex = 0,
+    csrfToken = "we34345234452345=",
     currentUser = {
       id : null,
       email : null,
@@ -385,6 +386,9 @@ var xhr = function(path, action, cb, eb, async, payload) {
   _xhr.open(action || "GET", path, async);
   if (action == "PATCH")
     _xhr.setRequestHeader("Content-type", "application/json");
+  if (!csrfToken)
+    getCSRFToken();
+    _xhr.setRequestHeader("X-CSRF-Token", csrfToken);
   _xhr.onreadystatechange = function() {
     if (_xhr.readyState == 4) {
       var resp = _xhr.responseText.charAt(0) == "<" ? 
@@ -509,6 +513,18 @@ var validEmail = function(s) {
     dotChar == s.length - 1 || atChar + 2 > dotChar)
     return false;
   return true;
+};
+
+var getCSRFToken = function() {
+  if (csrfToken == null) {
+    var metas = document.getElementsByTagName('meta'); 
+
+    for (i=0; i<metas.length; i++) { 
+      if (metas[i].getAttribute("name") == "csrf-token") { 
+        csrfToken = metas[i].getAttribute("content"); 
+      } 
+    } 
+  }
 };
 
 // http://paulirish.com/2011/requestanimationframe-for-smart-animating/
