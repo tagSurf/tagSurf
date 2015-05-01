@@ -278,8 +278,12 @@ Hash:   #{hash}\" #{tag} #{hash}"
               end
           end
           f.write("http://fonts.googleapis.com/css?family=Raleway:100,200,300,500\n")
+          f.write("feed.html")
+          f.write("bumps.html")
+          f.write("history.html")
+          f.write("favorites.html")
           f.write("\n\nNETWORK\n")
-          f.write("*\n")
+          f.write("*")
       end
   end
 
