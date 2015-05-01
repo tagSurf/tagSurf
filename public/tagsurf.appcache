@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 1430517274
+# 1430517597
 assets/application-0a605ecbc4b0e20d6362a9b38d955447.css
 assets/application-50c38c2438d2cc5b498c482449191699.js
 assets/gallery_page-3657f6b6baf2db07fc0c90b0f3ab7ba7.js
@@ -12,8 +12,3 @@ assets/signup-c88c1e0ed8fce4c992fb2d934f98c1cb.js
 assets/welcome-874fc7262bd23deded791d06e176788f.js
 assets/welcome-a120f0006f51bf3cd173bcc7d422a23c.css
 http://fonts.googleapis.com/css?family=Raleway:100,200,300,500
-
-
-NETWORK
-/api/*
-*
