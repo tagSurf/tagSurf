@@ -1,15 +1,7 @@
-<% content_for :stylesheets do %>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/carousel.css">
-<% end %>
-<% content_for :javascripts do %>
-  <script src="/js/util.js"></script>
-  <script src="/js/gesture.js"></script>
-  <script src="/js/drag.js"></script>
-  <script src="/js/carousel.js"></script>
-  <script src="/js/welcome.js"></script>
-<% end %>
+
   <%= form_for(current_user, url: user_path, method: :put, class: 'hidden') do |f| %>
-    <%= f.hidden_field :confirm_feature_tour, value: true %>
+    <%= f.hidden_field :completed_feature_tour, value: true %>
     <%= f.submit "Got it!", class: 'button hidden', id: "welcome-submit-btn" %>
   <% end %>
+
+<%= javascript_include_tag "welcome" %>

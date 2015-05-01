@@ -5,7 +5,7 @@ class Api::UsersController < Api::BaseController
   def paginated_history
     @offset = user_params["offset"].to_i
     @limit = user_params["limit"].to_i
-    @voted = Vote.paginated_history(current_user.id, @limit, @offset) 
+    @voted = Vote.paginated_history(@user.id, @limit, @offset, @user.safe_mode) 
     if @voted
       render json: @voted, root: 'data'
     else
@@ -84,9 +84,11 @@ class Api::UsersController < Api::BaseController
     @user = current_user
     results = {:user => @user}
     if @user
-      results['total_votes'] = @user.find_voted_items.count
-      results['up_votes']    = @user.find_up_voted_items.count
-      results['down_votes']  = @user.find_down_voted_items.count
+      # results['total_votes'] = @user.find_voted_items.count
+      # results['up_votes']    = @user.find_up_voted_items.count
+      # results['down_votes']  = @user.find_down_voted_items.count
+      results['unseen_bumps'] = Bump.unscoped.where(:sharer_id => @user.id, :seen => false).count
+      results['unseen_referrals'] = Referral.unscoped.where(:user_id => @user.id, :seen => false).count
       render json: results
     else
       results[:user] = "not found"
@@ -102,6 +104,35 @@ class Api::UsersController < Api::BaseController
     end
   end
 
+  def buddies
+    render json: User.buddy_list(current_user.id)
+  end
+
+  def unsubscribe
+    user = User.find(params[:id])
+    user.update_column "#{params[:type]}_mailers", false
+
+    if user["#{params[:type]}_mailers"] == false
+      flash[:notice] = "Unsubscribed from #{params[:type]} emails"
+      redirect_to '/feed'
+    else
+      flash[:error] = "Could not unscubscribe because of error"
+      redirect_to '/feed'
+    end
+  end
+
+  def check_username
+    username = params[:username].downcase
+    user = User.where(:username => username).first
+    if user.present?
+      render :json =>  [:available => false, :message => "This username is already taken"]
+    else
+      render :json =>  [:available => true]
+    end      
+  end
+
+
+
   private
 
     def user_params
@@ -112,6 +143,9 @@ class Api::UsersController < Api::BaseController
         :limit, 
         :offset, 
         :email, 
+        :username,
+        :first_name,
+        :last_name,
         :confirm_feature_tour
       ) 
     end

@@ -1,41 +1,22 @@
 <% content_for :title do %>
-  <title>tagSurf - Feed</title>
-<% end %>
-
-<% content_for :stylesheets do %>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/navbar.css">
-  <link rel="stylesheet" href="/css/gallery.css">
-  <link rel="stylesheet" href="/css/feed.css">
-<% end %>
-
-<% content_for :javascripts do %>
-  <script src="/js/tos_pp.js"></script>
-  <script src="/js/util.js"></script>
-  <script src="/js/image.js"></script>
-  <script src="/js/gesture.js"></script>
-<!-- <script src="/js/keystroke.js"></script> -->
-  <script src="/js/drag.js"></script>
-  <script src="/js/modal.js"></script>
-  <script src="/js/throbber.js"></script>
-  <script src="/js/autocomplete.js"></script>
-  <script src="/js/share.js"></script>
-  <script src="/js/feed.js"></script>
+  <title>tagSurf</title>
 <% end %>
 
 <!-- Place body html below -->
 <div id="nav" ontouchmove="return false;"></div>
 <div id="formatter" class="hider"></div>
 <div id="scroll-container-container">
- <div id="scroll-container">
-  <div id="input-container">
-    <div id="static-icon">
-      <b id="static-hash">#</b>
+  <div id="scroll-container">
+    <div id="input-container">
+      <div id="static-icon">
+        <span id="static-hash" class="bold">#</span>
+      </div>
+      <input id="tag-input" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off">
+      <div id="search-input"><img src="http://assets.tagsurf.co/img/search_white.png"></div>
     </div>
-    <input id="tag-input" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off">
-    <div id="search-input"><img src="/img/search_white.png"></div>
+    <div id="slider"></div>
   </div>
-  <div id="slider"></div>
- </div>
 </div>
 <div id="autocomplete" class="autocomplete hider"></div>
+
+<%= javascript_include_tag "application" %>

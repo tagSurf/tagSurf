@@ -7,11 +7,17 @@ class Media < ActiveRecord::Base
 
   has_many :votes, :foreign_key => :votable_id
   has_many :favorites
+  has_many :referrals, :foreign_key => :media_id
+  has_many :bumps, :foreign_key => :media_id
 
   validates_uniqueness_of :remote_id, :image_link_original
 
   default_scope { where(ts_type: 'content') }
   default_scope { where(reported: false) }
+
+  scope :nsfw, ->(boolean) { where("nsfw = ?", boolean) }
+
+  attr_accessor :referrals_list
 
   # Imgur specific
   before_create :resize_image_links
@@ -38,16 +44,14 @@ class Media < ActiveRecord::Base
     votes.map(&:vote_tag).uniq
   end
 
-  # TODO Redisify
   def media_tag_info(tag)
     trend = [*1..10].sample.odd? ? 'up' : 'down' 
     data = {total_votes: nil, down_votes: nil, up_votes: nil, score: nil, is_trending: false, trend: nil}
-    # Doing count lookups is faster than array actions, but refactor is needed.
-    data[:total_votes]  = Vote.where(votable_id: id, vote_tag: tag).count
-    data[:down_votes]   = Vote.where(votable_id: id, vote_tag: tag, vote_flag: false).count
-    data[:up_votes]     = Vote.where(votable_id: id, vote_tag: tag, vote_flag: true).count
+    #data[:total_votes]  = Vote.where(votable_id: id, vote_tag: tag).count
+    #data[:down_votes]   = Vote.where(votable_id: id, vote_tag: tag, vote_flag: false).count
+    #data[:up_votes]     = Vote.where(votable_id: id, vote_tag: tag, vote_flag: true).count
+    #data[:score]        = (data[:total_votes] - data[:down_votes]) 
     data[:is_trending]  = false
-    data[:score]        = (data[:total_votes] - data[:down_votes]) 
     data[:trend]        = trend 
     data 
   end
@@ -89,89 +93,340 @@ class Media < ActiveRecord::Base
 
   # Gather the next set of media for feeds 
   # The brains of tagSurf feeds 
-  def self.next(user, tag, options = {})
+  # TODO evaluate for efficiency
+  def self.next(user, tags, options = {})
     offset = options[:offset].nil? ? 0 : options[:offset].to_i
     n = options[:limit].nil? ?  20 : options[:limit].to_i
     id = options[:id].to_i
+    span = 7.days.ago
        
-    if user.try(:safe_mode)
-      return [] if Tag.blacklisted?(tag)
+    if user.try(:safe_mode) 
+      return [] if Tag.blacklisted?(tags)
     end
 
-    @media = Media.all
+    unless user
+      return [] if Tag.blacklisted?(tags)
+    end
 
     # Media available for non-authed preview
+    # TODO - Holy fracking shit, refactor this!!
+    # If there is no user
     if user.nil?
-      if tag == 'trending'
-        @media  = @media.where(viral: true, nsfw: false).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
+      # Viral:true NSFW:true
+      if tags.include?('trending')
+        
+        @media  = Media.where(
+            viral: true, 
+            nsfw: false,
+            :created_at => 2.days.ago..Time.now 
+          ).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
+        # If it is empty, run again with unlimited scope
+        unless !@media.empty?
+          @media  = Media.where(
+            viral: true, 
+            nsfw: false
+          ).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
+        end
+      # NSFW:true
       else
-        @media = @media.where(nsfw: false).tagged_with(tag, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')  
+      
+        @media = Media.where(
+            nsfw: false,
+            :created_at => 2.days.ago..Time.now
+          ).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
+        
+        unless !@media.empty?
+          @media = Media.where(
+            nsfw: false
+          ).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
+        end
+        
+
         if @media.length < 10
-          RequestTaggedMedia.perform_async(tag)
+          RequestTaggedMedia.perform_async(tags.first)
         end
       end
 
     # Authenticated users
     else
-      # Migrate has_voted_ids to Redis
-      # unless has_voted_ids = user.voted_on.present? && user.voted_on.to_a
-      # has_voted_ids = has_voted_ids.collect {|v| v.to_i } 
-      # end
-      has_voted_ids = user.votes.pluck(:votable_id) 
+      # Various branches of existance testing and switching based on params.
+      # Complete bullshit. Refactor this please!
+      recent_voted_ids = user.votes.where(:created_at => span..Time.now).pluck(:votable_id)
 
-      if tag == 'trending'
-        staffpick_ids = @media.tagged_with('StaffPicks').pluck(:id)
-        viral_ids = @media.where(viral: true, nsfw: false).pluck(:id)
-
-        # Remove media which the user has voted on
-        staffpick_ids = staffpick_ids - has_voted_ids
-
-        # Avoid the extra query if no staffpicks left
-        # Reserving optimization for the move to Redis objects
-        if staffpick_ids.present?
-          if staffpick_ids.length < 20
-            trending_limit = n - staffpick_ids.length
-            additional_media = Media.where('id not in (?) and id in (?)', has_voted_ids, viral_ids).limit(trending_limit).order('ts_score DESC NULLS LAST').map(&:id)
-            media_ids = staffpick_ids + additional_media
-
-            # Custom sort order for collections
-            # TODO candidate for Activerecord extension
-            sort_order = media_ids.collect{|id| "id = #{id} desc"}.join(',')
-            @media =  @media.where('id in (?)', media_ids).limit(n).order(sort_order)
-          else
-            @media =  @media.where('id in (?)', staffpick_ids).limit(n).order('ts_score DESC NULLS LAST')
-          end
-        else
-          if user.safe_mode? 
-            @media = @media.where('id not in (?) and viral and not nsfw', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
-          else
-            @media = @media.where('id not in (?) and viral', has_voted_ids).limit(n).order('ts_score DESC NULLS LAST')
-          end
-        end
+      referrals = Referral.select(:media_id).where(user_id: user.id)
+      if !referrals.empty?
+ 
+        @media = Media.where('id in (?)', referrals).order('ts_score DESC NULLS LAST')
+ 
       else
-        if user.safe_mode?
-          @media = Media.where('media.id not in (?) and not nsfw', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+        if tags.include?('trending') && tags.length == 1
+          if user.safe_mode?          
+            if recent_voted_ids.empty?
+             
+              @media = Media.where(
+                'viral and not nsfw', 
+                :created_at => span..Time.now
+              ).limit(n).order('ts_score DESC NULLS LAST')
+                
+              # Nothing returned from limited scope
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+            
+                if has_voted_ids.empty?
+            
+                  @media = Media.where(
+                    'viral and not nsfw'
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+            
+                # !has_voted_ids.empty?
+                else
+            
+                  @media = Media.where(
+                    'viral and not nsfw'
+                  ).where(
+                    'id not in (?)', has_voted_ids 
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+            
+                end
+              end
+            
+            # !recent_vote_ids.empty?
+            else 
+             
+              @media = Media.where(
+                :created_at => span..Time.now
+              ).where(
+                'viral and not nsfw'
+              ).where(
+                'id not in (?)', recent_voted_ids
+              ).limit(n).order('ts_score DESC NULLS LAST')
+              
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+            
+                if has_voted_ids.empty?
+              
+                  @media = Media.where(
+                    'viral and not nsfw'
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+              
+                # !has_voted_ids.empty?
+                else 
+              
+                  @media = Media.where(
+                    'id not in (?)', has_voted_ids
+                  ).where(
+                    'viral and not nsfw'
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+              
+                end
+              end
+            end
+          
+          # !user.safe_mode?          
+          else
+         
+            if recent_voted_ids.empty?
+            
+              @media = Media.where(
+                'viral',
+                :created_at => span..Time.now 
+              ).limit(n).order('ts_score DESC NULLS LAST')
+              
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+              
+                if has_voted_ids.empty?
+              
+                  @media = Media.where(
+                    'viral'
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+                
+                # !has_voted_ids.empty?
+                else 
+              
+                  @media = Media.where(
+                    'id not in (?)', has_voted_ids
+                  ).where(
+                    'viral'
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+              
+                end
+              end
+            
+            # !recent_voted_ids.empty?
+            else 
+
+              @media = Media.where(
+                :created_at => span..Time.now
+              ).where( 
+                'id not in (?)', recent_voted_ids
+              ).where(
+                'viral'
+              ).limit(n).order('ts_score DESC NULLS LAST')
+              
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+              
+                if has_voted_ids.empty?
+              
+                  @media = Media.where(
+                    'viral'
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+              
+                # !has_voted_ids.empty?
+                else 
+              
+                  @media = Media.where(
+                    'id not in (?)', has_voted_ids
+                  ).where(
+                    'viral'
+                  ).limit(n).order('ts_score DESC NULLS LAST')
+              
+                end
+              end
+            end
+          end
+ 
+        # !tags.include?('trending')
         else
-          @media = Media.where('media.id not in (?)', has_voted_ids).tagged_with(tag, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
-        end
-    
-        if @media.length < 10
-          RequestTaggedMedia.perform_async(tag)
+          if user.safe_mode?          
+            if recent_voted_ids.empty?
+             
+              @media = Media.where(
+                'not nsfw', 
+                :created_at => span..Time.now
+              ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+                
+              # Nothing returned from limited scope
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+            
+                if has_voted_ids.empty?
+            
+                  @media = Media.where(
+                    'not nsfw'
+                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+            
+                # !has_voted_ids.empty?
+                else
+            
+                  @media = Media.where(
+                    'media.id not in (?)', has_voted_ids
+                  ).where(
+                    'not nsfw'
+                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+            
+                end
+              end
+            
+            # !recent_vote_ids.empty?
+            else 
+             
+              @media = Media.where(
+                :created_at => span..Time.now
+              ).where(
+                'media.id not in (?)', recent_voted_ids
+              ).where(
+                'not nsfw'
+              ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+            
+                if has_voted_ids.empty?
+              
+                  @media = Media.where(
+                    'not nsfw'
+                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+                # !has_voted_ids.empty?
+                else 
+              
+                  @media = Media.where(
+                    'media.id not in (?)', has_voted_ids
+                  ).where(
+                    'not nsfw'
+                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+                end
+              end
+            end
+          
+          # !user.safe_mode?          
+          else
+         
+            if recent_voted_ids.empty?
+            
+              @media = Media.where(
+                :created_at => span..Time.now
+              ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+              
+                if has_voted_ids.empty?
+              
+                  @media = Media.tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+                
+                # !has_voted_ids.empty?
+                else 
+              
+                  @media = Media.where(
+                    'media.id not in (?)', has_voted_ids
+                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+                end
+              end
+
+            # !recent_voted_ids.empty?
+            else 
+
+              @media = Media.where(
+                :created_at => span..Time.now
+              ).where( 
+                'media.id not in (?)', recent_voted_ids
+              ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+              unless !@media.empty?
+                has_voted_ids = user.votes.pluck(:votable_id)
+              
+                if has_voted_ids.empty?
+              
+                  @media = Media.tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+                # !has_voted_ids.empty?
+                else 
+              
+                  @media = Media.where(
+                    'media.id not in (?)', has_voted_ids
+                  ).tagged_with(tags, :wild => true).limit(n).order('ts_score DESC NULLS LAST')
+              
+                end
+              end
+            end
+          end
+
+          if @media.length < 10 
+            tags.each do |tag|
+              RequestTaggedMedia.perform_async(tag)
+            end
+          end
         end
       end
     end
 
-    if id.present? and offset < 1
+    if id.present? and id != 0 and offset < 1
       @media = Media.where(id: id) + @media
       @media = @media.uniq_by(&:id)
     end
 
-    # Embedds login card every third card
+    # Embedds login card every 15th card
     if user.nil?
       @login_card = Media.unscoped.where(ts_type: 'login').limit(1)
       # creates an empty relation
       @relation = Media.where(id: nil)
-      @media.each_slice(4) do |media|
+      @media.each_slice(14) do |media|
         @relation << media + @login_card
       end
       @media = @relation.flatten!
@@ -181,57 +436,67 @@ class Media < ActiveRecord::Base
   end
 
   def self.populate_tag(tag_name) 
-    return if Tag.blacklisted?(tag_name)
-    response = RemoteResource.tagged_feed(tag_name)
+    updated = false
+    CONFIG[:remote_providers].each do |provider|    
+      begin
+        if provider == 'imgur'
+          response = RemoteResource.tagged_feed(tag_name, provider, nil, nil)
 
-    if response.nil? or response.parsed_response.nil?
-      raise "Failed to fetch with #{tag_name}, response:#{response}"
-    end
+          if response.nil? or response.parsed_response.nil?
+            raise "Failed to fetch imgur results for tag:##{tag_name}, response:#{response}"
+          end
 
-    tagged = response.parsed_response["data"]
+          tagged = response.parsed_response["data"]
 
-    # Create tag if not already in the system
-    unless tag = Tag.where('name ilike ?', tag_name).first
-      tag = Tag.create(name: tag_name)
-    end
+          # Create tag if not already in the system
+          unless tag = Tag.where('name ilike ?', tag_name).first or tagged.empty?
+            tag = Tag.create(name: tag_name)
+          end
 
-    if tagged
-      tagged.each do |obj|
-        next if obj['is_album'].to_s == 'true'
-        media = Media.create({
-          remote_id: obj['id'],
-          remote_provider: 'imgur',
-          remote_created_at: obj['datatime'],
-          image_link_original: obj['link'],
-          viral: false,
-          nsfw:  obj["nsfw"],
-          title: obj['title'],
-          description: obj['description'],
-          content_type: obj['type'],
-          animated: obj['animated'],
-          width: obj['width'],
-          height: obj['height'],
-          size: obj['size'],
-          remote_views: obj['views'],
-          remote_score: obj['score'],
-          ts_score: (obj['score'] + (Time.new.to_i - 1000000000)),
-          remote_up_votes: obj['ups'],
-          remote_down_votes: obj['downs'],
-          section: obj['section'],
-          delete_hash: obj['deletehash']
-        })
+          if tagged
+            updated = true
+            self.populate_imgur_tag(tagged)
+          end
 
-        if obj["nswf"] == 'true'
-          media.tag_list.add(media.section, 'NSFW')
-        else
-          media.tag_list.add(media.section)
+        elsif provider == 'urx' && !Tag.blacklisted?(tag_name)
+          CONFIG[:urx_domains].each do |domain|
+            @offset = 0
+            while @offset < 11 do
+              response = RemoteResource.tagged_feed(tag_name, provider, @offset, domain)
+
+              if response.nil?
+                raise "Failed to fetch URX results for ##{tag_name} from #{domain}, response:#{response}"
+              end
+
+              parsed = JSON.parse(response.body)
+              tagged = parsed['result']
+
+              if tagged.empty?
+                puts "no more results for ##{tag_name} from #{domain}, offset = #{@offset}"
+                break
+              end
+
+              # Create tag if not already in the system
+              unless tag = Tag.where('name ilike ?', tag_name).first or tagged.empty?
+                tag = Tag.create(name: tag_name)
+              end
+
+              if tagged
+                updated = true
+                self.populate_urx_tag(tagged, domain, tag_name)
+              end
+              @offset += 1
+            end
+          end
         end
-
-        media.save
+      rescue => e
+        puts "Something went wrong with Media.populate_tag: #{e}"
       end
-    else
+    end
+    if !updated 
       tag.update_column("fetch_more_content", true)
     end
+
   end
 
   def self.populate_trending!
@@ -245,7 +510,7 @@ class Media < ActiveRecord::Base
           remote_created_at: obj['datatime'],
           image_link_original: obj['link'],
           viral: true,
-          nsfw: obj["nsfw"],
+          nsfw: (obj["nsfw"] || false),
           title: obj['title'],
           description: obj['description'],
           content_type: obj['type'],
@@ -255,7 +520,7 @@ class Media < ActiveRecord::Base
           size: obj['size'],
           remote_views: obj['views'],
           remote_score: obj['score'],
-          ts_score: (obj['score'] + (Time.new.to_i - 1000000000)),
+          ts_score: (obj['score'] + (Time.new.to_i - 1300000000)),
           remote_up_votes: obj['ups'],
           remote_down_votes: obj['downs'],
           section: obj['section'] || "imgurhot",
@@ -300,4 +565,185 @@ class Media < ActiveRecord::Base
     #}
   #}
 
+  def init_vote_counter!
+    up_votes = votes.where(vote_flag: true).count
+    down_votes = votes.where(vote_flag: false).count
+    self.up_votes.reset
+    net_votes = up_votes - down_votes
+    if net_votes > 0
+      self.up_votes.increment(net_votes)
+    elsif net_votes < 0
+      self.up_votes.decrement(net_votes.abs)
+    end
+  end
+
+  def self.populate_imgur_tag(objs)
+    objs.each do |obj|
+      next if obj['is_album'].to_s == 'true'
+      media = Media.create({
+        remote_id: obj['id'],
+        remote_provider: 'imgur',
+        remote_created_at: obj['datatime'],
+        image_link_original: obj['link'],
+        viral: false,
+        nsfw:  (obj["nsfw"] || false),
+        title: obj['title'],
+        description: obj['description'],
+        content_type: obj['type'],
+        animated: obj['animated'],
+        width: obj['width'],
+        height: obj['height'],
+        size: obj['size'],
+        remote_views: obj['views'],
+        remote_score: obj['score'],
+        ts_score: (obj['score'] + (Time.new.to_i - 1300000000)),
+        remote_up_votes: obj['ups'],
+        remote_down_votes: obj['downs'],
+        section: obj['section'],
+        delete_hash: obj['deletehash']
+      })
+
+      if obj["nsfw"] == 'true'
+        media.tag_list.add(media.section, 'NSFW')
+      else
+        media.tag_list.add(media.section)
+      end
+      media.save
+    end
+  end
+
+  def self.populate_urx_tag(objs, domain, tag_name)
+    extensions = ['jpg', 'jpeg', 'png', 'gif'] 
+    accepted_types = ['Thing','http://schema.org/Article']
+    provider = domain.split('.')[0];
+    resp = Media.select(:remote_id).where(:remote_provider => "urx/#{provider}").last
+    starting_index = resp.nil? ? 1 : resp.remote_id.split("#")[1].to_i + 1
+
+    objs.each do |obj|
+      next if !accepted_types.include?(obj['@type'])
+      type = obj['@type'].split('/').last
+      success = false
+      extension = obj['image'].is_a?(Array) ? 
+                            obj['image'].first.split('.').last.strip.split('?')[0] : 
+                              obj['image'].split('.').last.strip.split('?')[0]
+      if extension.downcase == 'jpg'
+        extension = 'jpeg'
+      end
+
+      case type
+      when 'Article'
+        title = obj['headline name']
+        nsfw = obj['isFamilyFriendly'].nil? ? false : obj['isFamilyFriendly'].nil?
+      else
+        title = obj['name'].is_a?(Array) ? obj['name'].first : obj['name']
+        nsfw = false
+      end
+      next if provider == 'buzzfeed' and title.include?("Community Post")
+
+      if obj['datePublished']
+        t = obj['datePublished'].gsub(/[A-Za-z\-:]/, ' ').split(' ')
+        zone = obj['datePublished'].last(3)
+        case zone
+        when 'EDT'
+          gmt = "-05:00"
+        when 'PST'
+          gmt = "-08:00"
+        else 
+          gmt = "-07:00"
+        end
+        created_at = Time.new(t[0],t[1],t[2],t[3],t[4],t[5].nil? ? 0 : t[5], gmt)
+      end
+
+      media = Media.create({
+        remote_id: "#{provider[0...4].upcase}##{starting_index}",
+        remote_provider: "urx/#{provider}",
+        remote_created_at: created_at.nil? ? Time.now : created_at,
+        image_link_original: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
+        image_link_large: obj['image'].is_a?(Array) ? obj['image'].first : obj['image'],
+        image_link_huge: obj['image'].is_a?(Array) ? 
+                          extensions.include?(obj['image'].last.split('.').last) ? 
+                            obj['image'].last : nil : nil, 
+        viral: false,
+        nsfw:  nsfw,
+        title: title,
+        description: obj['description'].is_a?(Array) ? obj['description'].first : obj['description'],
+        content_type: "image/#{extension}",
+        animated: @extension == 'gif' ? true : false,
+        #Give a small fixed bonus to lift it above some imgur content
+        ts_score: (1000 + ((created_at.nil? ? Time.new.to_i : created_at.to_i) - 1300000000)), 
+        section: tag_name,
+        web_link: obj['url'],
+        deep_link: obj['potentialAction']['target']['urlTemplate'],
+        deep_link_type: obj['potentialAction']['target']['@type'],
+        deep_link_action: obj['potentialAction']['@type'],
+        deep_link_desc: obj['potentialAction']['description'],
+        deep_link_icon: obj['potentialAction']['image']
+      })
+        
+      media.tag_list.add('urx', provider, tag_name)
+        
+      success = media.save  
+
+      if success
+        starting_index += 1
+      end
+
+    end
+  end
+
+  def self.recalculate_scores
+    Media.select(
+      :id, 
+      :ts_score, 
+      :remote_score, 
+      :created_at, 
+      :time_bonus_expired
+    ).where(
+      created_at: 3.days.ago..Time.now
+    ).where(
+     :time_bonus_expired => false
+    ).find_in_batches(:batch_size => 10000) do |m|
+      m.each do |m|
+        time_bonus = m.created_at.to_i - 1300000000
+        score = m.remote_score.to_i + (m.up_votes.to_i * 1000000) + 
+          ((m.favorites.count + m.bumps.count) * 10000000)
+        m.update_columns(ts_score: score + time_bonus)
+      end
+    end
+
+    Media.select(
+      :id, 
+      :ts_score, 
+      :remote_score, 
+      :created_at, 
+      :time_bonus_expired
+    ).where(
+      created_at: 3.days.ago..7.days.ago
+    ).where(
+     :time_bonus_expired => false
+    ).find_in_batches(:batch_size => 10000) do |m|
+      m.each do |m|
+        time_bonus = m.created_at.to_i - 1350000000
+        score = m.remote_score.to_i + (m.up_votes.to_i * 1000000) + 
+          ((m.favorites.count + m.bumps.count) * 10000000)
+        m.update_columns(ts_score: score + time_bonus)
+      end
+    end
+
+    Media.select(
+      :id, 
+      :ts_score, 
+      :remote_score, 
+      :created_at, 
+      :time_bonus_expired
+    ).where(
+     :time_bonus_expired => true
+    ).find_in_batches(:batch_size => 10000) do |m|
+      m.each do |m|
+        score = m.remote_score.to_i + (m.up_votes.to_i * 1000000) + 
+          ((m.favorites.count + m.bumps.count) * 10000000)
+        m.update_columns(ts_score: score)
+      end
+    end 
+  end
 end

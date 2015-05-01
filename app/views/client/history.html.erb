@@ -2,29 +2,14 @@
   <title>tagSurf - History</title>
 <% end %>
 
-<% content_for :stylesheets do %>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/navbar.css">
-  <link rel="stylesheet" href="/css/gallery.css">
-<% end %>
-
-<% content_for :javascripts do %>
-  <script src="/js/tos_pp.js"></script>
-  <script src="/js/util.js"></script>
-  <script src="/js/image.js"></script>
-  <script src="/js/gesture.js"></script>
-  <script src="/js/drag.js"></script>
-  <script src="/js/modal.js"></script>
-  <script src="/js/throbber.js"></script>
-  <script src="/js/autocomplete.js"></script>
-  <script src="/js/share.js"></script>
-  <script src="/js/gallery.js"></script>
-  <script>
-  	populateNavbar();
-  	gallerize("history");
-  </script>
-<% end %>
-
-
 <!-- Place body html below -->
 <div id="nav"></div>
+
+<%= javascript_include_tag "gallery_page" %>
+
+<% content_for :javascripts do %>
+  <script>
+    populateNavbar();
+    gallerize("history");
+  </script>
+<% end %>

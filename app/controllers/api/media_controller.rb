@@ -1,6 +1,6 @@
 class Api::MediaController < Api::BaseController
 
-  before_action :find_authenticated_user, except: :share_feed
+  before_action :find_authenticated_user, except: [:share_feed, :show]
 
   def create_vote
 
@@ -25,20 +25,33 @@ class Api::MediaController < Api::BaseController
       IncrementMediaVoteCount.perform_async(media_params[:id], vote.vote_flag)
       render json: {success: "true"}
     else
-      render json: {error: "something went wrong: #{e}"}, status: :unprocessible_entity
+      render json: {errors: "something went wrong: #{e}"}, status: :unprocessible_entity
     end
   end
 
   def share_feed
+    tags = Array.new
+    if media_params[:tag].include?(',')
+      tags = media_params[:tag].delete'{}'
+      tags = tags.split(',')
+    else
+      tags << media_params[:tag]
+    end
+    if Tag.blacklisted?(tags)
+      render json: {errors: "This tag is not available in Safe Surf mode"}, status: :unauthorized
+      return
+    end
+
     @media = Media.next(
       @user, 
-      media_params[:tag], 
+      tags, 
       {
         :id => media_params[:id], 
         :limit => media_params[:limit],
         :offset => media_params[:offset] 
       }
     )
+
     if @media.present?
       render json: @media, root: "data"
     else
@@ -51,8 +64,21 @@ class Api::MediaController < Api::BaseController
       render json: {errors: 'must be logged in to view feed.'}, status: :unauthorized
       return
     end
+
+    tags = Array.new
+    if media_params[:tag].include?(',')
+      tags = media_params[:tag].delete'{}'
+      tags = tags.split(',')
+    else
+      tags << media_params[:tag]
+    end
+
+    if @user.safe_mode? && Tag.blacklisted?(tags)
+      render json: {errors: "This tag is not available in Safe Surf mode"}, status: :unauthorized
+      return
+    end
       
-    @media = Media.next(@user, media_params[:tag])
+    @media = Media.next(@user, tags)
     if @media.present?
       render json: @media, root: "data"
     else
@@ -61,11 +87,6 @@ class Api::MediaController < Api::BaseController
   end
 
   def show
-    unless @user
-      render json: {errors: 'must be logged in to view media.'}, status: :unauthorized
-      return
-    end
-      
     @media = Media.find(params[:id]) 
     if @media
       render json: @media, root: "data"

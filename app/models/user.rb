@@ -8,12 +8,13 @@ class User < ActiveRecord::Base
 
   has_many    :votes, :foreign_key => :voter_id
   has_many    :favorites
+  has_many    :referrals, :foreign_key => :referrer_id
   belongs_to  :access_code
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, 
          :registerable, :confirmable,
-         :omniauthable, :omniauth_providers => [:imgur]
+         :omniauthable, :omniauth_providers => [:imgur, :facebook]
 
   CLIENT_ID = Rails.env.production? ? 'e0d1a9753eaf289' : '63c3978f06dac10'
   CLIENT_SECRET = Rails.env.production? ? '804e630c072f527b68bdfcc6a08ccbfe2492ab99' : '4eea9bc017f984049cfcd748fb3d8de17ae1cb8e'
@@ -23,7 +24,11 @@ class User < ActiveRecord::Base
 
   validates_presence_of :slug
 
+  validates_uniqueness_of :username, :allow_blank => true, :message => "username taken"
+
   scope :sorted_history, order("created_at ASC")
+
+  after_commit :destroy_all_relations, on: :destroy
 
   def welcomed?
     completed_feature_tour?
@@ -103,6 +108,132 @@ class User < ActiveRecord::Base
     user
   end
 
+  def self.from_omniauth(auth)
+    user = User.where(email: auth.info.email).first
+    unless user
+      user = User.where(provider: auth.provider, uid: auth.uid).first_or_create! do |user|
+        user.uid = auth.uid
+        user.provider = auth.provider
+        user.email = auth.info.email
+        user.first_name = auth.info.first_name
+        user.last_name = auth.info.last_name
+        user.profile_pic_link = (auth.provider == "facebook") ? "http://graph.facebook.com/" + auth.uid + "/picture?type=square" : auth.info.image
+        user.password = Devise.friendly_token[0,20]
+        user.facebook_auth_token = auth.credentials.token
+        user.facebook_token_expires_at = auth.credentials.expires_at
+        user.facebook_token_created_at = Time.now
+        user.gender = auth.extra.raw_info.gender
+        user.location = auth.extra.raw_info.locale
+        user.active = true
+        user.beta_user = true
+      end
+    end
+    if user.provider != auth.provider
+      user.uid = auth.uid
+      user.provider = auth.provider
+      user.facebook_auth_token = auth.credentials.token
+      user.facebook_token_expires_at = auth.credentials.expires_at
+      user.facebook_token_created_at = Time.now
+      user.gender = auth.extra.raw_info.gender
+      user.location = auth.extra.raw_info.locale
+
+      user.save
+    end
+    if user.profile_pic_link.nil?
+      user.profile_pic_link = (auth.provider == "facebook") ? "http://graph.facebook.com/" + auth.uid + "/picture?type=square" : auth.info.image
+      
+      user.save
+    end
+    if user.first_name.nil? || auth.info.first_name != user.first_name
+      user.first_name = auth.info.first_name
+      user.last_name = auth.info.last_name
+
+      user.save
+    end
+    user
+  end
+
+  def self.from_native(fb_params)
+    user = User.where(email: fb_params[:email]).first
+    unless user
+      user = User.where(provider: 'facebook', uid: fb_params[:uid]).first_or_create! do |user|
+        user.uid = fb_params[:uid]
+        user.provider = 'facebook'
+        user.email = fb_params[:email]
+        user.first_name = fb_params[:first_name]
+        user.last_name = fb_params[:last_name]
+        user.profile_pic_link = fb_params[:profile_pic_link].nil? ? "http://graph.facebook.com/" + fb_params[:uid] + "/picture?type=square" : fb_params[:profile_pic_link]
+        user.password = Devise.friendly_token[0,20]
+        user.facebook_auth_token = fb_params[:facebook_auth_token]
+        user.facebook_token_expires_at = fb_params[:facebook_token_expires_at]
+        user.facebook_token_created_at = Time.now
+        user.gender = fb_params[:gender]
+        user.location = fb_params[:location]
+        user.active = true
+        user.beta_user = true
+      end
+    end
+    if user.provider != 'facebook'
+      user.uid = fb_params[:uid]
+      user.provider = 'facebook'
+      user.facebook_auth_token = fb_params[:facebook_auth_token]
+      user.facebook_token_expires_at = fb_params[:facebook_token_expires_at]
+      user.facebook_token_created_at = Time.now
+      user.gender = fb_params[:gender]
+      user.location = fb_params[:location]
+
+      user.save
+    end
+    if user.profile_pic_link.nil?
+      user.profile_pic_link = "http://graph.facebook.com/" + fb_params[:uid] + "/picture?type=square"
+      
+      user.save
+    end
+    if user.first_name.nil? || fb_params[:first_name] != user.first_name
+      user.first_name = fb_params[:first_name]
+      user.last_name = fb_params[:last_name]
+
+      user.save
+    end
+
+    user
+  end 
+
+  def self.link_fb(user, fb_params)
+    user = User.find(user)
+    user.uid = fb_params[:uid]
+    user.provider = 'facebook'
+    user.profile_pic_link = fb_params[:profile_pic_link].nil? ? "http://graph.facebook.com/" + fb_params[:uid] + "/picture?type=square" : fb_params[:profile_pic_link]
+    user.facebook_auth_token = fb_params[:facebook_auth_token]
+    user.facebook_token_expires_at = fb_params[:facebook_token_expires_at]
+    user.facebook_token_created_at = Time.now
+    user.gender = fb_params[:gender]
+    user.location = fb_params[:location]
+    if user.first_name.nil? || fb_params[:first_name] != user.first_name
+      user.first_name = fb_params[:first_name]
+      user.last_name = fb_params[:last_name]
+    end
+
+    user.save
+  end
+
+  def self.buddy_list(user_id)
+    recent_shares = Array.new
+    buddy_ids = Array.new
+
+    recent_shares = Referral.unscoped.where(referrer_id: user_id).select(:user_id).map{|r| r.user_id}
+
+    buddy_ids = recent_shares.inject(Hash.new(1)) { |h, e| h[e] += 1 ; h }.to_a.sort_by(&:last).reverse.map {|x,y| x}
+
+    buddies = User.find(buddy_ids).index_by(&:id).values_at(*buddy_ids).map{|u| [u.id,u.email,u.username, u.first_name, u.last_name, u.profile_pic_link]}
+    buddies.concat(User.select(:id, :email, :username, :first_name, :last_name, :profile_pic_link).order('sign_in_count DESC NULLS LAST').map { |user| [user.id, user.email, user.username, user.first_name, user.last_name, user.profile_pic_link] })
+    
+    buddies.uniq!
+
+    buddies
+
+  end
+
   protected
 
   def generate_slug
@@ -115,6 +246,29 @@ class User < ActiveRecord::Base
 
   def confirmation_required?
     false
+  end
+
+  def destroy_all_relations
+    self.votes.each do |v|
+      v.destroy!
+    end
+
+    Referral.unscoped.where(:referrer_id => id).each do |r|
+      r.destroy!
+    end
+
+    Referral.unscoped.where(:user_id => id).each do |r|
+      r.destroy!
+    end
+
+    Bump.where(:sharer_id => id).each do |b|
+      b.destroy!
+    end
+
+    Bump.where(:bumper_id => id).each do |b|
+      b.destroy!
+    end
+
   end
   
 end

@@ -9,7 +9,8 @@ Tagsurf::Application.routes.draw do
   devise_for :users, controllers: { 
                        registrations: 'registrations', 
                        sessions: 'sessions',  
-                       passwords: 'passwords'
+                       passwords: 'passwords',
+                       :omniauth_callbacks => "omniauth_callbacks"
                      }
 
   get 'users/sign_up', to: redirect('/sign-up')
@@ -21,15 +22,24 @@ Tagsurf::Application.routes.draw do
   get 'history'         => 'client#history'
   get 'favorites'       => 'client#favorites'
   get 'submissions'     => 'client#submissions'
+  get 'bumps'           => 'client#bumps'
   get 'tag'             => 'client#tag'
+  get 'bump/:ref_id'    => 'client#bump'
+
+  #Enable Push
+  get 'push-enable/:user_id'  => 'client#push_enable'
+  get 'push'                  => 'client#push'
 
   # Beta access flow, ordered by good path
-  get 'code'        => 'client#access_code'
-  get 'disclaimer'  => 'client#disclaimer'
-  get 'terms'       => 'client#terms'
-  get 'sign-up'     => 'client#signup'
-  get 'resend'      => 'client#resend_link'
-  get 'welcome'     => 'client#welcome'
+  get 'code'               => 'client#access_code'
+  get 'disclaimer'         => 'client#disclaimer'
+  get 'terms'              => 'client#terms'
+  get 'sign-up'            => 'client#signup'
+  get 'resend'             => 'client#resend_link'
+  get 'welcome'            => 'client#welcome'
+  get 'selectusername'     => 'client#username_select'
+  get 'linkfb'             => 'client#linkfb'
+  get 'name'               => 'client#enter_name'
     
   # Multi-step beta access flow
   post 'confirm-beta'              => 'client#confirm_beta_token'
@@ -37,7 +47,8 @@ Tagsurf::Application.routes.draw do
   post 'confirm-terms'             => 'client#terms_agreement'
 
   # User routes
-  put 'user'                           => 'users#update'
+  put 'user'               => 'users#update'
+  post 'authentication/from-native' =>  'users#from_native'
 
   # JSON API
   namespace :api do
@@ -63,7 +74,10 @@ Tagsurf::Application.routes.draw do
     # Users API
     get  'users/:id/stats'               => 'votes#stats'
     get  'users'                         => 'users#stats'
+    get  'users/buddies'                 => 'users#buddies'
     patch  'users/:id'                   => 'users#update'
+    get 'users/unsubscribe/:id/:type'    => 'users#unsubscribe'
+    get 'users/check-name/:username'     => 'users#check_username'
 
     # History API
     get  'history/paginated/:limit/:offset'  => 'users#paginated_history'
@@ -73,11 +87,24 @@ Tagsurf::Application.routes.draw do
 
     # Favorites API
     get  'favorites/paginated/:limit/:offset'      => 'favorites#paginated_history'
-    get  'favorites/bracketed/:id'       => 'favorites#bracketed_history'
-    get  'favorites/next/:id'            => 'favorites#next_history'
-    get  'favorites/previous/:id'        => 'favorites#previous_history'
-    post 'favorites/:card_id'            => 'favorites#create'
-    delete 'favorites/:card_id'          => 'favorites#delete'
+    get  'favorites/bracketed/:id'                 => 'favorites#bracketed_history'
+    get  'favorites/next/:id'                      => 'favorites#next_history'
+    get  'favorites/previous/:id'                  => 'favorites#previous_history'
+    post 'favorites/:card_id'                      => 'favorites#create'
+    delete 'favorites/:card_id'                    => 'favorites#delete'
+
+    # Referrals API
+    get  'referral/made/paginated/:limit/:offset'         => 'referrals#paginated_collection_made'
+    get  'referral/received/paginated/:limit/:offset'     => 'referrals#paginated_collection_received'
+    post 'referral/:card_id/:user_ids'                    => 'referrals#create'
+    post 'referral/:card_id/:referral_id'                 => 'referrals#bump'
+    get 'referral/seen/:referral_id'                      => 'referrals#seen'
+
+    #Bumps API
+    post 'bump/:media_id/:sharer_ids'       => 'bumps#create'
+    get 'bump/seen/:bump_id'                => 'bumps#seen'
+
+
   end
 
   get '/desktop' => 'client#desktop'

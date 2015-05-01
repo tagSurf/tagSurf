@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>
+          <h1>Hi @<%= @username %>!</h1> 
+        </td>
+        <td align="right">
+          <img width="75px" src="http://assets.tagsurf.co/img/ts_logo_stacked_gray.png"/>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <p>@<%= @referrer_name %> bumped this to you on tagSurf. Click on the card to check it out!</p>        
+        </td>
+      </tr>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td align="center" style="padding: 15px 0 0 0;">
+          <a href="http://beta.tagsurf.co/share/trending/<%= @media.id %>">
+            <table style="background-color: #353535; border: solid #353535; border-radius: 10px; min-width: 80%; max-width: 90%;" cellspacing="0" cellpadding="0">
+              <tr>
+                <td>
+                  <img width="98%;" style="padding:1%; border: 1px solid #353535; border-radius:5px;" src="<%= @media.image_link_original %>" />
+                </td>
+              </tr>
+              <tr>
+                <td align="center" style="border-radius: 5px;">
+                  <p style="color: white; font-family: 'Raleway', sans-serif; font-weight: 200; font-size: 130%; padding: 0 10px 30px 10px;"><%= @caption %></p>
+                <td>
+              </tr>
+            </table>
+          </a>
+        </td>
+      </tr>
+    </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="padding-top:20px">
+      <tr>
+        <td>
+          <a href="<%= @url %>/bump/<%= @referral_id %>">
+            <img width="100px" style="padding: 20px;" src="http://assets.tagsurf.co/img/bump_white.png"/>
+          </a>
+        </td>
+        <td align="left">
+          <h2>Bump it back to @<%= @referrer_name %> if you think it's #awesome!</h2>
+        </td>
+      </tr>
+      <tr style="padding-top:10px">
+        <td align="left" colspan="2">
+          <p>Surf on!</p>
+        </td>
+      </tr>
+    </table>
+    <a href="<%= @url %>/api/users/unsubscribe/<%= @user_id %>/refer">
+      <h2>Unsubscribe</h2>
+    </a>
+    
+  </body>
+</html>
+

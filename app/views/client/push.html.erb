@@ -1,0 +1,29 @@
+<%= stylesheet_link_tag "sessions", :media => "all" %>
+
+<center>
+	<div id='container' class='hidden'>
+   <div class="tslogo"></div>
+   <div class="ac-text-container">
+		<p>Please enable push notificaitons to see the things your friends share with you</p>
+   </div>
+	 <a id='btn-lnk'><div id='btn' class="button" style="max-width: 30%;">Ok</div></a>
+	</div>
+</center>
+
+<%= javascript_include_tag "push" %>
+
+<script type="text/javascript">
+	if (isUIWebView() && !isAndroid()) { //&& document.location.hash.split('~')[1]) {
+		var container = document.getElementById('container'),
+			button = document.getElementById('btn-lnk'),
+			user_id = document.location.hash.split('#')[1].split('~')[0];
+			// model = document.location.hash.split('~')[1];
+		container.classList.remove('hidden');
+		button.setAttribute('href', "/push-enable/" + user_id);
+		// if (model && model.indexOf('iPhone7') == -1) {
+		// 	button.setAttribute('target', '_blank');
+		// }
+	}
+	else
+		document.location = '/feed#funny';
+</script>

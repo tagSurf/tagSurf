@@ -6,7 +6,7 @@ class Api::BaseController < ApplicationController
 
     def find_authenticated_user
       unless @user = current_user
-        redirect_to :root
+        render json: {errors: "authentication required"}, status: :unauthorized
       end
     end
 end

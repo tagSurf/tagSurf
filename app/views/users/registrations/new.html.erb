@@ -2,14 +2,11 @@
   <title>tagSurf</title>
 <% end %>
 
-<% content_for :stylesheets do %>
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/login.css">
-<% end %>
+<%= stylesheet_link_tag "sessions", :media => "all" %>
 
 <%= form_for(resource, :as => resource_name, :url => registration_path(resource_name) ) do |f| %>
   <center>
-    <img id="tslogo" src="/img/ts_logo_stacked_gray.jpg"></img>
+    <img id="tslogo" src="http://assets.tagsurf.co/img/ts_logo_stacked_gray.jpg"></img>
     <%#= f.email_field :email, :placeholder => 'email', :class => 'ts-input', :disabled => true %>
     <%#= f.password_field :password, :placeholder => 'password', :class => 'ts-input', :disabled => true %>
     <%#= f.password_field :password_confirmation, :placeholder => 'confirm password', :class => 'ts-input', :disabled => true %>

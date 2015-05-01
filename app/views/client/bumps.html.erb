@@ -1,0 +1,14 @@
+<% content_for :title do %>
+  <title>tagSurf - Shares</title>
+<% end %>
+
+<!-- Place body html below -->
+<div id="nav"></div>
+
+<%= javascript_include_tag "gallery_page" %>
+<% content_for :javascripts do %>
+  <script>
+    populateNavbar();
+    gallerize("bumps");
+  </script>
+<% end %>

@@ -4,10 +4,13 @@ class MediaSerializer < BaseSerializer
   attributes( 
     :id,
     :remote_id,
+    :source,
     :image,
     :caption, 
     :tags,
-    :tags_v2,
+    :web_link,
+    :deep_link,
+    :source_icon,
     :user_stats,
     :permissions,
     :total_votes,
@@ -15,7 +18,8 @@ class MediaSerializer < BaseSerializer
     :up_votes,
     :score,
     :type,
-    :trend
+    :trend,
+    :referral
   )
 
   def media
@@ -23,6 +27,15 @@ class MediaSerializer < BaseSerializer
   end
 
   def type
+    return "login" if media.ts_type == 'login'
+    unless media.remote_provider.include?('urx')
+      return media.ts_type
+    end
+
+    if CONFIG[:web_domains].include?(media.remote_provider.split('/')[1])
+      return "content/web"
+    end
+  
     media.ts_type
   end
 
@@ -37,31 +50,38 @@ class MediaSerializer < BaseSerializer
 
   def tags
     return [] if type == 'login'
-    [media.section]
-  end
-
-  def tags_v2
-    return [] if type == 'login'
-    # Fix this fiasco once client is set
-    current_tags = (media.tag_list + media.tagged_as + [media.section]).uniq
+    current_tags = (media.tag_list + media.tagged_as).uniq
+    if current_user.try(:safe_mode)
+      current_tags.delete_if { |tag| Tag.blacklisted?([tag.to_s]) }
+    end
     tagged_medias = []
     current_tags.each do |tag|
-      tagged_medias.push("#{tag}" => media.media_tag_info(tag))
+      tagged_medias.push("#{tag}" => media.media_tag_info(tag))   
     end
     tagged_medias
   end
 
   def image
     return {} if type == 'login'
-    img = {
-      content_type: media.content_type,
-      animated: media.animated?,
-      tiny: {url: media.image_link_tiny, width: 50, height: 50}.merge!(media.scale_dimensions(160)),
-      medium: {url: media.image_link_medium, width: 320, height: 320}.merge!(media.scale_dimensions(320)),
-      large: {url: media.image_link_large, width: 640, height: 640}.merge!(media.scale_dimensions(640)),
-      huge: {url: media.image_link_huge, width: 1024, height: 1024}.merge!(media.scale_dimensions(1024)),
-      original: {url: media.image_link_original, width: media.width, height: media.height}
-    }
+    if media.remote_provider == 'imgur'
+      img = {
+        content_type: media.content_type,
+        animated: media.animated?,
+        tiny: {url: media.image_link_tiny, width: 50, height: 50}.merge!(media.scale_dimensions(160)),
+        medium: {url: media.image_link_medium, width: 320, height: 320}.merge!(media.scale_dimensions(320)),
+        large: {url: media.image_link_large, width: 640, height: 640}.merge!(media.scale_dimensions(640)),
+        huge: {url: media.image_link_huge, width: 1024, height: 1024}.merge!(media.scale_dimensions(1024)),
+        original: {url: media.image_link_original, width: media.width, height: media.height}
+      }
+    elsif media.remote_provider.include?('urx')
+      img = {
+        content_type: media.content_type,
+        animated: media.animated?,
+        large: {url: media.image_link_large},
+        huge: {url: media.image_link_huge},
+        original: {url: media.image_link_original}
+      }
+    end
     img
   end
 
@@ -77,8 +97,17 @@ class MediaSerializer < BaseSerializer
 
   def caption
     return nil if type == 'login'
-    if media.description
-      media.description
+    case media.remote_provider
+    when 'imgur'
+      media.description ? media.description : media.title
+    when 'urx/pinterest'
+      media.description ? media.description : media.title
+    when 'urx/engadget'
+      media.description ? media.description : media.title
+    when 'urx/cbs'
+      media.description ? media.description : media.title
+    when 'urx/flipboard'
+      media.description ? media.description : media.title
     else
       media.title
     end 
@@ -139,9 +168,49 @@ class MediaSerializer < BaseSerializer
     media.remote_score
   end
 
+  def source_icon
+    return nil if type == 'login'
+    if media.remote_provider.include?('urx')
+      media.deep_link_icon
+    elsif media.remote_provider == 'imgur'
+      "http://assets.tagsurf.co/img/imgur_icon.png"
+    end
+  end
+
+  def web_link
+    return media.web_link unless media.remote_provider == 'imgur'
+    return "http://imgur.com/gallery/#{media.remote_id}"
+  end
+
   def trend
     return nil if type == 'login'
     [*1..10].sample.odd? ? 'up' : 'down'
+  end
+
+  def referral
+    if media.referrals_list
+      media.referrals_list.each do |r|
+        r[:time] = "#{time_ago_in_words(r[:time])} ago"
+      end
+      media.referrals_list
+    else 
+      return nil if !current_user
+      referrals = Referral.unscoped.where(media_id: media.id, user_id: current_user.id)
+      return nil if referrals.empty?
+      ref = Array.new
+      referrals.each do |r|
+        ref << {
+          referral_id: r.id,
+          user_id: r.referrer_id,
+          username: User.find(r.referrer_id).username ? 
+                      User.find(r.referrer_id).username : User.find(r.referrer_id).email,
+          profile_pic: User.find(r.referrer_id).profile_pic_link,
+          bumped: r.bumped,
+          seen: r.seen        
+        }
+      end
+      ref
+    end
   end
 
   
