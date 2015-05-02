@@ -64,6 +64,12 @@
 #favorites-btn {
   float:right;
 }
+#appstore-btn {
+  position: absolute;
+}
+#appstore-icon {
+    width:70%;
+}
 .btn {
   padding: 12px 10px 13px 10px;
 }
@@ -193,6 +199,15 @@
   max-width: initial !important;
   padding: 10px;
 } 
+#link-facebook-btn {
+  max-width: initial !important;
+  padding: 5px;
+  margin-top: 10px;
+  margin-bottom: 0;
+  color: white;
+  max-width: 50%;
+} 
+
 /*======= This targets destops and tablets ======*/
 @media only screen and (min-width: 700px){
 /*  #tag_adder
@@ -218,4 +233,11 @@
   .menu-icon {
     width: 24px;
   }
+  #appstore-btn {
+    padding-top: 4px;
+  }
+  #appstore-icon {
+    width:23%;
+  }
+
 }

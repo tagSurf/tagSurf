@@ -5,6 +5,8 @@ var authorizedSession = null,
       id : null,
       email : null,
       username: null,
+      realname: null,
+      profilepic: null,
       slug : null,
       vote_btns : true,
       admin : false,
@@ -77,6 +79,9 @@ var getUser = function () {
           currentUser.id = result.user.id;
           currentUser.email = result.user.email;
           currentUser.username = result.user.username;
+          currentUser.realname = result.user.first_name ? 
+                result.user.first_name + " " + result.user.last_name : null;
+          currentUser.profilepic = result.user.profile_pic_link;
           currentUser.slug = result.user.slug;
           currentUser.admin = result.user.admin;
           currentUser.safeSurf = result.user.safe_mode;
@@ -166,6 +171,13 @@ var shareVotes = [], stashVotesAndLogin = function () {
   sessionStorage.setItem("shareVotes",
     JSON.stringify(shareVotes));
   window.location = "/users/sign_in";
+};
+
+stashVotes = function () {
+  sessionStorage.setItem("lastPath",
+    current_tag + "~" + currentMedia.id);
+  sessionStorage.setItem("shareVotes",
+    JSON.stringify(shareVotes));
 };
 
 var messageBox = function (title, message, action_type, cb, backed) {
