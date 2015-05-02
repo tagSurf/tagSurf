@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   belongs_to  :access_code
 
   devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable, 
+         :recoverable, :rememberable, :trackable, #:validatable, 
          :registerable, :confirmable,
          :omniauthable, :omniauth_providers => [:imgur, :facebook]
 
@@ -25,6 +25,7 @@ class User < ActiveRecord::Base
   validates_presence_of :slug
 
   validates_uniqueness_of :username, :allow_blank => true, :message => "username taken"
+  # validates_uniqueness_of :uid, :scope => :provider
 
   scope :sorted_history, order("created_at ASC")
 
@@ -137,18 +138,18 @@ class User < ActiveRecord::Base
       user.gender = auth.extra.raw_info.gender
       user.location = auth.extra.raw_info.locale
 
-      user.save
+      user.save(validate: false)
     end
     if user.profile_pic_link.nil?
       user.profile_pic_link = (auth.provider == "facebook") ? "http://graph.facebook.com/" + auth.uid + "/picture?type=square" : auth.info.image
       
-      user.save
+      user.save(validate: false)
     end
     if user.first_name.nil? || auth.info.first_name != user.first_name
       user.first_name = auth.info.first_name
       user.last_name = auth.info.last_name
 
-      user.save
+      user.save(validate: false)
     end
     user
   end
@@ -156,10 +157,12 @@ class User < ActiveRecord::Base
   def self.from_native(fb_params)
     user = User.where(email: fb_params[:email]).first
     unless user
-      user = User.where(provider: 'facebook', uid: fb_params[:uid]).first_or_create! do |user|
+      user = User.where(provider: 'facebook', uid: fb_params[:uid])
+      unless user
+        user = User.new
         user.uid = fb_params[:uid]
         user.provider = 'facebook'
-        user.email = fb_params[:email]
+        user.email = fb_params[:email].nil? ? "" : fb_params[:email]
         user.first_name = fb_params[:first_name]
         user.last_name = fb_params[:last_name]
         user.profile_pic_link = fb_params[:profile_pic_link].nil? ? "http://graph.facebook.com/" + fb_params[:uid] + "/picture?type=square" : fb_params[:profile_pic_link]
@@ -171,6 +174,7 @@ class User < ActiveRecord::Base
         user.location = fb_params[:location]
         user.active = true
         user.beta_user = true
+        user.save(validate: false)
       end
     end
     if user.provider != 'facebook'
@@ -182,18 +186,18 @@ class User < ActiveRecord::Base
       user.gender = fb_params[:gender]
       user.location = fb_params[:location]
 
-      user.save
+      user.save(validate: false)
     end
     if user.profile_pic_link.nil?
       user.profile_pic_link = "http://graph.facebook.com/" + fb_params[:uid] + "/picture?type=square"
       
-      user.save
+      user.save(validate: false)
     end
     if user.first_name.nil? || fb_params[:first_name] != user.first_name
       user.first_name = fb_params[:first_name]
       user.last_name = fb_params[:last_name]
 
-      user.save
+      user.save(validate: false)
     end
 
     user
