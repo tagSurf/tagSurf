@@ -22,7 +22,13 @@ class Referral < ActiveRecord::Base
 
     media_ids.uniq!
 
-    media = Media.where('media.id in (?)', media_ids).index_by(&:id).values_at(*media_ids)
+    if safe
+      media = Media.where('not nsfw and media.id in (?)', media_ids).index_by(&:id).values_at(*media_ids)
+    else
+      media = Media.where('media.id in (?)', media_ids).index_by(&:id).values_at(*media_ids)
+    end
+
+    media.compact!
 
     media = media[offset..(offset+limit-1)]
 
@@ -35,6 +41,7 @@ class Referral < ActiveRecord::Base
           user_id: r.user_id,
           username:  User.find(r.user_id).username ? 
                       User.find(r.user_id).username : User.find(r.user_id).email,
+          profile_pic: User.find(r.user_id).profile_pic_link,
           bumped: r.bumped,
           seen: r.bump ? r.bump.seen : nil,
           bump_id: r.bump ? r.bump.id : nil,
@@ -54,7 +61,13 @@ class Referral < ActiveRecord::Base
 
     media_ids.uniq!
 
-    media = Media.where('media.id in (?)', media_ids).index_by(&:id).values_at(*media_ids)
+    if safe
+      media = Media.unscoped.where('not nsfw and media.id in (?)', media_ids).index_by(&:id).values_at(*media_ids)
+    else
+      media = Media.unscoped.where('media.id in (?)', media_ids).index_by(&:id).values_at(*media_ids)
+    end
+
+    media.compact!
 
     media = media[offset..(offset+limit-1)]
 
@@ -67,6 +80,7 @@ class Referral < ActiveRecord::Base
           user_id: r.referrer_id,
           username:  User.find(r.referrer_id).username ? 
                       User.find(r.referrer_id).username : User.find(r.referrer_id).email,
+          profile_pic: User.find(r.referrer_id).profile_pic_link,
           bumped: r.bumped,
           seen: r.seen,
           time: r.created_at
@@ -88,7 +102,13 @@ class Referral < ActiveRecord::Base
 	end
 
   def send_notification
-    SendReferNotification.perform_async(self.id)
+    safe_mode = User.find(self.user_id).safe_mode
+    nsfw = Media.find(self.media_id).nsfw
+    if safe_mode && nsfw
+      return
+    else
+      SendReferNotification.perform_async(self.id)
+    end
   end
 
 end

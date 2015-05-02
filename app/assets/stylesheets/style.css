@@ -122,6 +122,10 @@ a {
 .referred {
 	border-color: #00aeef !important;
 }
+.container {
+	position: absolute;
+	width: 100%;
+}
 
 /*===== Pic Tags Stuff =====*/
 .pictags {
@@ -172,7 +176,8 @@ a {
 	font-size: 0.7em;
 }
 .user-pic {
-	width: 40%;
+	width: 60px;
+	border-radius: 50%;
 }
 .bump-btn {
 	padding: 5px;
@@ -303,10 +308,12 @@ a {
 .buddy-pic {
 	width: 50px;
 	margin: 5px;
+	border-radius: 64px;
 }
 .buddy-name {
 	display: inline-block;
 	font-size: 150%;
+	font-weight: 300;
 	margin-left: 3%;
 	vertical-align: top;
 	margin-top: 15px;
@@ -700,6 +707,9 @@ a {
   background-color: #00aeef;
   color: #404041;
 }
+.active-download-btn {
+	opacity: 0.5;
+}
 .prompt-container {
 	text-align: center;
 }
@@ -806,6 +816,25 @@ a {
   bottom: 35%;
   left: 21%;
   font-weight: 200;
+}
+#no-btn {
+  max-width: 70%;
+  width: 50%;
+  position: absolute;
+  bottom: 15%;
+  left: 25%;
+  font-weight: 200;
+}
+#never-btn {
+  max-width: 70%;
+  min-width: 55%;
+  position: absolute;
+  bottom: 4%;
+  left: 22%;
+  font-weight: 200;
+}
+#download-btn {
+	margin-top: 10%;
 }
 #reload-btn {
   max-width: 70%;
@@ -937,15 +966,27 @@ a {
 /*===== Options Menu Stuff ======*/
 .options-table {
 	width: 260px;
+	margin: 0 auto;
+}
+.user-table {
+	width: 260px;
+	margin: 0 auto;
 }
 .options-title {
 	font-size: 200%;
 	position: relative;
 	top: -25px;
 }
+.options-container {
+	max-height: 70%;
+	overflow-y: scroll;
+}
 .options-key-text {
 	font-size: 180%;
 	margin-right: 15px;
+}
+.username-text {
+	font-size: 180%;
 }
 .options-key-desc {
 	padding-top: 5px;
@@ -1110,9 +1151,16 @@ a {
 	.options-table {
 		width: 30%;
 	}
+	.user-table {
+		width: 30%;
+	}
 	.options-key-text {
 		text-align: right;
 		margin-right: 30px;
+		font-size: 180% !important;
+	}
+	.username-text {
+		text-align: center;
 		font-size: 180% !important;
 	}
 	.options-msg {
@@ -1191,13 +1239,28 @@ a {
 	    left: 41%;
 	    bottom: 30%;
     }
+    #no-btn {
+	    max-width: 21%;
+	    left: 41%;
+	    bottom: 30%;
+    }
+    #never-btn {
+	    max-width: 21%;
+	    left: 41%;
+	    bottom: 30%;
+    }
     #reload-btn {
 	    max-width: 21%;
 	    left: 41.5%;
 	    bottom: 17%;
     }
-    
-	/*===== Referral Window Stuff =====*/
+   
+	/*===== Referral Stuff =====*/
+	.user-pic {
+		width: 80px;
+	}
+
+	/*===== Buddy List Stuff =====*/
     .search-bar {
 		max-width: 400px;
 	}

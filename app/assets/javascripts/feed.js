@@ -14,6 +14,24 @@ var castVote = function(card) {
 
 onload = function ()
 {
+	// Deeplink re-directs
+	// Pause on facebook redirect to handle bug in iPhone5 FB Browser
+	if (isFacebook() && isIos()) {
+		setTimeout(function() { 
+				if (isIos() && !isUIWebView() && isAuthorized())
+					window.location = "tagSurf://card/" + document.location.hash.split("#")[1];
+				else if (isIos() && !isUIWebView() && !isAuthorized())
+					window.location = "tagSurf://card/" + 
+						document.location.pathname.split("/")[2] + "~" + 
+							document.location.pathname.split("/")[3];
+		}, 2000);
+	}
+	else if (isIos() && !isUIWebView() && isAuthorized())
+		window.location = "tagSurf://card/" + document.location.hash.split("#")[1];
+	else if (isIos() && !isUIWebView() && !isAuthorized())
+		window.location = "tagSurf://card/" + document.location.pathname.split("/")[2] + "~" +
+							document.location.pathname.split("/")[3];
+	
 	populateNavbar();
 
 	// defined in util for autocomplete
@@ -623,7 +641,7 @@ onload = function ()
 	var jiggler = function() {
 		tutorial.jiggleTimeout = setTimeout(function() { 
 			current_deck.topCard().jiggle() 
-		}, 8000);
+		}, 6000);
 		setTimeout(function() {
 			current_deck.topCard().setOneTimeCb("vote", function () { 
 				clearTimeout(tutorial.jiggleTimeout);
@@ -642,7 +660,8 @@ onload = function ()
 	// }, 8000);
 	if (!isAuthorized())// && !DEBUG)
 		jiggler();
-
+	if (!isAuthorized() && isMobile())
+		newReminder(downloadMessage.call(), null, "Download", 12000, 5000);
 };
 
 //This is the first line executed in feed

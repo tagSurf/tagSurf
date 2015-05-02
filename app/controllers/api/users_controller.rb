@@ -109,20 +109,14 @@ class Api::UsersController < Api::BaseController
   end
 
   def unsubscribe
-    if current_user
-      user = User.find(params[:id])
-      user.update_column "#{params[:type]}_mailers", false
+    user = User.find(params[:id])
+    user.update_column "#{params[:type]}_mailers", false
 
-      if user["#{params[:type]}_mailers"] == false
-        flash[:notice] = "Unsubscribed from #{params[:type]} emails"
-        redirect_to '/feed'
-      else
-        flash[:error] = "Could not unscubscribe because of error"
-        redirect_to '/feed'
-      end
-
+    if user["#{params[:type]}_mailers"] == false
+      flash[:notice] = "Unsubscribed from #{params[:type]} emails"
+      redirect_to '/feed'
     else
-      flash[:error] = "not authorized"
+      flash[:error] = "Could not unscubscribe because of error"
       redirect_to '/feed'
     end
   end
@@ -150,6 +144,8 @@ class Api::UsersController < Api::BaseController
         :offset, 
         :email, 
         :username,
+        :first_name,
+        :last_name,
         :confirm_feature_tour
       ) 
     end

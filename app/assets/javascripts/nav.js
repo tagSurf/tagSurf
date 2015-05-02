@@ -27,7 +27,13 @@ var populateNavbar = function () {
   reduced_navbar_content = [
     "<div id='help-btn'>",
       "<img id='help-icon' src='http://assets.tagsurf.co/img/help_btn.png'>",
-    "</div>",
+    "</div>", ((!isAuthorized() && isMobile()) 
+      ? (("<a href='" + (isIos() 
+        ? ("https://appsto.re/us/hYmt1.i") 
+        : ("https://play.google.com/store/apps/details?id=co.tagsurf.tagsurf")) + "' ><div id='appstore-btn' class='btn hidden'><img id='appstore-icon' src='" + (isIos() 
+        ? ("http://assets.tagsurf.co/img/Download_on_the_App_Store_Badge_US-UK_135x40.svg") 
+        : ("http://assets.tagsurf.co/img/get-it-on-google-play-store-logo.png")) + "' >") + "</div></a>") 
+      : ("")),
     "<div class='navbar-center'>",
       "<label id='slider-label' for='slider-box' ontouchmove='return false;' onclick='slideNavMenu();'>",
         "<span id='main-logo'>",
@@ -118,6 +124,20 @@ var populateNavbar = function () {
       callHelpModal();
       analytics.track('Open Help Modal');
     });
+    if (isMobile()) {
+      var appstoreBtn = document.getElementById('appstore-btn');
+      gesture.listen("down", appstoreBtn, function () {
+        appstoreBtn.classList.add("active-download-btn");
+      });
+      gesture.listen("up", appstoreBtn, function () {
+        appstoreBtn.classList.remove("active-download-btn");
+      });
+      gesture.listen("tap", appstoreBtn, function () {
+        var destination = isIos() ? "https://appsto.re/us/hYmt1.i" : 
+              "https://play.google.com/store/apps/details?id=co.tagsurf.tagsurf";
+        window.location = destination;
+      });
+    }
   }
   tag_adder.firstChild.nextSibling.onclick = function() {
     var newtag = tag_adder.firstChild.value.slice(1);
@@ -175,7 +195,7 @@ var populateNavbar = function () {
           modal.backOff();
           modal.modalOut();
         },
-        optionsTable = buildOptionsTable(options_cb);
+        optionsContainer = buildOptionsTable(options_cb);
     n.className = "center-label";
     closebtn.src = "http://assets.tagsurf.co/img/Close.png";
     closebtn.className = "modal-close-button";
@@ -185,7 +205,7 @@ var populateNavbar = function () {
     TOS.innerHTML = "<a class='blue bold big-lnk' id='terms-lnk'>Terms of Use</a> | <a class='blue bold big-lnk' id='privacy-lnk'>Privacy Policy</a>";
     TOS.className = "tos-line";
     n.appendChild(title);
-    n.appendChild(optionsTable);
+    n.appendChild(optionsContainer);
     n.appendChild(closebtn);
     n.appendChild(TOS);
     slideNavMenu(true);
@@ -194,18 +214,24 @@ var populateNavbar = function () {
     voteButtonsOff();
     modal.modalIn(n, options_cb);
     initDocLinks(checkShare);
+    drag.makeDraggable(optionsContainer, {constraint: "horizontal"});
   };
 };
 
 var buildOptionsTable = function (options_cb) {
-  var optionsTable = document.createElement('table'),
-      usernameRow = optionsTable.insertRow(0),
-      safeSurfRow = optionsTable.insertRow(1),
-      safeSurfHelperRow = optionsTable.insertRow(2),
-      voteButtonsRow = optionsTable.insertRow(3),
-      voteButtonsHelperRow = optionsTable.insertRow(4),
-      usernameCell = usernameRow.insertCell(0),
+  var optionsContainer = document.createElement('div'),
+      optionsTable = document.createElement('table'),
+      userTable = document.createElement('table'),
+      usernameRow = userTable.insertRow(0),
+      profilepicCell = usernameRow.insertCell(0),
+      usernameCell = usernameRow.insertCell(1),
       usernameText = document.createElement('div'),
+      realnameText = document.createElement('div'),
+      profilepic = document.createElement('img'),
+      safeSurfRow = optionsTable.insertRow(0),
+      safeSurfHelperRow = optionsTable.insertRow(1),
+      voteButtonsRow = optionsTable.insertRow(2),
+      voteButtonsHelperRow = optionsTable.insertRow(3),
       voteButtonsTextCell = voteButtonsRow.insertCell(0),
       voteButtonsCheckboxCell = voteButtonsRow.insertCell(1),
       voteButtonsDescCell = voteButtonsHelperRow.insertCell(0),
@@ -225,14 +251,57 @@ var buildOptionsTable = function (options_cb) {
         resumeButtonCell = resumeTutorial.insertCell(0),
         resumeButton = document.createElement('div');
   
-  optionsTable.className = "inline options-table";
+  optionsContainer.className = "container options-container";
+  optionsContainer.id = "options-container";
+  optionsContainer.appendChild(userTable);
+  optionsContainer.appendChild(optionsTable);
 
-  usernameText.innerHTML = "User:<span class='blue'> " 
+  optionsTable.className = "inline-block options-table";
+  optionsTable.id = "options-table";
+  userTable.className = "inline-block user-table";
+  userTable.id = "user-table";
+
+  usernameText.innerHTML = "<span class='blue'> " 
     + username + "</span>";
-  usernameText.className = "options-key-text";
+  if (currentUser.realname) {
+    realnameText.innerHTML = "(" + currentUser.realname + ")";
+    realnameText.style.fontSize = "80%";
+    realnameText.style.fontWeight = "200";
+    usernameText.appendChild(realnameText);
+  }
+  profilepic.src = currentUser.profilepic ? currentUser.profilepic : 
+                        "http://assets.tagsurf.co/img/UserAvatar.png";
+  profilepic.className = 'user-pic';
+  profilepicCell.appendChild(profilepic);
+  usernameText.className = "username-text";
   usernameText.style.textAlign = "center";
   usernameCell.appendChild(usernameText);
-  usernameCell.colSpan = 2;
+
+  if (!currentUser.profilepic) {
+    var facebookRow = userTable.insertRow(1),
+        facebookCell = facebookRow.insertCell(0),
+        facebookBtn = document.createElement('div'),
+        facebookLnk = document.createElement('a');
+    facebookLnk.href = "/users/auth/facebook";
+    facebookBtn.innerHTML = "Link To Facebook";
+    facebookBtn.className = isMobile() ? "msgbox-btn biggest pointer" 
+                              : "msgbox-btn really-big pointer";
+    facebookBtn.id = "link-facebook-btn";
+    facebookCell.colSpan = "2";
+    // gesture.listen("down", facebookBtn, function () {
+    //   facebookBtn.classList.add('ts-active-button');
+    // });
+    // gesture.listen("up", facebookBtn, function () {
+    //   facebookBtn.classList.remove('ts-active-button');
+    // });
+    // gesture.listen("tap", facebookBtn, function() {
+    //   var dispatch = document.createEvent("HTMLEvents");
+    //     dispatch.initEvent("click", true, true);
+    //     facebookLnk.dispatchEvent(dispatch);
+    // });
+    facebookLnk.appendChild(facebookBtn);
+    facebookCell.appendChild(facebookLnk);
+  }
 
  
   // Safe Surf Switch
@@ -246,7 +315,9 @@ var buildOptionsTable = function (options_cb) {
   safeSurfDescCell.colSpan = voteButtonsDescCell.colSpan = 2;
   safeSurfDesc.innerHTML = "Safe Surf filters NSFW content<br>out of your feed and galleries.<br><i>(NSFW = Not Safe For Work)</i>";
   safeSurfDesc.className = voteButtonsDesc.className = "options-key-desc";
-  gesture.listen('down', safeSurfCheckbox, function () {
+  gesture.listen('up', safeSurfCheckbox, function () {
+    if (document.getElementById('options-container').dragging)
+      return;
     if (isAuthorized())
     {
       if (isUIWebView())
@@ -283,6 +354,10 @@ var buildOptionsTable = function (options_cb) {
       analytics.track('Unauthorized Toggle Safe Surf');
     }
   });
+  gesture.listen("drag", safeSurfCheckbox, function(direction, distance, dx, dy, pixelsPerSecond) {
+        gesture.triggerDrag(document.getElementById('options-container'), direction, distance, dx, dy, pixelsPerSecond);
+        return true;
+  });
   safeSurfCheckbox.className = voteButtonsCheckbox.className = 'onoffswitch-container';
   safeSurfTextCell.appendChild(safeSurfText);
   safeSurfCheckboxCell.appendChild(safeSurfCheckbox);
@@ -297,7 +372,9 @@ var buildOptionsTable = function (options_cb) {
   voteButtonsText.style.fontSize="150%";
   voteButtonsDesc.innerHTML = "Turn off voting buttons and just swipe";
 
-  gesture.listen('down', voteButtonsCheckbox, function () {
+  gesture.listen('up', voteButtonsCheckbox, function () {
+    if (document.getElementById('options-container').dragging)
+      return;
     voteButtonsCheckbox.firstChild.checked = !voteButtonsCheckbox.firstChild.checked;
     // Enable this block if votebtn toggle becomes permantent and server tracks this pref
     // xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
@@ -313,13 +390,17 @@ var buildOptionsTable = function (options_cb) {
         voteButtons: currentUser.vote_btns
     });
   });
+  gesture.listen("drag", voteButtonsCheckbox, function(direction, distance, dx, dy, pixelsPerSecond) {
+        gesture.triggerDrag(document.getElementById('options-container'), direction, distance, dx, dy, pixelsPerSecond);
+        return true;
+  });
   voteButtonsTextCell.appendChild(voteButtonsText);
   voteButtonsCheckboxCell.appendChild(voteButtonsCheckbox);
   voteButtonsDescCell.appendChild(voteButtonsDesc);
   
   // Resume Tutorial Button (if applicable)
   if(typeof tutorial === "undefined" || !tutorial.paused)
-    return optionsTable;
+    return optionsContainer;
   resumeButton.innerHTML = "Resume Tutorial";
   resumeButton.className = isMobile() ? "msgbox-btn biggest pointer" 
                             : "msgbox-btn really-big pointer";
@@ -336,7 +417,8 @@ var buildOptionsTable = function (options_cb) {
       resumeButton.classList.remove('ts-active-button');
     });
   tutorial.paused && resumeButtonCell.appendChild(resumeButton);
-  return optionsTable;
+  
+  return optionsContainer;
 };
 
 var navMenuSlid = false;

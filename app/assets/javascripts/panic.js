@@ -21,6 +21,7 @@ var panic = {
 		closebtn.className = "modal-close-button";
 		closebtn.id = "panic-close-button";
 		gesture.listen("tap", getAwayButton, function() {
+			xhr("/api/votes/false/" + panic.card.id, "POST", null, null);
 			xhr("/api/media/" + panic.card.id + "/report", "POST");
 			panic.cb && panic.cb();
 			panic.close();

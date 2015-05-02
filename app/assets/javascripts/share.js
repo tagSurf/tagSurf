@@ -174,6 +174,8 @@ var share = {
 	},
 	on: function (card, cb)
 	{
+		if (isFacebook())
+			return;
 		if (cb)
 			share.cb = cb;
 		if (card)

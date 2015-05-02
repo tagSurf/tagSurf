@@ -141,6 +141,76 @@ var closeReminders = function() {
 // 	slowReminder = newReminder(slowMessage.call(), null, "Slow", 10000, 5000);
 // }, 5000);
 
+var downloadMessage = function() {
+	var node = document.createElement('div'),
+		downloadbtn = document.createElement('div'),
+		appstoreIcon = document.createElement('img'),
+		nobtn = document.createElement('div'),
+		neverbtn = document.createElement('div');
+	node.innerHTML = "You know...<br/>these cards look<br/>even better in our<br/>native app ;)";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "35%" : "18%";
+	node.style.marginTop = isUIWebView() ? "50%" : node.style.marginTop;
+	downloadbtn.className = "pointer";
+	appstoreIcon.src = isIos() ? 
+			"http://assets.tagsurf.co/img/Download_on_the_App_Store_Badge_US-UK_135x40.svg" : 
+				"http://assets.tagsurf.co/img/get-it-on-google-play-store-logo.png"; 
+	appstoreIcon.style.width = "65%";
+	downloadbtn.appendChild(appstoreIcon);
+	gesture.listen("down", downloadbtn, function() {
+		downloadbtn.classList.add("active-download-btn");
+	});
+	gesture.listen("up", downloadbtn, function() {
+		downloadbtn.classList.remove("active-download-btn");
+	});
+	gesture.listen("tap", downloadbtn, function() {
+		var destination = isIos() ? "https://appsto.re/us/hYmt1.i" : 
+							"https://play.google.com/store/apps/details?id=co.tagsurf.tagsurf";
+		window.location = destination;
+		reminders[0].close();
+	});
+	downloadbtn.id = "download-btn";
+	node.appendChild(downloadbtn);	
+	nobtn.className = "no-fill-btn pointer";
+	gesture.listen("down", nobtn, function() {
+		nobtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", nobtn, function() {
+		nobtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", nobtn, function() {
+		var menuBtn = document.getElementById('appstore-btn');
+		reminders[0].close();
+		menuBtn.classList.remove('hidden');
+	});
+	nobtn.id = "no-btn";
+	nobtn.innerHTML = "Not Now";
+	node.appendChild(nobtn);
+	neverbtn.className = "no-fill-btn pointer";
+	gesture.listen("down", neverbtn, function() {
+		neverbtn.classList.add("active-no-fill-btn");
+	});
+	gesture.listen("up", neverbtn, function() {
+		neverbtn.classList.remove("active-no-fill-btn");
+	});
+	gesture.listen("tap", neverbtn, function() {
+		reminders[0].close();
+		messageBox("Never Again", "Please create an account to save this preference", "Ok", function () {
+			if(isFacebook()) {
+				stashVotes();
+				window.location = "/users/auth/facebook";
+			}
+			else
+				stashVotesAndLogin();
+		}, true);
+	});
+	neverbtn.id = "never-btn";
+	neverbtn.innerHTML = "Never Again";
+	node.appendChild(neverbtn);
+
+	return node;
+};
+
 var slowMessage = function() {
 	var node = document.createElement('div'),
 		reloadbtn = document.createElement('div'),
