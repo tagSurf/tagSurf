@@ -18,6 +18,13 @@
     <meta property="og:image:width" content="<%= @media.width %>" />
     <meta property="og:image:height" content="<%= @media.height %>" />
     <meta property="fb:app_id" content="676135635790285" />
+    <meta property="al:ios:url" content="tagSurf://" />
+    <meta property="al:ios:app_store_id" content="894225543" />
+    <meta property="al:ios:app_name" content="tagSurf" />
+    <meta property="al:android:url" content="tagSurf://card/<%= request.original_url.split("/")[4] %>~<%= @media.id %>" />
+    <meta property="al:android:app_name" content="tagSurf" />
+    <meta property="al:android:package" content="co.tagsurf.tagsurf" />
+    <!-- <meta property="al:web:should_fallback" content="false" /> -->
   <% end %>
 
   <script type="text/javascript">
