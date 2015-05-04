@@ -661,7 +661,10 @@ onload = function ()
 	if (!isAuthorized())// && !DEBUG)
 		jiggler();
 	if (!isAuthorized() && isMobile())
-		newReminder(downloadMessage.call(), null, "Download", 12000, 5000);
+		newReminder(downloadMessage.call(), function() {
+			var menuBtn = document.getElementById('appstore-btn');
+			menuBtn.classList.remove('hidden');
+		}, "Download", 12000, 5000);
 };
 
 //This is the first line executed in feed
