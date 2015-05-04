@@ -6,6 +6,8 @@ class User < ActiveRecord::Base
   include Redis::Objects
   set :voted_on
 
+  has_friendship
+
   has_many    :votes, :foreign_key => :voter_id
   has_many    :favorites
   has_many    :referrals, :foreign_key => :referrer_id
@@ -218,6 +220,9 @@ class User < ActiveRecord::Base
   end
 
   def self.buddy_list(user_id)
+
+    friends = User.find(user_id).friends.map{|u| [u.id, u.email, u.username, u.first_name, u.last_name, u.profile_pic_link]}
+
     recent_shares = Array.new
     buddy_ids = Array.new
 
@@ -225,8 +230,9 @@ class User < ActiveRecord::Base
 
     buddy_ids = recent_shares.inject(Hash.new(1)) { |h, e| h[e] += 1 ; h }.to_a.sort_by(&:last).reverse.map {|x,y| x}
 
-    buddies = User.find(buddy_ids).index_by(&:id).values_at(*buddy_ids).map{|u| [u.id,u.email,u.username, u.first_name, u.last_name, u.profile_pic_link]}
-    buddies.concat(User.select(:id, :email, :username, :first_name, :last_name, :profile_pic_link).order('sign_in_count DESC NULLS LAST').map { |user| [user.id, user.email, user.username, user.first_name, user.last_name, user.profile_pic_link] })
+    buddies = User.find(buddy_ids).index_by(&:id).values_at(*buddy_ids).map{|u| [u.id, u.email, u.username, u.first_name, u.last_name, u.profile_pic_link]}
+    
+    buddies.concat(friends)
     
     buddies.uniq!
 

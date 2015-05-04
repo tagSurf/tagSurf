@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 ruby "2.0.0"
 
-gem 'rails', '4.0.2'
+gem 'rails', '>= 4.0.2'
 gem 'pg', '0.17.0'
 gem 'unicorn'
 gem 'rails_12factor', group: :production
@@ -17,7 +17,7 @@ gem 'sinatra', '>= 1.3.0', :require => nil
 gem 'sidetiq'
 gem 'redis'
 gem 'redis-objects', '0.9.1'
-gem 'honeybadger'
+gem 'honeybadger', '~> 2.0.0'
 gem 'rack-cache'
 gem 'redis-store'
 
@@ -30,6 +30,7 @@ gem 'omniauth', '1.1.0'
 gem 'omniauth-oauth2', '1.0.3'
 gem 'omniauth-facebook'
 gem 'urbanairship'
+gem 'has_friendship'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'
