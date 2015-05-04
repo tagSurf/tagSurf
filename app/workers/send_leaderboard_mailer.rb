@@ -43,6 +43,7 @@ class SendLeaderboardMailer
 	  		m.referrals_list << {
 				username: User.find(u[0]).username ? 
 	                      User.find(u[0]).username : User.find(u[0]).email,
+	            profile_pic: User.find(u[0]).profile_pic_link,
 		        shares: shares[u[0]],
 		        bumps: bumps[u[0]],
 		        ratio: bumps[u[0]].to_f/shares[u[0]],
