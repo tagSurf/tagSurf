@@ -104,6 +104,11 @@ Tagsurf::Application.routes.draw do
     post 'bump/:media_id/:sharer_ids'       => 'bumps#create'
     get 'bump/seen/:bump_id'                => 'bumps#seen'
 
+    # Friends API
+    post 'friend/request/:user_id'          => 'friends#create'
+    post 'friend/accept/:user_id'           => 'friends#accept'
+    post 'friend/decline/:user_id'          => 'friends#decline'
+    post 'friend/unfriend/:user_id'         => 'friends#destroy'
 
   end
 
