@@ -230,7 +230,6 @@ class User < ActiveRecord::Base
 
     buddy_ids = recent_shares.inject(Hash.new(1)) { |h, e| h[e] += 1 ; h }.to_a.sort_by(&:last).reverse.map {|x,y| x}
 
-
     buddies = User.find(buddy_ids).index_by(&:id).values_at(*buddy_ids).map{|u| [u.id,u.email,u.username, u.first_name, u.last_name, u.profile_pic_link]}
     
     buddies.concat(friends)
