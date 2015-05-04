@@ -43,6 +43,7 @@ class SendLeaderboardMailer
 	  		m.referrals_list << {
 				username: User.find(u[0]).username ? 
 	                      User.find(u[0]).username : User.find(u[0]).email,
+	            profile_pic: User.find(u[0]).profile_pic_link,
 		        shares: shares[u[0]],
 		        bumps: bumps[u[0]],
 		        ratio: bumps[u[0]].to_f/shares[u[0]],
@@ -58,6 +59,6 @@ class SendLeaderboardMailer
 
     User.all.select(:id).where(:leaderboard_mailers => true).map { |u| u.id }.each do |u|
 	  	LeaderboardMailer.weekly_leaderboard_mailer(u, @top_media, winner_id, winner_score).deliver
-		end
+	end
   end
 end
