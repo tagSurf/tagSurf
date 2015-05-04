@@ -59,6 +59,6 @@ class SendLeaderboardMailer
 
     User.all.select(:id).where(:leaderboard_mailers => true).map { |u| u.id }.each do |u|
 	  	LeaderboardMailer.weekly_leaderboard_mailer(u, @top_media, winner_id, winner_score).deliver
-		end
+	end
   end
 end
