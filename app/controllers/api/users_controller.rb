@@ -94,6 +94,8 @@ class Api::UsersController < Api::BaseController
       results[:user] = "not found"
       render json: results, status: :not_found
     end
+    @user.last_seen = Time.now
+    @user.save
   end
   
   def update
