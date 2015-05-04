@@ -9,7 +9,9 @@ class RemoteResource
         "https://imgur-apiv3.p.mashape.com/3/#{uri}",
         :headers => {
           "Authorization" => "Client-ID #{ENV['TS_IMGUR']}",
-          "X-Mashape-Authorization" => ENV['TS_MASHAPE']
+          "X-Mashape-Authorization" => ENV['TS_MASHAPE'],
+          "Accept" => "application/json",
+          "Accept-Language" => "en-US"
         }
       )
     elsif provider == 'urx'
