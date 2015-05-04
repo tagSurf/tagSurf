@@ -233,9 +233,7 @@ class User < ActiveRecord::Base
 
     buddies = User.find(buddy_ids).index_by(&:id).values_at(*buddy_ids).map{|u| [u.id,u.email,u.username, u.first_name, u.last_name, u.profile_pic_link]}
     
-    # Uncomment this line and rm line directly below it to enable filter based on friendship
-    # buddies.concat(friends)
-    buddies.concat(User.select(:id, :email, :username, :first_name, :last_name, :profile_pic_link).order('sign_in_count DESC NULLS LAST').map { |user| [user.id, user.email, user.username, user.first_name, user.last_name, user.profile_pic_link] })
+    buddies.concat(friends)
         
     buddies.uniq!
 
