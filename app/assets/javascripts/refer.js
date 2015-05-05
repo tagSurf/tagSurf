@@ -155,24 +155,25 @@ var refer = {
 			if (currentUser.email == b.users[1])
 				return;
 			var row = buddyList.insertRow(position),
-				buddyCell = row.insertCell(0),
-				buddyPic = document.createElement('img'),
-				buddyName = document.createElement('div'),
-				realName = document.createElement('div'),
-				checkmark = document.createElement('img'),
-				username = b.users[2] ? b.users[2] : b.users[1].split("@")[0],
-				first_name = b.users[3],
-				last_name = b.users[4],
-				profile_pic = b.users[5],
-				buddy = {
-					id: b.users[0],
-					username: username,
-					first_name: first_name,
-					last_name: last_name,
-					profile_pic: profile_pic,
-					cell: buddyCell, 
-					selected: false
-				};
+					buddyCell = row.insertCell(0),
+					buddyPic = document.createElement('img'),
+					buddyName = document.createElement('div'),
+					realName = document.createElement('div'),
+					checkmark = document.createElement('img'),
+					username = b.users[2] ? b.users[2] : b.users[1].split("@")[0],
+					first_name = b.users[3],
+					last_name = b.users[4],
+					profile_pic = b.users[5],
+					buddy = {
+						id: b.users[0],
+						username: username,
+						first_name: first_name,
+						last_name: last_name,
+						profile_pic: profile_pic,
+						cell: buddyCell, 
+						selected: false
+					};
+
 			refer.buddies.push(buddy);
 
 			buddyCell.className = 'buddy-cell';
@@ -228,9 +229,56 @@ var refer = {
 			});
 			++position;
 		});
+
+
+// 	Add friends button at end of list
+		var 	plusrow = buddyList.insertRow(position),
+					plusCell = plusrow.insertCell(0),
+					plusIcon = document.createElement('img'),
+					plusText = document.createElement('div'),
+					plusBtn = document.createElement('div');
+
+		plusCell.className = 'buddy-cell plus-cell';
+		plusText.className = 'plus-message buddy-name block';
+		plusText.innerHTML = 'Add Friends';
+		plusIcon.className = 'plus-icon block';
+		plusIcon.src = "http://assets.tagsurf.co/img/plus_white_150.png";
+		plusBtn.className = 'plus-btn';
+		plusBtn.appendChild(plusIcon);
+		plusBtn.appendChild(plusText);
+		plusCell.appendChild(plusBtn);
+
+		gesture.listen("down", plusCell, function() {
+			if (listContainer.dragging)
+				return;
+			plusIcon.src = "http://assets.tagsurf.co/img/plus_gray_150.png";
+			plusIcon.style.opacity = "0.4";
+			gesture.triggerDown(listContainer);
+			return true;
+		});
+		gesture.listen("up", plusCell, function(direction, distance, dx, dy) {
+			if (listContainer.dragging)
+				return;
+			plusIcon.src = "http://assets.tagsurf.co/img/plus_white_150.png";
+			plusIcon.style.opacity = "1.0";
+			gesture.triggerDrag(listContainer, direction, distance, dx, dy);
+			return true;			
+		});
+		gesture.listen("swipe", plusCell, function(direction, distance, dx, dy, pixelsPerSecond) {
+			gesture.triggerSwipe(listContainer, direction, distance, dx, dy, pixelsPerSecond);
+		});
+		gesture.listen("tap", plusCell, function() {
+			if (listContainer.dragging)
+				return;
+		});
+		gesture.listen("drag", plusCell, function(direction, distance, dx, dy, pixelsPerSecond) {
+			gesture.triggerDrag(listContainer, direction, distance, dx, dy, pixelsPerSecond);
+			return true;
+		});
+
 		listContainer.appendChild(buddyList);
 	    
-	    drag.makeDraggable(listContainer, {constraint: "horizontal"});
+    drag.makeDraggable(listContainer, {constraint: "horizontal"});
 	},
 	on: function (card) {
 		if (card)

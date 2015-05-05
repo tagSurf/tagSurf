@@ -342,6 +342,22 @@ a {
 	margin-left: auto !important;
 	margin-top: 28% !important; 
 }
+.plus-cell {
+	border: initial !important;
+	text-align: center !important;
+}
+.plus-icon {
+	width: 25%;
+	margin-left: auto;
+	margin-right: auto;
+}
+.plus-btn{
+	margin: 5% 0;
+}
+.plus-message{
+	font-size: 200%;
+}
+
 
 /*======== Modal Close Button Stuff =========*/
 .modal-close-button {
@@ -1303,5 +1319,12 @@ a {
 	}
 	.small-badge {
 		min-width: 2%;
+	}
+	.plus-icon {
+		width: 15%;
+
+	}
+	.plus-btn {
+		margin: 2% 0;
 	}
 }
