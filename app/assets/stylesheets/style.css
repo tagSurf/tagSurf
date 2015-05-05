@@ -243,6 +243,9 @@ a {
 #buddy-list {
 	width: 100%;
 }
+#search-list {
+	width: 100%;
+}
 .buddy-list-container::-webkit-scrollbar {
 	display: initial !important;
 	width: 12px;
@@ -254,6 +257,10 @@ a {
 }
 .send-btn {
 	max-width: 30% !important;
+	margin-top: 10px;
+}
+.request-btn {
+	max-width: 35% !important;
 	margin-top: 10px;
 }
 .search-bar {
@@ -739,7 +746,7 @@ a {
   text-align: center;
   background-color: white;
   border: 1px solid #00aeef;
-  z-index: 10;
+  z-index: 100;
   position: absolute;
   width: 250px;
   padding: 5px;

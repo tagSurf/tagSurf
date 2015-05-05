@@ -240,6 +240,10 @@ class User < ActiveRecord::Base
 
   end
 
+  def self.full_list
+    list = User.where('username IS NOT NULL').map{|u| [u.id, u.email, u.username, u.first_name, u.last_name, u.profile_pic_link]}
+  end 
+
   protected
 
   def generate_slug

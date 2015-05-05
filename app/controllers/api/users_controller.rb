@@ -110,6 +110,10 @@ class Api::UsersController < Api::BaseController
     render json: User.buddy_list(current_user.id)
   end
 
+  def list
+    render json: User.full_list
+  end
+
   def unsubscribe
     user = User.find(params[:id])
     user.update_column "#{params[:type]}_mailers", false
