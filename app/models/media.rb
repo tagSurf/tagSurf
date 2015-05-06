@@ -418,7 +418,7 @@ class Media < ActiveRecord::Base
 
     if id.present? and id != 0 and offset < 1
       @media = Media.where(id: id) + @media
-      @media = @media.uniq_by(&:id)
+      @media.uniq!
     end
 
     # Embedds login card every 15th card
@@ -429,7 +429,7 @@ class Media < ActiveRecord::Base
       @media.each_slice(14) do |media|
         @relation << media + @login_card
       end
-      @media = @relation.flatten!
+      @media = @relation.flatten
     end
 
     @media
