@@ -146,7 +146,10 @@ var refer = {
 			searchInput = document.createElement('input'),
 			listContainer = document.createElement('div'),
 			closebtn = document.createElement('img'),
-			sendbtn = document.createElement('div');
+			sendbtn = document.createElement('div'),
+			textContainer = document.createElement('div'),
+			connectbtn = document.createElement('div'),
+			abookLink = document.createElement('a');
 		heading.className = "buddy-title";
 		heading.innerHTML = "Search by username";
 		searchBar.className = "search-bar";
@@ -167,24 +170,28 @@ var refer = {
 		sendbtn.className = "msgbox-btn request-btn hidden";
 		sendbtn.classList.add(isMobile() ? "biggest" : "really-big");
 		sendbtn.innerHTML = "Request";
+		abookLink.id = "abook-link";
+		abookLink.href = "addressbook://";
+		abookLink.appendChild(connectbtn);
+		textContainer.className = "buddy-title";
+		textContainer.innerHTML = "Or";
+		connectbtn.className = "msgbox-btn connect-btn";
+		connectbtn.classList.add(isMobile() ? "biggest" : "really-big");
+		connectbtn.innerHTML = "Search<br/>Address Book";
 		refer.searcher.className = "centered";
 		refer.searcher.style.height = "100%";
 		refer.searcher.appendChild(heading);
 		refer.searcher.appendChild(searchBar);
 		refer.searcher.appendChild(listContainer);
 		refer.searcher.appendChild(sendbtn);
+		if (isUIWebView() && isIos()) {
+			refer.searcher.appendChild(textContainer);
+			refer.searcher.appendChild(abookLink);
+		}
 		refer.searcher.appendChild(closebtn);
 
 		gesture.listen("tap", sendbtn, function() {
 			var selectionList = [];
-			searchBar.children[1].value = "";
-			mod({
-				className: "buddy-cell",
-				hide: true,
-				// value: "table-cell"
-			});
-			document.getElementsByClassName('buddy-list-container')[0].classList.add('hidden');
-			document.getElementsByClassName('request-btn')[0].classList.add('hidden');
 			refer.buddies.forEach(function(b) {
 				if(b.selected) {
 					selectionList.push(b.id)
@@ -204,13 +211,33 @@ var refer = {
 						messageBox("Oops", result.reason);
 					});
 				})
-			}			
+			}
+			searchBar.children[1].value = "";
+			mod({
+				className: "buddy-cell",
+				hide: true,
+				// value: "table-cell"
+			});
+			document.getElementsByClassName('buddy-list-container')[0].classList.add('hidden');
+			document.getElementsByClassName('request-btn')[0].classList.add('hidden');			
 		});
 		gesture.listen("down", sendbtn, function () {
 	    sendbtn.classList.add('ts-active-button');
     });
 		gesture.listen("up", sendbtn, function () {
 	    sendbtn.classList.remove('ts-active-button');
+    });
+
+		gesture.listen("tap", connectbtn, function() {
+			var dispatch = document.createEvent("HTMLEvents");
+			dispatch.initEvent("click", true, true);
+			document.getElementById('abook-link').dispatchEvent(dispatch);
+		});
+		gesture.listen("down", connectbtn, function () {
+	    connectbtn.classList.add('ts-active-button');
+    });
+		gesture.listen("up", connectbtn, function () {
+	    connectbtn.classList.remove('ts-active-button');
     });
 
     gesture.listen("down", searchBar, function() {

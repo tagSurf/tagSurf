@@ -111,6 +111,8 @@ Tagsurf::Application.routes.draw do
     post 'friend/decline/:user_id'          => 'friends#decline'
     post 'friend/unfriend/:user_id'         => 'friends#destroy'
 
+    post 'contacts'                     => 'friends#match'
+
   end
 
   get '/desktop' => 'client#desktop'

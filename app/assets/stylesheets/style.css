@@ -263,6 +263,11 @@ a {
 	max-width: 35% !important;
 	margin-top: 10px;
 }
+.connect-btn {
+	max-width: 65% !important;
+	margin-top: 10px;
+	color: white;
+}
 .search-bar {
 	background: #6a6a6a;
 	border-radius: 50px;

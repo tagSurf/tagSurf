@@ -1,6 +1,6 @@
 class Api::FriendsController < Api::BaseController
 
-	before_filter :find_authenticated_user
+	before_filter :find_authenticated_user, except: :match
 
 	def create
 		@user = current_user
@@ -69,6 +69,10 @@ class Api::FriendsController < Api::BaseController
 	  rescue => e
       render json: {destroyed: false, reason: "no request found" }, status: :not_implemented
     end
+  end
+
+  def match
+  	redirect_to root_path
   end
 
 end
