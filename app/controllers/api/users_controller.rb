@@ -90,12 +90,13 @@ class Api::UsersController < Api::BaseController
       results['unseen_bumps'] = Bump.unscoped.where(:sharer_id => @user.id, :seen => false).count
       results['unseen_referrals'] = Referral.unscoped.where(:user_id => @user.id, :seen => false).count
       render json: results
+      @user.last_seen = Time.now
+      @user.save
     else
       results[:user] = "not found"
       render json: results, status: :not_found
     end
-    @user.last_seen = Time.now
-    @user.save
+    
   end
   
   def update
