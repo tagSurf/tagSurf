@@ -1,6 +1,6 @@
 class Api::FriendsController < Api::BaseController
 
-	before_filter :find_authenticated_user, except: :match
+	before_filter :find_authenticated_user
 
 	def create
 		@user = current_user

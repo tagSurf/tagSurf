@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150504052613) do
+ActiveRecord::Schema.define(version: 20150506212424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -194,6 +194,9 @@ ActiveRecord::Schema.define(version: 20150504052613) do
     t.string   "location"
     t.boolean  "fb_link_requested",         default: false, null: false
     t.datetime "last_seen"
+    t.string   "phone"
+    t.boolean  "phone_confirmed",           default: false, null: false
+    t.datetime "phone_confirmed_at"
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
