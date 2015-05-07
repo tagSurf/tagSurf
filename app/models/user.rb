@@ -247,9 +247,9 @@ class User < ActiveRecord::Base
     friends = User.find(user).friends.map{|u| u.id}
     friends.concat(pending_friends)
 
-    User.select(:phone, :username, :id).where(:phone_confirmed => true).each {|u| phones[u.phone] = [u.id, u.username]}
+    User.select(:phone, :username, :id, :profile_pic_link).where(:phone_confirmed => true).each {|u| phones[u.phone] = [u.id, u.username, u.profile_pic_link]}
 
-    User.all.select(:email, :username, :id).each {|u| emails[u.email] = [u.id, u.username]}
+    User.all.select(:email, :username, :id, :profile_pic_link).each {|u| emails[u.email] = [u.id, u.username, u.profile_pic_link]}
     
     contacts.each do |c|
       if c[:phone_number].empty? && c[:emails].empty?
@@ -267,6 +267,7 @@ class User < ActiveRecord::Base
       end
     end
 
+    #ToDo Refactor this and make it more efficient
     contacts.each do |c|
       if !c[:phone_number].empty? && contacts.select{|e| e[:phone_number] == c[:phone_number]}.count > 1
         dups = contacts.select{|e| e[:phone_number] == c[:phone_number]}
@@ -320,6 +321,7 @@ class User < ActiveRecord::Base
       if c[:phone_number] && phones[c[:phone_number]]
         c[:user_id] = phones[c[:phone_number]][0]
         c[:username] = phones[c[:phone_number]][1]
+        c[:profile_pic] = phones[c[:phone_number]][2]
         c[:requested] = friends.include?(c[:user_id])
         # puts "user found by phone! " + c[:first_name] + " " + c[:last_name]
       elsif !c[:emails].empty?
@@ -327,6 +329,7 @@ class User < ActiveRecord::Base
           if emails[e]
             c[:user_id] = emails[e][0]
             c[:username] = emails[e][1]
+            c[:profile_pic] = emails[e][2]
             c[:requested] = friends.include?(c[:user_id])
             # puts "user found by email! " + c[:first_name] + " " + c[:last_name]
           end
