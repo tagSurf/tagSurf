@@ -50,6 +50,7 @@ Tagsurf::Application.routes.draw do
   put 'user'               => 'users#update'
   post 'authentication/from-native' =>  'users#from_native'
 
+
   # JSON API
   namespace :api do
   
@@ -111,7 +112,7 @@ Tagsurf::Application.routes.draw do
     post 'friend/decline/:user_id'          => 'friends#decline'
     post 'friend/unfriend/:user_id'         => 'friends#destroy'
 
-    post 'contacts'                     => 'friends#match'
+    post 'contacts'                         => 'friends#match_contacts'
 
   end
 

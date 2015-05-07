@@ -240,6 +240,54 @@ class User < ActiveRecord::Base
 
   end
 
+  def self.match_users(contacts, user)
+    phones = Hash.new()
+    emails = Hash.new()
+    pending_friends = User.find(user).pending_friends.map{|u| u.id}
+    friends = User.find(user).friends.map{|u| u.id}
+    friends.concat(pending_friends)
+
+    User.select(:phone, :username, :id).where(:phone_confirmed => true).each {|u| phones[u.phone] = [u.id, u.username]}
+
+    User.all.select(:email, :username, :id).each {|u| emails[u.email] = [u.id, u.username]}
+    
+    contacts.each do |c|
+      if c[:phone_number].empty? && c[:emails].empty?
+        contacts.delete(c)
+      end
+    end
+
+    # No idea why we have to do this twice o.O
+    contacts.each do |c|
+      if c[:phone_number].empty? && c[:emails].empty?
+        contacts.delete(c)
+      end
+    end
+
+    contacts.each do |c|
+      if c[:phone_number] && phones[c[:phone_number]]
+        c[:user_id] = phones[c[:phone_number]][0]
+        c[:username] = phones[c[:phone_number]][1]
+        c[:requested] = friends.include?(c[:user_id])
+        # puts "user found by phone! " + c[:first_name] + " " + c[:last_name]
+      elsif !c[:emails].empty?
+        c[:emails].each do |e|
+          if emails[e]
+            c[:user_id] = emails[e][0]
+            c[:username] = emails[e][1]
+            c[:requested] = friends.include?(c[:user_id])
+            # puts "user found by email! " + c[:first_name] + " " + c[:last_name]
+          end
+        end
+      end
+    end
+
+    contacts.uniq!
+
+    contacts
+  
+  end
+
   def self.full_list
     list = User.where('username IS NOT NULL').map{|u| [u.id, u.email, u.username, u.first_name, u.last_name, u.profile_pic_link]}
   end 

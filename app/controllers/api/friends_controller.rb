@@ -71,8 +71,9 @@ class Api::FriendsController < Api::BaseController
     end
   end
 
-  def match
-  	redirect_to root_path
-  end
+  layout 'client'
+  def match_contacts
+    User.match_users(params["_json"], current_user.id)
+  end 
 
 end
