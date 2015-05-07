@@ -254,15 +254,67 @@ class User < ActiveRecord::Base
     contacts.each do |c|
       if c[:phone_number].empty? && c[:emails].empty?
         contacts.delete(c)
+      elsif c[:first_name].empty? && c[:last_name].empty?
+        contacts.delete(c)
       end
     end
 
     # No idea why we have to do this twice o.O
+    # First pass misses a few...
     contacts.each do |c|
       if c[:phone_number].empty? && c[:emails].empty?
         contacts.delete(c)
       end
     end
+
+    contacts.each do |c|
+      if !c[:phone_number].empty? && contacts.select{|e| e[:phone_number] == c[:phone_number]}.count > 1
+        dups = contacts.select{|e| e[:phone_number] == c[:phone_number]}
+        consolidate = Hash.new()
+        consolidate[:emails] = Array.new
+        dups.each do |d|
+          consolidate[:first_name] ||= d[:first_name]
+          consolidate[:last_name] ||= d[:last_name]
+          consolidate[:phone_number] ||= d[:phone_number]
+          if !d[:emails].empty? && d[:emails].is_a?(Array) 
+            consolidate[:emails].concat(d[:emails])
+            consolidate[:emails].uniq!
+          elsif !d[:emails].empty?
+            consolidate[:emails].push(d[:emails])
+            consolidate[:emails].uniq!
+          end
+          contacts.delete(d)
+        end
+        if consolidate[:emails].empty?
+          consolidate[:emails] = ""
+        end
+        contacts.push(consolidate)
+      end
+      if contacts.select{|e| e[:first_name] == c[:first_name] && e[:last_name] == c[:last_name]}.count > 1
+        dups = contacts.select{|e| e[:first_name] == c[:first_name] && e[:last_name] == c[:last_name]}
+        consolidate = Hash.new()
+        consolidate[:emails] = Array.new
+        dups.each do |d|
+          consolidate[:first_name] ||= d[:first_name]
+          consolidate[:last_name] ||= d[:last_name]
+          consolidate[:phone_number] ||= d[:phone_number]
+          if !d[:emails].empty? && d[:emails].is_a?(Array) 
+            consolidate[:emails].concat(d[:emails])
+            consolidate[:emails].uniq!
+          elsif !d[:emails].empty?
+            consolidate[:emails].push(d[:emails])
+            consolidate[:emails].uniq!
+          end
+          contacts.delete(d)
+        end
+        if consolidate[:emails].empty?
+          consolidate[:emails] = ""
+        end
+        contacts.push(consolidate)
+      end
+    end
+
+    contacts.sort_by!{|c| c[:first_name].downcase + c[:last_name].downcase}
 
     contacts.each do |c|
       if c[:phone_number] && phones[c[:phone_number]]

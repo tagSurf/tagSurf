@@ -229,6 +229,7 @@ var refer = {
     });
 
 		gesture.listen("tap", connectbtn, function() {
+			throbber.on();
 			var dispatch = document.createEvent("HTMLEvents");
 			dispatch.initEvent("click", true, true);
 			document.getElementById('abook-link').dispatchEvent(dispatch);
