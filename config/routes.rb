@@ -25,6 +25,7 @@ Tagsurf::Application.routes.draw do
   get 'bumps'           => 'client#bumps'
   get 'tag'             => 'client#tag'
   get 'bump/:ref_id'    => 'client#bump'
+  get 'contacts'        => 'client#contacts'
 
   #Enable Push
   get 'push-enable/:user_id'  => 'client#push_enable'

@@ -11,7 +11,8 @@ class ClientController < ApplicationController
     :disclaimer_agreement,
     :terms_agreement,
     :password_submission,
-    :authentication
+    :authentication,
+    :contacts
   ]
 
   before_action :confirm_surfable, only: [
@@ -167,6 +168,12 @@ class ClientController < ApplicationController
 
   def enter_name
     @user = current_user
+  end
+
+  layout 'contacts'
+  def contacts
+    @contacts = flash[:contacts]
+    flash.discard(:contacts)
   end
 
   private

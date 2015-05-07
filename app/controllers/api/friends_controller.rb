@@ -71,9 +71,9 @@ class Api::FriendsController < Api::BaseController
     end
   end
 
-  layout 'client'
   def match_contacts
-    @contacts = User.match_users(params["_json"], current_user.id)
+    flash[:contacts] = User.match_users(params["_json"], current_user.id)
+     render json: {redirect: true, path: "/contacts"}, status: :ok
   end 
 
 end
