@@ -1,0 +1,27 @@
+<%= stylesheet_link_tag "contacts", :media => "all" %>
+<div id="container">
+	<div id="clist-container">
+		<table id="contact-table" width="100%" cellspacing="0" cellpadding="0">
+		<% prev_letter = "" %>
+		<% @contacts.each do |c| %>
+			<% if ((!c[:first_name].empty? && prev_letter != c[:first_name].slice(0,1).downcase) || (c[:first_name].empty? && prev_letter != c[:last_name].slice(0,1).downcase)) %>
+				<tr>
+					<% letter = c[:first_name].empty? ? c[:last_name].slice(0, 1) : c[:first_name].slice(0, 1) %>
+					<td style="font-size:200%"><a name=<%=letter%> class="section-header"><%= letter %></a></td>
+				</tr>
+			<% end %>
+			<tr>
+				<td><%= c[:first_name] %> <%= c[:last_name] %></td>
+			</tr>
+			<% prev_letter = c[:first_name].empty? ? c[:last_name].slice(0, 1).downcase : c[:first_name].slice(0, 1).downcase %>
+		<% end %>
+		</table>
+	</div>
+</div>
+<div id="navigator">
+</div>
+<%= javascript_include_tag "contacts" %>
+
+<script type="text/javascript">
+	
+</script>

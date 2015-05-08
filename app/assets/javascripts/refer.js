@@ -184,10 +184,10 @@ var refer = {
 		refer.searcher.appendChild(searchBar);
 		refer.searcher.appendChild(listContainer);
 		refer.searcher.appendChild(sendbtn);
-		// if (isUIWebView() && isIos()) {
+		if (isUIWebView() && isIos()) {
 			refer.searcher.appendChild(textContainer);
 			refer.searcher.appendChild(abookLink);
-		// }
+		}
 		refer.searcher.appendChild(closebtn);
 
 		gesture.listen("tap", sendbtn, function() {
@@ -233,11 +233,6 @@ var refer = {
 			var dispatch = document.createEvent("HTMLEvents");
 			dispatch.initEvent("click", true, true);
 			document.getElementById('abook-link').dispatchEvent(dispatch);
-			// data = [{"last_name":"Hope", "phone_number":"+14083092105", "first_name":"Erik", "emails":""},{"last_name":"Paul", "phone_number":"+3423423", "first_name":"Lacey", "emails":""}];
-			// jData = JSON.stringify(data);
-			// xhr("http://localhost:3000/api/contacts", "POST", function() {
-			// 	window.location = "/contacts";
-			// }, null, true, jData, true);
 		});
 		gesture.listen("down", connectbtn, function () {
 	    connectbtn.classList.add('ts-active-button');
