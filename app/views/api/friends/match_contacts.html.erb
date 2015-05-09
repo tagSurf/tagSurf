@@ -1,27 +1,265 @@
 <%= stylesheet_link_tag "contacts", :media => "all" %>
+
+  <style>
+    a {
+      text-decoration: none;
+    }
+    #container {
+      display: inline-block;
+      height: 100%;
+      width: 95%;
+    }
+    #clist-container {
+    	height: 90%;
+      overflow-y: scroll;
+    }
+    #navigator {
+      display: inline-block;
+      position: fixed;
+      top: 2%;
+      right: 0;
+      width: 5%;
+      overflow: scroll;
+    }
+    .picker-box {
+      display: block;
+      width: 100%;
+    }
+    #contact-table {
+    	width: 100%;
+    }
+    #close-btn {
+    	width: 50px;
+    	z-index: 100;
+    	padding: 10px 5px 5px 10px;
+    	position: fixed;
+    	bottom: 0;
+    	right: 0;
+    }
+    #close-icon {
+    	width: 30px;
+    }
+    .section-header {
+    	font-size: 200%;
+    	padding-left: 5px;
+    }
+    .contact-row {
+    	padding: 3px 0 3px 5px;
+    	border-radius: 5px;
+    	background-color: #f4f7f8;
+    }
+    .active-btn {
+    	background-color: #00aeef;
+    	color: white;
+    }
+    .contact-cell {
+    	min-height: 35px;
+    	position: relative;
+    }
+    .name {
+    	max-width: 85%;
+    }
+    .user {
+    	color: #404041;
+    }
+    .cta {
+    	font-size: 70%;
+    	display: block;
+    	color: #404041;
+    }
+    .username {
+    	font-size: 90%;
+    	display: block;
+    	color: #00aeef;
+    }
+    .cell-img {
+    	position: absolute;
+    	right: 10px;
+    	top: 0;
+    	bottom: 0;
+    	margin: auto;
+    	width: 15px;
+    }
+    .hidden {
+    	opacity: 0 !important;
+    }
+    #banner {
+    	background-color: #00aeef;
+    	color: white;
+    	font-weight: bold;
+    	font-size: 150%;
+    	text-align: center;
+    	vertical-align: center;
+    	position: fixed;
+    	opacity: 0.7;
+    	top: 0;
+    	width: 100%;
+    	height: 40px;
+    	z-index: 100;
+    	padding-top: 5px;
+    	-webkit-transition: opacity 999ms ease-in-out;
+    }
+
+  </style>
+
 <div id="container">
+	<div id="banner" class="hidden">Request Sent!</div>
 	<div id="clist-container">
-		<table id="contact-table" width="100%" cellspacing="0" cellpadding="0">
-		<% prev_letter = "" %>
-		<% @contacts.each do |c| %>
-			<% if ((!c[:first_name].empty? && prev_letter != c[:first_name].slice(0,1).downcase) || (c[:first_name].empty? && prev_letter != c[:last_name].slice(0,1).downcase)) %>
+		<table id="contact-table">
+			<% prev_letter = "" %>
+			<% letters = [] %>
+			<% i = 0 %>
+			<% @contacts.each do |c| %>
 				<tr>
-					<% letter = c[:first_name].empty? ? c[:last_name].slice(0, 1) : c[:first_name].slice(0, 1) %>
-					<td style="font-size:200%"><a name=<%=letter%> class="section-header"><%= letter %></a></td>
+					<% if ((!c[:first_name].empty? && prev_letter != c[:first_name].slice(0,1).downcase) || (c[:first_name].empty? && prev_letter != c[:last_name].slice(0,1).downcase)) %>
+						<% letter = c[:first_name].empty? ? c[:last_name].slice(0, 1) : c[:first_name].slice(0, 1) %>
+						<td>
+							<a name=<%=letter%> class="section-header">
+								<%= letter %>
+							</a>
+						</td>
+					</tr>
+					<% letters.push(letter) %>
+					<tr>
+					<% end %>
+					<% if c[:user_id] %>
+						<td class="contact-row">
+							<a onclick="sendRequest(<%=c[:user_id]%>, <%=i%>);" >
+								<div id="c<%=i%>" class="contact-cell" >
+									<div class="name user">
+										<b><%= c[:first_name] %> <%= c[:last_name] %> </b>
+										<% if c[:username] && !c[:username].empty? %>
+											<div class="username">@<%=c[:username]%></div>
+										<% end %>
+									</div>
+									<% if c[:requested] %>
+										<img id="img<%=i%>" class="cell-img" src="http://assets.tagsurf.co/img/Checkmark_blue.png">
+									<% else %>
+										<img id="img<%=i%>" class="cell-img" src="http://assets.tagsurf.co/img/plus_gray_150.png">
+									<% end %>
+								</div>
+							</a>
+						</td>
+					<% elsif !c[:phone_number].empty? %>
+						<td class="contact-row">
+							<a href="sms:<%=c[:phone_number]%>&body=Hey! Checkout this cool app I found. Find me @<%=@username%> and we can share some #lolz! https://appsto.re/us/hYmt1.i" onclick="swapImg(<%=i%>)">
+								<div id="c<%=i%>" class="contact-cell">
+									<div class="name">
+										<%= c[:first_name] %> <%= c[:last_name] %>
+									</div>
+									<div class="cta">
+										<i>Invite!</i>
+									</div>
+									<img id="img<%=i%>" class="cell-img" src="http://assets.tagsurf.co/img/plus_gray_150.png">
+								</div>
+							</a>
+						</td>
+					<% else %>
+						<% email = nil %>
+						<% if c[:emails].count > 1 %>
+							<% c[:emails].each do |e| %>
+								<% if e.include?("@gmail.com") %>
+									<% email = e %>
+								<% elsif e.include?("@yahoo.com") %>
+									<% email ||= e %>
+								<% end %>
+							<% end %>
+						<% end %>
+						<% email ||= c[:emails][0] %>
+						<td class="contact-row">
+							<a href="mailto:<%=email%>?subject=tagSurf&body=Hey, checkout this new app I found! My username is @<%=@username%>. Find me and we can share some #lolz! https://appsto.re/us/hYmt1.i" onclick="swapImg(<%=i%>)">
+								<div id="c<%=i%>" class="contact-cell">
+									<div class="name">
+										<%= c[:first_name] %> <%= c[:last_name] %>
+									</div>
+									<div class="cta">
+										<i>Invite!</i>
+									</div>
+									<img id="img<%=i%>" class="cell-img" src="http://assets.tagsurf.co/img/plus_gray_150.png">
+								</div>
+							</a>
+						</td>
+					<% end %>
+					<% prev_letter = c[:first_name].empty? ? c[:last_name].slice(0, 1).downcase : c[:first_name].slice(0, 1).downcase %>
+					<% i = i + 1 %>
 				</tr>
 			<% end %>
-			<tr>
-				<td><%= c[:first_name] %> <%= c[:last_name] %></td>
-			</tr>
-			<% prev_letter = c[:first_name].empty? ? c[:last_name].slice(0, 1).downcase : c[:first_name].slice(0, 1).downcase %>
-		<% end %>
 		</table>
 	</div>
+	<div id="navigator">
+		<% letters.each do |l| %>
+			<div>
+				<a href="#<%=l%>">
+					<%=l%>
+				</a>
+			</div>
+		<% end %>
+	</div>
+	<a onclick="goBack();">
+		<div id="close-btn">
+			<img id="close-icon" src="http://assets.tagsurf.co/img/Close.png">
+		</div>
+	</a>
 </div>
-<div id="navigator">
-</div>
+
 <%= javascript_include_tag "contacts" %>
 
 <script type="text/javascript">
-	
+	var xhr = function(path, action, cb, eb, async, payload, json) {
+	  var _xhr = new XMLHttpRequest();
+	  if(DEBUG) 
+	    console.log("XHR Request. Path: " + path + " action: " + (action || "GET"));
+	  if (typeof async === "undefined")
+	    async = true;
+	  if (typeof json === "undefined")
+	    json = false;
+	  _xhr.open(action || "GET", path, async);
+	  if (action == "PATCH" || json)
+	    _xhr.setRequestHeader("Content-type", "application/json");
+	  _xhr.onreadystatechange = function() {
+	    if (_xhr.readyState == 4) {
+	      var resp = _xhr.responseText.charAt(0) == "<" ? 
+	      { "errors": _xhr.responseText } : JSON.parse(_xhr.responseText);
+	      if (resp.errors || _xhr.status != 200) {
+	        if (eb) 
+	          eb(resp, _xhr.status);
+	        if (DEBUG && _xhr.status != 401 && _xhr.status != 404) {
+	          var errstr = "XHR error! Request failed. Path:"
+	            + path + " Errors: " + resp.errors + " Response: "
+	            + _xhr.responseText + " Status: " + _xhr.status;
+	          console.log(errstr);
+	          !isDesktop() && alert(errstr);
+	        }
+	      } 
+	      else
+	        cb && cb(resp);
+	    }
+	  }
+	  _xhr.send(payload);
+	};
+
+	var sendRequest = function (user_id, cell_id) {
+		xhr("/api/friend/request/" + user_id, "POST", function() {
+			document.getElementById('img'+cell_id).src = "http://assets.tagsurf.co/img/Checkmark_blue.png";
+			document.getElementById('banner').classList.remove('hidden');
+			setTimeout(function() {
+				document.getElementById('banner').classList.add('hidden');
+			}, 2000);
+		}, null);
+	};
+
+	var swapImg = function (cell_id) {
+		var cellIcon = document.getElementById('img'+cell_id);
+		cellIcon.src = "http://assets.tagsurf.co/img/Checkmark_blue.png";
+	};
+
+	var goBack = function() {
+		window.location = "/feed";
+	}
+
+	onload = function() {
+		var nav = document.getElementById('navigator');
+				height = window.innerHeight - 60;
+		nav.style.maxHeight = height + "px";
+	}
 </script>

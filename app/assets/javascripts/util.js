@@ -382,6 +382,8 @@ var xhr = function(path, action, cb, eb, async, payload, json) {
     console.log("XHR Request. Path: " + path + " action: " + (action || "GET"));
   if (typeof async === "undefined")
     async = true;
+  if (typeof json === "undefined")
+    json = false;
   _xhr.open(action || "GET", path, async);
   if (action == "PATCH" || json)
     _xhr.setRequestHeader("Content-type", "application/json");

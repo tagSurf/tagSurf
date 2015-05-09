@@ -323,7 +323,7 @@ class User < ActiveRecord::Base
         c[:username] = phones[c[:phone_number]][1]
         c[:profile_pic] = phones[c[:phone_number]][2]
         c[:requested] = friends.include?(c[:user_id])
-        # puts "user found by phone! " + c[:first_name] + " " + c[:last_name]
+        puts "user found by phone! " + c[:first_name] + " " + c[:last_name]
       elsif !c[:emails].empty?
         c[:emails].each do |e|
           if emails[e]
@@ -331,7 +331,7 @@ class User < ActiveRecord::Base
             c[:username] = emails[e][1]
             c[:profile_pic] = emails[e][2]
             c[:requested] = friends.include?(c[:user_id])
-            # puts "user found by email! " + c[:first_name] + " " + c[:last_name]
+            puts "user found by email! " + c[:first_name] + " " + c[:last_name]
           end
         end
       end

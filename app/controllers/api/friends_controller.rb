@@ -73,6 +73,7 @@ class Api::FriendsController < Api::BaseController
 
   def match_contacts
     @contacts = User.match_users(params["_json"], current_user.id)
+    @username = User.find(current_user.id).username
   end 
 
 end

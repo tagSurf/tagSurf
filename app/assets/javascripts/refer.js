@@ -210,7 +210,7 @@ var refer = {
 					}, function(result) {
 						messageBox("Oops", result.reason);
 					});
-				})
+				});
 			}
 			searchBar.children[1].value = "";
 			mod({
@@ -221,23 +221,23 @@ var refer = {
 			document.getElementsByClassName('buddy-list-container')[0].classList.add('hidden');
 			document.getElementsByClassName('request-btn')[0].classList.add('hidden');			
 		});
-		gesture.listen("down", sendbtn, function () {
+	gesture.listen("down", sendbtn, function () {
 	    sendbtn.classList.add('ts-active-button');
     });
-		gesture.listen("up", sendbtn, function () {
+	gesture.listen("up", sendbtn, function () {
 	    sendbtn.classList.remove('ts-active-button');
     });
 
-		gesture.listen("tap", connectbtn, function() {
+	gesture.listen("tap", connectbtn, function() {
 			throbber.on();
 			var dispatch = document.createEvent("HTMLEvents");
 			dispatch.initEvent("click", true, true);
 			document.getElementById('abook-link').dispatchEvent(dispatch);
 		});
-		gesture.listen("down", connectbtn, function () {
+	gesture.listen("down", connectbtn, function () {
 	    connectbtn.classList.add('ts-active-button');
     });
-		gesture.listen("up", connectbtn, function () {
+	gesture.listen("up", connectbtn, function () {
 	    connectbtn.classList.remove('ts-active-button');
     });
 
@@ -283,9 +283,6 @@ var refer = {
 				document.getElementsByClassName('request-btn')[0].classList.add('hidden');
 			}
 		};
-		gesture.listen("tap", closebtn, function(){
-			modal.topModalIn(refer.content, refer.close);
-		});
 	},
 	startInput: function() {
 

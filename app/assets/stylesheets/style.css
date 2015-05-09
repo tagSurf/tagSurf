@@ -260,7 +260,7 @@ a {
 	margin-top: 10px;
 }
 .request-btn {
-	max-width: 35% !important;
+	max-width: 40% !important;
 	margin-top: 10px;
 }
 .connect-btn {
@@ -1115,6 +1115,9 @@ a {
 	}
 	#slider-badge {
 		left: 56% !important;
+	}
+	.request-btn {
+		max-width: 45% !important;
 	}
 
 }
