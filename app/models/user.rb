@@ -241,95 +241,62 @@ class User < ActiveRecord::Base
   end
 
   def self.match_users(contacts, user)
-    phones = Hash.new()
-    emails = Hash.new()
+    user_phones = Hash.new()
+    user_emails = Hash.new()
+    names_hash = Hash.new()
+    phones_hash = Hash.new()
     pending_friends = User.find(user).pending_friends.map{|u| u.id}
     friends = User.find(user).friends.map{|u| u.id}
     friends.concat(pending_friends)
 
-    User.select(:phone, :username, :id, :profile_pic_link).where(:phone_confirmed => true).each {|u| phones[u.phone] = [u.id, u.username, u.profile_pic_link]}
+    User.select(:phone, :username, :id, :profile_pic_link).where(:phone_confirmed => true).each {|u| user_phones[u.phone] = [u.id, u.username, u.profile_pic_link]}
 
-    User.all.select(:email, :username, :id, :profile_pic_link).each {|u| emails[u.email] = [u.id, u.username, u.profile_pic_link]}
-    
+    User.all.select(:email, :username, :id, :profile_pic_link).each {|u| user_emails[u.email] = [u.id, u.username, u.profile_pic_link]}
+
     contacts.each do |c|
-      if c[:phone_number].empty? && c[:emails].empty?
-        contacts.delete(c)
-      elsif c[:first_name].empty? && c[:last_name].empty?
-        contacts.delete(c)
+      unless (c[:phone_number].empty? && c[:emails].empty?) || (c[:first_name].empty? && c[:last_name].empty?)
+        n = User.build_name_key(c)
+        unless n.empty?
+          names_hash[n] ||= Hash.new()
+          names_hash[n] = User.merge_contact(names_hash[n], c)  
+        end
+
+        p = User.build_phone_key(c)
+        unless p.empty?
+          phones_hash[p] ||= Hash.new()
+          phones_hash[p] = User.merge_contact(phones_hash[p], c)
+        end        
       end
     end
 
-    # No idea why we have to do this twice o.O
-    # First pass misses a few...
-    contacts.each do |c|
-      if c[:phone_number].empty? && c[:emails].empty?
-        contacts.delete(c)
-      end
+    clean_contacts = names_hash.values.concat(phones_hash.values)
+    clean_contacts.uniq!
+
+    names_hash = Hash.new
+
+    clean_contacts.each do |c|
+      n = User.build_name_key(c)
+      names_hash[n] ||= Hash.new()
+      names_hash[n] = User.merge_contact(names_hash[n], c)  
     end
 
-    #ToDo Refactor this and make it more efficient
-    contacts.each do |c|
-      if !c[:phone_number].empty? && contacts.select{|e| e[:phone_number] == c[:phone_number]}.count > 1
-        dups = contacts.select{|e| e[:phone_number] == c[:phone_number]}
-        consolidate = Hash.new()
-        consolidate[:emails] = Array.new
-        dups.each do |d|
-          consolidate[:first_name] ||= d[:first_name]
-          consolidate[:last_name] ||= d[:last_name]
-          consolidate[:phone_number] ||= d[:phone_number]
-          if !d[:emails].empty? && d[:emails].is_a?(Array) 
-            consolidate[:emails].concat(d[:emails])
-            consolidate[:emails].uniq!
-          elsif !d[:emails].empty?
-            consolidate[:emails].push(d[:emails])
-            consolidate[:emails].uniq!
-          end
-          contacts.delete(d)
-        end
-        if consolidate[:emails].empty?
-          consolidate[:emails] = ""
-        end
-        contacts.push(consolidate)
-      end
-      if contacts.select{|e| e[:first_name] == c[:first_name] && e[:last_name] == c[:last_name]}.count > 1
-        dups = contacts.select{|e| e[:first_name] == c[:first_name] && e[:last_name] == c[:last_name]}
-        consolidate = Hash.new()
-        consolidate[:emails] = Array.new
-        dups.each do |d|
-          consolidate[:first_name] ||= d[:first_name]
-          consolidate[:last_name] ||= d[:last_name]
-          consolidate[:phone_number] ||= d[:phone_number]
-          if !d[:emails].empty? && d[:emails].is_a?(Array) 
-            consolidate[:emails].concat(d[:emails])
-            consolidate[:emails].uniq!
-          elsif !d[:emails].empty?
-            consolidate[:emails].push(d[:emails])
-            consolidate[:emails].uniq!
-          end
-          contacts.delete(d)
-        end
-        if consolidate[:emails].empty?
-          consolidate[:emails] = ""
-        end
-        contacts.push(consolidate)
-      end
-    end
+    clean_contacts = names_hash.values
 
-    contacts.sort_by!{|c| c[:first_name].downcase + c[:last_name].downcase}
+    clean_contacts.sort_by!{|c| c[:first_name].downcase + c[:last_name].downcase}
 
-    contacts.each do |c|
-      if c[:phone_number] && phones[c[:phone_number]]
-        c[:user_id] = phones[c[:phone_number]][0]
-        c[:username] = phones[c[:phone_number]][1]
-        c[:profile_pic] = phones[c[:phone_number]][2]
+    clean_contacts.each do |c|
+      if c[:phone_number] && user_phones[c[:phone_number]]
+        c[:user_id] = user_phones[c[:phone_number]][0]
+        c[:username] = user_phones[c[:phone_number]][1]
+        c[:profile_pic] = user_phones[c[:phone_number]][2]
         c[:requested] = friends.include?(c[:user_id])
         puts "user found by phone! " + c[:first_name] + " " + c[:last_name]
       elsif !c[:emails].empty?
         c[:emails].each do |e|
-          if emails[e]
-            c[:user_id] = emails[e][0]
-            c[:username] = emails[e][1]
-            c[:profile_pic] = emails[e][2]
+          if user_emails[e]
+            c[:user_id] = user_emails[e][0]
+            c[:username] = user_emails[e][1]
+            c[:profile_pic] = user_emails[e][2]
             c[:requested] = friends.include?(c[:user_id])
             puts "user found by email! " + c[:first_name] + " " + c[:last_name]
           end
@@ -337,15 +304,40 @@ class User < ActiveRecord::Base
       end
     end
 
-    contacts.uniq!
-
-    contacts
-  
+    clean_contacts
   end
 
   def self.full_list
     list = User.where('username IS NOT NULL').map{|u| [u.id, u.email, u.username, u.first_name, u.last_name, u.profile_pic_link]}
   end 
+
+  def self.build_name_key(contact)
+    key = contact[:first_name].downcase + contact[:last_name].downcase
+   
+    key
+  end
+
+  def self.build_phone_key(contact)
+    key = contact[:phone_number]
+  
+    key
+  end
+
+  def self.merge_contact(existing, to_merge)
+    existing[:first_name] ||= to_merge[:first_name]
+    existing[:last_name] ||= to_merge[:last_name]
+    existing[:phone_number] ||= to_merge[:phone_number]
+    existing[:emails] ||= Array.new
+    if !to_merge[:emails].empty? && to_merge[:emails].is_a?(Array) 
+      existing[:emails].concat(to_merge[:emails])
+      existing[:emails].uniq!
+    elsif !to_merge[:emails].empty?
+      existing[:emails].push(to_merge[:emails])
+      existing[:emails].uniq!
+    end
+
+    existing
+  end
 
   protected
 
