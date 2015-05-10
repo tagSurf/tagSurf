@@ -21,6 +21,8 @@ var image = {
 	load: function(dlist, minWidth, cb, eb) {
 		var load = image._load;
 		dlist.forEach(function(d) {
+			if (d.type == "friend_request")
+				cb && cb(d);
 			if (d.type.indexOf("content") == -1 || current_deck.known_keys[d.id])
 				return;
 			d._image_load_cb = d._image_load_cb || cb;

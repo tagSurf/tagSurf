@@ -429,7 +429,13 @@ class Media < ActiveRecord::Base
           attr_accessor :friend
         end
         card.friend = Array.new
-        card.friend = [u.id, u.first_name, u.last_name, u.username, u.profile_pic_link]
+        card.friend = { 
+                        :friend_id => u.id, 
+                        :first_name => u.first_name,
+                        :last_name => u.last_name, 
+                        :username => u.username, 
+                        :profile_pic => u.profile_pic_link 
+                      }
         friends << card
       end
       @media = friends.concat(@media)

@@ -19,6 +19,8 @@ var deck_proto = {
 			d = rdata[i];
 			if (d.type == "login")
 				this.loginCard = d;
+			else if (d.type == "friend_request")
+				preloads.push(d);
 			else if ((!this.known_keys[d.id] && !this.voted_keys[d.id]))
 				preloads.push(d);
 		}

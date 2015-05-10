@@ -21,7 +21,7 @@ var refer = {
 		}
 		refer._buildContent();
 		refer._buildSearcher();
-		refer._populateBuddies();
+		refer.populateBuddies();
 		refer._fetchAll();
 	},
 	_buildContent: function () {
@@ -287,7 +287,7 @@ var refer = {
 	startInput: function() {
 
 	},
-	_populateBuddies: function () {
+	populateBuddies: function () {
 		xhr("/api/users/buddies", "GET", function(response_data) {
 			refer._updateList(response_data.users);
 		});
@@ -394,7 +394,7 @@ var refer = {
 
     if (all)
     	return;
-// 	Add friends button at end of list
+	// 	Add friends button at end of list a personalized list
 		var 	plusrow = buddyList.insertRow(position),
 					plusCell = plusrow.insertCell(0),
 					plusIcon = document.createElement('img'),

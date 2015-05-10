@@ -212,6 +212,47 @@ html, body {
   margin-top: 10px;
 }
 
+/*======== Friend Request Card Stuff =========*/
+.friend-card {
+  background: #00aeef;
+  border: none !important;
+  text-align: center;
+  color: white;
+}
+.friend-profile-pic {
+  border-radius: 50%;
+  width: 40%;
+  margin-top: 5%;
+}
+.friend-username {
+  font-size: 180%;
+  font-weight: 300;
+}
+.friend-explainer {
+  margin-top: 4%;
+  max-width: 80%;
+  margin-right: auto;
+  margin-left: auto;
+}
+.left-instructions {
+  position: absolute;
+  padding: 5px;
+  background-color: #ff0000;
+  border-radius: 5px;
+  min-width: 30%;
+  bottom: 0;
+  left: 0;
+}
+.right-instructions {
+  position: absolute;
+  padding: 5px;
+  background-color: #00a651;
+  border-radius: 5px;
+  min-width: 30%;
+  bottom: 0;
+  right: 0;
+}
+
 /*======== Swiping Animation Stuff ========*/
 .swiping {
   -webkit-transition: -webkit-transform 250ms ease-in;
@@ -481,6 +522,15 @@ html, body {
   width: 200px !important;
   margin: 10px 0;
 }
+
+/*===== This Targets Anything Above iPhone 5 ========*/
+@media only screen and (min-width: 340px){
+  .friend-explainer {
+    max-width: 70%;
+    margin-top: 10%;
+  }
+}
+
 /*====== This targets tablets and desktops ======*/
 @media only screen and (min-width: 700px){
   .text-container {
