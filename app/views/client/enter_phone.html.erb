@@ -1,0 +1,64 @@
+<%= stylesheet_link_tag "sessions", :media => "all" %>
+
+<%= form_for(@user, :url => user_path(@user), :remote => false, :html => {:method => 'put', :role => 'form', :id => 'phone_form'}) do |f| %>
+  <center>
+   <div class="tslogo"></div>
+   <div class="ac-text-container">
+    <p>Please enter your phone number</p>
+   </div>
+  <div class="input-border-container" style="margin-bottom:10px;">
+    <%= telephone_field(:user,:phone,class: 'ts-input', :onkeyup => 'format_number()') %>
+  </div>
+
+  <div id='submit-btn' class="button input-width disabled-button", onclick="form_submit();">Submit</div>
+
+  </center>
+<% end %>
+
+<%= javascript_include_tag "sessions" %>
+
+<script type="text/javascript">
+  var input = document.getElementsByClassName('ts-input')[0];
+
+  input.value = "";
+
+  var form_submit = function() {
+    var phone_number = input.value.trim(),
+        f = document.getElementById('phone_form');
+    if (phone_number.length < 14)
+      alert('Please enter a full number')
+    else if (phone_number.indexOf("+") == -1) {
+      input.value = "+1" + phone_number.replace(/\D/g,'');
+      f.submit();
+    } else {
+      input.value = "+" + phone_number.replace(/\D/g,'');
+      f.submit();
+    }
+  }
+
+  stroke.listen("up", "13", function() {
+    form_submit();
+  });
+
+  stroke.listen("up", null, function() {
+    var phone_number = input.value.trim(),
+        button = document.getElementById('submit-btn');
+
+    if (phone_number.length > 9 && phone_number.indexOf("-") == -1)
+      input.value = phone_number.slice(0,9) + "-" + phone_number.slice(9,phone_number.length);
+    else if (phone_number.length >= 3 && phone_number.indexOf("(") == -1 && phone_number.indexOf(")") == -1)
+      input.value = "(" + phone_number.slice(0,3) + ") " + phone_number.slice(3,phone_number.length);
+    else if (phone_number.length > 4 && phone_number.indexOf(")") == -1)
+      input.value = phone_number.slice(0,4) + ") " + phone_number.slice(4,phone_number.length);
+    
+    if (phone_number.length < 14 && button.className.indexOf('disabled-button') == -1)
+      button.classList.add('disabled-button');
+    else if (phone_number.length >= 14)
+      button.classList.remove('disabled-button');
+
+  });
+
+  input.onfocus = function () { toggleClass.apply(input.parentNode, ["focused"]); };
+  input.onblur = function () { toggleClass.apply(input.parentNode, ["focused"]); };
+
+</script>

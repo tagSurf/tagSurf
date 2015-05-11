@@ -1,0 +1,86 @@
+<%= stylesheet_link_tag "sessions", :media => "all" %>
+
+<%= form_for(@user, :url => "/phone/verify/#{@user.id}", :method => :post, :remote => false, :html => {:method => 'post', :role => 'form', :id => 'confirm_form'}) do |f| %>
+  <center>
+   <div class="tslogo"></div>
+   <div class="ac-text-container">
+    <p>Enter your verification code</p>
+   </div>
+  <div class="hidden">
+    <%= number_field_tag(:code, :id => 'code', class: 'hidden') %>
+  </div>
+
+  <input type="tel" class="ts-input code" maxlength="1"/>
+  <input type="tel" class="ts-input code" maxlength="1"/>
+  <input type="tel" class="ts-input code" maxlength="1"/>
+  <input type="tel" class="ts-input code" maxlength="1"/>
+
+  <div id='submit-btn' class="button input-width disabled-button" style="margin-top: 10px;", onclick="form_submit();">Submit</div>
+  <a href = "/phone"><div id='submit-btn' class="button input-width" style="margin-top: 10px;", onclick="form_submit();"><- Edit Number</div></a>
+
+  </center>
+<% end %>
+
+<%= javascript_include_tag "sessions" %>
+
+<script type="text/javascript">
+  var inputs = document.getElementsByClassName('ts-input');
+
+  var form_submit = function() {
+    var f = document.getElementById('confirm_form'),
+        code_field = document.getElementById('code'),
+        code = "";
+      for (i=0; i<inputs.length; i++) {
+        code += inputs[i].value
+      };
+       console.log(code);
+      if (code.length == 0) {
+        return;
+      } else if (code.length < 4) {
+        alert("Please enter a complete code");
+        return;
+      }
+      code_field.value = code;
+      f.submit(); 
+  }
+
+  stroke.listen("up", "13", function() {
+    form_submit();
+  });
+
+  stroke.listen("up", null, function(kobj){
+    var submitBtn = document.getElementById('submit-btn');
+    if ((document.activeElement == inputs[inputs.length-1]) && !(inputs[inputs.length-1].value == ""))
+      submitBtn.classList.remove("disabled-button");
+    else if (submitBtn.className.indexOf('disabled-button') == -1)
+      submitBtn.classList.add("disabled-button");
+
+    if (kobj.code == 8) {
+      for (i=0; i<inputs.length; ++i) {
+        if (document.activeElement == inputs[i]) {
+          inputs[i-1].focus();
+          break;
+        }
+      };
+    }
+    else {
+      for (i=0; i<inputs.length-1; ++i) {
+        if (document.activeElement == inputs[i]) {
+          inputs[i+1].focus();
+          break;
+        }
+      };
+    }
+  });
+
+
+  inputs[0].onfocus = function () { toggleClass.apply(inputs[0], ["focused"]); };
+  inputs[1].onfocus = function () { toggleClass.apply(inputs[1], ["focused"]); };
+  inputs[2].onfocus = function () { toggleClass.apply(inputs[2], ["focused"]); };
+  inputs[3].onfocus = function () { toggleClass.apply(inputs[3], ["focused"]); };
+  inputs[0].onblur = function () { toggleClass.apply(inputs[0], ["focused"]); };
+  inputs[1].onblur = function () { toggleClass.apply(inputs[1], ["focused"]); };
+  inputs[2].onblur = function () { toggleClass.apply(inputs[2], ["focused"]); };
+  inputs[3].onblur = function () { toggleClass.apply(inputs[3], ["focused"]); };
+
+</script>

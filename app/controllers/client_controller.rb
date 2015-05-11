@@ -35,8 +35,12 @@ class ClientController < ApplicationController
         redirect_to selectusername_path
       # elsif !usr.fb_link_requested && !usr.profile_pic_link
       #   redirect_to linkfb_path
-      elsif !usr.first_name
-        redirect_to name_path
+      # elsif !usr.first_name
+      #   redirect_to name_path
+      elsif !usr.phone
+        redirect_to phone_path
+      elsif !usr.phone_confirmed
+        redirect_to confirm_path
       elsif !usr.push_requested && params[:id].to_i == 0
         redirect_to "/push##{current_user.id}"
       else
@@ -167,6 +171,18 @@ class ClientController < ApplicationController
 
   def enter_name
     @user = current_user
+  end
+
+  def enter_phone
+    @user = current_user
+    unless @user.confirmation_code
+      ConfirmationCode.create(:user_id => @user.id).save
+    end
+  end
+
+  def confirm
+    @user = current_user
+    @code
   end
 
   private

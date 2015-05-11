@@ -7,6 +7,9 @@ html, body {
 .focused {
 	border-color: #48a4df;
 }
+.hidden {
+	display: none;
+}
 .ts-submit-bar {
 	width: 100%;
 	height: 44px;
@@ -105,4 +108,21 @@ html, body {
 }
 .unavailable {
 	color:#ff0000;
+}
+.code {
+	border: 1px solid #2f2f2f;
+	border-radius: 10px;
+	height: 55px;
+	width: 55px;
+	font-size: 200%;
+	text-align: center;
+	margin-bottom: 10px;
+}
+
+/*===== This Targets Anything Above iPhone 5 ========*/
+@media only screen and (min-width: 340px){
+	.code {
+		height: 60px;
+		width: 60px;
+	}
 }

@@ -17,13 +17,18 @@ class UsersController < ApplicationController
       params[:user][:last_name].strip!
       params[:user][:last_name].capitalize!
     end
+
     current_user.update(update_user_params)
 
-    # if current_user.welcomed? 
-    #   redirect_to feed_path
-    # else
+    if !params[:user][:phone].nil?
+      ConfirmationCodesController.new.send_code(current_user.id)
+    end
+
+    if !params[:user][:phone].nil? 
+      redirect_to confirm_path
+    else
       redirect_to root_path
-    # end
+    end
   end
 
   def new
@@ -62,7 +67,7 @@ class UsersController < ApplicationController
   private
   
   def update_user_params
-    params.require(:user).permit(:completed_feature_tour, :username, :first_name, :last_name) 
+    params.require(:user).permit(:completed_feature_tour, :username, :first_name, :last_name, :phone) 
   end
 
   def fb_params

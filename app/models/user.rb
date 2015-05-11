@@ -341,10 +341,10 @@ class User < ActiveRecord::Base
     existing
   end
 
-  def self.confirm_phone(user_id, code)
+  def self.verify_code(user_id, code)
     @user = User.find(user_id)
     @success = false
-    unless code != @user.confirmation_code.code
+    unless code.to_i != @user.confirmation_code.code
       @user.confirmation_code.destroy!
       @user.phone_confirmed = true
       @user.phone_confirmed_at = Time.now

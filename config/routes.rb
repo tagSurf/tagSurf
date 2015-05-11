@@ -41,6 +41,8 @@ Tagsurf::Application.routes.draw do
   get 'selectusername'     => 'client#username_select'
   get 'linkfb'             => 'client#linkfb'
   get 'name'               => 'client#enter_name'
+  get 'phone'              => 'client#enter_phone'
+  get 'confirm'            => 'client#confirm'
     
   # Multi-step beta access flow
   post 'confirm-beta'              => 'client#confirm_beta_token'
@@ -50,7 +52,8 @@ Tagsurf::Application.routes.draw do
 
   # User routes
   put 'user'                        => 'users#update'
-  post 'authentication/from-native' =>  'users#from_native'
+  post 'authentication/from-native' => 'users#from_native'
+  post 'phone/verify/:user_id'      => 'confirmation_codes#verify_code'
 
 
   # JSON API
