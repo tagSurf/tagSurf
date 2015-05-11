@@ -33,8 +33,8 @@ class ClientController < ApplicationController
       #   redirect_to welcome_path
       if !usr.username
         redirect_to selectusername_path
-      elsif !usr.fb_link_requested && !usr.profile_pic_link
-        redirect_to linkfb_path
+      # elsif !usr.fb_link_requested && !usr.profile_pic_link
+      #   redirect_to linkfb_path
       elsif !usr.first_name
         redirect_to name_path
       elsif !usr.push_requested && params[:id].to_i == 0
