@@ -12,10 +12,11 @@ class User < ActiveRecord::Base
   has_many    :favorites
   has_many    :referrals, :foreign_key => :referrer_id
   belongs_to  :access_code
+  has_one     :confirmation_code
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, 
-         :registerable, :confirmable,
+         :registerable,
          :omniauthable, :omniauth_providers => [:imgur, :facebook]
 
   CLIENT_ID = Rails.env.production? ? 'e0d1a9753eaf289' : '63c3978f06dac10'
@@ -31,6 +32,7 @@ class User < ActiveRecord::Base
   scope :sorted_history, order("created_at ASC")
 
   after_commit :destroy_all_relations, on: :destroy
+  after_commit :create_confirmation_code, on: :create
 
   def welcomed?
     completed_feature_tour?
@@ -339,6 +341,19 @@ class User < ActiveRecord::Base
     existing
   end
 
+  def self.confirm_phone(user_id, code)
+    @user = User.find(user_id)
+    @success = false
+    unless code != @user.confirmation_code.code
+      @user.confirmation_code.destroy!
+      @user.phone_confirmed = true
+      @user.phone_confirmed_at = Time.now
+      @user.save
+      @success = true
+    end
+    @success
+  end
+
   protected
 
   def generate_slug
@@ -347,6 +362,10 @@ class User < ActiveRecord::Base
 
   def assign_beta_code
     # For those who need not a code
+  end
+
+  def create_confirmation_code
+    ConfirmationCode.create(:user_id => id)
   end
 
   def confirmation_required?

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150506212424) do
+ActiveRecord::Schema.define(version: 20150510234515) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,18 @@ ActiveRecord::Schema.define(version: 20150506212424) do
 
   add_index "bumps", ["bumper_id"], name: "index_bumps_on_bumper_id", using: :btree
   add_index "bumps", ["sharer_id"], name: "index_bumps_on_sharer_id", using: :btree
+
+  create_table "confirmation_codes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "code"
+    t.boolean  "expires"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "confirmation_codes", ["user_id"], name: "index_confirmation_codes_on_user_id", using: :btree
 
   create_table "favorites", force: true do |t|
     t.integer  "media_id"
