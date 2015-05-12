@@ -11,6 +11,6 @@ class BumpMailer < ActionMailer::Base
     @referral_id = referral_id
     @caption =  @media.description ? @media.description : @media.title
     @url = Rails.env.production? ? "http://beta.tagsurf.co" : "http://localhost:3000"
-    mail(to: @email, subject: "#{@bumper_name} bumped it back on tagSurf!", from_email: "tagSurf@tagsurf.co", async: "true", from_name: "tagSurf")
+    mail(to: @email, subject: "@#{@bumper_name} bumped it back on tagSurf!", from_email: "tagSurf@tagsurf.co", async: "true", from_name: "tagSurf")
   end
 end

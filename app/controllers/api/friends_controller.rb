@@ -10,6 +10,7 @@ class Api::FriendsController < Api::BaseController
 		@success = !@result.nil?
 		
 		if @success
+			SendFriendRequestNotification.perform_async(params[:user_id], @user.id)
       render json: {created: true}, status: :ok
     else 
       render json: {created: false, reason: "request already made" }, status: :not_implemented
@@ -25,11 +26,11 @@ class Api::FriendsController < Api::BaseController
 			@success = !@result.nil?
 
 			if @success
-	      render json: {accepted: true}, status: :ok
+		    SendFriendAcceptNotification.perform_async(params[:user_id], @user.id)
+				render json: {accepted: true}, status: :ok
 	    else 
 	      render json: {created: false, reason: @result.errors.full_messages.first }, status: :not_implemented
 	    end
-
 	  rescue => e
       render json: {created: false, reason: "no friendship found" }, status: :not_implemented
     end
