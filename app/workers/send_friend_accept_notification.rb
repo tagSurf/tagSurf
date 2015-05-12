@@ -4,9 +4,9 @@ class SendFriendAcceptNotification
   sidekiq_options :backtrace => true
 
   def perform(user_id, acceptor_id)
-	# if Rails.env.development? 
-	# 	return
-	# end
+	if Rails.env.development? 
+		return
+	end
 
 	acceptor_name = User.find(acceptor_id).username
 	badge_number = Referral.unscoped.where(:user_id => user_id, :seen => false).count +
