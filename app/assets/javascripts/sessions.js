@@ -13,3 +13,4 @@
 //= require util
 //= require stroke
 //= require gesture
+//= require throbber

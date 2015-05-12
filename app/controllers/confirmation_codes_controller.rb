@@ -5,7 +5,7 @@ class ConfirmationCodesController < ApplicationController
 	    SmsController.new.send_sms(message, @user.phone)
 	end
 
-	def verify_code(user_id = params[:user_id], code = params[:code])
+	def verify_code(user_id = params[:user_id], code = params[:code].first)
 
 		@success = User.verify_code(user_id, code)
 		if @success

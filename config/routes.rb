@@ -43,6 +43,8 @@ Tagsurf::Application.routes.draw do
   get 'name'               => 'client#enter_name'
   get 'phone'              => 'client#enter_phone'
   get 'confirm'            => 'client#confirm'
+  get 'linkcontacts'       => 'client#link_contacts'
+  get 'addresslink'        => 'client#addressbook'
     
   # Multi-step beta access flow
   post 'confirm-beta'              => 'client#confirm_beta_token'
