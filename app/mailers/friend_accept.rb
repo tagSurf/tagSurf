@@ -7,6 +7,7 @@ class FriendAcceptMailer < ActionMailer::Base
 	    @username = User.find(user_id).username ? User.find(user_id).username : @email.split("@")[0]
   		acceptor = User.find(acceptor_id)
   		@acceptor_username = acceptor.username
+      @acceptor_name ||= acceptor.first_name
       if @acceptor_name.nil?
         @acceptor_name ||= acceptor.last_name
       else

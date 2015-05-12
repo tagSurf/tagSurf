@@ -563,7 +563,12 @@ onload = function ()
 				surfing: current_tag
 			});
 		}
-		swipeSlider("left");
+		if (slider.type == "friend_request") {
+			var friendId = slider.data.user_stats.friend_id;
+			swipeSlider("left", declineFriend(friendId), 700);
+		} else {
+			swipeSlider("left");
+		}
 		hasKeySwiped = true;
 	});
 	stroke.listen("up", "39", function() {
@@ -585,7 +590,12 @@ onload = function ()
 				surfing: current_tag
 			});
 		}
-		swipeSlider("right");
+		if (slider.type == "friend_request") {
+			var friendId = slider.data.user_stats.friend_id;
+			swipeSlider("right", acceptFriend(friendId), 700);
+		} else {
+			swipeSlider("right");			
+		}
 		hasKeySwiped = true;
 	});
 	stroke.listen("up", null, closeReminders);
