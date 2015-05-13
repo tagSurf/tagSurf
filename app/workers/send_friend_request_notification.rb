@@ -8,9 +8,10 @@ class SendFriendRequestNotification
 		return
 	end
 
+	@user = User.find(user_id)
+	@user.update_column('reload_deck', true)
+
 	friender_name = User.find(friender_id).username
-	badge_number = Referral.unscoped.where(:user_id => user_id, :seen => false).count +
-					Bump.unscoped.where(:sharer_id => user_id, :seen => false).count
 	
 	FriendRequestMailer.friend_request_email(user_id, friender_id).deliver
 
@@ -18,7 +19,7 @@ class SendFriendRequestNotification
 
 	notification = {
 		:aliases => [user_id],
-		:aps => {:alert => message, :badge => badge_number}
+		:aps => {:alert => message}
 	}
 
 	Urbanairship.push(notification)

@@ -113,6 +113,10 @@ var userStatsPoller = function () {
           if (isGallery() && whichGallery() == "bumps")
             updateGalleryBadges(currentUser.unseen_refs, currentUser.unseen_bumps);
         }
+        if (result.user.reload_deck)
+          current_deck.refill();
+        if (result.user.update_buddies)
+          refer.populateBuddies();
       }
     }, function(result) {
       if (result.user == "not found" && DEBUG) 

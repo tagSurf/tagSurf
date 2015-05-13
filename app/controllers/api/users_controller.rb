@@ -90,6 +90,8 @@ class Api::UsersController < Api::BaseController
       results['unseen_bumps'] = Bump.unscoped.where(:sharer_id => @user.id, :seen => false).count
       results['unseen_referrals'] = Referral.unscoped.where(:user_id => @user.id, :seen => false).count
       render json: results
+      @user.reload_deck = false
+      @user.update_buddies = false
       @user.last_seen = Time.now
       @user.save
     else

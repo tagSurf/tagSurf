@@ -8,9 +8,11 @@ class SendFriendAcceptNotification
 		return
 	end
 
+	@user = User.find(user_id)
+	@user.update_column('update_buddies', true)
+
 	acceptor_name = User.find(acceptor_id).username
-	badge_number = Referral.unscoped.where(:user_id => user_id, :seen => false).count +
-					Bump.unscoped.where(:sharer_id => user_id, :seen => false).count
+
 	
 	FriendAcceptMailer.friend_accept_email(user_id, acceptor_id).deliver
 
@@ -18,7 +20,7 @@ class SendFriendAcceptNotification
 
 	notification = {
 		:aliases => [user_id],
-		:aps => {:alert => message, :badge => badge_number}
+		:aps => {:alert => message}
 	}
 
 	Urbanairship.push(notification)
