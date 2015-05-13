@@ -34,7 +34,7 @@
             @<%= @acceptor_username %>
           <td>
         </tr>
-        <% if !@acceptor_name.nil? and !@acceptor_name.empty? %>
+        <% if !@acceptor_name.nil? and !@acceptor_name.empty? and !@acceptor_name == " " %>
           <tr>
             <td style="border-radius: 5px; font-size:120%; padding-top: 1%; padding-bottom:5%; font-weight:200;">
               (<%= @acceptor_name %>)

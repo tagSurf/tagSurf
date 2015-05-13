@@ -34,7 +34,7 @@
             @<%= @friender_username %>
           <td>
         </tr>
-        <% if !@friender_name.nil? and !@friender_name.empty? %>
+        <% if !@friender_name.nil? and !@friender_name.empty? and !@friender_name == " " %>
           <tr>
             <td style="border-radius: 5px; font-size:120%; padding-top: 1%; padding-bottom:5%; font-weight:200;">
               (<%= @friender_name %>)
