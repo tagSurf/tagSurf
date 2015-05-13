@@ -243,6 +243,9 @@ a {
 #buddy-list {
 	width: 100%;
 }
+#search-list {
+	width: 100%;
+}
 .buddy-list-container::-webkit-scrollbar {
 	display: initial !important;
 	width: 12px;
@@ -255,6 +258,15 @@ a {
 .send-btn {
 	max-width: 30% !important;
 	margin-top: 10px;
+}
+.request-btn {
+	max-width: 40% !important;
+	margin-top: 10px;
+}
+.connect-btn {
+	max-width: 65% !important;
+	margin-top: 10px;
+	color: white;
 }
 .search-bar {
 	background: #6a6a6a;
@@ -342,6 +354,40 @@ a {
 	margin-left: auto !important;
 	margin-top: 28% !important; 
 }
+.plus-cell {
+	border: initial !important;
+	text-align: center !important;
+}
+.plus-icon {
+	width: 25%;
+	margin-left: auto;
+	margin-right: auto;
+}
+.plus-btn{
+	margin: 5% 0;
+}
+.plus-message{
+	font-size: 200%;
+}
+#add-friends-btn {
+	position: absolute;
+	left: 5px;
+	bottom: 0;
+}
+#add-friends-icon {
+	width: 30px;
+	float: left;
+	margin-top: 3px;
+	margin-left: 5px;
+}
+#add-friends-message {
+	color: white;
+	float: right;
+	margin-left: 5px;
+	margin-bottom: 10px;
+	text-align: center;
+}
+
 
 /*======== Modal Close Button Stuff =========*/
 .modal-close-button {
@@ -438,7 +484,7 @@ a {
 	pointer-events: none;
 	opacity: 0;
 	position: fixed;
-	z-index: 4;
+	z-index: 100;
 	-webkit-transition: opacity 500ms;
 	transition: opacity 500ms;
 }
@@ -723,7 +769,7 @@ a {
   text-align: center;
   background-color: white;
   border: 1px solid #00aeef;
-  z-index: 10;
+  z-index: 100;
   position: absolute;
   width: 250px;
   padding: 5px;
@@ -1074,7 +1120,7 @@ a {
 		width: 86%;
 	}
 	.buddy-list-container {
-		max-height: 68%;
+		max-height: 72%;
 	}
 	#nav-badge{ 
 		left: 64%;
@@ -1087,6 +1133,9 @@ a {
 	}
 	#slider-badge {
 		left: 56% !important;
+	}
+	.request-btn {
+		max-width: 45% !important;
 	}
 
 }
@@ -1303,5 +1352,22 @@ a {
 	}
 	.small-badge {
 		min-width: 2%;
+	}
+	.plus-icon {
+		width: 15%;
+	}
+	.plus-btn {
+		margin: 2% 0;
+	}
+	#add-friends-btn {
+		left: 6px;
+	}
+	#add-friends-icon {
+		width: 45px;
+		margin-left: 15px;
+	}
+	#add-friends-message {
+		font-size: 140%;
+		margin-bottom: 3px;
 	}
 }

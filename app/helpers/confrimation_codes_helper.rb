@@ -1,0 +1,2 @@
+module ConfrimationCodesHelper
+end

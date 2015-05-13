@@ -1,0 +1,8 @@
+<%= javascript_include_tag "push" %>
+
+<script type="text/javascript">
+	if (isUIWebView() && !isAndroid())
+		document.location = '/addresslink';
+	else
+		document.location = '/feed#funny';
+</script>

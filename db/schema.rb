@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150504052613) do
+ActiveRecord::Schema.define(version: 20150513183909) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,18 @@ ActiveRecord::Schema.define(version: 20150504052613) do
 
   add_index "bumps", ["bumper_id"], name: "index_bumps_on_bumper_id", using: :btree
   add_index "bumps", ["sharer_id"], name: "index_bumps_on_sharer_id", using: :btree
+
+  create_table "confirmation_codes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "code"
+    t.boolean  "expires"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "confirmation_codes", ["user_id"], name: "index_confirmation_codes_on_user_id", using: :btree
 
   create_table "favorites", force: true do |t|
     t.integer  "media_id"
@@ -149,7 +161,7 @@ ActiveRecord::Schema.define(version: 20150504052613) do
   add_index "tags", ["name"], name: "index_tags_on_name", unique: true, using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "email",                     default: ""
+    t.string   "email",                     default: "",    null: false
     t.string   "encrypted_password",        default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
@@ -194,6 +206,12 @@ ActiveRecord::Schema.define(version: 20150504052613) do
     t.string   "location"
     t.boolean  "fb_link_requested",         default: false, null: false
     t.datetime "last_seen"
+    t.string   "phone"
+    t.boolean  "phone_confirmed",           default: false, null: false
+    t.datetime "phone_confirmed_at"
+    t.boolean  "contacts_link_requested",   default: false, null: false
+    t.boolean  "reload_deck",               default: false, null: false
+    t.boolean  "update_buddies",            default: false, null: false
   end
 
   add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree

@@ -25,6 +25,7 @@ Tagsurf::Application.routes.draw do
   get 'bumps'           => 'client#bumps'
   get 'tag'             => 'client#tag'
   get 'bump/:ref_id'    => 'client#bump'
+  get 'contacts'        => 'client#contacts'
 
   #Enable Push
   get 'push-enable/:user_id'  => 'client#push_enable'
@@ -40,15 +41,22 @@ Tagsurf::Application.routes.draw do
   get 'selectusername'     => 'client#username_select'
   get 'linkfb'             => 'client#linkfb'
   get 'name'               => 'client#enter_name'
+  get 'phone'              => 'client#enter_phone'
+  get 'confirm'            => 'client#confirm'
+  get 'linkcontacts'       => 'client#link_contacts'
+  get 'addresslink'        => 'client#addressbook'
     
   # Multi-step beta access flow
   post 'confirm-beta'              => 'client#confirm_beta_token'
   post 'confirm-disclaimer'        => 'client#disclaimer_agreement'
   post 'confirm-terms'             => 'client#terms_agreement'
+  post 'sms'                       => 'sms#receive'
 
   # User routes
-  put 'user'               => 'users#update'
-  post 'authentication/from-native' =>  'users#from_native'
+  put 'user'                        => 'users#update'
+  post 'authentication/from-native' => 'users#from_native'
+  post 'phone/verify/:user_id'      => 'confirmation_codes#verify_code'
+
 
   # JSON API
   namespace :api do
@@ -74,6 +82,7 @@ Tagsurf::Application.routes.draw do
     # Users API
     get  'users/:id/stats'               => 'votes#stats'
     get  'users'                         => 'users#stats'
+    get  'users/list'                    => 'users#list'
     get  'users/buddies'                 => 'users#buddies'
     patch  'users/:id'                   => 'users#update'
     get 'users/unsubscribe/:id/:type'    => 'users#unsubscribe'
@@ -109,6 +118,8 @@ Tagsurf::Application.routes.draw do
     post 'friend/accept/:user_id'           => 'friends#accept'
     post 'friend/decline/:user_id'          => 'friends#decline'
     post 'friend/unfriend/:user_id'         => 'friends#destroy'
+
+    post 'contacts'                         => 'friends#match_contacts'
 
   end
 

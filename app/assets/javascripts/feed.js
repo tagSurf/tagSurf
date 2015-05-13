@@ -5,6 +5,14 @@ var castVote = function(card) {
 		+ "/tag/" + tag, "POST", null, null);
 };
 
+var acceptFriend = function(id) {
+	xhr("/api/friend/accept/"+id, "POST", refer.populateBuddies, null);
+}
+
+var declineFriend = function(id) {
+	xhr("/api/friend/decline/"+id, "POST", refer.populateBuddies, null);
+}
+
 // window.onpageshow = function(evt) {
 // 	if (evt.persisted) {
 // 		document.body.style.display = "none";
@@ -16,7 +24,7 @@ onload = function ()
 {
 	// Deeplink re-directs
 	// Pause on facebook redirect to handle bug in iPhone5 FB Browser
-	if (isFacebook() && isIos()) {
+	if (isFacebook() && isIos() && !DEBUG) {
 		setTimeout(function() { 
 				if (isIos() && !isUIWebView() && isAuthorized())
 					window.location = "tagSurf://card/" + document.location.hash.split("#")[1];
@@ -26,9 +34,9 @@ onload = function ()
 							document.location.pathname.split("/")[3];
 		}, 2000);
 	}
-	else if (isIos() && !isUIWebView() && isAuthorized())
+	else if (isIos() && !isUIWebView() && isAuthorized() && !DEBUG)
 		window.location = "tagSurf://card/" + document.location.hash.split("#")[1];
-	else if (isIos() && !isUIWebView() && !isAuthorized())
+	else if (isIos() && !isUIWebView() && !isAuthorized() && !DEBUG)
 		window.location = "tagSurf://card/" + document.location.pathname.split("/")[2] + "~" +
 							document.location.pathname.split("/")[3];
 	
@@ -89,18 +97,27 @@ onload = function ()
 			if (!slider.animating && (direction == "up" || direction == "down") && slider.expanded)
 				gesture.triggerSwipe(scrollContainer, direction, distance, dx, dy, pixelsPerSecond);
 			else if (!slider.animating && (direction == "left" || direction == "right")) {
-				if (slider.isContent)
+				if (slider.isContent) {
 					analytics.track("Swipe", {
 						card: slider.id,
 						direction: direction,	
 						surfing: current_tag
 					});
-				else if (slider.id == 221281)
+					swipeSlider(direction, null, 700);
+				}
+				else if (slider.id == 221281) {
 					analytics.track("Swipe Login Card", {
 						direction: direction,
 						surfing: current_tag
 					});
-				swipeSlider(direction, null, 700);
+					swipeSlider(direction, null, 700);
+				}
+				else if (slider.type == "friend_request") {
+					var friendId = slider.data.user_stats.friend_id;
+					swipeSlider(direction, (direction == "left" ? declineFriend(friendId) : acceptFriend(friendId)), 700);
+				}
+				else
+					swipeSlider(direction, null, 700);
 			}
 		},
 		scroll: function(event) {
@@ -226,34 +243,52 @@ onload = function ()
 					}
 					else if (slider.x > slideThreshold)
 					{
-						if (slider.isContent)
+						if (slider.isContent) {
 							analytics.track("Swipe", {
 								card: slider.id,
 								direction: "right",	
 								surfing: current_tag
 							});
-						else if (slider.id == 221281)
+							swipeSlider("right", null, 100);
+						}
+						else if (slider.id == 221281) {
 							analytics.track("Swipe Login Card", {
 								direction: "right",
 								surfing: current_tag
 							});
-						swipeSlider("right", null, 100);
+							swipeSlider("right", null, 100);
+						}
+						else if (slider.type == "friend_request") {
+							var friendId = slider.data.user_stats.friend_id;
+							swipeSlider("right", acceptFriend(friendId), 100);	
+						}
+						else
+							swipeSlider("right", null, 100);	
 					}
 					else if (slider.x < -slideThreshold)
 					{
-						if (slider.isContent)
+						if (slider.isContent) {
 							analytics.track("Swipe", {
 								card: slider.id,
 								direction: "left",	
 								surfing: current_tag
 							});
-						else if (slider.id == 221281)
+							swipeSlider("left", null, 100);
+						}
+						else if (slider.id == 221281) {
 							analytics.track("Swipe Login Card", {
 								direction: "left",
 								surfing: current_tag
 							});
-						swipeSlider("left", null, 100);
-					}
+							swipeSlider("left", null, 100);
+						}
+						else if (slider.type == "friend_request") {
+							var friendId = slider.data.user_stats.friend_id;
+							swipeSlider("left", declineFriend(friendId), 100);
+						}
+						else
+							swipeSlider("left", null, 100);			
+					} 
 				}
 				else if (slider.verticaling == true && slider.expanded == true)
 				{
@@ -528,7 +563,12 @@ onload = function ()
 				surfing: current_tag
 			});
 		}
-		swipeSlider("left");
+		if (slider.type == "friend_request") {
+			var friendId = slider.data.user_stats.friend_id;
+			swipeSlider("left", declineFriend(friendId), 700);
+		} else {
+			swipeSlider("left");
+		}
 		hasKeySwiped = true;
 	});
 	stroke.listen("up", "39", function() {
@@ -550,7 +590,12 @@ onload = function ()
 				surfing: current_tag
 			});
 		}
-		swipeSlider("right");
+		if (slider.type == "friend_request") {
+			var friendId = slider.data.user_stats.friend_id;
+			swipeSlider("right", acceptFriend(friendId), 700);
+		} else {
+			swipeSlider("right");			
+		}
 		hasKeySwiped = true;
 	});
 	stroke.listen("up", null, closeReminders);

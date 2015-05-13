@@ -1,0 +1,25 @@
+<%= stylesheet_link_tag "sessions", :media => "all" %>
+
+<center>
+	<div id='container'>
+  	<div class="tslogo"></div>
+  	<div class="ac-text-container">	
+  		<p>Find friends from<br/>your contacts list!</p>
+  	</div>
+		<a id='btn-lnk' href = 'addressbook://'><div id='btn' class="button" style="max-width: 40%; margin-top: 20px; font-size: 120%; font-weight: 300;", onclick="connect();">Ok</div></a>
+		<a id='btn-lnk' href = '/'><div id='btn' class="button" style="max-width: 40%; margin-top: 20px; font-size: 120%; font-weight: 300;", onclick="throbber.on();">Not Now</div></a>
+	</div>
+</center>
+
+<%= javascript_include_tag "push" %>
+
+<script type="text/javascript">
+	var connect = function () {
+		throbber.on();
+		var link = document.getElementById('btn-lnk'),
+				dispatch = document.createEvent("HTMLEvents");
+
+		dispatch.initEvent("click", true, true);
+		link.dispatchEvent(dispatch);
+	}
+</script>

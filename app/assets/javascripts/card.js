@@ -30,6 +30,8 @@ var card_proto = {
 			this._buildContentCard();
 		else if (this.type == "login") 
 			this._buildLoginCard();
+		else if (this.type == "friend_request")
+			this._buildFriendCard(); 
 		else
 			this.wavesOn();
 	},
@@ -171,6 +173,34 @@ var card_proto = {
 			this.expanded = false;
 		}
 	},
+	_buildFriendCard: function() {
+		var self = this,
+			container = this.contents,
+			friend = this.data.user_stats,
+			profilePicLink = friend.profile_pic ? friend.profile_pic : "http://assets.tagsurf.co/img/UserAvatar.png",
+			name = (friend.first_name ? friend.first_name : "") + " " + (friend.last_name ? friend.last_name : ""),
+			username = friend.username ? friend.username : "", 
+			cardTemplate = "<div class='title really-big'>Friend Request</div><img class='friend-profile-pic' src='"+profilePicLink+"'><div class='friend-username'>@"+username+"</div>" + (name == " " ? "" : "<div class='friend-name bigger'>("+name+")</div>") + "<div class='friend-explainer bigger'>I'd like to share things with you on tagSurf!</div><div class='left-instructions'>Swipe Left<br/>to decline</div><div class='right-instructions'>Swipe Right<br/>to accept!</div>";
+		this.setOneTimeCb("show", function(){
+			if (window.innerHeight < 500) {
+				var contents = document.getElementsByClassName('friend-card')[0];
+				contents.style.maxHeight = "360px";
+				return;
+			}
+		});
+		this.wrapper.className = 'card-wrapper';
+		container.className = 'card-container friend-card';
+		container.innerHTML = cardTemplate;
+		this.cbs.start && this.cbs.start(this.contents);
+		if (this.oneTimeCbs.start) {
+			this.oneTimeCbs.start();
+			this.oneTimeCbs.start = null;
+		}
+		this.wrapper.appendChild(this.contents);
+		this.built = true;
+		this.swipable = true;
+		this.surfsUp = false;
+	},
 	_buildLoginCard: function() {
 		var self = this,
 			container = this.contents,
@@ -233,8 +263,10 @@ var card_proto = {
 		gesture.listen("drag", this.wrapper, this.cbs.drag);
 		gesture.listen("hold", this.wrapper, this.cbs.hold);
 		gesture.listen("down", this.wrapper, this.cbs.down);
-		if(this.type != "login") this._initImageGestures();
-		drag.makeDraggable(this.contents.children[4].lastChild, { constraint: "vertical" });
+		if(this.type == "content") { 
+			this._initImageGestures();
+			drag.makeDraggable(this.contents.children[4].lastChild, { constraint: "vertical" });
+		}
 	},
 	_initLoginInputs: function () {
 		var listInputs = document.forms[0].getElementsByClassName('su-input'),

@@ -14,3 +14,4 @@
 //= require util
 //= require gesture
 //= require modal
+//= require throbber

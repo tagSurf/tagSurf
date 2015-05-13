@@ -1,0 +1,39 @@
+<%= stylesheet_link_tag "contacts", :media => "all" %>
+<div id="container">
+	<div id="clist-container">
+		<table id="contact-table" style="background-color:blue;" width="100%" cellspacing="0" cellpadding="0">
+		<% prev_letter = "" %>
+		<% @contacts.each do |c| %>
+			<% if ((c[:first_name] && prev_letter != c[:first_name].slice(0,1).downcase) || (!c[:first_name] && prev_letter != c[:last_name].slice(0,1).downcase)) %>
+				<tr>
+					<% letter = c[:first_name].empty? ? c[:last_name].slice(0, 1) : c[:first_name].slice(0, 1) %>
+					<td style="font-size:200%"><a name=<%=letter%> class="section-header"><%= letter %></a></td>
+				</tr>
+			<% end %>
+			<tr>
+				<td><%= c[:first_name] %> <%= c[:last_name] %></td>
+			</tr>
+			<% prev_letter = c[:first_name].empty? ? c[:last_name].slice(0, 1).downcase : c[:first_name].slice(0, 1).downcase %>
+		<% end %>
+		</table>
+	</div>
+</div>
+<div id="navigator">
+</div>
+<%= javascript_include_tag "contacts" %>
+
+<script type="text/javascript">
+	var sections = document.getElementsByClassName('section-header'),
+			picker = document.getElementById('navigator');
+
+	sections.forEach(function(element){
+		var letterBox = document.createElement('div'),
+				link = document.createElement('a');
+
+		letterBox.className = "picker-box";
+		letterBox.innerHTML = element.name;
+		link.href = "#" + element.name;
+		link.appendChild(letterBox);
+		picker.appendChild(link);
+	})
+</script>

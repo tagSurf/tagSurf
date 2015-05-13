@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td>
+          <h1>Hi @<%= @username %>!</h1>
+        </td>
+        <td align="right">
+          <a href="http://tagsurf.co">
+            <img width="75px" src="http://assets.tagsurf.co/img/ts_logo_stacked_gray.png"/>
+          </a>
+        </td>
+      </tr>
+    </table>
+    <br/>
+    <a href="http://beta.tagsurf.co">
+      <table style="background-color: #00aeef; border: solid #00aeef; border-radius: 10px; width: 90%; text-align:center; color:white; font-family: 'Raleway', sans-serif; right:0; left:0; margin:auto;" cellspacing="0" cellpadding="0">
+        <tr>
+          <td style="font-size: 180%; font-weight:400; padding: 2% 0 5% 0;">
+            Request Accepted!
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <img width="50%;" style="border-radius:50%;" src="<%= @acceptor_profile_pic %>" />
+          </td>
+        </tr>
+        <tr>
+          <td style="border-radius: 5px; font-weight:300; font-size:200%; padding-top:5%;">
+            @<%= @acceptor_username %>
+          <td>
+        </tr>
+        <% if !@acceptor_name.nil? and !@acceptor_name.empty? %>
+          <tr>
+            <td style="border-radius: 5px; font-size:120%; padding-top: 1%; padding-bottom:5%; font-weight:200;">
+              (<%= @acceptor_name %>)
+            <td>
+          </tr>
+        <% end %>
+        <tr>
+          <td style="border-radius: 5px; padding: 3% 0; font-size: 120%; font-weight:200">
+            <p>Let's share some lolz!</p>
+          <td>
+        </tr>
+      </table>
+    </a>                        
+    <br/>
+    <h2><a href="http://beta.tagsurf.co" style="text-decoration:none;"><span style="color:#00aeef;">Login</span></a> to share cards!</h2>
+  </body>
+</html>

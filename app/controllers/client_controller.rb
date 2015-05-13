@@ -33,12 +33,18 @@ class ClientController < ApplicationController
       #   redirect_to welcome_path
       if !usr.username
         redirect_to selectusername_path
-      elsif !usr.fb_link_requested && !usr.profile_pic_link
-        redirect_to linkfb_path
-      elsif !usr.first_name
-        redirect_to name_path
+      # elsif !usr.fb_link_requested && !usr.profile_pic_link
+      #   redirect_to linkfb_path
+      # elsif !usr.first_name
+      #   redirect_to name_path
+      elsif !usr.phone
+        redirect_to phone_path
+      elsif !usr.phone_confirmed
+        redirect_to confirm_path
       elsif !usr.push_requested && params[:id].to_i == 0
         redirect_to "/push##{current_user.id}"
+      elsif !usr.contacts_link_requested
+        redirect_to linkcontacts_path
       else
         redirect_to feed_path
       end
@@ -109,17 +115,25 @@ class ClientController < ApplicationController
   def authentication; end
 
   def share
-    if current_user and !current_user.username
+    usr = current_user
+
+    if usr and !usr.username
       redirect_to selectusername_path
-    elsif current_user and !current_user.fb_link_requested and !current_user.profile_pic_link
+    elsif usr and !usr.fb_link_requested and !usr.profile_pic_link
       redirect_to linkfb_path
-    elsif current_user and !current_user.first_name
+    elsif usr and !usr.first_name
       redirect_to name_path
-    elsif current_user and !current_user.push_requested and params[:id].to_i == 0
-      redirect_to "/push##{current_user.id}"
-    elsif current_user and params[:tag] == "trending" 
+    elsif usr and !usr.phone
+      redirect_to phone_path
+    elsif usr and !usr.phone_confirmed
+      redirect_to confirm_path
+    elsif usr and !usr.push_requested and params[:id].to_i == 0
+      redirect_to "/push##{usr.id}"
+    elsif usr and !usr.contacts_link_requested
+      redirect_to linkcontacts_path
+    elsif usr and params[:tag] == "trending" 
       redirect_to "/feed#funny~#{params["id"]}"
-    elsif current_user 
+    elsif usr 
       redirect_to "/feed##{params["tag"]}~#{params["id"]}"
     elsif params["id"] == "0"
       confirm_surfable
@@ -130,7 +144,7 @@ class ClientController < ApplicationController
   def push_enable
     user = User.find(current_user.id)
     user.update_column :push_requested, true
-    redirect_to "/feed#funny~0"    
+    redirect_to root_path   
   end
 
   def push
@@ -167,6 +181,26 @@ class ClientController < ApplicationController
 
   def enter_name
     @user = current_user
+  end
+
+  def enter_phone
+    @user = current_user
+    unless @user.confirmation_code
+      ConfirmationCode.create(:user_id => @user.id).save
+    end
+  end
+
+  def confirm
+    @user = current_user
+    @code
+  end
+
+  def link_contacts
+  end
+
+  def addressbook
+    user = User.find(current_user.id)
+    user.update_column :contacts_link_requested, true
   end
 
   private

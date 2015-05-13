@@ -11,3 +11,4 @@
 // about supported directives.
 //
 //= require util
+//= require throbber

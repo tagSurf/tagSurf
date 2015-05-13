@@ -113,6 +113,10 @@ var userStatsPoller = function () {
           if (isGallery() && whichGallery() == "bumps")
             updateGalleryBadges(currentUser.unseen_refs, currentUser.unseen_bumps);
         }
+        if (result.user.reload_deck)
+          current_deck.refill();
+        if (result.user.update_buddies)
+          refer.populateBuddies();
       }
     }, function(result) {
       if (result.user == "not found" && DEBUG) 
@@ -376,14 +380,16 @@ window.onresize = function() {
   resizeCb && resizeCb();
 };
 
-var xhr = function(path, action, cb, eb, async, payload) {
+var xhr = function(path, action, cb, eb, async, payload, json) {
   var _xhr = new XMLHttpRequest();
   if(DEBUG) 
     console.log("XHR Request. Path: " + path + " action: " + (action || "GET"));
   if (typeof async === "undefined")
     async = true;
+  if (typeof json === "undefined")
+    json = false;
   _xhr.open(action || "GET", path, async);
-  if (action == "PATCH")
+  if (action == "PATCH" || json)
     _xhr.setRequestHeader("Content-type", "application/json");
   _xhr.onreadystatechange = function() {
     if (_xhr.readyState == 4) {

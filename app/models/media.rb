@@ -150,7 +150,7 @@ class Media < ActiveRecord::Base
     # Authenticated users
     else
       # Various branches of existance testing and switching based on params.
-      # Complete bullshit. Refactor this please!
+      # Please refactor me!
       recent_voted_ids = user.votes.where(:created_at => span..Time.now).pluck(:votable_id)
 
       referrals = Referral.select(:media_id).where(user_id: user.id)
@@ -419,6 +419,26 @@ class Media < ActiveRecord::Base
     if id.present? and id != 0 and offset < 1
       @media = Media.where(id: id) + @media
       @media.uniq!
+    end
+
+    if !user.nil? && user.requested_friends
+      friends = Array.new
+      user.requested_friends.each do |u|
+        card = Media.unscoped.where(ts_type: 'friend_request').limit(1).first
+        card.class_eval do
+          attr_accessor :friend
+        end
+        card.friend = Array.new
+        card.friend = { 
+                        :friend_id => u.id, 
+                        :first_name => u.first_name,
+                        :last_name => u.last_name, 
+                        :username => u.username, 
+                        :profile_pic => u.profile_pic_link 
+                      }
+        friends << card
+      end
+      @media = friends.concat(@media)
     end
 
     # Embedds login card every 15th card

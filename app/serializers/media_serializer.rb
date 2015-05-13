@@ -28,6 +28,7 @@ class MediaSerializer < BaseSerializer
 
   def type
     return "login" if media.ts_type == 'login'
+    return "friend_request" if media.ts_type == 'friend_request'
     unless media.remote_provider.include?('urx')
       return media.ts_type
     end
@@ -42,14 +43,14 @@ class MediaSerializer < BaseSerializer
   def permissions
     perms = {}
     perms[:votable] = true
-    if current_user.nil? || type == 'login'
+    if current_user.nil? || type == 'login' || type == 'friend_request'
       perms[:votable] = false
     end
     perms
   end
 
   def tags
-    return [] if type == 'login'
+    return [] if type != 'content'
     current_tags = (media.tag_list + media.tagged_as).uniq
     if current_user.try(:safe_mode)
       current_tags.delete_if { |tag| Tag.blacklisted?([tag.to_s]) }
@@ -62,7 +63,7 @@ class MediaSerializer < BaseSerializer
   end
 
   def image
-    return {} if type == 'login'
+    return {} if type != 'content'
     if media.remote_provider == 'imgur'
       img = {
         content_type: media.content_type,
@@ -86,17 +87,17 @@ class MediaSerializer < BaseSerializer
   end
 
   def user_vote
-    return nil if type == 'login'
+    return nil if type != 'content'
     @user_vote ||= Vote.where(voter_id: current_user.try(:id), votable_id: media.id).first
   end
 
   def user_favorite
-    return nil if type == 'login'
+    return nil if type != 'content'
     @user_fav ||= Favorite.where(user_id: current_user.try(:id), media_id: media.id).first
   end
 
   def caption
-    return nil if type == 'login'
+    return nil if type != 'content'
     case media.remote_provider
     when 'imgur'
       media.description ? media.description : media.title
@@ -114,11 +115,12 @@ class MediaSerializer < BaseSerializer
   end
 
   def source
-    return nil if type == 'login'
+    return nil if type != 'content'
     media.remote_provider
   end
 
   def user_stats
+    return media.friend if type == 'friend_request'
     return nil if type == 'login'
     time = Time.now
     user = {
@@ -144,32 +146,32 @@ class MediaSerializer < BaseSerializer
   end
 
   def votes
-    return nil if type == 'login'
+    return nil if type != 'content'
     @votes = Vote.where(votable_type: 'Media', votable_id: media.id) 
   end
 
   def total_votes
-    return nil if type == 'login'
+    return nil if type != 'content'
     media.remote_score.to_i + votes.length.to_i
   end
 
   def down_votes
-    return nil if type == 'login'
+    return nil if type != 'content'
     media.remote_down_votes.to_i + votes.where(vote_flag: false).count
   end
 
   def up_votes
-    return nil if type == 'login'
+    return nil if type != 'content'
     media.remote_up_votes.to_i + votes.where(vote_flag: true).count
   end
 
   def score
-    return nil if type == 'login'
+    return nil if type != 'content'
     media.remote_score
   end
 
   def source_icon
-    return nil if type == 'login'
+    return nil if type != 'content'
     if media.remote_provider.include?('urx')
       media.deep_link_icon
     elsif media.remote_provider == 'imgur'
@@ -183,7 +185,7 @@ class MediaSerializer < BaseSerializer
   end
 
   def trend
-    return nil if type == 'login'
+    return nil if type != 'content'
     [*1..10].sample.odd? ? 'up' : 'down'
   end
 
@@ -212,7 +214,5 @@ class MediaSerializer < BaseSerializer
       ref
     end
   end
-
-  
 
 end

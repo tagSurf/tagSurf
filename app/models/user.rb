@@ -12,10 +12,11 @@ class User < ActiveRecord::Base
   has_many    :favorites
   has_many    :referrals, :foreign_key => :referrer_id
   belongs_to  :access_code
+  has_one     :confirmation_code
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable, 
-         :registerable, :confirmable,
+         :registerable,
          :omniauthable, :omniauth_providers => [:imgur, :facebook]
 
   CLIENT_ID = Rails.env.production? ? 'e0d1a9753eaf289' : '63c3978f06dac10'
@@ -31,6 +32,7 @@ class User < ActiveRecord::Base
   scope :sorted_history, order("created_at ASC")
 
   after_commit :destroy_all_relations, on: :destroy
+  after_commit :create_confirmation_code, on: :create
 
   def welcomed?
     completed_feature_tour?
@@ -230,17 +232,126 @@ class User < ActiveRecord::Base
 
     buddy_ids = recent_shares.inject(Hash.new(1)) { |h, e| h[e] += 1 ; h }.to_a.sort_by(&:last).reverse.map {|x,y| x}
 
-
     buddies = User.find(buddy_ids).index_by(&:id).values_at(*buddy_ids).map{|u| [u.id,u.email,u.username, u.first_name, u.last_name, u.profile_pic_link]}
     
-    # Uncomment this line and rm line directly below it to enable filter based on friendship
-    # buddies.concat(friends)
-    buddies.concat(User.select(:id, :email, :username, :first_name, :last_name, :profile_pic_link).order('sign_in_count DESC NULLS LAST').map { |user| [user.id, user.email, user.username, user.first_name, user.last_name, user.profile_pic_link] })
+    buddies.concat(friends)
         
     buddies.uniq!
 
     buddies
 
+  end
+
+  def self.match_users(contacts, user)
+    user_phones = Hash.new()
+    user_emails = Hash.new()
+    names_hash = Hash.new()
+    phones_hash = Hash.new()
+    pending_friends = User.find(user).pending_friends.map{|u| u.id}
+    friends = User.find(user).friends.map{|u| u.id}
+    friends.concat(pending_friends)
+
+    User.select(:phone, :username, :id, :profile_pic_link).where(:phone_confirmed => true).each {|u| user_phones[u.phone] = [u.id, u.username, u.profile_pic_link]}
+
+    User.all.select(:email, :username, :id, :profile_pic_link).each {|u| user_emails[u.email] = [u.id, u.username, u.profile_pic_link]}
+
+    contacts.each do |c|
+      unless (c[:phone_number].empty? && c[:emails].empty?) || (c[:first_name].empty? && c[:last_name].empty?)
+        n = User.build_name_key(c)
+        unless n.empty?
+          names_hash[n] ||= Hash.new()
+          names_hash[n] = User.merge_contact(names_hash[n], c)  
+        end
+
+        p = User.build_phone_key(c)
+        unless p.empty?
+          phones_hash[p] ||= Hash.new()
+          phones_hash[p] = User.merge_contact(phones_hash[p], c)
+        end        
+      end
+    end
+
+    clean_contacts = names_hash.values.concat(phones_hash.values)
+    clean_contacts.uniq!
+
+    names_hash = Hash.new
+
+    clean_contacts.each do |c|
+      n = User.build_name_key(c)
+      names_hash[n] ||= Hash.new()
+      names_hash[n] = User.merge_contact(names_hash[n], c)  
+    end
+
+    clean_contacts = names_hash.values
+
+    clean_contacts.sort_by!{|c| c[:first_name].downcase + c[:last_name].downcase}
+
+    clean_contacts.each do |c|
+      if c[:phone_number] && user_phones[c[:phone_number]]
+        c[:user_id] = user_phones[c[:phone_number]][0]
+        c[:username] = user_phones[c[:phone_number]][1]
+        c[:profile_pic] = user_phones[c[:phone_number]][2]
+        c[:requested] = friends.include?(c[:user_id])
+        puts "user found by phone! " + c[:first_name] + " " + c[:last_name]
+      elsif !c[:emails].empty?
+        c[:emails].each do |e|
+          if user_emails[e]
+            c[:user_id] = user_emails[e][0]
+            c[:username] = user_emails[e][1]
+            c[:profile_pic] = user_emails[e][2]
+            c[:requested] = friends.include?(c[:user_id])
+            puts "user found by email! " + c[:first_name] + " " + c[:last_name]
+          end
+        end
+      end
+    end
+
+    clean_contacts
+  end
+
+  def self.full_list
+    list = User.where('username IS NOT NULL').map{|u| [u.id, u.email, u.username, u.first_name, u.last_name, u.profile_pic_link]}
+  end 
+
+  def self.build_name_key(contact)
+    key = contact[:first_name].downcase + contact[:last_name].downcase
+   
+    key
+  end
+
+  def self.build_phone_key(contact)
+    key = contact[:phone_number]
+  
+    key
+  end
+
+  def self.merge_contact(existing, to_merge)
+    existing[:first_name] ||= to_merge[:first_name]
+    existing[:last_name] ||= to_merge[:last_name]
+    existing[:phone_number] ||= to_merge[:phone_number]
+    existing[:emails] ||= Array.new
+    if !to_merge[:emails].empty? && to_merge[:emails].is_a?(Array) 
+      existing[:emails].concat(to_merge[:emails])
+      existing[:emails].uniq!
+    elsif !to_merge[:emails].empty?
+      existing[:emails].push(to_merge[:emails])
+      existing[:emails].uniq!
+    end
+
+    existing
+  end
+
+  def self.verify_code(user_id, code)
+    @user = User.find(user_id)
+    @success = false
+    unless code.to_i != @user.confirmation_code.code
+      @user.confirmation_code.destroy!
+      @user.phone_confirmed = true
+      @user.phone_confirmed_at = Time.now
+      @user.save
+      @success = true
+    end
+    @success
   end
 
   protected
@@ -251,6 +362,10 @@ class User < ActiveRecord::Base
 
   def assign_beta_code
     # For those who need not a code
+  end
+
+  def create_confirmation_code
+    ConfirmationCode.create(:user_id => id)
   end
 
   def confirmation_required?

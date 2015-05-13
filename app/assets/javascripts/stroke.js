@@ -14,6 +14,7 @@ var stroke = {
 			if (kobj.down)
 				kobj.duration += (now - kobj.down);
 			kobj.down = now;
+			kobj.code = code;
 			ac && ac(kobj);
 			cb && cb(kobj);
 		};
@@ -26,6 +27,7 @@ var stroke = {
 				ac = stroke.cbs.up.always,
 				cb = stroke.cbs.up[code];
 			kobj.up = now;
+			kobj.code = code;
 			kobj.duration += kobj.up - kobj.down;
 			ac && ac(kobj);
 			cb && cb(kobj);

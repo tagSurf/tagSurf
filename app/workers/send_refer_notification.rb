@@ -12,10 +12,16 @@ class SendReferNotification
 	media = Media.unscoped.find(ref.media_id)
 	referrer_id = ref.referrer_id
 	user_id = ref.user_id
+	@user = User.find(user_id)
 	referrer_name = User.find(referrer_id).username
 	badge_number = Referral.unscoped.where(:user_id => user_id, :seen => false).count +
 					Bump.unscoped.where(:sharer_id => user_id, :seen => false).count
-    unless !User.find(user_id).refer_mailers
+    
+	unless ref.voted
+		@user.update_column('reload_deck', true)
+	end
+
+    unless !@user.refer_mailers || (Referral.unscoped.where(:user_id => user_id).count > 3) 
 	    ReferMailer.referred_media_email(user_id, referrer_id, media, referral_id).deliver
 	end
 
