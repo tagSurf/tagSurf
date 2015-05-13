@@ -19,8 +19,24 @@ var deck_proto = {
 			d = rdata[i];
 			if (d.type == "login")
 				this.loginCard = d;
-			else if (d.type == "friend_request")
-				preloads.push(d);
+			else if (d.type == "friend_request" && !this.known_keys["f"+d.data.user_stats.friend_id]) {
+				d.isLoaded = true;
+				this.known_keys["f"+d.data.user_stats.friend_id] = true;
+				if(this.cards.length > 0)
+					this.unshift(d);
+				else
+					preloads.push(d);
+			}
+			else if (d.referral) {
+				image.load(d, window.innerWidth - 40, function(c) {
+					c.isLoaded = true;
+				});
+				this.known_keys[d.id] = true;
+				if (this.cards.length > 0)
+					this.unshift(d)
+				else
+					preloads.push(d)
+			}
 			else if ((!this.known_keys[d.id] && !this.voted_keys[d.id]))
 				preloads.push(d);
 		}
@@ -108,6 +124,11 @@ var deck_proto = {
 		this.cards.shift();
 		this.deal();
 	},
+	unshift: function(card) {
+		this.cards.splice(1, 0, card);
+		this.unshow(true);
+		this.deal();
+	},
 	purge: function() {
 		DEBUG && console.log("purge deck #" + this.tag);
 		this.cards = this.cards.filter(function(card) {
@@ -146,6 +167,14 @@ var deck_proto = {
 		this.fadeIn();
 		if ((this.cards.length + image.loadCount()) <= this.constants.buffer_minimum)
 			this.refill();
+	},
+	unshow: function (leaveTopCard) {
+		var i = leaveTopCard ? 1 : 0;
+		for (i; i < this.constants.stack_depth + 1; i++) {
+			c = this.cards[i];
+			if (!c) break;
+			c.unshow();
+		}
 	}
 };
 
