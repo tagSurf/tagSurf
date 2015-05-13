@@ -14,7 +14,7 @@ var deck_proto = {
 		return topCard && topCard.zIndex < this.constants.stack_depth;
 	},
 	popData: function(rdata) {
-		var i, d, preloads = [];
+		var i, d, preloads = [], self = this;
 		for (i = 0; i < rdata.length; i++) {
 			d = rdata[i];
 			if (d.type == "login")
@@ -28,14 +28,15 @@ var deck_proto = {
 					preloads.push(d);
 			}
 			else if (d.referral) {
-				image.load(d, window.innerWidth - 40, function(c) {
-					c.isLoaded = true;
-				});
-				this.known_keys[d.id] = true;
-				if (this.cards.length > 0)
+				if (this.cards.length > 0 && !this.known_keys[d.id]) {
 					this.unshift(d)
-				else
-					preloads.push(d)
+					image.load([d], window.innerWidth - 40, function(c) {
+						c.isLoaded = true;
+						self.known_keys[c.id] = true;
+						self.deal();
+					});
+				} else if ((!this.known_keys[d.id] && !this.voted_keys[d.id]))
+					preloads.push(d);
 			}
 			else if ((!this.known_keys[d.id] && !this.voted_keys[d.id]))
 				preloads.push(d);
