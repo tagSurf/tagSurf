@@ -21,7 +21,7 @@ class SendReferNotification
 		@user.update_column('reload_deck', true)
 	end
 
-    unless !@user.refer_mailers
+    unless !@user.refer_mailers || (Referral.unscoped.where(:user_id => user_id).count > 3) 
 	    ReferMailer.referred_media_email(user_id, referrer_id, media, referral_id).deliver
 	end
 
