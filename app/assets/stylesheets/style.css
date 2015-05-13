@@ -369,6 +369,24 @@ a {
 .plus-message{
 	font-size: 200%;
 }
+#add-friends-btn {
+	position: absolute;
+	left: 5px;
+	bottom: 0;
+}
+#add-friends-icon {
+	width: 30px;
+	float: left;
+	margin-top: 3px;
+	margin-left: 5px;
+}
+#add-friends-message {
+	color: white;
+	float: right;
+	margin-left: 5px;
+	margin-bottom: 10px;
+	text-align: center;
+}
 
 
 /*======== Modal Close Button Stuff =========*/
@@ -1102,7 +1120,7 @@ a {
 		width: 86%;
 	}
 	.buddy-list-container {
-		max-height: 68%;
+		max-height: 72%;
 	}
 	#nav-badge{ 
 		left: 64%;
@@ -1337,9 +1355,19 @@ a {
 	}
 	.plus-icon {
 		width: 15%;
-
 	}
 	.plus-btn {
 		margin: 2% 0;
+	}
+	#add-friends-btn {
+		left: 6px;
+	}
+	#add-friends-icon {
+		width: 45px;
+		margin-left: 15px;
+	}
+	#add-friends-message {
+		font-size: 140%;
+		margin-bottom: 3px;
 	}
 }

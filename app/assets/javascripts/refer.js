@@ -31,7 +31,10 @@ var refer = {
 			searchInput = document.createElement('input'),
 			listContainer = document.createElement('div'),
 			closebtn = document.createElement('img'),
-			sendbtn = document.createElement('div');
+			sendbtn = document.createElement('div'),
+			addbtn = document.createElement('div'),
+			addIcon = document.createElement('img'),
+			addMessage = document.createElement('div');
 		heading.className = "buddy-title";
 		heading.innerHTML = "Bump This To";
 		searchBar.className = "search-bar";
@@ -52,13 +55,31 @@ var refer = {
 		sendbtn.className = "msgbox-btn send-btn";
 		sendbtn.classList.add(isMobile() ? "biggest" : "really-big");
 		sendbtn.innerHTML = "Send";
+		addbtn.id = "add-friends-btn";
+		addIcon.id = "add-friends-icon";
+		addIcon.src = "http://assets.tagsurf.co/img/plus_white_150.png";
+		addMessage.id = "add-friends-message";
+		addMessage.innerHTML = "Add<br/>Friends";
+		addbtn.appendChild(addIcon);
+		addbtn.appendChild(addMessage);
 		refer.content.className = "centered";
 		refer.content.style.height = "100%";
 		refer.content.appendChild(heading);
 		refer.content.appendChild(searchBar);
 		refer.content.appendChild(listContainer);
 		refer.content.appendChild(sendbtn);
+		refer.content.appendChild(addbtn);
 		refer.content.appendChild(closebtn);
+
+		gesture.listen("down", addbtn, function() {
+			document.getElementById('add-friends-btn').style.opacity = 0.4;
+		});
+		gesture.listen("up", addbtn, function() {
+			document.getElementById('add-friends-btn').style.opacity = 1;
+		});
+		gesture.listen("tap", addbtn, function() {
+			modal.topModalIn(refer.searcher);
+		});
 
 		gesture.listen("tap", sendbtn, function() {
 			var selectionList = [];
@@ -392,53 +413,55 @@ var refer = {
 	    
     drag.makeDraggable(listContainer, {constraint: "horizontal"});
 
-    if (all)
-    	return;
-	// 	Add friends button at end of list a personalized list
-		var 	plusrow = buddyList.insertRow(position),
-					plusCell = plusrow.insertCell(0),
-					plusIcon = document.createElement('img'),
-					plusText = document.createElement('div'),
-					plusBtn = document.createElement('div');
+// Adds button at bottom of friends list to open add-friends modal
 
-		plusCell.className = 'buddy-cell plus-cell';
-		plusText.className = 'plus-message buddy-name block';
-		plusText.innerHTML = 'Add Friends';
-		plusIcon.className = 'plus-icon block';
-		plusIcon.src = "http://assets.tagsurf.co/img/plus_white_150.png";
-		plusBtn.className = 'plus-btn';
-		plusBtn.appendChild(plusIcon);
-		plusBtn.appendChild(plusText);
-		plusCell.appendChild(plusBtn);
+ //    if (all)
+ //    	return;
+	// // 	Add friends button at end of list a personalized list
+	// 	var 	plusrow = buddyList.insertRow(position),
+	// 				plusCell = plusrow.insertCell(0),
+	// 				plusIcon = document.createElement('img'),
+	// 				plusText = document.createElement('div'),
+	// 				plusBtn = document.createElement('div');
 
-		gesture.listen("down", plusCell, function() {
-			if (listContainer.dragging)
-				return;
-			plusIcon.src = "http://assets.tagsurf.co/img/plus_gray_150.png";
-			plusIcon.style.opacity = "0.4";
-			gesture.triggerDown(listContainer);
-			return true;
-		});
-		gesture.listen("up", plusCell, function(direction, distance, dx, dy) {
-			if (listContainer.dragging)
-				return;
-			plusIcon.src = "http://assets.tagsurf.co/img/plus_white_150.png";
-			plusIcon.style.opacity = "1.0";
-			gesture.triggerDrag(listContainer, direction, distance, dx, dy);
-			return true;			
-		});
-		gesture.listen("swipe", plusCell, function(direction, distance, dx, dy, pixelsPerSecond) {
-			gesture.triggerSwipe(listContainer, direction, distance, dx, dy, pixelsPerSecond);
-		});
-		gesture.listen("tap", plusCell, function() {
-			if (listContainer.dragging)
-				return;
-			modal.topModalIn(refer.searcher);
-		});
-		gesture.listen("drag", plusCell, function(direction, distance, dx, dy, pixelsPerSecond) {
-			gesture.triggerDrag(listContainer, direction, distance, dx, dy, pixelsPerSecond);
-			return true;
-		});
+	// 	plusCell.className = 'buddy-cell plus-cell';
+	// 	plusText.className = 'plus-message buddy-name block';
+	// 	plusText.innerHTML = 'Add Friends';
+	// 	plusIcon.className = 'plus-icon block';
+	// 	plusIcon.src = "http://assets.tagsurf.co/img/plus_white_150.png";
+	// 	plusBtn.className = 'plus-btn';
+	// 	plusBtn.appendChild(plusIcon);
+	// 	plusBtn.appendChild(plusText);
+	// 	plusCell.appendChild(plusBtn);
+
+	// 	gesture.listen("down", plusCell, function() {
+	// 		if (listContainer.dragging)
+	// 			return;
+	// 		plusIcon.src = "http://assets.tagsurf.co/img/plus_gray_150.png";
+	// 		plusIcon.style.opacity = "0.4";
+	// 		gesture.triggerDown(listContainer);
+	// 		return true;
+	// 	});
+	// 	gesture.listen("up", plusCell, function(direction, distance, dx, dy) {
+	// 		if (listContainer.dragging)
+	// 			return;
+	// 		plusIcon.src = "http://assets.tagsurf.co/img/plus_white_150.png";
+	// 		plusIcon.style.opacity = "1.0";
+	// 		gesture.triggerDrag(listContainer, direction, distance, dx, dy);
+	// 		return true;			
+	// 	});
+	// 	gesture.listen("swipe", plusCell, function(direction, distance, dx, dy, pixelsPerSecond) {
+	// 		gesture.triggerSwipe(listContainer, direction, distance, dx, dy, pixelsPerSecond);
+	// 	});
+	// 	gesture.listen("tap", plusCell, function() {
+	// 		if (listContainer.dragging)
+	// 			return;
+	// 		modal.topModalIn(refer.searcher);
+	// 	});
+	// 	gesture.listen("drag", plusCell, function(direction, distance, dx, dy, pixelsPerSecond) {
+	// 		gesture.triggerDrag(listContainer, direction, distance, dx, dy, pixelsPerSecond);
+	// 		return true;
+	// 	});
 
 	},
 	on: function (card) {

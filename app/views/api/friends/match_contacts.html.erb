@@ -29,15 +29,33 @@
     	width: 100%;
     }
     #close-btn {
-    	width: 50px;
+    	width: 100px;
+    	height: 100px
     	z-index: 100;
-    	padding: 10px 5px 5px 10px;
     	position: fixed;
     	bottom: 0;
     	right: 0;
+    	left: 0;
+    	margin: auto;
     }
     #close-icon {
     	width: 30px;
+    }
+    #close-btn-box {
+    	position: relative;
+    	background-color: #aaaaaa;
+    	width: 70px;
+    	height: 30px;
+    	bottom: 0;
+    	padding-top: 5px;
+    	top: 0;
+    	right: 0;
+    	left: 0;
+    	margin: auto;
+    	color: white;
+    	text-align: center;
+    	vertical-align: middle;
+    	font-weight: 600;
     }
     .section-header {
     	font-size: 200%;
@@ -197,7 +215,8 @@
 	</div>
 	<a onclick="goBack();">
 		<div id="close-btn">
-			<img id="close-icon" src="http://assets.tagsurf.co/img/Close.png">
+			<!-- <img id="close-icon" src="http://assets.tagsurf.co/img/Close.png"> -->
+			<div id="close-btn-box">Close</div>
 		</div>
 	</a>
 </div>
