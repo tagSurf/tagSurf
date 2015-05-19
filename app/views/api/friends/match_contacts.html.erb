@@ -160,7 +160,7 @@
 						</td>
 					<% elsif !c[:phone_number].empty? %>
 						<td class="contact-row">
-							<a href="sms:<%=c[:phone_number]%>&body=Hey! Checkout this cool app I found. Find me @<%=@username%> and we can share some #lolz! https://appsto.re/us/hYmt1.i" onclick="swapImg(<%=i%>)">
+							<a href="sms:<%=c[:phone_number]%>&body=Hey <%= c[:first_name] %> - check out this cool app I found! My username is @<%=@username%>. Add me and we can share some lolz! https://appsto.re/us/hYmt1.i" onclick="swapImg(<%=i%>)">
 								<div id="c<%=i%>" class="contact-cell">
 									<div class="name">
 										<%= c[:first_name] %> <%= c[:last_name] %>
