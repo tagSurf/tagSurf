@@ -37,14 +37,14 @@ class ClientController < ApplicationController
       #   redirect_to linkfb_path
       # elsif !usr.first_name
       #   redirect_to name_path
-      elsif !usr.phone
-        redirect_to phone_path
-      elsif !usr.phone_confirmed
-        redirect_to confirm_path
+      # elsif !usr.phone
+      #   redirect_to phone_path
+      # elsif !usr.phone_confirmed
+      #   redirect_to confirm_path
       elsif !usr.push_requested && params[:id].to_i == 0
         redirect_to "/push##{current_user.id}"
-      elsif !usr.contacts_link_requested
-        redirect_to linkcontacts_path
+      # elsif !usr.contacts_link_requested
+      #   redirect_to linkcontacts_path
       else
         redirect_to feed_path
       end
@@ -119,16 +119,16 @@ class ClientController < ApplicationController
 
     if usr and !usr.username
       redirect_to selectusername_path
-    elsif usr and !usr.fb_link_requested and !usr.profile_pic_link
-      redirect_to linkfb_path
-    elsif usr and !usr.first_name
-      redirect_to name_path
     elsif usr and !usr.phone
       redirect_to phone_path
     elsif usr and !usr.phone_confirmed
       redirect_to confirm_path
     elsif usr and !usr.push_requested and params[:id].to_i == 0
       redirect_to "/push##{usr.id}"
+    elsif usr and !usr.fb_link_requested and !usr.profile_pic_link
+      redirect_to linkfb_path
+    elsif usr and !usr.first_name
+      redirect_to name_path
     elsif usr and !usr.contacts_link_requested
       redirect_to linkcontacts_path
     elsif usr and params[:tag] == "trending" 

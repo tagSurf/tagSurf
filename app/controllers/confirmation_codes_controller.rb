@@ -9,7 +9,7 @@ class ConfirmationCodesController < ApplicationController
 
 		@success = User.verify_code(user_id, code)
 		if @success
-			redirect_to root_path, :notice => "Phone number confirmed"
+			redirect_to linkcontacts_path, :notice => "Phone number confirmed"
 		else
 			flash[:error] = ["Invalid code. Please try again."]
 			redirect_to confirm_path
