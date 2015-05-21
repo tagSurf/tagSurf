@@ -117,27 +117,35 @@ class ClientController < ApplicationController
   def share
     usr = current_user
 
-    if usr and !usr.username
-      redirect_to selectusername_path
-    elsif usr and !usr.phone
-      redirect_to phone_path
-    elsif usr and !usr.phone_confirmed
-      redirect_to confirm_path
-    elsif usr and !usr.push_requested and params[:id].to_i == 0
-      redirect_to "/push##{usr.id}"
-    elsif usr and !usr.fb_link_requested and !usr.profile_pic_link
-      redirect_to linkfb_path
-    elsif usr and !usr.first_name
-      redirect_to name_path
-    elsif usr and !usr.contacts_link_requested
-      redirect_to linkcontacts_path
-    elsif usr and params[:tag] == "trending" 
-      redirect_to "/feed#funny~#{params["id"]}"
-    elsif usr 
-      redirect_to "/feed##{params["tag"]}~#{params["id"]}"
-    elsif params["id"] == "0"
-      confirm_surfable
+    case params["id"]
+    when 0
+      if usr 
+        if !usr.username
+          redirect_to selectusername_path
+        elsif !usr.phone
+          redirect_to phone_path
+        elsif !usr.phone_confirmed
+          redirect_to confirm_path
+        elsif !usr.push_requested and params[:id].to_i == 0
+          redirect_to "/push##{usr.id}"
+        elsif !usr.fb_link_requested and !usr.profile_pic_link
+          redirect_to linkfb_path
+        elsif !usr.first_name
+          redirect_to name_path
+        elsif !usr.contacts_link_requested
+          redirect_to linkcontacts_path
+        end
+      else
+        confirm_surfable
+      end
+    else
+      if usr and params[:tag] == "trending" 
+        redirect_to "/feed#funny~#{params["id"]}"
+      elsif usr 
+        redirect_to "/feed##{params["tag"]}~#{params["id"]}"
+      end
     end
+    
     @media = Media.where(id: params[:id]).try(:first)
   end
 

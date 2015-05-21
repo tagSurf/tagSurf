@@ -24,6 +24,7 @@ onload = function ()
 {
 	// Deeplink re-directs
 	// Pause on facebook redirect to handle bug in iPhone5 FB Browser
+	var id = isAuthorized() ? document.location.hash.split('~')[1] : document.location.pathname.split("/")[3];
 	if (isFacebook() && isIos() && !DEBUG) {
 		setTimeout(function() { 
 				if (isIos() && !isUIWebView() && isAuthorized())
@@ -34,9 +35,9 @@ onload = function ()
 							document.location.pathname.split("/")[3];
 		}, 2000);
 	}
-	else if (isIos() && !isUIWebView() && isAuthorized() && !DEBUG)
+	else if (isIos() && !isUIWebView() && id && id != 0 && isAuthorized() && !DEBUG)
 		window.location = "tagSurf://card/" + document.location.hash.split("#")[1];
-	else if (isIos() && !isUIWebView() && !isAuthorized() && !DEBUG)
+	else if (isIos() && !isUIWebView() && !DEBUG)
 		window.location = "tagSurf://card/" + document.location.pathname.split("/")[2] + "~" +
 							document.location.pathname.split("/")[3];
 	
