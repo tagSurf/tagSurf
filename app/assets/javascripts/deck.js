@@ -29,10 +29,10 @@ var deck_proto = {
 			}
 			else if (c.referral) {
 				if (this.cards.length > 0 && !this.known_keys[c.id]) {
-					this.unshift(c)
+					this.known_keys[c.id] = true;
+					this.unshift(c)					
 					image.load([c], window.innerWidth - 40, function(c) {
 						c.isLoaded = true;
-						self.known_keys[c.id] = true;
 						self.deal();
 					});
 				} else if ((!this.known_keys[c.id] && !this.voted_keys[c.id]))
