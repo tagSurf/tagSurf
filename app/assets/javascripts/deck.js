@@ -19,7 +19,7 @@ var deck_proto = {
 			c = cards[i];
 			if (c.type == "login")
 				this.loginCard = c;
-			else if (c.type == "frienc_request" && !this.known_keys["f"+c.data.user_stats.friend_id]) {
+			else if (c.type == "friend_request" && !this.known_keys["f"+c.data.user_stats.friend_id]) {
 				c.isLoaded = true;
 				this.known_keys["f"+c.data.user_stats.friend_id] = true;
 				if(this.cards.length > 0)
