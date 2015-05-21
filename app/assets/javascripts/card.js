@@ -1,8 +1,13 @@
 var card_proto = {
 	_init: function(data) {
 		if (data) {
-			var self = this;
+			var self = this,
+				linkBody =	data.image.original.url.split('.')[2];
 			this.data = data;
+			this.video = (linkBody.charAt(linkBody.length-1) == 'h') ? {
+				mp4: "http://i.imgur.com/"+data.remote_id+".mp4",
+				webm: "http://i.imgur.com/"+data.remote_id+".webm"
+			} : null;
 			this.id = data.id;
 			this.image = data.image;
 			this.animated = data.image.animated;
@@ -691,6 +696,7 @@ var newCard = function (data) {
 	card.zIndex = null;
 	card.trending = false;
 	card.animated = null;
+	card.video = null;
 	card.type = null;
 	card.isContent = null;
 	card.source = null;
