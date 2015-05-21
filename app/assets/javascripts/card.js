@@ -1,8 +1,13 @@
 var card_proto = {
 	_init: function(data) {
 		if (data) {
-			var self = this;
+			var self = this,
+				linkBody =	data.image.original.url.split('.')[2];
 			this.data = data;
+			this.video = (linkBody.charAt(linkBody.length-1) == 'h') ? {
+				mp4: "http://i.imgur.com/"+data.remote_id+".mp4",
+				webm: "http://i.imgur.com/"+data.remote_id+".webm"
+			} : null;
 			this.id = data.id;
 			this.image = data.image;
 			this.animated = data.image.animated;
@@ -40,7 +45,8 @@ var card_proto = {
 			container = this.contents,
 			formattingContainer = document.getElementById('formatter'),
 			card = this,
-			imageTemplate = (card.type.indexOf('web') != -1) ? "<a href='" + (isAndroid() ? (card.deep_link ? card.deep_link : card.web_link) : card.web_link) + "' target='_blank'>" + "<div class='image-container expand-animation'><img src= ></div></a>" : "<div class='image-container expand-animation'><img src= ></div>",
+			videoTemplate = this.video ? "<video class='ts-video' preload='auto' poster='"+ this.image.huge.url + "' autoplay='autoplay' muted='muted' loop='loop' webkit-playsinline><source src="+this.video.mp4+" type='video/mp4'><source src="+this.video.webm+" type='video/webm'></video>" : null,
+			imageTemplate = (card.type.indexOf('web') != -1) ? "<a href='" + (isAndroid() ? (card.deep_link ? card.deep_link : card.web_link) : card.web_link) + "' target='_blank'>" + "<div class='image-container expand-animation'>"+ (this.video ? videoTemplate : "<img src= >") + "</div></a>" : "<div class='image-container expand-animation'>"+ (this.video ? videoTemplate : "<img src= >") + "</div>",
 			cardTemplate = imageTemplate + 
 			"<div id='refer-btn' class='msgbox-btn'>Bump It!</div>" + 				
 			"<div class='icon-line'>" +
@@ -121,6 +127,8 @@ var card_proto = {
 		this.swipable = true;
 	},
 	setSource: function() {
+		if(this.video)
+			return;
 		if(this.type.indexOf('web') != -1)
 			this.contents.children[0].children[0].firstChild.src = image.get(this.data, 
 				window.innerWidth - 40).url;
@@ -254,6 +262,7 @@ var card_proto = {
 		gesture.listen("down", imageContainer, returnTrue);
 		gesture.listen("up", imageContainer, returnTrue);
 		gesture.listen("drag", imageContainer, returnTrue);
+		gesture.listen("hold", this.wrapper, this.cbs.hold);
 		modal.setPinchLauncher(imageContainer,
 			function() { self.cbs.up(true); });
 	},
@@ -691,6 +700,7 @@ var newCard = function (data) {
 	card.zIndex = null;
 	card.trending = false;
 	card.animated = null;
+	card.video = null;
 	card.type = null;
 	card.isContent = null;
 	card.source = null;

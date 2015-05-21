@@ -13,33 +13,33 @@ var deck_proto = {
 		var topCard = this.topCard();
 		return topCard && topCard.zIndex < this.constants.stack_depth;
 	},
-	popData: function(rdata) {
-		var i, d, preloads = [], self = this;
-		for (i = 0; i < rdata.length; i++) {
-			d = rdata[i];
-			if (d.type == "login")
-				this.loginCard = d;
-			else if (d.type == "friend_request" && !this.known_keys["f"+d.data.user_stats.friend_id]) {
-				d.isLoaded = true;
-				this.known_keys["f"+d.data.user_stats.friend_id] = true;
+	popData: function(cards) {
+		var i, c, preloads = [], self = this;
+		for (i = 0; i < cards.length; i++) {
+			c = cards[i];
+			if (c.type == "login")
+				this.loginCard = c;
+			else if (c.type == "friend_request" && !this.known_keys["f"+c.data.user_stats.friend_id]) {
+				c.isLoaded = true;
+				this.known_keys["f"+c.data.user_stats.friend_id] = true;
 				if(this.cards.length > 0)
-					this.unshift(d);
+					this.unshift(c);
 				else
-					preloads.push(d);
+					preloads.push(c);
 			}
-			else if (d.referral) {
-				if (this.cards.length > 0 && !this.known_keys[d.id]) {
-					this.unshift(d)
-					image.load([d], window.innerWidth - 40, function(c) {
+			else if (c.referral) {
+				if (this.cards.length > 0 && !this.known_keys[c.id]) {
+					this.known_keys[c.id] = true;
+					this.unshift(c)					
+					image.load([c], window.innerWidth - 40, function(c) {
 						c.isLoaded = true;
-						self.known_keys[c.id] = true;
 						self.deal();
 					});
-				} else if ((!this.known_keys[d.id] && !this.voted_keys[d.id]))
-					preloads.push(d);
+				} else if ((!this.known_keys[c.id] && !this.voted_keys[c.id]))
+					preloads.push(c);
 			}
-			else if ((!this.known_keys[d.id] && !this.voted_keys[d.id]))
-				preloads.push(d);
+			else if ((!this.known_keys[c.id] && !this.voted_keys[c.id]))
+				preloads.push(c);
 		}
 		if (preloads.length == 0 && this.cards.length == 0) 
 			this.deal();

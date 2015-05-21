@@ -121,6 +121,14 @@ img[src="img/history_icon_gray.png"] {
   color: #404041;
   background-color: #00719C !important;
 }
+#video_container {
+	margin-top: 5px;
+	display: block;
+	width: 100%;
+}
+#video_container video {
+	border-radius: 4px;
+}
 
 /*===== Share toggler stuff =====*/
 #gallery-toggler {

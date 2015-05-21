@@ -18,22 +18,22 @@ var image = {
 	clearLoadList: function() {
 		image._load.list = [];
 	},
-	load: function(dlist, minWidth, cb, eb) {
+	load: function(cardList, minWidth, cb, eb) {
 		var load = image._load;
-		dlist.forEach(function(d) {
-			if (d.type == "friend_request")
-				cb && cb(d);
-			if (d.type.indexOf("content") == -1 || current_deck.known_keys[d.id])
+		cardList.forEach(function(c) {
+			if (c.type == "friend_request")
+				cb && cb(c);
+			if (c.type.indexOf("content") == -1 || current_deck.known_keys[c.id])
 				return;
-			d._image_load_cb = d._image_load_cb || cb;
-			d._image_load_eb = d._image_load_eb || eb;
+			c._image_load_cb = c._image_load_cb || cb;
+			c._image_load_eb = c._image_load_eb || eb;
 			if (load.count >= load.max) {
-				load.list.push(d);
+				load.list.push(c);
 				return;
 			}
 			load.count += 1;
 			var i = new Image();
-			i.src = image.get(d, minWidth).url;
+			i.src = image.get(c, minWidth).url;
 			var loadNext = function() {
 				load.count -= 1;
 				if (load.count < load.max && load.list.length) {
@@ -43,41 +43,41 @@ var image = {
 				}
 			};
 			i.onload = function() {
-				d._image_load_cb && d._image_load_cb(d);
+				c._image_load_cb && c._image_load_cb(c);
 				loadNext();
 			};
 			i.onerror = function() {
-				d._image_load_eb && d._image_load_eb(d);
+				c._image_load_eb && c._image_load_eb(c);
 				loadNext();
 			};
 		});
 	},
 	get: function(card, minWidth, isGallery) {
-		var i, size, d = card && card.data ? card.data : card;
-		if(!d)
+		var i, size, c = (card && card.data) ? card.data : card;
+		if(!c)
 			return;
 		// animated cards and unspecified minWidth force original size
-		if ((!isGallery && d && d.image.animated) || !minWidth || image.cache.original[d.id]) {
-			image.cache.original[d.id] = d.image.original;
-			return d.image.original;
+		if ((!isGallery && c && c.image.animated) || !minWidth || image.cache.original[c.id]) {
+			image.cache.original[c.id] = c.image.original;
+			return c.image.original;
 		}
 
 		// check cache
 		for (i = 0; i < image.sizes.length; i++) {
 			size = image.sizes[i];
-			if (image.cache[size][d.id] && d.image[size].width >= minWidth)
-				return image.cache[size][d.id];
+			if (image.cache[size][c.id] && c.image[size].width >= minWidth)
+				return image.cache[size][c.id];
 		}
 
 		// just get the image
 		for (i = 2; i >= 0; i--) {
 			size = image.sizes[i];
-			if (d.image[size].url && d.image[size].width >= minWidth) {
-				image.cache[size][d.id] = d.image[size];
-				return image.cache[size][d.id];
+			if (c.image[size].url && c.image[size].width >= minWidth) {
+				image.cache[size][c.id] = c.image[size];
+				return image.cache[size][c.id];
 			}
 		}
-		image.cache.original[d.id] = d.image.original;
-		return d.image.original;
+		image.cache.original[c.id] = c.image.original;
+		return c.image.original;
 	}
 };

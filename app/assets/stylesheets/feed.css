@@ -321,6 +321,9 @@ html, body {
   width: 100%;
   -webkit-overflow-scrolling: none;
 }
+.ts-video {
+  width: 100%;
+}
 
 /*======= More Card Formatting Stuff ========*/
 .text-container {
