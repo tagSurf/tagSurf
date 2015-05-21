@@ -324,6 +324,9 @@ html, body {
 .ts-video {
   width: 100%;
 }
+.ts-video video {
+  border-radius: 5px;
+}
 
 /*======= More Card Formatting Stuff ========*/
 .text-container {
