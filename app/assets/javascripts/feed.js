@@ -195,7 +195,7 @@ onload = function ()
 		},
 		hold: function (duration) {
 			var slider = topCard();
-			if (duration == 3000 && !isAndroid())
+			if (duration == 3000 && !isAndroid() && !slider.video)
 			{
 				slider.supering = true;
 				toggleClass.apply(slider.contents, ['super-card', 'on']);
@@ -203,7 +203,7 @@ onload = function ()
 		},
 		tap: function (tapCount) {
 			var slider = topCard();
-			if (modal.zoom.zoomed) return;
+			if (modal.zoom.zoomed || slider.video) return;
 			if (tapCount == 1)
 			{
 				if (slider.compressing == false)

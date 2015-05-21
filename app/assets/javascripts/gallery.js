@@ -384,6 +384,8 @@ var gnodes = {},
 					modal.modalOut();
 					if (document.getElementById('web_link'))
 						picbox.replaceChild(bigpic, link);
+					else if (document.getElementById('video_container'))
+						picbox.replaceChild(bigpic, video);
 				}
 			}, function() { modal.zoomIn(d, function() {
 					modal.zoomOut();
@@ -397,6 +399,7 @@ var gnodes = {},
 			topbar.firstChild.appendChild(voteMeter(d, true));
 			topbar.children[2].innerHTML = Object.keys(d.tags[0])[0];
 
+			var linkBody = current_gallery_image.image.original.url.split('.')[2];
 			if (current_gallery_image.type.indexOf('web') != -1) {
 				picbox.replaceChild(link, bigpic);
 				link.appendChild(bigpic);
@@ -404,6 +407,11 @@ var gnodes = {},
 					link.setAttribute('href', current_gallery_image.deep_link);
 				else if (current_gallery_image.web_link)
 					link.setAttribute('href', current_gallery_image.web_link);
+			} else if (linkBody.charAt(linkBody.length-1) == 'h') {
+				var video = document.createElement('div'); 
+				video.id = "video_container";
+				video.innerHTML = "<video class='ts-video' preload='auto' poster='"+ current_gallery_image.image.huge.url + "' autoplay='autoplay' muted='muted' loop='loop' webkit-playsinline><source src='http://i.imgur.com/"+current_gallery_image.remote_id+".mp4' type='video/mp4'><source src='http://i.imgur.com/"+current_gallery_image.remote_id+".webm' type='video/webm'></video>";
+				picbox.replaceChild(video, bigpic);
 			}
 			bigpic.src = image.get(d, window.innerWidth - 40).url;
 			picdesc.innerHTML = d.caption;

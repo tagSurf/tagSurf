@@ -21,7 +21,7 @@ var image = {
 	load: function(cardList, minWidth, cb, eb) {
 		var load = image._load;
 		cardList.forEach(function(c) {
-			if (c.type == "friend_request" || c.video)
+			if (c.type == "friend_request")
 				cb && cb(c);
 			if (c.type.indexOf("content") == -1 || current_deck.known_keys[c.id])
 				return;
