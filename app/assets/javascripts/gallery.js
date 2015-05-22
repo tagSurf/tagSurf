@@ -166,7 +166,7 @@ var gnodes = {},
 					toggleClass.call(closebtn, "hidden");
 				}
 			});
-			gesture.listen("swipe", bigpic, function (direction, distance, dx, dy, pixelsPerSecond) {
+			gesture.listen("swipe", picbox, function (direction, distance, dx, dy, pixelsPerSecond) {
 				if (direction != "up" && direction != "down")
 				{
 					modal.callModal();
