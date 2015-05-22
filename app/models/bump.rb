@@ -9,6 +9,7 @@ class Bump < ActiveRecord::Base
   belongs_to :media
   belongs_to :referral 
 
+  after_commit :create_vote,        on: :create
 	after_commit :set_referral_flag, 	on: :create
   after_commit :send_notification,  on: :create
   after_commit :update_media_score, on: :create
@@ -38,6 +39,30 @@ class Bump < ActiveRecord::Base
     ref.update_column(:seen, true)
     UpdateBadgeIcon.perform_async(ref.user_id)
 	end
+
+  def create_vote
+    user = User.find(self.bumper_id)
+    user.voted_on << self.media_id
+    if CONFIG[:redis_active]
+      CreateBumpVote.perform_async(self.id)
+    else
+      vote = Vote.where(
+        votable_id: self.media_id,
+        votable_type: 'Media',
+        voter_id: self.bumper_id,
+        voter_type: 'User'
+      ).first
+      unless vote
+        vote = Vote.create!(
+          voter_id: self.bumper_id,
+          voter_type: 'User',
+          votable_id: self.media_id,
+          votable_type: 'Media',
+          vote_flag: true
+        )
+      end
+    end
+  end
 
   def send_notification
     SendBumpNotification.perform_async(self.referral_id)
