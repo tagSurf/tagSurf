@@ -31,24 +31,25 @@ class Referral < ActiveRecord::Base
     media.compact!
 
     media = media[offset..(offset+limit-1)]
-
-    media.each do |m|
-      refs = Referral.unscoped.where(media_id: m.id, referrer_id: user_id).order('created_at desc').reverse
-      m.referrals_list = Array.new
-      refs.each do |r|
-        m.referrals_list << {
-          referral_id: r.id,
-          user_id: r.user_id,
-          username:  User.find(r.user_id).username ? 
-                      User.find(r.user_id).username : User.find(r.user_id).email,
-          profile_pic: User.find(r.user_id).profile_pic_link,
-          bumped: r.bumped,
-          seen: r.bump ? r.bump.seen : nil,
-          bump_id: r.bump ? r.bump.id : nil,
-          time: r.created_at
-        }
-      end
-    end 
+    unless media.nil?
+      media.each do |m|
+        refs = Referral.unscoped.where(media_id: m.id, referrer_id: user_id).order('created_at desc').reverse
+        m.referrals_list = Array.new
+        refs.each do |r|
+          m.referrals_list << {
+            referral_id: r.id,
+            user_id: r.user_id,
+            username:  User.find(r.user_id).username ? 
+                        User.find(r.user_id).username : User.find(r.user_id).email,
+            profile_pic: User.find(r.user_id).profile_pic_link,
+            bumped: r.bumped,
+            seen: r.bump ? r.bump.seen : nil,
+            bump_id: r.bump ? r.bump.id : nil,
+            time: r.created_at
+          }
+        end
+      end 
+    end
 
     media
 
@@ -71,22 +72,24 @@ class Referral < ActiveRecord::Base
 
     media = media[offset..(offset+limit-1)]
 
-    media.each do |m|
-      refs = Referral.unscoped.where(media_id: m.id, user_id: user_id).order('created_at desc')
-      m.referrals_list = Array.new
-      refs.each do |r|
-        m.referrals_list << {
-          referral_id: r.id,
-          user_id: r.referrer_id,
-          username:  User.find(r.referrer_id).username ? 
-                      User.find(r.referrer_id).username : User.find(r.referrer_id).email,
-          profile_pic: User.find(r.referrer_id).profile_pic_link,
-          bumped: r.bumped,
-          seen: r.seen,
-          time: r.created_at
-        }
-      end
-    end 
+    unless media.nil?
+      media.each do |m|
+        refs = Referral.unscoped.where(media_id: m.id, user_id: user_id).order('created_at desc')
+        m.referrals_list = Array.new
+        refs.each do |r|
+          m.referrals_list << {
+            referral_id: r.id,
+            user_id: r.referrer_id,
+            username:  User.find(r.referrer_id).username ? 
+                        User.find(r.referrer_id).username : User.find(r.referrer_id).email,
+            profile_pic: User.find(r.referrer_id).profile_pic_link,
+            bumped: r.bumped,
+            seen: r.seen,
+            time: r.created_at
+          }
+        end
+      end 
+    end
 
     media
 
