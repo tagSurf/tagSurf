@@ -117,7 +117,7 @@ class ClientController < ApplicationController
   def share
     usr = current_user
 
-    case params["id"]
+    case params["id"].to_i
     when 0
       if usr 
         if !usr.username
