@@ -50,7 +50,7 @@ class MediaSerializer < BaseSerializer
   end
 
   def tags
-    return [] if type != 'content'
+    return [] if !type.include?('content')
     current_tags = (media.tag_list + media.tagged_as).uniq
     if current_user.try(:safe_mode)
       current_tags.delete_if { |tag| Tag.blacklisted?([tag.to_s]) }
@@ -63,7 +63,7 @@ class MediaSerializer < BaseSerializer
   end
 
   def image
-    return {} if type != 'content'
+    return {} if !type.include?('content')
     if media.remote_provider == 'imgur'
       img = {
         content_type: media.content_type,
@@ -87,17 +87,17 @@ class MediaSerializer < BaseSerializer
   end
 
   def user_vote
-    return nil if type != 'content'
+    return nil if !type.include?('content')
     @user_vote ||= Vote.where(voter_id: current_user.try(:id), votable_id: media.id).first
   end
 
   def user_favorite
-    return nil if type != 'content'
+    return nil if !type.include?('content')
     @user_fav ||= Favorite.where(user_id: current_user.try(:id), media_id: media.id).first
   end
 
   def caption
-    return nil if type != 'content'
+    return nil if !type.include?('content')
     case media.remote_provider
     when 'imgur'
       media.description ? media.description : media.title
@@ -115,7 +115,7 @@ class MediaSerializer < BaseSerializer
   end
 
   def source
-    return nil if type != 'content'
+    return nil if !type.include?('content')
     media.remote_provider
   end
 
@@ -146,32 +146,32 @@ class MediaSerializer < BaseSerializer
   end
 
   def votes
-    return nil if type != 'content'
+    return nil if !type.include?('content')
     @votes = Vote.where(votable_type: 'Media', votable_id: media.id) 
   end
 
   def total_votes
-    return nil if type != 'content'
+    return nil if !type.include?('content')
     media.remote_score.to_i + votes.length.to_i
   end
 
   def down_votes
-    return nil if type != 'content'
+    return nil if !type.include?('content')
     media.remote_down_votes.to_i + votes.where(vote_flag: false).count
   end
 
   def up_votes
-    return nil if type != 'content'
+    return nil if !type.include?('content')
     media.remote_up_votes.to_i + votes.where(vote_flag: true).count
   end
 
   def score
-    return nil if type != 'content'
+    return nil if !type.include?('content')
     media.remote_score
   end
 
   def source_icon
-    return nil if type != 'content'
+    return nil if !type.include?('content')
     if media.remote_provider.include?('urx')
       media.deep_link_icon
     elsif media.remote_provider == 'imgur'
@@ -185,7 +185,7 @@ class MediaSerializer < BaseSerializer
   end
 
   def trend
-    return nil if type != 'content'
+    return nil if !type.include?('content')
     [*1..10].sample.odd? ? 'up' : 'down'
   end
 
