@@ -77,8 +77,10 @@ var card_proto = {
 			gesture.listen("tap", iconLine.children[1], function() {
 				autocomplete.tapTag(Object.keys(current_deck.topCard().tags[0])[0], "autocomplete", false);
 			});
+			this._initButtonGestures(iconLine.children[1]);
 		} else
 			iconLine.children[1].style.display = "none";
+		
 		gesture.listen("down", iconLine.children[0].firstChild, function() {
 			iconLine.children[0].firstChild.style.opacity = 0.5;
 		});
@@ -91,18 +93,22 @@ var card_proto = {
 		    dispatch.initEvent("click", true, true);
 		    current_deck.topCard().contents.children[2].children[0].dispatchEvent(dispatch);
 		});
+		this._initButtonGestures(iconLine.children[0].firstChild);
+
 		gesture.listen("tap", container.children[1], function() {
 			refer.open();
 		});
 		gesture.listen("down", container.children[1], function () {
-		    current_deck.topCard().contents.children[1].classList.add('ts-active-button');
-	    });
+	    current_deck.topCard().contents.children[1].classList.add('ts-active-button');
+    });
 		gesture.listen("up", container.children[1], function () {
-		    current_deck.topCard().contents.children[1].classList.remove('ts-active-button');
-	    });
+	    current_deck.topCard().contents.children[1].classList.remove('ts-active-button');
+    });
 
-	    if (this.referral)
-	    	this.populateReferrals();
+		this._initButtonGestures(container.children[1]);
+
+    if (this.referral)
+    	this.populateReferrals();
 
 		this.tags.sort(function(a, b) {
 			var aName = Object.keys(a)[0];
@@ -276,6 +282,12 @@ var card_proto = {
 			this._initImageGestures();
 			drag.makeDraggable(this.contents.children[4].lastChild, { constraint: "vertical" });
 		}
+	},
+	_initButtonGestures: function(node){
+		gesture.listen("up", node, this.cbs.up);
+		gesture.listen("drag", node, this.cbs.drag);
+		gesture.listen("hold", node, this.cbs.hold);
+		gesture.listen("down", node, this.cbs.down);
 	},
 	_initLoginInputs: function () {
 		var listInputs = document.forms[0].getElementsByClassName('su-input'),
@@ -564,6 +576,7 @@ var card_proto = {
 			else
 				autocomplete.tapTag(tag, "autocomplete", false);
 		});
+		this._initButtonGestures(p);
 		pictags.appendChild(p);
 		if (self.showing) {
 			self._formatContents(image.get(this.data));
@@ -640,7 +653,8 @@ var card_proto = {
 		if(!this.referral)
 			return;
 		var referralBox = this.contents.children[4].lastChild,
-			card_id = this.id;
+			card_id = this.id,
+			self = this;
 		this.referral.forEach(function(r) {
 			var cell = document.createElement('div'),
 			pic = document.createElement('img'),
@@ -668,6 +682,7 @@ var card_proto = {
 				    bumpIcon.src = "http://assets.tagsurf.co/img/bumped.png";
 				    gesture.unlisten(bumpBtn);
 				    xhr("/api/bump/" + card_id + "/" + referrer_id, "POST", null, null);
+				    cardCbs.swipe("right");
 				});
 				gesture.listen("down", bumpBtn, function () {
 				    bumpBtn.classList.add('bump-btn-active');
@@ -677,7 +692,11 @@ var card_proto = {
 			    });
 			}
 
+			self._initButtonGestures(cell);
+			self._initButtonGestures(bumpBtn);
 		});
+
+		this._initButtonGestures(referralBox);
 	},
 	jiggle: function () {
 		var self = this,

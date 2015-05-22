@@ -164,10 +164,10 @@ a {
 	font-size: 1.5em;
 	margin: 20px 0;
 }
-.referral-scroller {
+/*.referral-scroller {
 	overflow-x: scroll;
 	white-space: nowrap;
-}
+}*/
 .user-cell {
 	margin: 10px 0 0 0;
 	display: inline-block;

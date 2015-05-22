@@ -194,12 +194,12 @@ onload = function ()
 			}
 		},
 		hold: function (duration) {
-			var slider = topCard();
-			if (duration == 3000 && !isAndroid() && !slider.video)
-			{
-				slider.supering = true;
-				toggleClass.apply(slider.contents, ['super-card', 'on']);
-			}
+			// var slider = topCard();
+			// if (duration == 3000 && !isAndroid() && !slider.video)
+			// {
+			// 	slider.supering = true;
+			// 	toggleClass.apply(slider.contents, ['super-card', 'on']);
+			// }
 		},
 		tap: function (tapCount) {
 			var slider = topCard();
