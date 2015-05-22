@@ -134,14 +134,16 @@ class ClientController < ApplicationController
           redirect_to name_path
         elsif !usr.contacts_link_requested
           redirect_to linkcontacts_path
+        elsif params[:tag] == "trending" 
+          redirect_to "/feed#funny~#{params["id"]}"
+        else
+          redirect_to "/feed##{params["tag"]}~#{params["id"]}"         
         end
       else
         confirm_surfable
       end
     else
-      if usr and params[:tag] == "trending" 
-        redirect_to "/feed#funny~#{params["id"]}"
-      elsif usr 
+      if usr 
         redirect_to "/feed##{params["tag"]}~#{params["id"]}"
       end
     end
