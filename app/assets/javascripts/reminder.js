@@ -20,7 +20,7 @@ var reminder_proto = {
 	remove: function() {
 		var self = this;
 		if (this.built)
-			setTimeout(function () { document.body.removeChild(self.container);}, 100);
+			setTimeout(function () { document.body.removeChild(self.container);}, 200);
 		this.timeout = null;
 		if (reminders.indexOf(this) != -1)
 			reminders.splice(reminders.indexOf(this), 1);

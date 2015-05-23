@@ -182,6 +182,16 @@
 #tutorial-refer-cell-container {
   font-size: 80%;
 }
+#referral-bump-icon {
+  -webkit-transition: opacity 200ms;
+  transition: opacity 200ms;
+}
+.tutorial-bump-icon {
+  width: 60px;
+}
+.tutorial-user-cell {
+  width: 45%;
+}
 
 /*== (Desktop Only) ==*/
 .close-instructions {

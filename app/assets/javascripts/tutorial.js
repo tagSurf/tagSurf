@@ -9,12 +9,30 @@ var tutorial = {
 				+ document.getElementById('input-container').offsetHeight + 12,
 			searchReminder = newReminder(searchMessage.call(), function() {
 				var voteReminder = newReminder(voteMessage.call(), function() {
-					var bumpRemdiner = newReminder(bumpMessage.call(), function() {
+					var bumpReminder = newReminder(bumpMessage.call(), function() {
 						var shareReminder = newReminder(shareMessage.call(), function() {
 							var referReminder = newReminder(referMessage.call(), function() {
 								var bumpBackReminder = newReminder(bumpBackMessage.call(), function() {
-									var endReminder = newReminder(endMessage.call(), null, "End", 2000, 3000);
+									var endReminder = newReminder(endMessage.call(), null, "End", 2000, 3000),
+										backer = document.getElementById('tutorial-backer');
+									document.body.removeChild(backer);
 								}, "Bump-Back", 0, 6000);
+								bumpBackReminder.setCb("show", function() {
+									setTimeout(function() {
+										var fist = document.getElementById('referral-bump-icon');
+										fist.style.opacity = 0.5;
+										setTimeout(function() {
+											var fist = document.getElementById('referral-bump-icon');
+											fist.style.opacity = 1;
+											setTimeout(function() {
+												var fist = document.getElementById('referral-bump-icon');
+												fist.src = "http://assets.tagsurf.co/img/bumped_callout.png";
+												fist.style.width = "65px";
+												fist.style.marginBottom = "-5px";
+											}, 200);								
+										}, 200);
+									}, 3000);
+								});
 							}, "Refer", 0, 6000);
 						}, "Share", 0, 5000);
 						shareReminder.setCb("show", function() {
@@ -22,6 +40,17 @@ var tutorial = {
 						 	closebtn.className += " reminder-close-left";
 						});
 					}, "Bump", 2000, 5000);
+					bumpReminder.setCb("show", function() {
+						var backer = document.createElement('div'),
+							bumpContainer = document.getElementById('Bump-reminder-container');
+						bumpContainer.style.zIndex = 101;
+						backer.className = "reminder-container";
+						backer.id = "tutorial-backer";
+						backer.style.visibility = "initial";
+						backer.style.opacity = 1;
+						backer.style.zIndex = 100;
+						document.body.appendChild(backer);
+					});
 				}, "Vote", 2000, 6000);
 				voteReminder.setCb("show", function() {
 					setTimeout(function() {
@@ -374,23 +403,23 @@ var bumpBackMessage = function() {
 	node.style.marginTop = isMobile() ? "30%" : "22%";
 	node.style.marginTop = isUIWebView() ? "35%" : node.style.marginTop;
 
-	cell1.className = "user-cell";
+	cell1.className = "user-cell tutorial-user-cell";
 	usrpic1.className = "user-pic";
 	usrpic1.src = "http://assets.tagsurf.co/img/UserAvatar.png";
 	usrname1.className = "user-name";
 	usrname1.innerHTML = "brucewillitz"
-	bumpIcon1.className = "bump-icon";
+	bumpIcon1.className = "bump-icon tutorial-bump-icon";
 	bumpIcon1.src = "http://assets.tagsurf.co/img/bumped.png";
 	cell1.appendChild(usrpic1);
 	cell1.appendChild(usrname1);
 	cell1.appendChild(bumpIcon1);
 
-	cell2.className = "user-cell";
+	cell2.className = "user-cell tutorial-user-cell";
 	usrpic2.className = "user-pic";
 	usrpic2.src = "http://assets.tagsurf.co/img/UserAvatar.png";
 	usrname2.className = "user-name";
 	usrname2.innerHTML = "sgtpepper";
-	bumpIcon2.className = "bump-icon";
+	bumpIcon2.className = "bump-icon tutorial-bump-icon";
 	bumpIcon2.id = "referral-bump-icon";
 	bumpIcon2.src = "http://assets.tagsurf.co/img/bump_white.png";
 	cell2.appendChild(usrpic2);
