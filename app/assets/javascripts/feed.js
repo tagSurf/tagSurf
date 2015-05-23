@@ -704,6 +704,27 @@ onload = function ()
 	// 	else if (topCard)
 	// 		slowReminder.forget(true);
 	// }, 8000);
+	
+	setTimeout(function() {
+		var topCard = current_deck.topCard();
+		if (topCard && topCard.showing)
+			if (currentUser && !currentUser.completed_tutorial)
+				tutorial.start();
+			else if (currentUser)
+				return;
+		else
+			setTimeout(function() {
+				var topCard = current_deck.topCard();
+				if (topCard && topCard.showing)
+					if (currentUser && !currentUser.completed_tutorial)
+						tutorial.start();
+				else if (currentUser)
+					return;
+				else
+					console.log("Slow connection... we'll get 'em next time");
+			}, 4000);
+	}, 4000);
+
 	if (!isAuthorized())// && !DEBUG)
 		jiggler();
 	if (!isAuthorized() && isMobile())

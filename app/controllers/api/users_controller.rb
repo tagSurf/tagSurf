@@ -155,7 +155,7 @@ class Api::UsersController < Api::BaseController
         :username,
         :first_name,
         :last_name,
-        :confirm_feature_tour
+        :completed_feature_tour
       ) 
     end
 

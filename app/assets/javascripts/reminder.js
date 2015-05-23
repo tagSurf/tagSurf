@@ -20,7 +20,7 @@ var reminder_proto = {
 	remove: function() {
 		var self = this;
 		if (this.built)
-			setTimeout(function () { document.body.removeChild(self.container);}, 100);
+			setTimeout(function () { document.body.removeChild(self.container);}, 200);
 		this.timeout = null;
 		if (reminders.indexOf(this) != -1)
 			reminders.splice(reminders.indexOf(this), 1);
@@ -80,16 +80,16 @@ var reminder_proto = {
 	},
 	_build: function () {
 		var self = this,
-			container = this.container = document.createElement('div'),
-			closeContainer = document.createElement('div'),
-			close = document.createElement('img');
+			container = this.container = document.createElement('div');
+			// closeContainer = document.createElement('div'),
+			// close = document.createElement('img');
 		container.id = this.type + "-reminder-container";
 		container.className = "reminder-container";
 		container.style.visibility = "hidden";
 		container.style.opacity = 0;
-		close.className = "reminder-close";
-		close.src = "http://assets.tagsurf.co/img/Close.png";
-		closeContainer.appendChild(close);
+		// close.className = "reminder-close";
+		// close.src = "http://assets.tagsurf.co/img/Close.png";
+		// closeContainer.appendChild(close);
 		if(this.node)
 			container.appendChild(this.node);
 		else if (DEBUG)
@@ -100,10 +100,10 @@ var reminder_proto = {
 				return true;
 			}
 		});
-		container.appendChild(closeContainer);
+		// container.appendChild(closeContainer);
 		document.body.appendChild(container);
 		gesture.listen("down", self.container, returnTrue);
-		gesture.listen('down', closeContainer, function() { self.close(); });
+		// gesture.listen('down', closeContainer, function() { self.close(); });
 		gesture.listen("tap", self.container, function() { self.close(); });
 		gesture.listen("swipe", self.container, function() { self.close(); });
 		this.startTimeout(this.delay);

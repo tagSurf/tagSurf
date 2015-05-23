@@ -11,7 +11,8 @@ var authorizedSession = null,
       vote_btns : true,
       admin : false,
       unseen_bumps : 0,
-      unseen_refs : 0
+      unseen_refs : 0,
+      completed_tutorial : false,
     },
     returnTrue = function() { return true; },
     hasSwiped = false,
@@ -84,6 +85,7 @@ var getUser = function () {
           currentUser.profilepic = result.user.profile_pic_link;
           currentUser.slug = result.user.slug;
           currentUser.admin = result.user.admin;
+          currentUser.completed_tutorial = result.user.completed_feature_tour,
           currentUser.safeSurf = result.user.safe_mode;
           currentUser.unseen_bumps = result.unseen_bumps;
           currentUser.unseen_refs = result.unseen_referrals;

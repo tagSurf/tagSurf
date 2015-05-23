@@ -657,11 +657,11 @@ var card_proto = {
 			self = this;
 		this.referral.forEach(function(r) {
 			var cell = document.createElement('div'),
-			pic = document.createElement('img'),
-			usr = document.createElement('div'),
-			bumpBtn = document.createElement('div'),
-			bumpIcon = document.createElement('img'),
-			referrer_id = r.user_id;
+				pic = document.createElement('img'),
+				usr = document.createElement('div'),
+				bumpBtn = document.createElement('div'),
+				bumpIcon = document.createElement('img'),
+				referrer_id = r.user_id;
 			cell.className = "user-cell";
 			pic.className = "user-pic";
 			pic.src = r.profile_pic ? r.profile_pic : "http://assets.tagsurf.co/img/UserAvatar.png";
