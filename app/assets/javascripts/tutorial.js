@@ -4,23 +4,35 @@ var tutorial = {
 	jiggleTimeout: null,
 	start: function() {
 		tutorial.on = true;
-		var welcome = newReminder(welcomeMessage.call(), function() {
-			var upvote = newReminder(upvoteMessage.call(), function() {
-				var downvote = newReminder(downvoteMessage.call(), null, "Downvote", 2000, 5000);
-				tutorial.jiggleTimeout = setTimeout(function() { 
-					current_deck.topCard().jiggle() 
-				}, 8000);
-				current_deck.topCard().setOneTimeCb("vote", function () { 
-					var firstvote = newReminder(firstvoteMessage.call(), startPhase2, "First Vote", 1000, 5000);
-					clearTimeout(tutorial.jiggleTimeout); 
-					tutorial.jiggleTimeout = null;
-					!tutorial.on && firstvote.forget();
+		
+		var offset = document.getElementById('nav').offsetHeight 
+				+ document.getElementById('input-container').offsetHeight + 12,
+			searchReminder = newReminder(searchMessage.call(), function() {
+				var voteReminder = newReminder(voteMessage.call(), function() {
+					var bumpRemdiner = newReminder(bumpMessage.call(), function() {
+						var shareReminder = newReminder(shareMessage.call(), function() {
+							var referReminder = newReminder(referMessage.call(), function() {
+								var bumpBackReminder = newReminder(bumpBackMessage.call(), function() {
+									var endReminder = newReminder(endMessage.call(), null, "End", 2000, 3000);
+								}, "Bump-Back", 0, 6000);
+							}, "Refer", 0, 6000);
+						}, "Share", 0, 5000);
+						shareReminder.setCb("show", function() {
+						 	var closebtn = shareReminder.container.lastChild.children[0];
+						 	closebtn.className += " reminder-close-left";
+						});
+					}, "Bump", 2000, 5000);
+				}, "Vote", 2000, 6000);
+				voteReminder.setCb("show", function() {
+					setTimeout(function() {
+						current_deck.topCard().jiggle();
+					}, 2000);
 				});
-			}, "Upvote", 2000, 5000);
-		}, "Welcome", 1000, 6000);
-		welcome.setCb("show", function() {
-			if (isUIWebView())
-				this.container.style.paddingTop = "30px"; 
+			}, "Search", 2000, 6000);
+		searchReminder.container.style.marginTop = offset + "px";
+		searchReminder.setCb("show", function() {
+			var closebtn = searchReminder.container.lastChild.children[0];
+			closebtn.style.bottom = (isDesktop() || isTablet() ? 20 : 15) + offset + "px";
 		});
 	},
 	pause: function(remind) {
@@ -255,6 +267,162 @@ var upvoteMessage = function() {
 	return node;
 };
 
+var voteMessage = function() {
+	var node = document.createElement('div'),
+		bottomMessage = document.createElement('div'),
+		// pausebtn = document.createElement('div'),
+		thumbs = new Image();
+	thumbs.src = "http://assets.tagsurf.co/img/tutorial_thumbs.png";
+	thumbs.id = "tutorial-thumbs-image";
+	thumbs.style.width = "80%";
+	thumbs.style.margin = "8% 0";
+	node.innerHTML = "Swipe to";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	bottomMessage.innerHTML = "(like Pandora)";
+	bottomMessage.className = "centered small";
+	node.appendChild(thumbs);	
+	node.appendChild(bottomMessage);
+	node.style.marginTop = isMobile() ? "40%" : "22%";
+	node.style.marginTop = isUIWebView() ? "50%" : node.style.marginTop;
+	// pausebtn.id = "pause-btn";
+	// pausebtn.className = "no-fill-btn pointer";
+	// pausebtn.innerHTML = "Pause Tutorial";
+	// gesture.listen("down", pausebtn, function() {
+	// 	pausebtn.classList.add("active-no-fill-btn");
+	// });
+	// gesture.listen("up", pausebtn, function() {
+	// 	pausebtn.classList.remove("active-no-fill-btn");
+	// });
+	// gesture.listen("tap", pausebtn, function() {
+	// 	tutorial.pause();
+	// });
+	// node.appendChild(pausebtn);
+	return node;
+};
+
+var referMessage = function() {
+	var node = document.createElement('div'),
+		// pausebtn = document.createElement('div'),
+		card = new Image();
+	card.src = "http://assets.tagsurf.co/img/refer_card.png";
+	card.id = "tutorial-card-image";
+	card.style.maxWidth = "85%";
+	card.style.margin = "0";
+	node.innerHTML = "Cards your friends<br/>bump are on top";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.appendChild(card);
+	node.style.marginTop = isMobile() ? "20%" : "22%";
+	node.style.marginTop = isUIWebView() ? "20%" : node.style.marginTop;
+	// pausebtn.id = "pause-btn";
+	// pausebtn.className = "no-fill-btn pointer";
+	// pausebtn.innerHTML = "Pause Tutorial";
+	// gesture.listen("down", pausebtn, function() {
+	// 	pausebtn.classList.add("active-no-fill-btn");
+	// });
+	// gesture.listen("up", pausebtn, function() {
+	// 	pausebtn.classList.remove("active-no-fill-btn");
+	// });
+	// gesture.listen("tap", pausebtn, function() {
+	// 	tutorial.pause();
+	// });
+	// node.appendChild(pausebtn);
+	return node;
+};
+
+var bumpMessage = function() {
+	var node = document.createElement('div'),
+		bumpbtn = document.createElement('div');
+		// pausebtn = document.createElement('div');
+	node.innerHTML = "Bump things<br/>into your friend's<br/>feeds";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	bumpbtn.innerHTML = "Bump it!";
+	bumpbtn.className = "msgbox-btn tutorial-btn";
+	node.appendChild(bumpbtn);
+	node.style.marginTop = isMobile() ? "50%" : "22%";
+	node.style.marginTop = isUIWebView() ? "50%" : node.style.marginTop;
+	// pausebtn.id = "pause-btn";
+	// pausebtn.className = "no-fill-btn pointer";
+	// pausebtn.innerHTML = "Pause Tutorial";
+	// gesture.listen("down", pausebtn, function() {
+	// 	pausebtn.classList.add("active-no-fill-btn");
+	// });
+	// gesture.listen("up", pausebtn, function() {
+	// 	pausebtn.classList.remove("active-no-fill-btn");
+	// });
+	// gesture.listen("tap", pausebtn, function() {
+	// 	tutorial.pause();
+	// });
+	// node.appendChild(pausebtn);
+	return node;
+};
+
+var bumpBackMessage = function() {
+	var node = document.createElement('div'),
+		referContainer = document.createElement('div'),
+		cellContainer = document.createElement('div'),
+		cell1 = document.createElement('div'),
+		usrpic1 = document.createElement('img'),
+		usrname1 = document.createElement('div'),
+		bumpIcon1 = document.createElement('img'),
+		cell2 = document.createElement('div'),
+		usrpic2 = document.createElement('img'),
+		usrname2 = document.createElement('div'),
+		bumpIcon2 = document.createElement('img');
+		// pausebtn = document.createElement('div');
+	node.innerHTML = "If you like<br/>what they share...<br/><br/>Bump it back!";
+	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.style.marginTop = isMobile() ? "30%" : "22%";
+	node.style.marginTop = isUIWebView() ? "35%" : node.style.marginTop;
+
+	cell1.className = "user-cell";
+	usrpic1.className = "user-pic";
+	usrpic1.src = "http://assets.tagsurf.co/img/UserAvatar.png";
+	usrname1.className = "user-name";
+	usrname1.innerHTML = "brucewillitz"
+	bumpIcon1.className = "bump-icon";
+	bumpIcon1.src = "http://assets.tagsurf.co/img/bumped.png";
+	cell1.appendChild(usrpic1);
+	cell1.appendChild(usrname1);
+	cell1.appendChild(bumpIcon1);
+
+	cell2.className = "user-cell";
+	usrpic2.className = "user-pic";
+	usrpic2.src = "http://assets.tagsurf.co/img/UserAvatar.png";
+	usrname2.className = "user-name";
+	usrname2.innerHTML = "sgtpepper";
+	bumpIcon2.className = "bump-icon";
+	bumpIcon2.id = "referral-bump-icon";
+	bumpIcon2.src = "http://assets.tagsurf.co/img/bump_white.png";
+	cell2.appendChild(usrpic2);
+	cell2.appendChild(usrname2);
+	cell2.appendChild(bumpIcon2);
+
+	referContainer.innerHTML = "Bumped To You By";
+	referContainer.className = "referrals";
+	referContainer.id = "tutorial-refer-container";
+	cellContainer.appendChild(cell1);
+	cellContainer.appendChild(cell2);
+	cellContainer.id = 'tutorial-refer-cell-container';
+	referContainer.appendChild(cellContainer);
+
+	node.appendChild(referContainer);
+
+	// pausebtn.id = "pause-btn";
+	// pausebtn.className = "no-fill-btn pointer";
+	// pausebtn.innerHTML = "Pause Tutorial";
+	// gesture.listen("down", pausebtn, function() {
+	// 	pausebtn.classList.add("active-no-fill-btn");
+	// });
+	// gesture.listen("up", pausebtn, function() {
+	// 	pausebtn.classList.remove("active-no-fill-btn");
+	// });
+	// gesture.listen("tap", pausebtn, function() {
+	// 	tutorial.pause();
+	// });
+	// node.appendChild(pausebtn);
+	return node;
+};
+
 var downvoteMessage = function() {
 	var node = document.createElement('div'),
 		pausebtn = document.createElement('div'),
@@ -311,19 +479,19 @@ var searchMessage = function() {
 	arrow.src = "http://assets.tagsurf.co/img/up_pointer_arrow_white.gif";
 	arrow.id = "menu-up-arrow";
 	arrow.className = "slightly-left-arrow";
-	redditIcon.id = "reddit-icon";
-	redditIcon.src = "http://assets.tagsurf.co/img/reddit_logo_white.png";
-	redditIcon.className = "block";
+	// redditIcon.id = "reddit-icon";
+	// redditIcon.src = "http://assets.tagsurf.co/img/reddit_logo_white.png";
+	// redditIcon.className = "block";
 	imgurIcon.id = "imgur-icon";
 	imgurIcon.src = "http://assets.tagsurf.co/img/imgur_logo_white.png";
 	imgurIcon.className = "block";
 	if (isUIWebView()) {
-		redditIcon.style.width = "60%";
-		redditIcon.style.margin = "8% auto";
+		// redditIcon.style.width = "60%";
+		// redditIcon.style.margin = "8% auto";
 		imgurIcon.style.width = "50%";
-		imgurIcon.style.margin = "8% auto";
+		imgurIcon.style.margin = "15% auto";
 	}
-	node.innerHTML = "Type any hashtag<br/>to search social<br/>networks for<br/>content";
+	node.innerHTML = "Search for a<br/>hashtag to explore<br/>a subreddit on";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
 	node.style.marginTop = isMobile() ? "22%" : "9%";
 	node.style.marginTop = isUIWebView() ? "28%" : node.style.marginTop;
@@ -343,7 +511,7 @@ var searchMessage = function() {
 		tutorial.pause();
 	});	
 	node.appendChild(top);
-	node.appendChild(redditIcon);
+	// node.appendChild(redditIcon);
 	node.appendChild(imgurIcon);
 	node.appendChild(arrow);
 	node.appendChild(pausebtn);
@@ -746,30 +914,32 @@ var favoriteMessage = function() {
 
 var shareMessage = function() {
 	var node = document.createElement('div'),
-		pausebtn = document.createElement('div'),
+		// pausebtn = document.createElement('div'),
 		sharebtn = new Image(),
 		pointerarrow = new Image();
-	node.innerHTML = "Find something<br/>you like?<br/><br/>Share it with your<br/>friends!";
+	node.innerHTML = "Or share<br/>another way";
 	node.className = isMobile() ? "centered biggest" : "centered really-big";
-	node.style.marginTop = isMobile() ? "40%" : "20%";
-	node.style.marginTop = isUIWebView() ? "55%" : node.style.marginTop;
+	node.style.marginTop = isMobile() ? "95%" : "20%";
+	node.style.marginTop = isUIWebView() ? "125%" : node.style.marginTop;
+	node.style.marginLeft = isMobile() ? "40%" : "30%";
+	node.style.marginLeft = isUIWebView() ? "40%" : node.style.marginLeft;
 	sharebtn.className = "reminder-share-btn";
 	sharebtn.src = "http://assets.tagsurf.co/img/share_icon.png";
 	pointerarrow.src = "http://assets.tagsurf.co/img/down_pointer_arrow_white.gif";
 	pointerarrow.id = "right-down-arrow";
-	pausebtn.className = "no-fill-btn pointer";
-	gesture.listen("down", pausebtn, function() {
-		pausebtn.classList.add("active-no-fill-btn");
-	});
-	gesture.listen("up", pausebtn, function() {
-		pausebtn.classList.remove("active-no-fill-btn");
-	});
-	gesture.listen("tap", pausebtn, function() {
-		tutorial.pause();
-	});
-	pausebtn.id = "pause-btn";
-	pausebtn.innerHTML = "Pause Tutorial";
-	node.appendChild(pausebtn);
+	// pausebtn.className = "no-fill-btn pointer";
+	// gesture.listen("down", pausebtn, function() {
+	// 	pausebtn.classList.add("active-no-fill-btn");
+	// });
+	// gesture.listen("up", pausebtn, function() {
+	// 	pausebtn.classList.remove("active-no-fill-btn");
+	// });
+	// gesture.listen("tap", pausebtn, function() {
+	// 	tutorial.pause();
+	// });
+	// pausebtn.id = "pause-btn";
+	// pausebtn.innerHTML = "Pause Tutorial";
+	// node.appendChild(pausebtn);
 	node.appendChild(sharebtn);
 	node.appendChild(pointerarrow);
 	return node;
@@ -817,5 +987,14 @@ var thatsAllMessage = function() {
 	node.appendChild(menuarrow);	
 	node.style.marginTop = isMobile() ? "40%" : "18%";
 	node.style.marginTop = isUIWebView() ? "45%" : node.style.marginTop;
+	return node;
+};
+
+var endMessage = function() {
+	var node = document.createElement('div');
+	node.innerHTML = "Happy<br/>Surfing!";
+	node.className = "centered really-big";
+	node.style.marginTop = isMobile() ? "50%" : "18%";
+	node.style.marginTop = isUIWebView() ? "65%" : node.style.marginTop;
 	return node;
 };
