@@ -15,7 +15,7 @@ var tutorial = {
 						var shareReminder = newReminder(shareMessage.call(), function() {
 							var referReminder = newReminder(referMessage.call(), function() {
 								var bumpBackReminder = newReminder(bumpBackMessage.call(), function() {
-									var endReminder = newReminder(endMessage.call(), null, "End", 2000, 3000),
+									var endReminder = newReminder(endMessage.call(), null, "End", 2000),
 										backer = document.getElementById('tutorial-backer');
 									document.body.removeChild(backer);
 								}, "Bump-Back", 0, 6000);
@@ -35,13 +35,13 @@ var tutorial = {
 										}, 200);
 									}, 3000);
 								});
-							}, "Refer", 0, 6000);
-						}, "Share", 0, 5000);
+							}, "Refer", 0);
+						}, "Share", 0);
 						shareReminder.setCb("show", function() {
 						 	var closebtn = shareReminder.container.lastChild.children[0];
 						 	closebtn.className += " reminder-close-left";
 						});
-					}, "Bump", 2000, 5000);
+					}, "Bump", 2000);
 					bumpReminder.setCb("show", function() {
 						var backer = document.createElement('div'),
 							bumpContainer = document.getElementById('Bump-reminder-container');
@@ -53,13 +53,13 @@ var tutorial = {
 						backer.style.zIndex = 100;
 						document.body.appendChild(backer);
 					});
-				}, "Vote", 2000, 6000);
+				}, "Vote", 2000);
 				voteReminder.setCb("show", function() {
 					setTimeout(function() {
 						current_deck.topCard().jiggle();
 					}, 2000);
 				});
-			}, "Search", 2000, 6000);
+			}, "Search", 2000);
 		searchReminder.container.style.marginTop = offset + "px";
 		searchReminder.setCb("show", function() {
 			var closebtn = searchReminder.container.lastChild.children[0];
