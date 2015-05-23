@@ -4,7 +4,9 @@ var tutorial = {
 	jiggleTimeout: null,
 	start: function() {
 		tutorial.on = true;
-		
+		currentUser.completed_tutorial = true;
+		xhr("/api/users/" + currentUser.slug, "PATCH", null, null, null,
+            JSON.stringify({ completed_feature_tour: true }));
 		var offset = document.getElementById('nav').offsetHeight 
 				+ document.getElementById('input-container').offsetHeight + 12,
 			searchReminder = newReminder(searchMessage.call(), function() {
