@@ -4,10 +4,6 @@ var card_proto = {
 			var self = this,
 				linkBody =	data.image.original.url.split('.')[2];
 			this.data = data;
-			this.video = (linkBody.charAt(linkBody.length-1) == 'h') ? {
-				mp4: "http://i.imgur.com/"+data.remote_id+".mp4",
-				webm: "http://i.imgur.com/"+data.remote_id+".webm"
-			} : null;
 			this.id = data.id;
 			this.image = data.image;
 			this.animated = data.image.animated;
@@ -16,6 +12,10 @@ var card_proto = {
 			this.deep_link = data.deep_link;
 			this.source = data.source;
 			this.referral = data.referral;
+			this.video = (linkBody.charAt(linkBody.length-1) == 'h' && this.animated) ? {
+				mp4: "http://i.imgur.com/"+data.remote_id+".mp4",
+				webm: "http://i.imgur.com/"+data.remote_id+".webm"
+			} : null;
 			data.tags.forEach(function(tag) { 
 				self.tags.push(tag); 
 			});
