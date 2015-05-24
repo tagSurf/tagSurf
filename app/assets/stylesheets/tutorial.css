@@ -192,6 +192,12 @@
 .tutorial-user-cell {
   width: 45%;
 }
+.outline {
+   -webkit-text-fill-color: white;
+   -webkit-text-stroke-width: 1px;
+   -webkit-text-stroke-color: black;
+   text-shadow: 2px 2px #353535;
+}
 
 /*== (Desktop Only) ==*/
 .close-instructions {

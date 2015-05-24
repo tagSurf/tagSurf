@@ -277,7 +277,7 @@ var upvoteMessage = function() {
 	upvotearrow.id = "reminder-upvote-arrow";
 	node.innerHTML = isMobile ? "Upvote this<br/>and we'll show<br/>you more things<br/>like it" 
 								: "Upvote this and we'll show you<br/>more things like it";
-	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.className = isMobile() ? "centered biggest outline" : "centered really-big outline";
 	node.appendChild(upvotearrow);	
 	node.appendChild(upvotebtn);
 	node.style.marginTop = isMobile() ? "50%" : "22%";
@@ -303,12 +303,12 @@ var voteMessage = function() {
 		bottomMessage = document.createElement('div'),
 		// pausebtn = document.createElement('div'),
 		thumbs = new Image();
-	thumbs.src = "http://assets.tagsurf.co/img/tutorial_thumbs.png";
+	thumbs.src = "http://assets.tagsurf.co/img/tutorial_thumbs_outlined.png";
 	thumbs.id = "tutorial-thumbs-image";
 	thumbs.style.width = "80%";
 	thumbs.style.margin = "8% 0";
 	node.innerHTML = "Swipe to";
-	node.className = isMobile() ? "centered biggest" : "centered really-big";
+	node.className = isMobile() ? "centered biggest outline" : "centered really-big outline";
 	bottomMessage.innerHTML = "(like Pandora)";
 	bottomMessage.className = "centered small";
 	node.appendChild(thumbs);	
@@ -1024,7 +1024,7 @@ var thatsAllMessage = function() {
 var endMessage = function() {
 	var node = document.createElement('div');
 	node.innerHTML = "Happy<br/>Surfing!";
-	node.className = "centered really-big";
+	node.className = "centered really-big outline";
 	node.style.marginTop = isMobile() ? "50%" : "18%";
 	node.style.marginTop = isUIWebView() ? "65%" : node.style.marginTop;
 	return node;
