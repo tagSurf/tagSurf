@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   # Much faster and more practical than SQL
   include Redis::Objects
   set :voted_on
+  hash_key :notifications
 
   has_friendship
 
