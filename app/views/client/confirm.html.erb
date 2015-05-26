@@ -27,32 +27,10 @@
   var inputs = document.getElementsByClassName('ts-input');
       container = document.getElementsByClassName('input-border-container')[0];
 
-  if (isUIWebView() && isIos()) {
-    container.classList.remove('hidden');
-
-    for (i=1; i<inputs.length; i++) {
-      inputs[i].classList.add('hidden');
-    };
-  };
-
   var form_submit = function() {
     var f = document.getElementById('confirm_form'),
     code_field = document.getElementById('code'),
     code = "";
-
-    if (isUIWebView() && isIos()){
-      code_field.value = code_field.value.trim()
-      if (code_field.value.length == 0) {
-        return;
-      } else if (code_field.value.length < 4) {
-        alert("Please enter a complete code");
-        return;
-      } else {
-        code_field.value = code_field.value.toString();
-        f.submit();
-        return;
-      } 
-    };
 
     for (i=0; i<inputs.length; i++) {
       code += inputs[i].value
@@ -72,15 +50,6 @@
   });
 
   stroke.listen("up", null, function(kobj){
-    if (isUIWebView() && isIos()) {
-      var code = document.getElementById('code').value,
-          submitBtn = document.getElementById('submit-btn');
-      if (code.length < 4 && submitBtn.className.indexOf('disabled-button') == -1)
-        submitBtn.classList.add("disabled-button");
-      else if (code.length >= 4)
-        submitBtn.classList.remove("disabled-button");
-      return;
-    }
     var submitBtn = document.getElementById('submit-btn');
     if ((document.activeElement == inputs[inputs.length-1]) && !(inputs[inputs.length-1].value == ""))
       submitBtn.classList.remove("disabled-button");
