@@ -707,7 +707,7 @@ onload = function ()
 	
 	setTimeout(function() {
 		var topCard = current_deck.topCard();
-		if (topCard && topCard.showing)
+		if (topCard && topCard.showing && isAuthorized())
 			if (currentUser && !currentUser.completed_tutorial)
 				tutorial.start();
 			else if (currentUser)
