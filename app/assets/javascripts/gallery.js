@@ -407,7 +407,7 @@ var gnodes = {},
 					link.setAttribute('href', current_gallery_image.deep_link);
 				else if (current_gallery_image.web_link)
 					link.setAttribute('href', current_gallery_image.web_link);
-			} else if (linkBody.charAt(linkBody.length-1) == 'h') {
+			} else if (linkBody.charAt(linkBody.length-1) == 'h' && current_gallery_image.image.animated) {
 				var video = document.createElement('div'); 
 				video.id = "video_container";
 				video.innerHTML = "<video class='ts-video' preload='auto' poster='"+ current_gallery_image.image.huge.url + "' autoplay='autoplay' muted='muted' loop='loop' webkit-playsinline><source src='http://i.imgur.com/"+current_gallery_image.remote_id+".mp4' type='video/mp4'><source src='http://i.imgur.com/"+current_gallery_image.remote_id+".webm' type='video/webm'></video>";

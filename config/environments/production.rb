@@ -12,7 +12,7 @@ Tagsurf::Application.configure do
   
   # Probably should use redis-cache
   # config.cache_store = :mem_cache_store
-  config.static_cache_control = "public, max-age=2592000"
+  config.static_cache_control = "public, max-age=31536000"
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
   # Add `rack-cache` to your Gemfile before enabling this.
