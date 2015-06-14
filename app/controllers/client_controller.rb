@@ -101,10 +101,16 @@ class ClientController < ApplicationController
     flash.discard(:notice)
     expires_in 30.days, public: true;
   end
-  def favorites; end
-  def history; end
+  def favorites;
+    expires_in 30.days, public: true;
+  end
+  def history; 
+    expires_in 30.days, public: true;
+  end
   def submissions; end
-  def bumps; end
+  def bumps;
+    expires_in 30.days, public: true;
+  end
   def tag; end
   def device; end
 
