@@ -99,6 +99,7 @@ class ClientController < ApplicationController
   def trending; end
   def feed;
     flash.discard(:notice)
+    expires_in 30.days, public: true;
   end
   def favorites; end
   def history; end
