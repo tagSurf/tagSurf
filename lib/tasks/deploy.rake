@@ -1,3 +1,5 @@
+require slackr
+
 APP = 'tagsurf'
 
 def repo_branch
@@ -165,6 +167,8 @@ namespace :deploy do
 Branch: #{branch}\n\
 Hash:   #{hash}\" #{tag} #{hash}"
       system "git push origin #{tag}"
+      slack = Slackr.connect("tagSurf", ENV["TS_SLACK_DEPLOY_BOT_TOKEN"], {"channel" => "#deployments", "username" => "tagsurf_deployr"})
+      slack.say "Deployed #{tag} to #{env}"
       puts "Tagged #{tag}"
     else
       puts "Can't tag without heroku."
