@@ -32,6 +32,7 @@ gem 'omniauth-facebook'
 gem 'urbanairship'
 gem 'has_friendship'
 gem 'twilio-ruby'
+gem 'slackr',  :git => 'git://github.com/risk-io/slackr.git'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'
