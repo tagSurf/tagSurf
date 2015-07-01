@@ -1,4 +1,4 @@
-require slackr
+require 'slackr'
 
 APP = 'tagsurf'
 
