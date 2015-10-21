@@ -39,11 +39,11 @@ module Tagsurf
     config.action_mailer.raise_delivery_errors = false
 
     # Urban Airship Config
-    Urbanairship.application_key = Rails.env.production? ? 'xAP0Hge-StGbQvVSzyOa6Q' : 'mrUA6v29S_qi2NrV_avUsA'
-    Urbanairship.application_secret = Rails.env.production? ? '2ottmDAoQ-C5aLaYSWWFTA' : 'mVtZIrpMRjuaug4RdNdwOw'
-    Urbanairship.master_secret = Rails.env.production? ? 'Mf8zfYJDQO6yrUc9XBoFQA' : 'z0pJo8KuSdKt2wolfj3Oiw'
-    Urbanairship.logger = Rails.logger
-    Urbanairship.request_timeout = 5 #default value
+    #Urbanairship.application_key = 
+    #Urbanairship.application_secret = 
+    #Urbanairship.master_secret = 
+    #Urbanairship.logger = Rails.logger
+    #Urbanairship.request_timeout = 5 #default value
 
     # redis_active = Rails.env.development? ? false : true
     CONFIG[:redis_active] = true #redis_active  
