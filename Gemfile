@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby "2.0.0"
+ruby "2.2.2"
 
 gem 'rails', '>= 4.0.2'
 gem 'pg', '0.17.0'
@@ -36,7 +36,7 @@ gem 'slackr',  :git => 'git://github.com/risk-io/slackr.git'
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'
-  gem 'debugger'
+  # gem 'debugger'
 end
 
 gem 'compass-rails', '1.1.3'

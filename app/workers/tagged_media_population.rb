@@ -4,7 +4,7 @@ class TaggedMediaPopulation
 
   sidekiq_options :retry =>  3
 
-  recurrence { hourly.minute_of_hour(5, 20, 35, 50) }
+  recurrence { daily.hour_of_day(6) }
 
   def perform
     batch = Tag.where(fetch_more_content: true).limit(25)

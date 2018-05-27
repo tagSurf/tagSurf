@@ -2,7 +2,7 @@ class MediaPopulation
   include Sidekiq::Worker
   include Sidetiq::Schedulable
 
-  recurrence { hourly.minute_of_hour(0, 15, 30, 45) }
+  recurrence { daily.hour_of_day(5, 10, 15) }
 
   def perform
     Media.populate_trending!
