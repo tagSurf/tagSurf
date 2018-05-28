@@ -11,7 +11,7 @@ class Bump < ActiveRecord::Base
 
   after_commit :create_vote,        on: :create
 	after_commit :set_referral_flag, 	on: :create
-  after_commit :send_notification,  on: :create
+  # after_commit :send_notification,  on: :create
   after_commit :update_media_score, on: :create
 
   def self.bump_referral(id)

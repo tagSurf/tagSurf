@@ -12,7 +12,7 @@ class Referral < ActiveRecord::Base
   has_one :bump, :foreign_key => :referral_id
 
   after_commit :find_vote, 	on: :create
-  after_commit :send_notification, on: :create
+  # after_commit :send_notification, on: :create
 
   
 # Return referrals made BY a user
