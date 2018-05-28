@@ -1,7 +1,7 @@
 class UpdateBadgeIcon
   include Sidekiq::Worker
 
-  sidekiq_options :backtrace => true
+  sidekiq_options :backtrace => true, :retry =>  3
 
   def perform(user_id)
 	badge_number = Referral.unscoped.where(:user_id => user_id, :seen => false).count +

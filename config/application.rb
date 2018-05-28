@@ -48,7 +48,7 @@ module Tagsurf
     # redis_active = Rails.env.development? ? false : true
     CONFIG[:redis_active] = true #redis_active  
 
-    CONFIG[:remote_providers] = ["imgur", "urx"]
+    CONFIG[:remote_providers] = ["imgur"]
 
     CONFIG[:urx_domains] = [
       "buzzfeed.com", 
