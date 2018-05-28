@@ -36,7 +36,7 @@ class Api::BumpsController < Api::BaseController
       @success = bump.update_column('seen', true)
       if @success
         render json: {seen: true}, status: :ok
-        UpdateBadgeIcon.perform_async(current_user.id)
+        # UpdateBadgeIcon.perform_async(current_user.id)
       else 
         render json: {created: false, reason: @success.errors }, status: :not_implemented
       end

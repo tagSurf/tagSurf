@@ -70,7 +70,7 @@ class Vote < ActiveRecord::Base
       ref.update_column("voted", true);
       ref.update_column("seen", true);
     end
-    UpdateBadgeIcon.perform_async(self.voter_id)
+    # UpdateBadgeIcon.perform_async(self.voter_id)
   end
    
 end
