@@ -1,7 +1,7 @@
 class SendReferNotification
   include Sidekiq::Worker
 
-  sidekiq_options :backtrace => true
+  sidekiq_options :backtrace => true, :retry =>  3
 
   def perform(referral_id)
 		if Rails.env.development? 

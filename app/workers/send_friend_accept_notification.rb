@@ -1,7 +1,7 @@
 class SendFriendAcceptNotification
   include Sidekiq::Worker
 
-  sidekiq_options :backtrace => true
+  sidekiq_options :backtrace => true, :retry =>  3
 
   def perform(user_id, acceptor_id)
 	if Rails.env.development? 

@@ -1,7 +1,7 @@
 class SendFriendRequestNotification
   include Sidekiq::Worker
 
-  sidekiq_options :backtrace => true
+  sidekiq_options :backtrace => true, :retry =>  3
 
   def perform(user_id, friender_id)
 	if Rails.env.development? 
