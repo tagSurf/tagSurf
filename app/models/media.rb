@@ -98,7 +98,7 @@ class Media < ActiveRecord::Base
     offset = options[:offset].nil? ? 0 : options[:offset].to_i
     n = options[:limit].nil? ?  20 : options[:limit].to_i
     id = options[:id].to_i
-    span = 7.days.ago
+    span = 4.years.ago
        
     if user.try(:safe_mode) 
       return [] if Tag.blacklisted?(tags)
@@ -118,7 +118,7 @@ class Media < ActiveRecord::Base
         @media  = Media.where(
             viral: true, 
             nsfw: false,
-            :created_at => 2.days.ago..Time.now 
+            :created_at => span..Time.now 
           ).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
         # If it is empty, run again with unlimited scope
         unless !@media.empty?
@@ -132,7 +132,7 @@ class Media < ActiveRecord::Base
       
         @media = Media.where(
             nsfw: false,
-            :created_at => 2.days.ago..Time.now
+            :created_at => span..Time.now
           ).tagged_with(tags, :wild => true).limit(n).offset(offset).order('ts_score DESC NULLS LAST')
         
         unless !@media.empty?
