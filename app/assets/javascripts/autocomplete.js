@@ -1,3 +1,4 @@
+
 var autocomplete = {
 	data: null,
 	nodes: {},
@@ -35,8 +36,11 @@ var autocomplete = {
 		n.innerHTML = tagName;
 		n.className = "tagline";
 		var tlower = tagName.toLowerCase();
-		for (var i = 1; i <= tlower.length; i++)
+		for (var i = 1; i <= tlower.length; i++){
+			if(["blackout"].includes(tlower.slice(0,i)))
+				continue;
 			n.className += " " + tlower.slice(0, i);
+		}
 		autocomplete.nodes[listName].firstChild.appendChild(n);
 		n.onclick = function() {
 			autocomplete.tapTag(tagName, listName);
