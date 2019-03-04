@@ -45,7 +45,7 @@ var card_proto = {
 			container = this.contents,
 			formattingContainer = document.getElementById('formatter'),
 			card = this,
-			videoTemplate = this.video ? "<video class='ts-video' preload='auto' autplay muted loop controls playsinline><source src="+this.video.mp4+" type='video/mp4'></video>" : null,
+			videoTemplate = this.video ? "<video class='ts-video' preload='auto' autplay muted loop playsinline><source src="+this.video.mp4+" type='video/mp4'></video>" : null,
 			imageTemplate = (card.type.indexOf('web') != -1) ? "<a href='" + (isAndroid() ? (card.deep_link ? card.deep_link : card.web_link) : card.web_link) + "' target='_blank'>" + "<div class='image-container expand-animation'>"+ (this.video ? videoTemplate : "<img src= >") + "</div></a>" : "<div class='image-container expand-animation'>"+ (this.video ? videoTemplate : "<img src= >") + "</div>",
 			cardTemplate = imageTemplate + 
 			"<div id='refer-btn' class='msgbox-btn'>Bump It!</div>" + 				
