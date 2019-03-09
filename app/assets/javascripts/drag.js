@@ -53,13 +53,13 @@ var drag = {
 				opts.swipe();
 			}
 		}, true, false);
-		n.parentNode.addEventListener('scroll', function (event) {
-			if (opts.scroll)
-				opts.scroll(event);
-			if (opts.drag)
-				delayedDrag();
-			return true;
-		}, false);
+		// n.parentNode.addEventListener('scroll', function (event) {
+		// 	if (opts.scroll)
+		// 		opts.scroll(event);
+		// 	if (opts.drag)
+		// 		delayedDrag();
+		// 	return true;
+		// }, false);
 	},
 	makeDraggable: function (node, opts)
 	{
