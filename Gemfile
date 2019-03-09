@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
 
-ruby "2.2.2"
+ruby "2.4.5"
 
-gem 'rails', '>= 4.0.2'
+gem 'rails', '>= 4.2'
 gem 'pg', '0.17.0'
 gem 'unicorn'
 gem 'rails_12factor', group: :production
@@ -16,7 +16,7 @@ gem 'sidekiq'
 gem 'sinatra', '>= 1.3.0', :require => nil
 gem 'sidetiq'
 gem 'redis'
-gem 'redis-objects', '0.9.1'
+gem 'redis-objects', '>=1.0'
 gem 'honeybadger', '~> 2.0.0'
 gem 'rack-cache'
 gem 'redis-store'
@@ -25,7 +25,7 @@ gem 'sass-rails', '~> 4.0.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.0.0'
 gem 'jbuilder', '~> 1.2'
-gem 'devise', '3.2.2'
+gem 'devise', '4.4.2'
 gem 'omniauth', '1.1.0'
 gem 'omniauth-oauth2', '~> 1.0.3'
 gem 'omniauth-facebook'
@@ -39,4 +39,6 @@ group :development, :test do
   # gem 'debugger'
 end
 
-gem 'compass-rails', '1.1.3'
+gem 'compass-rails'
+gem 'responders'
+gem 'redis-namespace'

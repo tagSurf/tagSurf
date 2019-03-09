@@ -30,7 +30,9 @@ class User < ActiveRecord::Base
 
   validates_uniqueness_of :username, :allow_blank => true, :message => "username taken"
 
-  scope :sorted_history, order("created_at ASC")
+  scope :sorted_history, -> {
+    order("created_at ASC")
+  }
 
   after_commit :destroy_all_relations, on: :destroy
   after_commit :create_confirmation_code, on: :create
