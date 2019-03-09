@@ -36,9 +36,9 @@ var autocomplete = {
 		n.innerHTML = tagName;
 		n.className = "tagline";
 		var tlower = tagName.toLowerCase();
-		for (var i = 1; i <= tlower.length; i++){
-			if(["blackout"].includes(tlower.slice(0,i)))
-				continue;
+		for (var i = 1; i <= tlower.length; i++) {
+			if(tlower.slice(0, i) == "blackout") 
+				continue	
 			n.className += " " + tlower.slice(0, i);
 		}
 		autocomplete.nodes[listName].firstChild.appendChild(n);
