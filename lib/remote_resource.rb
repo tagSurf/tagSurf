@@ -6,10 +6,10 @@ class RemoteResource
   def self.get_request(uri, provider, offset, domain)
     if provider == 'imgur'
       HTTParty.get(
-        "https://imgur-apiv3.p.mashape.com/3/#{uri}",
+        "https://imgur-apiv3.p.rapidapi.com/3/#{uri}",
         :headers => {
           "Authorization" => "Client-ID #{ENV['TS_IMGUR']}",
-          "X-Mashape-Authorization" => ENV['TS_MASHAPE'],
+          "X-RapidAPI-Key" => ENV['TS_RAPIDAPI'],
           "Accept" => "application/json",
           "Accept-Language" => "en-US"
         }
