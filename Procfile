@@ -1,2 +1,2 @@
-web: bundle exec unicorn -p $PORT -c ./config/unicorn.rb
+web: bundle exec rails s puma -p $PORT -e $RACK_ENV
 worker: bundle exec sidekiq -q default

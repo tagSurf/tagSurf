@@ -37,6 +37,12 @@ gem 'slackr',  :git => 'git://github.com/risk-io/slackr.git'
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0.beta'
   # gem 'debugger'
+  gem 'capistrano',         require: false
+  gem 'capistrano-rvm',     require: false
+  gem 'capistrano-rails',   require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano3-puma',   require: false
 end
 
+gem 'puma'
 gem 'compass-rails', '1.1.3'
