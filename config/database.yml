@@ -20,8 +20,8 @@ production:
   adapter: postgresql
   encoding: unicode
   database: tagsurf_development
-  username: ENV['TS_DB_PWD']
-  password: ENV['TS_DB_USR']
+  username: <%= ENV['TS_DB_PWD'] %>
+  password: <%= ENV['TS_DB_USR'] %>
   host: localhost
   port: 5432
 
