@@ -17,7 +17,7 @@ gem 'sinatra', '>= 1.3.0', :require => nil
 gem 'sidetiq'
 gem 'redis'
 gem 'redis-objects', '0.9.1'
-gem 'honeybadger', '~> 2.0.0'
+# gem 'honeybadger', '~> 2.0.0'
 gem 'rack-cache'
 gem 'redis-store'
 
