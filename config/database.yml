@@ -2,7 +2,7 @@ development:
   adapter: postgresql
   encoding: unicode
   database: tagsurf_development
-  username: deploy
+  username: 
   password:
   host: localhost
   port: 5432
@@ -20,7 +20,7 @@ production:
   adapter: postgresql
   encoding: unicode
   database: tagsurf_development
-  username: <%= ENV['TS_DB_USR'] %>
+  username: 
   password:
   host: localhost
   port: 5432
