@@ -21,7 +21,7 @@ production:
   encoding: unicode
   database: tagsurf_development
   username: <%= ENV['TS_DB_USR'] %>
-  password: <%= ENV['TS_DB_PWD'] %>
+  password:
   host: localhost
   port: 5432
 
