@@ -47,7 +47,11 @@ var image = {
 				loadNext();
 			};
 			i.onerror = function() {
-				c._image_load_eb && c._image_load_eb(c);
+				// Add escape in case the card is a video
+				if (c.video)
+					c._image_load_cb && c._image_load_cb(c);
+				else 
+					c._image_load_eb && c._image_load_eb(c);
 				loadNext();
 			};
 		});
