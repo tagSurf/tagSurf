@@ -4,6 +4,7 @@ server '178.128.75.250', port: 22, roles: [:web, :app, :db], primary: true
 set :repo_url,        'git@github.com:tagSurf/tagSurf.git'
 set :application,     'tagsurf'
 set :user,            'deploy'
+set :rails_env,       'production'
 set :puma_threads,    [4, 16]
 set :puma_workers,    0
 
