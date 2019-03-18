@@ -43,6 +43,7 @@ group :development, :test do
   gem 'capistrano-bundler', require: false
   gem 'capistrano3-puma',   require: false
   gem 'capistrano-sidekiq', require: false
+  gem 'capistrano-nginx', 	require: false
 end
 
 gem 'puma'
