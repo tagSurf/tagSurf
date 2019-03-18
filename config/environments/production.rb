@@ -8,7 +8,7 @@ Tagsurf::Application.configure do
   config.consider_all_requests_local       = false
   config.action_controller.perform_caching = true
   config.i18n.fallbacks = true
-  config.force_ssl = true
+  # config.force_ssl = true
   
   # Probably should use redis-cache
   # config.cache_store = :mem_cache_store
