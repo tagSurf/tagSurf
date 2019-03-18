@@ -71,6 +71,7 @@ namespace :deploy do
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
       invoke!("puma:restart")
+      # invoke!("nginx:restart")
       # after :restart { invoke 'sidekiq:restart' }
     end
   end
